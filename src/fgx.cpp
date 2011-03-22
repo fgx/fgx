@@ -28,10 +28,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	on_useMetar_clicked();
 	on_setTime_clicked();
 	checkCoords();
-	checkRWY();
-	checkPP();
 	checkScenery();
-	useParkPositionCheck();
 	on_airCraft_activated();
 	
 	
@@ -44,11 +41,6 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	if (multiplayerPort->text() == "") {
 		multiplayerPort->setText("5000");
 	}
-	
-	ps.setProcessChannelMode(QProcess::MergedChannels);
-
-	
-	// Get Airport List of fgdata/Scenery
 	
 	QStringList airport_list;
 	QString airportPath = fgdataPath->text();
@@ -68,14 +60,18 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 		airport_list.append(line);	
 	}
 	
+	//locationIcao->clear();
 	locationIcao->addItems(airport_list);
-
 	
-}
+	
+	ps.setProcessChannelMode(QProcess::MergedChannels);
+	
+	}
+
 
 fgx::~fgx(){
 	
-}
+	}
 
 
 // refresh Aircraft List after setting fgdata path
@@ -103,32 +99,13 @@ void fgx::on_set_fgdata_path_Button_clicked() {
 	airCraft->clear();
 	airCraft->addItems(str_list);
 	
-	QStringList airport_list;
-	QString airportPath = fgdataPath->text();
-	airportPath.append("/Scenery/Airports/index.txt");
-	QFile airportFile("");
-	airportFile.setFileName(airportPath);
-	
-	if (!airportFile.open(QIODevice::ReadOnly | QIODevice::Text))
-		return;
-	
-	while (!airportFile.atEnd()) {
-		
-		QString line;
-		line.append(airportFile.readLine());
-		line.truncate(4);
-		line.remove("|");
-		airport_list.append(line);	
-	}
-	
-	locationIcao->clear();
-	locationIcao->addItems(airport_list);
-	
 }
 
 // Start FlightGear
 
 void fgx::on_fgStart_clicked() {
+	
+	checkScenery();
 	
 	
 	// Write commands and arguments to TerraSync.sh and run via Terminal.app	
@@ -731,47 +708,24 @@ void fgx::readSettings()
 }
 
 
-// Check Runways/Park Positions
+// Check location edit change
 
 void fgx::on_locationIcao_activated() {
-	checkRWY();
-	checkPP();
 	checkScenery();
 }
 
-// Check fgfs default state
+// Check built-in FlightGear state
 void fgx::on_useFGXfgfs_clicked() {
 	checkFGFS();
-	
-	if (useFGXfgfs->isChecked() == true) {
-		QString newfgdataPath;
-		newfgdataPath = QDir::currentPath();
-		//newfgdataPath.append(argexeroot);
-		newfgdataPath.append("/fgx.app/Contents/Resources/fgx-fgdata");
-		fgdataPath->setText(newfgdataPath);
-	}
-	
-	QStringList str_list;
-	
-	QString aircraftPath = fgdataPath->text();
-	aircraftPath.append("/Aircraft");
-	QDir aircraftDir(aircraftPath);
-	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
-	
-	QStringList entries = aircraftDir.entryList();
-	
-	for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
-		
-	{
-		// Filter out default dir names, should be a QDir name filter?
-		if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
-			str_list << *entry;
-		}
-	}
-	
-	airCraft->clear();
-	airCraft->addItems(str_list);
+	checkScenery();
+	on_airCraft_activated();
 }
+
+void fgx::on_tabs_currentChanged() {
+	checkScenery();
+	on_airCraft_activated();
+}
+
 
 // Check aircraft image
 void fgx::on_airCraft_activated() {
@@ -787,7 +741,7 @@ void fgx::on_airCraft_activated() {
 		QImage image(fileName);
 		if (image.isNull()) {
 			QMessageBox::information(this, tr("Image Viewer"),
-									 tr("Cannot load %1.").arg(fileName));
+									 tr("Please click on refresh on tab \"path/programs\". Cannot load %1.").arg(fileName));
 			return;
 		}
 			aircraftImage->setPixmap(QPixmap::fromImage(image));
@@ -805,7 +759,7 @@ void fgx::on_airCraft_activated() {
 			QImage image(fileName);
 			if (image.isNull()) {
 				QMessageBox::information(this, tr("Image Viewer"),
-										 tr("Cannot load %1.").arg(fileName));
+										 tr("Please check path to your FlightGear data folder and click on refresh. Cannot load %1.").arg(fileName));
 				return;
 			}
 			aircraftImage->setPixmap(QPixmap::fromImage(image));
@@ -897,7 +851,7 @@ void fgx::on_useMetar_clicked() {
 	}
 }
 
-// built-in checked
+// built-in check, disable path line edits
 
 void fgx::checkFGFS() {
 	
@@ -912,166 +866,10 @@ void fgx::checkFGFS() {
 		fgfsPath->setEnabled(true);
 		fgdataPath->setEnabled(true);
 	}
-	
-	if (useFGXfgfs->isChecked() == true) {
-		
-		QString fileName = QDir::currentPath();
-		fileName.append("/fgx.app/Contents/Resources/fgx-fgdata/Aircraft/");
-		fileName.append(airCraft->currentText());
-		fileName.append("/thumbnail.jpg");
-		
-		if (!fileName.isEmpty()) {
-			QImage image(fileName);
-			if (image.isNull()) {
-				QMessageBox::information(this, tr("Image Viewer"),
-										 tr("Cannot load %1.").arg(fileName));
-				return;
-			}
-			aircraftImage->setPixmap(QPixmap::fromImage(image));
-			
-		}
-	}
-	
-	else {
-		QString fileName = fgdataPath->text();
-		fileName.append("/Aircraft/");
-		fileName.append(airCraft->currentText());
-		fileName.append("/thumbnail.jpg");
-		
-		if (!fileName.isEmpty()) {
-			QImage image(fileName);
-			if (image.isNull()) {
-				QMessageBox::information(this, tr("Image Viewer"),
-										 tr("Cannot load %1.").arg(fileName));
-				return;
-			}
-			aircraftImage->setPixmap(QPixmap::fromImage(image));
-			
-		}
-	}
-	
-}
-
-// Check runways
-
-void fgx::checkRWY() {
-	
-	QString xmlfilepath;
-	
-	if (terrasync = false) {
-		xmlfilepath = fgdataPath->text();
-		xmlfilepath.append("/Scenery/Airports/");
-	} else {
-		xmlfilepath.append("/Documents/TerrasyncScenery/Airports/");
-	}
-
-	QString letters = locationIcao->currentText();
-	xmlfilepath.append(letters[0]);
-	xmlfilepath.append("/");
-	xmlfilepath.append(letters[1]);
-	xmlfilepath.append("/");
-	xmlfilepath.append(letters[2]);
-	xmlfilepath.append("/");
-	xmlfilepath.append(letters);
-	xmlfilepath.append(".threshold.xml");
-	
-	QFile xmlfile(xmlfilepath);
-	
-	if (xmlfile.open(QIODevice::ReadOnly)) {
-	
-	QXmlStreamReader reader(&xmlfile);
-	QXmlStreamReader::TokenType tokenType;
-
-	QStringList runwayList;
-	QString rwy;
-	while ((tokenType = reader.readNext()) != QXmlStreamReader::EndDocument) {
-		if (reader.name() == "rwy") {
-				rwy = reader.readElementText();
-				runwayList.append(rwy);
-		}
-	}
-	
-	xmlfile.close();
-	
-	runWay->clear();
-	runWay->addItems(runwayList);
-	runWay->setEnabled(true);
-	
-	}
-	
-	else {
-		runWay->setEnabled(false);
-	}
-
-
-}
-
-// Check park positions
-
-void fgx::checkPP() {
-
-	
-	QString xmlfilepath;
-	
-	if (terrasync = false) {
-		xmlfilepath = fgdataPath->text();
-		xmlfilepath.append("/Scenery/Airports/");
-	} else {
-		xmlfilepath.append("/Documents/TerrasyncScenery/Airports/");
-	}
-	
-	QString letters = locationIcao->currentText();
-	xmlfilepath.append(letters[0]);
-	xmlfilepath.append("/");
-	xmlfilepath.append(letters[1]);
-	xmlfilepath.append("/");
-	xmlfilepath.append(letters[2]);
-	xmlfilepath.append("/");
-	xmlfilepath.append(letters);
-	xmlfilepath.append(".groundnet.xml");
-	
-	QFile xmlfile(xmlfilepath);
-	
-	if (xmlfile.open(QIODevice::ReadOnly)) {
-		
-		QXmlStreamReader reader(&xmlfile);
-		QXmlStreamReader::TokenType tokenType;
-		
-		QStringList ppList;
-
-		while ((tokenType = reader.readNext()) != QXmlStreamReader::EndDocument) {
-			if (reader.name() == "Parking") {
-				QXmlStreamAttributes attributes = reader.attributes();
-				
-				if (attributes.value("type").toString() == "gate" && attributes.value("name").toString() != "Startup Location") {
-					QString ppname = attributes.value("name").toString();
-					QString ppnumber = attributes.value("number").toString();
-					QString ppall;
-					ppall.append(ppname); ppall.append(ppnumber);
-					ppList.append(ppall);
-				}
-				
-				}
-		}
-		
-		xmlfile.close();
-		
-		parkPosition->clear();
-		parkPosition->addItems(ppList);
-		parkPosition->setEnabled(true);
-		
-		
-	}
-	
-	else {
-		parkPosition->setEnabled(false);	
-	}
-	
-	
 }
 
 
-// Check for coordinates enabled
+// Check for coordinates enabled, disable ICAO, runway, park position
 void fgx::checkCoords() {
 	
 	Qt::CheckState coordstate;
@@ -1090,7 +888,7 @@ void fgx::checkCoords() {
 	}
 }
 
-// Check for using park position
+// Check for using park position (needs runways disabled)
 void fgx::on_useParkPosition_clicked() {
 	
 	Qt::CheckState ppstate;
@@ -1104,33 +902,12 @@ void fgx::on_useParkPosition_clicked() {
 		parkPosition->setEnabled(false);
 	}
 }
-
-void fgx::useParkPositionCheck() {
-	
-	Qt::CheckState ppstate;
-	
-	ppstate = useParkPosition->checkState();
-	if (ppstate == Qt::Checked) {
-		runWay->setEnabled(false);
-		parkPosition->setEnabled(true);
-	} else {
-		runWay->setEnabled(true);
-		parkPosition->setEnabled(false);
-	}
-}
 	
 
-// Write settings on close
-
-void fgx::closeEvent(QCloseEvent *event)
-{
-	writeSettings();
-	event->accept();
-}
-
-// Check for scenery
+// Check for scenery, runways and parkposition
 
 void fgx::checkScenery() {
+	
 	QString filepath = fgdataPath->text();
 	filepath.append("/Scenery/Airports/");
 	QString letters = locationIcao->currentText();
@@ -1143,38 +920,113 @@ void fgx::checkScenery() {
 	filepath.append(letters);
 	filepath.append(".threshold.xml");
 	
-	QFile file(filepath);
+	QFile rwyfile(filepath);
 	
-	QString terrasyncfilepath;
-	terrasyncfilepath.append("/Documents/TerrasyncScenery/Airports/");
-	QString terrasyncletters = locationIcao->currentText();
-	terrasyncfilepath.append(terrasyncletters[0]);
-	terrasyncfilepath.append("/");
-	terrasyncfilepath.append(terrasyncletters[1]);
-	terrasyncfilepath.append("/");
-	terrasyncfilepath.append(terrasyncletters[2]);
-	terrasyncfilepath.append("/");
-	terrasyncfilepath.append(terrasyncletters);
-	terrasyncfilepath.append(".threshold.xml");
-	
-	QFile terrasyncfile(terrasyncfilepath);
-	
-	if (terrasyncfile.exists() == false) {
-		sceneryCheck->setText("<font color=#ff0000>No default or custom scenery avaiable yet</font>");
+	if (rwyfile.exists() == true) {
+		
+		if (rwyfile.open(QIODevice::ReadOnly)) {
+			
+			QXmlStreamReader rwyreader(&rwyfile);
+			QXmlStreamReader::TokenType tokenType;
+			
+			QStringList runwayList;
+			QString rwy;
+			while ((tokenType = rwyreader.readNext()) != QXmlStreamReader::EndDocument) {
+				if (rwyreader.name() == "rwy") {
+					rwy = rwyreader.readElementText();
+					runwayList.append(rwy);
+				}
+			}
+			
+			rwyfile.close();
+			
+			runWay->clear();
+			runWay->addItems(runwayList);
+			runWay->setEnabled(true);
+			
+		} else {
+			runWay->setEnabled(false);
+		}
+
+		
+		QString ppfilepath = fgdataPath->text();
+		ppfilepath.append("/Scenery/Airports/");
+		//QString letters = locationIcao->currentText();
+		ppfilepath.append(letters[0]);
+		ppfilepath.append("/");
+		ppfilepath.append(letters[1]);
+		ppfilepath.append("/");
+		ppfilepath.append(letters[2]);
+		ppfilepath.append("/");
+		ppfilepath.append(letters);
+		ppfilepath.append(".parking.xml");
+		
+		QFile ppfile(ppfilepath);
+		
+		if (ppfile.exists() == false) {
+			sceneryCheck->setText("<font color=#999999>Using built-in Scenery, no park positions avaiable.");
+			parkPosition->setEnabled(false);
+		} else {
+			
+			if (ppfile.open(QIODevice::ReadOnly)) {
+				
+				QXmlStreamReader ppreader(&ppfile);
+				QXmlStreamReader::TokenType tokenType;
+				
+				QStringList ppList;
+				
+				while ((tokenType = ppreader.readNext()) != QXmlStreamReader::EndDocument) {
+					if (ppreader.name() == "Parking") {
+						QXmlStreamAttributes attributes = ppreader.attributes();
+						
+						if (attributes.value("type").toString() == "gate" && attributes.value("name").toString() != "Startup Location") {
+							QString ppname = attributes.value("name").toString();
+							QString ppnumber = attributes.value("number").toString();
+							QString ppall;
+							ppall.append(ppname); ppall.append(ppnumber);
+							ppList.append(ppall);
+						}
+						
+					}
+				}
+				
+				ppfile.close();
+				
+				parkPosition->clear();
+				parkPosition->addItems(ppList);
+				parkPosition->setEnabled(true);
+				
+				
+			}
+			
+			else {
+				parkPosition->setEnabled(false);	
+			}
+			sceneryCheck->setText("<font color=#999999>Using built-in Scenery</font>");
+		}
+
+		
+	} else {
+		sceneryCheck->setText("<font color=#999999>No runway/park position avaiable. Using defaults.");
 		runWay->setEnabled(false);
 		parkPosition->setEnabled(false);
-	} else {
-		
-		if (terrasyncfile.exists() == true) {
-			sceneryCheck->setText("<font color=#999999>Scenery check successful, using custom scenery locations</font>");
-		} else {
-			sceneryCheck->setText("<font color=#999999>Scenery check successful, using default locations</font>");
-		}
-		terrasync = true;
 	}
-
 	
 }
+	
+// Write settings on close
+	
+void fgx::closeEvent(QCloseEvent *event)
+{
+	writeSettings();
+	event->accept();
+}
+	
+	
+
+
+
+
 
 // Qt Helper
 // QApplication::beep();

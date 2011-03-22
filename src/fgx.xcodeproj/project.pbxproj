@@ -10,8 +10,8 @@
 		069D05B0128AE5DC7EE31738 /* QtCore.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = 7BC2E65A5E699A5E5D834CA2 /* QtCore.framework */; };
 		2497464F1D7DD67EB6CDDFCB /* fgx.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = F34E5AEF6684E84E2C55C110 /* fgx.cpp */; settings = {ATTRIBUTES = (); }; };
 		2B093CA6F071B023A473CED0 /* main.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 118FCBAABA162BA17933C789 /* main.cpp */; settings = {ATTRIBUTES = (); }; };
-		339B83E0133643A900736D7F /* fgx22.icns in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 339B83DF133643A900736D7F /* fgx22.icns */; };
-		33C6E75313361B2900A07AD5 /* fgx.app in Project Copy */ = {isa = PBXBuildFile; fileRef = 33C6E75013361B2900A07AD5 /* fgx.app */; };
+		33E09FF71337EBEB000E5CF8 /* fgx.app in Project Copy */ = {isa = PBXBuildFile; fileRef = 33E09FF41337EBEB000E5CF8 /* fgx.app */; };
+		33E0A0091337EC75000E5CF8 /* fgx22.icns in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 33E0A0081337EC75000E5CF8 /* fgx22.icns */; };
 		3826A0833FCB54E86728C6EF /* QtNetwork.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = B6B9970B86A6C219B0869FE9 /* QtNetwork.framework */; };
 		3856F1C05E59E6FFCFE0426B /* moc_fgx.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = E72DC64BA6A58D8837C090D7 /* moc_fgx.cpp */; settings = {ATTRIBUTES = (); }; };
 		501667F26B3C1FF6767A7C12 /* QtGui.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = 9B36DA7E32F0304E780E7972 /* QtGui.framework */; };
@@ -24,7 +24,7 @@
 			dstPath = /Users/raoulquittarco/Desktop/fgx/fgx/src;
 			dstSubfolderSpec = 0;
 			files = (
-				33C6E75313361B2900A07AD5 /* fgx.app in Project Copy */,
+				33E09FF71337EBEB000E5CF8 /* fgx.app in Project Copy */,
 			);
 			name = "Project Copy";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -33,8 +33,8 @@
 
 /* Begin PBXFileReference section */
 		118FCBAABA162BA17933C789 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		339B83DF133643A900736D7F /* fgx22.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = fgx22.icns; path = ../../originaldateien/fgx22.icns; sourceTree = SOURCE_ROOT; };
-		33C6E75013361B2900A07AD5 /* fgx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fgx.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		33E09FF41337EBEB000E5CF8 /* fgx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fgx.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		33E0A0081337EC75000E5CF8 /* fgx22.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = fgx22.icns; sourceTree = "<group>"; };
 		680457B3A5607B3D17F831B3 /* fgx.pro */ = {isa = PBXFileReference; lastKnownFileType = text; path = fgx.pro; sourceTree = "<group>"; };
 		7BC2E65A5E699A5E5D834CA2 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = /Library/Frameworks/QtCore.framework; sourceTree = "<absolute>"; };
 		9B36DA7E32F0304E780E7972 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = /Library/Frameworks/QtGui.framework; sourceTree = "<absolute>"; };
@@ -64,22 +64,22 @@
 		05596AB53D8D521C69802C27 /* fgx */ = {
 			isa = PBXGroup;
 			children = (
-				339B83DF133643A900736D7F /* fgx22.icns */,
+				33E0A0081337EC75000E5CF8 /* fgx22.icns */,
 				FB61758D0F0FDA4BA867C3D5 /* Sources */,
 				46E892BBB6BB6952967E0561 /* Temporary Sources */,
 				883D7615C4D2DE3FA1218F12 /* Headers */,
 				7CABE3C80E79AD2B307756D2 /* Sources [qmake] */,
 				EEC299C65D5017EB9DD513B0 /* Sources [UIC] */,
 				ED1E82605DD74B483AF3C982 /* External Frameworks and Libraries */,
-				33C6E75113361B2900A07AD5 /* Products */,
+				33E09FF51337EBEB000E5CF8 /* Products */,
 			);
 			name = fgx;
 			sourceTree = "<group>";
 		};
-		33C6E75113361B2900A07AD5 /* Products */ = {
+		33E09FF51337EBEB000E5CF8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				33C6E75013361B2900A07AD5 /* fgx.app */,
+				33E09FF41337EBEB000E5CF8 /* fgx.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,7 +141,7 @@
 /* Begin PBXNativeTarget section */
 		1C2830CCA1889BA6A90F2F64 /* fgx */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 33C6E76313361B4700A07AD5 /* Build configuration list for PBXNativeTarget "fgx" */;
+			buildConfigurationList = 33E0A0071337EC32000E5CF8 /* Build configuration list for PBXNativeTarget "fgx" */;
 			buildPhases = (
 				D7BA7D76DAB5DD13389D6332 /* Qt Qmake */,
 				A0A52A2ADF7A1E2A99738674 /* Qt Preprocessors */,
@@ -156,7 +156,7 @@
 			);
 			name = fgx;
 			productName = fgx;
-			productReference = 33C6E75013361B2900A07AD5 /* fgx.app */;
+			productReference = 33E09FF41337EBEB000E5CF8 /* fgx.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -175,7 +175,7 @@
 				German,
 			);
 			mainGroup = 05596AB53D8D521C69802C27 /* fgx */;
-			productRefGroup = 33C6E75113361B2900A07AD5 /* Products */;
+			productRefGroup = 33E09FF51337EBEB000E5CF8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -189,7 +189,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				339B83E0133643A900736D7F /* fgx22.icns in Bundle Resources */,
+				33E0A0091337EC75000E5CF8 /* fgx22.icns in Bundle Resources */,
 			);
 			name = "Bundle Resources";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,7 +234,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		33C6E75713361B2900A07AD5 /* Debug */ = {
+		33E0A0011337EBEC000E5CF8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/raoulquittarco/Desktop/fgx/fgx/src;
@@ -296,7 +296,7 @@
 			};
 			name = Debug;
 		};
-		33C6E75813361B2900A07AD5 /* Release */ = {
+		33E0A0021337EBEC000E5CF8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/raoulquittarco/Desktop/fgx/fgx/src;
@@ -357,7 +357,7 @@
 			};
 			name = Release;
 		};
-		33C6E75913361B2900A07AD5 /* Default */ = {
+		33E0A0031337EBEC000E5CF8 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/raoulquittarco/Desktop/fgx/fgx/src;
@@ -424,7 +424,7 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = "";
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				VALID_ARCHS = "i386 x86 x86_64";
 			};
@@ -450,12 +450,12 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		33C6E76313361B4700A07AD5 /* Build configuration list for PBXNativeTarget "fgx" */ = {
+		33E0A0071337EC32000E5CF8 /* Build configuration list for PBXNativeTarget "fgx" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				33C6E75713361B2900A07AD5 /* Debug */,
-				33C6E75813361B2900A07AD5 /* Release */,
-				33C6E75913361B2900A07AD5 /* Default */,
+				33E0A0011337EBEC000E5CF8 /* Debug */,
+				33E0A0021337EBEC000E5CF8 /* Release */,
+				33E0A0031337EBEC000E5CF8 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;

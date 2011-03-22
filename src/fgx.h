@@ -44,15 +44,13 @@ private:
 	void on_useMetar_clicked();
 	void on_useCoordinates_clicked();
 	void on_useParkPosition_clicked();
-	void useParkPositionCheck();
 	void on_locationIcao_activated();
-	void checkCoords();
-	void checkRWY();
-	void checkPP();	
+	void checkCoords();	
 	void checkScenery();
 	void readSettings();
 	void writeSettings();
 	void on_airCraft_activated();
+	void on_tabs_currentChanged();
 	
 };
 
