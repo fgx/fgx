@@ -17,6 +17,7 @@
 #include <QAbstractSocket>
 #include <QHostInfo>
 #include <QFileDialog>
+#include <QDirIterator>
 #include <QXmlStreamReader>
 
 
@@ -29,7 +30,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	on_setTime_clicked();
 	checkCoords();
 	checkScenery();
-	on_airCraft_activated();
+	//on_airCraft_activated();
 	
 	
 	// Setting some defaults in case
@@ -42,31 +43,12 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 		multiplayerPort->setText("5000");
 	}
 	
-	QStringList airport_list;
-	QString airportPath = fgdataPath->text();
-	airportPath.append("/Scenery/Airports/index.txt");
-	QFile airportFile("");
-	airportFile.setFileName(airportPath);
-	
-	if (!airportFile.open(QIODevice::ReadOnly | QIODevice::Text))
-		return;
-	
-	while (!airportFile.atEnd()) {
-		
-		QString line;
-		line.append(airportFile.readLine());
-		line.truncate(4);
-		line.remove("|");
-		airport_list.append(line);	
-	}
-	
-	//locationIcao->clear();
-	locationIcao->addItems(airport_list);
-	
 	
 	ps.setProcessChannelMode(QProcess::MergedChannels);
 	
 	}
+
+
 
 
 fgx::~fgx(){
@@ -337,10 +319,7 @@ void fgx::on_fgStart_clicked() {
 		}
 		
 		
-		Qt::CheckState state;
-		state = useParkPosition->checkState();
-		
-		if (state == Qt::Checked) {
+		if (parkPosition->isEnabled() == true) {
 			content.append(" --parkpos=");
 			content.append(argparkpos);
 		}
@@ -476,6 +455,13 @@ void fgx::writeSettings()
 	settings.setValue("multiplayerPort", multiplayerPort->text());
 	settings.setValue("callSign", callSign->text());
 	settings.setValue("locationIcao", locationIcao->currentText());
+	
+	if (usecustomScenery->isChecked() == true) {
+		settings.setValue("usecustomScenery", "true");
+	}	else {
+		settings.setValue("usecustomScenery", "false");
+	}
+	
 	settings.setValue("airCraft", airCraft->currentText());
 	
 	if (useCoordinates->isChecked() == true) {
@@ -486,8 +472,8 @@ void fgx::writeSettings()
 	
 	settings.setValue("Longitude", Longitude->text());
 	settings.setValue("Latidude", Latitude->text());
-	//settings.setValue("runWay", runWay->currentText());
-	//settings.setValue("parkPosition", parkPosition->currentText());
+	settings.setValue("runWay", runWay->currentText());
+	settings.setValue("parkPosition", parkPosition->currentText());
 	
 	settings.setValue("year", year->text());
 	settings.setValue("month", month->text());
@@ -595,6 +581,13 @@ void fgx::readSettings()
 	locationIcao->insertItem(0, locationICAOSet);
 	locationIcao->insertItem(1, "----");
 	
+	QString usecustomScenerySet = settings.value("usecustomScenery").toString();
+	if (usecustomScenerySet == "true") {
+		usecustomScenery->setCheckState(Qt::Checked);
+	} else {
+		usecustomScenery->setCheckState(Qt::Unchecked);
+	}
+	
 	QString airCraftSet = settings.value("airCraft").toString();
 	airCraft->insertItem(0, airCraftSet);
 	airCraft->insertItem(1, "----");
@@ -635,13 +628,13 @@ void fgx::readSettings()
 	QString latSet = settings.value("Latidude").toString();
 	Latitude->setText(latSet);
 	
-	//QString runWaySet = settings.value("runWay").toString();
-	//runWay->insertItem(0, runWaySet);
-	//runWay->insertItem(1, "----");
+	QString runWaySet = settings.value("runWay").toString();
+	runWay->insertItem(0, runWaySet);
+	runWay->insertItem(1, "----");
 	
-	//QString parkPositionSet = settings.value("parkPosition").toString();
-	//parkPosition->insertItem(0, parkPositionSet);
-	//parkPosition->insertItem(1, "----");
+	QString parkPositionSet = settings.value("parkPosition").toString();
+	parkPosition->insertItem(0, parkPositionSet);
+	parkPosition->insertItem(1, "----");
 	
 	QString yearSet = settings.value("year").toString();
 	year->setText(yearSet);
@@ -718,12 +711,12 @@ void fgx::on_locationIcao_activated() {
 void fgx::on_useFGXfgfs_clicked() {
 	checkFGFS();
 	checkScenery();
-	on_airCraft_activated();
+	//on_airCraft_activated();
 }
 
 void fgx::on_tabs_currentChanged() {
 	checkScenery();
-	on_airCraft_activated();
+	//on_airCraft_activated();
 }
 
 
@@ -784,10 +777,14 @@ void fgx::on_useCoordinates_clicked() {
 		locationIcao->setEnabled(false);
 		runWay->setEnabled(false);
 		parkPosition->setEnabled(false);
+		Latitude->setEnabled(true);
+		Longitude->setEnabled(true);
 	} else {
 		locationIcao->setEnabled(true);
 		runWay->setEnabled(true);
 		parkPosition->setEnabled(true);
+		Latitude->setEnabled(false);
+		Longitude->setEnabled(false);
 	}
 }
 
@@ -896,11 +893,24 @@ void fgx::on_useParkPosition_clicked() {
 	ppstate = useParkPosition->checkState();
 	if (ppstate == Qt::Checked) {
 		runWay->setEnabled(false);
-		parkPosition->setEnabled(true);
+		if (parkPosition->currentText() != "") {
+			parkPosition->setEnabled(true);
+		}
+		
 	} else {
 		runWay->setEnabled(true);
 		parkPosition->setEnabled(false);
 	}
+}
+
+
+// Check for scenery when "use custom scenery" is clicked
+
+void fgx::on_usecustomScenery_clicked() {
+	locationIcao->clear();
+	runWay->clear();
+	parkPosition->clear();
+	checkScenery();
 }
 	
 
@@ -908,19 +918,59 @@ void fgx::on_useParkPosition_clicked() {
 
 void fgx::checkScenery() {
 	
-	QString filepath = fgdataPath->text();
-	filepath.append("/Scenery/Airports/");
-	QString letters = locationIcao->currentText();
-	filepath.append(letters[0]);
-	filepath.append("/");
-	filepath.append(letters[1]);
-	filepath.append("/");
-	filepath.append(letters[2]);
-	filepath.append("/");
-	filepath.append(letters);
-	filepath.append(".threshold.xml");
 	
-	QFile rwyfile(filepath);
+	// Check for installed airports
+	
+	QString directory;
+	
+	if (usecustomScenery->isChecked() == true) {
+		//directory = fgdataPath->text();
+		directory.append("/Documents/TerrasyncScenery/Scenery/Airports");
+	}	else {
+		directory = fgdataPath->text();
+		directory.append("/Scenery/Airports");
+	}
+	
+	
+	
+	QStringList files;
+	
+	QDirIterator it(directory, QDirIterator::Subdirectories);
+	while (it.hasNext()) {
+			files << it.next();
+	}
+	
+	// filters Stringlist for Airport entries containing "threshold"
+	
+	QStringList filtered;
+	
+	filtered = files.filter(QRegExp("hold"));
+	
+	// filter path Strings in Stringlist to get a valid airport name
+	
+	filtered.replaceInStrings(".threshold.xml", "");
+	filtered.replaceInStrings(directory, "");
+	filtered.replaceInStrings(QRegExp("......."), "");
+	
+	//removing duplicates
+	filtered.removeDuplicates();
+	
+	// add to list
+	locationIcao->addItems(filtered);
+	
+	
+	QString letters = locationIcao->currentText();
+	directory.append("/");
+	directory.append(letters[0]);
+	directory.append("/");
+	directory.append(letters[1]);
+	directory.append("/");
+	directory.append(letters[2]);
+	directory.append("/");
+	directory.append(letters);
+	directory.append(".threshold.xml");
+	
+	QFile rwyfile(directory);
 	
 	if (rwyfile.exists() == true) {
 		
@@ -949,22 +999,19 @@ void fgx::checkScenery() {
 		}
 
 		
-		QString ppfilepath = fgdataPath->text();
-		ppfilepath.append("/Scenery/Airports/");
-		//QString letters = locationIcao->currentText();
-		ppfilepath.append(letters[0]);
-		ppfilepath.append("/");
-		ppfilepath.append(letters[1]);
-		ppfilepath.append("/");
-		ppfilepath.append(letters[2]);
-		ppfilepath.append("/");
-		ppfilepath.append(letters);
-		ppfilepath.append(".parking.xml");
+		QString ppfilepath;
+		ppfilepath = directory.replace("threshold", "parking");
 		
 		QFile ppfile(ppfilepath);
 		
 		if (ppfile.exists() == false) {
-			sceneryCheck->setText("<font color=#999999>Using built-in Scenery, no park positions avaiable.");
+			if (usecustomScenery->isChecked() == true) {
+				sceneryCheck->setText("<font color=#ff0000 size=11px>Using Custom Scenery/Terrasync, currently no park positions avaiable.");
+			} else {
+				sceneryCheck->setText("<font color=#ff0000 size=11px>Using built-in Scenery, no park positions avaiable.");
+			}
+
+			
 			parkPosition->setEnabled(false);
 		} else {
 			
@@ -1000,17 +1047,28 @@ void fgx::checkScenery() {
 			}
 			
 			else {
-				parkPosition->setEnabled(false);	
+				parkPosition->setEnabled(false);
 			}
-			sceneryCheck->setText("<font color=#999999>Using built-in Scenery</font>");
+			
+			if (usecustomScenery->isChecked() == true) {
+				sceneryCheck->setText("<font color=#ff0000 size=11px>Using custom scenery/terrasync</font>");
+			} else
+			{sceneryCheck->setText("<font color=#ff0000 size=11px>Using built-in Scenery</font>");}
 		}
 
 		
 	} else {
-		sceneryCheck->setText("<font color=#999999>No runway/park position avaiable. Using defaults.");
+		sceneryCheck->setText("<font color=#ff0000 size=11px>No runway/park position avaiable. Using defaults.");
 		runWay->setEnabled(false);
 		parkPosition->setEnabled(false);
 	}
+	
+	// Check for installed airports
+	
+
+
+		
+
 	
 }
 	
@@ -1021,10 +1079,6 @@ void fgx::closeEvent(QCloseEvent *event)
 	writeSettings();
 	event->accept();
 }
-	
-	
-
-
 
 
 

@@ -49,8 +49,9 @@ private:
 	void checkScenery();
 	void readSettings();
 	void writeSettings();
-	void on_airCraft_activated();
 	void on_tabs_currentChanged();
+	void on_usecustomScenery_clicked();
+	void on_airCraft_activated();
 	
 };
 
