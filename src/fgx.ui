@@ -7,11 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>566</width>
-    <height>669</height>
+    <height>649</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>FlightGear Launcher</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
@@ -39,6 +45,12 @@
       <height>281</height>
      </rect>
     </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="tabShape">
      <enum>QTabWidget::Triangular</enum>
     </property>
@@ -57,7 +69,7 @@
     <property name="movable">
      <bool>false</bool>
     </property>
-    <widget class="QWidget" name="tab_3">
+    <widget class="QWidget" name="toptab">
      <attribute name="title">
       <string>Paths and Programs</string>
      </attribute>
@@ -812,22 +824,6 @@ p, li { white-space: pre-wrap; }
      </widget>
     </widget>
    </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>511</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>../../originaldateien/logo-version.png</pixmap>
-    </property>
-   </widget>
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
@@ -837,10 +833,13 @@ p, li { white-space: pre-wrap; }
       <height>191</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="tab_8">
+    <widget class="QWidget" name="bottomtab">
      <attribute name="title">
       <string>Multiplayer</string>
      </attribute>
@@ -860,7 +859,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_Multiplayerserver_2">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>20</x>
         <y>90</y>
         <width>141</width>
         <height>16</height>
@@ -873,7 +872,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLineEdit" name="callSign">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>20</x>
         <y>115</y>
         <width>113</width>
         <height>22</height>
@@ -892,7 +891,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>20</x>
         <y>140</y>
         <width>311</width>
         <height>16</height>
@@ -955,7 +954,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QCheckBox" name="enableMultiplayer">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>20</x>
         <y>55</y>
         <width>181</width>
         <height>20</height>
@@ -968,7 +967,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="pathMultiplayerOut">
       <property name="geometry">
        <rect>
-        <x>230</x>
+        <x>227</x>
         <y>53</y>
         <width>221</width>
         <height>26</height>
@@ -1037,6 +1036,19 @@ p, li { white-space: pre-wrap; }
         <string>mpserver13.flightgear.org</string>
        </property>
       </item>
+     </widget>
+     <widget class="QCheckBox" name="enableAITraffic">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>28</y>
+        <width>201</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Enable AI traffic</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_6">
@@ -1246,27 +1258,34 @@ p, li { white-space: pre-wrap; }
     <property name="openExternalLinks">
      <bool>true</bool>
     </property>
+    <property name="textInteractionFlags">
+     <set>Qt::TextBrowserInteraction</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="fgx_logo">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>581</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../../originaldateien/logo-version-release22.png</pixmap>
+    </property>
+    <property name="margin">
+     <number>10</number>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>566</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuAbout">
-    <property name="title">
-     <string>About</string>
-    </property>
-    <addaction name="actionAbout_FGX"/>
-    <addaction name="actionAbout_FlightGear"/>
-   </widget>
-   <addaction name="menuAbout"/>
-  </widget>
   <action name="actionAbout_FGX">
    <property name="text">
     <string>About FGX</string>

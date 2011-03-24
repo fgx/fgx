@@ -19,6 +19,8 @@
 #include <QFileDialog>
 #include <QDirIterator>
 #include <QXmlStreamReader>
+#include <QProgressDialog>
+#include <QTimer>
 
 
 fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
@@ -29,9 +31,13 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	on_useMetar_clicked();
 	on_setTime_clicked();
 	checkCoords();
-	checkScenery();
-	//on_airCraft_activated();
 	
+	checkAirportlist();
+	listchecked = true;
+	
+	checkScenery();
+	checkAircraftImage();
+
 	
 	// Setting some defaults in case
 	
@@ -47,8 +53,6 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	ps.setProcessChannelMode(QProcess::MergedChannels);
 	
 	}
-
-
 
 
 fgx::~fgx(){
@@ -249,7 +253,12 @@ void fgx::on_fgStart_clicked() {
 		content.append(" --fg-root=");
 		content.append(argfgdatapath);
 		
+		if (usecustomScenery->isChecked() == true) {
+		
 		content.append(" --fg-scenery=$HOME/Documents/TerrasyncScenery:/Scenery/");
+		} else {
+			content.append(" --fg-scenery=/Scenery");
+		}
 		
 		if (useTerraSync->isChecked() == true) {
 			QString argatlas = " --atlas=socket,out,5,localhost,5505,udp";
@@ -332,6 +341,15 @@ void fgx::on_fgStart_clicked() {
 		else {
 			content.append(" --disable-real-weather-fetch");
 		}
+		
+		if (enableAITraffic->isChecked() == true) {
+			content.append(" --enable-ai-traffic");
+		}
+		else {
+			content.append(" --disable-ai-traffic");
+		}
+		
+		content.append(" --enable-ai-models");
 		
 		if (useMetar->isChecked() == true) {
 			content.append(" --metar=");
@@ -435,6 +453,12 @@ void fgx::writeSettings()
 		settings.setValue("enableMultiplayer", "true");
 	}	else {
 		settings.setValue("enableMultiplayer", "false");
+	}
+	
+	if (enableAITraffic->isChecked() == true) {
+		settings.setValue("enableAITraffic", "true");
+	}	else {
+		settings.setValue("enableAITraffic", "false");
 	}
 	
 	if (disableSplashScreen->isChecked() == true) {
@@ -554,6 +578,13 @@ void fgx::readSettings()
 		enableMultiplayer->setCheckState(Qt::Checked);
 	} else {
 		enableMultiplayer->setCheckState(Qt::Unchecked);
+	}
+	
+	QString enableAITrafficSet = settings.value("enableAITraffic").toString();
+	if (enableAITrafficSet == "true") {
+		enableAITraffic->setCheckState(Qt::Checked);
+	} else {
+		enableAITraffic->setCheckState(Qt::Unchecked);
 	}
 	
 	QString disableSplashScreenSet = settings.value("disableSplashScreen").toString();
@@ -711,7 +742,7 @@ void fgx::on_locationIcao_activated() {
 void fgx::on_useFGXfgfs_clicked() {
 	checkFGFS();
 	checkScenery();
-	//on_airCraft_activated();
+
 }
 
 void fgx::on_tabs_currentChanged() {
@@ -721,7 +752,7 @@ void fgx::on_tabs_currentChanged() {
 
 
 // Check aircraft image
-void fgx::on_airCraft_activated() {
+void fgx::checkAircraftImage() {
 	
 	if (useFGXfgfs->isChecked() == true) {
 	
@@ -759,10 +790,11 @@ void fgx::on_airCraft_activated() {
 			
 		}
 	}
-	
-	
-
 			
+}
+
+void fgx::on_airCraft_activated() {
+	checkAircraftImage();
 }
 
 
@@ -800,10 +832,13 @@ void fgx::on_enableMultiplayer_clicked() {
 		pathMultiplayerOut->setEnabled(false);
 		callSign->setEnabled(false);
 		multiplayerPort->setEnabled(false);
+		enableAITraffic->setEnabled(true);
 	} else {
 		pathMultiplayerOut->setEnabled(true);
 		callSign->setEnabled(true);
 		multiplayerPort->setEnabled(true);
+		enableAITraffic->setEnabled(false);
+		enableAITraffic->setCheckState(Qt::Checked);
 	}
 }
 
@@ -910,9 +945,51 @@ void fgx::on_usecustomScenery_clicked() {
 	locationIcao->clear();
 	runWay->clear();
 	parkPosition->clear();
+	checkAirportlist();
 	checkScenery();
+
 }
+
+void fgx::checkAirportlist() {
 	
+	QString directory;
+
+	if (usecustomScenery->isChecked() == true) {
+		directory = QDir::homePath();
+		directory.append("/Documents/TerrasyncScenery/Airports");
+	}	else {
+		directory = fgdataPath->text();
+		directory.append("/Scenery/Airports");
+	}
+
+	QStringList files;
+
+
+	
+	QDirIterator it(directory, QDirIterator::Subdirectories);
+	while (it.hasNext()) {
+		files << it.next();
+		}
+		
+	// filters Stringlist for Airport entries containing "threshold"
+		
+	QStringList filtered;
+	filtered = files.filter(QRegExp("threshold.xml"));
+		
+	// filter path Strings in Stringlist to get a valid airport name
+		
+	filtered.replaceInStrings(".threshold.xml", "");
+	filtered.replaceInStrings(directory, "");
+	filtered.replaceInStrings(QRegExp("......."), "");
+		
+	//removing duplicates
+	filtered.removeDuplicates();
+		
+	// add to list
+	locationIcao->addItems(filtered);
+
+	listchecked = true;
+}
 
 // Check for scenery, runways and parkposition
 
@@ -924,39 +1001,20 @@ void fgx::checkScenery() {
 	QString directory;
 	
 	if (usecustomScenery->isChecked() == true) {
-		//directory = fgdataPath->text();
-		directory.append("/Documents/TerrasyncScenery/Scenery/Airports");
+		directory = QDir::homePath();
+		directory.append("/Documents/TerrasyncScenery/Airports");
 	}	else {
 		directory = fgdataPath->text();
 		directory.append("/Scenery/Airports");
 	}
 	
-	
-	
 	QStringList files;
 	
-	QDirIterator it(directory, QDirIterator::Subdirectories);
-	while (it.hasNext()) {
-			files << it.next();
-	}
 	
-	// filters Stringlist for Airport entries containing "threshold"
-	
-	QStringList filtered;
-	
-	filtered = files.filter(QRegExp("hold"));
-	
-	// filter path Strings in Stringlist to get a valid airport name
-	
-	filtered.replaceInStrings(".threshold.xml", "");
-	filtered.replaceInStrings(directory, "");
-	filtered.replaceInStrings(QRegExp("......."), "");
-	
-	//removing duplicates
-	filtered.removeDuplicates();
-	
-	// add to list
-	locationIcao->addItems(filtered);
+	if (listchecked != true) {
+		
+		checkAirportlist();
+		}
 	
 	
 	QString letters = locationIcao->currentText();
@@ -1000,7 +1058,12 @@ void fgx::checkScenery() {
 
 		
 		QString ppfilepath;
+		
+		if (usecustomScenery->isChecked() == true) {
+			ppfilepath = directory.replace("threshold", "groundnet");
+		} else {
 		ppfilepath = directory.replace("threshold", "parking");
+		}
 		
 		QFile ppfile(ppfilepath);
 		

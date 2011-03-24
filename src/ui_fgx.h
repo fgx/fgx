@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'fgx.ui'
 **
-** Created: Wed Mar 23 00:34:47 2011
+** Created: Thu Mar 24 15:30:11 2011
 **      by: Qt User Interface Compiler version 4.7.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -20,8 +20,6 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QMainWindow>
-#include <QtGui/QMenu>
-#include <QtGui/QMenuBar>
 #include <QtGui/QPlainTextEdit>
 #include <QtGui/QPushButton>
 #include <QtGui/QStatusBar>
@@ -38,7 +36,7 @@ public:
     QWidget *centralwidget;
     QPushButton *fgStart;
     QTabWidget *tabs;
-    QWidget *tab_3;
+    QWidget *toptab;
     QLineEdit *fgfsPath;
     QLabel *label;
     QLabel *label_2;
@@ -87,9 +85,8 @@ public:
     QLineEdit *minute;
     QLineEdit *hour;
     QLabel *label_date_2;
-    QLabel *label_4;
     QTabWidget *tabWidget;
-    QWidget *tab_8;
+    QWidget *bottomtab;
     QLabel *label_Multiplayerserver;
     QLabel *label_Multiplayerserver_2;
     QLineEdit *callSign;
@@ -99,6 +96,7 @@ public:
     QLabel *label_8;
     QCheckBox *enableMultiplayer;
     QComboBox *pathMultiplayerOut;
+    QCheckBox *enableAITraffic;
     QWidget *tab_6;
     QCheckBox *enableFGCom;
     QLineEdit *fgcomShell;
@@ -113,15 +111,16 @@ public:
     QPlainTextEdit *commandLine;
     QLabel *label_loglevel_2;
     QLabel *label_9;
+    QLabel *fgx_logo;
     QStatusBar *statusbar;
-    QMenuBar *menubar;
-    QMenu *menuAbout;
 
     void setupUi(QMainWindow *mainWindow)
     {
         if (mainWindow->objectName().isEmpty())
             mainWindow->setObjectName(QString::fromUtf8("mainWindow"));
-        mainWindow->resize(566, 669);
+        mainWindow->resize(566, 649);
+        mainWindow->setAutoFillBackground(false);
+        mainWindow->setStyleSheet(QString::fromUtf8(""));
         mainWindow->setTabShape(QTabWidget::Rounded);
         actionAbout_FGX = new QAction(mainWindow);
         actionAbout_FGX->setObjectName(QString::fromUtf8("actionAbout_FGX"));
@@ -135,42 +134,44 @@ public:
         tabs = new QTabWidget(centralwidget);
         tabs->setObjectName(QString::fromUtf8("tabs"));
         tabs->setGeometry(QRect(20, 75, 521, 281));
+        tabs->setAutoFillBackground(true);
+        tabs->setStyleSheet(QString::fromUtf8(""));
         tabs->setTabShape(QTabWidget::Triangular);
         tabs->setUsesScrollButtons(false);
         tabs->setDocumentMode(false);
         tabs->setTabsClosable(false);
         tabs->setMovable(false);
-        tab_3 = new QWidget();
-        tab_3->setObjectName(QString::fromUtf8("tab_3"));
-        fgfsPath = new QLineEdit(tab_3);
+        toptab = new QWidget();
+        toptab->setObjectName(QString::fromUtf8("toptab"));
+        fgfsPath = new QLineEdit(toptab);
         fgfsPath->setObjectName(QString::fromUtf8("fgfsPath"));
         fgfsPath->setGeometry(QRect(20, 55, 351, 22));
-        label = new QLabel(tab_3);
+        label = new QLabel(toptab);
         label->setObjectName(QString::fromUtf8("label"));
         label->setGeometry(QRect(20, 35, 301, 16));
-        label_2 = new QLabel(tab_3);
+        label_2 = new QLabel(toptab);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         label_2->setGeometry(QRect(20, 95, 241, 16));
-        fgdataPath = new QLineEdit(tab_3);
+        fgdataPath = new QLineEdit(toptab);
         fgdataPath->setObjectName(QString::fromUtf8("fgdataPath"));
         fgdataPath->setGeometry(QRect(20, 115, 351, 22));
-        set_fgdata_path_Button = new QPushButton(tab_3);
+        set_fgdata_path_Button = new QPushButton(toptab);
         set_fgdata_path_Button->setObjectName(QString::fromUtf8("set_fgdata_path_Button"));
         set_fgdata_path_Button->setGeometry(QRect(390, 110, 114, 32));
-        label_3 = new QLabel(tab_3);
+        label_3 = new QLabel(toptab);
         label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setGeometry(QRect(20, 140, 311, 16));
-        useTerraSync = new QCheckBox(tab_3);
+        useTerraSync = new QCheckBox(toptab);
         useTerraSync->setObjectName(QString::fromUtf8("useTerraSync"));
         useTerraSync->setGeometry(QRect(19, 215, 321, 20));
-        useFGXfgfs = new QCheckBox(tab_3);
+        useFGXfgfs = new QCheckBox(toptab);
         useFGXfgfs->setObjectName(QString::fromUtf8("useFGXfgfs"));
         useFGXfgfs->setGeometry(QRect(395, 55, 101, 20));
         useFGXfgfs->setChecked(true);
-        label_10 = new QLabel(tab_3);
+        label_10 = new QLabel(toptab);
         label_10->setObjectName(QString::fromUtf8("label_10"));
         label_10->setGeometry(QRect(20, 195, 241, 16));
-        tabs->addTab(tab_3, QString());
+        tabs->addTab(toptab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QString::fromUtf8("tab_2"));
         labelWindow = new QLabel(tab_2);
@@ -309,47 +310,47 @@ public:
         label_date_2->setObjectName(QString::fromUtf8("label_date_2"));
         label_date_2->setGeometry(QRect(20, 154, 31, 16));
         tabs->addTab(tab_5, QString());
-        label_4 = new QLabel(centralwidget);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setGeometry(QRect(10, 10, 511, 51));
-        label_4->setPixmap(QPixmap(QString::fromUtf8("../../originaldateien/logo-version.png")));
         tabWidget = new QTabWidget(centralwidget);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
         tabWidget->setGeometry(QRect(20, 375, 521, 191));
-        tab_8 = new QWidget();
-        tab_8->setObjectName(QString::fromUtf8("tab_8"));
-        label_Multiplayerserver = new QLabel(tab_8);
+        tabWidget->setStyleSheet(QString::fromUtf8(""));
+        bottomtab = new QWidget();
+        bottomtab->setObjectName(QString::fromUtf8("bottomtab"));
+        label_Multiplayerserver = new QLabel(bottomtab);
         label_Multiplayerserver->setObjectName(QString::fromUtf8("label_Multiplayerserver"));
         label_Multiplayerserver->setGeometry(QRect(230, 30, 141, 16));
-        label_Multiplayerserver_2 = new QLabel(tab_8);
+        label_Multiplayerserver_2 = new QLabel(bottomtab);
         label_Multiplayerserver_2->setObjectName(QString::fromUtf8("label_Multiplayerserver_2"));
-        label_Multiplayerserver_2->setGeometry(QRect(30, 90, 141, 16));
-        callSign = new QLineEdit(tab_8);
+        label_Multiplayerserver_2->setGeometry(QRect(20, 90, 141, 16));
+        callSign = new QLineEdit(bottomtab);
         callSign->setObjectName(QString::fromUtf8("callSign"));
-        callSign->setGeometry(QRect(30, 115, 113, 22));
+        callSign->setGeometry(QRect(20, 115, 113, 22));
         callSign->setMaxLength(7);
         callSign->setReadOnly(false);
-        label_7 = new QLabel(tab_8);
+        label_7 = new QLabel(bottomtab);
         label_7->setObjectName(QString::fromUtf8("label_7"));
-        label_7->setGeometry(QRect(30, 140, 311, 16));
-        label_Multiplayerserver_3 = new QLabel(tab_8);
+        label_7->setGeometry(QRect(20, 140, 311, 16));
+        label_Multiplayerserver_3 = new QLabel(bottomtab);
         label_Multiplayerserver_3->setObjectName(QString::fromUtf8("label_Multiplayerserver_3"));
         label_Multiplayerserver_3->setGeometry(QRect(230, 90, 141, 16));
-        multiplayerPort = new QLineEdit(tab_8);
+        multiplayerPort = new QLineEdit(bottomtab);
         multiplayerPort->setObjectName(QString::fromUtf8("multiplayerPort"));
         multiplayerPort->setGeometry(QRect(230, 115, 81, 22));
         multiplayerPort->setReadOnly(false);
-        label_8 = new QLabel(tab_8);
+        label_8 = new QLabel(bottomtab);
         label_8->setObjectName(QString::fromUtf8("label_8"));
         label_8->setGeometry(QRect(230, 140, 311, 16));
-        enableMultiplayer = new QCheckBox(tab_8);
+        enableMultiplayer = new QCheckBox(bottomtab);
         enableMultiplayer->setObjectName(QString::fromUtf8("enableMultiplayer"));
-        enableMultiplayer->setGeometry(QRect(30, 55, 181, 20));
-        pathMultiplayerOut = new QComboBox(tab_8);
+        enableMultiplayer->setGeometry(QRect(20, 55, 181, 20));
+        pathMultiplayerOut = new QComboBox(bottomtab);
         pathMultiplayerOut->setObjectName(QString::fromUtf8("pathMultiplayerOut"));
-        pathMultiplayerOut->setGeometry(QRect(230, 53, 221, 26));
+        pathMultiplayerOut->setGeometry(QRect(227, 53, 221, 26));
         pathMultiplayerOut->setEditable(true);
-        tabWidget->addTab(tab_8, QString());
+        enableAITraffic = new QCheckBox(bottomtab);
+        enableAITraffic->setObjectName(QString::fromUtf8("enableAITraffic"));
+        enableAITraffic->setGeometry(QRect(20, 28, 201, 20));
+        tabWidget->addTab(bottomtab, QString());
         tab_6 = new QWidget();
         tab_6->setObjectName(QString::fromUtf8("tab_6"));
         enableFGCom = new QCheckBox(tab_6);
@@ -394,20 +395,17 @@ public:
         label_9->setObjectName(QString::fromUtf8("label_9"));
         label_9->setGeometry(QRect(170, 590, 371, 20));
         label_9->setOpenExternalLinks(true);
+        label_9->setTextInteractionFlags(Qt::TextBrowserInteraction);
+        fgx_logo = new QLabel(centralwidget);
+        fgx_logo->setObjectName(QString::fromUtf8("fgx_logo"));
+        fgx_logo->setGeometry(QRect(0, 0, 581, 61));
+        fgx_logo->setStyleSheet(QString::fromUtf8(""));
+        fgx_logo->setPixmap(QPixmap(QString::fromUtf8("../../originaldateien/logo-version-release22.png")));
+        fgx_logo->setMargin(10);
         mainWindow->setCentralWidget(centralwidget);
         statusbar = new QStatusBar(mainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
         mainWindow->setStatusBar(statusbar);
-        menubar = new QMenuBar(mainWindow);
-        menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 566, 22));
-        menuAbout = new QMenu(menubar);
-        menuAbout->setObjectName(QString::fromUtf8("menuAbout"));
-        mainWindow->setMenuBar(menubar);
-
-        menubar->addAction(menuAbout->menuAction());
-        menuAbout->addAction(actionAbout_FGX);
-        menuAbout->addAction(actionAbout_FlightGear);
 
         retranslateUi(mainWindow);
 
@@ -467,7 +465,7 @@ public:
 #endif // QT_NO_TOOLTIP
         useFGXfgfs->setText(QApplication::translate("mainWindow", "built-in", 0, QApplication::UnicodeUTF8));
         label_10->setText(QApplication::translate("mainWindow", "Custom scenery", 0, QApplication::UnicodeUTF8));
-        tabs->setTabText(tabs->indexOf(tab_3), QApplication::translate("mainWindow", "Paths and Programs", 0, QApplication::UnicodeUTF8));
+        tabs->setTabText(tabs->indexOf(toptab), QApplication::translate("mainWindow", "Paths and Programs", 0, QApplication::UnicodeUTF8));
         labelWindow->setText(QApplication::translate("mainWindow", "Window size", 0, QApplication::UnicodeUTF8));
         screenSize->clear();
         screenSize->insertItems(0, QStringList()
@@ -531,7 +529,6 @@ public:
         hour->setText(QApplication::translate("mainWindow", "hh", 0, QApplication::UnicodeUTF8));
         label_date_2->setText(QApplication::translate("mainWindow", "Time", 0, QApplication::UnicodeUTF8));
         tabs->setTabText(tabs->indexOf(tab_5), QApplication::translate("mainWindow", "Time and Weather", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QString());
         label_Multiplayerserver->setText(QApplication::translate("mainWindow", "Multiplayer server", 0, QApplication::UnicodeUTF8));
         label_Multiplayerserver_2->setText(QApplication::translate("mainWindow", "Your Callsign", 0, QApplication::UnicodeUTF8));
         callSign->setText(QString());
@@ -563,7 +560,8 @@ public:
          << QApplication::translate("mainWindow", "mpserver12.flightgear.org", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("mainWindow", "mpserver13.flightgear.org", 0, QApplication::UnicodeUTF8)
         );
-        tabWidget->setTabText(tabWidget->indexOf(tab_8), QApplication::translate("mainWindow", "Multiplayer", 0, QApplication::UnicodeUTF8));
+        enableAITraffic->setText(QApplication::translate("mainWindow", "Enable AI traffic", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(bottomtab), QApplication::translate("mainWindow", "Multiplayer", 0, QApplication::UnicodeUTF8));
         enableFGCom->setText(QApplication::translate("mainWindow", "Enable FGCom", 0, QApplication::UnicodeUTF8));
         fgcomShell->setText(QApplication::translate("mainWindow", "fgcom -Sfgcom.flightgear.org.uk", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("mainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -598,7 +596,7 @@ public:
 "</style></head><body style=\" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9pt; font-weight:600; color:#717171;\">FGX</span><span style=\" font-size:9pt; color:#717171;\"> \302\251 2011 Gral aka Yves Sablonier, Zurich //  </span><a href=\"http://www.gnu.org/licenses/gpl-2.0.txt\"><span style=\" font-size:9pt; text-decoration: underline; color:#0000ff;\">GPL2</span></a><span style=\" font-size:9pt; color:#717171;\"> // </span><a href=\"http://wiki.flightgear.org\"><span style=\" font-size:9pt; text-decoration: underline; color:#0000ff;\">FlightGear</span></a><span style=\" font-size:9pt; color:#717171;\"> l"
                         "auncher for OSX</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        menuAbout->setTitle(QApplication::translate("mainWindow", "About", 0, QApplication::UnicodeUTF8));
+        fgx_logo->setText(QString());
     } // retranslateUi
 
 };

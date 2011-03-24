@@ -25,7 +25,7 @@ protected:
 public:
 	fgx (QMainWindow *parent = 0);
 	~fgx();
-	bool terrasync;
+	bool listchecked;
 	
 
 	
@@ -52,6 +52,8 @@ private:
 	void on_tabs_currentChanged();
 	void on_usecustomScenery_clicked();
 	void on_airCraft_activated();
+	void checkAirportlist();
+	void checkAircraftImage();
 	
 };
 
