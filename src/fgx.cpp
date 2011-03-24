@@ -32,11 +32,6 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	on_setTime_clicked();
 	checkCoords();
 	
-	checkAirportlist();
-	listchecked = true;
-	
-	checkScenery();
-	checkAircraftImage();
 
 	
 	// Setting some defaults in case
@@ -49,6 +44,26 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 		multiplayerPort->setText("5000");
 	}
 	
+	QDir fgdatadir(fgdataPath->text());
+	
+	if (fgdatadir.exists() == false || fgfsPath->text() == "" || useFGXfgfs->isChecked() == true) {
+			QString fgdataPathGet = QDir::currentPath();
+			fgdataPathGet.append("/fgx.app/Contents/Resources/fgx-fgdata");
+			fgdataPath->setText(fgdataPathGet);
+			QString fgfsPathGet = QDir::currentPath();
+			fgfsPathGet.append("/fgx.app/Contents/MacOS");
+			fgfsPath->setText(fgfsPathGet);
+			useFGXfgfs->setCheckState(Qt::Checked);
+	}
+	
+	// startup checks
+	checkAirportlist();
+	checkAircraftListStartup();
+	
+	listchecked = true;
+	
+	checkScenery();
+	checkAircraftImage();
 	
 	ps.setProcessChannelMode(QProcess::MergedChannels);
 	
@@ -59,33 +74,6 @@ fgx::~fgx(){
 	
 	}
 
-
-// refresh Aircraft List after setting fgdata path
-
-void fgx::on_set_fgdata_path_Button_clicked() {
-	
-	QStringList str_list;
-	
-	QString aircraftPath = fgdataPath->text();
-	aircraftPath.append("/Aircraft");
-	QDir aircraftDir(aircraftPath);
-	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
-	
-	QStringList entries = aircraftDir.entryList();
-	
-	for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
-		
-		{
-			// Filter out default dir names, should be a QDir name filter?
-			if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
-				str_list << *entry;
-			}
-		}
-	
-	airCraft->clear();
-	airCraft->addItems(str_list);
-	
-}
 
 // Start FlightGear
 
@@ -179,21 +167,8 @@ void fgx::on_fgStart_clicked() {
 	
     QFile file(fgStartfilename);
 	
-	QString argexeroot;
-	QString argfgfspath;
-	QString argfgdatapath;
-	
-	if (useFGXfgfs->isChecked() == true) {
-		argexeroot = QDir::currentPath();
-		argfgfspath.append(argexeroot);
-		argfgfspath.append("/fgx.app/Contents/MacOS");
-		argfgdatapath.append(argexeroot);
-		argfgdatapath.append("/fgx.app/Contents/Resources/fgx-fgdata");
-	}	else {
-		argfgfspath = fgfsPath->text();
-		argfgdatapath = fgdataPath->text();
-	}
-	
+	QString argfgfspath = fgfsPath->text();
+	QString argfgdatapath = fgdataPath->text();
 	
 	QString argmultiplayerpathout = pathMultiplayerOut->currentText();
 	QString	argmultiplayerport = multiplayerPort->text();
@@ -254,10 +229,13 @@ void fgx::on_fgStart_clicked() {
 		content.append(argfgdatapath);
 		
 		if (usecustomScenery->isChecked() == true) {
-		
-		content.append(" --fg-scenery=$HOME/Documents/TerrasyncScenery:/Scenery/");
+			content.append(" --fg-scenery=$HOME/Documents/TerrasyncScenery:");
+			content.append(argfgdatapath);
+			content.append("/Scenery/");
 		} else {
-			content.append(" --fg-scenery=/Scenery");
+			content.append(" --fg-scenery=");
+			content.append(argfgdatapath);
+			content.append("/Scenery/");
 		}
 		
 		if (useTerraSync->isChecked() == true) {
@@ -608,9 +586,17 @@ void fgx::readSettings()
 	QString multiplayerPortSet = settings.value("multiplayerPort").toString();
 	multiplayerPort->setText(multiplayerPortSet);
 	
-	QString locationICAOSet = settings.value("locationIcao").toString();
-	locationIcao->insertItem(0, locationICAOSet);
-	locationIcao->insertItem(1, "----");
+	
+	if (settings.value("locationIcao").toString() != "") {
+		QString locationICAOSet = settings.value("locationIcao").toString();
+		locationIcao->insertItem(0, locationICAOSet);
+		locationIcao->insertItem(1, "----");
+	} else {
+		locationIcao->insertItem(0, "KSFO");
+		locationIcao->insertItem(1, "----");
+		timeoftheDay->setCurrentIndex(0);
+	}
+
 	
 	QString usecustomScenerySet = settings.value("usecustomScenery").toString();
 	if (usecustomScenerySet == "true") {
@@ -619,32 +605,16 @@ void fgx::readSettings()
 		usecustomScenery->setCheckState(Qt::Unchecked);
 	}
 	
-	QString airCraftSet = settings.value("airCraft").toString();
-	airCraft->insertItem(0, airCraftSet);
-	airCraft->insertItem(1, "----");
-	
-	// Get Aircraft List of Aircraft Directory
-	
-	QStringList str_list;
-	
-	QString aircraftPath = fgdataPath->text();
-	aircraftPath.append("/Aircraft");
-	QDir aircraftDir(aircraftPath);
-	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
-	
-	QStringList entries = aircraftDir.entryList();
-	
-	for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
-	
-	{
-	 //Filter out default dir names, should be a QDir name filter?
-		if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
-			str_list << *entry;
-		}
+	if (settings.value("airCraft").toString() != "") {
+		QString airCraftSet = settings.value("airCraft").toString();
+		airCraft->insertItem(0, airCraftSet);
+		airCraft->insertItem(1, "----");
+	} else {
+		airCraft->insertItem(0, "c172p");
+		airCraft->insertItem(1, "----");
+		timeoftheDay->setCurrentIndex(0);
 	}
-	
-	//airCraft->clear();
-	airCraft->addItems(str_list);
+
 	
 	QString useCoordinatesSet = settings.value("useCoordinates").toString();
 	if (useCoordinatesSet == "true") {
@@ -704,23 +674,42 @@ void fgx::readSettings()
 	QString metarTextSet = settings.value("metarText").toString();
 	metarText->setPlainText(metarTextSet);
 	
-	QString screenSizeSet = settings.value("screenSize").toString();
-	screenSize->insertItem(0, screenSizeSet);
-	screenSize->insertItem(1, "----");
-	screenSize->setCurrentIndex(0);
+	if (settings.value("screenSize").toString() != "") {
+		QString screenSizeSet = settings.value("screenSize").toString();
+		screenSize->insertItem(0, screenSizeSet);
+		screenSize->insertItem(1, "----");
+		screenSize->setCurrentIndex(0);
+	} else {
+		screenSize->insertItem(0, "1024x768");
+		screenSize->insertItem(1, "----");
+		screenSize->setCurrentIndex(0);
+	}
 	
-	QString timeoftheDaySet = settings.value("timeoftheDay").toString();
-	timeoftheDay->insertItem(0, timeoftheDaySet);
-	timeoftheDay->insertItem(1, "----");
-	timeoftheDay->setCurrentIndex(0);
+	if ( settings.value("timeoftheDay").toString() != "") {
+		QString timeoftheDaySet = settings.value("timeoftheDay").toString();
+		timeoftheDay->insertItem(0, timeoftheDaySet);
+		timeoftheDay->insertItem(1, "----");
+		timeoftheDay->setCurrentIndex(0);
+	} else {
+		timeoftheDay->insertItem(0, "real");
+		timeoftheDay->insertItem(1, "----");
+		timeoftheDay->setCurrentIndex(0);
+	}
+		
 	
 	QString commandLineSet = settings.value("commandLine").toString();
 	commandLine->setPlainText(commandLineSet);
 	
-	QString logLevelSet = settings.value("logLevel").toString();
-	logLevel->insertItem(0, logLevelSet);
-	logLevel->insertItem(1, "----");
-	logLevel->setCurrentIndex(0);
+	if (settings.value("logLevel").toString() != "") {
+		QString logLevelSet = settings.value("logLevel").toString();
+		logLevel->insertItem(0, logLevelSet);
+		logLevel->insertItem(1, "----");
+		logLevel->setCurrentIndex(0);
+	} else {
+		logLevel->insertItem(0, "warn");
+		logLevel->insertItem(1, "----");
+		timeoftheDay->setCurrentIndex(0);
+		}
 	
 	QString enableLogSet = settings.value("enableLog").toString();
 	if (enableLogSet == "true") {
@@ -742,12 +731,79 @@ void fgx::on_locationIcao_activated() {
 void fgx::on_useFGXfgfs_clicked() {
 	checkFGFS();
 	checkScenery();
+	
+	if (useFGXfgfs->isChecked() == true) {
+		QString fgdataPathGet = QDir::currentPath();
+		fgdataPathGet.append("/fgx.app/Contents/Resources/fgx-fgdata");
+		fgdataPath->setText(fgdataPathGet);
+		QString fgfsPathGet = QDir::currentPath();
+		fgfsPathGet.append("/fgx.app/Contents/MacOS");
+		fgfsPath->setText(fgfsPathGet);
+	}
+	
+	checkAircraftList();
+	checkAircraftImage();
 
+}
+
+// refresh Aircraft List after setting fgdata path
+
+void fgx::on_set_fgdata_path_Button_clicked() {
+	checkAircraftList();
+}
+
+void fgx::checkAircraftListStartup() {
+	
+	QStringList str_list;
+	
+	QString aircraftPath = fgdataPath->text();
+	aircraftPath.append("/Aircraft");
+	QDir aircraftDir(aircraftPath);
+	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+	
+	QStringList entries = aircraftDir.entryList();
+	
+	for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
+		
+	{
+		// Filter out default dir names, should be a QDir name filter?
+		if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
+			str_list << *entry;
+		}
+	}
+	
+	//airCraft->clear();
+	airCraft->addItems(str_list);
+	
+}
+
+void fgx::checkAircraftList() {
+	
+	QStringList str_list;
+	
+	QString aircraftPath = fgdataPath->text();
+	aircraftPath.append("/Aircraft");
+	QDir aircraftDir(aircraftPath);
+	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+	
+	QStringList entries = aircraftDir.entryList();
+	
+	for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
+		
+	{
+		// Filter out default dir names, should be a QDir name filter?
+		if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
+			str_list << *entry;
+		}
+	}
+	
+	airCraft->clear();
+	airCraft->addItems(str_list);
+	
 }
 
 void fgx::on_tabs_currentChanged() {
 	checkScenery();
-	//on_airCraft_activated();
 }
 
 
@@ -893,7 +949,6 @@ void fgx::checkFGFS() {
 	if (defaultstate == Qt::Checked) {
 		fgfsPath->setEnabled(false);
 		fgdataPath->setEnabled(false);
-		//fgdataPath->text
 	} else {
 		fgfsPath->setEnabled(true);
 		fgdataPath->setEnabled(true);
@@ -1069,9 +1124,13 @@ void fgx::checkScenery() {
 		
 		if (ppfile.exists() == false) {
 			if (usecustomScenery->isChecked() == true) {
-				sceneryCheck->setText("<font color=#ff0000 size=11px>Using Custom Scenery/Terrasync, currently no park positions avaiable.");
+				sceneryCheck->setText("<font color=#ff0000 size=11px>Using Custom Scenery data, currently no park positions avaiable.");
+				useParkPosition->setEnabled(false);
+				useParkPosition->setCheckState(Qt::Unchecked);
 			} else {
 				sceneryCheck->setText("<font color=#ff0000 size=11px>Using built-in Scenery, no park positions avaiable.");
+				useParkPosition->setEnabled(false);
+				useParkPosition->setCheckState(Qt::Unchecked);
 			}
 
 			
@@ -1105,6 +1164,7 @@ void fgx::checkScenery() {
 				parkPosition->clear();
 				parkPosition->addItems(ppList);
 				parkPosition->setEnabled(true);
+				useParkPosition->setEnabled(true);
 				
 				
 			}
@@ -1114,7 +1174,7 @@ void fgx::checkScenery() {
 			}
 			
 			if (usecustomScenery->isChecked() == true) {
-				sceneryCheck->setText("<font color=#ff0000 size=11px>Using custom scenery/terrasync</font>");
+				sceneryCheck->setText("<font color=#ff0000 size=11px>Using custom scenery data</font>");
 			} else
 			{sceneryCheck->setText("<font color=#ff0000 size=11px>Using built-in Scenery</font>");}
 		}
@@ -1125,13 +1185,6 @@ void fgx::checkScenery() {
 		runWay->setEnabled(false);
 		parkPosition->setEnabled(false);
 	}
-	
-	// Check for installed airports
-	
-
-
-		
-
 	
 }
 	

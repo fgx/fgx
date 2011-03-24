@@ -54,6 +54,8 @@ private:
 	void on_airCraft_activated();
 	void checkAirportlist();
 	void checkAircraftImage();
+	void checkAircraftListStartup();
+	void checkAircraftList();
 	
 };
 

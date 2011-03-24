@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'fgx.h'
 **
-** Created: Thu Mar 24 18:20:25 2011
+** Created: Fri Mar 25 00:00:50 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_fgx[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      19,   14, // methods
+      21,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -50,6 +50,8 @@ static const uint qt_meta_data_fgx[] = {
      372,    4,    4,    4, 0x08,
      396,    4,    4,    4, 0x08,
      415,    4,    4,    4, 0x08,
+     436,    4,    4,    4, 0x08,
+     463,    4,    4,    4, 0x08,
 
        0        // eod
 };
@@ -67,7 +69,8 @@ static const char qt_meta_stringdata_fgx[] = {
     "writeSettings()\0on_tabs_currentChanged()\0"
     "on_usecustomScenery_clicked()\0"
     "on_airCraft_activated()\0checkAirportlist()\0"
-    "checkAircraftImage()\0"
+    "checkAircraftImage()\0checkAircraftListStartup()\0"
+    "checkAircraftList()\0"
 };
 
 const QMetaObject fgx::staticMetaObject = {
@@ -120,9 +123,11 @@ int fgx::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 16: on_airCraft_activated(); break;
         case 17: checkAirportlist(); break;
         case 18: checkAircraftImage(); break;
+        case 19: checkAircraftListStartup(); break;
+        case 20: checkAircraftList(); break;
         default: ;
         }
-        _id -= 19;
+        _id -= 21;
     }
     return _id;
 }
