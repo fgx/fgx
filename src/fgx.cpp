@@ -13,7 +13,7 @@
 #include <iostream>
 #include <QTextStream>
 #include <QSettings>
-#include <QtGUI/QCloseEvent>
+#include <QtGui/QCloseEvent>
 #include <QAbstractSocket>
 #include <QHostInfo>
 #include <QFileDialog>
