@@ -40,6 +40,19 @@ QString XSettings::fg_root(QString append_path){
 }
 
 
+//===========================================================================
+//** Paths Sane
+//===========================================================================
+bool XSettings::paths_sane(){
+	if(!QFile::exists(fgfs_path())){
+		return false;
+	}
+	if(!QFile::exists(fg_root())){
+		return false;
+	}
+	return true;
+}
+
 
 //===========================================================================
 //** aircraft_path()

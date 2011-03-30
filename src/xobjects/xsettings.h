@@ -36,6 +36,8 @@ public:
 
 
 	int runningOS();
+	bool paths_sane();
+
 signals:
 
 public slots:

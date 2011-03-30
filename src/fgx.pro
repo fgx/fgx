@@ -10,10 +10,14 @@ QT += network
 # Input
 HEADERS += fgx.h \
     xobjects/xsettings.h \
-    settings/settingsdialog.h
+    settings/settingsdialog.h \
+    network/networkwidget.h \
+    network/mptelnet.h
 FORMS += fgx.ui
 SOURCES += main.cpp \
     fgx.cpp \
     xobjects/xsettings.cpp \
-    settings/settingsdialog.cpp
+    settings/settingsdialog.cpp \
+    network/networkwidget.cpp \
+    network/mptelnet.cpp
 RESOURCES += resources/icons.qrc

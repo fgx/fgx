@@ -35,7 +35,9 @@ private:
 	QProcess ps;
 	QProcess *fgProcess;
 	XSettings settings;
-	
+
+	QString start_fg_command();
+
 private slots:
 	void on_fgStart_clicked();
 	void on_set_fgdata_path_Button_clicked();
@@ -63,6 +65,9 @@ private slots:
 	void checkAircraftList();
 
 	void checkAirportlist();
+
+	void show_settings_dialog();
+	void on_buttonSettings_clicked();
 
 	void on_buttonTest_clicked();
 };
