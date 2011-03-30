@@ -36,7 +36,7 @@ private:
 	QProcess *fgProcess;
 	XSettings settings;
 
-	QString start_fg_command();
+	QStringList start_fg_args();
 
 private slots:
 	void on_fgStart_clicked();

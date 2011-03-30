@@ -23,7 +23,7 @@
 #include <QTimer>
 
 #include "settings/settingsdialog.h"
-
+#include "network/networkwidget.h"
 
 fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
@@ -83,8 +83,9 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 		show_settings_dialog();
 	}
 
-	//QLabel *foo = new QLabel("foo");
-	//ui->tabs->addTab(foo,"Foo");
+	NetworkWidget *networkWidget = new NetworkWidget(this);
+	tabs->addTab(networkWidget, "Network");
+
 } /* end constructor */
 
 fgx::~fgx(){
@@ -167,8 +168,12 @@ void fgx::on_fgStart_clicked() {
 		system("open -a Terminal.app ./FGCOM.sh");
 		
 	}
-	qDebug() << "COMMAND=" << start_fg_command();
-	QProcess fgProcess;
+	qDebug() << "COMMAND=" << start_fg_args();
+	//QProcess fgProcess;
+	int pid = 0;
+	bool start = QProcess::startDetached( settings.fgfs_path(), start_fg_args());//, pid);
+	qDebug() << "PID=" << pid << "=" << start;
+	/*
 	fgProcess.start(start_fg_command());
 	if(fgProcess.waitForStarted()){
 		fgProcess.waitForFinished();
@@ -177,16 +182,15 @@ void fgx::on_fgStart_clicked() {
 		qDebug() << "OK=" << ok_result;
 		qDebug() << "ERROR=" << error_result;
 	}
+	*/
 }
 
 
 //=======================================================================================================================
 // FlightGear Command String
 //=======================================================================================================================
-QString fgx::start_fg_command(){
+QStringList fgx::start_fg_args(){
 
-	QString argmultiplayerpathout = pathMultiplayerOut->currentText();
-	QString	argmultiplayerport = multiplayerPort->text();
 	
 	QString arglon = Longitude->text();
 	QString arglat = Latitude->text();
@@ -212,13 +216,13 @@ QString fgx::start_fg_command(){
 	argwritelog.append(argwritelogdir);
 	argwritelog = " &> fgfslog.log";
 	
-	QString command("");
+	QStringList args;
+	QString command;
 
-	//* fgfs exe
-	command.append(settings.fgfs_path());
+	//** WARNING - make sure there are no spaces in the args. Any args with spaces are quoted.
 
 	//* fg_root
-	command.append(" --fg-root=").append(settings.fg_root());
+	args << QString("--fg-root=").append(settings.fg_root());
 
 	//* Custom Scenery
 	/*
@@ -234,20 +238,20 @@ QString fgx::start_fg_command(){
 	*/
 	//* terrasync enabled
 	if (useTerraSync->isChecked()) {
-		command.append(" --atlas=socket,out,5,localhost,5505,udp");
+		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}
 		
 	//* FgCom enabled
 	if (enableFGCom->isChecked()) {
-		//command.append(" --generic=");
+		//command.append("--generic=");
 		//command.append("socket,out,10,localhost,%1,udp,fgcom").arg(portFGCOM->text());
 	}
 		
 	//** Multiplayer
 	if (enableMultiplayer->isChecked()) {
-		//command.append(" --multiplay=out,10,%1,%2").arg(argmultiplayerpathout).arg(argmultiplayerport);
+		//command.append("--multiplay=out,10,%1,%2").arg(argmultiplayerpathout).arg(argmultiplayerport);
 		/*
-		content.append(" --multiplay=in,10,");
+		content.append("--multiplay=in,10,");
 
 		system("ipconfig getifaddr en0 > ip.txt");
 			
@@ -272,51 +276,51 @@ QString fgx::start_fg_command(){
 
 	//* Callsign
 	if (callSign->text().trimmed().length() > 0) {
-		command.append(" --callsign=%a").arg(callSign->text());
+		args << QString("--callsign=%a").arg(callSign->text());
 	}
 
 	//* Aircraft
-	//command.append(" --aircraft=").append(airCraft->currentIndex());
+	//command.append("--aircraft=").append(airCraft->currentIndex());
 
 	//* Airport
-	command.append(" --airport=").append(locationIcao->currentText());
+	//args << QString("--airport=").append(locationIcao->currentText());
 
 	//* Runway
 	if (runWay->isEnabled()) {
-		command.append(" --runway=").append(runWay->currentText());
+		//args << QString("--runway=").append(runWay->currentText());
 	}
 
 	//* Park Position
 	if (parkPosition->isEnabled() == true) {
-		command.append(" --parkpos=").append(parkPosition->currentText());
+		args << QString("--parkpos=").append(parkPosition->currentText());
 	}
 
 	//* Coordinates
 	if (useCoordinates->isChecked()) {
-		command.append(" --lon=").append(arglon);
-		command.append(" --lat=").append(arglat);
+		args << QString("--lon=").append(arglon);
+		args << QString("--lat=").append(arglat);
 	}
 
 	//* Weather fetch
 	if (Weather->currentText() == "real") {
-		command.append(" --enable-real-weather-fetch");
+		args << QString("--enable-real-weather-fetch");
 	}else{
-		command.append(" --disable-real-weather-fetch");
+		args << QString("--disable-real-weather-fetch");
 	}
 
 	//* Ai Traffic
 	if (enableAITraffic->isChecked()) {
-		command.append(" --enable-ai-traffic");
+		args << QString("--enable-ai-traffic");
 	}else{
-		command.append(" --disable-ai-traffic");
+		args << QString("--disable-ai-traffic");
 	}
 
 	//* Enable AI models ???
-	command.append(" --enable-ai-models");
+	args << QString("--enable-ai-models");
 
 	//* Metar
 	if (useMetar->isChecked()) {
-		command.append(" --metar=");
+		command.append("--metar=");
 		QString metartoUse = metarText->toPlainText();
 		command.append("\"");
 		command.append(metartoUse);
@@ -336,29 +340,29 @@ QString fgx::start_fg_command(){
 	*/
 
 	//* Startup , Spalsh, Geometry
-	command.append(" --geometry=").append(screenSize->currentText());
+	args << QString("--geometry=").append(screenSize->currentText());
 	if (disableSplashScreen->isChecked()) {
-		command.append(" --disable-splash-screen");
+		args << QString("--disable-splash-screen");
 	}
 	if (useFullScreen->isChecked()) {
-		command.append(" --enable-fullscreen");
+		args << QString("--enable-fullscreen");
 	}
 
 
 	//*  Additonal **args - remove line endings in command line text field and add arguments
 	if (commandLine->toPlainText().trimmed().length() > 0) {
-		command.append(" ").append( commandLine->toPlainText().replace(QString("\n"), QString(" ")) );
+		args << QString(" ").append( commandLine->toPlainText().replace(QString("\n"), QString(" ")) );
 	}
 
 	//* Log Level
-	command.append(" --log-level=").append(logLevel->currentText());
+	args << QString("--log-level=").append(logLevel->currentText());
 
 
 	if (enableLog->isChecked() == true) {
-		command.append(argwritelog);
+		args << QString(argwritelog);
 	}
 
-	return command;
+	return args;
 }
 
 
@@ -1143,6 +1147,6 @@ void fgx::on_buttonSettings_clicked(){
 
 void fgx::on_buttonTest_clicked(){
 	qDebug() << "YES";
-	qDebug() << "CMD=" << start_fg_command();
+	qDebug() << "CMD=" << start_fg_args();
 }
 

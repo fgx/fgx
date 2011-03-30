@@ -40,7 +40,7 @@
        <string notr="true">padding: 10px; fint-family: monospace; font-size: 12pt; font-weight: bold; background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 white, stop: 1 #6095B6);</string>
       </property>
       <property name="text">
-       <string>FlightGear Launcher</string>
+       <string/>
       </property>
       <property name="pixmap">
        <pixmap>../../originaldateien/logo-version-release22.png</pixmap>
@@ -156,7 +156,7 @@ p, li { white-space: pre-wrap; }
             <property name="sizeHint" stdset="0">
              <size>
               <width>636</width>
-              <height>11</height>
+              <height>9</height>
              </size>
             </property>
            </spacer>
@@ -186,7 +186,7 @@ p, li { white-space: pre-wrap; }
             <property name="sizeHint" stdset="0">
              <size>
               <width>636</width>
-              <height>34</height>
+              <height>31</height>
              </size>
             </property>
            </spacer>
@@ -1079,6 +1079,10 @@ p, li { white-space: pre-wrap; }
          <widget class="QPushButton" name="fgStart">
           <property name="text">
            <string>Start FlightGear</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resources/icons.qrc">
+            <normaloff>:/icon/start</normaloff>:/icon/start</iconset>
           </property>
          </widget>
         </item>
