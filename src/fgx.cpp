@@ -24,7 +24,9 @@
 
 
 fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
+
 	setupUi(this);
+	settings.restoreWindow(this);
 
 	checkFGFS();
 	on_enableMultiplayer_clicked();
@@ -1189,18 +1191,13 @@ void fgx::checkScenery() {
 	}
 	
 }
-	
+
+
 // Write settings on close
-	
 void fgx::closeEvent(QCloseEvent *event)
 {
 	writeSettings();
-	settings.saveWindow()
+	settings.saveWindow(this);
 	event->accept();
 }
-
-
-
-// Qt Helper
-// QApplication::beep();
 

@@ -12,7 +12,8 @@
 
 #include <QProcess>
 #include <QMessageBox>
-#include <QSettings>
+
+#include "xobjects/xsettings.h"
 
 #include "ui_fgx.h"
 
@@ -33,7 +34,7 @@ private:
 	Ui::mainWindow *ui;
 	QProcess ps;
 	QProcess *fgProcess;
-	QSettings settings;
+	XSettings settings;
 	
 private slots:
 	void on_fgStart_clicked();
