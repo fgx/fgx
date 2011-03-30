@@ -42,7 +42,7 @@ private slots:
 	void checkFGFS();
 	void on_useFGXfgfs_clicked();
 	void on_enableMultiplayer_clicked();
-	void on_setTime_clicked();
+	void on_groupBoxSetTime_clicked();
 	void on_useMetar_clicked();
 	void on_useCoordinates_clicked();
 	void on_useParkPosition_clicked();

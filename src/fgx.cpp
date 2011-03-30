@@ -32,11 +32,12 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	settings.restoreWindow(this);
 
+	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 
 	checkFGFS();
 	on_enableMultiplayer_clicked();
 	on_useMetar_clicked();
-	on_setTime_clicked();
+	on_groupBoxSetTime_clicked();
 	checkCoords();
 	
 
@@ -353,7 +354,7 @@ void fgx::on_fgStart_clicked() {
 		}
 		
 		
-		if (setTime->isChecked() == true) {
+		if (groupBoxSetTime->isChecked() == true) {
 			content.append(" --start-date-lat=");
 			content.append(argtime);
 		} else {
@@ -493,7 +494,7 @@ void fgx::writeSettings()
 	settings.setValue("minute", minute->text());
 	settings.setValue("second", second->text());
 	
-	if (setTime->isChecked() == true) {
+	if (groupBoxSetTime->isChecked() == true) {
 		settings.setValue("setTime", "true");
 	}	else {
 		settings.setValue("setTime", "false");
@@ -622,11 +623,8 @@ void fgx::readSettings()
 	}
 
 	QString useCoordinatesSet = settings.value("useCoordinates").toString();
-	if (useCoordinatesSet == "true") {
-		useCoordinates->setCheckState(Qt::Checked);
-	} else {
-		useCoordinates->setCheckState(Qt::Unchecked);
-	}
+	useCoordinates->setChecked(useCoordinatesSet == "true");
+
 	
 	QString lonSet = settings.value("Longitude").toString();
 	Longitude->setText(lonSet);
@@ -657,9 +655,9 @@ void fgx::readSettings()
 	
 	QString setTimeSet = settings.value("setTime").toString();
 	if (setTimeSet == "true") {
-		setTime->setCheckState(Qt::Checked);
+		groupBoxSetTime->setChecked(true);
 	} else {
-		setTime->setCheckState(Qt::Unchecked);
+		groupBoxSetTime->setChecked(false);
 	}
 	
 	QString WeatherSet = settings.value("Weather").toString();
@@ -866,22 +864,12 @@ void fgx::on_airCraft_activated() {
 
 void fgx::on_useCoordinates_clicked() {
 	
-	Qt::CheckState coordstate;
-	
-	coordstate = useCoordinates->checkState();
-	if (coordstate == Qt::Checked) {
-		locationIcao->setEnabled(false);
-		runWay->setEnabled(false);
-		parkPosition->setEnabled(false);
-		Latitude->setEnabled(true);
-		Longitude->setEnabled(true);
-	} else {
-		locationIcao->setEnabled(true);
-		runWay->setEnabled(true);
-		parkPosition->setEnabled(true);
-		Latitude->setEnabled(false);
-		Longitude->setEnabled(false);
-	}
+	bool checked = useCoordinates->isChecked();
+	locationIcao->setEnabled(!checked);
+	runWay->setEnabled(!checked);
+	parkPosition->setEnabled(!checked);
+	//Latitude->setEnabled(checked);
+	//Longitude->setEnabled(true);
 }
 
 // Multiplayer checked
@@ -907,29 +895,16 @@ void fgx::on_enableMultiplayer_clicked() {
 }
 
 // Set Time checked
-
-void fgx::on_setTime_clicked() {
+void fgx::on_groupBoxSetTime_clicked() {
 	
-	Qt::CheckState timestate;
-	
-	timestate = setTime->checkState();
-	if (timestate == Qt::Checked) {
-		timeoftheDay->setEnabled(false);
-		year->setEnabled(true);
-		month->setEnabled(true);
-		day->setEnabled(true);
-		hour->setEnabled(true);
-		minute->setEnabled(true);
-		second->setEnabled(true);
-	} else {
-		timeoftheDay->setEnabled(true);
-		year->setEnabled(false);
-		month->setEnabled(false);
-		day->setEnabled(false);
-		hour->setEnabled(false);
-		minute->setEnabled(false);
-		second->setEnabled(false);
-	}
+	bool enabled  = groupBoxSetTime->isChecked();
+	timeoftheDay->setEnabled(!enabled);
+	year->setEnabled(enabled);
+	month->setEnabled(enabled);
+	day->setEnabled(enabled);
+	hour->setEnabled(enabled);
+	minute->setEnabled(enabled);
+	second->setEnabled(enabled);
 }
 
 // Metar checked
@@ -967,20 +942,11 @@ void fgx::checkFGFS() {
 // Check for coordinates enabled, disable ICAO, runway, park position
 void fgx::checkCoords() {
 	
-	Qt::CheckState coordstate;
-	
-	coordstate = useCoordinates->checkState();
-	if (coordstate == Qt::Checked) {
-		locationIcao->setEnabled(false);
-		runWay->setEnabled(false);
-		parkPosition->setEnabled(false);
-	} else {
-		locationIcao->setEnabled(true);
-		runWay->setEnabled(true);
-		parkPosition->setEnabled(true);
-		Latitude->setEnabled(false);
-		Longitude->setEnabled(false);
-	}
+	bool checked = useCoordinates->isChecked();
+	locationIcao->setEnabled(!checked);
+	runWay->setEnabled(!checked);
+	parkPosition->setEnabled(!checked);
+
 }
 
 // Check for using park position (needs runways disabled)

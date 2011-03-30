@@ -73,6 +73,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 	menuFgfs->addAction(actionFgfsAutoSelect);
 	actionFgfsAutoSelect->setText(tr("Autodetect"));
 	connect(actionFgfsAutoSelect, SIGNAL(triggered()), this, SLOT(on_fgfs_autodetect()));
+	actionFgfsAutoSelect->setVisible( settings.runningOS() != XSettings::WINDOWS );
 
 
 

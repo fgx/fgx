@@ -18,6 +18,8 @@ int main( int argc, char* argv[])
 	QApplication::setOrganizationName("fgx");
 	QApplication::setOrganizationDomain("fgx.gral.com");
 	QApplication::setApplicationName("FlightGear Starter OSX");
+	QApplication::setApplicationVersion("0.1");
+
 
 	fgx w;
 	w.show();

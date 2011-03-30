@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'fgx.ui'
 **
-** Created: Wed Mar 30 12:06:26 2011
+** Created: Wed Mar 30 13:58:46 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -16,14 +16,19 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QMainWindow>
 #include <QtGui/QPlainTextEdit>
 #include <QtGui/QPushButton>
+#include <QtGui/QSpacerItem>
 #include <QtGui/QStatusBar>
 #include <QtGui/QTabWidget>
+#include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -34,92 +39,120 @@ public:
     QAction *actionAbout_FGX;
     QAction *actionAbout_FlightGear;
     QWidget *centralwidget;
-    QPushButton *fgStart;
+    QVBoxLayout *verticalLayout;
+    QLabel *fgx_logo;
     QTabWidget *tabs;
     QWidget *toptab;
-    QLineEdit *fgfsPath;
+    QGridLayout *gridLayout_4;
     QLabel *label;
+    QLineEdit *fgfsPath;
+    QCheckBox *useFGXfgfs;
     QLabel *label_2;
     QLineEdit *fgdataPath;
     QPushButton *set_fgdata_path_Button;
-    QLabel *label_3;
-    QCheckBox *useTerraSync;
-    QCheckBox *useFGXfgfs;
+    QSpacerItem *verticalSpacer_5;
     QLabel *label_10;
+    QCheckBox *useTerraSync;
+    QSpacerItem *verticalSpacer_6;
+    QLabel *label_3;
     QWidget *tab_2;
+    QGridLayout *gridLayout_6;
     QLabel *labelWindow;
     QComboBox *screenSize;
     QCheckBox *disableSplashScreen;
     QCheckBox *useFullScreen;
+    QSpacerItem *verticalSpacer_7;
     QWidget *tab;
+    QGridLayout *gridLayout_7;
     QLabel *labelAircraft;
-    QComboBox *airCraft;
     QLabel *aircraftImage;
+    QComboBox *airCraft;
+    QSpacerItem *verticalSpacer_9;
+    QSpacerItem *verticalSpacer_8;
     QWidget *tab_4;
+    QGridLayout *gridLayout_9;
+    QCheckBox *usecustomScenery;
     QLabel *labelLocation;
     QComboBox *locationIcao;
+    QLabel *label_runway;
+    QComboBox *runWay;
+    QCheckBox *useParkPosition;
+    QSpacerItem *verticalSpacer_10;
+    QComboBox *parkPosition;
+    QLabel *sceneryCheck;
+    QSpacerItem *verticalSpacer_11;
+    QGroupBox *useCoordinates;
+    QGridLayout *gridLayout_8;
     QLabel *labelLatitude;
     QLabel *labelLongitude;
     QLineEdit *Latitude;
     QLineEdit *Longitude;
-    QLabel *label_runway;
-    QComboBox *runWay;
-    QComboBox *parkPosition;
-    QLabel *sceneryCheck;
-    QCheckBox *useCoordinates;
-    QCheckBox *useParkPosition;
-    QCheckBox *usecustomScenery;
     QWidget *tab_5;
-    QLabel *labelTime;
-    QComboBox *timeoftheDay;
-    QLabel *label_Weather;
-    QComboBox *Weather;
-    QPlainTextEdit *metarText;
-    QCheckBox *setTime;
-    QCheckBox *useMetar;
+    QGridLayout *gridLayout_5;
+    QGroupBox *groupBoxSetTime;
+    QGridLayout *gridLayout;
+    QLabel *label_date;
     QLineEdit *year;
     QLineEdit *month;
     QLineEdit *day;
-    QLabel *label_date;
-    QLineEdit *second;
-    QLineEdit *minute;
-    QLineEdit *hour;
     QLabel *label_date_2;
+    QLineEdit *hour;
+    QLineEdit *minute;
+    QLineEdit *second;
+    QGroupBox *groupBox;
+    QVBoxLayout *verticalLayout_3;
+    QComboBox *Weather;
+    QCheckBox *useMetar;
+    QPlainTextEdit *metarText;
+    QGroupBox *groupBoxTime;
+    QVBoxLayout *verticalLayout_2;
+    QComboBox *timeoftheDay;
+    QSpacerItem *horizontalSpacer;
+    QSpacerItem *verticalSpacer_3;
     QTabWidget *tabWidget;
     QWidget *bottomtab;
+    QGridLayout *gridLayout_2;
+    QCheckBox *enableAITraffic;
     QLabel *label_Multiplayerserver;
-    QLabel *label_Multiplayerserver_2;
-    QLineEdit *callSign;
-    QLabel *label_7;
-    QLabel *label_Multiplayerserver_3;
-    QLineEdit *multiplayerPort;
-    QLabel *label_8;
     QCheckBox *enableMultiplayer;
     QComboBox *pathMultiplayerOut;
-    QCheckBox *enableAITraffic;
-    QWidget *tab_6;
-    QCheckBox *enableFGCom;
-    QLineEdit *fgcomShell;
+    QLabel *label_Multiplayerserver_2;
+    QLabel *label_Multiplayerserver_3;
+    QLineEdit *callSign;
+    QLineEdit *multiplayerPort;
     QLabel *label_5;
-    QLabel *label_port;
-    QLineEdit *portFGCOM;
     QLabel *label_6;
+    QSpacerItem *verticalSpacer_4;
+    QWidget *tab_6;
+    QGridLayout *gridLayout_3;
+    QCheckBox *enableFGCom;
+    QLabel *label_4;
+    QLabel *label_port;
+    QLineEdit *fgcomShell;
+    QLineEdit *portFGCOM;
+    QLabel *lblDefaultFgComServer;
+    QLabel *labelDefaultFgComPort;
+    QSpacerItem *verticalSpacer;
     QWidget *tab_7;
-    QCheckBox *enableLog;
-    QComboBox *logLevel;
-    QLabel *label_loglevel;
-    QPlainTextEdit *commandLine;
+    QHBoxLayout *horizontalLayout_2;
+    QVBoxLayout *verticalLayout_5;
     QLabel *label_loglevel_2;
+    QPlainTextEdit *commandLine;
+    QVBoxLayout *verticalLayout_4;
+    QCheckBox *enableLog;
+    QLabel *label_loglevel;
+    QComboBox *logLevel;
+    QSpacerItem *verticalSpacer_2;
+    QHBoxLayout *horizontalLayout;
+    QPushButton *fgStart;
     QLabel *label_9;
-    QLabel *fgx_logo;
-    QPushButton *buttonTest;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *mainWindow)
     {
         if (mainWindow->objectName().isEmpty())
             mainWindow->setObjectName(QString::fromUtf8("mainWindow"));
-        mainWindow->resize(566, 649);
+        mainWindow->resize(792, 664);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/icon/favicon"), QSize(), QIcon::Normal, QIcon::Off);
         mainWindow->setWindowIcon(icon);
@@ -132,283 +165,517 @@ public:
         actionAbout_FlightGear->setObjectName(QString::fromUtf8("actionAbout_FlightGear"));
         centralwidget = new QWidget(mainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        fgStart = new QPushButton(centralwidget);
-        fgStart->setObjectName(QString::fromUtf8("fgStart"));
-        fgStart->setGeometry(QRect(20, 585, 131, 32));
+        verticalLayout = new QVBoxLayout(centralwidget);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        fgx_logo = new QLabel(centralwidget);
+        fgx_logo->setObjectName(QString::fromUtf8("fgx_logo"));
+        fgx_logo->setStyleSheet(QString::fromUtf8(""));
+        fgx_logo->setPixmap(QPixmap(QString::fromUtf8("../../originaldateien/logo-version-release22.png")));
+        fgx_logo->setMargin(10);
+
+        verticalLayout->addWidget(fgx_logo);
+
         tabs = new QTabWidget(centralwidget);
         tabs->setObjectName(QString::fromUtf8("tabs"));
-        tabs->setGeometry(QRect(20, 75, 521, 281));
         tabs->setAutoFillBackground(true);
         tabs->setStyleSheet(QString::fromUtf8(""));
-        tabs->setTabShape(QTabWidget::Triangular);
+        tabs->setTabShape(QTabWidget::Rounded);
         tabs->setUsesScrollButtons(false);
         tabs->setDocumentMode(false);
         tabs->setTabsClosable(false);
         tabs->setMovable(false);
         toptab = new QWidget();
         toptab->setObjectName(QString::fromUtf8("toptab"));
-        fgfsPath = new QLineEdit(toptab);
-        fgfsPath->setObjectName(QString::fromUtf8("fgfsPath"));
-        fgfsPath->setGeometry(QRect(20, 55, 351, 22));
+        gridLayout_4 = new QGridLayout(toptab);
+        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
         label = new QLabel(toptab);
         label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(20, 35, 301, 16));
-        label_2 = new QLabel(toptab);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(20, 95, 241, 16));
-        fgdataPath = new QLineEdit(toptab);
-        fgdataPath->setObjectName(QString::fromUtf8("fgdataPath"));
-        fgdataPath->setGeometry(QRect(20, 115, 351, 22));
-        set_fgdata_path_Button = new QPushButton(toptab);
-        set_fgdata_path_Button->setObjectName(QString::fromUtf8("set_fgdata_path_Button"));
-        set_fgdata_path_Button->setGeometry(QRect(390, 110, 114, 32));
-        label_3 = new QLabel(toptab);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setGeometry(QRect(20, 140, 311, 16));
-        useTerraSync = new QCheckBox(toptab);
-        useTerraSync->setObjectName(QString::fromUtf8("useTerraSync"));
-        useTerraSync->setGeometry(QRect(19, 215, 321, 20));
+
+        gridLayout_4->addWidget(label, 0, 0, 1, 1);
+
+        fgfsPath = new QLineEdit(toptab);
+        fgfsPath->setObjectName(QString::fromUtf8("fgfsPath"));
+
+        gridLayout_4->addWidget(fgfsPath, 1, 0, 1, 1);
+
         useFGXfgfs = new QCheckBox(toptab);
         useFGXfgfs->setObjectName(QString::fromUtf8("useFGXfgfs"));
-        useFGXfgfs->setGeometry(QRect(395, 55, 101, 20));
         useFGXfgfs->setChecked(true);
+
+        gridLayout_4->addWidget(useFGXfgfs, 1, 1, 1, 1);
+
+        label_2 = new QLabel(toptab);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        gridLayout_4->addWidget(label_2, 2, 0, 1, 1);
+
+        fgdataPath = new QLineEdit(toptab);
+        fgdataPath->setObjectName(QString::fromUtf8("fgdataPath"));
+
+        gridLayout_4->addWidget(fgdataPath, 3, 0, 1, 1);
+
+        set_fgdata_path_Button = new QPushButton(toptab);
+        set_fgdata_path_Button->setObjectName(QString::fromUtf8("set_fgdata_path_Button"));
+
+        gridLayout_4->addWidget(set_fgdata_path_Button, 3, 1, 3, 1);
+
+        verticalSpacer_5 = new QSpacerItem(663, 44, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_4->addItem(verticalSpacer_5, 6, 0, 1, 1);
+
         label_10 = new QLabel(toptab);
         label_10->setObjectName(QString::fromUtf8("label_10"));
-        label_10->setGeometry(QRect(20, 195, 241, 16));
+
+        gridLayout_4->addWidget(label_10, 7, 0, 1, 1);
+
+        useTerraSync = new QCheckBox(toptab);
+        useTerraSync->setObjectName(QString::fromUtf8("useTerraSync"));
+
+        gridLayout_4->addWidget(useTerraSync, 8, 0, 1, 1);
+
+        verticalSpacer_6 = new QSpacerItem(663, 44, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_4->addItem(verticalSpacer_6, 9, 0, 1, 1);
+
+        label_3 = new QLabel(toptab);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        gridLayout_4->addWidget(label_3, 4, 0, 1, 1);
+
         tabs->addTab(toptab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QString::fromUtf8("tab_2"));
+        gridLayout_6 = new QGridLayout(tab_2);
+        gridLayout_6->setObjectName(QString::fromUtf8("gridLayout_6"));
         labelWindow = new QLabel(tab_2);
         labelWindow->setObjectName(QString::fromUtf8("labelWindow"));
-        labelWindow->setGeometry(QRect(20, 20, 121, 16));
+
+        gridLayout_6->addWidget(labelWindow, 0, 0, 1, 1);
+
         screenSize = new QComboBox(tab_2);
         screenSize->setObjectName(QString::fromUtf8("screenSize"));
-        screenSize->setGeometry(QRect(15, 40, 111, 26));
         screenSize->setEditable(true);
         screenSize->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+
+        gridLayout_6->addWidget(screenSize, 1, 0, 1, 1);
+
         disableSplashScreen = new QCheckBox(tab_2);
         disableSplashScreen->setObjectName(QString::fromUtf8("disableSplashScreen"));
-        disableSplashScreen->setGeometry(QRect(240, 43, 241, 20));
         disableSplashScreen->setChecked(true);
+
+        gridLayout_6->addWidget(disableSplashScreen, 1, 1, 1, 1);
+
         useFullScreen = new QCheckBox(tab_2);
         useFullScreen->setObjectName(QString::fromUtf8("useFullScreen"));
-        useFullScreen->setGeometry(QRect(17, 80, 191, 20));
+
+        gridLayout_6->addWidget(useFullScreen, 2, 0, 1, 1);
+
+        verticalSpacer_7 = new QSpacerItem(20, 193, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_6->addItem(verticalSpacer_7, 3, 0, 1, 1);
+
         tabs->addTab(tab_2, QString());
         tab = new QWidget();
         tab->setObjectName(QString::fromUtf8("tab"));
+        gridLayout_7 = new QGridLayout(tab);
+        gridLayout_7->setObjectName(QString::fromUtf8("gridLayout_7"));
         labelAircraft = new QLabel(tab);
         labelAircraft->setObjectName(QString::fromUtf8("labelAircraft"));
-        labelAircraft->setGeometry(QRect(20, 20, 121, 16));
-        airCraft = new QComboBox(tab);
-        airCraft->setObjectName(QString::fromUtf8("airCraft"));
-        airCraft->setGeometry(QRect(16, 40, 161, 26));
-        airCraft->setEditable(true);
+
+        gridLayout_7->addWidget(labelAircraft, 0, 0, 1, 1);
+
         aircraftImage = new QLabel(tab);
         aircraftImage->setObjectName(QString::fromUtf8("aircraftImage"));
-        aircraftImage->setGeometry(QRect(300, 40, 171, 128));
         aircraftImage->setMinimumSize(QSize(171, 128));
         aircraftImage->setMaximumSize(QSize(171, 128));
         aircraftImage->setLayoutDirection(Qt::LeftToRight);
         aircraftImage->setAutoFillBackground(false);
         aircraftImage->setOpenExternalLinks(false);
+
+        gridLayout_7->addWidget(aircraftImage, 0, 1, 3, 1);
+
+        airCraft = new QComboBox(tab);
+        airCraft->setObjectName(QString::fromUtf8("airCraft"));
+        airCraft->setEditable(true);
+
+        gridLayout_7->addWidget(airCraft, 1, 0, 1, 1);
+
+        verticalSpacer_9 = new QSpacerItem(20, 105, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_7->addItem(verticalSpacer_9, 2, 0, 1, 1);
+
+        verticalSpacer_8 = new QSpacerItem(20, 104, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_7->addItem(verticalSpacer_8, 3, 1, 1, 1);
+
         tabs->addTab(tab, QString());
         tab_4 = new QWidget();
         tab_4->setObjectName(QString::fromUtf8("tab_4"));
-        labelLocation = new QLabel(tab_4);
-        labelLocation->setObjectName(QString::fromUtf8("labelLocation"));
-        labelLocation->setGeometry(QRect(20, 50, 141, 16));
-        locationIcao = new QComboBox(tab_4);
-        locationIcao->setObjectName(QString::fromUtf8("locationIcao"));
-        locationIcao->setGeometry(QRect(17, 70, 160, 26));
-        locationIcao->setEditable(true);
-        labelLatitude = new QLabel(tab_4);
-        labelLatitude->setObjectName(QString::fromUtf8("labelLatitude"));
-        labelLatitude->setGeometry(QRect(220, 80, 61, 16));
-        labelLongitude = new QLabel(tab_4);
-        labelLongitude->setObjectName(QString::fromUtf8("labelLongitude"));
-        labelLongitude->setGeometry(QRect(370, 80, 81, 16));
-        Latitude = new QLineEdit(tab_4);
-        Latitude->setObjectName(QString::fromUtf8("Latitude"));
-        Latitude->setGeometry(QRect(220, 102, 120, 22));
-        Latitude->setReadOnly(false);
-        Longitude = new QLineEdit(tab_4);
-        Longitude->setObjectName(QString::fromUtf8("Longitude"));
-        Longitude->setGeometry(QRect(370, 102, 120, 22));
-        Longitude->setReadOnly(false);
-        label_runway = new QLabel(tab_4);
-        label_runway->setObjectName(QString::fromUtf8("label_runway"));
-        label_runway->setGeometry(QRect(20, 110, 141, 16));
-        runWay = new QComboBox(tab_4);
-        runWay->setObjectName(QString::fromUtf8("runWay"));
-        runWay->setGeometry(QRect(17, 130, 85, 26));
-        runWay->setEditable(true);
-        parkPosition = new QComboBox(tab_4);
-        parkPosition->setObjectName(QString::fromUtf8("parkPosition"));
-        parkPosition->setGeometry(QRect(17, 190, 85, 26));
-        parkPosition->setEditable(true);
-        sceneryCheck = new QLabel(tab_4);
-        sceneryCheck->setObjectName(QString::fromUtf8("sceneryCheck"));
-        sceneryCheck->setGeometry(QRect(20, 220, 481, 20));
-        useCoordinates = new QCheckBox(tab_4);
-        useCoordinates->setObjectName(QString::fromUtf8("useCoordinates"));
-        useCoordinates->setGeometry(QRect(217, 48, 191, 20));
-        useParkPosition = new QCheckBox(tab_4);
-        useParkPosition->setObjectName(QString::fromUtf8("useParkPosition"));
-        useParkPosition->setGeometry(QRect(19, 165, 151, 20));
+        gridLayout_9 = new QGridLayout(tab_4);
+        gridLayout_9->setObjectName(QString::fromUtf8("gridLayout_9"));
         usecustomScenery = new QCheckBox(tab_4);
         usecustomScenery->setObjectName(QString::fromUtf8("usecustomScenery"));
-        usecustomScenery->setGeometry(QRect(20, 20, 321, 20));
         usecustomScenery->setChecked(true);
+
+        gridLayout_9->addWidget(usecustomScenery, 0, 0, 1, 2);
+
+        labelLocation = new QLabel(tab_4);
+        labelLocation->setObjectName(QString::fromUtf8("labelLocation"));
+
+        gridLayout_9->addWidget(labelLocation, 1, 0, 1, 1);
+
+        locationIcao = new QComboBox(tab_4);
+        locationIcao->setObjectName(QString::fromUtf8("locationIcao"));
+        locationIcao->setEditable(true);
+
+        gridLayout_9->addWidget(locationIcao, 2, 0, 1, 1);
+
+        label_runway = new QLabel(tab_4);
+        label_runway->setObjectName(QString::fromUtf8("label_runway"));
+
+        gridLayout_9->addWidget(label_runway, 3, 0, 1, 1);
+
+        runWay = new QComboBox(tab_4);
+        runWay->setObjectName(QString::fromUtf8("runWay"));
+        runWay->setEditable(true);
+
+        gridLayout_9->addWidget(runWay, 4, 0, 1, 1);
+
+        useParkPosition = new QCheckBox(tab_4);
+        useParkPosition->setObjectName(QString::fromUtf8("useParkPosition"));
+
+        gridLayout_9->addWidget(useParkPosition, 5, 0, 1, 1);
+
+        verticalSpacer_10 = new QSpacerItem(244, 46, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_9->addItem(verticalSpacer_10, 5, 2, 2, 1);
+
+        parkPosition = new QComboBox(tab_4);
+        parkPosition->setObjectName(QString::fromUtf8("parkPosition"));
+        parkPosition->setEditable(true);
+
+        gridLayout_9->addWidget(parkPosition, 6, 0, 1, 1);
+
+        sceneryCheck = new QLabel(tab_4);
+        sceneryCheck->setObjectName(QString::fromUtf8("sceneryCheck"));
+
+        gridLayout_9->addWidget(sceneryCheck, 7, 0, 1, 3);
+
+        verticalSpacer_11 = new QSpacerItem(244, 54, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_9->addItem(verticalSpacer_11, 8, 0, 1, 1);
+
+        useCoordinates = new QGroupBox(tab_4);
+        useCoordinates->setObjectName(QString::fromUtf8("useCoordinates"));
+        useCoordinates->setCheckable(true);
+        gridLayout_8 = new QGridLayout(useCoordinates);
+        gridLayout_8->setObjectName(QString::fromUtf8("gridLayout_8"));
+        labelLatitude = new QLabel(useCoordinates);
+        labelLatitude->setObjectName(QString::fromUtf8("labelLatitude"));
+
+        gridLayout_8->addWidget(labelLatitude, 0, 0, 1, 1);
+
+        labelLongitude = new QLabel(useCoordinates);
+        labelLongitude->setObjectName(QString::fromUtf8("labelLongitude"));
+
+        gridLayout_8->addWidget(labelLongitude, 0, 1, 1, 1);
+
+        Latitude = new QLineEdit(useCoordinates);
+        Latitude->setObjectName(QString::fromUtf8("Latitude"));
+        Latitude->setReadOnly(false);
+
+        gridLayout_8->addWidget(Latitude, 1, 0, 1, 1);
+
+        Longitude = new QLineEdit(useCoordinates);
+        Longitude->setObjectName(QString::fromUtf8("Longitude"));
+        Longitude->setReadOnly(false);
+
+        gridLayout_8->addWidget(Longitude, 1, 1, 1, 1);
+
+
+        gridLayout_9->addWidget(useCoordinates, 1, 1, 3, 2);
+
         tabs->addTab(tab_4, QString());
         tab_5 = new QWidget();
         tab_5->setObjectName(QString::fromUtf8("tab_5"));
-        labelTime = new QLabel(tab_5);
-        labelTime->setObjectName(QString::fromUtf8("labelTime"));
-        labelTime->setGeometry(QRect(20, 20, 51, 16));
-        timeoftheDay = new QComboBox(tab_5);
-        timeoftheDay->setObjectName(QString::fromUtf8("timeoftheDay"));
-        timeoftheDay->setGeometry(QRect(16, 40, 111, 26));
-        label_Weather = new QLabel(tab_5);
-        label_Weather->setObjectName(QString::fromUtf8("label_Weather"));
-        label_Weather->setGeometry(QRect(250, 20, 101, 16));
-        Weather = new QComboBox(tab_5);
-        Weather->setObjectName(QString::fromUtf8("Weather"));
-        Weather->setGeometry(QRect(247, 40, 211, 26));
-        metarText = new QPlainTextEdit(tab_5);
-        metarText->setObjectName(QString::fromUtf8("metarText"));
-        metarText->setGeometry(QRect(250, 120, 251, 78));
-        setTime = new QCheckBox(tab_5);
-        setTime->setObjectName(QString::fromUtf8("setTime"));
-        setTime->setGeometry(QRect(18, 90, 151, 20));
-        useMetar = new QCheckBox(tab_5);
-        useMetar->setObjectName(QString::fromUtf8("useMetar"));
-        useMetar->setGeometry(QRect(250, 90, 141, 20));
-        year = new QLineEdit(tab_5);
-        year->setObjectName(QString::fromUtf8("year"));
-        year->setGeometry(QRect(60, 120, 41, 22));
-        year->setMaxLength(4);
-        month = new QLineEdit(tab_5);
-        month->setObjectName(QString::fromUtf8("month"));
-        month->setGeometry(QRect(110, 120, 30, 22));
-        month->setMaxLength(2);
-        day = new QLineEdit(tab_5);
-        day->setObjectName(QString::fromUtf8("day"));
-        day->setGeometry(QRect(150, 120, 30, 22));
-        day->setMaxLength(2);
-        label_date = new QLabel(tab_5);
+        gridLayout_5 = new QGridLayout(tab_5);
+        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
+        groupBoxSetTime = new QGroupBox(tab_5);
+        groupBoxSetTime->setObjectName(QString::fromUtf8("groupBoxSetTime"));
+        groupBoxSetTime->setCheckable(true);
+        gridLayout = new QGridLayout(groupBoxSetTime);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        label_date = new QLabel(groupBoxSetTime);
         label_date->setObjectName(QString::fromUtf8("label_date"));
-        label_date->setGeometry(QRect(20, 124, 31, 16));
-        second = new QLineEdit(tab_5);
-        second->setObjectName(QString::fromUtf8("second"));
-        second->setGeometry(QRect(150, 150, 30, 22));
-        second->setMaxLength(2);
-        minute = new QLineEdit(tab_5);
-        minute->setObjectName(QString::fromUtf8("minute"));
-        minute->setGeometry(QRect(110, 150, 30, 22));
-        minute->setMaxLength(2);
-        hour = new QLineEdit(tab_5);
-        hour->setObjectName(QString::fromUtf8("hour"));
-        hour->setGeometry(QRect(60, 150, 30, 22));
-        hour->setMaxLength(2);
-        label_date_2 = new QLabel(tab_5);
+
+        gridLayout->addWidget(label_date, 0, 0, 1, 1);
+
+        year = new QLineEdit(groupBoxSetTime);
+        year->setObjectName(QString::fromUtf8("year"));
+        year->setMaxLength(4);
+
+        gridLayout->addWidget(year, 0, 1, 1, 1);
+
+        month = new QLineEdit(groupBoxSetTime);
+        month->setObjectName(QString::fromUtf8("month"));
+        month->setMaxLength(2);
+
+        gridLayout->addWidget(month, 0, 2, 1, 1);
+
+        day = new QLineEdit(groupBoxSetTime);
+        day->setObjectName(QString::fromUtf8("day"));
+        day->setMaxLength(2);
+
+        gridLayout->addWidget(day, 0, 3, 1, 1);
+
+        label_date_2 = new QLabel(groupBoxSetTime);
         label_date_2->setObjectName(QString::fromUtf8("label_date_2"));
-        label_date_2->setGeometry(QRect(20, 154, 31, 16));
+
+        gridLayout->addWidget(label_date_2, 1, 0, 1, 1);
+
+        hour = new QLineEdit(groupBoxSetTime);
+        hour->setObjectName(QString::fromUtf8("hour"));
+        hour->setMaxLength(2);
+
+        gridLayout->addWidget(hour, 1, 1, 1, 1);
+
+        minute = new QLineEdit(groupBoxSetTime);
+        minute->setObjectName(QString::fromUtf8("minute"));
+        minute->setMaxLength(2);
+
+        gridLayout->addWidget(minute, 1, 2, 1, 1);
+
+        second = new QLineEdit(groupBoxSetTime);
+        second->setObjectName(QString::fromUtf8("second"));
+        second->setMaxLength(2);
+
+        gridLayout->addWidget(second, 1, 3, 1, 1);
+
+
+        gridLayout_5->addWidget(groupBoxSetTime, 0, 0, 1, 3);
+
+        groupBox = new QGroupBox(tab_5);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        verticalLayout_3 = new QVBoxLayout(groupBox);
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        Weather = new QComboBox(groupBox);
+        Weather->setObjectName(QString::fromUtf8("Weather"));
+
+        verticalLayout_3->addWidget(Weather);
+
+        useMetar = new QCheckBox(groupBox);
+        useMetar->setObjectName(QString::fromUtf8("useMetar"));
+
+        verticalLayout_3->addWidget(useMetar);
+
+        metarText = new QPlainTextEdit(groupBox);
+        metarText->setObjectName(QString::fromUtf8("metarText"));
+
+        verticalLayout_3->addWidget(metarText);
+
+
+        gridLayout_5->addWidget(groupBox, 0, 3, 3, 1);
+
+        groupBoxTime = new QGroupBox(tab_5);
+        groupBoxTime->setObjectName(QString::fromUtf8("groupBoxTime"));
+        verticalLayout_2 = new QVBoxLayout(groupBoxTime);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        timeoftheDay = new QComboBox(groupBoxTime);
+        timeoftheDay->setObjectName(QString::fromUtf8("timeoftheDay"));
+
+        verticalLayout_2->addWidget(timeoftheDay);
+
+
+        gridLayout_5->addWidget(groupBoxTime, 1, 0, 1, 1);
+
+        horizontalSpacer = new QSpacerItem(298, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_5->addItem(horizontalSpacer, 1, 2, 1, 1);
+
+        verticalSpacer_3 = new QSpacerItem(20, 107, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_5->addItem(verticalSpacer_3, 2, 1, 1, 1);
+
         tabs->addTab(tab_5, QString());
+
+        verticalLayout->addWidget(tabs);
+
         tabWidget = new QTabWidget(centralwidget);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
-        tabWidget->setGeometry(QRect(20, 375, 521, 191));
         tabWidget->setStyleSheet(QString::fromUtf8(""));
         bottomtab = new QWidget();
         bottomtab->setObjectName(QString::fromUtf8("bottomtab"));
-        label_Multiplayerserver = new QLabel(bottomtab);
-        label_Multiplayerserver->setObjectName(QString::fromUtf8("label_Multiplayerserver"));
-        label_Multiplayerserver->setGeometry(QRect(230, 30, 141, 16));
-        label_Multiplayerserver_2 = new QLabel(bottomtab);
-        label_Multiplayerserver_2->setObjectName(QString::fromUtf8("label_Multiplayerserver_2"));
-        label_Multiplayerserver_2->setGeometry(QRect(20, 90, 141, 16));
-        callSign = new QLineEdit(bottomtab);
-        callSign->setObjectName(QString::fromUtf8("callSign"));
-        callSign->setGeometry(QRect(20, 115, 113, 22));
-        callSign->setMaxLength(7);
-        callSign->setReadOnly(false);
-        label_7 = new QLabel(bottomtab);
-        label_7->setObjectName(QString::fromUtf8("label_7"));
-        label_7->setGeometry(QRect(20, 140, 311, 16));
-        label_Multiplayerserver_3 = new QLabel(bottomtab);
-        label_Multiplayerserver_3->setObjectName(QString::fromUtf8("label_Multiplayerserver_3"));
-        label_Multiplayerserver_3->setGeometry(QRect(230, 90, 141, 16));
-        multiplayerPort = new QLineEdit(bottomtab);
-        multiplayerPort->setObjectName(QString::fromUtf8("multiplayerPort"));
-        multiplayerPort->setGeometry(QRect(230, 115, 81, 22));
-        multiplayerPort->setReadOnly(false);
-        label_8 = new QLabel(bottomtab);
-        label_8->setObjectName(QString::fromUtf8("label_8"));
-        label_8->setGeometry(QRect(230, 140, 311, 16));
-        enableMultiplayer = new QCheckBox(bottomtab);
-        enableMultiplayer->setObjectName(QString::fromUtf8("enableMultiplayer"));
-        enableMultiplayer->setGeometry(QRect(20, 55, 181, 20));
-        pathMultiplayerOut = new QComboBox(bottomtab);
-        pathMultiplayerOut->setObjectName(QString::fromUtf8("pathMultiplayerOut"));
-        pathMultiplayerOut->setGeometry(QRect(227, 53, 221, 26));
-        pathMultiplayerOut->setEditable(true);
+        gridLayout_2 = new QGridLayout(bottomtab);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         enableAITraffic = new QCheckBox(bottomtab);
         enableAITraffic->setObjectName(QString::fromUtf8("enableAITraffic"));
-        enableAITraffic->setGeometry(QRect(20, 28, 201, 20));
+
+        gridLayout_2->addWidget(enableAITraffic, 0, 0, 1, 1);
+
+        label_Multiplayerserver = new QLabel(bottomtab);
+        label_Multiplayerserver->setObjectName(QString::fromUtf8("label_Multiplayerserver"));
+
+        gridLayout_2->addWidget(label_Multiplayerserver, 0, 1, 1, 1);
+
+        enableMultiplayer = new QCheckBox(bottomtab);
+        enableMultiplayer->setObjectName(QString::fromUtf8("enableMultiplayer"));
+
+        gridLayout_2->addWidget(enableMultiplayer, 1, 0, 1, 1);
+
+        pathMultiplayerOut = new QComboBox(bottomtab);
+        pathMultiplayerOut->setObjectName(QString::fromUtf8("pathMultiplayerOut"));
+        pathMultiplayerOut->setEditable(true);
+
+        gridLayout_2->addWidget(pathMultiplayerOut, 1, 1, 1, 1);
+
+        label_Multiplayerserver_2 = new QLabel(bottomtab);
+        label_Multiplayerserver_2->setObjectName(QString::fromUtf8("label_Multiplayerserver_2"));
+
+        gridLayout_2->addWidget(label_Multiplayerserver_2, 2, 0, 1, 1);
+
+        label_Multiplayerserver_3 = new QLabel(bottomtab);
+        label_Multiplayerserver_3->setObjectName(QString::fromUtf8("label_Multiplayerserver_3"));
+
+        gridLayout_2->addWidget(label_Multiplayerserver_3, 2, 1, 1, 1);
+
+        callSign = new QLineEdit(bottomtab);
+        callSign->setObjectName(QString::fromUtf8("callSign"));
+        callSign->setMaxLength(7);
+        callSign->setReadOnly(false);
+
+        gridLayout_2->addWidget(callSign, 3, 0, 1, 1);
+
+        multiplayerPort = new QLineEdit(bottomtab);
+        multiplayerPort->setObjectName(QString::fromUtf8("multiplayerPort"));
+        multiplayerPort->setReadOnly(false);
+
+        gridLayout_2->addWidget(multiplayerPort, 3, 1, 1, 1);
+
+        label_5 = new QLabel(bottomtab);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+
+        gridLayout_2->addWidget(label_5, 4, 0, 1, 1);
+
+        label_6 = new QLabel(bottomtab);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+
+        gridLayout_2->addWidget(label_6, 4, 1, 1, 1);
+
+        verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_2->addItem(verticalSpacer_4, 5, 0, 1, 1);
+
         tabWidget->addTab(bottomtab, QString());
         tab_6 = new QWidget();
         tab_6->setObjectName(QString::fromUtf8("tab_6"));
+        gridLayout_3 = new QGridLayout(tab_6);
+        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
         enableFGCom = new QCheckBox(tab_6);
         enableFGCom->setObjectName(QString::fromUtf8("enableFGCom"));
-        enableFGCom->setGeometry(QRect(20, 15, 181, 20));
-        fgcomShell = new QLineEdit(tab_6);
-        fgcomShell->setObjectName(QString::fromUtf8("fgcomShell"));
-        fgcomShell->setGeometry(QRect(20, 40, 231, 22));
-        fgcomShell->setReadOnly(true);
-        label_5 = new QLabel(tab_6);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
-        label_5->setGeometry(QRect(22, 67, 311, 16));
+
+        gridLayout_3->addWidget(enableFGCom, 0, 0, 1, 1);
+
+        label_4 = new QLabel(tab_6);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+
+        gridLayout_3->addWidget(label_4, 1, 0, 1, 1);
+
         label_port = new QLabel(tab_6);
         label_port->setObjectName(QString::fromUtf8("label_port"));
-        label_port->setGeometry(QRect(270, 44, 41, 16));
+
+        gridLayout_3->addWidget(label_port, 1, 1, 1, 1);
+
+        fgcomShell = new QLineEdit(tab_6);
+        fgcomShell->setObjectName(QString::fromUtf8("fgcomShell"));
+        fgcomShell->setReadOnly(true);
+
+        gridLayout_3->addWidget(fgcomShell, 2, 0, 1, 1);
+
         portFGCOM = new QLineEdit(tab_6);
         portFGCOM->setObjectName(QString::fromUtf8("portFGCOM"));
-        portFGCOM->setGeometry(QRect(312, 40, 101, 22));
-        label_6 = new QLabel(tab_6);
-        label_6->setObjectName(QString::fromUtf8("label_6"));
-        label_6->setGeometry(QRect(313, 65, 311, 31));
+
+        gridLayout_3->addWidget(portFGCOM, 2, 1, 1, 1);
+
+        lblDefaultFgComServer = new QLabel(tab_6);
+        lblDefaultFgComServer->setObjectName(QString::fromUtf8("lblDefaultFgComServer"));
+
+        gridLayout_3->addWidget(lblDefaultFgComServer, 3, 0, 1, 1);
+
+        labelDefaultFgComPort = new QLabel(tab_6);
+        labelDefaultFgComPort->setObjectName(QString::fromUtf8("labelDefaultFgComPort"));
+
+        gridLayout_3->addWidget(labelDefaultFgComPort, 3, 1, 1, 1);
+
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_3->addItem(verticalSpacer, 4, 0, 1, 1);
+
         tabWidget->addTab(tab_6, QString());
         tab_7 = new QWidget();
         tab_7->setObjectName(QString::fromUtf8("tab_7"));
-        enableLog = new QCheckBox(tab_7);
-        enableLog->setObjectName(QString::fromUtf8("enableLog"));
-        enableLog->setGeometry(QRect(320, 20, 161, 20));
-        logLevel = new QComboBox(tab_7);
-        logLevel->setObjectName(QString::fromUtf8("logLevel"));
-        logLevel->setGeometry(QRect(320, 70, 141, 26));
-        label_loglevel = new QLabel(tab_7);
-        label_loglevel->setObjectName(QString::fromUtf8("label_loglevel"));
-        label_loglevel->setGeometry(QRect(323, 50, 62, 16));
-        commandLine = new QPlainTextEdit(tab_7);
-        commandLine->setObjectName(QString::fromUtf8("commandLine"));
-        commandLine->setGeometry(QRect(20, 50, 271, 78));
+        horizontalLayout_2 = new QHBoxLayout(tab_7);
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        verticalLayout_5 = new QVBoxLayout();
+        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
         label_loglevel_2 = new QLabel(tab_7);
         label_loglevel_2->setObjectName(QString::fromUtf8("label_loglevel_2"));
-        label_loglevel_2->setGeometry(QRect(20, 20, 231, 20));
+
+        verticalLayout_5->addWidget(label_loglevel_2);
+
+        commandLine = new QPlainTextEdit(tab_7);
+        commandLine->setObjectName(QString::fromUtf8("commandLine"));
+
+        verticalLayout_5->addWidget(commandLine);
+
+
+        horizontalLayout_2->addLayout(verticalLayout_5);
+
+        verticalLayout_4 = new QVBoxLayout();
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        enableLog = new QCheckBox(tab_7);
+        enableLog->setObjectName(QString::fromUtf8("enableLog"));
+
+        verticalLayout_4->addWidget(enableLog);
+
+        label_loglevel = new QLabel(tab_7);
+        label_loglevel->setObjectName(QString::fromUtf8("label_loglevel"));
+
+        verticalLayout_4->addWidget(label_loglevel);
+
+        logLevel = new QComboBox(tab_7);
+        logLevel->setObjectName(QString::fromUtf8("logLevel"));
+
+        verticalLayout_4->addWidget(logLevel);
+
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_4->addItem(verticalSpacer_2);
+
+
+        horizontalLayout_2->addLayout(verticalLayout_4);
+
         tabWidget->addTab(tab_7, QString());
+
+        verticalLayout->addWidget(tabWidget);
+
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setSpacing(20);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        fgStart = new QPushButton(centralwidget);
+        fgStart->setObjectName(QString::fromUtf8("fgStart"));
+
+        horizontalLayout->addWidget(fgStart);
+
         label_9 = new QLabel(centralwidget);
         label_9->setObjectName(QString::fromUtf8("label_9"));
-        label_9->setGeometry(QRect(170, 590, 371, 20));
         label_9->setOpenExternalLinks(true);
         label_9->setTextInteractionFlags(Qt::TextBrowserInteraction);
-        fgx_logo = new QLabel(centralwidget);
-        fgx_logo->setObjectName(QString::fromUtf8("fgx_logo"));
-        fgx_logo->setGeometry(QRect(0, 0, 581, 61));
-        fgx_logo->setStyleSheet(QString::fromUtf8(""));
-        fgx_logo->setPixmap(QPixmap(QString::fromUtf8("../../originaldateien/logo-version-release22.png")));
-        fgx_logo->setMargin(10);
-        buttonTest = new QPushButton(centralwidget);
-        buttonTest->setObjectName(QString::fromUtf8("buttonTest"));
-        buttonTest->setGeometry(QRect(160, 590, 80, 24));
+
+        horizontalLayout->addWidget(label_9);
+
+
+        verticalLayout->addLayout(horizontalLayout);
+
         mainWindow->setCentralWidget(centralwidget);
         statusbar = new QStatusBar(mainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -418,7 +685,7 @@ public:
 
         tabs->setCurrentIndex(0);
         screenSize->setCurrentIndex(1);
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(2);
         logLevel->setCurrentIndex(0);
 
 
@@ -430,7 +697,8 @@ public:
         mainWindow->setWindowTitle(QApplication::translate("mainWindow", "FlightGear Launcher", 0, QApplication::UnicodeUTF8));
         actionAbout_FGX->setText(QApplication::translate("mainWindow", "About FGX", 0, QApplication::UnicodeUTF8));
         actionAbout_FlightGear->setText(QApplication::translate("mainWindow", "About FlightGear", 0, QApplication::UnicodeUTF8));
-        fgStart->setText(QApplication::translate("mainWindow", "Start FlightGear", 0, QApplication::UnicodeUTF8));
+        fgx_logo->setText(QApplication::translate("mainWindow", "SSSSSSSSSSSSSSSSSSSSSSS", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("mainWindow", "Directory of FlightGear binary (fgfs)", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         fgfsPath->setToolTip(QApplication::translate("mainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -444,7 +712,10 @@ public:
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; color:#0035ff;\"></p></body></html>", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         fgfsPath->setText(QString());
-        label->setText(QApplication::translate("mainWindow", "Directory of FlightGear binary (fgfs)", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        useFGXfgfs->setToolTip(QApplication::translate("mainWindow", "Check this box when you want to use built-in FlightGear/data", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        useFGXfgfs->setText(QApplication::translate("mainWindow", "built-in", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("mainWindow", "Path to FlightGear data (fgdata)", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         fgdataPath->setToolTip(QApplication::translate("mainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -458,20 +729,12 @@ public:
         set_fgdata_path_Button->setToolTip(QApplication::translate("mainWindow", "Click this when you enter a new path to flightgear data. Will refresh aircraft and airport list with the new fgdata path (if exists!)", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         set_fgdata_path_Button->setText(QApplication::translate("mainWindow", "refresh", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("mainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; color:#717171;\">i.e. /Users/joefoo/Documents/fgdata</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+        label_10->setText(QApplication::translate("mainWindow", "Custom scenery", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         useTerraSync->setToolTip(QApplication::translate("mainWindow", "Check this box when terrasync should start to download latest custom scenery", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         useTerraSync->setText(QApplication::translate("mainWindow", "Use Terrasync for custom scenery download", 0, QApplication::UnicodeUTF8));
-#ifndef QT_NO_TOOLTIP
-        useFGXfgfs->setToolTip(QApplication::translate("mainWindow", "Check this box when you want to use built-in FlightGear/data", 0, QApplication::UnicodeUTF8));
-#endif // QT_NO_TOOLTIP
-        useFGXfgfs->setText(QApplication::translate("mainWindow", "built-in", 0, QApplication::UnicodeUTF8));
-        label_10->setText(QApplication::translate("mainWindow", "Custom scenery", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("mainWindow", "i.e. /Users/joefoo/Documents/fgdata", 0, QApplication::UnicodeUTF8));
         tabs->setTabText(tabs->indexOf(toptab), QApplication::translate("mainWindow", "Paths and Programs", 0, QApplication::UnicodeUTF8));
         labelWindow->setText(QApplication::translate("mainWindow", "Window size", 0, QApplication::UnicodeUTF8));
         screenSize->clear();
@@ -491,23 +754,35 @@ public:
 "</style></head><body style=\" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">No image.</p></body></html>", 0, QApplication::UnicodeUTF8));
         tabs->setTabText(tabs->indexOf(tab), QApplication::translate("mainWindow", "Aircraft", 0, QApplication::UnicodeUTF8));
-        labelLocation->setText(QApplication::translate("mainWindow", "Airport (ICAO/IATA)", 0, QApplication::UnicodeUTF8));
-        labelLatitude->setText(QApplication::translate("mainWindow", "Latitude", 0, QApplication::UnicodeUTF8));
-        labelLongitude->setText(QApplication::translate("mainWindow", "Longitude", 0, QApplication::UnicodeUTF8));
-        label_runway->setText(QApplication::translate("mainWindow", "Runway", 0, QApplication::UnicodeUTF8));
-        sceneryCheck->setText(QApplication::translate("mainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#717171;\">Scenery Check</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        useCoordinates->setText(QApplication::translate("mainWindow", "Use coordinates:", 0, QApplication::UnicodeUTF8));
-        useParkPosition->setText(QApplication::translate("mainWindow", "Use Park Position:", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         usecustomScenery->setToolTip(QApplication::translate("mainWindow", "Don\342\200\231t forget to check Terrasync download at Paths and Programs tab", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         usecustomScenery->setText(QApplication::translate("mainWindow", "Use custom scenery", 0, QApplication::UnicodeUTF8));
+        labelLocation->setText(QApplication::translate("mainWindow", "Airport (ICAO/IATA)", 0, QApplication::UnicodeUTF8));
+        label_runway->setText(QApplication::translate("mainWindow", "Runway", 0, QApplication::UnicodeUTF8));
+        useParkPosition->setText(QApplication::translate("mainWindow", "Use Park Position:", 0, QApplication::UnicodeUTF8));
+        sceneryCheck->setText(QApplication::translate("mainWindow", "Scenery Check", 0, QApplication::UnicodeUTF8));
+        useCoordinates->setTitle(QApplication::translate("mainWindow", "Use coordinates", 0, QApplication::UnicodeUTF8));
+        labelLatitude->setText(QApplication::translate("mainWindow", "Latitude", 0, QApplication::UnicodeUTF8));
+        labelLongitude->setText(QApplication::translate("mainWindow", "Longitude", 0, QApplication::UnicodeUTF8));
         tabs->setTabText(tabs->indexOf(tab_4), QApplication::translate("mainWindow", "Location", 0, QApplication::UnicodeUTF8));
-        labelTime->setText(QApplication::translate("mainWindow", "Time", 0, QApplication::UnicodeUTF8));
+        groupBoxSetTime->setTitle(QApplication::translate("mainWindow", "Set Time", 0, QApplication::UnicodeUTF8));
+        label_date->setText(QApplication::translate("mainWindow", "Date", 0, QApplication::UnicodeUTF8));
+        year->setText(QApplication::translate("mainWindow", "yyyy", 0, QApplication::UnicodeUTF8));
+        month->setText(QApplication::translate("mainWindow", "mm", 0, QApplication::UnicodeUTF8));
+        day->setText(QApplication::translate("mainWindow", "dd", 0, QApplication::UnicodeUTF8));
+        label_date_2->setText(QApplication::translate("mainWindow", "Time", 0, QApplication::UnicodeUTF8));
+        hour->setText(QApplication::translate("mainWindow", "hh", 0, QApplication::UnicodeUTF8));
+        minute->setText(QApplication::translate("mainWindow", "mm", 0, QApplication::UnicodeUTF8));
+        second->setText(QApplication::translate("mainWindow", "ss", 0, QApplication::UnicodeUTF8));
+        groupBox->setTitle(QApplication::translate("mainWindow", "Weather Fetch", 0, QApplication::UnicodeUTF8));
+        Weather->clear();
+        Weather->insertItems(0, QStringList()
+         << QApplication::translate("mainWindow", "real", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("mainWindow", "disable", 0, QApplication::UnicodeUTF8)
+        );
+        useMetar->setText(QApplication::translate("mainWindow", "Use this METAR:", 0, QApplication::UnicodeUTF8));
+        groupBoxTime->setTitle(QApplication::translate("mainWindow", "Time", 0, QApplication::UnicodeUTF8));
         timeoftheDay->clear();
         timeoftheDay->insertItems(0, QStringList()
          << QApplication::translate("mainWindow", "real", 0, QApplication::UnicodeUTF8)
@@ -519,38 +794,9 @@ public:
          << QApplication::translate("mainWindow", "evening", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("mainWindow", "midnight", 0, QApplication::UnicodeUTF8)
         );
-        label_Weather->setText(QApplication::translate("mainWindow", "Weather fetch", 0, QApplication::UnicodeUTF8));
-        Weather->clear();
-        Weather->insertItems(0, QStringList()
-         << QApplication::translate("mainWindow", "real", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("mainWindow", "disable", 0, QApplication::UnicodeUTF8)
-        );
-        setTime->setText(QApplication::translate("mainWindow", "Set time", 0, QApplication::UnicodeUTF8));
-        useMetar->setText(QApplication::translate("mainWindow", "Use this METAR:", 0, QApplication::UnicodeUTF8));
-        year->setText(QApplication::translate("mainWindow", "yyyy", 0, QApplication::UnicodeUTF8));
-        month->setText(QApplication::translate("mainWindow", "mm", 0, QApplication::UnicodeUTF8));
-        day->setText(QApplication::translate("mainWindow", "dd", 0, QApplication::UnicodeUTF8));
-        label_date->setText(QApplication::translate("mainWindow", "Date", 0, QApplication::UnicodeUTF8));
-        second->setText(QApplication::translate("mainWindow", "ss", 0, QApplication::UnicodeUTF8));
-        minute->setText(QApplication::translate("mainWindow", "mm", 0, QApplication::UnicodeUTF8));
-        hour->setText(QApplication::translate("mainWindow", "hh", 0, QApplication::UnicodeUTF8));
-        label_date_2->setText(QApplication::translate("mainWindow", "Time", 0, QApplication::UnicodeUTF8));
         tabs->setTabText(tabs->indexOf(tab_5), QApplication::translate("mainWindow", "Time and Weather", 0, QApplication::UnicodeUTF8));
+        enableAITraffic->setText(QApplication::translate("mainWindow", "Enable AI traffic", 0, QApplication::UnicodeUTF8));
         label_Multiplayerserver->setText(QApplication::translate("mainWindow", "Multiplayer server", 0, QApplication::UnicodeUTF8));
-        label_Multiplayerserver_2->setText(QApplication::translate("mainWindow", "Your Callsign", 0, QApplication::UnicodeUTF8));
-        callSign->setText(QString());
-        label_7->setText(QApplication::translate("mainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; color:#717171;\">max. 7 letters</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        label_Multiplayerserver_3->setText(QApplication::translate("mainWindow", "Multiplayer port", 0, QApplication::UnicodeUTF8));
-        multiplayerPort->setText(QApplication::translate("mainWindow", "5000", 0, QApplication::UnicodeUTF8));
-        label_8->setText(QApplication::translate("mainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; color:#717171;\">5000 is standard.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
         enableMultiplayer->setText(QApplication::translate("mainWindow", "Enable Multiplayer", 0, QApplication::UnicodeUTF8));
         pathMultiplayerOut->clear();
         pathMultiplayerOut->insertItems(0, QStringList()
@@ -567,25 +813,24 @@ public:
          << QApplication::translate("mainWindow", "mpserver12.flightgear.org", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("mainWindow", "mpserver13.flightgear.org", 0, QApplication::UnicodeUTF8)
         );
-        enableAITraffic->setText(QApplication::translate("mainWindow", "Enable AI traffic", 0, QApplication::UnicodeUTF8));
+        label_Multiplayerserver_2->setText(QApplication::translate("mainWindow", "Your Callsign", 0, QApplication::UnicodeUTF8));
+        label_Multiplayerserver_3->setText(QApplication::translate("mainWindow", "Multiplayer port", 0, QApplication::UnicodeUTF8));
+        callSign->setText(QString());
+        multiplayerPort->setText(QApplication::translate("mainWindow", "5000", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("mainWindow", "max. 7 letters", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("mainWindow", "5000 is standard.", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(bottomtab), QApplication::translate("mainWindow", "Multiplayer", 0, QApplication::UnicodeUTF8));
         enableFGCom->setText(QApplication::translate("mainWindow", "Enable FGCom", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("mainWindow", "Server", 0, QApplication::UnicodeUTF8));
+        label_port->setText(QApplication::translate("mainWindow", "UDP Port", 0, QApplication::UnicodeUTF8));
         fgcomShell->setText(QApplication::translate("mainWindow", "fgcom -Sfgcom.flightgear.org.uk", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("mainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; color:#717171;\">Call FlightGear default fgcom server.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        label_port->setText(QApplication::translate("mainWindow", "Port", 0, QApplication::UnicodeUTF8));
         portFGCOM->setText(QApplication::translate("mainWindow", "16661", 0, QApplication::UnicodeUTF8));
-        label_6->setText(QApplication::translate("mainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; color:#717171;\">Default FGCOM UDP Port </span></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p></body></html>", 0, QApplication::UnicodeUTF8));
+        lblDefaultFgComServer->setText(QApplication::translate("mainWindow", "Call FlightGear default fgcom server", 0, QApplication::UnicodeUTF8));
+        labelDefaultFgComPort->setText(QApplication::translate("mainWindow", "Default FGCOM UDP Port ", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_6), QApplication::translate("mainWindow", "Voice Communication", 0, QApplication::UnicodeUTF8));
+        label_loglevel_2->setText(QApplication::translate("mainWindow", "Add other command line options:", 0, QApplication::UnicodeUTF8));
         enableLog->setText(QApplication::translate("mainWindow", "Write log files to disk", 0, QApplication::UnicodeUTF8));
+        label_loglevel->setText(QApplication::translate("mainWindow", "Log-level", 0, QApplication::UnicodeUTF8));
         logLevel->clear();
         logLevel->insertItems(0, QStringList()
          << QApplication::translate("mainWindow", "warn", 0, QApplication::UnicodeUTF8)
@@ -594,17 +839,14 @@ public:
          << QApplication::translate("mainWindow", "bulk", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("mainWindow", "alert", 0, QApplication::UnicodeUTF8)
         );
-        label_loglevel->setText(QApplication::translate("mainWindow", "Log-level", 0, QApplication::UnicodeUTF8));
-        label_loglevel_2->setText(QApplication::translate("mainWindow", "Add other command line options:", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_7), QApplication::translate("mainWindow", "Command line / Log", 0, QApplication::UnicodeUTF8));
+        fgStart->setText(QApplication::translate("mainWindow", "Start FlightGear", 0, QApplication::UnicodeUTF8));
         label_9->setText(QApplication::translate("mainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9pt; font-weight:600; color:#717171;\">FGX</span><span style=\" font-size:9pt; color:#717171;\"> \302\251 2011 Gral aka Yves Sablonier, Zurich //  </span><a href=\"http://www.gnu.org/licenses/gpl-2.0.txt\"><span style=\" font-size:9pt; text-decoration: underline; color:#0000ff;\">GPL2</span></a><span style=\" font-size:9pt; color:#717171;\"> // </span><a href=\"http://wiki.flightgear.org\"><span style=\" font-size:9pt; text-decoration: underline; color:#0000ff;\">FlightGear</span></a><span style=\" font-size:9pt; color:#717171;\"> l"
                         "auncher for OSX</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        fgx_logo->setText(QString());
-        buttonTest->setText(QApplication::translate("mainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
