@@ -36,6 +36,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	networkWidget = new NetworkWidget(this);
 	tabs->addTab(networkWidget, "Network");
+	networkWidget->load_settings();
 
 	tabs->setCurrentIndex( settings.value("last_tab").toInt() );
 
@@ -50,7 +51,7 @@ fgx::~fgx(){
 // Initial Setup
 //=======================================================================================================================
 void fgx::initial_setup(){
-
+	qDebug() << "INITIAL SETUP";
 	checkFGFS();
 	on_enableMultiplayer_clicked();
 	on_useMetar_clicked();
@@ -63,9 +64,6 @@ void fgx::initial_setup(){
 		portFGCOM->setText("16661");
 	}
 	
-	if (multiplayerPort->text() == "") {
-		multiplayerPort->setText("5000");
-	}
 	
 	QDir fgdatadir(fgdataPath->text());
 	
@@ -282,11 +280,13 @@ QStringList fgx::start_fg_args(){
 	}
 
 	//* Ai Traffic
+	/*
 	if (enableAITraffic->isChecked()) {
 		args << QString("--enable-ai-traffic");
 	}else{
 		args << QString("--disable-ai-traffic");
 	}
+	*/
 
 	//* Enable AI models ???
 	args << QString("--enable-ai-models");
@@ -339,13 +339,13 @@ QStringList fgx::start_fg_args(){
 }
 
 
-
+//================================================================================
 // Write Settings
-
+//================================================================================
 void fgx::writeSettings()
 {
 	//QSettings settings("fgx", "FlightGear Starter OSX");
-	
+	return;
 	settings.setValue("fgdataPath", fgdataPath->text());
 	
 	if (useFGXfgfs->isChecked() == true) {
@@ -356,7 +356,7 @@ void fgx::writeSettings()
 	
 	settings.setValue("fgfsPath", fgfsPath->text());
 	settings.setValue("fgcomShell", fgcomShell->text());
-	settings.setValue("pathMultiplayerOut", pathMultiplayerOut->currentText());
+	//settings.setValue("pathMultiplayerOut", pathMultiplayerOut->currentText());
 	settings.setValue("portFGCOM", portFGCOM->text());
 	
 	if (useTerraSync->isChecked() == true) {
@@ -371,18 +371,18 @@ void fgx::writeSettings()
 		settings.setValue("enableFGCom", "false");
 	}
 	
-	if (enableMultiplayer->isChecked() == true) {
-		settings.setValue("enableMultiplayer", "true");
-	}	else {
-		settings.setValue("enableMultiplayer", "false");
-	}
-	
+	//if (networkWidget->grpMpServer->isChecked()) {
+		settings.setValue("enableMultiplayer", networkWidget->grpMpServer->isChecked());
+	//}	else {
+	//	settings.setValue("enableMultiplayer", "false");
+	//}
+	/*
 	if (enableAITraffic->isChecked() == true) {
 		settings.setValue("enableAITraffic", "true");
 	}	else {
 		settings.setValue("enableAITraffic", "false");
 	}
-	
+	*/
 	if (disableSplashScreen->isChecked() == true) {
 		settings.setValue("disableSplashScreen", "true");
 	}	else {
@@ -398,7 +398,8 @@ void fgx::writeSettings()
 	}
 	
 	settings.setValue("timeoftheDay", timeoftheDay->currentText());
-	settings.setValue("multiplayerPort", multiplayerPort->text());
+	settings.setValue("multiplayerLocalPort", networkWidget->comboLocalPort->currentText());
+	settings.setValue("multiplayerRemotePort", networkWidget->comboRemotePort->currentText());
 	settings.setValue("callSign", callSign->text());
 	settings.setValue("locationIcao", locationIcao->currentText());
 	
@@ -456,11 +457,12 @@ void fgx::writeSettings()
 	
 }
 
+//================================================================================
 // Read Settings
-
+//================================================================================
 void fgx::readSettings()
 {
-	
+	return;
 	qDebug() << settings.fg_root() << "  " << settings.fgfs_path();
 	fgdataPath->setText(settings.fg_root());
 	
@@ -493,19 +495,18 @@ void fgx::readSettings()
 	QString portFGCOMSet = settings.value("portFGCOM").toString();
 	portFGCOM->setText(portFGCOMSet);
 	
-	QString enableMultiplayerSet = settings.value("enableMultiplayer").toString();
-	if (enableMultiplayerSet == "true") {
-		enableMultiplayer->setCheckState(Qt::Checked);
-	} else {
-		enableMultiplayer->setCheckState(Qt::Unchecked);
-	}
+
+	networkWidget->grpMpServer->setChecked(settings.value("enableMultiplayer").toBool());
+
 	
 	QString enableAITrafficSet = settings.value("enableAITraffic").toString();
+	/*
 	if (enableAITrafficSet == "true") {
 		enableAITraffic->setCheckState(Qt::Checked);
 	} else {
 		enableAITraffic->setCheckState(Qt::Unchecked);
 	}
+	*/
 	
 	QString disableSplashScreenSet = settings.value("disableSplashScreen").toString();
 	if (disableSplashScreenSet == "true") {
@@ -520,14 +521,14 @@ void fgx::readSettings()
 	} else {
 		useFullScreen->setCheckState(Qt::Unchecked);
 	}
-	
+	/*
 	QString pathMultiplayerOutSet = settings.value("pathMultiplayerOut").toString();
 	pathMultiplayerOut->insertItem(0, pathMultiplayerOutSet);
 	pathMultiplayerOut->insertItem(1, "----");
 	
 	QString multiplayerPortSet = settings.value("multiplayerPort").toString();
 	multiplayerPort->setText(multiplayerPortSet);
-	
+	*/
 
 	if (settings.value("locationIcao").toString() != "") {
 		QString locationICAOSet = settings.value("locationIcao").toString();
@@ -809,7 +810,7 @@ void fgx::on_useCoordinates_clicked() {
 // Multiplayer checked
 
 void fgx::on_enableMultiplayer_clicked() {
-	
+	/*
 	Qt::CheckState state;
 
 	state = enableMultiplayer->checkState();
@@ -826,6 +827,7 @@ void fgx::on_enableMultiplayer_clicked() {
 		enableAITraffic->setEnabled(false);
 		enableAITraffic->setCheckState(Qt::Checked);
 	}
+	*/
 }
 
 // Set Time checked
@@ -1125,7 +1127,9 @@ void fgx::on_tabs_currentChanged(int index){
 void fgx::on_buttonTest_clicked(){
 	qDebug() << "YES" << pid_fg;
 	//qDebug() << networkWidget->get_args();
-	qDebug() << start_fg_args();
+	networkWidget->save_settings();
+	//qDebug() << start_fg_args();
+
 }
 
 
