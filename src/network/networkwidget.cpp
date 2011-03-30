@@ -740,8 +740,7 @@ void NetworkWidget::save_settings(){
 	settings.setValue("screenshot", grpScreenShot->isChecked());
 	settings.setValue("screenshot_port", txtScreenShot->text());
 
-
-
+	settings.sync();
 }
 
 

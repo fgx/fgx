@@ -17,6 +17,7 @@
 
 #include "xobjects/xsettings.h"
 #include "network/networkwidget.h"
+#include "aircraft/aircraftwidget.h"
 
 
 
@@ -39,6 +40,7 @@ private:
 	Ui::mainWindow *ui;
 	XSettings settings;
 
+	AircraftWidget *aircraftWidget;
 	NetworkWidget *networkWidget;
 
 	void initial_setup();

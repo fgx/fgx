@@ -35,8 +35,14 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	fgx_logo->setText(QCoreApplication::applicationName());
 
+	//** Initialse Extra Widgets
+	aircraftWidget = new AircraftWidget(this);
+	tabs->addTab(aircraftWidget, "Aircraft");
+
 	networkWidget = new NetworkWidget(this);
 	tabs->addTab(networkWidget, "Network");
+
+
 
 	//** Restore Settings
 	tabs->setCurrentIndex( settings.value("last_tab").toInt() );
