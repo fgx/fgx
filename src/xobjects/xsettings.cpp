@@ -91,3 +91,18 @@ QString XSettings::_windowName(QWidget *widget){
 }
 
 
+int XSettings::runningOS() {
+    #ifdef Q_WS_X11
+		return XSettings::LINUX;
+    #endif
+
+    #ifdef Q_WS_MAC
+		return XSettings::MAC;
+    #endif
+
+    #ifdef Q_WS_WIN
+		return XSettings::WINDOWS;
+    #endif
+
+	return XSettings::UNKNOWN;
+}

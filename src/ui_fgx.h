@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'fgx.ui'
 **
-** Created: Wed Mar 30 11:18:52 2011
+** Created: Wed Mar 30 12:06:26 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

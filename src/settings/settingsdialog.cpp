@@ -16,6 +16,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QFileDialog>
 #include <QtGui/QTreeWidget>
+#include <QtGui/QMessageBox>
 
 #include "settingsdialog.h"
 
@@ -48,7 +49,6 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 	//*** FGFS Group
 	grpFgfs = new QGroupBox(tr("Path to FlightGear executable"));
 	mainLayout->addWidget(grpFgfs);
-	grpFgfs->setStyleSheet(set_frame_style(""));
 
     QHBoxLayout *layoutExe = new QHBoxLayout();
 	grpFgfs->setLayout(layoutExe);
@@ -81,7 +81,6 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     //*** FG_ROOT Group
     grpFgRoot = new QGroupBox(tr("FG_ROOT - Path to the data directory;"));
     mainLayout->addWidget(grpFgRoot);
-    grpFgRoot->setStyleSheet(set_frame_style(""));
 
     QHBoxLayout *layoutFgRoot = new QHBoxLayout();
     grpFgRoot->setLayout(layoutFgRoot);
@@ -102,21 +101,11 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     actFgRootPath->setText(tr("Select path.."));
 	connect(actFgRootPath, SIGNAL(triggered()), this, SLOT(on_select_fg_root_path()));
 
-    QAction *actFgRootCheck = new QAction(menuFgRoot);
-    menuFgRoot->addAction(actFgRootCheck);
-    actFgRootCheck->setText(tr("Check path"));
-	//connect(actFgRootCheck, SIGNAL(triggered()), this, SLOT(on_exe_autodetect())); ???
-
-
-
-
 
 	//===============================================================
     //*** FG_Scenery
     grpFgScenery = new QGroupBox(tr("FG_Scenery - Paths to the scenery directories."));
     mainLayout->addWidget(grpFgScenery);
-	//grpFgfs->setFlat(false);
-    grpFgScenery->setStyleSheet(set_frame_style(""));
 
     QHBoxLayout *layoutFgScenery = new QHBoxLayout();
     grpFgScenery->setLayout(layoutFgScenery);
@@ -186,6 +175,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
 
 	load_settings();
+	validate_paths();
 }
 
 //=================================================================================
@@ -196,29 +186,12 @@ void SettingsDialog::load_settings(){
 }
 
 
-void SettingsDialog::on_save_clicked(){
-	// ## TODO ## validate paths
-
-	settings.setValue("FGFS", txtFgfs->text());
-	settings.setValue("FG_ROOT", txtFgRoot->text());
-	settings.sync();
-	accept();
-}
-
-
 //=================================================================================
 //* TODO Disable Scenery Buttons
 void SettingsDialog::disable_scenery_actions(bool state){
     buttSceneryDown->setDisabled(state);
     buttSceneryUp->setDisabled(state);
     buttSceneryRemove->setDisabled(state);
-}
-QString SettingsDialog::set_frame_style(QString color){
-    if(color == ""){
-        color = "gray";
-    }
-    return QString("QGroupBox{border:2px solid %1;border-radius:5px;  margin-top: 1ex;} QGroupBox::title{subcontrol-origin: margin;subcontrol-position:top center;padding:0 3px;}").arg(color);
-
 }
 
 //=================================================================================
@@ -232,20 +205,19 @@ void SettingsDialog::on_fgfs_autodetect(){
 	process->start(command);
 
 	if(process->waitForStarted()){
-			qDebug() << "wait";
-			process->waitForFinished();
-			QByteArray result =  process->readAllStandardOutput();
-			//QByteArray errorResult = process->readAllStandardError();
-			QString exe = QString(result).trimmed();
 
-			if(exe.length() == 0){
-				// none found
-			}else{
-				txtFgfs->setText(exe);
-			}
-			QStringList lines = QString(result).split("\n");
-			qDebug() << "LINES=" << lines;
+		process->waitForFinished();
+		QByteArray result =  process->readAllStandardOutput();
+		//QByteArray errorResult = process->readAllStandardError();
+		QString exe = QString(result).trimmed();
+
+		if(exe.length() == 0){
+			// none found
+		}else{
+			txtFgfs->setText(exe);
 		}
+		validate_paths();
+	}
 }
 
 
@@ -261,6 +233,7 @@ void SettingsDialog::on_select_fgfs_path(){
 	if(filePath.length() > 0){
 		txtFgfs->setText(filePath);
 	}
+	validate_paths();
 }
 
 
@@ -272,6 +245,7 @@ void SettingsDialog::on_select_fg_root_path(){
 	if(dirPath.length() > 0){
 		txtFgRoot->setText(dirPath);
 	}
+	validate_paths();
 }
 
 
@@ -280,4 +254,44 @@ void SettingsDialog::on_select_fg_root_path(){
 void SettingsDialog::closeEvent(QCloseEvent *event){
 	Q_UNUSED(event);
 	settings.saveWindow(this);
+}
+
+
+//=================================================================================
+// Validate
+bool SettingsDialog::validate_paths(){
+
+	bool fgfs_ok = QFile::exists( txtFgfs->text() );
+	grpFgfs->setStyleSheet( get_frame_style(fgfs_ok) );
+
+	bool fg_root_ok = QFile::exists( txtFgRoot->text() );
+	grpFgRoot->setStyleSheet( get_frame_style(fg_root_ok) );
+
+	return fgfs_ok && fg_root_ok;
+}
+
+
+//=================================================================================
+// Frame Style
+QString SettingsDialog::get_frame_style(bool is_ok){
+	return QString("QGroupBox{border:2px solid %1;border-radius:5px;  margin-top: 1ex;} QGroupBox::title{subcontrol-origin: margin;subcontrol-position:top center;padding:0 3px;}").arg(is_ok ? "green" : "#990000");
+
+}
+
+
+//=================================================================================
+// Save Clicked
+void SettingsDialog::on_save_clicked(){
+	if( !validate_paths() ){
+		if(QMessageBox::question(this, "Path Error",
+								"There are errors in path, Save Anyway?",
+								QMessageBox::No | QMessageBox::Yes) == QMessageBox::No){
+			return;
+		}
+	}
+
+	settings.setValue("FGFS", txtFgfs->text());
+	settings.setValue("FG_ROOT", txtFgRoot->text());
+	settings.sync();
+	accept();
 }

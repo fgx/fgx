@@ -7,7 +7,15 @@ class XSettings : public QSettings
 {
 Q_OBJECT
 public:
+	enum OS{
+		BSD = 1,
+		MAC = 2,
+		LINUX = 3,
+		WINDOWS = 4,
+		UNKNOWN = 5,
+	};
     explicit XSettings(QObject *parent = 0);
+
 
     QString _temp;
     QString temp();
@@ -26,6 +34,8 @@ public:
 	void restoreWindow(QWidget *widget);
 	QString _windowName(QWidget *widget);
 
+
+	int runningOS();
 signals:
 
 public slots:

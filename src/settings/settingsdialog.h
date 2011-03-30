@@ -38,10 +38,11 @@ private:
     QPushButton *buttSceneryRemove;
 
 
-    QString set_frame_style(QString color);
+	QString get_frame_style(bool is_valid);
     void disable_scenery_actions(bool);
 
 	void closeEvent(QCloseEvent *event);
+	bool validate_paths();
 
 signals:
 
