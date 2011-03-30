@@ -6,5 +6,6 @@
         <file alias="favicon">asterisk_orange.png</file>
         <file alias="start">control_play_blue.png</file>
         <file alias="refresh">arrow_refresh.png</file>
+        <file alias="quit">book_previous.png</file>
     </qresource>
 </RCC>

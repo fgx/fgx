@@ -204,7 +204,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	QString style("font-size: 8pt; color: #666666;");
 
 	// fgCom NO
-	txtFgComNo = new QLineEdit("fgcom -Sfgcom.flightgear.org.uk");
+	txtFgComNo = new QLineEdit();
 	layoutFgCom->addWidget(txtFgComNo);
 	connect(txtFgComNo, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
 
@@ -217,7 +217,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 
 
 	//* fgCom Port
-	txtFgComPort = new QLineEdit("16661");
+	txtFgComPort = new QLineEdit();
 	txtFgComPort->setMaximumWidth(100);
 	layoutFgCom->addWidget(txtFgComPort);
 	connect(txtFgComPort, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
@@ -394,8 +394,8 @@ void NetworkWidget::on_dns_lookup_host(const QHostInfo &hostInfo){
          lbl = hostInfo.addresses().first().toString();
          color = QColor(0, 150, 0);
      }else{
-        lbl = tr("Not Found");
-        color = QColor(150, 0, 0);
+		lbl = tr("No Entry");
+		color = QColor(150, 150, 150);
      }
      QBrush brush = items[0]->foreground(C_IP_ADDRESS);
      brush.setColor(color);
@@ -404,7 +404,13 @@ void NetworkWidget::on_dns_lookup_host(const QHostInfo &hostInfo){
 
      if(has_address){
 		items[0]->setText(C_FLAG, "1");
-		//items[0]->setText(C_PILOTS_COUNT, tr("Wait"));
+		QString ip_or_domain( comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString());
+		QList<QTreeWidgetItem*> selItems = treeWidget->findItems(settings.value("mpserver").toString(),
+																	Qt::MatchExactly,
+																	ip_or_domain == "domain" ? C_DOMAIN : C_IP_ADDRESS);
+		if(selItems.length() > 0){
+			treeWidget->setCurrentItem(selItems[0]);
+		}
 
 		/* TODO
         MpTelnet *telnet = new MpTelnet(this );
@@ -551,7 +557,7 @@ void NetworkWidget::set_mp_server(){
 	QString out(",");
 	out.append(comboHzOut->currentText());
 	out.append(",");
-	out.append( comboRemoteAddress->itemData(comboRemoteAddress->currentIndex()) == "domain"
+	out.append( comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(),Qt::UserRole) == "domain"
 				? item->text(C_DOMAIN)
 				: item->text(C_IP_ADDRESS));
 	out.append(",").append("5000");
@@ -570,6 +576,12 @@ void NetworkWidget::set_mp_server(){
 // Setup fgCom
 void NetworkWidget::set_fgcom(){
 	if(grpFgCom->isChecked()){
+		if(txtFgComNo->text().trimmed().length() == 0){
+			txtFgComNo->setText(settings.default_fgcom_no());
+		}
+		if(txtFgComPort->text().trimmed().length() == 0){
+			txtFgComPort->setText(settings.default_fgcom_port());
+		}
 		emit set_arg("set", "--fgcom=", txtFgComNo->text().append(":").append( txtFgComPort->text() ) );
 	}else{
 		emit set_arg("remove", "--fgcom=","");
@@ -656,7 +668,7 @@ QStringList NetworkWidget::get_args(){
 							);
 		}
 		if(checkBoxOut->isChecked()){
-			QString remote_server(	comboRemoteAddress->itemData(comboRemoteAddress->currentIndex()).toString() == "domain"
+			QString remote_server(	comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString() == "domain"
 							? treeWidget->currentItem()->text(C_DOMAIN)
 							: treeWidget->currentItem()->text(C_IP_ADDRESS)
 			);
@@ -695,14 +707,17 @@ QStringList NetworkWidget::get_args(){
 // Save Settings
 void NetworkWidget::save_settings(){
 	settings.setValue("enable_mp", grpMpServer->isChecked());
+	settings.setValue("callsign", txtCallSign->text());
 
 	settings.setValue("in", checkBoxIn->isChecked());
 	settings.setValue("out", checkBoxOut->isChecked());
 
 	settings.setValue("in_address", comboLocalIpAddress->currentText());
-	settings.setValue("out_with", comboRemoteAddress->itemData(comboRemoteAddress->currentIndex()).toString());
+
+	QString ip_or_domain( comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString());
+	settings.setValue("out_with", ip_or_domain);
 	if(treeWidget->currentItem()){
-		//settings.setValue("out_to", comboRemoteAddressAddress->itemData(comboRemoteAddress->currentIndex()));
+		settings.setValue("mpserver", treeWidget->currentItem()->text(ip_or_domain == "domain" ? C_DOMAIN : C_IP_ADDRESS));
 	}
 
 	settings.setValue("in_port", comboLocalPort->currentText());
@@ -710,6 +725,11 @@ void NetworkWidget::save_settings(){
 
 	settings.setValue("in_hz", comboHzIn->currentText());
 	settings.setValue("out_hz", comboHzOut->currentText());
+
+	settings.setValue("fgcom", grpFgCom->isChecked());
+	settings.setValue("fgcom_no", txtFgComNo->text());
+	settings.setValue("fgcom_port", txtFgComPort->text());
+
 
 	settings.setValue("telnet", grpTelnet->isChecked());
 	settings.setValue("telnet_port", txtTelnet->text());
@@ -720,6 +740,8 @@ void NetworkWidget::save_settings(){
 	settings.setValue("screenshot", grpScreenShot->isChecked());
 	settings.setValue("screenshot_port", txtScreenShot->text());
 
+
+
 }
 
 
@@ -729,13 +751,15 @@ void NetworkWidget::load_settings(){
 	int idx;
 
 	grpMpServer->setChecked( settings.value("enable_mp").toBool() );
+	txtCallSign->setText( settings.value("callsign").toString() );
 
 	checkBoxIn->setChecked( settings.value("in").toBool() );
 	checkBoxOut->setChecked( settings.value("out").toBool() );
 
 	idx = comboLocalIpAddress->findText(settings.value("in_address").toString(), Qt::MatchExactly);
 	comboLocalIpAddress->setCurrentIndex( idx == -1 ? 0 : idx);
-	idx = comboRemoteAddress->findText(settings.value("out_with").toString(), Qt::MatchExactly);
+
+	idx = comboRemoteAddress->findData(settings.value("out_with").toString(), Qt::UserRole, Qt::MatchExactly);
 	comboRemoteAddress->setCurrentIndex( idx == -1 ? 0 : idx);
 
 	idx = comboHzIn->findText(settings.value("in_hz").toString(), Qt::MatchExactly);
@@ -748,6 +772,12 @@ void NetworkWidget::load_settings(){
 	idx = comboRemotePort->findText(settings.value("out_port").toString(), Qt::MatchExactly);
 	comboRemotePort->setCurrentIndex( idx == -1 ? 0 : idx );
 
+
+	grpFgCom->setChecked( settings.value("fgcom").toBool() );
+	txtFgComNo->setText( settings.value("fgcom_no", settings.default_fgcom_no()).toString());
+	txtFgComPort->setText( settings.value("fgcom_port", settings.default_fgcom_port()).toString());
+
+
 	grpHttp->setChecked( settings.value("http").toBool() );
 	grpTelnet->setChecked( settings.value("telnet").toBool() );
 	grpScreenShot->setChecked( settings.value("screenshot").toBool() );
@@ -758,5 +788,20 @@ void NetworkWidget::load_settings(){
 
 	on_checkbox_in();
 	on_checkbox_out();
+}
 
+//=============================================================
+// Validate
+bool NetworkWidget::validate(){
+	if(grpMpServer->isChecked()){
+		if(txtCallSign->text().trimmed().length() == 0){
+			txtCallSign->setFocus();
+			return false;
+		}
+		if(!treeWidget->currentItem() or treeWidget->currentItem()->text(C_FLAG) != "1"){
+			treeWidget->setFocus();
+			return false;
+		}
+	}
+	return true;
 }

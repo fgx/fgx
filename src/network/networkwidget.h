@@ -3,7 +3,7 @@
 
 
 #include <QtNetwork/QHostInfo>
-#include <QSettings>
+
 
 #include <QWidget>
 #include <QtGui/QTreeWidget>
@@ -12,7 +12,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QComboBox>
 
-//#include "mainobject.h"
+#include "xobjects/xsettings.h"
 
 class NetworkWidget : public QWidget
 {
@@ -31,7 +31,7 @@ public:
 	explicit NetworkWidget(QWidget *parent = 0);
 
 	//MainObject *mainObject;
-	QSettings settings;
+	XSettings settings;
 
 	QGroupBox *grpMpServer;
 	QLineEdit *txtCallSign;
@@ -65,7 +65,7 @@ public:
 	void populate_combo_hz(QComboBox *combo);
 	void save_settings();
 	void load_settings();
-
+	bool validate();
 	QStringList get_args();
 
 signals:

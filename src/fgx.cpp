@@ -33,17 +33,18 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	settings.restoreWindow(this);
 
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
+	fgx_logo->setText(QCoreApplication::applicationName());
 
 	networkWidget = new NetworkWidget(this);
 	tabs->addTab(networkWidget, "Network");
-	networkWidget->load_settings();
 
+	//** Restore Settings
 	tabs->setCurrentIndex( settings.value("last_tab").toInt() );
+	networkWidget->load_settings();
 
 }/* end constructor */
 
 fgx::~fgx(){
-
 }
 
 
@@ -51,7 +52,7 @@ fgx::~fgx(){
 // Initial Setup
 //=======================================================================================================================
 void fgx::initial_setup(){
-	qDebug() << "INITIAL SETUP";
+	//qDebug() << "INITIAL SETUP";
 	checkFGFS();
 	on_enableMultiplayer_clicked();
 	on_useMetar_clicked();
@@ -102,7 +103,11 @@ void fgx::initial_setup(){
 // Start FlightGear
 //=======================================================================================================================
 void fgx::on_fgStart_clicked() {
-	
+	qDebug() << "validation";
+	if(!networkWidget->validate()){
+		tabs->setCurrentIndex( tabs->indexOf(networkWidget));
+		return;
+	}
 	checkScenery();
 	
 	// Write commands and arguments to TerraSync.sh and run via Terminal.app	
@@ -161,7 +166,7 @@ void fgx::start_terrasync(){
 
 
 //=======================================================================================================================
-// FlightGear Command String
+// FlightGear Command Args
 //=======================================================================================================================
 QStringList fgx::start_fg_args(){
 

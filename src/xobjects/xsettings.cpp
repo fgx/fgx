@@ -119,3 +119,11 @@ int XSettings::runningOS() {
 
 	return XSettings::UNKNOWN;
 }
+
+
+QString XSettings::default_fgcom_no(){
+	return QString("fgcom -Sfgcom.flightgear.org.uk");
+}
+QString XSettings::default_fgcom_port(){
+	return QString("16661");
+}

@@ -34,6 +34,8 @@ public:
 	void restoreWindow(QWidget *widget);
 	QString _windowName(QWidget *widget);
 
+	QString default_fgcom_no();
+	QString default_fgcom_port();
 
 	int runningOS();
 	bool paths_sane();
