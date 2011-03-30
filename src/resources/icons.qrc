@@ -5,5 +5,6 @@
         <file alias="cancel">bullet_black.png</file>
         <file alias="favicon">asterisk_orange.png</file>
         <file alias="start">control_play_blue.png</file>
+        <file alias="refresh">arrow_refresh.png</file>
     </qresource>
 </RCC>

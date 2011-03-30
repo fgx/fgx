@@ -13,9 +13,12 @@
 #include <QProcess>
 #include <QMessageBox>
 
-#include "xobjects/xsettings.h"
-
 #include "ui_fgx.h"
+
+#include "xobjects/xsettings.h"
+#include "network/networkwidget.h"
+
+
 
 class fgx : public QMainWindow, public Ui::mainWindow{
 	Q_OBJECT
@@ -28,19 +31,25 @@ public:
 	~fgx();
 	bool listchecked;
 	
-
+	Q_PID pid_fg;
+	Q_PID pid_terra;
+	Q_PID pid_fgcom;
 	
 private:
 	Ui::mainWindow *ui;
-	QProcess ps;
-	QProcess *fgProcess;
 	XSettings settings;
 
+	NetworkWidget *networkWidget;
+
+	void initial_setup();
+
 	QStringList start_fg_args();
+	void start_fg_com();
+	void start_terrasync();
 
 private slots:
 	void on_fgStart_clicked();
-	void on_set_fgdata_path_Button_clicked();
+	//void on_set_fgdata_path_Button_clicked();
 	void checkFGFS();
 	void on_useFGXfgfs_clicked();
 	void on_enableMultiplayer_clicked();
@@ -70,6 +79,8 @@ private slots:
 	void on_buttonSettings_clicked();
 
 	void on_buttonTest_clicked();
+
+	void on_tabs_currentChanged(int);
 };
 
 
