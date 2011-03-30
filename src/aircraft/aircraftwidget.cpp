@@ -69,55 +69,45 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
     QToolBar *treeToolbar = new QToolBar();
     treeLayout->addWidget(treeToolbar);
     treeToolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    
-    QAction *actionRefreshTree = new QAction(this);
-    treeToolbar->addAction(actionRefreshTree);
-	actionRefreshTree->setText("Reload");
-	actionRefreshTree->setIcon(QIcon(":/icon/refresh"));
-    connect(actionRefreshTree, SIGNAL(triggered()), this, SLOT(load_aircraft()) );
 
-    treeToolbar->addSeparator();
 
     //******************************************************
     //** Filter Buttons
-    QButtonGroup *buttViewGroup = new QButtonGroup(this);
+	buttViewGroup = new QButtonGroup(this);
     buttViewGroup->setExclusive(true);
     connect(buttViewGroup, SIGNAL(buttonClicked(QAbstractButton*)),
             this, SLOT(on_view_button_clicked(QAbstractButton*))
     );
 
-    QToolButton *buttAll = new QToolButton();
-    treeToolbar->addWidget(buttAll);
-    buttViewGroup->addButton(buttAll);
-    buttAll->setText("All");
-    buttAll->setCheckable(true);
-	buttAll->setIcon(QIcon(":/icon/pink"));
-    buttAll->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	QToolButton *buttList = new QToolButton();
+	buttList->setText("List");
+	buttList->setCheckable(true);
+	buttList->setIcon(QIcon(":/icon/pink"));
+	buttList->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttList->setChecked(true);
+	treeToolbar->addWidget(buttList);
+	buttViewGroup->addButton(buttList, V_LIST);
 
 
-    QToolButton *buttAvailable = new QToolButton();
-    treeToolbar->addWidget(buttAvailable);
-    buttViewGroup->addButton(buttAvailable);
-	buttAvailable->setText("Favourites");
-    buttAvailable->setCheckable(true);
-	buttAvailable->setIcon(QIcon(":/icon/purple"));
-    buttAvailable->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	QToolButton *buttNested = new QToolButton();
+	buttNested->setText("Nested");
+	buttNested->setCheckable(true);
+	buttNested->setIcon(QIcon(":/icon/purple"));
+	buttNested->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-    buttAll->setChecked(true);
+	treeToolbar->addWidget(buttNested);
+	buttViewGroup->addButton(buttNested, V_NESTED);
+
+	treeToolbar->addSeparator();
+
+	QAction *actionRefreshTree = new QAction(this);
+	treeToolbar->addAction(actionRefreshTree);
+	actionRefreshTree->setText("Reload");
+	actionRefreshTree->setIcon(QIcon(":/icon/refresh"));
+	connect(actionRefreshTree, SIGNAL(triggered()), this, SLOT(load_aircraft()) );
 
 
-	//===============================================================
-    //** Models
-	/*
-    model = new QStandardItemModel(this);
-    model->setColumnCount(2);
-    QStringList headerLabelsList;
-	headerLabelsList << "Model" << "Description" << "Path";
-    model->setHorizontalHeaderLabels(headerLabelsList);
 
-    proxyModel = new QSortFilterProxyModel(this);
-    proxyModel->setSourceModel(model);
-	*/
 	//===============================================================
     //** Aircraft Tree
 	treeWidget = new QTreeWidget(this);
@@ -159,8 +149,6 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
 
     QGroupBox *grpAero = new QGroupBox();
     splitter->addWidget(grpAero);
-   // QString style = QString("QGroupBox{border:2px solid gray;border-radius:5px;  margin-top: 1ex;} QGroupBox::title{subcontrol-origin: margin;subcontrol-position:top center;padding:0 3px;}");
-	//grpAero->setStyleSheet(style);
     grpAero->setDisabled(false);
     grpAero->setTitle(tr("Aircraft Details"));
 
@@ -249,11 +237,15 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
 
 
 void AircraftWidget::on_view_button_clicked(QAbstractButton *button){
-    qDebug("on_view_button_clicked()");
-    //qDebug() << button->text();
-    // TODO
-    statusBarTree->showMessage(button->text());
-    //QString
+
+	if(buttViewGroup->checkedId() == V_LIST){
+		buttViewGroup->button(V_LIST)->setIcon(QIcon(":/icon/pink"));
+		buttViewGroup->button(V_NESTED)->setIcon(QIcon(":/icon/purple"));
+	}else{
+		buttViewGroup->button(V_LIST)->setIcon(QIcon(":/icon/purple"));
+		buttViewGroup->button(V_NESTED)->setIcon(QIcon(":/icon/pink"));
+	}
+	load_tree();
 }
 
 
@@ -365,9 +357,9 @@ void AircraftWidget::load_aircraft_shell(){
 	}
 }
 
-
-//*** Borrowed from fgX gitourious - ta Gral ;-)
-QStringList AircraftWidget::aircraft_xml_set(){
+//========================================================
+//*** Walk XML - sets
+QStringList AircraftWidget::scan_xml_sets(){
 
 
 	QStringList aeroList;
@@ -430,6 +422,7 @@ QStringList AircraftWidget::aircraft_xml_set(){
 							fdm = n.firstChildElement("flight-model").text();
 						} /* !query.isValid() */
 					} /*  xmlFile.open() */
+
 					QString record = QString("%1~|~%2~|~%3~|~%4~|~%5~|~%6").arg(directory, xml_file, aero, fdm, description, author );
 					aeroList << record;
 
@@ -445,9 +438,10 @@ QStringList AircraftWidget::aircraft_xml_set(){
 //=============================================================
 // Save Settings
 void AircraftWidget::save_settings(){
-
-
-
+	if(treeWidget->indexOfTopLevelItem(treeWidget->currentItem()) != -1){
+		settings.setValue("aircraft", treeWidget->currentItem()->text(C_XML) );
+	}
+	settings.sync();
 
 }
 
@@ -456,6 +450,14 @@ void AircraftWidget::save_settings(){
 // Load Settings
 void AircraftWidget::load_settings(){
 
+	QString aeroxml = settings.value("aircraft").toString();
+	qDebug() << aeroxml;
+	if(buttViewGroup->checkedId() == V_LIST){
+		QList<QTreeWidgetItem*> items = treeWidget->findItems(aeroxml, Qt::MatchExactly, C_XML);
+		if(items.length() > 0){
+			treeWidget->setCurrentItem(items[0]);
+		}
+	}
 
 
 }
@@ -470,39 +472,57 @@ bool AircraftWidget::validate(){
 
 
 //=============================================================
-// Initialize
-void AircraftWidget::initialize(){
-	QStringList aeroList = settings.value("aircraft_list").toStringList();
+// Load Airraft To Tree
+void AircraftWidget::load_tree(){
+
+
+	treeWidget->setUpdatesEnabled(false);
+	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 	QString record;
 	QString last_dir("");
-	QTreeWidgetItem *dirItem;
+	QTreeWidgetItem *parentItem;
+
+	int view = buttViewGroup->checkedId();
+	if(view == V_LIST){
+		parentItem = treeWidget->invisibleRootItem();
+	}
+	treeWidget->setColumnHidden(C_DIR, view == V_LIST);
+	treeWidget->setRootIsDecorated(view == V_NESTED);
 
 	 for (int i = 0; i < aeroList.size(); ++i) {
 		record = aeroList.at(i);
 		QStringList fields = record.split("~|~");
 
-		if(last_dir != fields.at(C_DIR)){
-			dirItem = new QTreeWidgetItem();
-			dirItem->setText( C_DIR, fields.at(0));
-			dirItem->setIcon(C_DIR, QIcon(":/icon/folder"));
-			treeWidget->addTopLevelItem(dirItem);
-			treeWidget->setFirstItemColumnSpanned(dirItem, true);
+		if(view == V_NESTED and last_dir != fields.at(C_DIR)){
+			parentItem = new QTreeWidgetItem();
+			parentItem->setText( C_DIR, fields.at(0));
+			parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
+			treeWidget->addTopLevelItem(parentItem);
+			treeWidget->setFirstItemColumnSpanned(parentItem, true);
 			last_dir = fields.at(C_DIR);
 		}
 		//directory, xml_file, aero, fdm, description, author
-		QTreeWidgetItem *aeroItem = new QTreeWidgetItem(dirItem);
-		aeroItem->setText(C_XML, fields.at(1));
+		QTreeWidgetItem *aeroItem = new QTreeWidgetItem(parentItem);
+		QString xml_path = QString("%1/%2").arg(fields.at(0), fields.at(1));
+		aeroItem->setText(C_XML, xml_path);
 		aeroItem->setText(C_AERO, fields.at(2));
 		aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
 		aeroItem->setText(C_FDM, fields.at(3));
 		aeroItem->setText(C_DESCRIPTION, fields.at(4));
 		aeroItem->setText(C_AUTHOR, fields.at(5));
 	 }
-	 treeWidget->sortByColumn(C_DIR, Qt::AscendingOrder);
+	 treeWidget->sortByColumn(view == V_NESTED ? C_DIR : C_AERO, Qt::AscendingOrder);
+	 treeWidget->setUpdatesEnabled(true);
 }
 
 //=============================================================
 // Initialize
-void AircraftWidget::load_aircraft(){
-	settings.setValue("aircraft_list", aircraft_xml_set());
+void AircraftWidget::initialize(){
+	aeroList = settings.value("aircraft_list").toStringList();
+	if(aeroList.count() == 0){
+		//assume its never been initialised
+		scan_xml_sets();
+	}
+	aeroList = settings.value("aircraft_list").toStringList();
+	load_tree();
 }

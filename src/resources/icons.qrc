@@ -9,5 +9,7 @@
         <file alias="quit">book_previous.png</file>
         <file alias="aircraft">bullet_green.png</file>
         <file alias="folder">folder.png</file>
+        <file alias="pink">bullet_pink.png</file>
+        <file alias="purple">bullet_purple.png</file>
     </qresource>
 </RCC>

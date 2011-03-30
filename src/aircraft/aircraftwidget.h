@@ -6,6 +6,7 @@
 
 #include <QtGui/QWidget>
 #include <QtGui/QAbstractButton>
+#include <QtGui/QButtonGroup>
 
 #include <QtGui/QTreeWidget>
 #include <QtGui/QLabel>
@@ -22,18 +23,23 @@ public:
 		C_DIR = 0,
 		C_XML = 1,
 		C_AERO = 2,
-		C_FDM = 3,
-		C_DESCRIPTION = 4,
+		C_DESCRIPTION = 3,
+		C_FDM = 4,
 		C_AUTHOR = 5
-
 	};
-
+	enum VIEWS{
+		V_LIST = 0,
+		V_NESTED = 1
+	};
 
 	explicit AircraftWidget(QWidget *parent = 0);
 
+
 	XSettings settings;
+	QStringList aeroList;
 
 	QLabel *aeroImageLabel;
+	QButtonGroup *buttViewGroup;
 
 private:
 	QTreeWidget *treeWidget;
@@ -54,9 +60,9 @@ signals:
 	void set_arg(QString action, QString arg, QString value);
 
 public slots:
-	void load_aircraft();
+	void load_tree();
 	void load_aircraft_shell();
-	QStringList aircraft_xml_set();
+	QStringList scan_xml_sets();
 
 	void on_tree_selection_changed();
 	void on_auto_coordination(bool state);
