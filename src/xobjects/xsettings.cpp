@@ -84,10 +84,10 @@ void XSettings::restoreWindow(QWidget *widget){
 	widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
 }
 QString XSettings::_windowName(QWidget *widget){
-	QString ki = "window/";
-	ki.append(widget->property("settings_namespace").toString());
-	ki.append("/geometry");
-	return ki;
+	QString key_name = "window/";
+	key_name.append(widget->property("settings_namespace").toString());
+	key_name.append("/geometry");
+	return key_name;
 }
 
 

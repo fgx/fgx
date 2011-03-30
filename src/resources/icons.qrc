@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file alias="save">accept.png</file>
+        <file alias="settings">cog.png</file>
+        <file alias="cancel">bullet_black.png</file>
+    </qresource>
+</RCC>

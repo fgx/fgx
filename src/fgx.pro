@@ -9,8 +9,11 @@ QT += network
 
 # Input
 HEADERS += fgx.h \
-    xobjects/xsettings.h
+    xobjects/xsettings.h \
+    settings/settingsdialog.h
 FORMS += fgx.ui
 SOURCES += main.cpp \
     fgx.cpp \
-    xobjects/xsettings.cpp
+    xobjects/xsettings.cpp \
+    settings/settingsdialog.cpp
+RESOURCES += resources/icons.qrc

@@ -55,7 +55,7 @@
      <enum>QTabWidget::Triangular</enum>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="usesScrollButtons">
      <bool>false</bool>
@@ -1282,6 +1282,19 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="margin">
      <number>10</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buttonTest">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>590</y>
+      <width>80</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
     </property>
    </widget>
   </widget>

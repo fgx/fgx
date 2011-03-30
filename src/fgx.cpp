@@ -22,11 +22,16 @@
 #include <QProgressDialog>
 #include <QTimer>
 
+#include "settings/settingsdialog.h"
+
 
 fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	setupUi(this);
+	setProperty("settings_namespace", QVariant("launcher_window"));
 	settings.restoreWindow(this);
+
+	//connect(ui->buttonTest, SIGNAL(clicked()), this, SLOT(on_test_button_clicked()));
 
 	checkFGFS();
 	on_enableMultiplayer_clicked();
@@ -70,16 +75,17 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	ps.setProcessChannelMode(QProcess::MergedChannels);
 	
 	readSettings();
-	}
 
+
+} /* end constructor */
 
 fgx::~fgx(){
-	
-	}
+
+}
+
 
 
 // Start FlightGear
-
 void fgx::on_fgStart_clicked() {
 	
 	checkScenery();
@@ -519,13 +525,11 @@ void fgx::writeSettings()
 
 void fgx::readSettings()
 {
-	//QSettings settings("fgx", "FlightGear Starter OSX");
 	
-	QString fgdataPathSet = settings.value("fgdataPath").toString();
-	fgdataPath->setText(fgdataPathSet);
+	qDebug() << settings.fg_root() << "  " << settings.fgfs_path();
+	fgdataPath->setText(settings.fg_root());
 	
-	QString fgfsPathSet = settings.value("fgfsPath").toString();
-	fgfsPath->setText(fgfsPathSet);
+	fgfsPath->setText(settings.fgfs_path());
 	
 	QString useFGXfgfsSet = settings.value("useFGXfgfs").toString();
 	if (useFGXfgfsSet == "true") {
@@ -1199,5 +1203,11 @@ void fgx::closeEvent(QCloseEvent *event)
 	writeSettings();
 	settings.saveWindow(this);
 	event->accept();
+}
+
+void fgx::on_buttonTest_clicked(){
+	qDebug() << "test";
+	SettingsDialog *settingsDialog = new SettingsDialog();
+	settingsDialog->exec();
 }
 

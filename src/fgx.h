@@ -63,6 +63,8 @@ private slots:
 	void checkAircraftList();
 
 	void checkAirportlist();
+
+	void on_buttonTest_clicked();
 };
 
 

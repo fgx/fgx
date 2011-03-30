@@ -1,5 +1,7 @@
 *.o
 moc_*.cpp
+qrc_*.cpp
 Makefile
 fgx
+fgx.pro.user
 

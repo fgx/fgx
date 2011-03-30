@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'fgx.ui'
 **
-** Created: Thu Mar 24 15:30:11 2011
-**      by: Qt User Interface Compiler version 4.7.1
+** Created: Wed Mar 30 10:52:44 2011
+**      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -112,6 +112,7 @@ public:
     QLabel *label_loglevel_2;
     QLabel *label_9;
     QLabel *fgx_logo;
+    QPushButton *buttonTest;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *mainWindow)
@@ -402,6 +403,9 @@ public:
         fgx_logo->setStyleSheet(QString::fromUtf8(""));
         fgx_logo->setPixmap(QPixmap(QString::fromUtf8("../../originaldateien/logo-version-release22.png")));
         fgx_logo->setMargin(10);
+        buttonTest = new QPushButton(centralwidget);
+        buttonTest->setObjectName(QString::fromUtf8("buttonTest"));
+        buttonTest->setGeometry(QRect(160, 590, 80, 24));
         mainWindow->setCentralWidget(centralwidget);
         statusbar = new QStatusBar(mainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -409,7 +413,7 @@ public:
 
         retranslateUi(mainWindow);
 
-        tabs->setCurrentIndex(2);
+        tabs->setCurrentIndex(0);
         screenSize->setCurrentIndex(1);
         tabWidget->setCurrentIndex(0);
         logLevel->setCurrentIndex(0);
@@ -597,6 +601,7 @@ public:
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9pt; font-weight:600; color:#717171;\">FGX</span><span style=\" font-size:9pt; color:#717171;\"> \302\251 2011 Gral aka Yves Sablonier, Zurich //  </span><a href=\"http://www.gnu.org/licenses/gpl-2.0.txt\"><span style=\" font-size:9pt; text-decoration: underline; color:#0000ff;\">GPL2</span></a><span style=\" font-size:9pt; color:#717171;\"> // </span><a href=\"http://wiki.flightgear.org\"><span style=\" font-size:9pt; text-decoration: underline; color:#0000ff;\">FlightGear</span></a><span style=\" font-size:9pt; color:#717171;\"> l"
                         "auncher for OSX</span></p></body></html>", 0, QApplication::UnicodeUTF8));
         fgx_logo->setText(QString());
+        buttonTest->setText(QApplication::translate("mainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
