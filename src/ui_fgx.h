@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'fgx.ui'
 **
-** Created: Wed Mar 30 10:52:44 2011
+** Created: Wed Mar 30 11:18:52 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -120,6 +120,9 @@ public:
         if (mainWindow->objectName().isEmpty())
             mainWindow->setObjectName(QString::fromUtf8("mainWindow"));
         mainWindow->resize(566, 649);
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/icon/favicon"), QSize(), QIcon::Normal, QIcon::Off);
+        mainWindow->setWindowIcon(icon);
         mainWindow->setAutoFillBackground(false);
         mainWindow->setStyleSheet(QString::fromUtf8(""));
         mainWindow->setTabShape(QTabWidget::Rounded);

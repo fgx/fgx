@@ -1,4 +1,6 @@
 
+#include <QDebug>
+
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QByteArray>
@@ -30,19 +32,13 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 	setProperty("settings_namespace", QVariant("settings_window"));
 	settings.restoreWindow(this);
 
-
 	setWindowTitle(tr("Settings"));
 	setWindowIcon(QIcon(":/icon/settings"));
 
-    //* Main Layout
-    QVBoxLayout *mainContainer = new QVBoxLayout();
-    setLayout(mainContainer);
-    mainContainer->setSpacing(0);
-    mainContainer->setContentsMargins(0,0,0,0);
 
     //* Main Layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
-    mainContainer->addLayout(mainLayout);
+	setLayout(mainLayout);
     mainLayout->setSpacing(20);
     int m = 20;
     mainLayout->setContentsMargins(m,m,m,m);
@@ -176,14 +172,18 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     mainLayout->addLayout(buttonBox);
     buttonBox->addStretch(10);
 
+	QPushButton *buttCancel = new QPushButton();
+	buttonBox->addWidget(buttCancel);
+	buttCancel->setText("Cancel");
+	buttCancel->setIcon(QIcon(":/icon/cancel"));
+	connect(buttCancel, SIGNAL(clicked()), this, SLOT(reject()));
+
     QPushButton *buttSave = new QPushButton();
     buttonBox->addWidget(buttSave);
     buttSave->setText("Save");
 	buttSave->setIcon(QIcon(":/icon/save"));
 	connect(buttSave, SIGNAL(clicked()), this, SLOT(on_save_clicked()));
 
-
-    mainContainer->addStretch(20);
 
 	load_settings();
 }
@@ -202,7 +202,6 @@ void SettingsDialog::on_save_clicked(){
 	settings.setValue("FGFS", txtFgfs->text());
 	settings.setValue("FG_ROOT", txtFgRoot->text());
 	settings.sync();
-	// TODO maybe a transmiit ()??
 	accept();
 }
 
@@ -226,26 +225,26 @@ QString SettingsDialog::set_frame_style(QString color){
 //* Autodetect fgfs - this wont work on windows proabably
 void SettingsDialog::on_fgfs_autodetect(){
 
-	QString program = "which fgfs";
-
+	//if(settings.runningOs() == )
+	QString command = "which fgfs";
+	qDebug() << "command=" << command;
 	QProcess *process = new QProcess(this);
-	process->start(program);
+	process->start(command);
 
 	if(process->waitForStarted()){
+			qDebug() << "wait";
 			process->waitForFinished();
 			QByteArray result =  process->readAllStandardOutput();
 			//QByteArray errorResult = process->readAllStandardError();
 			QString exe = QString(result).trimmed();
 
 			if(exe.length() == 0){
-				statusBar->showMessage( tr("fgfs not found").append(" :-(") , 5000);
-				grpFgfs->setStyleSheet(set_frame_style("pink"));
+				// none found
 			}else{
-				statusBar->showMessage( tr("OK fgfs found ").append(" :-)") , 5000);
 				txtFgfs->setText(exe);
-				grpFgfs->setStyleSheet(set_frame_style("#77FF77"));
 			}
 			QStringList lines = QString(result).split("\n");
+			qDebug() << "LINES=" << lines;
 		}
 }
 

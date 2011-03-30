@@ -28,10 +28,10 @@
 fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	setupUi(this);
+
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	settings.restoreWindow(this);
 
-	//connect(ui->buttonTest, SIGNAL(clicked()), this, SLOT(on_test_button_clicked()));
 
 	checkFGFS();
 	on_enableMultiplayer_clicked();
