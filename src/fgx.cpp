@@ -25,7 +25,7 @@
 
 fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	setupUi(this);
-	readSettings();
+
 	checkFGFS();
 	on_enableMultiplayer_clicked();
 	on_useMetar_clicked();
@@ -67,6 +67,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	
 	ps.setProcessChannelMode(QProcess::MergedChannels);
 	
+	readSettings();
 	}
 
 
@@ -400,7 +401,7 @@ void fgx::on_fgStart_clicked() {
 
 void fgx::writeSettings()
 {
-	QSettings settings("fgx", "FlightGear Starter OSX");
+	//QSettings settings("fgx", "FlightGear Starter OSX");
 	
 	settings.setValue("fgdataPath", fgdataPath->text());
 	
@@ -516,7 +517,7 @@ void fgx::writeSettings()
 
 void fgx::readSettings()
 {
-	QSettings settings("fgx", "FlightGear Starter OSX");
+	//QSettings settings("fgx", "FlightGear Starter OSX");
 	
 	QString fgdataPathSet = settings.value("fgdataPath").toString();
 	fgdataPath->setText(fgdataPathSet);
@@ -586,7 +587,7 @@ void fgx::readSettings()
 	QString multiplayerPortSet = settings.value("multiplayerPort").toString();
 	multiplayerPort->setText(multiplayerPortSet);
 	
-	
+
 	if (settings.value("locationIcao").toString() != "") {
 		QString locationICAOSet = settings.value("locationIcao").toString();
 		locationIcao->insertItem(0, locationICAOSet);
@@ -597,14 +598,13 @@ void fgx::readSettings()
 		timeoftheDay->setCurrentIndex(0);
 	}
 
-	
 	QString usecustomScenerySet = settings.value("usecustomScenery").toString();
 	if (usecustomScenerySet == "true") {
 		usecustomScenery->setCheckState(Qt::Checked);
 	} else {
 		usecustomScenery->setCheckState(Qt::Unchecked);
 	}
-	
+
 	if (settings.value("airCraft").toString() != "") {
 		QString airCraftSet = settings.value("airCraft").toString();
 		airCraft->insertItem(0, airCraftSet);
@@ -615,7 +615,6 @@ void fgx::readSettings()
 		timeoftheDay->setCurrentIndex(0);
 	}
 
-	
 	QString useCoordinatesSet = settings.value("useCoordinates").toString();
 	if (useCoordinatesSet == "true") {
 		useCoordinates->setCheckState(Qt::Checked);
@@ -820,8 +819,11 @@ void fgx::checkAircraftImage() {
 	if (!fileName.isEmpty()) {
 		QImage image(fileName);
 		if (image.isNull()) {
+			// TODO - make sure this shows a null image or alike and solve problem another way
+			/*
 			QMessageBox::information(this, tr("Image Viewer"),
 									 tr("Please click on refresh on tab \"path/programs\". Cannot load %1.").arg(fileName));
+			*/
 			return;
 		}
 			aircraftImage->setPixmap(QPixmap::fromImage(image));
@@ -1193,6 +1195,7 @@ void fgx::checkScenery() {
 void fgx::closeEvent(QCloseEvent *event)
 {
 	writeSettings();
+	settings.saveWindow()
 	event->accept();
 }
 

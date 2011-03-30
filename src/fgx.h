@@ -33,8 +33,9 @@ private:
 	Ui::mainWindow *ui;
 	QProcess ps;
 	QProcess *fgProcess;
+	QSettings settings;
 	
-	private slots:
+private slots:
 	void on_fgStart_clicked();
 	void on_set_fgdata_path_Button_clicked();
 	void checkFGFS();
@@ -46,17 +47,21 @@ private:
 	void on_useParkPosition_clicked();
 	void on_locationIcao_activated();
 	void checkCoords();	
-	void checkScenery();
+	void on_tabs_currentChanged();
+
 	void readSettings();
 	void writeSettings();
-	void on_tabs_currentChanged();
+
+
 	void on_usecustomScenery_clicked();
+	void checkScenery();
+
 	void on_airCraft_activated();
-	void checkAirportlist();
 	void checkAircraftImage();
 	void checkAircraftListStartup();
 	void checkAircraftList();
-	
+
+	void checkAirportlist();
 };
 
 

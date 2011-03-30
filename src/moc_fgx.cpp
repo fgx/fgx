@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'fgx.h'
 **
-** Created: Fri Mar 25 00:00:50 2011
-**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.1)
+** Created: Wed Mar 30 09:47:30 2011
+**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -11,7 +11,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'fgx.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 62
-#error "This file was generated using the moc from 4.7.1. It"
+#error "This file was generated using the moc from 4.7.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -43,15 +43,15 @@ static const uint qt_meta_data_fgx[] = {
      229,    4,    4,    4, 0x08,
      257,    4,    4,    4, 0x08,
      271,    4,    4,    4, 0x08,
-     286,    4,    4,    4, 0x08,
-     301,    4,    4,    4, 0x08,
-     317,    4,    4,    4, 0x08,
-     342,    4,    4,    4, 0x08,
+     296,    4,    4,    4, 0x08,
+     311,    4,    4,    4, 0x08,
+     327,    4,    4,    4, 0x08,
+     357,    4,    4,    4, 0x08,
      372,    4,    4,    4, 0x08,
      396,    4,    4,    4, 0x08,
-     415,    4,    4,    4, 0x08,
-     436,    4,    4,    4, 0x08,
-     463,    4,    4,    4, 0x08,
+     417,    4,    4,    4, 0x08,
+     444,    4,    4,    4, 0x08,
+     464,    4,    4,    4, 0x08,
 
        0        // eod
 };
@@ -65,12 +65,11 @@ static const char qt_meta_stringdata_fgx[] = {
     "on_useCoordinates_clicked()\0"
     "on_useParkPosition_clicked()\0"
     "on_locationIcao_activated()\0checkCoords()\0"
-    "checkScenery()\0readSettings()\0"
-    "writeSettings()\0on_tabs_currentChanged()\0"
-    "on_usecustomScenery_clicked()\0"
-    "on_airCraft_activated()\0checkAirportlist()\0"
+    "on_tabs_currentChanged()\0readSettings()\0"
+    "writeSettings()\0on_usecustomScenery_clicked()\0"
+    "checkScenery()\0on_airCraft_activated()\0"
     "checkAircraftImage()\0checkAircraftListStartup()\0"
-    "checkAircraftList()\0"
+    "checkAircraftList()\0checkAirportlist()\0"
 };
 
 const QMetaObject fgx::staticMetaObject = {
@@ -115,16 +114,16 @@ int fgx::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 8: on_useParkPosition_clicked(); break;
         case 9: on_locationIcao_activated(); break;
         case 10: checkCoords(); break;
-        case 11: checkScenery(); break;
+        case 11: on_tabs_currentChanged(); break;
         case 12: readSettings(); break;
         case 13: writeSettings(); break;
-        case 14: on_tabs_currentChanged(); break;
-        case 15: on_usecustomScenery_clicked(); break;
+        case 14: on_usecustomScenery_clicked(); break;
+        case 15: checkScenery(); break;
         case 16: on_airCraft_activated(); break;
-        case 17: checkAirportlist(); break;
-        case 18: checkAircraftImage(); break;
-        case 19: checkAircraftListStartup(); break;
-        case 20: checkAircraftList(); break;
+        case 17: checkAircraftImage(); break;
+        case 18: checkAircraftListStartup(); break;
+        case 19: checkAircraftList(); break;
+        case 20: checkAirportlist(); break;
         default: ;
         }
         _id -= 21;
