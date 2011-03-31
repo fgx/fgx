@@ -570,7 +570,8 @@ void fgx::on_groupBoxSetTime_clicked() {
 }
 
 // Metar checked
-void fgx::on_weather_selected() {
+void fgx::on_buttonGroupWeather_buttonClicked(int id) {
+	Q_UNUSED(id)
 	metarText->setEnabled(buttonGroupWeather->checkedId() == METAR_EDIT);
 	if(buttonGroupWeather->checkedId() == METAR_EDIT){
 		metarText->setFocus();

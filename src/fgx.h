@@ -94,7 +94,7 @@ private slots:
 
 
 	void on_groupBoxSetTime_clicked();
-	void on_weather_selected();
+	void on_buttonGroupWeather_buttonClicked(int);
 	void on_style(QAction *act);
 
 	void on_tabs_currentChanged(int);
