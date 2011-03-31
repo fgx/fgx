@@ -73,44 +73,28 @@ private:
 
 private slots:
 
-	void show_settings_dialog();
+
 	void on_buttonFgFsPath_clicked();
 	void on_buttonFgRootPath_clicked();
 
 
 	void on_buttonStartFg_clicked();
 	void on_buttonStopFg_clicked();
-
-	void on_groupBoxSetTime_clicked();
-
-
-	void on_weather_selected();
-
-	void on_useParkPosition_clicked();
-	void on_locationIcao_activated();
-
-	void on_checkBoxUseCoordinates_clicked();
-
-	void on_tabs_currentChanged();
-
-	void load_settings();
-	void save_settings();
-
-
-	void on_usecustomScenery_clicked();
-	void checkScenery();
-
-
-	void checkAirportlist();
-
-
-
-
 	void on_buttonTest_clicked();
 
-	void on_tabs_currentChanged(int);
+	void on_groupBoxSetTime_clicked();
+	void on_weather_selected();
 
+
+	void on_tabs_currentChanged(int);
+	void show_settings_dialog();
+	void load_settings();
+	void save_settings();
 	void initialize();
+
+
+
+
 };
 
 

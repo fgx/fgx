@@ -6,18 +6,17 @@
 #include <QXmlStreamReader>
 
 #include <QtGui/QWidget>
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QTreeView>
-#include <QtGui/QTreeWidget>
-
 #include <QtGui/QButtonGroup>
 #include <QtGui/QRadioButton>
+#include <QtGui/QPushButton>
 #include <QtGui/QProgressBar>
 #include <QtGui/QStatusBar>
 #include <QtGui/QGroupBox>
 
-
+#include <QtGui/QStandardItemModel>
+#include <QtGui/QSortFilterProxyModel>
+#include <QtGui/QTreeView>
+#include <QtGui/QTreeWidget>
 
 #include "xobjects/xsettings.h"
 
@@ -27,7 +26,7 @@ Q_OBJECT
 public:
     enum COLS{
         C_FAV = 0,
-        C_CODE = 1,
+		C_ICAO = 1,
         C_TOWER = 2,
         C_ELEVATION = 3,
 		C_NAME = 4,
@@ -44,7 +43,7 @@ public:
     QStandardItemModel *model;
     QSortFilterProxyModel *proxyModel;
     QTreeView *treeView;
-
+	QPushButton *buttonRefreshTree;
 	QStatusBar *statusBarAirports;
 	QStatusBar *statusBarRunways;
 	//QProgressBar *progressAirportsLoad;
@@ -55,14 +54,18 @@ public:
     QTreeWidget *treeWidgetRunways;
 
     void show_progress(bool state);
-	void initialize();
+
 	void scan_airports_xml();
 	void load_tree();
 
 	QLineEdit *txtLat;
 	QLineEdit *txtLng;
 
-
+	QStringList get_args();
+	void initialize();
+	void save_settings();
+	void load_settings();
+	bool validate();
 
 signals:
 	void set_arg(QString action, QString arg, QString value);

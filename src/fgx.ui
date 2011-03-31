@@ -64,7 +64,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>1</number>
         </property>
         <property name="usesScrollButtons">
          <bool>false</bool>
@@ -298,55 +298,7 @@ p, li { white-space: pre-wrap; }
           <string>Location</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_9">
-          <item row="0" column="0" colspan="2">
-           <widget class="QCheckBox" name="usecustomScenery">
-            <property name="toolTip">
-             <string>Don’t forget to check Terrasync download at Paths and Programs tab</string>
-            </property>
-            <property name="text">
-             <string>Use custom scenery</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="labelLocation">
-            <property name="text">
-             <string>Airport (ICAO/IATA)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QComboBox" name="locationIcao">
-            <property name="editable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_runway">
-            <property name="text">
-             <string>Runway</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QComboBox" name="runWay">
-            <property name="editable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QCheckBox" name="useParkPosition">
-            <property name="text">
-             <string>Use Park Position:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="2" rowspan="2">
+          <item row="0" column="1" rowspan="2">
            <spacer name="verticalSpacer_10">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -359,21 +311,7 @@ p, li { white-space: pre-wrap; }
             </property>
            </spacer>
           </item>
-          <item row="6" column="0">
-           <widget class="QComboBox" name="parkPosition">
-            <property name="editable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0" colspan="3">
-           <widget class="QLabel" name="sceneryCheck">
-            <property name="text">
-             <string>Scenery Check</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
+          <item row="2" column="0">
            <spacer name="verticalSpacer_11">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -385,46 +323,6 @@ p, li { white-space: pre-wrap; }
              </size>
             </property>
            </spacer>
-          </item>
-          <item row="1" column="1" rowspan="3" colspan="2">
-           <widget class="QGroupBox" name="checkBoxUseCoordinates">
-            <property name="title">
-             <string>Use coordinates</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_8">
-             <item row="0" column="0">
-              <widget class="QLabel" name="labelLatitude">
-               <property name="text">
-                <string>Latitude</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="labelLongitude">
-               <property name="text">
-                <string>Longitude</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLineEdit" name="Latitude">
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QLineEdit" name="Longitude">
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
           </item>
          </layout>
         </widget>

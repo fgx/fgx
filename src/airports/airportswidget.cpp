@@ -105,7 +105,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     treeToolbar->addWidget(buttCode);
     buttGroupFilter->addButton(buttCode);
     buttCode->setText("Code");
-    buttCode->setProperty("column", QVariant(C_CODE));
+	buttCode->setProperty("column", QVariant(C_ICAO));
 
 
     //** Name Filter
@@ -176,7 +176,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	treeView->setColumnHidden(C_FAV, true);
 	treeView->setColumnHidden(C_XML, true);
     treeView->setColumnWidth(C_FAV, 50);
-    treeView->setColumnWidth(C_CODE, 80);
+	treeView->setColumnWidth(C_ICAO, 80);
     treeView->setColumnWidth(C_TOWER, 50);
     treeView->setColumnWidth(C_ELEVATION, 80);
 
@@ -302,7 +302,8 @@ void AirportsWidget::initialize(){
 //============================================================================
 void AirportsWidget::scan_airports_xml(){
 
-    show_progress(true);
+	QProgressDialog progress;
+	progress.show();
 
 	QString directory = settings.airports_path();
 
@@ -322,6 +323,7 @@ void AirportsWidget::scan_airports_xml(){
 	}
 
 	settings.setValue("cache/aiports", airportsList);
+	progress.hide();
 }
 //============================================================================
 //** Load Airports Tree
@@ -342,7 +344,7 @@ void AirportsWidget::load_tree(){
 		font.setFamily("monospace");
 		itemIcao->setFont(font);
 		itemIcao->setText(airport.at(1));
-		model->setItem(i, C_CODE, itemIcao);
+		model->setItem(i, C_ICAO, itemIcao);
 
 
 		QStandardItem *itemXml = new QStandardItem();
@@ -366,6 +368,14 @@ void AirportsWidget::load_tree(){
 	//qDebug() << "set row count";
 	//show_progress(false);
 	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
+
+	QList<QStandardItem *> items = model->findItems("KSFO", Qt::MatchExactly, C_ICAO);
+	if(items.count() > 0){
+		QModelIndex srcIdx = model->indexFromItem(items[0]);
+		QModelIndex proxIdx = proxyModel->mapFromSource(srcIdx);
+		treeView->selectionModel()->select(proxIdx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
+
+	}
 }
 
 
@@ -400,7 +410,7 @@ void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex prev
                                             treeWidgetRunways->model()->rowCount()
                                             );
 
-	//QModelIndex proxyIndex =  treeView->selectionModel()->selectedRows(C_CODE).first();
+	//QModelIndex proxyIndex =  treeView->selectionModel()->selectedRows(C_ICAO).first();
 	QModelIndex proxyIndex =  proxyModel->index(current.row(), C_XML);
     if(!proxyIndex.isValid()){
 		//emit set_arg("remove", "--airport=", "");
@@ -508,4 +518,64 @@ void AirportsWidget::on_groupbox_use_coordinates(){
 	if(groupBoxUseCoordinates->isChecked()){
 		groupBoxAirport->setChecked(false);
 	}
+}
+
+
+
+QStringList AirportsWidget::get_args(){
+	QStringList args;
+	//if (parkPosition->isEnabled() == true) {
+	//	args << QString("--parkpos=").append(parkPosition->currentText());
+	//}
+
+	//* Coordinates
+	if(groupBoxUseCoordinates->isChecked()){
+		if( txtLat->text().length() > 0 and txtLng->text().length() > 0){
+			args << QString("--lat=").append(txtLat->text());
+			args << QString("--lon=").append(txtLng->text());
+		}
+
+	//* Airports
+	}else{
+		if(treeView->selectionModel()->hasSelection()){
+
+		}
+
+	}
+	return args;
+}
+
+// Save Settings
+void AirportsWidget::save_settings(){
+
+	settings.setValue("use_coordinates", groupBoxUseCoordinates->isChecked());
+	settings.setValue("lon", txtLat->text());
+	settings.setValue("lat", txtLng->text());
+
+
+	//settings.setValue("runway", runWay->currentText());
+	//settings.setValue("parkPosition", parkPosition->currentText());
+
+	settings.sync();
+	//qDebug() <<  "SAVE" << item->text(C_AERO);
+}
+
+
+//=============================================================
+// Load Settings
+void AirportsWidget::load_settings(){
+	//select_node(settings.value("aircraft").toString());
+	/*if (settings.value("locationIcao").toString() != "") {
+		QString locationICAOSet = settings.value("locationIcao").toString();
+		locationIcao->insertItem(0, locationICAOSet);
+		locationIcao->insertItem(1, "----");
+	} else {
+		locationIcao->insertItem(0, "KSFO");
+		locationIcao->insertItem(1, "----");
+		//timeoftheDay->setCurrentIndex(0);
+	}*/
+	groupBoxUseCoordinates->setChecked(settings.value("use_coordinates").toBool());
+	txtLat->setText(settings.value("lat").toString());
+	txtLng->setText(settings.value("lng").toString());
+	//settings.setValue("airport", locationIcao->currentText());
 }
