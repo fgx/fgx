@@ -7,21 +7,27 @@
  *
  */
 
-#include "fgx.h"
+
 #include <QFile>
 #include <QDir>
+#include <QDirIterator>
 #include <iostream>
 #include <QTextStream>
+
+#include <QXmlStreamReader>
 #include <QSettings>
-#include <QtGui/QCloseEvent>
 #include <QAbstractSocket>
 #include <QHostInfo>
-#include <QFileDialog>
-#include <QDirIterator>
-#include <QXmlStreamReader>
-#include <QProgressDialog>
 #include <QTimer>
 
+
+#include <QtGui/QCloseEvent>
+
+//#include <QFileDialog>
+//#include <QProgressDialog>
+
+
+#include "fgx.h"
 #include "settings/settingsdialog.h"
 
 
@@ -42,7 +48,16 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	networkWidget = new NetworkWidget(this);
 	tabs->insertTab(4, networkWidget, "Network");
 
-
+	buttonGroupTime = new QButtonGroup(this);
+	buttonGroupTime->setExclusive(true);
+	buttonGroupTime->addButton(radioButtonTimeRealTime);
+	buttonGroupTime->addButton(radioButtonTimeDawn);
+	buttonGroupTime->addButton(radioButtonTimeMorning);
+	buttonGroupTime->addButton(radioButtonTimeNoon);
+	buttonGroupTime->addButton(radioButtonTimeAfterNoon);
+	buttonGroupTime->addButton(radioButtonTimeEvening);
+	buttonGroupTime->addButton(radioButtonTimeDusk);
+	buttonGroupTime->addButton(radioButtonTimeMidnight);
 
 	//** Restore Settings
 	tabs->setCurrentIndex( settings.value("last_tab").toInt() );
@@ -115,7 +130,7 @@ void fgx::on_buttonStartFg_clicked() {
 
 	checkScenery();
 	
-	lineEditDebug->setPlainText(fg_args().join("\n"));
+	txtStartupCommand->setPlainText(fg_args().join("\n"));
 
 	//** This process will always start on the shell as fgfs returns an error help if incorrect args
 	bool start = QProcess::startDetached( settings.fgfs_path(), fg_args(), QString(), &pid_fg);
@@ -350,7 +365,7 @@ void fgx::save_settings()
 	settings.setValue("screen_splash", checkboxDisableSplash->isChecked());
 
 	
-	settings.setValue("timeoftheDay", timeoftheDay->currentText());
+	settings.setValue("timeofday", buttonGroupTime->checkedButton()->text());
 	settings.setValue("locationIcao", locationIcao->currentText());
 	
 	if (usecustomScenery->isChecked() == true) {
@@ -421,7 +436,7 @@ void fgx::load_settings()
 	}
 	
 
-	
+	//** Sartup sxreens
 	comboScreenSize->setCurrentIndex( comboScreenSize->findText(settings.value("screen_size").toString()) );
 	checkboxFullScreen->setChecked(settings.value("screen_full").toBool());
 	checkboxDisableSplash->setChecked(settings.value("screen_splash").toBool());
@@ -434,7 +449,7 @@ void fgx::load_settings()
 	} else {
 		locationIcao->insertItem(0, "KSFO");
 		locationIcao->insertItem(1, "----");
-		timeoftheDay->setCurrentIndex(0);
+		//timeoftheDay->setCurrentIndex(0);
 	}
 
 	QString usecustomScenerySet = settings.value("usecustomScenery").toString();
@@ -477,7 +492,19 @@ void fgx::load_settings()
 	} else {
 		groupBoxSetTime->setChecked(false);
 	}
-	
+
+	//** Time Of Day
+	QString tod = settings.value("timeofday", "Real Time").toString();
+	qDebug() << "TOD=" << tod;
+	QList<QAbstractButton *> todButtons = buttonGroupTime->buttons();
+	for (int i = 0; i < todButtons.size(); ++i) {
+		if(todButtons.at(i)->text() == tod){
+			todButtons.at(i)->setChecked(true);
+			break;
+		}
+	 }
+
+
 	QString WeatherSet = settings.value("Weather").toString();
 	if (WeatherSet == "real") {
 		Weather->setCurrentIndex(0);
@@ -498,16 +525,7 @@ void fgx::load_settings()
 	int size_idx = comboScreenSize->findText(settings.value("screen_size").toString());
 	comboScreenSize->setCurrentIndex( size_idx == -1 ? 0 : size_idx);
 	
-	if ( settings.value("timeoftheDay").toString() != "") {
-		QString timeoftheDaySet = settings.value("timeoftheDay").toString();
-		timeoftheDay->insertItem(0, timeoftheDaySet);
-		timeoftheDay->insertItem(1, "----");
-		timeoftheDay->setCurrentIndex(0);
-	} else {
-		timeoftheDay->insertItem(0, "real");
-		timeoftheDay->insertItem(1, "----");
-		timeoftheDay->setCurrentIndex(0);
-	}
+
 		
 	
 	lineEditExtraArgs->setPlainText(settings.value("extra_args").toString());
@@ -574,7 +592,7 @@ void fgx::on_enableMultiplayer_clicked() {
 void fgx::on_groupBoxSetTime_clicked() {
 	
 	bool enabled  = groupBoxSetTime->isChecked();
-	timeoftheDay->setEnabled(!enabled);
+	//timeoftheDay->setEnabled(!enabled);
 	year->setEnabled(enabled);
 	month->setEnabled(enabled);
 	day->setEnabled(enabled);
@@ -856,7 +874,7 @@ void fgx::on_buttonTest_clicked(){
 	//qDebug() << aircraftWidget->aircraft();
 	//aircraftWidget->save_settings();
 	save_settings();
-	lineEditDebug->setPlainText(fg_args().join("\n"));
+	txtStartupCommand->setPlainText(fg_args().join("\n"));
 	//qDebug() << start_fg_args();
 
 }

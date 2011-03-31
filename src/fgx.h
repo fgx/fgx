@@ -12,6 +12,7 @@
 
 #include <QProcess>
 #include <QMessageBox>
+#include <QButtonGroup>
 
 #include "ui_fgx.h"
 
@@ -44,7 +45,7 @@ private:
 	AircraftWidget *aircraftWidget;
 	NetworkWidget *networkWidget;
 
-
+	QButtonGroup *buttonGroupTime;
 
 	QStringList fg_args();
 	void start_fgcom();
