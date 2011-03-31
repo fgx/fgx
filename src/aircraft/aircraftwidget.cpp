@@ -106,8 +106,6 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
 	actionRefreshTree->setIcon(QIcon(":/icon/refresh"));
 	connect(actionRefreshTree, SIGNAL(triggered()), this, SLOT(on_refresh_cache()) );
 
-
-
 	//===============================================================
     //** Aircraft Tree
 	treeWidget = new QTreeWidget(this);
@@ -135,11 +133,6 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
 			 SIGNAL( itemSelectionChanged() ),
 			 SLOT( on_tree_selection_changed() )
 	);
-
-
-    statusBarTree = new QStatusBar();
-    treeLayout->addWidget(statusBarTree);
-    statusBarTree->showMessage("Idle");
 
 
 
@@ -346,7 +339,6 @@ void AircraftWidget::load_aircraft_shell(){
 //========================================================
 //*** Walk XML - sets
 QStringList AircraftWidget::scan_xml_sets(){
-
 
 	QStringList aeroList;
 
