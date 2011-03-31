@@ -34,6 +34,13 @@ public:
 		METAR_LIVE = 1,
 		METAR_EDIT = 2
 	};
+	enum LOG{
+		LOG_WARN = 0,
+		LOG_INFO = 1,
+		LOG_DEBUG = 2,
+		LOG_BULK = 3,
+		LOG_ALERT = 4,
+	};
 
 	fgx (QMainWindow *parent = 0);
 	~fgx();
@@ -53,6 +60,7 @@ private:
 
 	QButtonGroup *buttonGroupTime;
 	QButtonGroup *buttonGroupWeather;
+	QButtonGroup *buttonGroupLog;
 
 	QStringList fg_args();
 	void start_fgcom();

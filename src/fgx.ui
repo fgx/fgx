@@ -64,7 +64,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>3</number>
         </property>
         <property name="usesScrollButtons">
          <bool>false</bool>
@@ -679,35 +679,38 @@ p, li { white-space: pre-wrap; }
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_7">
              <item>
-              <widget class="QComboBox" name="comboBoxLogLevel">
-               <property name="currentIndex">
-                <number>0</number>
+              <widget class="QRadioButton" name="radioButtonLogWarn">
+               <property name="text">
+                <string>Warn</string>
                </property>
-               <item>
-                <property name="text">
-                 <string>warn</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>info</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>debug</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>bulk</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>alert</string>
-                </property>
-               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButtonLogInfo">
+               <property name="text">
+                <string>Info</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButtonLogDebug">
+               <property name="text">
+                <string>Debug</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButtonLogBulk">
+               <property name="text">
+                <string>Bulk</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButtonLogAlert">
+               <property name="text">
+                <string>Alert</string>
+               </property>
               </widget>
              </item>
              <item>

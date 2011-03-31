@@ -59,6 +59,15 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	buttonGroupWeather->addButton(radioButtonWeatherMetar, METAR_EDIT);
 	connect(buttonGroupWeather, SIGNAL(buttonClicked(int)), this, SLOT(on_weather_selected()));
 
+	buttonGroupLog = new QButtonGroup(this);
+	buttonGroupLog->setExclusive(true);
+	buttonGroupLog->addButton(radioButtonLogWarn, LOG_WARN);
+	buttonGroupLog->addButton(radioButtonLogInfo, LOG_INFO);
+	buttonGroupLog->addButton(radioButtonLogDebug, LOG_DEBUG);
+	buttonGroupLog->addButton(radioButtonLogBulk, LOG_BULK);
+	buttonGroupLog->addButton(radioButtonLogAlert, LOG_ALERT);
+
+
 	//** Initialse Extra Widgets
 	aircraftWidget = new AircraftWidget(this);
 	tabs->insertTab(3, aircraftWidget, "Aircraft");
@@ -339,7 +348,7 @@ QStringList fgx::fg_args(){
 	}
 
 	//* Log Level
-	args << QString("--log-level=").append(comboBoxLogLevel->currentText());
+	args << QString("--log-level=").append( buttonGroupLog->button(buttonGroupLog->checkedId())->text().toLower() );
 
 
 	if (checkBoxLogEnabled->isChecked()) {
@@ -374,7 +383,7 @@ void fgx::save_settings()
 	settings.setValue("screen_splash", checkboxDisableSplash->isChecked());
 
 	
-	settings.setValue("timeofday", buttonGroupTime->checkedButton()->text());
+
 	settings.setValue("locationIcao", locationIcao->currentText());
 	
 	if (usecustomScenery->isChecked() == true) {
@@ -400,18 +409,22 @@ void fgx::save_settings()
 	settings.setValue("minute", minute->text());
 	settings.setValue("second", second->text());
 	
+	//* Time
+	settings.setValue("timeofday", buttonGroupTime->checkedButton()->text());
 	if (groupBoxSetTime->isChecked() == true) {
 		settings.setValue("setTime", "true");
 	}	else {
 		settings.setValue("setTime", "false");
 	}
 	
+	//* Weather
 	settings.setValue("weather", buttonGroupWeather->checkedId());
 	settings.setValue("metar", metarText->toPlainText());
 	
+	//* Advanced
 	settings.setValue("extra_args", lineEditExtraArgs->toPlainText());
-	settings.setValue("log_level", comboBoxLogLevel->currentText());
 	settings.setValue("log_enabled", checkBoxLogEnabled->isChecked());
+	settings.setValue("log_level", buttonGroupLog->checkedId());
 
 	
 	
@@ -519,8 +532,8 @@ void fgx::load_settings()
 	
 	lineEditExtraArgs->setPlainText(settings.value("extra_args").toString());
 	checkBoxLogEnabled->setChecked(settings.value("log_enabled").toBool());
-	int idxLog = comboBoxLogLevel->findText(settings.value("log_level").toString());
-	comboBoxLogLevel->setCurrentIndex(idxLog == -1 ? 0 : idxLog);
+	int idxLog = settings.value("log_level", LOG_WARN).toInt();
+	buttonGroupLog->button(idxLog)->setChecked(true);
 
 }
 
