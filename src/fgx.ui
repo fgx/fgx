@@ -526,23 +526,23 @@ p, li { white-space: pre-wrap; }
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <item>
-              <widget class="QComboBox" name="Weather">
-               <item>
-                <property name="text">
-                 <string>real</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>disable</string>
-                </property>
-               </item>
+              <widget class="QRadioButton" name="radioButtonWeatherNone">
+               <property name="text">
+                <string>None</string>
+               </property>
               </widget>
              </item>
              <item>
-              <widget class="QCheckBox" name="useMetar">
+              <widget class="QRadioButton" name="radioButtonWeatherLive">
                <property name="text">
-                <string>Use this METAR:</string>
+                <string>Fetch METAR live</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButtonWeatherMetar">
+               <property name="text">
+                <string>METAR</string>
                </property>
               </widget>
              </item>

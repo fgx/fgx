@@ -29,6 +29,12 @@ protected:
 	void closeEvent(QCloseEvent *event);
 	
 public:
+	enum METAR{
+		METAR_NONE = 0,
+		METAR_LIVE = 1,
+		METAR_EDIT = 2
+	};
+
 	fgx (QMainWindow *parent = 0);
 	~fgx();
 	bool listchecked;
@@ -46,6 +52,7 @@ private:
 	NetworkWidget *networkWidget;
 
 	QButtonGroup *buttonGroupTime;
+	QButtonGroup *buttonGroupWeather;
 
 	QStringList fg_args();
 	void start_fgcom();
@@ -65,9 +72,10 @@ private slots:
 	void on_buttonStartFg_clicked();
 	void on_buttonStopFg_clicked();
 
-	void on_enableMultiplayer_clicked();
 	void on_groupBoxSetTime_clicked();
-	void on_useMetar_clicked();
+
+
+	void on_weather_selected();
 
 	void on_useParkPosition_clicked();
 	void on_locationIcao_activated();

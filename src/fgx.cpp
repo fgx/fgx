@@ -41,13 +41,6 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	fgx_logo->setText(QCoreApplication::applicationName());
 
-	//** Initialse Extra Widgets
-	aircraftWidget = new AircraftWidget(this);
-	tabs->insertTab(3, aircraftWidget, "Aircraft");
-
-	networkWidget = new NetworkWidget(this);
-	tabs->insertTab(4, networkWidget, "Network");
-
 	buttonGroupTime = new QButtonGroup(this);
 	buttonGroupTime->setExclusive(true);
 	buttonGroupTime->addButton(radioButtonTimeRealTime);
@@ -58,6 +51,22 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	buttonGroupTime->addButton(radioButtonTimeEvening);
 	buttonGroupTime->addButton(radioButtonTimeDusk);
 	buttonGroupTime->addButton(radioButtonTimeMidnight);
+
+	buttonGroupWeather = new QButtonGroup(this);
+	buttonGroupWeather->setExclusive(true);
+	buttonGroupWeather->addButton(radioButtonWeatherNone, METAR_NONE);
+	buttonGroupWeather->addButton(radioButtonWeatherLive, METAR_LIVE);
+	buttonGroupWeather->addButton(radioButtonWeatherMetar, METAR_EDIT);
+	connect(buttonGroupWeather, SIGNAL(buttonClicked(int)), this, SLOT(on_weather_selected()));
+
+	//** Initialse Extra Widgets
+	aircraftWidget = new AircraftWidget(this);
+	tabs->insertTab(3, aircraftWidget, "Aircraft");
+
+	networkWidget = new NetworkWidget(this);
+	tabs->insertTab(4, networkWidget, "Network");
+
+
 
 	//** Restore Settings
 	tabs->setCurrentIndex( settings.value("last_tab").toInt() );
@@ -281,7 +290,7 @@ QStringList fgx::fg_args(){
 	}
 
 	//* Weather fetch
-	if (Weather->currentText() == "real") {
+	if (buttonGroupWeather->checkedId() == METAR_LIVE) {
 		args << QString("--enable-real-weather-fetch");
 	}else{
 		args << QString("--disable-real-weather-fetch");
@@ -397,15 +406,8 @@ void fgx::save_settings()
 		settings.setValue("setTime", "false");
 	}
 	
-	settings.setValue("Weather", Weather->currentText());
-	
-	if (useMetar->isChecked() == true) {
-		settings.setValue("useMetar", "true");
-	}	else {
-		settings.setValue("useMetar", "false");
-	}
-	
-	settings.setValue("metarText", metarText->toPlainText());
+	settings.setValue("weather", buttonGroupWeather->checkedId());
+	settings.setValue("metar", metarText->toPlainText());
 	
 	settings.setValue("extra_args", lineEditExtraArgs->toPlainText());
 	settings.setValue("log_level", comboBoxLogLevel->currentText());
@@ -504,23 +506,10 @@ void fgx::load_settings()
 		}
 	 }
 
-
-	QString WeatherSet = settings.value("Weather").toString();
-	if (WeatherSet == "real") {
-		Weather->setCurrentIndex(0);
-	} else {
-		Weather->setCurrentIndex(1);
-	}
-	
-	QString useMetarSet = settings.value("useMetar").toString();
-	if (useMetarSet == "true") {
-		useMetar->setCheckState(Qt::Checked);
-	} else {
-		useMetar->setCheckState(Qt::Unchecked);
-	}
-
-	QString metarTextSet = settings.value("metarText").toString();
-	metarText->setPlainText(metarTextSet);
+	//** Weather
+	int idx_weather = settings.value("weather").toInt();
+	buttonGroupWeather->button(idx_weather)->setChecked(true);
+	metarText->setPlainText(settings.value("metar").toString());
 	
 	int size_idx = comboScreenSize->findText(settings.value("screen_size").toString());
 	comboScreenSize->setCurrentIndex( size_idx == -1 ? 0 : size_idx);
@@ -567,7 +556,7 @@ void fgx::on_checkBoxUseCoordinates_clicked() {
 
 // Multiplayer checked
 
-void fgx::on_enableMultiplayer_clicked() {
+//void fgx::on_enableMultiplayer_clicked() {
 	/*
 	Qt::CheckState state;
 
@@ -586,7 +575,7 @@ void fgx::on_enableMultiplayer_clicked() {
 		enableAITraffic->setCheckState(Qt::Checked);
 	}
 	*/
-}
+//}
 
 // Set Time checked
 void fgx::on_groupBoxSetTime_clicked() {
@@ -603,16 +592,10 @@ void fgx::on_groupBoxSetTime_clicked() {
 
 // Metar checked
 
-void fgx::on_useMetar_clicked() {
-	
-	Qt::CheckState metarstate;
-	
-	metarstate = useMetar->checkState();
-	if (metarstate == Qt::Checked) {
-		Weather->setEnabled(false);
-		Weather->setCurrentIndex(1);
-	} else {
-		Weather->setEnabled(true);
+void fgx::on_weather_selected() {
+	metarText->setEnabled(buttonGroupWeather->checkedId() == METAR_EDIT);
+	if(buttonGroupWeather->checkedId() == METAR_EDIT){
+		metarText->setFocus();
 	}
 }
 
