@@ -106,23 +106,13 @@ void fgx::on_fgStart_clicked() {
 
 	checkScenery();
 	
-
+	lineEditDebug->setPlainText(start_fg_args().join("\n"));
 	//** Start FlightGear
-	qDebug() << "COMMAND=" << start_fg_args();
-	//QProcess fgProcess;
+
 
 	bool start = QProcess::startDetached( settings.fgfs_path(), start_fg_args(), QString(), &pid_fg);
 	qDebug() << "PID=" << pid_fg << "=" << start;
-	/*
-	fgProcess.start(start_fg_command());
-	if(fgProcess.waitForStarted()){
-		fgProcess.waitForFinished();
-		QString ok_result = fgProcess.readAllStandardOutput();
-		QString error_result = fgProcess.readAllStandardError();
-		qDebug() << "OK=" << ok_result;
-		qDebug() << "ERROR=" << error_result;
-	}
-	*/
+
 }
 
 
@@ -270,11 +260,11 @@ QStringList fgx::start_fg_args(){
 	*/
 
 	//* Startup , Spalsh, Geometry
-	args << QString("--geometry=").append(screenSize->currentText());
-	if (disableSplashScreen->isChecked()) {
+	args << QString("--geometry=").append(comboScreenSize->currentText());
+	if (checkboxDisableSplash->isChecked()) {
 		args << QString("--disable-splash-screen");
 	}
-	if (useFullScreen->isChecked()) {
+	if (checkboxFullScreen->isChecked()) {
 		args << QString("--enable-fullscreen");
 	}
 
@@ -302,7 +292,7 @@ QStringList fgx::start_fg_args(){
 void fgx::save_settings()
 {
 	//## NB: fgfs path and FG_ROOT are saves in SettingsDialog ##
-
+	qDebug() << "saves settings";
 	aircraftWidget->save_settings();
 	networkWidget->save_settings();
 
@@ -313,19 +303,12 @@ void fgx::save_settings()
 	}
 	
 	
-	if (disableSplashScreen->isChecked() == true) {
-		settings.setValue("disableSplashScreen", "true");
-	}	else {
-		settings.setValue("disableSplashScreen", "false");
-	}
-	
-	settings.setValue("screenSize", screenSize->currentText());
-	
-	if (useFullScreen->isChecked() == true) {
-		settings.setValue("useFullScreens", "true");
-	}	else {
-		settings.setValue("useFullScreen", "false");
-	}
+
+
+	settings.setValue("screen_size", comboScreenSize->currentText());
+	settings.setValue("screen_full", checkboxFullScreen->isChecked());
+	settings.setValue("screen_splash", checkboxDisableSplash->isChecked());
+
 	
 	settings.setValue("timeoftheDay", timeoftheDay->currentText());
 	settings.setValue("locationIcao", locationIcao->currentText());
@@ -405,28 +388,10 @@ void fgx::load_settings()
 	
 
 	
-	
-	QString disableSplashScreenSet = settings.value("disableSplashScreen").toString();
-	if (disableSplashScreenSet == "true") {
-		disableSplashScreen->setCheckState(Qt::Checked);
-	} else {
-		disableSplashScreen->setCheckState(Qt::Unchecked);
-	}
-	
-	QString useFullScreenSet = settings.value("useFullScreen").toString();
-	if (useFullScreenSet == "true") {
-		useFullScreen->setCheckState(Qt::Checked);
-	} else {
-		useFullScreen->setCheckState(Qt::Unchecked);
-	}
-	/*
-	QString pathMultiplayerOutSet = settings.value("pathMultiplayerOut").toString();
-	pathMultiplayerOut->insertItem(0, pathMultiplayerOutSet);
-	pathMultiplayerOut->insertItem(1, "----");
-	
-	QString multiplayerPortSet = settings.value("multiplayerPort").toString();
-	multiplayerPort->setText(multiplayerPortSet);
-	*/
+	comboScreenSize->setCurrentIndex( comboScreenSize->findText(settings.value("screen_size").toString()) );
+	checkboxFullScreen->setChecked(settings.value("screen_full").toBool());
+	checkboxDisableSplash->setChecked(settings.value("screen_splash").toBool());
+
 
 	if (settings.value("locationIcao").toString() != "") {
 		QString locationICAOSet = settings.value("locationIcao").toString();
@@ -501,16 +466,8 @@ void fgx::load_settings()
 	QString metarTextSet = settings.value("metarText").toString();
 	metarText->setPlainText(metarTextSet);
 	
-	if (settings.value("screenSize").toString() != "") {
-		QString screenSizeSet = settings.value("screenSize").toString();
-		screenSize->insertItem(0, screenSizeSet);
-		screenSize->insertItem(1, "----");
-		screenSize->setCurrentIndex(0);
-	} else {
-		screenSize->insertItem(0, "1024x768");
-		screenSize->insertItem(1, "----");
-		screenSize->setCurrentIndex(0);
-	}
+	int size_idx = comboScreenSize->findText(settings.value("screen_size").toString());
+	comboScreenSize->setCurrentIndex( size_idx == -1 ? 0 : size_idx);
 	
 	if ( settings.value("timeoftheDay").toString() != "") {
 		QString timeoftheDaySet = settings.value("timeoftheDay").toString();

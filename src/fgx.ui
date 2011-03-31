@@ -14,7 +14,7 @@
    <string>FlightGear Launcher</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="resources/icons.qrc">
     <normaloff>:/icon/favicon</normaloff>:/icon/favicon</iconset>
   </property>
   <property name="autoFillBackground">
@@ -97,7 +97,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QComboBox" name="screenSize">
+              <widget class="QComboBox" name="comboScreenSize">
                <property name="editable">
                 <bool>true</bool>
                </property>
@@ -130,7 +130,7 @@
               </widget>
              </item>
              <item row="1" column="0" colspan="2">
-              <widget class="QCheckBox" name="disableSplashScreen">
+              <widget class="QCheckBox" name="checkboxDisableSplash">
                <property name="text">
                 <string>Disable Splash Screen</string>
                </property>
@@ -140,7 +140,7 @@
               </widget>
              </item>
              <item row="2" column="0" colspan="2">
-              <widget class="QCheckBox" name="useFullScreen">
+              <widget class="QCheckBox" name="checkboxFullScreen">
                <property name="text">
                 <string>Full screen at startup</string>
                </property>
@@ -191,7 +191,7 @@ p, li { white-space: pre-wrap; }
                    <string/>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources/icons.qrc">
                     <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                   </property>
                  </widget>
@@ -231,7 +231,7 @@ p, li { white-space: pre-wrap; }
                    <string/>
                   </property>
                   <property name="icon">
-                   <iconset>
+                   <iconset resource="resources/icons.qrc">
                     <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                   </property>
                  </widget>
@@ -768,7 +768,7 @@ p, li { white-space: pre-wrap; }
            <string>Start FlightGear</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="resources/icons.qrc">
             <normaloff>:/icon/start</normaloff>:/icon/start</iconset>
           </property>
          </widget>
@@ -833,7 +833,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset>
+    <iconset resource="resources/icons.qrc">
      <normaloff>:/icon/quit</normaloff>:/icon/quit</iconset>
    </property>
    <property name="text">
@@ -844,6 +844,8 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
