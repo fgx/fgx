@@ -41,13 +41,22 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 {
 
     //* Main Layout
-    QVBoxLayout *mainLayout = new QVBoxLayout();
+	QHBoxLayout *mainLayout = new QHBoxLayout();
     setLayout(mainLayout);
-    mainLayout->setSpacing(0);
-    mainLayout->setContentsMargins(0,0,0,0);
+	mainLayout->setSpacing(10);
+	int m = 10;
+	mainLayout->setContentsMargins(m,m,m,m);
+
+
+	groupBoxAirport = new QGroupBox(this);
+	groupBoxAirport->setTitle("Start at Airport");
+	groupBoxAirport->setCheckable(true);
+	mainLayout->addWidget(groupBoxAirport);
+	QVBoxLayout *layoutAirport = new QVBoxLayout();
+	groupBoxAirport->setLayout(layoutAirport);
 
     QSplitter *splitter = new QSplitter(this);
-    mainLayout->addWidget(splitter);
+	layoutAirport->addWidget(splitter);
 
     //************************************************************************************************
     //** Left
@@ -123,7 +132,8 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
     QAction *actionRefreshTree = new QAction(this);
     treeToolbar->addAction(actionRefreshTree);
-    actionRefreshTree->setText("Refresh");
+	actionRefreshTree->setText("Reload");
+	actionRefreshTree->setToolTip("Scan directories and reload cache");
 	actionRefreshTree->setIcon(QIcon(":/icon/refresh"));
 	connect(actionRefreshTree, SIGNAL(triggered()), this, SLOT(on_refresh_clicked()) );
 
@@ -234,8 +244,18 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
     splitter->setStretchFactor(0, 3);
     splitter->setStretchFactor(1, 1);
-	//load_airports();
-    //import_airports_dialog();
+
+
+
+
+	groupBoxUseCoordinates = new QGroupBox(this);
+	groupBoxUseCoordinates->setTitle("Start at Coordinates");
+	groupBoxUseCoordinates->setCheckable(true);
+	mainLayout->addWidget(groupBoxUseCoordinates);
+	QVBoxLayout *layoutCoordinates = new QVBoxLayout();
+	groupBoxUseCoordinates->setLayout(layoutCoordinates);
+
+
 	initialize();
 
 }
@@ -330,7 +350,7 @@ void AirportsWidget::load_tree(){
 	}
 	//qDebug() << "set row count";
 	//show_progress(false);
-	statusBarTree->showMessage( QString("%1 airports in total").arg(model->rowCount()) );
+	statusBarTree->showMessage( QString("%1 airports").arg(model->rowCount()) );
 }
 
 

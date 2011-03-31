@@ -15,6 +15,8 @@
 #include <QtGui/QRadioButton>
 #include <QtGui/QProgressBar>
 #include <QtGui/QStatusBar>
+#include <QtGui/QGroupBox>
+
 
 
 #include "xobjects/xsettings.h"
@@ -35,6 +37,9 @@ public:
 	explicit AirportsWidget(QWidget *parent = 0);
 
 	XSettings settings;
+
+	QGroupBox *groupBoxAirport;
+	QGroupBox *groupBoxUseCoordinates;
 
     QStandardItemModel *model;
     QSortFilterProxyModel *proxyModel;
