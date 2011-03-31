@@ -13,6 +13,7 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QButtonGroup>
+#include <QActionGroup>
 
 #include "ui_fgx.h"
 #include "xobjects/xsettings.h"
@@ -69,7 +70,7 @@ private:
 	void start_terrasync();
 	void stop_terrasync();
 
-
+	QActionGroup *actionGroupStyle;
 
 private slots:
 
@@ -88,15 +89,13 @@ private slots:
 
 	void on_groupBoxSetTime_clicked();
 	void on_weather_selected();
-
+	void on_style(QAction*);
 
 	void on_tabs_currentChanged(int);
 	void show_settings_dialog();
 	void load_settings();
 	void save_settings();
 	void initialize();
-
-
 
 
 };

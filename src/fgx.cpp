@@ -22,6 +22,7 @@
 
 
 #include <QtGui/QCloseEvent>
+#include <QStyleFactory>
 
 #include <QFileDialog>
 //#include <QProgressDialog>
@@ -40,6 +41,25 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	fgx_logo->setText(QCoreApplication::applicationName());
+
+
+	//** Setup Styles
+	QApplication::setStyle( QStyleFactory::create(settings.value("gui_style","Cleanlooks").toString()) );
+	actionGroupStyle = new QActionGroup(this);
+	actionGroupStyle->setExclusive(true);
+	connect(actionGroupStyle, SIGNAL(triggered(QAction*)), this, SLOT(on_style(QAction*)) );
+	QStringList styles =  QStyleFactory::keys();
+	for(int idx=0; idx < styles.count(); idx++){
+		QString sty = QString(styles.at(idx));
+		QAction *act = menuStyle->addAction( sty );
+		actionGroupStyle->addAction( act );
+		act->setCheckable(true);
+		if(QApplication::style()->objectName() == sty.toLower()){
+			act->setChecked(true);
+		}
+	}
+
+
 
 	//*** Setup up Button Groups as the UI cant ;-(
 	buttonGroupTime = new QButtonGroup(this);
@@ -153,7 +173,7 @@ void fgx::on_buttonStartFg_clicked() {
 
 	//** This process will always start on the shell as fgfs returns an error help if incorrect args
 	bool start = QProcess::startDetached( settings.fgfs_path(), fg_args(), QString(), &pid_fg);
-
+	Q_UNUSED(start);
 
 }
 
@@ -503,6 +523,13 @@ void fgx::on_groupBoxTerraSync_clicked(){
 	settings.sync();
 }
 
+//===============================================================
+// Misc Events
+//===============================================================
+void fgx::on_style(QAction *action){
+	settings.setValue("gui_style",action->text());
+	QApplication::setStyle(QStyleFactory::create(action->text()));
+}
 
 // Set Time checked
 void fgx::on_groupBoxSetTime_clicked() {
