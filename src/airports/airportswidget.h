@@ -61,16 +61,24 @@ public:
     void show_progress(bool state);
 
 	void scan_airports_xml();
-	void load_tree();
+	void load_airports_tree();
+	void load_runways(QString airportXmlFile);
 
 	QLineEdit *txtLat;
 	QLineEdit *txtLng;
+	QLineEdit *txtAltitude;
+	QLineEdit *txtHeading;
+	QLineEdit *txtRoll;
+	QLineEdit *txtPitch;
+	QLineEdit *txtAirspeed;
 
 	QStringList get_args();
 
 	void save_settings();
 	void load_settings();
 	QString validate();
+
+
 
 signals:
 	void set_arg(QString action, QString arg, QString value);
