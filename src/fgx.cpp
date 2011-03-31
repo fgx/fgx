@@ -79,7 +79,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	//***** Qt Has no Show event for a form, so we need to present Widgets first
 	//** and then initialise. THis is achieved with a timer that triggers in a moment
-	//QTimer::singleShot(500, this, SLOT(initialize()));
+	QTimer::singleShot(500, this, SLOT(initialize()));
 
 }/* end constructor */
 
