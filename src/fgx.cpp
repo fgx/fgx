@@ -206,9 +206,15 @@ void fgx::stop_fgcom() {
 }
 
 
+
+
 //=======================================================================================================================
 // Start Terrasync
 //=======================================================================================================================
+void fgx::on_buttonStartTerraSync_clicked(){
+	start_terrasync();
+}
+
 void fgx::start_terrasync(){
 
 	QString command("nice");
@@ -216,14 +222,50 @@ void fgx::start_terrasync(){
 	QStringList args;
 	args << "terrasync" << "-p" << "5505" << "-S" << "-d" << "settings";
 
-	QProcess::startDetached(command, args, QString(), &pid_terra);
+	int start = QProcess::startDetached(command, args, QString(), &pid_terra);
+	Q_UNUSED(start);
+
 }
 
+
 //=======================================================================================================================
-// Stop FGCom
+// Stop TerraSync
 //=======================================================================================================================
+void fgx::on_buttonStopTerraSync_clicked(){
+	stop_terrasync();
+}
+
 void fgx::stop_terrasync() {
-	kill_process(QString::number(pid_terra));
+
+	/* This is a really nasty hack cos I dont know what Im doing!! (said pete)
+	   Gets a list of processes, and find terrasync arg
+	   Then kills it - is there a better way ?
+	*/
+	//** Get a list of ALL process
+	QStringList args;
+	args << "-ef";
+	QProcess process;
+	process.start("ps", args, QIODevice::ReadOnly);
+	if(process.waitForStarted()){
+		process.waitForFinished();
+		QString ok_result = process.readAllStandardOutput();
+		QString error_result = process.readAllStandardError();
+
+		//* take result and split into parts
+		QStringList entries = ok_result.split("\n");
+		for(int i=0; i < entries.count(); i++){
+			QString entry(entries.at(i));
+
+			if(entry.contains("terrasync -p 5505")){
+				//* found a terrasync  so Kill it
+				QStringList parts = entry.split(" ", QString::SkipEmptyParts);
+				QStringList killargs;
+				killargs << "-9" << parts.at(1);
+				int start = QProcess::startDetached("kill", killargs);
+				Q_UNUSED(start);
+			}
+		}
+	}
 }
 
 //=======================================================================================================================
