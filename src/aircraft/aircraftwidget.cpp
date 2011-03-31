@@ -31,14 +31,14 @@
 #include <QtGui/QCheckBox>
 #include <QtGui/QTabWidget>
 
-#include <QtGui/QTreeWidgetItem>
-
 #include <QtGui/QHeaderView>
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QPixmap>
 
-
 #include "aircraft/aircraftwidget.h"
+
+
+
 
 
 AircraftWidget::AircraftWidget(QWidget *parent) :
@@ -217,7 +217,7 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
 
 
 void AircraftWidget::on_view_button_clicked(QAbstractButton *button){
-
+	Q_UNUSED(button);
 	if(buttViewGroup->checkedId() == V_LIST){
 		buttViewGroup->button(V_LIST)->setIcon(QIcon(":/icon/pink"));
 		buttViewGroup->button(V_NESTED)->setIcon(QIcon(":/icon/purple"));
@@ -478,9 +478,6 @@ void AircraftWidget::load_tree(){
 	QTreeWidgetItem *parentItem;
 
 	int view = buttViewGroup->checkedId();
-	if(view == V_LIST){
-		parentItem = treeWidget->invisibleRootItem();
-	}
 	treeWidget->setColumnHidden(C_DIR, view == V_LIST);
 	treeWidget->setRootIsDecorated(view == V_NESTED);
 
@@ -488,14 +485,17 @@ void AircraftWidget::load_tree(){
 		record = aeroList.at(i);
 		QStringList fields = record.split("~|~");
 
-		if(view == V_NESTED and last_dir != fields.at(C_DIR)){
-			parentItem = new QTreeWidgetItem();
+		if(view == V_LIST){
+			parentItem = treeWidget->invisibleRootItem();
+		}else if(last_dir != fields.at(C_DIR)){
+			parentItem = new QTreeWidgetItem(treeWidget->invisibleRootItem());
 			parentItem->setText( C_DIR, fields.at(0));
 			parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
 			treeWidget->addTopLevelItem(parentItem);
 			treeWidget->setFirstItemColumnSpanned(parentItem, true);
 			last_dir = fields.at(C_DIR);
 		}
+
 		//directory, xml_file, aero, fdm, description, author
 		QTreeWidgetItem *aeroItem = new QTreeWidgetItem(parentItem);
 		QString xml_path = QString("%1/%2").arg(fields.at(0), fields.at(1));

@@ -15,6 +15,7 @@
 
 #include "xobjects/xsettings.h"
 
+
 class AircraftWidget : public QWidget
 {
 Q_OBJECT

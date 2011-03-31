@@ -6,8 +6,8 @@ TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 QT += network \
-	xml \
-	xmlpatterns
+    xml \
+    xmlpatterns
 
 # Input
 HEADERS += fgx.h \
