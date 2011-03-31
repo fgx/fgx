@@ -67,11 +67,6 @@ void fgx::initial_setup(){
 	on_groupBoxSetTime_clicked();
 	checkCoords();
 		
-	// Setting some defaults in case
-	
-	if (portFGCOM->text() == "") {
-		portFGCOM->setText("16661");
-	}
 	
 	
 	QDir fgdatadir(fgdataPath->text());
@@ -156,7 +151,7 @@ void fgx::start_fg_com(){
 	QString command("nice");
 
 	QStringList args;
-	args << "fgcom" << "-Sfgcom.flightgear.org.uk" << "-p" << portFGCOM->text();
+	args << "fgcom" << networkWidget->txtFgComNo->text() << "-p" << networkWidget->txtFgComPort->text();
 
 	QProcess::startDetached(command, args, QString(), &pid_fgcom);
 }
@@ -227,44 +222,10 @@ QStringList fgx::start_fg_args(){
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}
 		
-	//* FgCom enabled
-	if (enableFGCom->isChecked()) {
-		//command.append("--generic=");
-		//command.append("socket,out,10,localhost,%1,udp,fgcom").arg(portFGCOM->text());
-	}
 		
-	//** Multiplayer
-	//if (enableMultiplayer->isChecked()) {
-		//command.append("--multiplay=out,10,%1,%2").arg(argmultiplayerpathout).arg(argmultiplayerport);
-		/*
-		content.append("--multiplay=in,10,");
-
-		system("ipconfig getifaddr en0 > ip.txt");
-			
-			QFile ipFile("");
-			ipFile.setFileName("ip.txt");
-			
-			if (!ipFile.open(QIODevice::ReadOnly | QIODevice::Text))
-				return;
-			
-			while (!ipFile.atEnd()) {
-				
-				QString line;
-				line.append(ipFile.readAll());
-				line.remove("\n");
-				content.append(line);	
-			}
-			
-			content.append(",5000");
-		}
-		*/
-	//}
+	//** Network
 	args << networkWidget->get_args();
 
-	//* Callsign
-	if (callSign->text().trimmed().length() > 0) {
-		args << QString("--callsign=%a").arg(callSign->text());
-	}
 
 	//* Aircraft
 	//command.append("--aircraft=").append(airCraft->currentIndex());
@@ -371,9 +332,7 @@ void fgx::writeSettings()
 	}
 	
 	settings.setValue("fgfsPath", fgfsPath->text());
-	settings.setValue("fgcomShell", fgcomShell->text());
-	//settings.setValue("pathMultiplayerOut", pathMultiplayerOut->currentText());
-	settings.setValue("portFGCOM", portFGCOM->text());
+
 	
 	if (useTerraSync->isChecked() == true) {
 		settings.setValue("useTerraSync", "true");
@@ -381,24 +340,7 @@ void fgx::writeSettings()
 		settings.setValue("useTerraSync", "false");
 	}
 	
-	if (enableFGCom->isChecked() == true) {
-		settings.setValue("enableFGCom", "true");
-	}	else {
-		settings.setValue("enableFGCom", "false");
-	}
 	
-	//if (networkWidget->grpMpServer->isChecked()) {
-		settings.setValue("enableMultiplayer", networkWidget->grpMpServer->isChecked());
-	//}	else {
-	//	settings.setValue("enableMultiplayer", "false");
-	//}
-	/*
-	if (enableAITraffic->isChecked() == true) {
-		settings.setValue("enableAITraffic", "true");
-	}	else {
-		settings.setValue("enableAITraffic", "false");
-	}
-	*/
 	if (disableSplashScreen->isChecked() == true) {
 		settings.setValue("disableSplashScreen", "true");
 	}	else {
@@ -414,9 +356,6 @@ void fgx::writeSettings()
 	}
 	
 	settings.setValue("timeoftheDay", timeoftheDay->currentText());
-	settings.setValue("multiplayerLocalPort", networkWidget->comboLocalPort->currentText());
-	settings.setValue("multiplayerRemotePort", networkWidget->comboRemotePort->currentText());
-	settings.setValue("callSign", callSign->text());
 	settings.setValue("locationIcao", locationIcao->currentText());
 	
 	if (usecustomScenery->isChecked() == true) {
@@ -497,31 +436,8 @@ void fgx::readSettings()
 		useTerraSync->setCheckState(Qt::Unchecked);
 	}
 	
-	QString enableFGComSet = settings.value("enableFGCom").toString();
-	if (enableFGComSet == "true") {
-		enableFGCom->setCheckState(Qt::Checked);
-	} else {
-		enableFGCom->setCheckState(Qt::Unchecked);
-	}
-	
-	QString callSignSet = settings.value("callSign").toString();
-	callSign->setText(callSignSet);
-	
-	QString portFGCOMSet = settings.value("portFGCOM").toString();
-	portFGCOM->setText(portFGCOMSet);
-	
-
-	networkWidget->grpMpServer->setChecked(settings.value("enableMultiplayer").toBool());
 
 	
-	QString enableAITrafficSet = settings.value("enableAITraffic").toString();
-	/*
-	if (enableAITrafficSet == "true") {
-		enableAITraffic->setCheckState(Qt::Checked);
-	} else {
-		enableAITraffic->setCheckState(Qt::Unchecked);
-	}
-	*/
 	
 	QString disableSplashScreenSet = settings.value("disableSplashScreen").toString();
 	if (disableSplashScreenSet == "true") {
