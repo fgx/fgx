@@ -88,6 +88,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     */
 
     //** Code Filter
+	/*
     QRadioButton *buttCode = new QRadioButton();
     treeToolbar->addWidget(buttCode);
     buttGroupFilter->addButton(buttCode);
@@ -102,7 +103,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     buttName->setText("Name");
     buttName->setProperty("column", QVariant(C_NAME));
     buttName->setChecked(true);
-
+	*/
 
     //** Find Text
     txtAirportsFilter = new QLineEdit();
@@ -134,7 +135,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     model = new QStandardItemModel(this);
     model->setColumnCount(2);
     QStringList headerLabelsList;
-	headerLabelsList << "Fav" << "Code"  << "Twr" <<  "Elevation" << "Name" << "Path";
+	headerLabelsList << "Location" << "Code"  << "Twr" <<  "Elevation" << "Name" << "Path";
     model->setHorizontalHeaderLabels(headerLabelsList);
 
     proxyModel = new QSortFilterProxyModel(this);
@@ -160,8 +161,10 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
     //** Deaders and columns
     treeView->header()->setStretchLastSection(true);
-    //treeView->setColumnHidden(C_ELEVATION, true);
-    //treeView->setColumnHidden(C_TOWER, true);
+	treeView->setColumnHidden(C_ELEVATION, true);
+	treeView->setColumnHidden(C_TOWER, true);
+	treeView->setColumnHidden(C_FAV, true);
+	treeView->setColumnHidden(C_XML, true);
     treeView->setColumnWidth(C_FAV, 50);
     treeView->setColumnWidth(C_CODE, 80);
     treeView->setColumnWidth(C_TOWER, 50);
@@ -207,6 +210,11 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     headerItem->setText(3, tr("Lat"));
     headerItem->setText(4, tr("Lng"));
     headerItem->setText(5, tr("Alignment"));
+	treeWidgetRunways->setColumnHidden(1,true);
+	treeWidgetRunways->setColumnHidden(2,true);
+	treeWidgetRunways->setColumnHidden(3,true);
+	treeWidgetRunways->setColumnHidden(4,true);
+	treeWidgetRunways->setColumnHidden(5,true);
 	/*
     connect( treeView->selectionModel(),
              SIGNAL( selectionChanged (const QItemSelection&, const QItemSelection&) ),
@@ -329,18 +337,11 @@ void AirportsWidget::load_tree(){
 //**********************************************
 //*** Update Filter
 void AirportsWidget::on_update_filter(){
-   // qDebug() << txtAirportsFilter->text();
 
     int column = buttGroupFilter->checkedButton()->property("column").toInt();
     proxyModel->setFilterKeyColumn( column );
     proxyModel->setFilterFixedString( txtAirportsFilter->text() );
-    //qDebug() << column;
-    //return;
-    //proxyModel->setFilterKeyColumn( column );
     treeView->sortByColumn(column);
-    //if( !txtAirportsFilter->hasFocus() ){ // WTF?
-       // txtAirportsFilter->setFocus();
-    //}
 }
 
 //**********************************************
@@ -372,41 +373,46 @@ void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex prev
     }
     QModelIndex srcIndex = proxyModel->mapToSource(proxyIndex);
 	QString airportXmlFile = model->item(srcIndex.row(), C_XML)->text();
+	int i;
 
 	//*** Load Runways
-	QTreeWidgetItem *runwaysItem = new QTreeWidgetItem();
-	runwaysItem->setText(0, "Runways" );
-	treeWidgetRunways->addTopLevelItem(runwaysItem);
-	treeWidgetRunways->setItemExpanded(runwaysItem, true);
-
+	QStringList runwayList;
 	QFile rwyfile(airportXmlFile);
 	if (rwyfile.open(QIODevice::ReadOnly)) {
 
 		QXmlStreamReader rwyreader(&rwyfile);
 		QXmlStreamReader::TokenType tokenType;
 
-		QStringList runwayList;
-		QString rwy;
 		while ((tokenType = rwyreader.readNext()) != QXmlStreamReader::EndDocument) {
 			if (rwyreader.name() == "rwy") {
-				rwy = rwyreader.readElementText();
-				QTreeWidgetItem *item = new QTreeWidgetItem(runwaysItem);
-				item->setText(0, rwy);
+				runwayList << rwyreader.readElementText();
 			}
 		}
 		rwyfile.close();
 	}
+	runwayList.removeDuplicates();
+	runwayList.sort();
+
+	QTreeWidgetItem *runwaysItem = new QTreeWidgetItem();
+	runwaysItem->setText(0, "Runways" );
+	treeWidgetRunways->addTopLevelItem(runwaysItem);
+	treeWidgetRunways->setItemExpanded(runwaysItem, true);
+	if(runwayList.count() == 0){
+		QTreeWidgetItem *item = new QTreeWidgetItem(runwaysItem);
+		item->setText(0, "None");
+	}else{
+		for(i =0; i < runwayList.count(); i++){
+			QTreeWidgetItem *item = new QTreeWidgetItem(runwaysItem);
+			item->setText(0, runwayList.at(i));
+			item->setText(1, "runway");
+		}
+	}
 
 	//*** Load Parking Positions
+	QStringList parkingPositions;
 	QString parkPosFile = QString(airportXmlFile);
 	parkPosFile.chop(13); // strip the threshold.xml part
 	parkPosFile.append("parking.xml");  //"groundnet.xml"
-	qDebug() << parkPosFile << " = " << QFile::exists(parkPosFile);
-
-	QTreeWidgetItem *parkingsItem = new QTreeWidgetItem();
-	parkingsItem->setText(0, "Parking Stands" );
-	treeWidgetRunways->addTopLevelItem(parkingsItem);
-	treeWidgetRunways->setItemExpanded(parkingsItem, true);
 
 	QFile ppfile(parkPosFile);
 	if(ppfile.open(QIODevice::ReadOnly)) {
@@ -421,18 +427,32 @@ void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex prev
 				if (attributes.value("type").toString() == "gate" && attributes.value("name").toString() != "Startup Location") {
 					QString ppname = attributes.value("name").toString();
 					QString ppnumber = attributes.value("number").toString();
-					QString ppall;
-
+					QString ppall ;
 					ppall.append(ppname); ppall.append(ppnumber);
-					//qDebug() << ppname << "=" << ppnumber << " = " << ppall;
-						QTreeWidgetItem *ppItem = new QTreeWidgetItem(parkingsItem);
-					ppItem->setText(0, ppall);
+					parkingPositions << ppall;
 				}
 
 			}
 		}
 
 		ppfile.close();
+	}
+	parkingPositions.removeDuplicates();
+	parkingPositions.sort();
+
+	QTreeWidgetItem *parkingsItem = new QTreeWidgetItem();
+	parkingsItem->setText(0, "Parking Stands" );
+	treeWidgetRunways->addTopLevelItem(parkingsItem);
+	treeWidgetRunways->setItemExpanded(parkingsItem, true);
+	if(parkingPositions.count() == 0){
+		QTreeWidgetItem *item = new QTreeWidgetItem(parkingsItem);
+		item->setText(0, "None");
+	}else{
+		for(i =0; i < parkingPositions.count(); i++){
+			QTreeWidgetItem *item = new QTreeWidgetItem(parkingsItem);
+			item->setText(0, parkingPositions.at(i));
+			item->setText(1, "stand");
+		}
 	}
 }
 
