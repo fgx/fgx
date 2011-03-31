@@ -20,6 +20,7 @@
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QSplitter>
+#include <QtGui/QProgressDialog>
 
 #include <QtGui/QToolBar>
 #include <QtGui/QToolButton>
@@ -134,6 +135,8 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
 			 SLOT( on_tree_selection_changed() )
 	);
 
+	statusBarAero = new QStatusBar();
+	treeLayout->addWidget(statusBarAero);
 
 
     //*************************************************************************************************
@@ -340,6 +343,11 @@ void AircraftWidget::load_aircraft_shell(){
 //*** Walk XML - sets
 QStringList AircraftWidget::scan_xml_sets(){
 
+	int c = 0;
+	int found = 0;
+	QProgressDialog progress("Loading Aircraft to Cache", "Cancel", 0, 0, this);
+	progress.setWindowModality(Qt::WindowModal);
+
 	QStringList aeroList;
 
 	QDir aircraftDir( settings.aircraft_path() );
@@ -403,7 +411,16 @@ QStringList AircraftWidget::scan_xml_sets(){
 
 					QString record = QString("%1~|~%2~|~%3~|~%4~|~%5~|~%6").arg(directory, xml_file, aero, fdm, description, author );
 					aeroList << record;
+					found++;
 
+					if(c % 100 == 0){
+						QString str = QString("%1 aircraft found").arg(found);
+						statusBarAero->showMessage(str);
+					}
+					if(progress.wasCanceled()){
+						break;
+					}
+					c++;
 				} // <Add models
 
 			}
@@ -469,7 +486,7 @@ void AircraftWidget::on_refresh_cache(){
 }
 
 void AircraftWidget::load_tree(){
-
+	int c =0;
 	QString currAero = aircraft();
 	treeWidget->setUpdatesEnabled(false);
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
@@ -505,11 +522,14 @@ void AircraftWidget::load_tree(){
 		aeroItem->setText(C_FDM, fields.at(3));
 		aeroItem->setText(C_DESCRIPTION, fields.at(4));
 		aeroItem->setText(C_AUTHOR, fields.at(5));
+		c++;
 	 }
 	 treeWidget->sortByColumn(view == V_NESTED ? C_DIR : C_AERO, Qt::AscendingOrder);
 	 treeWidget->setUpdatesEnabled(true);
 
 	 select_node(currAero);
+	 QString str = QString("%1 aircraft").arg(c);
+	 statusBarAero->showMessage(str);
 }
 
 //=============================================================

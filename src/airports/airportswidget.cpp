@@ -1,16 +1,12 @@
 
-#include <QtCore/QTimer>
 #include <QtCore/QDebug>
 #include <QtCore/QString>
-//#include <QtCore/QStringList>
-
-
-// layouts
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QSplitter>
 
 #include <QtGui/QSizePolicy>
 #include <QtGui/QFont>
+
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QSplitter>
 
 #include <QtGui/QToolBar>
 //#include <QtGui/QToolButton>
@@ -29,8 +25,8 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QTreeWidgetItem>
 
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
+//#include <QtSql/QSqlQuery>
+//#include <QtSql/QSqlError>
 
 
 
@@ -211,7 +207,9 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	//* blank to drop runways tree
 	QHBoxLayout *hbSpacer = new QHBoxLayout();
 	runwayLayout->addLayout(hbSpacer);
-	hbSpacer->addWidget(new QLabel(" "));
+	QLabel *lbl = new QLabel(" ");
+	lbl->setFixedHeight(25);
+	hbSpacer->addWidget(lbl);
 
 
     //*** Runways Tree
@@ -278,11 +276,6 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	txtLng = new QLineEdit();
 	layoutCoordinates->addWidget(txtLng);
 
-	//initialize();
-
-	//***** Qt Has no Show event for a form, so we need to present Widgets first
-	//** and then initialise. THis is achieved with a timer that triggers in a moment
-	QTimer::singleShot(500, this, SLOT(initialize()));
 
 }
 
@@ -312,9 +305,10 @@ void AirportsWidget::initialize(){
 //** Scan XML's for airports
 //============================================================================
 void AirportsWidget::scan_airports_xml(){
-	qDebug() << "Scanning";
-	QProgressDialog progress;
-	progress.show();
+	int c = 0;
+	int found = 0;
+	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0, this);
+	progress.setWindowModality(Qt::WindowModal);
 
 	QString directory = settings.airports_path();
 
@@ -323,19 +317,28 @@ void AirportsWidget::scan_airports_xml(){
 
 	QDirIterator it(directory, QDirIterator::Subdirectories);
 	while (it.hasNext()) {
-		//files << it.next();
+		progress.setValue(c);
 		entry = it.next();
 		if(entry.endsWith(".threshold.xml") ){
 			QFileInfo info(entry);
 			airportsList << QString("%1~|~%2").arg(	entry,
 													info.fileName().split(".").at(0)
 												);
+			found++;
+		}
+		c++;
+		if(c % 100 == 0){
+			QString str = QString("%1 airports found").arg(found);
+			statusBarAirports->showMessage(str);
+		}
+		if(progress.wasCanceled()){
+			return;
 		}
 	}
 
-	settings.setValue("cache/aiports", airportsList);
+	settings.setValue("cache/airports", airportsList);
+	settings.sync();
 	progress.hide();
-	qDebug() << "Scanning DONE";
 }
 //============================================================================
 //** Load Airports Tree
@@ -343,8 +346,8 @@ void AirportsWidget::scan_airports_xml(){
 void AirportsWidget::load_tree(){
 
 	model->removeRows(0, model->rowCount());
-
-	QStringList airports = settings.value("cache/aiports").toStringList();
+	treeViewAirports->setUpdatesEnabled(false);
+	QStringList airports = settings.value("cache/airports").toStringList();
 	for (int i = 0; i < airports.size(); ++i){
 		QStringList airport = airports.at(i).split("~|~");
 		int new_row_index = model->rowCount();
@@ -377,8 +380,7 @@ void AirportsWidget::load_tree(){
 		model->setItem(new_row_index, C_ELEVATION, itemAirportElevation);
 		*/
 	}
-	//qDebug() << "set row count";
-	//show_progress(false);
+
 	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
 
 	QList<QStandardItem *> items = model->findItems("KSFO", Qt::MatchExactly, C_ICAO);
@@ -388,6 +390,7 @@ void AirportsWidget::load_tree(){
 		treeViewAirports->selectionModel()->select(proxIdx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
 
 	}
+	treeViewAirports->setUpdatesEnabled(true);
 }
 
 
@@ -398,7 +401,7 @@ void AirportsWidget::on_update_filter(){
     int column = buttGroupFilter->checkedButton()->property("column").toInt();
     proxyModel->setFilterKeyColumn( column );
     proxyModel->setFilterFixedString( txtAirportsFilter->text() );
-	treeViewAirports->sortByColumn(column);
+	//treeViewAirports->sortByColumn(column);
 }
 
 
@@ -511,13 +514,11 @@ void AirportsWidget::on_refresh_clicked(){
 }
 
 void AirportsWidget::on_groupbox_airports(){
-	qDebug() << "on_groupbox_airports " << groupBoxAirport->isChecked();
 	if(groupBoxAirport->isChecked()){
 		groupBoxUseCoordinates->setChecked(false);
 	}
 }
 void AirportsWidget::on_groupbox_use_coordinates(){
-	qDebug() << "on_groupbox_use_coordinates " << groupBoxUseCoordinates->isChecked();
 	if(groupBoxUseCoordinates->isChecked()){
 		groupBoxAirport->setChecked(false);
 	}
@@ -560,7 +561,6 @@ void AirportsWidget::save_settings(){
 	//settings.setValue("parkPosition", parkPosition->currentText());
 
 	settings.sync();
-	//qDebug() <<  "SAVE" << item->text(C_AERO);
 }
 
 

@@ -10,7 +10,6 @@
 
 #include <QtGui/QTreeWidget>
 #include <QtGui/QLabel>
-
 #include <QtGui/QStatusBar>
 
 #include "xobjects/xsettings.h"
