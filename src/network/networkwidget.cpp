@@ -797,9 +797,11 @@ bool NetworkWidget::validate(){
 			txtCallSign->setFocus();
 			return false;
 		}
-		if(!treeWidget->currentItem() or treeWidget->currentItem()->text(C_FLAG) != "1"){
-			treeWidget->setFocus();
-			return false;
+		if(checkBoxOut->isChecked()){
+			if(!treeWidget->currentItem() or treeWidget->currentItem()->text(C_FLAG) != "1"){
+				treeWidget->setFocus();
+				return false;
+			}
 		}
 	}
 	return true;

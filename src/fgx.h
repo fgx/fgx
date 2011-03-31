@@ -54,7 +54,7 @@ private:
 	void stop_fgcom();
 	void start_terrasync();
 	void stop_terrasync();
-
+	bool validate();
 	QActionGroup *actionGroupStyle;
 
 private slots:

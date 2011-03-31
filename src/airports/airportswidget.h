@@ -12,6 +12,8 @@
 #include <QtGui/QProgressBar>
 #include <QtGui/QStatusBar>
 #include <QtGui/QGroupBox>
+#include <QtGui/QRadioButton>
+
 
 #include <QtGui/QStandardItemModel>
 #include <QtGui/QSortFilterProxyModel>
@@ -36,6 +38,9 @@ public:
 	explicit AirportsWidget(QWidget *parent = 0);
 
 	XSettings settings;
+
+	QRadioButton *radioButtonUseAirport;
+	QRadioButton *radioButtonUseCoordinates;
 
 	QGroupBox *groupBoxAirport;
 	QGroupBox *groupBoxUseCoordinates;
@@ -80,8 +85,7 @@ public slots:
 
 	void on_refresh_clicked();
 
-	void on_groupbox_airports();
-	void on_groupbox_use_coordinates();
+	void on_buttonGroupUse();
 };
 
 #endif // AIRPORTSWIDGET_H

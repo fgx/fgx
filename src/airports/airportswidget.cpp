@@ -36,17 +36,23 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 {
 
     //* Main Layout
-	QHBoxLayout *mainLayout = new QHBoxLayout();
+	QGridLayout *mainLayout = new QGridLayout();
     setLayout(mainLayout);
 	mainLayout->setSpacing(10);
 	int m = 10;
 	mainLayout->setContentsMargins(m,m,m,m);
 
+	QButtonGroup *buttonGroupUse = new QButtonGroup(this);
+	buttonGroupUse->setExclusive(true);
+	connect(buttonGroupUse, SIGNAL(buttonClicked(int)), this, SLOT(on_buttonGroupUse()));
+
+	radioButtonUseAirport = new QRadioButton("Start at Airport");
+	mainLayout->addWidget(radioButtonUseAirport, 0, 0);
+	buttonGroupUse->addButton(radioButtonUseAirport);
 
 	groupBoxAirport = new QGroupBox(this);
-	groupBoxAirport->setTitle("Start at Airport");
-	groupBoxAirport->setCheckable(true);
-	mainLayout->addWidget(groupBoxAirport);
+	groupBoxAirport->setTitle("Airport Details");
+	mainLayout->addWidget(groupBoxAirport, 1, 0);
 	connect(groupBoxAirport, SIGNAL(clicked()), this, SLOT(on_groupbox_airports()));
 
 
@@ -257,10 +263,13 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	//====================================================================
 	//** Use Coordinates
 	//====================================================================
+	radioButtonUseCoordinates = new QRadioButton("Start at Coordinates");
+	mainLayout->addWidget(radioButtonUseCoordinates, 0, 1);
+	buttonGroupUse->addButton(radioButtonUseCoordinates);
+
 	groupBoxUseCoordinates = new QGroupBox(this);
-	groupBoxUseCoordinates->setTitle("Start at Coordinates");
-	groupBoxUseCoordinates->setCheckable(true);
-	mainLayout->addWidget(groupBoxUseCoordinates);
+	groupBoxUseCoordinates->setTitle("Coordinates");
+	mainLayout->addWidget(groupBoxUseCoordinates, 1, 1);
 	connect(groupBoxUseCoordinates, SIGNAL(clicked()), this, SLOT(on_groupbox_use_coordinates()));
 	QVBoxLayout *layoutCoordinates = new QVBoxLayout();
 	groupBoxUseCoordinates->setLayout(layoutCoordinates);
@@ -275,21 +284,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	txtLng = new QLineEdit();
 	layoutCoordinates->addWidget(txtLng);
 
-
-}
-
-void AirportsWidget::show_progress(bool state){
-	/*
-    if(state){
-        progressAirportsLoad->setRange(0,0);
-        progressAirportsLoad->setValue(0);
-        progressAirportsLoad->show();
-        progressAirportsLoad->repaint();
-    }else{
-        progressAirportsLoad->setRange(0,100);
-        progressAirportsLoad->hide();
-    }
-	*/
+	layoutCoordinates->addStretch(20);
 }
 
 void AirportsWidget::initialize(){
@@ -511,15 +506,10 @@ void AirportsWidget::on_refresh_clicked(){
 	load_tree();
 }
 
-void AirportsWidget::on_groupbox_airports(){
-	if(groupBoxAirport->isChecked()){
-		groupBoxUseCoordinates->setChecked(false);
-	}
-}
-void AirportsWidget::on_groupbox_use_coordinates(){
-	if(groupBoxUseCoordinates->isChecked()){
-		groupBoxAirport->setChecked(false);
-	}
+void AirportsWidget::on_buttonGroupUse(){
+	int useAirport = radioButtonUseAirport->isChecked();
+	groupBoxAirport->setEnabled(useAirport);;
+	groupBoxUseCoordinates->setEnabled(!useAirport);;
 }
 
 

@@ -117,28 +117,6 @@ void fgx::kill_process(QString pid) {
 // Start FlightGear
 //=======================================================================================================================
 void fgx::on_buttonStartFg_clicked() {
-
-	//* Validate
-
-	if(!aircraftWidget->validate()){
-		tabs->setCurrentIndex( tabs->indexOf(aircraftWidget));
-		return;
-	}
-
-	if(!airportsWidget->validate()){
-		tabs->setCurrentIndex( tabs->indexOf(airportsWidget));
-		return;
-	}
-
-	if(!networkWidget->validate()){
-		tabs->setCurrentIndex( tabs->indexOf(networkWidget));
-		return;
-	}
-
-	if(groupBoxTerraSync->isChecked() and txtTerraSyncPath->text().length() == 0){
-		tabs->setCurrentIndex(0);
-		txtTerraSyncPath->setFocus();
-	}
 	
 	txtStartupCommand->setPlainText(fg_args().join("\n"));
 
@@ -237,6 +215,35 @@ void fgx::stop_terrasync() {
 			}
 		}
 	}
+}
+
+
+
+//=======================================================================================================================
+//* Validate
+//=======================================================================================================================
+bool fgx::validate(){
+	if(!aircraftWidget->validate()){
+		tabs->setCurrentIndex( tabs->indexOf(aircraftWidget));
+		return false;
+	}
+
+	if(!airportsWidget->validate()){
+		tabs->setCurrentIndex( tabs->indexOf(airportsWidget));
+		return false;
+	}
+
+	if(!networkWidget->validate()){
+		tabs->setCurrentIndex( tabs->indexOf(networkWidget));
+		return false;
+	}
+
+	if(groupBoxTerraSync->isChecked() and txtTerraSyncPath->text().length() == 0){
+		tabs->setCurrentIndex(0);
+		txtTerraSyncPath->setFocus();
+		return false;
+	}
+	return true;
 }
 
 //=======================================================================================================================
@@ -608,6 +615,9 @@ void fgx::on_tabs_currentChanged(int index){
 //==============================================
 //** View Buttons
 void fgx::on_buttonViewCommand_clicked(){
+	if(!validate()){
+		return;
+	}
 	QString str = QString(settings.fgfs_path()).append(" \\\n");
 	str.append( fg_args().join(" \\\n"));
 	txtStartupCommand->setPlainText(str);
