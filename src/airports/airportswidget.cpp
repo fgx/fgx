@@ -13,7 +13,9 @@
 #include <QtGui/QFont>
 
 #include <QtGui/QToolBar>
-#include <QtGui/QToolButton>
+//#include <QtGui/QToolButton>
+#include <QtGui/QPushButton>
+
 
 #include <QtGui/QAction>
 #include <QtGui/QLabel>
@@ -52,6 +54,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	groupBoxAirport->setTitle("Start at Airport");
 	groupBoxAirport->setCheckable(true);
 	mainLayout->addWidget(groupBoxAirport);
+	connect(groupBoxAirport, SIGNAL(clicked()), this, SLOT(on_groupbox_airports()));
 	QVBoxLayout *layoutAirport = new QVBoxLayout();
 	groupBoxAirport->setLayout(layoutAirport);
 
@@ -62,20 +65,20 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     //** Left
     QWidget *leftWidget = new QWidget();
     splitter->addWidget(leftWidget);
-    QVBoxLayout *treeLayout = new QVBoxLayout();
-    leftWidget->setLayout(treeLayout);
-    treeLayout->setContentsMargins(0,0,0,0);
-    treeLayout->setSpacing(0);
+	QVBoxLayout *airportLayout = new QVBoxLayout();
+	leftWidget->setLayout(airportLayout);
+	airportLayout->setContentsMargins(0,0,0,0);
+	airportLayout->setSpacing(0);
 
     //*************************************************
     //** Toolbar
-    QToolBar *treeToolbar = new QToolBar();
-    treeLayout->addWidget(treeToolbar);
-    treeToolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    treeToolbar->layout()->setSpacing(10);
+	QHBoxLayout *treeBar = new QHBoxLayout();
+	airportLayout->addLayout(treeBar);
+   // treeToolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	//treeToolbar->layout()->setSpacing(10);
 
     //** Filter Code
-    treeToolbar->addWidget(new QLabel(tr("Filter").append(":")));
+	treeBar->addWidget(new QLabel(tr("Filter").append(":")));
 
 
 
@@ -116,26 +119,23 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
     //** Find Text
     txtAirportsFilter = new QLineEdit();
-    treeToolbar->addWidget(txtAirportsFilter);
+	treeBar->addWidget(txtAirportsFilter);
     txtAirportsFilter->setFixedWidth(100);
     connect(txtAirportsFilter,    SIGNAL(textChanged(QString)),
             this,           SLOT(on_update_filter())
     );
 
-    treeToolbar->addSeparator();
+	treeBar->addStretch(20);
 
-    //** Add spacer widget to force right
-    QWidget *spacerWidget = new QWidget();
 
-    spacerWidget->setSizePolicy( QSizePolicy::Expanding , QSizePolicy::Minimum );
-    treeToolbar->addWidget(spacerWidget);
-
-    QAction *actionRefreshTree = new QAction(this);
-    treeToolbar->addAction(actionRefreshTree);
-	actionRefreshTree->setText("Reload");
-	actionRefreshTree->setToolTip("Scan directories and reload cache");
-	actionRefreshTree->setIcon(QIcon(":/icon/refresh"));
-	connect(actionRefreshTree, SIGNAL(triggered()), this, SLOT(on_refresh_clicked()) );
+	QPushButton *buttonRefreshTree = new QPushButton(this);
+	treeBar->addWidget(buttonRefreshTree);
+	buttonRefreshTree->setText("Reload");
+	buttonRefreshTree->setToolTip("Scan directories and reload cache");
+	buttonRefreshTree->setIcon(QIcon(":/icon/refresh"));
+	//buttonRefreshTree->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttonRefreshTree->setFlat(true);
+	connect(buttonRefreshTree, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()) );
 
 
 
@@ -157,7 +157,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     //******************************************************
     //**  Tree
     treeView = new QTreeView(this);
-    treeLayout->addWidget(treeView);
+	airportLayout->addWidget(treeView);
     treeView->setModel(proxyModel);
 
     treeView->setUniformRowHeights(true);
@@ -190,9 +190,9 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     //        this, SLOT(on_tree_clicked(QModelIndex))
     //);
 
-	statusBarTree = new QStatusBar();
-    treeLayout->addWidget(statusBarTree);
-    statusBarTree->showMessage("Idle");
+	statusBarAirports = new QStatusBar();
+	airportLayout->addWidget(statusBarAirports);
+	statusBarAirports->showMessage("Idle");
 
 	//progressAirportsLoad = new QProgressBar();
 	//statusBarTree->addPermanentWidget(progressAirportsLoad);
@@ -202,15 +202,15 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     //** Right
     QWidget *rightWidget = new QWidget();
     splitter->addWidget(rightWidget);
-    QVBoxLayout *airportLayout = new QVBoxLayout();
-    rightWidget->setLayout(airportLayout);
-    airportLayout->setContentsMargins(0,0,0,0);
-    airportLayout->setSpacing(0);
+	QVBoxLayout *runwayLayout = new QVBoxLayout();
+	rightWidget->setLayout(runwayLayout);
+	runwayLayout->setContentsMargins(0,0,0,0);
+	runwayLayout->setSpacing(0);
 
 
     //*** Runways Tree
     treeWidgetRunways = new QTreeWidget();
-    airportLayout->addWidget(treeWidgetRunways, 3);
+	runwayLayout->addWidget(treeWidgetRunways, 3);
     treeWidgetRunways->setAlternatingRowColors(true);
 	treeWidgetRunways->setRootIsDecorated(true);
     QTreeWidgetItem *headerItem = treeWidgetRunways->headerItem();
@@ -237,6 +237,9 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 			 SLOT( on_aiport_row_changed(QModelIndex, QModelIndex) )
 	);
 
+	statusBarRunways = new QStatusBar();
+	runwayLayout->addWidget(statusBarRunways);
+	statusBarAirports->showMessage("");
 
     //** Map
     //map = new GoogleMapWidget(this);
@@ -247,14 +250,26 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
 
 
-
+	//====================================================================
+	//** Use Coordinates
+	//====================================================================
 	groupBoxUseCoordinates = new QGroupBox(this);
 	groupBoxUseCoordinates->setTitle("Start at Coordinates");
 	groupBoxUseCoordinates->setCheckable(true);
 	mainLayout->addWidget(groupBoxUseCoordinates);
+	connect(groupBoxUseCoordinates, SIGNAL(clicked()), this, SLOT(on_groupbox_use_coordinates()));
 	QVBoxLayout *layoutCoordinates = new QVBoxLayout();
 	groupBoxUseCoordinates->setLayout(layoutCoordinates);
 
+
+	layoutCoordinates->addWidget(new QLabel("Latitude"));
+	txtLat = new QLineEdit();
+	layoutCoordinates->addWidget(txtLat);
+
+	layoutCoordinates->addSpacing(10);
+	layoutCoordinates->addWidget(new QLabel("Longtitude"));
+	txtLng = new QLineEdit();
+	layoutCoordinates->addWidget(txtLng);
 
 	initialize();
 
@@ -350,7 +365,7 @@ void AirportsWidget::load_tree(){
 	}
 	//qDebug() << "set row count";
 	//show_progress(false);
-	statusBarTree->showMessage( QString("%1 airports").arg(model->rowCount()) );
+	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
 }
 
 
@@ -480,4 +495,17 @@ void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex prev
 void AirportsWidget::on_refresh_clicked(){
 	scan_airports_xml();
 	load_tree();
+}
+
+void AirportsWidget::on_groupbox_airports(){
+	qDebug() << "on_groupbox_airports " << groupBoxAirport->isChecked();
+	if(groupBoxAirport->isChecked()){
+		groupBoxUseCoordinates->setChecked(false);
+	}
+}
+void AirportsWidget::on_groupbox_use_coordinates(){
+	qDebug() << "on_groupbox_use_coordinates " << groupBoxUseCoordinates->isChecked();
+	if(groupBoxUseCoordinates->isChecked()){
+		groupBoxAirport->setChecked(false);
+	}
 }

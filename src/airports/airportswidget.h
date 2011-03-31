@@ -45,7 +45,8 @@ public:
     QSortFilterProxyModel *proxyModel;
     QTreeView *treeView;
 
-	QStatusBar *statusBarTree;
+	QStatusBar *statusBarAirports;
+	QStatusBar *statusBarRunways;
 	//QProgressBar *progressAirportsLoad;
 
     QLineEdit *txtAirportsFilter;
@@ -57,6 +58,11 @@ public:
 	void initialize();
 	void scan_airports_xml();
 	void load_tree();
+
+	QLineEdit *txtLat;
+	QLineEdit *txtLng;
+
+
 
 signals:
 	void set_arg(QString action, QString arg, QString value);
@@ -71,6 +77,9 @@ public slots:
 	void on_aiport_row_changed(QModelIndex, QModelIndex);
 
 	void on_refresh_clicked();
+
+	void on_groupbox_airports();
+	void on_groupbox_use_coordinates();
 };
 
 #endif // AIRPORTSWIDGET_H
