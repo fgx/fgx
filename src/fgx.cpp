@@ -91,10 +91,13 @@ void fgx::initialize(){
 
 
 //=======================================================================================================================
-// Start FlightGear
+// FlightGear
 //=======================================================================================================================
-void fgx::on_fgStart_clicked() {
-	qDebug() << "validation";
+
+//=== Start =======================================
+void fgx::on_buttonStartFg_clicked() {
+
+	//* Validate
 	if(!networkWidget->validate()){
 		tabs->setCurrentIndex( tabs->indexOf(networkWidget));
 		return;
@@ -107,11 +110,16 @@ void fgx::on_fgStart_clicked() {
 	checkScenery();
 	
 	lineEditDebug->setPlainText(start_fg_args().join("\n"));
-	//** Start FlightGear
 
-
+	//** This process will always start on the shell as fgfs returns an error help if incorrect args
 	bool start = QProcess::startDetached( settings.fgfs_path(), start_fg_args(), QString(), &pid_fg);
 	qDebug() << "PID=" << pid_fg << "=" << start;
+
+}
+
+//=== Stop =======================================
+void fgx::on_buttonStopFg_clicked() {
+	qDebug() << "KILL" << pid_fg;
 
 }
 
@@ -214,9 +222,11 @@ QStringList fgx::start_fg_args(){
 	}
 
 	//* Coordinates
-	if (useCoordinates->isChecked()) {
-		args << QString("--lon=").append(Longitude->text());
-		args << QString("--lat=").append(Latitude->text());
+	if (checkBoxUseCoordinates->isChecked()) {
+		if( Longitude->text().length() > 0 and Latitude->text().length() > 0){
+			args << QString("--lon=").append(Longitude->text());
+			args << QString("--lat=").append(Latitude->text());
+		}
 	}
 
 	//* Weather fetch
@@ -320,14 +330,12 @@ void fgx::save_settings()
 	}
 	
 	
-	if (useCoordinates->isChecked() == true) {
-		settings.setValue("useCoordinates", "true");
-	}	else {
-		settings.setValue("useCoordinates", "false");
-	}
-	
-	settings.setValue("Longitude", Longitude->text());
-	settings.setValue("Latidude", Latitude->text());
+
+	settings.setValue("coordinates", checkBoxUseCoordinates->isChecked());
+	settings.setValue("lon", Longitude->text());
+	settings.setValue("lat", Latitude->text());
+
+
 	settings.setValue("runWay", runWay->currentText());
 	settings.setValue("parkPosition", parkPosition->currentText());
 	
@@ -410,16 +418,11 @@ void fgx::load_settings()
 		usecustomScenery->setCheckState(Qt::Unchecked);
 	}
 
+	checkBoxUseCoordinates->setChecked(settings.value("coordinates").toBool());
+	Latitude->setText(settings.value("lat").toString());
+	Longitude->setText(settings.value("lng").toString());
 
-	QString useCoordinatesSet = settings.value("useCoordinates").toString();
-	useCoordinates->setChecked(useCoordinatesSet == "true");
 
-	
-	QString lonSet = settings.value("Longitude").toString();
-	Longitude->setText(lonSet);
-	
-	QString latSet = settings.value("Latidude").toString();
-	Latitude->setText(latSet);
 	
 	QString runWaySet = settings.value("runWay").toString();
 	runWay->insertItem(0, runWaySet);
@@ -524,9 +527,9 @@ void fgx::on_tabs_currentChanged() {
 
 // Use coordinates checked
 
-void fgx::on_useCoordinates_clicked() {
+void fgx::on_checkBoxUseCoordinates_clicked() {
 	
-	bool checked = useCoordinates->isChecked();
+	bool checked = checkBoxUseCoordinates->isChecked();
 	locationIcao->setEnabled(!checked);
 	runWay->setEnabled(!checked);
 	parkPosition->setEnabled(!checked);
@@ -586,18 +589,6 @@ void fgx::on_useMetar_clicked() {
 }
 
 
-
-
-
-// Check for coordinates enabled, disable ICAO, runway, park position
-void fgx::checkCoords() {
-	
-	bool checked = useCoordinates->isChecked();
-	locationIcao->setEnabled(!checked);
-	runWay->setEnabled(!checked);
-	parkPosition->setEnabled(!checked);
-
-}
 
 // Check for using park position (needs runways disabled)
 void fgx::on_useParkPosition_clicked() {

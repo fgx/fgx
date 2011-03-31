@@ -50,15 +50,24 @@ private:
 	void start_terrasync();
 
 private slots:
-	void on_fgStart_clicked();
+
+	void show_settings_dialog();
+	void on_buttonFgFsPath_clicked();
+	void on_buttonFgRootPath_clicked();
+
+
+	void on_buttonStartFg_clicked();
+	void on_buttonStopFg_clicked();
 
 	void on_enableMultiplayer_clicked();
 	void on_groupBoxSetTime_clicked();
 	void on_useMetar_clicked();
-	void on_useCoordinates_clicked();
+
 	void on_useParkPosition_clicked();
 	void on_locationIcao_activated();
-	void checkCoords();	
+
+	void on_checkBoxUseCoordinates_clicked();
+
 	void on_tabs_currentChanged();
 
 	void load_settings();
@@ -71,9 +80,8 @@ private slots:
 
 	void checkAirportlist();
 
-	void show_settings_dialog();
-	void on_buttonFgFsPath_clicked();
-	void on_buttonFgRootPath_clicked();
+
+
 
 	void on_buttonTest_clicked();
 
