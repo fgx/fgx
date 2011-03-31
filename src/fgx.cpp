@@ -88,12 +88,10 @@ void fgx::initial_setup(){
 	
 	// startup checks
 	checkAirportlist();
-	checkAircraftListStartup();
 	
 	listchecked = true;
 	
 	checkScenery();
-	checkAircraftImage();
 	
 	
 	readSettings();
@@ -427,7 +425,6 @@ void fgx::writeSettings()
 		settings.setValue("usecustomScenery", "false");
 	}
 	
-	settings.setValue("airCraft", airCraft->currentText());
 	
 	if (useCoordinates->isChecked() == true) {
 		settings.setValue("useCoordinates", "true");
@@ -565,15 +562,6 @@ void fgx::readSettings()
 		usecustomScenery->setCheckState(Qt::Unchecked);
 	}
 
-	if (settings.value("airCraft").toString() != "") {
-		QString airCraftSet = settings.value("airCraft").toString();
-		airCraft->insertItem(0, airCraftSet);
-		airCraft->insertItem(1, "----");
-	} else {
-		airCraft->insertItem(0, "c172p");
-		airCraft->insertItem(1, "----");
-		timeoftheDay->setCurrentIndex(0);
-	}
 
 	QString useCoordinatesSet = settings.value("useCoordinates").toString();
 	useCoordinates->setChecked(useCoordinatesSet == "true");
@@ -697,120 +685,17 @@ void fgx::on_useFGXfgfs_clicked() {
 		fgfsPath->setText(fgfsPathGet);
 	}
 	
-	checkAircraftList();
-	checkAircraftImage();
 
 }
 
-// refresh Aircraft List after setting fgdata path
 
-//void fgx::on_set_fgdata_path_Button_clicked() {
-//	checkAircraftList();
-//}
 
-void fgx::checkAircraftListStartup() {
-	
-	QStringList str_list;
-	
-	QString aircraftPath = fgdataPath->text();
-	aircraftPath.append("/Aircraft");
-	QDir aircraftDir(aircraftPath);
-	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
-	
-	QStringList entries = aircraftDir.entryList();
-	
-	for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
-		
-	{
-		// Filter out default dir names, should be a QDir name filter?
-		if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
-			str_list << *entry;
-		}
-	}
-	
-	//airCraft->clear();
-	airCraft->addItems(str_list);
-	
-}
-
-void fgx::checkAircraftList() {
-	
-	QStringList str_list;
-	
-	QString aircraftPath = fgdataPath->text();
-	aircraftPath.append("/Aircraft");
-	QDir aircraftDir(aircraftPath);
-	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
-	
-	QStringList entries = aircraftDir.entryList();
-	
-	for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
-		
-	{
-		// Filter out default dir names, should be a QDir name filter?
-		if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
-			str_list << *entry;
-		}
-	}
-	
-	airCraft->clear();
-	airCraft->addItems(str_list);
-	
-}
 
 void fgx::on_tabs_currentChanged() {
 	checkScenery();
 }
 
 
-// Check aircraft image
-void fgx::checkAircraftImage() {
-	
-	if (useFGXfgfs->isChecked() == true) {
-	
-	QString fileName = QDir::currentPath();
-		fileName.append("/fgx.app/Contents/Resources/fgx-fgdata/Aircraft/");
-		fileName.append(airCraft->currentText());
-		fileName.append("/thumbnail.jpg");
-	
-	if (!fileName.isEmpty()) {
-		QImage image(fileName);
-		if (image.isNull()) {
-			// TODO - make sure this shows a null image or alike and solve problem another way
-			/*
-			QMessageBox::information(this, tr("Image Viewer"),
-									 tr("Please click on refresh on tab \"path/programs\". Cannot load %1.").arg(fileName));
-			*/
-			return;
-		}
-			aircraftImage->setPixmap(QPixmap::fromImage(image));
-		
-			}
-	}
-	
-	else {
-		QString fileName = fgdataPath->text();
-		fileName.append("/Aircraft/");
-		fileName.append(airCraft->currentText());
-		fileName.append("/thumbnail.jpg");
-		
-		if (!fileName.isEmpty()) {
-			QImage image(fileName);
-			if (image.isNull()) {
-				QMessageBox::information(this, tr("Image Viewer"),
-										 tr("Please check path to your FlightGear data folder and click on refresh. Cannot load %1.").arg(fileName));
-				return;
-			}
-			aircraftImage->setPixmap(QPixmap::fromImage(image));
-			
-		}
-	}
-			
-}
-
-void fgx::on_airCraft_activated() {
-	checkAircraftImage();
-}
 
 
 // Use coordinates checked

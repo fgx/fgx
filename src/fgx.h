@@ -51,7 +51,7 @@ private:
 
 private slots:
 	void on_fgStart_clicked();
-	//void on_set_fgdata_path_Button_clicked();
+
 	void checkFGFS();
 	void on_useFGXfgfs_clicked();
 	void on_enableMultiplayer_clicked();
@@ -70,10 +70,6 @@ private slots:
 	void on_usecustomScenery_clicked();
 	void checkScenery();
 
-	void on_airCraft_activated();
-	void checkAircraftImage();
-	void checkAircraftListStartup();
-	void checkAircraftList();
 
 	void checkAirportlist();
 
