@@ -35,6 +35,7 @@ public:
 	Q_PID pid_fg;
 	Q_PID pid_terra;
 	Q_PID pid_fgcom;
+	void kill_process(QString pid);
 	
 private:
 	Ui::mainWindow *ui;
@@ -45,9 +46,13 @@ private:
 
 
 
-	QStringList start_fg_args();
-	void start_fg_com();
+	QStringList fg_args();
+	void start_fgcom();
+	void stop_fgcom();
 	void start_terrasync();
+	void stop_terrasync();
+
+
 
 private slots:
 

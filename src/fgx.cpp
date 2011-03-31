@@ -88,13 +88,19 @@ void fgx::initialize(){
 
 
 }
+//=======================================================================================================================
+// Process Related
+//=======================================================================================================================
+void fgx::kill_process(QString pid) {
 
+	QString command("kill ");
+	command.append(pid);
+	QProcess::startDetached(command);
+}
 
 //=======================================================================================================================
-// FlightGear
+// Start FlightGear
 //=======================================================================================================================
-
-//=== Start =======================================
 void fgx::on_buttonStartFg_clicked() {
 
 	//* Validate
@@ -109,25 +115,27 @@ void fgx::on_buttonStartFg_clicked() {
 
 	checkScenery();
 	
-	lineEditDebug->setPlainText(start_fg_args().join("\n"));
+	lineEditDebug->setPlainText(fg_args().join("\n"));
 
 	//** This process will always start on the shell as fgfs returns an error help if incorrect args
-	bool start = QProcess::startDetached( settings.fgfs_path(), start_fg_args(), QString(), &pid_fg);
+	bool start = QProcess::startDetached( settings.fgfs_path(), fg_args(), QString(), &pid_fg);
 	qDebug() << "PID=" << pid_fg << "=" << start;
 
 }
 
-//=== Stop =======================================
-void fgx::on_buttonStopFg_clicked() {
-	qDebug() << "KILL" << pid_fg;
 
+//=======================================================================================================================
+// Stop FlightGear
+//=======================================================================================================================
+void fgx::on_buttonStopFg_clicked() {
+	kill_process(QString::number(pid_fg));
 }
 
 
 //=======================================================================================================================
 // Start FGCom
 //=======================================================================================================================
-void fgx::start_fg_com(){
+void fgx::start_fgcom(){
 
 	QString command("nice");
 
@@ -135,6 +143,12 @@ void fgx::start_fg_com(){
 	args << "fgcom" << networkWidget->txtFgComNo->text() << "-p" << networkWidget->txtFgComPort->text();
 
 	QProcess::startDetached(command, args, QString(), &pid_fgcom);
+}
+//=======================================================================================================================
+// Stop FGCom
+//=======================================================================================================================
+void fgx::stop_fgcom() {
+	kill_process(QString::number(pid_fgcom));
 }
 
 
@@ -151,11 +165,17 @@ void fgx::start_terrasync(){
 	QProcess::startDetached(command, args, QString(), &pid_terra);
 }
 
+//=======================================================================================================================
+// Stop FGCom
+//=======================================================================================================================
+void fgx::stop_terrasync() {
+	kill_process(QString::number(pid_terra));
+}
 
 //=======================================================================================================================
 // FlightGear Command Args
 //=======================================================================================================================
-QStringList fgx::start_fg_args(){
+QStringList fgx::fg_args(){
 
 	QString argtime;
 	argtime.append(year->text());
@@ -178,13 +198,29 @@ QStringList fgx::start_fg_args(){
 	argwritelog.append(argwritelogdir);
 	argwritelog = " &> fgfslog.log";
 	
+
+
+
+	//++ WARNING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	//** Please make sure there are no spaces in the args.
+	//** Any args with spaces are quoted eg ' --foo=bar'
+	//-- end Warning <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	QStringList args;
-	QString command;
 
-	//** WARNING - make sure there are no spaces in the args. Any args with spaces are quoted.
-
-	//* fg_root
+	//= fg_root
 	args << QString("--fg-root=").append(settings.fg_root());
+
+
+	//= Startup , Spalsh, Geometry
+	args << QString("--geometry=").append(comboScreenSize->currentText());
+	if (checkboxDisableSplash->isChecked()) {
+		args << QString("--disable-splash-screen");
+	}
+	if (checkboxFullScreen->isChecked()) {
+		args << QString("--enable-fullscreen");
+	}
+
+	args << aircraftWidget->get_args();
 
 	//* Custom Scenery
 	/*
@@ -249,6 +285,7 @@ QStringList fgx::start_fg_args(){
 	args << QString("--enable-ai-models");
 
 	//* Metar
+	/*
 	if (useMetar->isChecked()) {
 		command.append("--metar=");
 		QString metartoUse = metarText->toPlainText();
@@ -256,7 +293,7 @@ QStringList fgx::start_fg_args(){
 		command.append(metartoUse);
 		command.append("\"");
 	}
-
+	*/
 
 
 	/*
@@ -269,14 +306,7 @@ QStringList fgx::start_fg_args(){
 	}
 	*/
 
-	//* Startup , Spalsh, Geometry
-	args << QString("--geometry=").append(comboScreenSize->currentText());
-	if (checkboxDisableSplash->isChecked()) {
-		args << QString("--disable-splash-screen");
-	}
-	if (checkboxFullScreen->isChecked()) {
-		args << QString("--enable-fullscreen");
-	}
+
 
 
 	//*  Additonal **args - remove line endings in command line text field and add arguments
@@ -846,7 +876,7 @@ void fgx::on_buttonTest_clicked(){
 	//qDebug() << aircraftWidget->aircraft();
 	//aircraftWidget->save_settings();
 	save_settings();
-	lineEditDebug->setPlainText(start_fg_args().join("\n"));
+	lineEditDebug->setPlainText(fg_args().join("\n"));
 	//qDebug() << start_fg_args();
 
 }
