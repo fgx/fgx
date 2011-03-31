@@ -23,7 +23,7 @@
 
 #include <QtGui/QCloseEvent>
 
-//#include <QFileDialog>
+#include <QFileDialog>
 //#include <QProgressDialog>
 
 
@@ -71,13 +71,13 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	//** Initialse Extra Widgets
 	aircraftWidget = new AircraftWidget(this);
-	tabs->insertTab(3, aircraftWidget, "Aircraft");
+	tabs->insertTab(2, aircraftWidget, "Aircraft");
 
 	airportsWidget = new AirportsWidget(this);
-	tabs->insertTab(4, airportsWidget, "Airports");
+	tabs->insertTab(3, airportsWidget, "Airports");
 
 	networkWidget = new NetworkWidget(this);
-	tabs->insertTab(5, networkWidget, "Network");
+	tabs->insertTab(4, networkWidget, "Network");
 
 
 
@@ -124,15 +124,26 @@ void fgx::kill_process(QString pid) {
 void fgx::on_buttonStartFg_clicked() {
 
 	//* Validate
-	if(!networkWidget->validate()){
-		tabs->setCurrentIndex( tabs->indexOf(networkWidget));
-		return;
-	}
+
 	if(!aircraftWidget->validate()){
 		tabs->setCurrentIndex( tabs->indexOf(aircraftWidget));
 		return;
 	}
 
+	if(!airportsWidget->validate()){
+		tabs->setCurrentIndex( tabs->indexOf(airportsWidget));
+		return;
+	}
+
+	if(!networkWidget->validate()){
+		tabs->setCurrentIndex( tabs->indexOf(networkWidget));
+		return;
+	}
+
+	if(groupBoxTerraSync->isChecked() and txtTerraSyncPath->text().length() == 0){
+		tabs->setCurrentIndex(0);
+		txtTerraSyncPath->setFocus();
+	}
 	
 	txtStartupCommand->setPlainText(fg_args().join("\n"));
 
@@ -254,7 +265,7 @@ QStringList fgx::fg_args(){
 	}
 	*/
 	//* terrasync enabled
-	if (useTerraSync->isChecked()) {
+	if (groupBoxTerraSync->isChecked()) {
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}
 		
@@ -339,13 +350,9 @@ void fgx::save_settings()
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
 
-	if (useTerraSync->isChecked() == true) {
-		settings.setValue("useTerraSync", "true");
-	}	else {
-		settings.setValue("useTerraSync", "false");
-	}
-	
-	
+
+	settings.setValue("use_terrasync", groupBoxTerraSync->isChecked());
+	settings.setValue("terrasync_path", txtTerraSyncPath->text());
 
 
 	settings.setValue("screen_size", comboScreenSize->currentText());
@@ -407,14 +414,8 @@ void fgx::load_settings()
 	airportsWidget->load_settings();
 	networkWidget->load_settings();
 	
-	
-	QString useTerraSyncSet = settings.value("useTerraSync").toString();
-	if (useTerraSyncSet == "true") {
-		useTerraSync->setCheckState(Qt::Checked);
-	} else {
-		useTerraSync->setCheckState(Qt::Unchecked);
-	}
-	
+	groupBoxTerraSync->setChecked(settings.value("use_terrasync").toBool());
+	txtTerraSyncPath->setText( settings.value("terrasync_path").toString() );
 
 	//** Sartup sxreens
 	comboScreenSize->setCurrentIndex( comboScreenSize->findText(settings.value("screen_size").toString()) );
@@ -473,7 +474,30 @@ void fgx::load_settings()
 
 }
 
+//===============================================================
+// Terrasync
+//===============================================================
+//** Path buttons Clicked
+void fgx::on_buttonTerraSyncPath_clicked(){
 
+	QString filePath = QFileDialog::getExistingDirectory(this,
+														 tr("Select Terrasync Directory"),
+														 txtTerraSyncPath->text(),
+														 QFileDialog::ShowDirsOnly);
+	if(filePath.length() > 0){
+		txtTerraSyncPath->setText(filePath);
+	}
+
+	//* Need to write out the terrasync dir as its used other places ;-(
+	settings.setValue("terrasync_path", txtTerraSyncPath->text());
+	settings.sync();
+}
+
+//** Group Box Checked
+void fgx::on_groupBoxTerraSync_clicked(){
+	settings.setValue("use_terrasync", groupBoxTerraSync->isChecked());
+	settings.sync();
+}
 
 
 // Set Time checked

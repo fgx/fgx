@@ -58,7 +58,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
     QToolButton *buttExecutable = new QToolButton();
     layoutExe->addWidget(buttExecutable);
-    buttExecutable->setIcon(QIcon(":/icons/refresh"));
+	buttExecutable->setIcon(QIcon(":/icons/black"));
     buttExecutable->setPopupMode(QToolButton::InstantPopup);
 
 	QMenu *menuFgfs = new QMenu();
@@ -91,7 +91,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
     QToolButton *buttFgRoot = new QToolButton();
     layoutFgRoot->addWidget(buttFgRoot);
-	buttFgRoot->setIcon(QIcon(":/icon/refresh"));
+	buttFgRoot->setIcon(QIcon(":/icons/black"));
     buttFgRoot->setPopupMode(QToolButton::InstantPopup);
 
     QMenu *menuFgRoot = new QMenu();

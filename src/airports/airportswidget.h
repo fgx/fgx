@@ -42,7 +42,7 @@ public:
 
     QStandardItemModel *model;
     QSortFilterProxyModel *proxyModel;
-    QTreeView *treeView;
+	QTreeView *treeViewAirports;
 	QPushButton *buttonRefreshTree;
 	QStatusBar *statusBarAirports;
 	QStatusBar *statusBarRunways;
@@ -62,7 +62,7 @@ public:
 	QLineEdit *txtLng;
 
 	QStringList get_args();
-	void initialize();
+
 	void save_settings();
 	void load_settings();
 	bool validate();
@@ -71,10 +71,9 @@ signals:
 	void set_arg(QString action, QString arg, QString value);
 
 public slots:
-    void import_airports_dialog();
 
-	//void on_airport(QString, QString, QString, QString);
-    //void update_airports_count();
+	void initialize();
+
     void on_update_filter();
 	void on_aiport_selection_changed(const QItemSelection&, const QItemSelection&);
 	void on_aiport_row_changed(QModelIndex, QModelIndex);

@@ -73,14 +73,18 @@ private:
 
 private slots:
 
-
+	//* paths
 	void on_buttonFgFsPath_clicked();
 	void on_buttonFgRootPath_clicked();
 
+	void on_groupBoxTerraSync_clicked();
+	void on_buttonTerraSyncPath_clicked();
+	void on_buttonTest_clicked();
 
+	//* Processstart actions
 	void on_buttonStartFg_clicked();
 	void on_buttonStopFg_clicked();
-	void on_buttonTest_clicked();
+
 
 	void on_groupBoxSetTime_clicked();
 	void on_weather_selected();

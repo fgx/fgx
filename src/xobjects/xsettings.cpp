@@ -19,7 +19,7 @@ XSettings::XSettings(QObject *parent) :
 }
 
 //===========================================================================
-//** fg_root()
+//** fgfs Executable Full Path
 //===========================================================================
 QString XSettings::fgfs_path(){
 	// TODO = return the default windows path
@@ -70,8 +70,33 @@ QString XSettings::aircraft_path(QString dir){
 //** Aiprots path
 //===========================================================================
 QString XSettings::airports_path(){
+	if(use_terrasync()){
+		return scenery_path().append("/Airports");
+	}
 	return fg_root().append("/Scenery/Airports");
 }
+
+
+//===========================================================================
+//** Scenery Path
+//===========================================================================
+QString XSettings::scenery_path(){
+	if(use_terrasync()){
+		return terrasync_path();
+	}
+	return fg_root("/Scenery");
+}
+
+//===========================================================================
+//** TerraSync
+//===========================================================================
+bool XSettings::use_terrasync(){
+	return value("use_terrasync").toBool();
+}
+QString XSettings::terrasync_path(){
+	return value("terrasync_path").toString();
+}
+
 
 //===========================================================================
 //** temp

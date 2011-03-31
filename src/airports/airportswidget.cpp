@@ -1,5 +1,5 @@
 
-
+#include <QtCore/QTimer>
 #include <QtCore/QDebug>
 #include <QtCore/QString>
 //#include <QtCore/QStringList>
@@ -156,41 +156,42 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
     //******************************************************
     //**  Tree
-    treeView = new QTreeView(this);
-	airportLayout->addWidget(treeView);
-    treeView->setModel(proxyModel);
+	treeViewAirports = new QTreeView(this);
+	airportLayout->addWidget(treeViewAirports);
+	treeViewAirports->setModel(proxyModel);
 
-    treeView->setUniformRowHeights(true);
-    treeView->setAlternatingRowColors(true);
-    treeView->setRootIsDecorated(false);
-    treeView->setSortingEnabled(true);
-    treeView->sortByColumn(C_NAME, Qt::AscendingOrder);
-    treeView->setSelectionMode(QAbstractItemView::SingleSelection);
-    treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	treeViewAirports->setUniformRowHeights(true);
+	treeViewAirports->setAlternatingRowColors(true);
+	treeViewAirports->setRootIsDecorated(false);
+	treeViewAirports->setSortingEnabled(true);
+	treeViewAirports->sortByColumn(C_NAME, Qt::AscendingOrder);
+	treeViewAirports->setSelectionMode(QAbstractItemView::SingleSelection);
+	treeViewAirports->setSelectionBehavior(QAbstractItemView::SelectRows);
+	treeViewAirports->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     //** Deaders and columns
-    treeView->header()->setStretchLastSection(true);
-	treeView->setColumnHidden(C_ELEVATION, true);
-	treeView->setColumnHidden(C_TOWER, true);
-	treeView->setColumnHidden(C_FAV, true);
-	treeView->setColumnHidden(C_XML, true);
-    treeView->setColumnWidth(C_FAV, 50);
-	treeView->setColumnWidth(C_ICAO, 80);
-    treeView->setColumnWidth(C_TOWER, 50);
-    treeView->setColumnWidth(C_ELEVATION, 80);
+	treeViewAirports->header()->setStretchLastSection(true);
+	treeViewAirports->setColumnHidden(C_ELEVATION, true);
+	treeViewAirports->setColumnHidden(C_TOWER, true);
+	treeViewAirports->setColumnHidden(C_FAV, true);
+	treeViewAirports->setColumnHidden(C_XML, true);
+	treeViewAirports->setColumnWidth(C_FAV, 50);
+	treeViewAirports->setColumnWidth(C_ICAO, 80);
+	treeViewAirports->setColumnWidth(C_TOWER, 50);
+	treeViewAirports->setColumnWidth(C_ELEVATION, 80);
 
-    connect( treeView->selectionModel(),
+	connect( treeViewAirports->selectionModel(),
              SIGNAL( selectionChanged (const QItemSelection&, const QItemSelection&) ),
 			 SLOT( on_aiport_selection_changed(const QItemSelection&, const QItemSelection&) )
     );
 
-    //connect(treeView,
+	//connect(treeViewAirports,
     //        SIGNAL(clicked(QModelIndex)),
     //        this, SLOT(on_tree_clicked(QModelIndex))
     //);
 
 	statusBarAirports = new QStatusBar();
+	statusBarAirports->setSizeGripEnabled(false);
 	airportLayout->addWidget(statusBarAirports);
 	statusBarAirports->showMessage("Idle");
 
@@ -206,6 +207,11 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	rightWidget->setLayout(runwayLayout);
 	runwayLayout->setContentsMargins(0,0,0,0);
 	runwayLayout->setSpacing(0);
+
+	//* blank to drop runways tree
+	QHBoxLayout *hbSpacer = new QHBoxLayout();
+	runwayLayout->addLayout(hbSpacer);
+	hbSpacer->addWidget(new QLabel(" "));
 
 
     //*** Runways Tree
@@ -226,18 +232,19 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	treeWidgetRunways->setColumnHidden(4,true);
 	treeWidgetRunways->setColumnHidden(5,true);
 	/*
-    connect( treeView->selectionModel(),
+	connect( treeViewAirports->selectionModel(),
              SIGNAL( selectionChanged (const QItemSelection&, const QItemSelection&) ),
 			 SLOT( on_aiport_selection_changed(const QItemSelection&, const QItemSelection&) )
     );
 	*/
 
-	connect( treeView->selectionModel(),
+	connect( treeViewAirports->selectionModel(),
 			 SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ),
 			 SLOT( on_aiport_row_changed(QModelIndex, QModelIndex) )
 	);
 
 	statusBarRunways = new QStatusBar();
+	statusBarRunways->setSizeGripEnabled(false);
 	runwayLayout->addWidget(statusBarRunways);
 	statusBarAirports->showMessage("");
 
@@ -245,7 +252,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     //map = new GoogleMapWidget(this);
     //airportLayout->addWidget(map, 10);
 
-    splitter->setStretchFactor(0, 3);
+	splitter->setStretchFactor(0, 2);
     splitter->setStretchFactor(1, 1);
 
 
@@ -271,7 +278,11 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	txtLng = new QLineEdit();
 	layoutCoordinates->addWidget(txtLng);
 
-	initialize();
+	//initialize();
+
+	//***** Qt Has no Show event for a form, so we need to present Widgets first
+	//** and then initialise. THis is achieved with a timer that triggers in a moment
+	QTimer::singleShot(500, this, SLOT(initialize()));
 
 }
 
@@ -301,7 +312,7 @@ void AirportsWidget::initialize(){
 //** Scan XML's for airports
 //============================================================================
 void AirportsWidget::scan_airports_xml(){
-
+	qDebug() << "Scanning";
 	QProgressDialog progress;
 	progress.show();
 
@@ -324,6 +335,7 @@ void AirportsWidget::scan_airports_xml(){
 
 	settings.setValue("cache/aiports", airportsList);
 	progress.hide();
+	qDebug() << "Scanning DONE";
 }
 //============================================================================
 //** Load Airports Tree
@@ -373,7 +385,7 @@ void AirportsWidget::load_tree(){
 	if(items.count() > 0){
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
 		QModelIndex proxIdx = proxyModel->mapFromSource(srcIdx);
-		treeView->selectionModel()->select(proxIdx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
+		treeViewAirports->selectionModel()->select(proxIdx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
 
 	}
 }
@@ -386,16 +398,7 @@ void AirportsWidget::on_update_filter(){
     int column = buttGroupFilter->checkedButton()->property("column").toInt();
     proxyModel->setFilterKeyColumn( column );
     proxyModel->setFilterFixedString( txtAirportsFilter->text() );
-    treeView->sortByColumn(column);
-}
-
-//**********************************************
-//*** Import Airports Dialog
-void AirportsWidget::import_airports_dialog(){
-	 //ImportAirportsWidget *imp = new ImportAirportsWidget(mainObject);
-	 //if(imp->exec()){
-	 //   load_airports();
-	// }
+	treeViewAirports->sortByColumn(column);
 }
 
 
@@ -410,7 +413,7 @@ void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex prev
                                             treeWidgetRunways->model()->rowCount()
                                             );
 
-	//QModelIndex proxyIndex =  treeView->selectionModel()->selectedRows(C_ICAO).first();
+	//QModelIndex proxyIndex =  treeViewAirports->selectionModel()->selectedRows(C_ICAO).first();
 	QModelIndex proxyIndex =  proxyModel->index(current.row(), C_XML);
     if(!proxyIndex.isValid()){
 		//emit set_arg("remove", "--airport=", "");
@@ -537,7 +540,7 @@ QStringList AirportsWidget::get_args(){
 
 	//* Airports
 	}else{
-		if(treeView->selectionModel()->hasSelection()){
+		if(treeViewAirports->selectionModel()->hasSelection()){
 
 		}
 
@@ -578,4 +581,22 @@ void AirportsWidget::load_settings(){
 	txtLat->setText(settings.value("lat").toString());
 	txtLng->setText(settings.value("lng").toString());
 	//settings.setValue("airport", locationIcao->currentText());
+}
+
+
+bool AirportsWidget::validate(){
+
+	if(groupBoxUseCoordinates->isChecked()){
+		if(txtLat->text().trimmed().length() == 0){
+			txtLat->setFocus();
+			return false;
+		}
+		if(txtLng->text().trimmed().length() == 0){
+			txtLng->setFocus();
+			return false;
+		}
+	}
+
+	return true;
+
 }

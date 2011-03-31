@@ -31,7 +31,9 @@ public:
 
 	QString airports_path();
 
-
+	QString scenery_path();
+	bool use_terrasync();
+	QString terrasync_path();
 
 	void saveWindow(QWidget *widget);
 	void restoreWindow(QWidget *widget);
