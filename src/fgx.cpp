@@ -37,10 +37,10 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	//** Initialse Extra Widgets
 	aircraftWidget = new AircraftWidget(this);
-	tabs->addTab(aircraftWidget, "Aircraft");
+	tabs->insertTab(3, aircraftWidget, "Aircraft");
 
 	networkWidget = new NetworkWidget(this);
-	tabs->addTab(networkWidget, "Network");
+	tabs->insertTab(4, networkWidget, "Network");
 
 
 
