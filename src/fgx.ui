@@ -14,7 +14,7 @@
    <string>FlightGear Launcher</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="resources/icons.qrc">
     <normaloff>:/icon/favicon</normaloff>:/icon/favicon</iconset>
   </property>
   <property name="autoFillBackground">
@@ -70,7 +70,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>2</number>
         </property>
         <property name="usesScrollButtons">
          <bool>false</bool>
@@ -222,7 +222,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -262,7 +262,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -294,7 +294,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -318,7 +318,7 @@ p, li { white-space: pre-wrap; }
                      <string>Start Terrasync</string>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
                     </property>
                    </widget>
@@ -329,7 +329,7 @@ p, li { white-space: pre-wrap; }
                      <string>Stop Terrasync</string>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
                     </property>
                    </widget>
@@ -382,6 +382,9 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="checkable">
              <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
             </property>
             <layout class="QGridLayout" name="gridLayout">
              <item row="0" column="0">
@@ -472,6 +475,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>None</string>
                </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
                <attribute name="buttonGroup">
                 <string>buttonGroupWeather</string>
                </attribute>
@@ -498,7 +504,11 @@ p, li { white-space: pre-wrap; }
               </widget>
              </item>
              <item>
-              <widget class="QPlainTextEdit" name="metarText"/>
+              <widget class="QPlainTextEdit" name="metarText">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -513,6 +523,9 @@ p, li { white-space: pre-wrap; }
               <widget class="QRadioButton" name="radioButtonTimeRealTime">
                <property name="text">
                 <string>Real Time</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
                </property>
                <attribute name="buttonGroup">
                 <string>buttonGroupTime</string>
@@ -652,11 +665,17 @@ p, li { white-space: pre-wrap; }
             <property name="checkable">
              <bool>true</bool>
             </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
             <layout class="QVBoxLayout" name="verticalLayout_7">
              <item>
               <widget class="QRadioButton" name="radioButtonLogWarn">
                <property name="text">
                 <string>Warn</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
                </property>
                <attribute name="buttonGroup">
                 <string>buttonGroupLog</string>
@@ -811,7 +830,7 @@ p, li { white-space: pre-wrap; }
            <string>Stop Fg</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="resources/icons.qrc">
             <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
           </property>
          </widget>
@@ -822,7 +841,7 @@ p, li { white-space: pre-wrap; }
            <string>Start Fg</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="resources/icons.qrc">
             <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
           </property>
          </widget>
@@ -877,7 +896,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset>
+    <iconset resource="resources/icons.qrc">
      <normaloff>:/icon/quit</normaloff>:/icon/quit</iconset>
    </property>
    <property name="text">
@@ -898,7 +917,9 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources/icons.qrc"/>
+ </resources>
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroupWeather"/>

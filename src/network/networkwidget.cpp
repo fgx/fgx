@@ -58,6 +58,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	grpMpServer  = new QGroupBox("Enable Multiplayer");
 	middleLayout->addWidget(grpMpServer, 3);
 	grpMpServer->setCheckable(true);
+	grpMpServer->setChecked(false);
 	connect(grpMpServer, SIGNAL(clicked(bool)), this, SLOT(on_mp_server_checked(bool)));
 
 	QVBoxLayout *layoutMpServer = new QVBoxLayout();
@@ -196,6 +197,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	grpFgCom = new QGroupBox(tr("fgCom - Voice Communications"));
 	rightLayout->addWidget(grpFgCom, 2);
 	grpFgCom->setCheckable(true);
+	grpFgCom->setChecked(false);
 	connect(grpFgCom, SIGNAL(clicked(bool)), this, SLOT(set_fgcom()));
 
 	QVBoxLayout *layoutFgCom = new QVBoxLayout();
@@ -791,18 +793,18 @@ void NetworkWidget::load_settings(){
 
 //=============================================================
 // Validate
-bool NetworkWidget::validate(){
+QString NetworkWidget::validate(){
 	if(grpMpServer->isChecked()){
 		if(txtCallSign->text().trimmed().length() == 0){
 			txtCallSign->setFocus();
-			return false;
+			return QString("Need a Callsign");
 		}
 		if(checkBoxOut->isChecked()){
 			if(!treeWidget->currentItem() or treeWidget->currentItem()->text(C_FLAG) != "1"){
 				treeWidget->setFocus();
-				return false;
+				return QString("Need a Multiplayer Server");;
 			}
 		}
 	}
-	return true;
+	return QString();
 }

@@ -70,7 +70,7 @@ public:
 
 	void save_settings();
 	void load_settings();
-	bool validate();
+	QString validate();
 
 signals:
 	void set_arg(QString action, QString arg, QString value);

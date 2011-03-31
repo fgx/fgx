@@ -75,6 +75,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	//** Restore Settings
 	tabs->setCurrentIndex( settings.value("last_tab").toInt() );
 
+	//centralWidget()->setDisabled(true);
 
 	//***** Qt Has no Show event for a form, so we need to present Widgets first
 	//** and then initialise. THis is achieved with a timer that triggers in a moment
@@ -99,7 +100,7 @@ void fgx::initialize(){
 	if(!settings.paths_sane()){
 		show_settings_dialog();
 	}
-
+	centralWidget()->setDisabled(false);
 
 
 }
@@ -223,24 +224,34 @@ void fgx::stop_terrasync() {
 //* Validate
 //=======================================================================================================================
 bool fgx::validate(){
-	if(!aircraftWidget->validate()){
+	int TIMEOUT = 5000;
+	QString v;
+
+	v = aircraftWidget->validate();
+	if(v != ""){
 		tabs->setCurrentIndex( tabs->indexOf(aircraftWidget));
+		statusBar()->showMessage(v, TIMEOUT);
 		return false;
 	}
 
-	if(!airportsWidget->validate()){
+	v = airportsWidget->validate();
+	if(v != ""){
 		tabs->setCurrentIndex( tabs->indexOf(airportsWidget));
+		statusBar()->showMessage(v, TIMEOUT);
 		return false;
 	}
 
-	if(!networkWidget->validate()){
+	v = networkWidget->validate();
+	if(v != ""){
 		tabs->setCurrentIndex( tabs->indexOf(networkWidget));
+		statusBar()->showMessage(v, TIMEOUT);
 		return false;
 	}
 
 	if(groupBoxTerraSync->isChecked() and txtTerraSyncPath->text().length() == 0){
 		tabs->setCurrentIndex(0);
 		txtTerraSyncPath->setFocus();
+		statusBar()->showMessage("Need a Terrasync directory", TIMEOUT);
 		return false;
 	}
 	return true;
@@ -312,7 +323,6 @@ QStringList fgx::fg_args(){
 		args << QString(" --timeofday=").append( buttonGroupTime->checkedButton()->text().toLower().replace(" ","") );
 	}
 
-	return args;
 
 	//* Weather/Metar fetch
 	if(radioButtonWeatherNone->isChecked()) {
@@ -370,7 +380,7 @@ QStringList fgx::fg_args(){
 void fgx::save_settings()
 {
 	//## NB: fgfs path and FG_ROOT are saves in SettingsDialog ##
-	qDebug() << "saves settings";
+	//qDebug() << "saves settings";
 	aircraftWidget->save_settings();
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
@@ -419,9 +429,9 @@ void fgx::load_settings()
 	fgdataPath->setText(settings.fg_root());
 	fgfsPath->setText(settings.fgfs_path());
 
-	//aircraftWidget->load_settings();
-	//airportsWidget->load_settings();
-	//networkWidget->load_settings();
+	aircraftWidget->load_settings();
+	airportsWidget->load_settings();
+	networkWidget->load_settings();
 	
 	groupBoxTerraSync->setChecked(settings.value("use_terrasync").toBool());
 	txtTerraSyncPath->setText( settings.value("terrasync_path").toString() );
@@ -580,6 +590,7 @@ void fgx::closeEvent(QCloseEvent *event)
 {
 	save_settings();
 	settings.saveWindow(this);
+	settings.sync();
 	event->accept();
 }
 
@@ -604,10 +615,9 @@ void fgx::on_buttonFgRootPath_clicked(){
 
 
 void fgx::on_tabs_currentChanged(int index){
-	qDebug() << "index=" << index;
 	settings.setValue("last_tab", index);
 	if(index == 6){
-		//on_buttonViewCommand_clicked();
+		on_buttonViewCommand_clicked();
 	}
 }
 

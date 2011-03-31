@@ -44,7 +44,7 @@ public:
 	void initialize();
 	void save_settings();
 	void load_settings();
-	bool validate();
+	QString validate();
 	void select_node(QString aero);
 	QString aircraft();
 

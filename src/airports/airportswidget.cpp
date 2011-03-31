@@ -251,9 +251,6 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	rightLayout->addWidget(statusBarRunways);
 	statusBarAirports->showMessage("");
 
-    //** Map
-    //map = new GoogleMapWidget(this);
-    //airportLayout->addWidget(map, 10);
 
 	splitter->setStretchFactor(0, 2);
     splitter->setStretchFactor(1, 1);
@@ -285,6 +282,9 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	layoutCoordinates->addWidget(txtLng);
 
 	layoutCoordinates->addStretch(20);
+
+	radioButtonUseAirport->setChecked(true);
+	on_buttonGroupUse();
 }
 
 void AirportsWidget::initialize(){
@@ -521,7 +521,7 @@ QStringList AirportsWidget::get_args(){
 	//}
 
 	//* Coordinates
-	if(groupBoxUseCoordinates->isChecked()){
+	if(radioButtonUseCoordinates->isChecked()){
 		if( txtLat->text().length() > 0 and txtLng->text().length() > 0){
 			args << QString("--lat=").append(txtLat->text());
 			args << QString("--lon=").append(txtLng->text());
@@ -540,7 +540,7 @@ QStringList AirportsWidget::get_args(){
 // Save Settings
 void AirportsWidget::save_settings(){
 
-	settings.setValue("use_coordinates", groupBoxUseCoordinates->isChecked());
+	settings.setValue("use_coordinates", radioButtonUseCoordinates->isChecked());
 	settings.setValue("lon", txtLat->text());
 	settings.setValue("lat", txtLng->text());
 
@@ -565,26 +565,26 @@ void AirportsWidget::load_settings(){
 		locationIcao->insertItem(1, "----");
 		//timeoftheDay->setCurrentIndex(0);
 	}*/
-	groupBoxUseCoordinates->setChecked(settings.value("use_coordinates").toBool());
+	radioButtonUseCoordinates->setChecked(settings.value("use_coordinates").toBool());
 	txtLat->setText(settings.value("lat").toString());
 	txtLng->setText(settings.value("lng").toString());
 	//settings.setValue("airport", locationIcao->currentText());
 }
 
 
-bool AirportsWidget::validate(){
+QString AirportsWidget::validate(){
 
-	if(groupBoxUseCoordinates->isChecked()){
+	if(radioButtonUseCoordinates->isChecked()){
 		if(txtLat->text().trimmed().length() == 0){
 			txtLat->setFocus();
-			return false;
+			return QString("Need Latitude");
 		}
 		if(txtLng->text().trimmed().length() == 0){
 			txtLng->setFocus();
-			return false;
+			return QString("Need Longtitude");
 		}
 	}
 
-	return true;
+	return QString();
 
 }

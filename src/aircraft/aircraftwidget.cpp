@@ -471,8 +471,8 @@ QString AircraftWidget::aircraft(){
 
 //=============================================================
 // Validate
-bool AircraftWidget::validate(){
-	return true;
+QString AircraftWidget::validate(){
+	return QString();
 }
 
 

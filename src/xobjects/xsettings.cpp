@@ -122,9 +122,11 @@ QString XSettings::temp(QString append_path){
 //** Save/Restore Window
 //===========================================================================
 void XSettings::saveWindow(QWidget *widget){
+	qDebug() << "saveWindow" << widget->saveGeometry();
 	setValue( _windowName(widget), QVariant(widget->saveGeometry()) );
 }
 void XSettings::restoreWindow(QWidget *widget){
+	qDebug() << "Restore";
 	widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
 }
 QString XSettings::_windowName(QWidget *widget){

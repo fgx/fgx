@@ -65,7 +65,7 @@ public:
 	void populate_combo_hz(QComboBox *combo);
 	void save_settings();
 	void load_settings();
-	bool validate();
+	QString validate();
 	QStringList get_args();
 
 signals:
