@@ -531,6 +531,20 @@ void fgx::on_style(QAction *action){
 	QApplication::setStyle(QStyleFactory::create(action->text()));
 }
 
+void fgx::on_actionAboutFGX_triggered(){
+	QString txt;
+	txt.append("<html><body><p><b>Launcher for OSX</b></p>");
+	txt.append("<p>© 2011 Gral aka Yves Sablonier, Zurich</p>");
+	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPL2</a></p>");
+	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear</a></p>");
+	txt.append("</body></html>");
+	QMessageBox::about(this, "About FGX", txt);
+}
+
+void fgx::on_actionAboutQT_triggered(){
+	QMessageBox::aboutQt(this, "About Qt");
+}
+
 // Set Time checked
 void fgx::on_groupBoxSetTime_clicked() {
 	

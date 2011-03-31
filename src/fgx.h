@@ -98,6 +98,9 @@ private slots:
 	void initialize();
 
 
+	void on_actionAboutFGX_triggered();
+	void on_actionAboutQT_triggered();
+
 };
 
 
