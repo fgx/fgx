@@ -29,6 +29,9 @@ public:
 	QString aircraft_path();
 	QString aircraft_path(QString dir);
 
+	QString airports_path();
+
+
 
 	void saveWindow(QWidget *widget);
 	void restoreWindow(QWidget *widget);

@@ -41,6 +41,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	fgx_logo->setText(QCoreApplication::applicationName());
 
+	//*** Setup up Button Groups as the UI cant ;-(
 	buttonGroupTime = new QButtonGroup(this);
 	buttonGroupTime->setExclusive(true);
 	buttonGroupTime->addButton(radioButtonTimeRealTime);
@@ -72,8 +73,11 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	aircraftWidget = new AircraftWidget(this);
 	tabs->insertTab(3, aircraftWidget, "Aircraft");
 
+	airportsWidget = new AirportsWidget(this);
+	tabs->insertTab(4, airportsWidget, "Airports");
+
 	networkWidget = new NetworkWidget(this);
-	tabs->insertTab(4, networkWidget, "Network");
+	tabs->insertTab(5, networkWidget, "Network");
 
 
 
@@ -645,9 +649,9 @@ void fgx::on_usecustomScenery_clicked() {
 }
 
 void fgx::checkAirportlist() {
-	
-	QString directory;
-
+	return;
+	QString directory = settings.airports_path();
+	/*
 	if (usecustomScenery->isChecked() == true) {
 		directory = QDir::homePath();
 		directory.append("/Documents/TerrasyncScenery/Airports");
@@ -655,16 +659,21 @@ void fgx::checkAirportlist() {
 		directory = fgdataPath->text();
 		directory.append("/Scenery/Airports");
 	}
+	*/
 
 	QStringList files;
+	QString entry;
 
-
-	
 	QDirIterator it(directory, QDirIterator::Subdirectories);
 	while (it.hasNext()) {
-		files << it.next();
+		//files << it.next();
+		entry = it.next();
+		if(entry.endsWith(".threshold.xml") ){
+			files << entry;
 		}
-		
+	}
+	qDebug() << files;
+	return;
 	// filters Stringlist for Airport entries containing "threshold"
 		
 	QStringList filtered;

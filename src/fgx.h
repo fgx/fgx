@@ -15,11 +15,11 @@
 #include <QButtonGroup>
 
 #include "ui_fgx.h"
-
 #include "xobjects/xsettings.h"
-#include "network/networkwidget.h"
-#include "aircraft/aircraftwidget.h"
 
+#include "aircraft/aircraftwidget.h"
+#include "airports/airportswidget.h"
+#include "network/networkwidget.h"
 
 
 class fgx : public QMainWindow, public Ui::mainWindow{
@@ -56,6 +56,7 @@ private:
 	XSettings settings;
 
 	AircraftWidget *aircraftWidget;
+	AirportsWidget *airportsWidget;
 	NetworkWidget *networkWidget;
 
 	QButtonGroup *buttonGroupTime;

@@ -55,7 +55,7 @@ bool XSettings::paths_sane(){
 
 
 //===========================================================================
-//** aircraft_path()
+//** Aircraft Path
 //===========================================================================
 QString XSettings::aircraft_path(){
 	return fg_root().append("/Aircraft");
@@ -66,6 +66,12 @@ QString XSettings::aircraft_path(QString dir){
 }
 
 
+//===========================================================================
+//** Aiprots path
+//===========================================================================
+QString XSettings::airports_path(){
+	return fg_root().append("/Scenery/Airports");
+}
 
 //===========================================================================
 //** temp

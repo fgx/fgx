@@ -15,7 +15,8 @@ HEADERS += fgx.h \
     settings/settingsdialog.h \
     network/networkwidget.h \
     network/mptelnet.h \
-    aircraft/aircraftwidget.h
+    aircraft/aircraftwidget.h \
+    airports/airportswidget.h
 FORMS += fgx.ui
 SOURCES += main.cpp \
     fgx.cpp \
@@ -23,5 +24,6 @@ SOURCES += main.cpp \
     settings/settingsdialog.cpp \
     network/networkwidget.cpp \
     network/mptelnet.cpp \
-    aircraft/aircraftwidget.cpp
+    aircraft/aircraftwidget.cpp \
+    airports/airportswidget.cpp
 RESOURCES += resources/icons.qrc
