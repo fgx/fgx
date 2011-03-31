@@ -46,9 +46,9 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	//** Restore Settings
 	tabs->setCurrentIndex( settings.value("last_tab").toInt() );
-	aircraftWidget->load_settings();
-	networkWidget->load_settings();
 
+
+	initialize();
 
 }/* end constructor */
 
@@ -59,27 +59,17 @@ fgx::~fgx(){
 //=======================================================================================================================
 // Initial Setup
 //=======================================================================================================================
-void fgx::initial_setup(){
-	//qDebug() << "INITIAL SETUP";
-	checkFGFS();
-	on_enableMultiplayer_clicked();
-	on_useMetar_clicked();
-	on_groupBoxSetTime_clicked();
-	checkCoords();
+void fgx::initialize(){
+
+
+	load_settings();
+	//on_enableMultiplayer_clicked();
+	//on_useMetar_clicked();
+	//on_groupBoxSetTime_clicked();
+	//checkCoords();
 		
 	
 	
-	QDir fgdatadir(fgdataPath->text());
-	
-	if (fgdatadir.exists() == false || fgfsPath->text() == "" || useFGXfgfs->isChecked() == true) {
-			QString fgdataPathGet = QDir::currentPath();
-			fgdataPathGet.append("/fgx.app/Contents/Resources/fgx-fgdata");
-			fgdataPath->setText(fgdataPathGet);
-			QString fgfsPathGet = QDir::currentPath();
-			fgfsPathGet.append("/fgx.app/Contents/MacOS");
-			fgfsPath->setText(fgfsPathGet);
-			useFGXfgfs->setCheckState(Qt::Checked);
-	}
 	
 	// startup checks
 	checkAirportlist();
@@ -89,7 +79,7 @@ void fgx::initial_setup(){
 	checkScenery();
 	
 	
-	readSettings();
+	load_settings();
 
 	if(!settings.paths_sane()){
 		show_settings_dialog();
@@ -116,13 +106,6 @@ void fgx::on_fgStart_clicked() {
 
 	checkScenery();
 	
-	// Write commands and arguments to TerraSync.sh and run via Terminal.app	
-	
-
-	// Write commands and arguments to FGCOM.sh and run via Terminal.app
-	
-	
-
 
 	//** Start FlightGear
 	qDebug() << "COMMAND=" << start_fg_args();
@@ -227,9 +210,6 @@ QStringList fgx::start_fg_args(){
 	args << networkWidget->get_args();
 
 
-	//* Aircraft
-	//command.append("--aircraft=").append(airCraft->currentIndex());
-
 	//* Airport
 	//args << QString("--airport=").append(locationIcao->currentText());
 
@@ -317,23 +297,15 @@ QStringList fgx::start_fg_args(){
 
 
 //================================================================================
-// Write Settings
+// Save Settings
 //================================================================================
-void fgx::writeSettings()
+void fgx::save_settings()
 {
-	//QSettings settings("fgx", "FlightGear Starter OSX");
-	return;
-	settings.setValue("fgdataPath", fgdataPath->text());
-	
-	if (useFGXfgfs->isChecked() == true) {
-		settings.setValue("useFGXfgfs", "true");
-	}	else {
-		settings.setValue("useFGXfgfs", "false");
-	}
-	
-	settings.setValue("fgfsPath", fgfsPath->text());
+	//## NB: fgfs path and FG_ROOT are saves in SettingsDialog ##
 
-	
+	aircraftWidget->save_settings();
+	networkWidget->save_settings();
+
 	if (useTerraSync->isChecked() == true) {
 		settings.setValue("useTerraSync", "true");
 	}	else {
@@ -412,22 +384,17 @@ void fgx::writeSettings()
 }
 
 //================================================================================
-// Read Settings
+// Load Settings
 //================================================================================
-void fgx::readSettings()
+void fgx::load_settings()
 {
-	return;
-	qDebug() << settings.fg_root() << "  " << settings.fgfs_path();
+
 	fgdataPath->setText(settings.fg_root());
-	
 	fgfsPath->setText(settings.fgfs_path());
+
+	aircraftWidget->load_settings();
+	networkWidget->load_settings();
 	
-	QString useFGXfgfsSet = settings.value("useFGXfgfs").toString();
-	if (useFGXfgfsSet == "true") {
-		useFGXfgfs->setCheckState(Qt::Checked);
-	} else {
-		useFGXfgfs->setCheckState(Qt::Unchecked);
-	}
 	
 	QString useTerraSyncSet = settings.value("useTerraSync").toString();
 	if (useTerraSyncSet == "true") {
@@ -587,22 +554,6 @@ void fgx::on_locationIcao_activated() {
 	checkScenery();
 }
 
-// Check built-in FlightGear state
-void fgx::on_useFGXfgfs_clicked() {
-	checkFGFS();
-	checkScenery();
-	
-	if (useFGXfgfs->isChecked() == true) {
-		QString fgdataPathGet = QDir::currentPath();
-		fgdataPathGet.append("/fgx.app/Contents/Resources/fgx-fgdata");
-		fgdataPath->setText(fgdataPathGet);
-		QString fgfsPathGet = QDir::currentPath();
-		fgfsPathGet.append("/fgx.app/Contents/MacOS");
-		fgfsPath->setText(fgfsPathGet);
-	}
-	
-
-}
 
 
 
@@ -678,14 +629,7 @@ void fgx::on_useMetar_clicked() {
 }
 
 
-// built-in check, disable path line edits
-void fgx::checkFGFS() {
-		
-	bool enabled = useFGXfgfs->checkState() == Qt::Checked;
-	fgfsPath->setEnabled(!enabled);
-	fgdataPath->setEnabled(!enabled);
 
-}
 
 
 // Check for coordinates enabled, disable ICAO, runway, park position
@@ -916,7 +860,7 @@ void fgx::checkScenery() {
 // Write settings on close
 void fgx::closeEvent(QCloseEvent *event)
 {
-	writeSettings();
+	save_settings();
 	settings.saveWindow(this);
 	event->accept();
 }
@@ -930,11 +874,15 @@ void fgx::show_settings_dialog(){
 		fgdataPath->setText(settings.fg_root());
 	}
 }
-
-
-void fgx::on_buttonSettings_clicked(){
+void fgx::on_buttonFgFsPath_clicked(){
 	show_settings_dialog();
 }
+void fgx::on_buttonFgRootPath_clicked(){
+	show_settings_dialog();
+}
+
+
+
 
 
 void fgx::on_tabs_currentChanged(int index){
@@ -947,8 +895,10 @@ void fgx::on_buttonTest_clicked(){
 	qDebug() << "YES" << pid_fg;
 	//qDebug() << networkWidget->get_args();
 	//networkWidget->save_settings();
-	qDebug() << aircraftWidget->aircraft();
-	aircraftWidget->save_settings();
+	//qDebug() << aircraftWidget->aircraft();
+	//aircraftWidget->save_settings();
+	save_settings();
+	lineEditDebug->setPlainText(start_fg_args().join("\n"));
 	//qDebug() << start_fg_args();
 
 }

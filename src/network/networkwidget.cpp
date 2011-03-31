@@ -105,7 +105,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	comboHzIn = new QComboBox();
 	gridMP->addWidget(comboHzIn, row, 5);
 	populate_combo_hz(comboHzIn);
-	connect(comboHzIn, SIGNAL(currentIndexChanged(int)), this, SLOT(set_mp_server(bool)));
+	connect(comboHzIn, SIGNAL(currentIndexChanged(int)), this, SLOT(set_mp_server()));
 	gridMP->addWidget(new QLabel("Hz"), row, 6);
 
 

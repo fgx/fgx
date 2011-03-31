@@ -43,7 +43,7 @@ private:
 	AircraftWidget *aircraftWidget;
 	NetworkWidget *networkWidget;
 
-	void initial_setup();
+
 
 	QStringList start_fg_args();
 	void start_fg_com();
@@ -52,8 +52,6 @@ private:
 private slots:
 	void on_fgStart_clicked();
 
-	void checkFGFS();
-	void on_useFGXfgfs_clicked();
 	void on_enableMultiplayer_clicked();
 	void on_groupBoxSetTime_clicked();
 	void on_useMetar_clicked();
@@ -63,8 +61,8 @@ private slots:
 	void checkCoords();	
 	void on_tabs_currentChanged();
 
-	void readSettings();
-	void writeSettings();
+	void load_settings();
+	void save_settings();
 
 
 	void on_usecustomScenery_clicked();
@@ -74,11 +72,14 @@ private slots:
 	void checkAirportlist();
 
 	void show_settings_dialog();
-	void on_buttonSettings_clicked();
+	void on_buttonFgFsPath_clicked();
+	void on_buttonFgRootPath_clicked();
 
 	void on_buttonTest_clicked();
 
 	void on_tabs_currentChanged(int);
+
+	void initialize();
 };
 
 
