@@ -656,7 +656,7 @@ void NetworkWidget::on_checkbox_out(){
 QStringList NetworkWidget::get_args(){
 
 	QStringList args;
-
+	return args;
 	//* Enable Multiplay
 	if(grpMpServer->isChecked()){
 		args << "--enable-ai-models";
@@ -668,15 +668,15 @@ QStringList NetworkWidget::get_args(){
 							);
 		}
 		if(checkBoxOut->isChecked()){
-			QString remote_server(	comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString() == "domain"
-							? treeWidget->currentItem()->text(C_DOMAIN)
-							: treeWidget->currentItem()->text(C_IP_ADDRESS)
-			);
-			args << QString("--multiplay=out,%1,%2,%3").arg(
-									comboHzOut->currentText()).arg(
-									remote_server).arg(
-									comboRemotePort->currentText()
-							);
+			if(treeWidget->currentItem()){
+				QString remote_server(	comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString() == "domain"
+								? treeWidget->currentItem()->text(C_DOMAIN)
+								: treeWidget->currentItem()->text(C_IP_ADDRESS));
+				args << QString("--multiplay=out,%1,%2,%3").arg(
+								comboHzOut->currentText()).arg(
+								remote_server).arg(
+								comboRemotePort->currentText());
+			}
 		}
 	}
 

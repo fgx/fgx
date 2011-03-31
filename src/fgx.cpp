@@ -47,7 +47,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	QApplication::setStyle( QStyleFactory::create(settings.value("gui_style","Cleanlooks").toString()) );
 	actionGroupStyle = new QActionGroup(this);
 	actionGroupStyle->setExclusive(true);
-	connect(actionGroupStyle, SIGNAL(triggered(QAction*)), this, SLOT(on_style(QAction*)) );
+	//connect(actionGroupStyle, SIGNAL(triggered(QAction*)), this, SLOT(on_style(QAction*)) );
 	QStringList styles =  QStyleFactory::keys();
 	for(int idx=0; idx < styles.count(); idx++){
 		QString sty = QString(styles.at(idx));
@@ -78,7 +78,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	buttonGroupWeather->addButton(radioButtonWeatherNone, METAR_NONE);
 	buttonGroupWeather->addButton(radioButtonWeatherLive, METAR_LIVE);
 	buttonGroupWeather->addButton(radioButtonWeatherMetar, METAR_EDIT);
-	connect(buttonGroupWeather, SIGNAL(buttonClicked(int)), this, SLOT(on_weather_selected()));
+	//connect(buttonGroupWeather,	SIGNAL(buttonClicked(QAbstractButton*)),this, SLOT(on_weather_selected()));
 
 	buttonGroupLog = new QButtonGroup(this);
 	buttonGroupLog->setExclusive(true);
@@ -303,11 +303,11 @@ QStringList fgx::fg_args(){
 	//-- end Warning <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	QStringList args;
 
-	//= fg_root
+	//** fg_root
 	args << QString("--fg-root=").append(settings.fg_root());
 
 
-	//= Startup , Spalsh, Geometry
+	//** Startup , Spalsh, Geometry
 	args << QString("--geometry=").append(comboScreenSize->currentText());
 	if (checkboxDisableSplash->isChecked()) {
 		args << QString("--disable-splash-screen");
@@ -316,42 +316,49 @@ QStringList fgx::fg_args(){
 		args << QString("--enable-fullscreen");
 	}
 
-	args << aircraftWidget->get_args();
 
-	//* Custom Scenery
-	/*
-	if (usecustomScenery->isChecked()) {
-		command.append(" --fg-scenery=$HOME/Documents/TerrasyncScenery:");
-		command.append(settings.fg_root()).append("/Scenery/");
-		command.append("/Scenery/");
-	} else {
-		command.append(" --fg-scenery=");
-		command.append(settings.fg_root()).append("/Scenery/");
-		command.append("/Scenery/");
-	}
-	*/
-	//* terrasync enabled
+	//** Terrasync
 	if (groupBoxTerraSync->isChecked()) {
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}
-		
-		
-	//** Network
-	args << networkWidget->get_args();
+
+	//** Scenery
+	args << QString("--fg-scenery=%1").arg(settings.scenery_path());
+
+
+
+	//** Time Of Day
+	if (groupBoxSetTime->isChecked()) {
+		//content.append(" --start-date-lat=");
+		//content.append(argtime);
+	} else {
+		args << QString(" --timeofday=").append( buttonGroupTime->checkedButton()->text().toLower().replace(" ","") );
+	}
+
+
+
+	//* Weather/Metar fetch
+	if(buttonGroupWeather->checkedId() == METAR_NONE) {
+		args << QString("--disable-real-weather-fetch");
+
+	}else if (buttonGroupWeather->checkedId() == METAR_LIVE) {
+		args << QString("--enable-real-weather-fetch");
+
+	}else if(buttonGroupWeather->checkedId() == METAR_EDIT){
+		args << QString("--metar=").append("\"").append(metarText->toPlainText()).append("\"");
+	}
+
+
+	//** Aircraft
+	args << aircraftWidget->get_args();
 
 	//** Airport, Runway Start pos
 	args << airportsWidget->get_args();
 
+	//** Network
+	args << networkWidget->get_args();
 
-
-	//* Weather fetch
-	if (buttonGroupWeather->checkedId() == METAR_LIVE) {
-		args << QString("--enable-real-weather-fetch");
-	}else{
-		args << QString("--disable-real-weather-fetch");
-	}
-
-	//* Ai Traffic
+	//* Ai Traffic TODO
 	/*
 	if (enableAITraffic->isChecked()) {
 		args << QString("--enable-ai-traffic");
@@ -359,32 +366,8 @@ QStringList fgx::fg_args(){
 		args << QString("--disable-ai-traffic");
 	}
 	*/
-
-	//* Enable AI models ???
+	//** Enable AI models ???
 	args << QString("--enable-ai-models");
-
-	//* Metar
-	/*
-	if (useMetar->isChecked()) {
-		command.append("--metar=");
-		QString metartoUse = metarText->toPlainText();
-		command.append("\"");
-		command.append(metartoUse);
-		command.append("\"");
-	}
-	*/
-
-
-	/*
-	if (groupBoxSetTime->isChecked() == true) {
-		content.append(" --start-date-lat=");
-		content.append(argtime);
-	} else {
-		content.append(" --timeofday=");
-		content.append(argtimeofday);
-	}
-	*/
-
 
 
 
@@ -394,12 +377,11 @@ QStringList fgx::fg_args(){
 	}
 
 	//* Log Level
-	args << QString("--log-level=").append( buttonGroupLog->button(buttonGroupLog->checkedId())->text().toLower() );
-
-
-	if (checkBoxLogEnabled->isChecked()) {
+	if(checkBoxLogEnabled->isChecked()){
+		args << QString("--log-level=").append( buttonGroupLog->button(buttonGroupLog->checkedId())->text().toLower() );
 		args << QString(argwritelog);
 	}
+
 
 	return args;
 }
@@ -424,19 +406,6 @@ void fgx::save_settings()
 	settings.setValue("screen_size", comboScreenSize->currentText());
 	settings.setValue("screen_full", checkboxFullScreen->isChecked());
 	settings.setValue("screen_splash", checkboxDisableSplash->isChecked());
-
-	
-
-
-	
-	//if (usecustomScenery->isChecked() == true) {
-	//	settings.setValue("usecustomScenery", "true");
-	//}	else {
-	//	settings.setValue("usecustomScenery", "false");
-	//}
-	
-	
-
 
 	
 	settings.setValue("year", year->text());
@@ -569,7 +538,7 @@ void fgx::on_groupBoxTerraSync_clicked(){
 // Misc Events
 //===============================================================
 void fgx::on_style(QAction *action){
-	settings.setValue("gui_style",action->text());
+	settings.setValue("gui_style", action->text());
 	QApplication::setStyle(QStyleFactory::create(action->text()));
 }
 
@@ -640,8 +609,26 @@ void fgx::on_buttonFgRootPath_clicked(){
 
 
 void fgx::on_tabs_currentChanged(int index){
+	qDebug() << "index=" << index;
 	settings.setValue("last_tab", index);
+	if(index == 6){
+		//on_buttonViewCommand_clicked();
+	}
 }
+
+
+//==============================================
+//** View Buttons
+void fgx::on_buttonViewCommand_clicked(){
+	QString str = QString(settings.fgfs_path()).append(" \\\n");
+	str.append( fg_args().join(" \\\n"));
+	txtStartupCommand->setPlainText(str);
+}
+
+void fgx::on_buttonViewHelp_clicked(){
+
+}
+
 
 
 
@@ -657,6 +644,3 @@ void fgx::on_buttonTest_clicked(){
 	//qDebug() << start_fg_args();
 
 }
-
-
-

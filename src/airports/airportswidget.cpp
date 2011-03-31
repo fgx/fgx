@@ -6,6 +6,7 @@
 #include <QtGui/QFont>
 
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QGridLayout>
 #include <QtGui/QSplitter>
 
 #include <QtGui/QToolBar>
@@ -24,10 +25,6 @@
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QHeaderView>
 #include <QtGui/QTreeWidgetItem>
-
-//#include <QtSql/QSqlQuery>
-//#include <QtSql/QSqlError>
-
 
 
 #include "airports/airportswidget.h"
@@ -51,41 +48,36 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	groupBoxAirport->setCheckable(true);
 	mainLayout->addWidget(groupBoxAirport);
 	connect(groupBoxAirport, SIGNAL(clicked()), this, SLOT(on_groupbox_airports()));
-	QVBoxLayout *layoutAirport = new QVBoxLayout();
-	groupBoxAirport->setLayout(layoutAirport);
 
-    QSplitter *splitter = new QSplitter(this);
-	layoutAirport->addWidget(splitter);
 
-    //************************************************************************************************
-    //** Left
-    QWidget *leftWidget = new QWidget();
-    splitter->addWidget(leftWidget);
-	QVBoxLayout *airportLayout = new QVBoxLayout();
-	leftWidget->setLayout(airportLayout);
-	airportLayout->setContentsMargins(0,0,0,0);
-	airportLayout->setSpacing(0);
 
-    //*************************************************
-    //** Toolbar
+	QVBoxLayout *airportsLayout = new QVBoxLayout();
+	groupBoxAirport->setLayout(airportsLayout);
+	//layoutAirport->setLayout(airportsLayout);
+	airportsLayout->setContentsMargins(10,10,10,10);
+	airportsLayout->setSpacing(10);
+
+
+	//*************************************************
+	//** Top Bar
 	QHBoxLayout *treeBar = new QHBoxLayout();
-	airportLayout->addLayout(treeBar);
-   // treeToolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	//treeToolbar->layout()->setSpacing(10);
+	airportsLayout->addLayout(treeBar);
+
 
     //** Filter Code
-	treeBar->addWidget(new QLabel(tr("Filter").append(":")));
+	treeBar->addWidget(new QLabel(tr("Filter").append(":  ")));
 
 
 
     //***********************************s*******************
-    //** Filter Buttons
+	//** Filter Buttons - TODO
+	 /*
     buttGroupFilter = new QButtonGroup(this);
     buttGroupFilter->setExclusive(true);
     connect(buttGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
             this,           SLOT(on_update_filter())
     );
-    /*
+
     QToolButton *buttAll = new QToolButton();
     treeToolbar->addWidget(buttAll);
     buttViewGroup->addButton(buttAll);
@@ -104,7 +96,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	buttCode->setProperty("column", QVariant(C_ICAO));
 
 
-    //** Name Filter
+	// Name Filter
     QRadioButton *buttName = new QRadioButton();
     treeToolbar->addWidget(buttName);
     buttGroupFilter->addButton(buttName);
@@ -117,9 +109,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     txtAirportsFilter = new QLineEdit();
 	treeBar->addWidget(txtAirportsFilter);
     txtAirportsFilter->setFixedWidth(100);
-    connect(txtAirportsFilter,    SIGNAL(textChanged(QString)),
-            this,           SLOT(on_update_filter())
-    );
+	connect(txtAirportsFilter, SIGNAL(textChanged(QString)), this, SLOT(on_update_filter()));
 
 	treeBar->addStretch(20);
 
@@ -135,6 +125,22 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
 
 
+	//***********************************************
+	//** Splitter
+	QSplitter *splitter = new QSplitter(this);
+	airportsLayout->addWidget(splitter);
+
+
+
+
+	//************************************************************************************************
+	//** Left
+	QWidget *leftWidget = new QWidget();
+	splitter->addWidget(leftWidget);
+	QVBoxLayout *leftLayout = new QVBoxLayout();
+	leftLayout->setContentsMargins(0,0,0,0);
+	leftLayout->setSpacing(0);
+	leftWidget->setLayout(leftLayout);
 
     //******************************************************
     //** Models
@@ -153,7 +159,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     //******************************************************
     //**  Tree
 	treeViewAirports = new QTreeView(this);
-	airportLayout->addWidget(treeViewAirports);
+	leftLayout->addWidget(treeViewAirports, 1, 0);
 	treeViewAirports->setModel(proxyModel);
 
 	treeViewAirports->setUniformRowHeights(true);
@@ -188,7 +194,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
 	statusBarAirports = new QStatusBar();
 	statusBarAirports->setSizeGripEnabled(false);
-	airportLayout->addWidget(statusBarAirports);
+	leftLayout->addWidget(statusBarAirports);
 	statusBarAirports->showMessage("Idle");
 
 	//progressAirportsLoad = new QProgressBar();
@@ -199,22 +205,15 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     //** Right
     QWidget *rightWidget = new QWidget();
     splitter->addWidget(rightWidget);
-	QVBoxLayout *runwayLayout = new QVBoxLayout();
-	rightWidget->setLayout(runwayLayout);
-	runwayLayout->setContentsMargins(0,0,0,0);
-	runwayLayout->setSpacing(0);
-
-	//* blank to drop runways tree
-	QHBoxLayout *hbSpacer = new QHBoxLayout();
-	runwayLayout->addLayout(hbSpacer);
-	QLabel *lbl = new QLabel(" ");
-	lbl->setFixedHeight(25);
-	hbSpacer->addWidget(lbl);
+	QVBoxLayout *rightLayout = new QVBoxLayout();
+	rightWidget->setLayout(rightLayout);
+	rightLayout->setContentsMargins(0,0,0,0);
+	rightLayout->setSpacing(0);
 
 
     //*** Runways Tree
     treeWidgetRunways = new QTreeWidget();
-	runwayLayout->addWidget(treeWidgetRunways, 3);
+	rightLayout->addWidget(treeWidgetRunways, 3);
     treeWidgetRunways->setAlternatingRowColors(true);
 	treeWidgetRunways->setRootIsDecorated(true);
     QTreeWidgetItem *headerItem = treeWidgetRunways->headerItem();
@@ -243,7 +242,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
 	statusBarRunways = new QStatusBar();
 	statusBarRunways->setSizeGripEnabled(false);
-	runwayLayout->addWidget(statusBarRunways);
+	rightLayout->addWidget(statusBarRunways);
 	statusBarAirports->showMessage("");
 
     //** Map
@@ -398,10 +397,9 @@ void AirportsWidget::load_tree(){
 //*** Update Filter
 void AirportsWidget::on_update_filter(){
 
-    int column = buttGroupFilter->checkedButton()->property("column").toInt();
-    proxyModel->setFilterKeyColumn( column );
+   /* LATER TODO int column = buttGroupFilter->checkedButton()->property("column").toInt();
+		proxyModel->setFilterKeyColumn( column ); */
     proxyModel->setFilterFixedString( txtAirportsFilter->text() );
-	//treeViewAirports->sortByColumn(column);
 }
 
 

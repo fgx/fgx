@@ -83,6 +83,9 @@ private slots:
 	void on_buttonStartTerraSync_clicked();
 	void on_buttonStopTerraSync_clicked();
 
+	void on_buttonViewCommand_clicked();
+	void on_buttonViewHelp_clicked();
+
 	void on_buttonTest_clicked();
 
 	//* Processstart actions
@@ -92,7 +95,7 @@ private slots:
 
 	void on_groupBoxSetTime_clicked();
 	void on_weather_selected();
-	void on_style(QAction*);
+	void on_style(QAction *act);
 
 	void on_tabs_currentChanged(int);
 	void show_settings_dialog();
