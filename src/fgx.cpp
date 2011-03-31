@@ -310,15 +310,15 @@ QStringList fgx::fg_args(){
 
 
 	//*  Additonal **args - remove line endings in command line text field and add arguments
-	if (commandLine->toPlainText().trimmed().length() > 0) {
-		args << QString(" ").append( commandLine->toPlainText().replace(QString("\n"), QString(" ")) );
+	if (lineEditExtraArgs->toPlainText().trimmed().length() > 0) {
+		args << QString(" ").append( lineEditExtraArgs->toPlainText().replace(QString("\n"), QString(" ")) );
 	}
 
 	//* Log Level
-	args << QString("--log-level=").append(logLevel->currentText());
+	args << QString("--log-level=").append(comboBoxLogLevel->currentText());
 
 
-	if (enableLog->isChecked() == true) {
+	if (checkBoxLogEnabled->isChecked()) {
 		args << QString(argwritelog);
 	}
 
@@ -392,14 +392,10 @@ void fgx::save_settings()
 	
 	settings.setValue("metarText", metarText->toPlainText());
 	
-	settings.setValue("commandLine", commandLine->toPlainText());
-	settings.setValue("logLevel", logLevel->currentText());
-	
-	if (enableLog->isChecked() == true) {
-		settings.setValue("enableLog", "true");
-	}	else {
-		settings.setValue("enableLog", "false");
-	}
+	settings.setValue("extra_args", lineEditExtraArgs->toPlainText());
+	settings.setValue("log_level", comboBoxLogLevel->currentText());
+	settings.setValue("log_enabled", checkBoxLogEnabled->isChecked());
+
 	
 	
 }
@@ -514,27 +510,11 @@ void fgx::load_settings()
 	}
 		
 	
-	QString commandLineSet = settings.value("commandLine").toString();
-	commandLine->setPlainText(commandLineSet);
-	
-	if (settings.value("logLevel").toString() != "") {
-		QString logLevelSet = settings.value("logLevel").toString();
-		logLevel->insertItem(0, logLevelSet);
-		logLevel->insertItem(1, "----");
-		logLevel->setCurrentIndex(0);
-	} else {
-		logLevel->insertItem(0, "warn");
-		logLevel->insertItem(1, "----");
-		timeoftheDay->setCurrentIndex(0);
-		}
-	
-	QString enableLogSet = settings.value("enableLog").toString();
-	if (enableLogSet == "true") {
-		enableLog->setCheckState(Qt::Checked);
-	} else {
-		enableLog->setCheckState(Qt::Unchecked);
-	}
-	
+	lineEditExtraArgs->setPlainText(settings.value("extra_args").toString());
+	checkBoxLogEnabled->setChecked(settings.value("log_enabled").toBool());
+	int idxLog = comboBoxLogLevel->findText(settings.value("log_level").toString());
+	comboBoxLogLevel->setCurrentIndex(idxLog == -1 ? 0 : idxLog);
+
 }
 
 
