@@ -30,18 +30,6 @@ protected:
 	void closeEvent(QCloseEvent *event);
 	
 public:
-	enum METAR{
-		METAR_NONE = 0,
-		METAR_LIVE = 1,
-		METAR_EDIT = 2
-	};
-	enum LOG{
-		LOG_WARN = 0,
-		LOG_INFO = 1,
-		LOG_DEBUG = 2,
-		LOG_BULK = 3,
-		LOG_ALERT = 4,
-	};
 
 	fgx (QMainWindow *parent = 0);
 	~fgx();
@@ -60,9 +48,6 @@ private:
 	AirportsWidget *airportsWidget;
 	NetworkWidget *networkWidget;
 
-	QButtonGroup *buttonGroupTime;
-	QButtonGroup *buttonGroupWeather;
-	QButtonGroup *buttonGroupLog;
 
 	QStringList fg_args();
 	void start_fgcom();
@@ -86,7 +71,8 @@ private slots:
 	void on_buttonViewCommand_clicked();
 	void on_buttonViewHelp_clicked();
 
-	void on_buttonTest_clicked();
+	void on_buttonLoadSettings_clicked();
+	void on_buttonSaveSettings_clicked();
 
 	//* Processstart actions
 	void on_buttonStartFg_clicked();
@@ -96,6 +82,9 @@ private slots:
 	void on_groupBoxSetTime_clicked();
 	void on_buttonGroupWeather_buttonClicked(int);
 	void on_style(QAction *act);
+
+	//void on_buttonGroupTime_buttonClicked(int);
+
 
 	void on_tabs_currentChanged(int);
 	void show_settings_dialog();

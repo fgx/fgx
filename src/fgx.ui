@@ -14,7 +14,7 @@
    <string>FlightGear Launcher</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources/icons.qrc">
+   <iconset>
     <normaloff>:/icon/favicon</normaloff>:/icon/favicon</iconset>
   </property>
   <property name="autoFillBackground">
@@ -70,7 +70,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="usesScrollButtons">
          <bool>false</bool>
@@ -222,7 +222,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -262,7 +262,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -294,7 +294,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -318,7 +318,7 @@ p, li { white-space: pre-wrap; }
                      <string>Start Terrasync</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
                     </property>
                    </widget>
@@ -329,7 +329,7 @@ p, li { white-space: pre-wrap; }
                      <string>Stop Terrasync</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
                     </property>
                    </widget>
@@ -472,6 +472,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>None</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupWeather</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -479,6 +482,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Fetch METAR live</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupWeather</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -486,6 +492,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>METAR</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupWeather</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -505,6 +514,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Real Time</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupTime</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -519,6 +531,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Dawn</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupTime</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -526,6 +541,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Morning</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupTime</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -533,6 +551,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Noon</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupTime</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -540,6 +561,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Afternoon</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupTime</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -547,6 +571,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Dusk</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupTime</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -554,6 +581,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Evening</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupTime</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -561,6 +591,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Midnight</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupTime</string>
+               </attribute>
               </widget>
              </item>
             </layout>
@@ -625,6 +658,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Warn</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupLog</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -632,6 +668,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Info</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupLog</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -639,6 +678,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Debug</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupLog</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -646,6 +688,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Bulk</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupLog</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -653,6 +698,9 @@ p, li { white-space: pre-wrap; }
                <property name="text">
                 <string>Alert</string>
                </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroupLog</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -731,6 +779,20 @@ p, li { white-space: pre-wrap; }
          <number>20</number>
         </property>
         <item>
+         <widget class="QPushButton" name="buttonLoadSettings">
+          <property name="text">
+           <string>Load</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonSaveSettings">
+          <property name="text">
+           <string>Save</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer_3">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -744,19 +806,12 @@ p, li { white-space: pre-wrap; }
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="buttonTest">
-          <property name="text">
-           <string>Test</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="buttonStopFg">
           <property name="text">
            <string>Stop Fg</string>
           </property>
           <property name="icon">
-           <iconset resource="resources/icons.qrc">
+           <iconset>
             <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
           </property>
          </widget>
@@ -767,7 +822,7 @@ p, li { white-space: pre-wrap; }
            <string>Start Fg</string>
           </property>
           <property name="icon">
-           <iconset resource="resources/icons.qrc">
+           <iconset>
             <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
           </property>
          </widget>
@@ -822,7 +877,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="resources/icons.qrc">
+    <iconset>
      <normaloff>:/icon/quit</normaloff>:/icon/quit</iconset>
    </property>
    <property name="text">
@@ -843,8 +898,11 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
- <resources>
-  <include location="resources/icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroupWeather"/>
+  <buttongroup name="buttonGroupTime"/>
+  <buttongroup name="buttonGroupLog"/>
+ </buttongroups>
 </ui>

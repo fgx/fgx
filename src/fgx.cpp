@@ -60,35 +60,6 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	}
 
 
-
-	//*** Setup up Button Groups as the UI cant ;-(
-	buttonGroupTime = new QButtonGroup(this);
-	buttonGroupTime->setExclusive(true);
-	buttonGroupTime->addButton(radioButtonTimeRealTime);
-	buttonGroupTime->addButton(radioButtonTimeDawn);
-	buttonGroupTime->addButton(radioButtonTimeMorning);
-	buttonGroupTime->addButton(radioButtonTimeNoon);
-	buttonGroupTime->addButton(radioButtonTimeAfterNoon);
-	buttonGroupTime->addButton(radioButtonTimeEvening);
-	buttonGroupTime->addButton(radioButtonTimeDusk);
-	buttonGroupTime->addButton(radioButtonTimeMidnight);
-
-	buttonGroupWeather = new QButtonGroup(this);
-	buttonGroupWeather->setExclusive(true);
-	buttonGroupWeather->addButton(radioButtonWeatherNone, METAR_NONE);
-	buttonGroupWeather->addButton(radioButtonWeatherLive, METAR_LIVE);
-	buttonGroupWeather->addButton(radioButtonWeatherMetar, METAR_EDIT);
-	//connect(buttonGroupWeather,	SIGNAL(buttonClicked(QAbstractButton*)),this, SLOT(on_weather_selected()));
-
-	buttonGroupLog = new QButtonGroup(this);
-	buttonGroupLog->setExclusive(true);
-	buttonGroupLog->addButton(radioButtonLogWarn, LOG_WARN);
-	buttonGroupLog->addButton(radioButtonLogInfo, LOG_INFO);
-	buttonGroupLog->addButton(radioButtonLogDebug, LOG_DEBUG);
-	buttonGroupLog->addButton(radioButtonLogBulk, LOG_BULK);
-	buttonGroupLog->addButton(radioButtonLogAlert, LOG_ALERT);
-
-
 	//** Initialse Extra Widgets
 	aircraftWidget = new AircraftWidget(this);
 	tabs->insertTab(2, aircraftWidget, "Aircraft");
@@ -107,7 +78,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	//***** Qt Has no Show event for a form, so we need to present Widgets first
 	//** and then initialise. THis is achieved with a timer that triggers in a moment
-	QTimer::singleShot(500, this, SLOT(initialize()));
+	//QTimer::singleShot(500, this, SLOT(initialize()));
 
 }/* end constructor */
 
@@ -287,7 +258,6 @@ QStringList fgx::fg_args(){
 	argtime.append(second->text());
 	
 
-	
 	// Redirect stdout and stderr to logfile
 	QString argwritelogdir = QDir::currentPath();
 	QString argwritelog;
@@ -335,16 +305,16 @@ QStringList fgx::fg_args(){
 		args << QString(" --timeofday=").append( buttonGroupTime->checkedButton()->text().toLower().replace(" ","") );
 	}
 
-
+	return args;
 
 	//* Weather/Metar fetch
-	if(buttonGroupWeather->checkedId() == METAR_NONE) {
+	if(radioButtonWeatherNone->isChecked()) {
 		args << QString("--disable-real-weather-fetch");
 
-	}else if (buttonGroupWeather->checkedId() == METAR_LIVE) {
+	}else if(radioButtonWeatherLive->isChecked()) {
 		args << QString("--enable-real-weather-fetch");
 
-	}else if(buttonGroupWeather->checkedId() == METAR_EDIT){
+	}else if(radioButtonWeatherMetar->isChecked()){
 		args << QString("--metar=").append("\"").append(metarText->toPlainText()).append("\"");
 	}
 
@@ -417,21 +387,18 @@ void fgx::save_settings()
 	
 	//* Time
 	settings.setValue("timeofday", buttonGroupTime->checkedButton()->text());
-	if (groupBoxSetTime->isChecked() == true) {
-		settings.setValue("setTime", "true");
-	}	else {
-		settings.setValue("setTime", "false");
-	}
+	settings.setValue("set_time", groupBoxSetTime->isChecked());
+
 	
 	//* Weather
-	settings.setValue("weather", buttonGroupWeather->checkedId());
+	settings.setValue("weather", buttonGroupWeather->checkedButton()->text());
 	settings.setValue("metar", metarText->toPlainText());
 	
 	//* Advanced
 	settings.setValue("extra_args", lineEditExtraArgs->toPlainText());
 	settings.setValue("log_enabled", checkBoxLogEnabled->isChecked());
-	settings.setValue("log_level", buttonGroupLog->checkedId());
-
+	settings.setValue("log_level", buttonGroupLog->checkedButton()->text());
+	qDebug() << buttonGroupLog->checkedButton()->text();
 	
 	
 }
@@ -445,21 +412,28 @@ void fgx::load_settings()
 	fgdataPath->setText(settings.fg_root());
 	fgfsPath->setText(settings.fgfs_path());
 
-	aircraftWidget->load_settings();
-	airportsWidget->load_settings();
-	networkWidget->load_settings();
+	//aircraftWidget->load_settings();
+	//airportsWidget->load_settings();
+	//networkWidget->load_settings();
 	
 	groupBoxTerraSync->setChecked(settings.value("use_terrasync").toBool());
 	txtTerraSyncPath->setText( settings.value("terrasync_path").toString() );
 
-	//** Sartup sxreens
+	//** Sartup sxreens	
 	comboScreenSize->setCurrentIndex( comboScreenSize->findText(settings.value("screen_size").toString()) );
 	checkboxFullScreen->setChecked(settings.value("screen_full").toBool());
 	checkboxDisableSplash->setChecked(settings.value("screen_splash").toBool());
 
-
-
 	
+
+		
+
+
+
+	//** Time Of Day
+	bool setTime = settings.value("set_time").toBool();
+	groupBoxSetTime->setChecked(setTime);
+
 	QString yearSet = settings.value("year").toString();
 	year->setText(yearSet);
 	QString monthSet = settings.value("month").toString();
@@ -472,40 +446,47 @@ void fgx::load_settings()
 	minute->setText(minuteSet);
 	QString secondSet = settings.value("second").toString();
 	second->setText(secondSet);
-	
-	QString setTimeSet = settings.value("setTime").toString();
-	if (setTimeSet == "true") {
-		groupBoxSetTime->setChecked(true);
-	} else {
-		groupBoxSetTime->setChecked(false);
-	}
 
-	//** Time Of Day
 	QString tod = settings.value("timeofday", "Real Time").toString();
-	qDebug() << "TOD=" << tod;
 	QList<QAbstractButton *> todButtons = buttonGroupTime->buttons();
 	for (int i = 0; i < todButtons.size(); ++i) {
 		if(todButtons.at(i)->text() == tod){
 			todButtons.at(i)->setChecked(true);
-			break;
 		}
+		todButtons.at(i)->setEnabled(!setTime);
 	 }
 
+
+
+
 	//** Weather
-	int idx_weather = settings.value("weather").toInt();
-	buttonGroupWeather->button(idx_weather)->setChecked(true);
+	QString weather = settings.value("weather").toString();
+	if(weather == radioButtonWeatherMetar->text()){
+		radioButtonWeatherMetar->setChecked(true);
+
+	}else if(weather == radioButtonWeatherLive->text()){
+		radioButtonWeatherLive->setChecked(true);
+
+	}else{
+		radioButtonWeatherNone->setChecked(true);
+	}
 	metarText->setPlainText(settings.value("metar").toString());
-	
-	int size_idx = comboScreenSize->findText(settings.value("screen_size").toString());
-	comboScreenSize->setCurrentIndex( size_idx == -1 ? 0 : size_idx);
+	metarText->setEnabled(weather == radioButtonWeatherMetar->text());
 	
 
 		
-	
 	lineEditExtraArgs->setPlainText(settings.value("extra_args").toString());
+
 	checkBoxLogEnabled->setChecked(settings.value("log_enabled").toBool());
-	int idxLog = settings.value("log_level", LOG_WARN).toInt();
-	buttonGroupLog->button(idxLog)->setChecked(true);
+	radioButtonLogWarn->setChecked(true);
+	QString log_level = settings.value("log_level").toString();
+	QList<QAbstractButton *> logButtons = buttonGroupLog->buttons();
+	for (int i = 0; i < logButtons.size(); ++i) {
+		if(logButtons.at(i)->text() == log_level){
+			logButtons.at(i)->setChecked(true);
+			break;
+		}
+	 }
 
 }
 
@@ -560,20 +541,26 @@ void fgx::on_actionAboutQT_triggered(){
 void fgx::on_groupBoxSetTime_clicked() {
 	
 	bool enabled  = groupBoxSetTime->isChecked();
-	//timeoftheDay->setEnabled(!enabled);
 	year->setEnabled(enabled);
 	month->setEnabled(enabled);
 	day->setEnabled(enabled);
 	hour->setEnabled(enabled);
 	minute->setEnabled(enabled);
 	second->setEnabled(enabled);
+
+	QList<QAbstractButton *> buttons = buttonGroupTime->buttons();
+	for(int i=0; i < buttons.count(); i++){
+		QAbstractButton *butt = buttons.at(i);
+		butt->setEnabled(!enabled);
+	}
 }
 
 // Metar checked
 void fgx::on_buttonGroupWeather_buttonClicked(int id) {
-	Q_UNUSED(id)
-	metarText->setEnabled(buttonGroupWeather->checkedId() == METAR_EDIT);
-	if(buttonGroupWeather->checkedId() == METAR_EDIT){
+	Q_UNUSED(id);
+	qDebug() << id;
+	metarText->setEnabled(radioButtonWeatherMetar->isChecked());
+	if(radioButtonWeatherMetar->isChecked()){
 		metarText->setFocus();
 	}
 }
@@ -633,15 +620,11 @@ void fgx::on_buttonViewHelp_clicked(){
 
 
 
-void fgx::on_buttonTest_clicked(){
-	qDebug() << "YES" << pid_fg;
-	//qDebug() << networkWidget->get_args();
-	//networkWidget->save_settings();
-	//qDebug() << aircraftWidget->aircraft();
-	//aircraftWidget->save_settings();
+void fgx::on_buttonLoadSettings_clicked(){
+	load_settings();
+	qDebug() << fg_args().join("\n");
+}
+void fgx::on_buttonSaveSettings_clicked(){
 	save_settings();
-	qDebug() << airportsWidget->get_args();
-	//txtStartupCommand->setPlainText(fg_args().join("\n"));
-	//qDebug() << start_fg_args();
-
+	qDebug() << fg_args().join("\n");
 }
