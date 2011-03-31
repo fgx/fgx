@@ -41,20 +41,22 @@ public:
 	QLabel *aeroImageLabel;
 	QButtonGroup *buttViewGroup;
 
-private:
-	QTreeWidget *treeWidget;
-
-    QLabel *lblAircraftModel;
-	QLabel *lblAuthor;
-	QLabel *lblFdm;
-
-    QStatusBar *statusBarTree;
-    QStatusBar *statusBarAero;
-
 	void initialize();
 	void save_settings();
 	void load_settings();
 	bool validate();
+	void select_node(QString aero);
+	QString aircraft();
+
+private:
+	QTreeWidget *treeWidget;
+
+    QStatusBar *statusBarTree;
+    QStatusBar *statusBarAero;
+
+
+
+	QStringList get_args();
 
 signals:
 	void set_arg(QString action, QString arg, QString value);
@@ -68,6 +70,7 @@ public slots:
 	void on_auto_coordination(bool state);
 
     void on_view_button_clicked(QAbstractButton *button);
+	void on_refresh_cache();
 };
 
 #endif // AIRCRAFTWIDGET_H

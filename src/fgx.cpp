@@ -46,7 +46,9 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	//** Restore Settings
 	tabs->setCurrentIndex( settings.value("last_tab").toInt() );
+	aircraftWidget->load_settings();
 	networkWidget->load_settings();
+
 
 }/* end constructor */
 
@@ -114,6 +116,11 @@ void fgx::on_fgStart_clicked() {
 		tabs->setCurrentIndex( tabs->indexOf(networkWidget));
 		return;
 	}
+	if(!aircraftWidget->validate()){
+		tabs->setCurrentIndex( tabs->indexOf(aircraftWidget));
+		return;
+	}
+
 	checkScenery();
 	
 	// Write commands and arguments to TerraSync.sh and run via Terminal.app	
@@ -1138,7 +1145,9 @@ void fgx::on_tabs_currentChanged(int index){
 void fgx::on_buttonTest_clicked(){
 	qDebug() << "YES" << pid_fg;
 	//qDebug() << networkWidget->get_args();
-	networkWidget->save_settings();
+	//networkWidget->save_settings();
+	qDebug() << aircraftWidget->aircraft();
+	aircraftWidget->save_settings();
 	//qDebug() << start_fg_args();
 
 }

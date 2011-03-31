@@ -104,7 +104,7 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
 	treeToolbar->addAction(actionRefreshTree);
 	actionRefreshTree->setText("Reload");
 	actionRefreshTree->setIcon(QIcon(":/icon/refresh"));
-	connect(actionRefreshTree, SIGNAL(triggered()), this, SLOT(load_aircraft()) );
+	connect(actionRefreshTree, SIGNAL(triggered()), this, SLOT(on_refresh_cache()) );
 
 
 
@@ -129,6 +129,7 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
 	treeWidget->setColumnHidden(C_XML, true);
 	treeWidget->setColumnWidth(C_DIR, 60);
 	treeWidget->setColumnWidth(C_FDM, 60);
+	treeWidget->setColumnWidth(C_DESCRIPTION, 200);
 
 	connect( treeWidget,
 			 SIGNAL( itemSelectionChanged() ),
@@ -162,26 +163,12 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
     //**********************************************8
 	//** Aero Panel
 	QGroupBox *grpAeroPanel = new QGroupBox();
-	grpAeroPanel->setStyleSheet("background-color: white;");
+	grpAeroPanel->setStyleSheet("background-color: black;");
 	aeroLayout->addWidget(grpAeroPanel);
 
 
 	QVBoxLayout *aeroPanelLayout = new QVBoxLayout();
 	grpAeroPanel->setLayout(aeroPanelLayout);
-
-	lblAircraftModel = new QLabel("");
-	lblAircraftModel->setAlignment(Qt::AlignHCenter);
-	aeroPanelLayout->addWidget(lblAircraftModel);
-
-
-	lblAuthor = new QLabel("");
-	aeroPanelLayout->addWidget(lblAuthor);
-	lblAuthor->setAlignment(Qt::AlignHCenter);
-	lblAuthor->setFixedWidth(200);
-
-	lblFdm = new QLabel("");
-	aeroPanelLayout->addWidget(lblFdm);
-	lblFdm->setAlignment(Qt::AlignHCenter);
 
 	QHBoxLayout *imgBox = new QHBoxLayout();
 	aeroPanelLayout->addLayout(imgBox);
@@ -256,31 +243,30 @@ void AircraftWidget::on_view_button_clicked(QAbstractButton *button){
 void AircraftWidget::on_tree_selection_changed(){
 
 	QTreeWidgetItem *item = treeWidget->currentItem();
+	if(!item){
+		return;
+	}
 
 	//** Check there is item and its a model
-	if(!item | item->text(C_AERO).length() == 0){
+	if(item->text(C_AERO).length() == 0){
 		aeroImageLabel->clear();
-		lblAircraftModel->setText("");
-		lblAuthor->setText("");
-		lblFdm->setText("");
 		emit set_arg("remove", "--aircraft=", "");
 		return;
 	}
 
 	emit set_arg("set", "--aircraft=", item->text(C_AERO));
 
-	lblAircraftModel->setText( item->text(C_AERO));
-	lblAuthor->setText( item->text(C_AUTHOR));
-	lblFdm->setText( item->text(C_FDM));
-
-	QString thumb_file( settings.aircraft_path( item->parent()->text(C_DIR) ) );
-	thumb_file.append("/thumbnail.jpg");
-	QPixmap aeroImage(thumb_file);
-	if(aeroImage.isNull()){
-		qDebug("NULL");
+	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( settings.aircraft_path(),
+																item->text(C_DIR),
+																item->text(C_AERO));
+	if(QFile::exists(thumb_file)){
+		QPixmap aeroImage(thumb_file);
+		if(!aeroImage.isNull()){
+			aeroImageLabel->setPixmap(aeroImage);
+		}
+	}else{
+		aeroImageLabel->clear();
 	}
-	aeroImageLabel->setPixmap(aeroImage);
-
 }
 
 
@@ -438,31 +424,41 @@ QStringList AircraftWidget::scan_xml_sets(){
 //=============================================================
 // Save Settings
 void AircraftWidget::save_settings(){
-	if(treeWidget->indexOfTopLevelItem(treeWidget->currentItem()) != -1){
-		settings.setValue("aircraft", treeWidget->currentItem()->text(C_XML) );
+	QTreeWidgetItem *item = treeWidget->currentItem();
+	if(!item or item->text(C_AERO).length() == 0){
+		return;
 	}
+	settings.setValue("aircraft", item->text(C_AERO) );
 	settings.sync();
-
+	qDebug() <<  "SAVE" << item->text(C_AERO);
 }
 
 
 //=============================================================
 // Load Settings
 void AircraftWidget::load_settings(){
-
-	QString aeroxml = settings.value("aircraft").toString();
-	qDebug() << aeroxml;
-	if(buttViewGroup->checkedId() == V_LIST){
-		QList<QTreeWidgetItem*> items = treeWidget->findItems(aeroxml, Qt::MatchExactly, C_XML);
-		if(items.length() > 0){
-			treeWidget->setCurrentItem(items[0]);
-		}
-	}
-
-
+	select_node(settings.value("aircraft").toString());
 }
 
-
+void AircraftWidget::select_node(QString aero){
+	if(aero.length() == 0){
+		return;
+	}
+	QList<QTreeWidgetItem*> items = treeWidget->findItems(aero, Qt::MatchExactly | Qt::MatchRecursive, C_AERO);
+	qDebug() << aero;
+	if(items.length() > 0){
+		treeWidget->setCurrentItem(items[0]);
+		treeWidget->scrollToItem(items[0]);
+	}
+}
+QString AircraftWidget::aircraft(){
+	QTreeWidgetItem *item = treeWidget->currentItem();
+	qDebug() << item;
+	if(!item or item->text(C_AERO).length() == 0){
+		return "";
+	}
+	return item->text(C_AERO);
+}
 
 //=============================================================
 // Validate
@@ -473,9 +469,16 @@ bool AircraftWidget::validate(){
 
 //=============================================================
 // Load Airraft To Tree
+
+void AircraftWidget::on_refresh_cache(){
+	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
+	scan_xml_sets();
+	load_tree();
+}
+
 void AircraftWidget::load_tree(){
 
-
+	QString currAero = aircraft();
 	treeWidget->setUpdatesEnabled(false);
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 	QString record;
@@ -513,6 +516,8 @@ void AircraftWidget::load_tree(){
 	 }
 	 treeWidget->sortByColumn(view == V_NESTED ? C_DIR : C_AERO, Qt::AscendingOrder);
 	 treeWidget->setUpdatesEnabled(true);
+
+	 select_node(currAero);
 }
 
 //=============================================================
@@ -525,4 +530,19 @@ void AircraftWidget::initialize(){
 	}
 	aeroList = settings.value("aircraft_list").toStringList();
 	load_tree();
+}
+
+//=============================================================
+// Get Args
+QStringList AircraftWidget::get_args(){
+
+	QStringList args;
+
+	if(aircraft().length() > 0){
+		args << QString("--aircraft=%1").arg(aircraft());
+	}
+
+
+	return args;
+
 }
