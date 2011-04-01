@@ -85,7 +85,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	airportsLayout->addLayout(layoutAptTopBar);
 
     //** Filter Code
-	layoutAptTopBar->addWidget(new QLabel(tr("Filter").append(":  ")));
+	layoutAptTopBar->addWidget(new QLabel(tr("Filter").append(":")));
 
 	//** Filter Buttons - TODO
 	buttonGroupFilter = new QButtonGroup(this);
@@ -148,7 +148,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     //******************************************************
     //** Models
     model = new QStandardItemModel(this);
-    model->setColumnCount(2);
+	model->setColumnCount(6);
     QStringList headerLabelsList;
 	headerLabelsList << "Location" << "ICAO"  << "Twr" <<  "Elevation" << "Name" << "Path";
     model->setHorizontalHeaderLabels(headerLabelsList);
@@ -180,7 +180,6 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	treeViewAirports->setColumnHidden(C_TOWER, true);
 	treeViewAirports->setColumnHidden(C_FAV, true);
 	treeViewAirports->setColumnHidden(C_XML, true);
-	treeViewAirports->setColumnHidden(C_NAME, true);
 	treeViewAirports->setColumnWidth(C_FAV, 50);
 	treeViewAirports->setColumnWidth(C_ICAO, 80);
 	treeViewAirports->setColumnWidth(C_TOWER, 50);
@@ -383,7 +382,7 @@ void AirportsWidget::load_airports_tree(){
 
 	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
 
-	QList<QStandardItem *> items = model->findItems("KSFO", Qt::MatchExactly, C_ICAO);
+	QList<QStandardItem *> items = model->findItems(settings.value("airport", "KSFO").toString(), Qt::MatchExactly, C_ICAO);
 	if(items.count() > 0){
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
 		QModelIndex proxIdx = proxyModel->mapFromSource(srcIdx);
@@ -544,9 +543,11 @@ void AirportsWidget::save_settings(){
 	settings.setValue("pitch", txtPitch->text());
 	settings.setValue("airspeed", txtAirspeed->text());
 
-
-	//settings.setValue("runway", runWay->currentText());
-	//settings.setValue("parkPosition", parkPosition->currentText());
+	if(treeViewAirports->currentIndex().row() != -1){
+		QModelIndex index = proxyModel->index(treeViewAirports->currentIndex().row(), C_ICAO);
+		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(index));
+		settings.setValue("airport", item->text());
+	}
 
 	settings.sync();
 }

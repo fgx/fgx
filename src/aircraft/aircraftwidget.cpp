@@ -479,10 +479,9 @@ void AircraftWidget::select_node(QString aero){
 		return;
 	}
 	QList<QTreeWidgetItem*> items = treeWidget->findItems(aero, Qt::MatchExactly | Qt::MatchRecursive, C_AERO);
-	qDebug() << aero;
 	if(items.length() > 0){
 		treeWidget->setCurrentItem(items[0]);
-		treeWidget->scrollToItem(items[0]);
+		treeWidget->scrollToItem(items[0], QAbstractItemView::PositionAtCenter);
 	}
 }
 QString AircraftWidget::aircraft(){

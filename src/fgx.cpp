@@ -566,7 +566,6 @@ void fgx::on_groupBoxSetTime_clicked() {
 // Metar checked
 void fgx::on_buttonGroupWeather_buttonClicked(int id) {
 	Q_UNUSED(id);
-	qDebug() << id;
 	metarText->setEnabled(radioButtonWeatherMetar->isChecked());
 	if(radioButtonWeatherMetar->isChecked()){
 		metarText->setFocus();
@@ -641,9 +640,7 @@ void fgx::on_buttonViewHelp_clicked(){
 
 void fgx::on_buttonLoadSettings_clicked(){
 	load_settings();
-	qDebug() << fg_args().join("\n");
 }
 void fgx::on_buttonSaveSettings_clicked(){
 	save_settings();
-	qDebug() << fg_args().join("\n");
 }

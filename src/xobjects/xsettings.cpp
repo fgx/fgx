@@ -102,15 +102,18 @@ QString XSettings::terrasync_path(){
 //** temp
 //===========================================================================
 QString XSettings::temp(){
+	return QDir(QDesktopServices::storageLocation(QDesktopServices::TempLocation)).absolutePath();
+	/*
     //** Check the temp dubdirctory exists or create it
     if( _temp.length() == 0 ){
         QDir tmpDir = QDir(QDesktopServices::storageLocation(QDesktopServices::TempLocation));
-        if(!tmpDir.exists("ffs-desktop")){
-            tmpDir.mkdir("ffs-desktop");
+        if(!tmpDir.exists("fgx")){
+            tmpDir.mkdir("fgx");
         }
-        _temp = QDesktopServices::storageLocation(QDesktopServices::TempLocation).append("/ffs-desktop/");
+        _temp = QDesktopServices::storageLocation(QDesktopServices::TempLocation).append("/fgx/");
     }
     return _temp;
+	*/
 }
 QString XSettings::temp(QString append_path){
     return this->temp().append(append_path);
