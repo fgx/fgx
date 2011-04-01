@@ -65,6 +65,7 @@ public:
 	void scan_airports_xml();
 	void show_progress(bool state);
 	void load_airports_tree();
+	void select_airport(QString);
 	void load_runways(QString airportXmlFile);
 
 	QLineEdit *txtLat;
@@ -90,8 +91,10 @@ public slots:
 	void initialize();
 
 	void on_filter_button(QAbstractButton*);
+	void on_filter_airports(QString);
 	void on_aiport_row_changed(QModelIndex, QModelIndex);
 
+	void on_import_clicked();
 	void on_refresh_clicked();
 
 	void on_buttonGroupUse();

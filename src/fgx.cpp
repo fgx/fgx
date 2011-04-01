@@ -48,7 +48,6 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	QApplication::setStyle( QStyleFactory::create(settings.value("gui_style","Cleanlooks").toString()) );
 	actionGroupStyle = new QActionGroup(this);
 	actionGroupStyle->setExclusive(true);
-	//connect(actionGroupStyle, SIGNAL(triggered(QAction*)), this, SLOT(on_style(QAction*)) );
 	QStringList styles =  QStyleFactory::keys();
 	for(int idx=0; idx < styles.count(); idx++){
 		QString sty = QString(styles.at(idx));
@@ -526,7 +525,7 @@ void fgx::on_groupBoxTerraSync_clicked(){
 //===============================================================
 // Misc Events
 //===============================================================
-void fgx::on_style(QAction *action){
+void fgx::on_menuStyle_triggered(QAction *action){
 	settings.setValue("gui_style", action->text());
 	QApplication::setStyle(QStyleFactory::create(action->text()));
 }

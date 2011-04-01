@@ -101,23 +101,11 @@ QString XSettings::terrasync_path(){
 //===========================================================================
 //** temp
 //===========================================================================
-QString XSettings::temp(){
+QString XSettings::temp_dir(){
 	return QDir(QDesktopServices::storageLocation(QDesktopServices::TempLocation)).absolutePath();
-	/*
-    //** Check the temp dubdirctory exists or create it
-    if( _temp.length() == 0 ){
-        QDir tmpDir = QDir(QDesktopServices::storageLocation(QDesktopServices::TempLocation));
-        if(!tmpDir.exists("fgx")){
-            tmpDir.mkdir("fgx");
-        }
-        _temp = QDesktopServices::storageLocation(QDesktopServices::TempLocation).append("/fgx/");
-    }
-    return _temp;
-	*/
 }
-QString XSettings::temp(QString append_path){
-    return this->temp().append(append_path);
-
+QString XSettings::temp_dir(QString append_path){
+	return temp_dir().append(append_path);
 }
 
 
@@ -125,11 +113,9 @@ QString XSettings::temp(QString append_path){
 //** Save/Restore Window
 //===========================================================================
 void XSettings::saveWindow(QWidget *widget){
-	qDebug() << "saveWindow" << widget->saveGeometry();
 	setValue( _windowName(widget), QVariant(widget->saveGeometry()) );
 }
 void XSettings::restoreWindow(QWidget *widget){
-	qDebug() << "Restore";
 	widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
 }
 QString XSettings::_windowName(QWidget *widget){
@@ -162,4 +148,10 @@ QString XSettings::default_fgcom_no(){
 }
 QString XSettings::default_fgcom_port(){
 	return QString("16661");
+}
+
+
+bool XSettings::_dev_mode(){
+	//** Hack for petes workstation in dev mode
+	return QFile::exists("/home/ffs/fgx/DEV.txt");
 }

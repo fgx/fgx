@@ -16,5 +16,6 @@
         <file alias="stop_disabled">control_stop.png</file>
         <file alias="browse">browse.png</file>
         <file alias="terminal">application_osx_terminal.png</file>
+        <file alias="import">database_go.png</file>
     </qresource>
 </RCC>

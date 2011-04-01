@@ -24,11 +24,10 @@
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QHeaderView>
-#include <QtGui/QTreeWidgetItem>
 
 
 #include "airports/airportswidget.h"
-
+#include "airports/importairportswidget.h"
 
 
 AirportsWidget::AirportsWidget(QWidget *parent) :
@@ -114,19 +113,26 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     txtAirportsFilter = new QLineEdit();
 	layoutAptTopBar->addWidget(txtAirportsFilter);
     txtAirportsFilter->setFixedWidth(100);
-	connect(txtAirportsFilter, SIGNAL(textChanged(QString)), this, SLOT(on_update_filter()));
+	connect(txtAirportsFilter, SIGNAL(textChanged(QString)), this, SLOT(on_filter_airports(QString)));
 
 	layoutAptTopBar->addStretch(20);
 
+	QPushButton *buttonImportAirports = new QPushButton(this);
+	layoutAptTopBar->addWidget(buttonImportAirports);
+	buttonImportAirports->setText("Reload");
+	buttonImportAirports->setToolTip("Scan directories and reload cache");
+	buttonImportAirports->setIcon(QIcon(":/icon/import"));
+	buttonImportAirports->setFlat(true);
+	connect(buttonImportAirports, SIGNAL(clicked()), this, SLOT(on_import_clicked()) );
 
-	QPushButton *buttonRefreshTree = new QPushButton(this);
-	layoutAptTopBar->addWidget(buttonRefreshTree);
-	buttonRefreshTree->setText("Reload");
-	buttonRefreshTree->setToolTip("Scan directories and reload cache");
-	buttonRefreshTree->setIcon(QIcon(":/icon/refresh"));
-	//buttonRefreshTree->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttonRefreshTree->setFlat(true);
-	connect(buttonRefreshTree, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()) );
+	QPushButton *buttonRefreshAirports = new QPushButton(this);
+	layoutAptTopBar->addWidget(buttonRefreshAirports);
+	buttonRefreshAirports->setText("Reload");
+	buttonRefreshAirports->setToolTip("Scan directories and reload cache");
+	buttonRefreshAirports->setIcon(QIcon(":/icon/refresh"));
+	//buttonRefreshAirports->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttonRefreshAirports->setFlat(true);
+	connect(buttonRefreshAirports, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()) );
 
 
 
@@ -382,7 +388,7 @@ void AirportsWidget::load_airports_tree(){
 
 	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
 
-	QList<QStandardItem *> items = model->findItems(settings.value("airport", "KSFO").toString(), Qt::MatchExactly, C_ICAO);
+	QList<QStandardItem *> items = model->findItems( settings.value("airport", "KSFO").toString(), Qt::MatchExactly, C_ICAO);
 	if(items.count() > 0){
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
 		QModelIndex proxIdx = proxyModel->mapFromSource(srcIdx);
@@ -394,18 +400,19 @@ void AirportsWidget::load_airports_tree(){
 }
 
 
-//**********************************************
-//*** Update Filter
+//==============================================================
+//*** Update Filters
 void AirportsWidget::on_filter_button(QAbstractButton *button){
 	proxyModel->setFilterKeyColumn( button->property("column").toInt() );
 	proxyModel->setFilterFixedString( txtAirportsFilter->text() );
 }
+void AirportsWidget::on_filter_airports(QString txt){
+	proxyModel->setFilterFixedString( txt );
+}
 
 
-
-//**********************************************
-//*** Airport Row Clicked = Show Runways
-
+//==============================================================
+//*** Airport Clicked 
 void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex previous){
 	Q_UNUSED(previous);
 	treeWidgetRunways->model()->removeRows(0, treeWidgetRunways->model()->rowCount());
@@ -419,6 +426,9 @@ void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex prev
     QModelIndex srcIndex = proxyModel->mapToSource(proxyIndex);
 	load_runways(model->item(srcIndex.row(), C_XML)->text());
 }
+
+//==============================================================
+//*** load_runways
 void AirportsWidget::load_runways(QString airportXmlFile){
 
 	int i;
@@ -507,6 +517,11 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 	statusBarRunways->showMessage( QString("%1 runways, %2 stangs").arg(runwaysParent->childCount(), parkingParent->childCount()) );
 }
 
+//===========================================================================
+void AirportsWidget::on_import_clicked(){
+	ImportAirportsWidget *widget = new ImportAirportsWidget();
+	widget->exec();
+}
 
 void AirportsWidget::on_refresh_clicked(){
 	scan_airports_xml();
@@ -519,7 +534,8 @@ void AirportsWidget::on_buttonGroupUse(){
 }
 
 
-
+//================================================================
+// Get Args
 QStringList AirportsWidget::get_args(){
 	QStringList args;
 	//if (parkPosition->isEnabled() == true) {
@@ -530,6 +546,7 @@ QStringList AirportsWidget::get_args(){
 	return args;
 }
 
+//=============================================================
 // Save Settings
 void AirportsWidget::save_settings(){
 

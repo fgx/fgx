@@ -81,7 +81,7 @@ private slots:
 
 	void on_groupBoxSetTime_clicked();
 	void on_buttonGroupWeather_buttonClicked(int);
-	void on_style(QAction *act);
+	void on_menuStyle_triggered(QAction *act);
 
 	//void on_buttonGroupTime_buttonClicked(int);
 

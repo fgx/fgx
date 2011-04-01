@@ -16,9 +16,10 @@ public:
 	};
     explicit XSettings(QObject *parent = 0);
 
+	bool _dev_mode(); //* pete's hack - ../DEV.txt exists for local dev
 
-    QString temp();
-    QString temp(QString append_path);
+	QString temp_dir();
+	QString temp_dir(QString append_path);
 
 	QString fgfs_path();
 
