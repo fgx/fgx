@@ -149,7 +149,8 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	layoutMpServer->addWidget(treeWidget, 100);
     treeWidget->setAlternatingRowColors(true);
     treeWidget->setRootIsDecorated(false);
-
+	treeWidget->setSortingEnabled(true);
+	treeWidget->sortByColumn(C_SERVER_NAME, Qt::AscendingOrder);
 
     QTreeWidgetItem * headerItem = treeWidget->headerItem();
     headerItem->setText(C_SERVER_NAME, tr("Name"));
@@ -164,7 +165,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 
 	treeWidget->setColumnHidden(C_DOMAIN, true);
 	treeWidget->setColumnHidden(C_FLAG, true);
-	treeWidget->setColumnHidden(C_PILOTS_COUNT, true);
+	//treeWidget->setColumnHidden(C_PILOTS_COUNT, true);
 
 	connect(treeWidget, SIGNAL(itemSelectionChanged()), this, SLOT(set_mp_server()));
 
@@ -351,26 +352,24 @@ void NetworkWidget::dns_lookup(){
 // DNS Callback
 void NetworkWidget::on_dns_lookup_callback(const QHostInfo &hostInfo){
 
-    bool has_address = hostInfo.addresses().count() > 0;
-	if(!has_address){
+	if(hostInfo.addresses().count() == 0){
 		return;
 	}
 	QTreeWidgetItem *newItem = new QTreeWidgetItem();
 	newItem->setText(C_SERVER_NAME, hostInfo.hostName().split(".")[0]);
 	newItem->setText(C_DOMAIN, hostInfo.hostName());
 	newItem->setText(C_IP_ADDRESS, hostInfo.addresses().first().toString());
-	newItem->setText(C_FLAG, "1");
+	newItem->setText(C_PILOTS_COUNT, "-");
 	treeWidget->addTopLevelItem(newItem);
 
-		/* TODO
-		MpTelnet *telnet = new MpTelnet(this );
-		telnet->get_info(hostInfo.addresses().first().toString());
-		connect(telnet, SIGNAL(telnet_data(QString, QString)),
-				this, SLOT(on_telnet_data(QString, QString))
-		);
-		*/
-		//TODO catch no return ? error ?
+
+	MpTelnet *telnet = new MpTelnet(this );
+	telnet->get_info(hostInfo.addresses().first().toString());
+	connect(telnet, SIGNAL(telnet_data(QString, QString)),
+			this, SLOT(on_telnet_data(QString, QString))
+	);
 }
+
 /* Example Output >>
 Trying 85.214.37.14...
 Connected to mpserver01.flightgear.org.
@@ -388,81 +387,33 @@ void NetworkWidget::on_telnet_data(QString ip_address, QString telnet_reply){
     QStringList lines = telnet_reply.split("\n");
     QString line;
     int pilots_count = 0;
-    QMap<QString, int> mServerCount;
 
     for(int i = 0; i < lines.size(); ++i){
 
         line = lines.at(i).trimmed();
         if(i == 0){
             // skip first line
-
         }else if(line.startsWith("#")){
             // skip lines starting with #
-
         }else if(line.length() == 0){
             // skip blank lines
-
         }else{
 
             //*** Process the line
-            QStringList parts = line.split(" ");
-            QString callsign = parts.at(0).split("@").at(0);
-            QString mp_server = parts.at(0).split("@").at(1);
-            QString mp_server_ip = QString("");
+			QString mp_server = line.split(" ").at(0).split("@").at(1);
             mp_server = mp_server.replace(QString(":"), QString("")); //* get rid of trailing ":" at end eg a.b.c.192:
-
             //** Map to an IP address
             if(mp_server == "LOCAL"){
                 //* Its ip_address from callback
-                mp_server_ip = QString(ip_address);
-
-            }else if(mp_server.startsWith("mpserver")){
-                //* its mpserver__ so find in tree if avaiable
-                // TODO insert unfound ip
-                QList<QTreeWidgetItem*> items = treeWidget->findItems(mp_server, Qt::MatchExactly, C_SERVER_NAME);
-                /*
-                if(items.count() == 0){
-                    mp_server_ip = "NOT_FOUND";
-                    QTreeWidgetItem *newItem = new QTreeWidgetItem();
-                    newItem->setText(C_IP_ADDRESS,ip_address);
-                    newItem->setText(C_DOMAIN, "?");
-                    treeWidget->addTopLevelItem(newItem);
-                }else{
-                    mp_server_ip = items[0]->text(C_IP_ADDRESS);
-                }*/
-                //qDebug() << "Found: " << mp_server << " = " << items.count();
-            }else{
-                //* Otherwise we got returned an ip address
-                mp_server_ip = mp_server;
-            }
-            //** Increment pilot count
-            if(mServerCount.contains(mp_server_ip)){
-                mServerCount[mp_server_ip] = mServerCount[mp_server_ip] + 1;
-            }else{
-                mServerCount[mp_server_ip] = 1;
-            }
-
-
-            pilots_count++;
-
+				pilots_count++;
+			}
         }
     } /* for lines() */
-    QMapIterator<QString, int> i(mServerCount);
-    while (i.hasNext()) {
-        i.next();
-        QList<QTreeWidgetItem*> items = treeWidget->findItems(i.key(), Qt::MatchExactly, C_IP_ADDRESS);
-        if(items.count() == 1){
-		   // qDebug() << "FoundRow" << i.key() ;
-        }else{
-			//qDebug() << "Row no found" << i.key();
-        }
-        //qDebug() << i.key() << ": " << i.value() << endl;
-    }
+
     //** Update the Pilots Count
     QList<QTreeWidgetItem*> items = treeWidget->findItems(ip_address, Qt::MatchExactly, C_IP_ADDRESS);
-    //treeWidget->removeItemWidget(items[0], C_PILOTS_COUNT);
     items[0]->setText(C_PILOTS_COUNT, QString::number(pilots_count));
-    //qDebug() >> "update=" << items.count();
+
 }
 
 
