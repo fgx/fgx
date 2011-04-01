@@ -14,7 +14,7 @@
    <string>FlightGear Launcher</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="resources/icons.qrc">
     <normaloff>:/icon/favicon</normaloff>:/icon/favicon</iconset>
   </property>
   <property name="autoFillBackground">
@@ -70,7 +70,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <property name="usesScrollButtons">
          <bool>false</bool>
@@ -222,7 +222,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -262,7 +262,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -294,7 +294,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -318,7 +318,7 @@ p, li { white-space: pre-wrap; }
                      <string>Start Terrasync</string>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
                     </property>
                    </widget>
@@ -329,7 +329,7 @@ p, li { white-space: pre-wrap; }
                      <string>Stop Terrasync</string>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
                     </property>
                    </widget>
@@ -752,21 +752,21 @@ p, li { white-space: pre-wrap; }
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_6">
              <item>
-              <widget class="QPlainTextEdit" name="txtStartupCommand"/>
+              <widget class="QPlainTextEdit" name="txtPreview"/>
              </item>
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
                 <widget class="QPushButton" name="buttonViewCommand">
                  <property name="text">
-                  <string>View Command</string>
+                  <string>Preview Command</string>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="QPushButton" name="buttonViewHelp">
                  <property name="text">
-                  <string>View Help</string>
+                  <string>Options Help</string>
                  </property>
                 </widget>
                </item>
@@ -830,7 +830,7 @@ p, li { white-space: pre-wrap; }
            <string>Stop Fg</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="resources/icons.qrc">
             <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
           </property>
          </widget>
@@ -841,7 +841,7 @@ p, li { white-space: pre-wrap; }
            <string>Start Fg</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="resources/icons.qrc">
             <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
           </property>
          </widget>
@@ -896,7 +896,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset>
+    <iconset resource="resources/icons.qrc">
      <normaloff>:/icon/quit</normaloff>:/icon/quit</iconset>
    </property>
    <property name="text">
@@ -917,7 +917,9 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources/icons.qrc"/>
+ </resources>
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroupWeather"/>

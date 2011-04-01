@@ -4,14 +4,13 @@
 #include <QtCore/QChar>
 #include <QtCore/QMap>
 #include <QtCore/QMapIterator>
-
-
-
+#include <QtCore/QUrl>
 
 #include <QtNetwork/QHostInfo>
 #include <QtNetwork/QHostAddress>
 #include <QtNetwork/QNetworkInterface>
 
+#include <QtGui/QDesktopServices>
 #include <QtGui/QBrush>
 #include <QtGui/QColor>
 
@@ -84,7 +83,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 
 	//** Mop IN
 	row++;
-	checkBoxIn = new QCheckBox("In from");
+	checkBoxIn = new QCheckBox("In to");
 	gridMP->addWidget(checkBoxIn, row, 0);
 	connect(checkBoxIn, SIGNAL(clicked()), this, SLOT(on_checkbox_in()));
 
@@ -253,9 +252,15 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	layoutNetTelnet->addWidget(txtTelnet);
 	connect(txtTelnet, SIGNAL(textChanged(QString)), this, SLOT(set_telnet()));
 
+	QToolButton *buttTelnet = new QToolButton();
+	layoutNetTelnet->addWidget(buttTelnet);
+	buttTelnet->setDisabled(true); // TODO
+	buttTelnet->setIcon(QIcon(":/icon/terminal"));
+	buttTelnet->setToolButtonStyle(Qt::ToolButtonIconOnly);
+	connect(buttTelnet, SIGNAL(clicked()), this, SLOT(on_open_telnet()));
 
 	//===========================================================
-	//** Telnet
+	//** Screenshot
 	grpScreenShot = new QGroupBox();
 	grpScreenShot->setTitle(tr("Screen Shot Server"));
 	grpScreenShot->setCheckable(true);
@@ -269,14 +274,18 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	//int m = 5;
 	layoutScreenShot->setContentsMargins(m,m,m,m);
 
-	QLabel *lblScreenshot = new QLabel();
-	lblScreenshot->setText(tr("Set Port No:"));
-	layoutScreenShot->addWidget( lblScreenshot);
+	layoutScreenShot->addWidget( new QLabel(tr("Port No:")));
 
-	txtScreenShot = new QLineEdit("7777");
+	txtScreenShot = new QLineEdit("8088");
 	txtScreenShot->setValidator(new QIntValidator(80, 32000, this));
 	layoutScreenShot->addWidget(txtScreenShot);
 	connect(txtScreenShot, SIGNAL(textChanged(QString)), this, SLOT(set_screenshot()));
+
+	QToolButton *buttScreenshot = new QToolButton();
+	layoutScreenShot->addWidget(buttScreenshot);
+	buttScreenshot->setIcon(QIcon(":/icon/browse"));
+	buttScreenshot->setToolButtonStyle(Qt::ToolButtonIconOnly);
+	connect(buttScreenshot, SIGNAL(clicked()), this, SLOT(on_browse_screenshot()));
 
 	//==========================================================
 	//** HTTP
@@ -285,17 +294,13 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	grpHttp->setCheckable(true);
 	grpHttp->setChecked(false);
 	rightLayout->addWidget(grpHttp);
-	connect(grpHttp, SIGNAL(clicked(bool)), this, SLOT(set_http()));
+	//connect(grpHttp, SIGNAL(clicked(bool)), this, SLOT(set_http()));
 
 	QHBoxLayout *layoutNetHttp = new QHBoxLayout();
 	grpHttp->setLayout(layoutNetHttp);
 	layoutNetHttp->setSpacing(10);
-	//int m = 5;
-	//layoutNetHttp->setContentsMargins(m,m,m,m);
 
-	QLabel *lblHttp = new QLabel();
-	lblHttp->setText(tr("Set Port No:"));
-	layoutNetHttp->addWidget( lblHttp);
+	layoutNetHttp->addWidget( new QLabel(tr("Port No:")) );
 
 	txtHttp = new QLineEdit("8080");
 	txtHttp->setValidator(new QIntValidator(80, 32000, this));
@@ -304,17 +309,9 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 
 	QToolButton *butHttp = new QToolButton();
 	layoutNetHttp->addWidget(butHttp);
-	butHttp->setIcon(QIcon(":/icons/dns_lookup"));
+	butHttp->setIcon(QIcon(":/icon/browse"));
 	butHttp->setToolButtonStyle(Qt::ToolButtonIconOnly);
-	butHttp->setPopupMode(QToolButton::InstantPopup);
-
-	QMenu *menuNetHttp = new QMenu();
-	butHttp->setMenu(menuNetHttp);
-
-	QAction *actHttpBrowse = new QAction(menuNetHttp);
-	menuNetHttp->addAction(actHttpBrowse);
-	actHttpBrowse->setText(tr("Open in external browser"));
-	//connect(actExePath, SIGNAL(triggered()), this, SLOT(on_exe_path()));
+	connect(butHttp, SIGNAL(clicked()), this, SLOT(on_browse_http()));
 
 
 	rightLayout->addStretch(20);
@@ -389,40 +386,39 @@ void NetworkWidget::on_dns_lookup_host(const QHostInfo &hostInfo){
     QList<QTreeWidgetItem*> items = treeWidget->findItems(hostInfo.hostName(), Qt::MatchExactly, C_DOMAIN);
 
     //** Make the colors change if address found
-    QString lbl;
-    QColor color;
-    bool has_address = hostInfo.addresses().count() > 0;
-    if( has_address ){
-         lbl = hostInfo.addresses().first().toString();
-         color = QColor(0, 150, 0);
-     }else{
-		lbl = tr("No Entry");
-		color = QColor(150, 150, 150);
-     }
-     QBrush brush = items[0]->foreground(C_IP_ADDRESS);
-     brush.setColor(color);
-     items[0]->setForeground(C_IP_ADDRESS, brush);
-     items[0]->setText(C_IP_ADDRESS, lbl);
 
-     if(has_address){
-		items[0]->setText(C_FLAG, "1");
-		QString ip_or_domain( comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString());
-		QList<QTreeWidgetItem*> selItems = treeWidget->findItems(settings.value("mpserver").toString(),
-																	Qt::MatchExactly,
-																	ip_or_domain == "domain" ? C_DOMAIN : C_IP_ADDRESS);
-		if(selItems.length() > 0){
-			treeWidget->setCurrentItem(selItems[0]);
-		}
+    bool has_address = hostInfo.addresses().count() > 0;
+	if(!has_address){
+		//* address not found to remove from list
+		items[0]->parent()->removeChild(items[0]);
+		return;
+	}
+
+	//* Address found
+	//QString lbl =  hostInfo.addresses().first().toString();
+	//QColor  QColor(0, 150, 0);;
+	//QBrush brush = items[0]->foreground(C_IP_ADDRESS);
+	//brush.setColor(color);
+	items[0]->setForeground(C_IP_ADDRESS, QColor(0, 150, 0));
+	items[0]->setText(C_IP_ADDRESS, hostInfo.addresses().first().toString());
+
+	items[0]->setText(C_FLAG, "1");
+	QString ip_or_domain( comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString());
+	QList<QTreeWidgetItem*> selItems = treeWidget->findItems(settings.value("mpserver").toString(),
+																Qt::MatchExactly,
+																ip_or_domain == "domain" ? C_DOMAIN : C_IP_ADDRESS);
+	if(selItems.length() > 0){
+		treeWidget->setCurrentItem(selItems[0]);
+	}
 
 		/* TODO
-        MpTelnet *telnet = new MpTelnet(this );
-        telnet->get_info(hostInfo.addresses().first().toString());
-        connect(telnet, SIGNAL(telnet_data(QString, QString)),
-                this, SLOT(on_telnet_data(QString, QString))
-        );
+		MpTelnet *telnet = new MpTelnet(this );
+		telnet->get_info(hostInfo.addresses().first().toString());
+		connect(telnet, SIGNAL(telnet_data(QString, QString)),
+				this, SLOT(on_telnet_data(QString, QString))
+		);
 		*/
-        //TODO catch no return ? error ?
-     }
+		//TODO catch no return ? error ?
 }
 /* Example Output >>
 Trying 85.214.37.14...
@@ -651,7 +647,23 @@ void NetworkWidget::on_checkbox_out(){
 
 }
 
+//=================================================
+// Open Browsers
+void NetworkWidget::on_browse_http(){
+	QString url = QString("http://localhost:%1").arg(txtHttp ->text());
+	QDesktopServices::openUrl(url);
+}
 
+void NetworkWidget::on_browse_screenshot(){
+	QString url = QString("http://localhost:%1").arg(txtScreenShot ->text());
+	QDesktopServices::openUrl(url);
+}
+
+//=================================================
+// Open Telnet
+void NetworkWidget::on_open_telnet(){
+	// TODO
+}
 
 //=============================================================
 // Get Args
@@ -808,3 +820,7 @@ QString NetworkWidget::validate(){
 	}
 	return QString();
 }
+
+
+
+

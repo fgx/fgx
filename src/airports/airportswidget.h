@@ -39,6 +39,7 @@ public:
 
 	XSettings settings;
 
+	QRadioButton *radioButtonUseDefault;
 	QRadioButton *radioButtonUseAirport;
 	QRadioButton *radioButtonUseCoordinates;
 

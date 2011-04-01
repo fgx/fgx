@@ -80,7 +80,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
 	//===============================================================
     //*** FG_ROOT Group
-    grpFgRoot = new QGroupBox(tr("FG_ROOT - Path to the data directory;"));
+	grpFgRoot = new QGroupBox(tr("FG_ROOT - Path to the data directory"));
     mainLayout->addWidget(grpFgRoot);
 
     QHBoxLayout *layoutFgRoot = new QHBoxLayout();
@@ -104,8 +104,9 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
 
 	//===============================================================
-    //*** FG_Scenery
+	//*** FG_Scenery - UNUSED at the moment
     grpFgScenery = new QGroupBox(tr("FG_Scenery - Paths to the scenery directories."));
+	grpFgfs->setVisible(false);
     mainLayout->addWidget(grpFgScenery);
 
     QHBoxLayout *layoutFgScenery = new QHBoxLayout();

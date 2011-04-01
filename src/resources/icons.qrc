@@ -14,5 +14,7 @@
         <file alias="start_disabled">control_play.png</file>
         <file alias="stop_enabled">control_stop_blue.png</file>
         <file alias="stop_disabled">control_stop.png</file>
+        <file alias="browse">browse.png</file>
+        <file alias="terminal">application_osx_terminal.png</file>
     </qresource>
 </RCC>

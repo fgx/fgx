@@ -5,7 +5,7 @@
 #include <QtGui/QSizePolicy>
 #include <QtGui/QFont>
 
-#include <QtGui/QVBoxLayout>
+#include <QtGui/QHBoxLayout>
 #include <QtGui/QGridLayout>
 #include <QtGui/QSplitter>
 
@@ -42,20 +42,35 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	int m = 10;
 	mainLayout->setContentsMargins(m,m,m,m);
 
+	//=====================================
+	//** Top Option Buttons
+	QHBoxLayout *layoutTop = new QHBoxLayout();
+	mainLayout->addLayout(layoutTop,0,0,1,2);
+
 	QButtonGroup *buttonGroupUse = new QButtonGroup(this);
 	buttonGroupUse->setExclusive(true);
 	connect(buttonGroupUse, SIGNAL(buttonClicked(int)), this, SLOT(on_buttonGroupUse()));
 
+	radioButtonUseDefault = new QRadioButton("Default (KSFO)");
+	radioButtonUseDefault->setChecked(true);
+	layoutTop->addWidget(radioButtonUseDefault);
+	buttonGroupUse->addButton(radioButtonUseDefault);
+
 	radioButtonUseAirport = new QRadioButton("Start at Airport");
-	mainLayout->addWidget(radioButtonUseAirport, 0, 0, 1, 2);
+	layoutTop->addWidget(radioButtonUseAirport);
 	buttonGroupUse->addButton(radioButtonUseAirport);
+
+	radioButtonUseCoordinates = new QRadioButton("Start at Coordinates");
+	layoutTop->addWidget(radioButtonUseCoordinates);
+	buttonGroupUse->addButton(radioButtonUseCoordinates);
+
+	layoutTop->addStretch(10);
+
 
 	groupBoxAirport = new QGroupBox(this);
 	groupBoxAirport->setTitle("Airport Details");
-	mainLayout->addWidget(groupBoxAirport, 1, 1, 1, 1);
+	mainLayout->addWidget(groupBoxAirport, 1, 0);
 	connect(groupBoxAirport, SIGNAL(clicked()), this, SLOT(on_groupbox_airports()));
-
-
 
 	QVBoxLayout *airportsLayout = new QVBoxLayout();
 	groupBoxAirport->setLayout(airportsLayout);
@@ -64,18 +79,15 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	airportsLayout->setSpacing(10);
 
 
-	//*************************************************
-	//** Top Bar
-	QHBoxLayout *treeBar = new QHBoxLayout();
-	airportsLayout->addLayout(treeBar);
-
+	//==================================================================
+	//** Airports Top Bar
+	QHBoxLayout *layoutAptTopBar = new QHBoxLayout();
+	layoutAptTopBar->setContentsMargins(0,0,0,0);
+	airportsLayout->addLayout(layoutAptTopBar);
 
     //** Filter Code
-	treeBar->addWidget(new QLabel(tr("Filter").append(":  ")));
+	layoutAptTopBar->addWidget(new QLabel(tr("Filter").append(":  ")));
 
-
-
-    //***********************************s*******************
 	//** Filter Buttons - TODO
 	 /*
     buttGroupFilter = new QButtonGroup(this);
@@ -92,7 +104,6 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     buttAll->setIcon(QIcon(":/icons/pink"));
     buttAll->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     */
-
     //** Code Filter
 	/*
     QRadioButton *buttCode = new QRadioButton();
@@ -100,7 +111,6 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     buttGroupFilter->addButton(buttCode);
     buttCode->setText("Code");
 	buttCode->setProperty("column", QVariant(C_ICAO));
-
 
 	// Name Filter
     QRadioButton *buttName = new QRadioButton();
@@ -113,15 +123,15 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
     //** Find Text
     txtAirportsFilter = new QLineEdit();
-	treeBar->addWidget(txtAirportsFilter);
+	layoutAptTopBar->addWidget(txtAirportsFilter);
     txtAirportsFilter->setFixedWidth(100);
 	connect(txtAirportsFilter, SIGNAL(textChanged(QString)), this, SLOT(on_update_filter()));
 
-	treeBar->addStretch(20);
+	layoutAptTopBar->addStretch(20);
 
 
 	QPushButton *buttonRefreshTree = new QPushButton(this);
-	treeBar->addWidget(buttonRefreshTree);
+	layoutAptTopBar->addWidget(buttonRefreshTree);
 	buttonRefreshTree->setText("Reload");
 	buttonRefreshTree->setToolTip("Scan directories and reload cache");
 	buttonRefreshTree->setIcon(QIcon(":/icon/refresh"));
@@ -131,12 +141,10 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
 
 
-	//***********************************************
-	//** Splitter
+	//*==============================================================================
+	//** Airports Splitter
 	QSplitter *splitter = new QSplitter(this);
 	airportsLayout->addWidget(splitter);
-
-
 
 
 	//************************************************************************************************
@@ -261,13 +269,11 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	//====================================================================
 	//** Use Coordinates
 	//====================================================================
-	radioButtonUseCoordinates = new QRadioButton("Start at Coordinates");
-	mainLayout->addWidget(radioButtonUseCoordinates, 0, 2, 1,2);
-	buttonGroupUse->addButton(radioButtonUseCoordinates);
+
 
 	groupBoxUseCoordinates = new QGroupBox(this);
 	groupBoxUseCoordinates->setTitle("Coordinates");
-	mainLayout->addWidget(groupBoxUseCoordinates, 1, 3, 1,1);
+	mainLayout->addWidget(groupBoxUseCoordinates, 1, 2);
 	connect(groupBoxUseCoordinates, SIGNAL(clicked()), this, SLOT(on_groupbox_use_coordinates()));
 	QVBoxLayout *layoutCoordinates = new QVBoxLayout();
 	groupBoxUseCoordinates->setLayout(layoutCoordinates);
@@ -310,13 +316,6 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
 	layoutCoordinates->addStretch(20);
 
-	mainLayout->setColumnStretch(0,1);
-	mainLayout->setColumnStretch(1,10);
-	mainLayout->setColumnStretch(2,1);
-	mainLayout->setColumnStretch(3,10);
-	//mainLayout->setColumnMinimumWidth();
-
-	radioButtonUseAirport->setChecked(true);
 	on_buttonGroupUse();
 }
 
@@ -547,9 +546,8 @@ void AirportsWidget::on_refresh_clicked(){
 }
 
 void AirportsWidget::on_buttonGroupUse(){
-	int useAirport = radioButtonUseAirport->isChecked();
-	groupBoxAirport->setEnabled(useAirport);;
-	groupBoxUseCoordinates->setEnabled(!useAirport);;
+	groupBoxAirport->setEnabled(radioButtonUseAirport->isChecked());;
+	groupBoxUseCoordinates->setEnabled(radioButtonUseCoordinates->isChecked());;
 }
 
 

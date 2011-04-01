@@ -118,8 +118,7 @@ void fgx::kill_process(QString pid) {
 // Start FlightGear
 //=======================================================================================================================
 void fgx::on_buttonStartFg_clicked() {
-	
-	txtStartupCommand->setPlainText(fg_args().join("\n"));
+	txtPreview->setPlainText(fg_args().join("\n"));
 
 	//** This process will always start on the shell as fgfs returns an error help if incorrect args
 	bool start = QProcess::startDetached( settings.fgfs_path(), fg_args(), QString(), &pid_fg);
@@ -160,7 +159,6 @@ void fgx::stop_fgcom() {
 
 //=======================================================================================================================
 // Start Terrasync
-//=======================================================================================================================
 void fgx::on_buttonStartTerraSync_clicked(){
 	start_terrasync();
 }
@@ -168,19 +166,16 @@ void fgx::on_buttonStartTerraSync_clicked(){
 void fgx::start_terrasync(){
 
 	QString command("nice");
-
 	QStringList args;
 	args << "terrasync" << "-p" << "5505" << "-S" << "-d" << "settings";
 
 	int start = QProcess::startDetached(command, args, QString(), &pid_terra);
 	Q_UNUSED(start);
-
 }
 
 
 //=======================================================================================================================
 // Stop TerraSync
-//=======================================================================================================================
 void fgx::on_buttonStopTerraSync_clicked(){
 	stop_terrasync();
 }
@@ -199,16 +194,14 @@ void fgx::stop_terrasync() {
 	if(process.waitForStarted()){
 		process.waitForFinished();
 		QString ok_result = process.readAllStandardOutput();
-		QString error_result = process.readAllStandardError();
+		//QString error_result = process.readAllStandardError(); Unused atmo
 
 		//* take result and split into parts
 		QStringList entries = ok_result.split("\n");
 		for(int i=0; i < entries.count(); i++){
-			QString entry(entries.at(i));
-
-			if(entry.contains("terrasync -p 5505")){
-				//* found a terrasync  so Kill it
-				QStringList parts = entry.split(" ", QString::SkipEmptyParts);
+			if(entries.at(i).contains("terrasync -p 5505")){
+				//* found a terrasync  so murder it
+				QStringList parts = entries.at(i).split(" ", QString::SkipEmptyParts);
 				QStringList killargs;
 				killargs << "-9" << parts.at(1);
 				int start = QProcess::startDetached("kill", killargs);
@@ -276,11 +269,7 @@ QStringList fgx::fg_args(){
 	argtime.append(second->text());
 	
 
-	// Redirect stdout and stderr to logfile
-	QString argwritelogdir = QDir::currentPath();
-	QString argwritelog;
-	argwritelog.append(argwritelogdir);
-	argwritelog = " &> fgfslog.log";
+
 	
 
 
@@ -317,10 +306,10 @@ QStringList fgx::fg_args(){
 
 	//** Time Of Day
 	if (groupBoxSetTime->isChecked()) {
-		//content.append(" --start-date-lat=");
+		//content.append("--start-date-lat=");
 		//content.append(argtime);
 	} else {
-		args << QString(" --timeofday=").append( buttonGroupTime->checkedButton()->text().toLower().replace(" ","") );
+		args << QString("--timeofday=").append( buttonGroupTime->checkedButton()->text().toLower().replace(" ","") );
 	}
 
 
@@ -356,19 +345,33 @@ QStringList fgx::fg_args(){
 	//** Enable AI models ???
 	args << QString("--enable-ai-models");
 
+	args.sort();
 
-
-	//*  Additonal **args - remove line endings in command line text field and add arguments
-	if (lineEditExtraArgs->toPlainText().trimmed().length() > 0) {
-		args << QString(" ").append( lineEditExtraArgs->toPlainText().replace(QString("\n"), QString(" ")) );
+	//*  Additonal args
+	QString extra = lineEditExtraArgs->toPlainText().trimmed();
+	if (extra.length() > 0) {
+		QStringList parts = extra.split("\n");
+		if(parts.count() > 0){
+			for(int i=0; i < parts.count(); i++){
+				QString part = parts.at(i).trimmed();
+				if(part.length() > 0){
+					args << part;
+				}
+			}
+		}
 	}
 
-	//* Log Level
+	//* Log Level - Redirect stdout and stderr to logfile
 	if(checkBoxLogEnabled->isChecked()){
+		//
+		QString argwritelogdir = QDir::currentPath();
+		QString argwritelog;
+		argwritelog.append(argwritelogdir);
+		argwritelog = " &> fgfslog.log";
+
 		args << QString("--log-level=").append( buttonGroupLog->button(buttonGroupLog->checkedId())->text().toLower() );
 		args << QString(argwritelog);
 	}
-
 
 	return args;
 }
@@ -621,7 +624,6 @@ void fgx::on_tabs_currentChanged(int index){
 	}
 }
 
-
 //==============================================
 //** View Buttons
 void fgx::on_buttonViewCommand_clicked(){
@@ -630,11 +632,20 @@ void fgx::on_buttonViewCommand_clicked(){
 	}
 	QString str = QString(settings.fgfs_path()).append(" \\\n");
 	str.append( fg_args().join(" \\\n"));
-	txtStartupCommand->setPlainText(str);
+	txtPreview->setPlainText(str);
 }
 
 void fgx::on_buttonViewHelp_clicked(){
-
+	QProcess process;
+	QStringList args;
+	args << "-h" << "-v" << QString("--fg-root=").append(settings.fg_root());
+	process.start(settings.fgfs_path(), args, QIODevice::ReadOnly);
+	if(process.waitForStarted()){
+		process.waitForFinished();
+		QString ok_result = process.readAllStandardOutput();
+		QString error_result = process.readAllStandardError();
+		txtPreview->setPlainText(ok_result);
+	}
 }
 
 
