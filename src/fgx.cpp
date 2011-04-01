@@ -362,14 +362,8 @@ QStringList fgx::fg_args(){
 
 	//* Log Level - Redirect stdout and stderr to logfile
 	if(checkBoxLogEnabled->isChecked()){
-		//
-		QString argwritelogdir = QDir::currentPath();
-		QString argwritelog;
-		argwritelog.append(argwritelogdir);
-		argwritelog = " &> fgfslog.log";
-
 		args << QString("--log-level=").append( buttonGroupLog->checkedButton()->text().toLower() );
-		args << QString(argwritelog);
+		args << QDir::currentPath().append(" &> fgfslog.log");
 	}
 
 	return args;
