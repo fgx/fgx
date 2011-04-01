@@ -75,7 +75,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	groupBoxAirport->setLayout(airportsLayout);
 	//layoutAirport->setLayout(airportsLayout);
 	airportsLayout->setContentsMargins(10,10,10,10);
-	airportsLayout->setSpacing(10);
+	airportsLayout->setSpacing(0);
 
 
 	//==================================================================
@@ -197,14 +197,9 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	treeViewAirports->setColumnWidth(C_ELEVATION, 80);
 
 	connect( treeViewAirports->selectionModel(),
-             SIGNAL( selectionChanged (const QItemSelection&, const QItemSelection&) ),
-			 SLOT( on_aiport_selection_changed(const QItemSelection&, const QItemSelection&) )
-    );
-
-	//connect(treeViewAirports,
-    //        SIGNAL(clicked(QModelIndex)),
-    //        this, SLOT(on_tree_clicked(QModelIndex))
-    //);
+			 SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ),
+			 this, SLOT( on_aiport_row_changed(QModelIndex, QModelIndex) )
+	);
 
 	statusBarAirports = new QStatusBar();
 	statusBarAirports->setSizeGripEnabled(false);
@@ -242,17 +237,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	treeWidgetRunways->setColumnHidden(3,true);
 	treeWidgetRunways->setColumnHidden(4,true);
 	treeWidgetRunways->setColumnHidden(5,true);
-	/*
-	connect( treeViewAirports->selectionModel(),
-             SIGNAL( selectionChanged (const QItemSelection&, const QItemSelection&) ),
-			 SLOT( on_aiport_selection_changed(const QItemSelection&, const QItemSelection&) )
-    );
-	*/
 
-	connect( treeViewAirports->selectionModel(),
-			 SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ),
-			 SLOT( on_aiport_row_changed(QModelIndex, QModelIndex) )
-	);
 
 	statusBarRunways = new QStatusBar();
 	statusBarRunways->setSizeGripEnabled(false);
@@ -275,39 +260,39 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	mainLayout->addWidget(groupBoxUseCoordinates, 1, 2);
 	QVBoxLayout *layoutCoordinates = new QVBoxLayout();
 	groupBoxUseCoordinates->setLayout(layoutCoordinates);
+	int space = 5;
 
-
-	layoutCoordinates->addWidget(new QLabel("Latitude"));
+	layoutCoordinates->addWidget(new QLabel(tr("Latitude (negative is west)")));
 	txtLat = new QLineEdit();
 	layoutCoordinates->addWidget(txtLat);
 
-	layoutCoordinates->addSpacing(10);
-	layoutCoordinates->addWidget(new QLabel("Longtitude"));
+	layoutCoordinates->addSpacing(space);
+	layoutCoordinates->addWidget(new QLabel(tr("Longtitude (negative is south)")));
 	txtLng = new QLineEdit();
 	layoutCoordinates->addWidget(txtLng);
 
-	layoutCoordinates->addSpacing(10);
-	layoutCoordinates->addWidget(new QLabel("Altitude"));
+	layoutCoordinates->addSpacing(space);
+	layoutCoordinates->addWidget(new QLabel(tr("Altitude")));
 	txtAltitude = new QLineEdit();
 	layoutCoordinates->addWidget(txtAltitude);
 
-	layoutCoordinates->addSpacing(10);
-	layoutCoordinates->addWidget(new QLabel("Heading"));
+	layoutCoordinates->addSpacing(space);
+	layoutCoordinates->addWidget(new QLabel(tr("Heading")));
 	txtHeading = new QLineEdit();
 	layoutCoordinates->addWidget(txtHeading);
 
-	layoutCoordinates->addSpacing(10);
-	layoutCoordinates->addWidget(new QLabel("Roll"));
+	layoutCoordinates->addSpacing(space);
+	layoutCoordinates->addWidget(new QLabel(tr("Roll")));
 	txtRoll = new QLineEdit();
 	layoutCoordinates->addWidget(txtRoll);
 
-	layoutCoordinates->addSpacing(10);
-	layoutCoordinates->addWidget(new QLabel("Pitch"));
+	layoutCoordinates->addSpacing(space);
+	layoutCoordinates->addWidget(new QLabel(tr("Pitch")));
 	txtPitch = new QLineEdit();
 	layoutCoordinates->addWidget(txtPitch);
 
-	layoutCoordinates->addSpacing(10);
-	layoutCoordinates->addWidget(new QLabel("Airspeed"));
+	layoutCoordinates->addSpacing(space);
+	layoutCoordinates->addWidget(new QLabel(tr("Airspeed")));
 	txtAirspeed = new QLineEdit();
 	layoutCoordinates->addWidget(txtAirspeed);
 
@@ -334,6 +319,7 @@ void AirportsWidget::scan_airports_xml(){
 	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0, this);
 	progress.setWindowModality(Qt::WindowModal);
 
+	qDebug() << settings.airports_path();
 	QString directory = settings.airports_path();
 
 	QStringList airportsList;
@@ -432,13 +418,10 @@ void AirportsWidget::on_update_filter(){
 
 //**********************************************
 //*** Airport Row Clicked = Show Runways
-void AirportsWidget::on_aiport_selection_changed(const QItemSelection&, const QItemSelection&){
-}
+
 void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex previous){
 	Q_UNUSED(previous);
-    treeWidgetRunways->model()->removeRows(0,
-                                            treeWidgetRunways->model()->rowCount()
-                                            );
+	treeWidgetRunways->model()->removeRows(0, treeWidgetRunways->model()->rowCount());
 
 	//QModelIndex proxyIndex =  treeViewAirports->selectionModel()->selectedRows(C_ICAO).first();
 	QModelIndex proxyIndex =  proxyModel->index(current.row(), C_XML);
@@ -447,7 +430,6 @@ void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex prev
 		return;
     }
     QModelIndex srcIndex = proxyModel->mapToSource(proxyIndex);
-	//QString airportXmlFile = model->item(srcIndex.row(), C_XML)->text();
 	load_runways(model->item(srcIndex.row(), C_XML)->text());
 }
 void AirportsWidget::load_runways(QString airportXmlFile){
@@ -535,6 +517,7 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 			item->setText(1, "stand");
 		}
 	}
+	statusBarRunways->showMessage( QString("%1 runways, %2 stangs").arg(runwaysParent->childCount(), parkingParent->childCount()) );
 }
 
 

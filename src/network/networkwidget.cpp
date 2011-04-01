@@ -361,7 +361,9 @@ void NetworkWidget::on_dns_lookup_callback(const QHostInfo &hostInfo){
 	newItem->setText(C_IP_ADDRESS, hostInfo.addresses().first().toString());
 	newItem->setText(C_PILOTS_COUNT, "-");
 	treeWidget->addTopLevelItem(newItem);
-
+	if(settings.value("mpserver").toString() == hostInfo.hostName()){
+		treeWidget->setCurrentItem(newItem);
+	}
 
 	MpTelnet *telnet = new MpTelnet(this );
 	telnet->get_info(hostInfo.addresses().first().toString());
@@ -413,7 +415,7 @@ void NetworkWidget::on_telnet_data(QString ip_address, QString telnet_reply){
     //** Update the Pilots Count
     QList<QTreeWidgetItem*> items = treeWidget->findItems(ip_address, Qt::MatchExactly, C_IP_ADDRESS);
     items[0]->setText(C_PILOTS_COUNT, QString::number(pilots_count));
-
+	items[0]->setText(C_FLAG, "1");
 }
 
 
@@ -633,7 +635,7 @@ void NetworkWidget::save_settings(){
 	QString ip_or_domain( comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString());
 	settings.setValue("out_with", ip_or_domain);
 	if(treeWidget->currentItem()){
-		settings.setValue("mpserver", treeWidget->currentItem()->text(ip_or_domain == "domain" ? C_DOMAIN : C_IP_ADDRESS));
+		settings.setValue("mpserver", treeWidget->currentItem()->text(C_DOMAIN));
 	}
 
 	settings.setValue("in_port", comboLocalPort->currentText());
@@ -711,12 +713,12 @@ QString NetworkWidget::validate(){
 	if(grpMpServer->isChecked()){
 		if(txtCallSign->text().trimmed().length() == 0){
 			txtCallSign->setFocus();
-			return QString("Need a Callsign");
+			return QString("Callsign required");
 		}
 		if(checkBoxOut->isChecked()){
-			if(!treeWidget->currentItem() or treeWidget->currentItem()->text(C_FLAG) != "1"){
+			if(!treeWidget->currentItem() or treeWidget->currentItem()->text(C_FLAG).length() == 0){
 				treeWidget->setFocus();
-				return QString("Need a Multiplayer Server");;
+				return QString("No multiplayer out server selected");;
 			}
 		}
 	}

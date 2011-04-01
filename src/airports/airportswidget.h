@@ -89,7 +89,6 @@ public slots:
 	void initialize();
 
     void on_update_filter();
-	void on_aiport_selection_changed(const QItemSelection&, const QItemSelection&);
 	void on_aiport_row_changed(QModelIndex, QModelIndex);
 
 	void on_refresh_clicked();

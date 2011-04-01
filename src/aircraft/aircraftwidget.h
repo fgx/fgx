@@ -7,7 +7,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QAbstractButton>
 #include <QtGui/QButtonGroup>
-
+#include <QtGui/QLineEdit>
 #include <QtGui/QTreeWidget>
 #include <QtGui/QLabel>
 #include <QtGui/QStatusBar>
@@ -41,6 +41,12 @@ public:
 	QLabel *aeroImageLabel;
 	QButtonGroup *buttViewGroup;
 
+	QLineEdit *txtNav1;
+	QLineEdit *txtNav2;
+	QLineEdit *txtAdf;
+	QLineEdit *txtComm1;
+	QLineEdit *txtComm2;
+
 	void initialize();
 	void save_settings();
 	void load_settings();
@@ -69,7 +75,6 @@ public slots:
 	QStringList scan_xml_sets();
 
 	void on_tree_selection_changed();
-	void on_auto_coordination(bool state);
 
     void on_view_button_clicked(QAbstractButton *button);
 	void on_refresh_cache();

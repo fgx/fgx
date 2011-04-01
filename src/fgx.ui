@@ -14,7 +14,7 @@
    <string>FlightGear Launcher</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources/icons.qrc">
+   <iconset>
     <normaloff>:/icon/favicon</normaloff>:/icon/favicon</iconset>
   </property>
   <property name="autoFillBackground">
@@ -70,7 +70,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>0</number>
         </property>
         <property name="usesScrollButtons">
          <bool>false</bool>
@@ -102,15 +102,32 @@
               <property name="title">
                <string>Startup Options</string>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_11">
-               <item>
+              <layout class="QGridLayout" name="gridLayout_3">
+               <item row="0" column="0">
                 <widget class="QLabel" name="label">
                  <property name="text">
                   <string>Screen Size</string>
                  </property>
                 </widget>
                </item>
-               <item>
+               <item row="3" column="0">
+                <widget class="QCheckBox" name="checkboxDisableSplash">
+                 <property name="text">
+                  <string>Disable Splash Screen</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QCheckBox" name="checkboxFullScreen">
+                 <property name="text">
+                  <string>Full screen at startup</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
                 <widget class="QComboBox" name="comboScreenSize">
                  <property name="editable">
                   <bool>true</bool>
@@ -143,22 +160,31 @@
                  </item>
                 </widget>
                </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_8">
+              <property name="title">
+               <string>Controls</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_12">
                <item>
-                <widget class="QCheckBox" name="checkboxDisableSplash">
+                <widget class="QCheckBox" name="checkBoxEnableAutoCordination">
                  <property name="text">
-                  <string>Disable Splash Screen</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
+                  <string>Enable Auto Cordination</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkboxFullScreen">
+                <widget class="QLabel" name="label_2">
                  <property name="text">
-                  <string>Full screen at startup</string>
+                  <string>Joystick</string>
                  </property>
                 </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="comboJoystick"/>
                </item>
               </layout>
              </widget>
@@ -171,7 +197,7 @@
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>101</height>
+                <height>40</height>
                </size>
               </property>
              </spacer>
@@ -195,15 +221,7 @@
                   <item>
                    <widget class="QLineEdit" name="fgfsPath">
                     <property name="toolTip">
-                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Example for development version installed: &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#0035ff;&quot;&gt;/usr/local/bin&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Example for hudson nightly builds:&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#0035ff;&quot;&gt;/Users/joefoo/Desktop/nightly/FlightGear.app/Contents/MacOS&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; color:#0035ff;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     <string/>
                     </property>
                     <property name="text">
                      <string/>
@@ -222,7 +240,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -239,11 +257,7 @@ p, li { white-space: pre-wrap; }
                   <item>
                    <widget class="QLineEdit" name="fgdataPath">
                     <property name="toolTip">
-                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#ff1500;&quot;&gt;Click Refresh&lt;/span&gt; button after editing this path!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     <string/>
                     </property>
                     <property name="text">
                      <string/>
@@ -262,7 +276,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -294,7 +308,7 @@ p, li { white-space: pre-wrap; }
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -318,7 +332,7 @@ p, li { white-space: pre-wrap; }
                      <string>Start Terrasync</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
                     </property>
                    </widget>
@@ -329,7 +343,7 @@ p, li { white-space: pre-wrap; }
                      <string>Stop Terrasync</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
                     </property>
                    </widget>
@@ -830,7 +844,7 @@ p, li { white-space: pre-wrap; }
            <string>Stop Fg</string>
           </property>
           <property name="icon">
-           <iconset resource="resources/icons.qrc">
+           <iconset>
             <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
           </property>
          </widget>
@@ -841,7 +855,7 @@ p, li { white-space: pre-wrap; }
            <string>Start Fg</string>
           </property>
           <property name="icon">
-           <iconset resource="resources/icons.qrc">
+           <iconset>
             <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
           </property>
          </widget>
@@ -896,7 +910,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="resources/icons.qrc">
+    <iconset>
      <normaloff>:/icon/quit</normaloff>:/icon/quit</iconset>
    </property>
    <property name="text">
@@ -917,9 +931,7 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
- <resources>
-  <include location="resources/icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroupWeather"/>

@@ -35,6 +35,8 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QPixmap>
+#include <QtGui/QDoubleValidator>
+
 
 #include "aircraft/aircraftwidget.h"
 
@@ -184,25 +186,45 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
     aeroLayout->addWidget(aeroTabs, 20);
 
     QWidget *aeroControlWidget = new QWidget();
-    aeroTabs->addTab(aeroControlWidget, tr("Control"));
-    QVBoxLayout *aeroControlLayout = new QVBoxLayout();
-    aeroControlWidget->setLayout(aeroControlLayout);
+	aeroTabs->addTab(aeroControlWidget, tr("Nav"));
 
-    QCheckBox *chkEnableAutoCoordination = new QCheckBox();
-    aeroControlLayout->addWidget(chkEnableAutoCoordination);
-    chkEnableAutoCoordination->setText(tr("Enable Auto-Cordination"));
-	connect(chkEnableAutoCoordination, SIGNAL(clicked(bool)), this, SLOT(on_auto_coordination(bool)));
-    //aeroLayout->addStretch(10);
+	QGridLayout *layoutAeroPane = new QGridLayout();
+	aeroControlWidget->setLayout(layoutAeroPane);
+	int row = 1;
 
-    QToolBar *aeroToolbar = new QToolBar();
-    aeroLayout->addWidget(aeroToolbar);
-    aeroToolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	//* Navs
+	layoutAeroPane->addWidget(new QLabel(tr("Nav 1")), row, 0, 1, 1, Qt::AlignRight);
+	txtNav1 = new QLineEdit();
+	txtNav1->setValidator(new QDoubleValidator(0, 200, 2, this));
+	layoutAeroPane->addWidget(txtNav1,row, 1, 1, 1);
 
-    QAction *actionReloadAero = new QAction(this);
-    aeroToolbar->addAction(actionReloadAero);
-    actionReloadAero->setText("Reload");
-    actionReloadAero->setIcon(QIcon(":/icons/refresh"));
-    //connect(actionReloadAero, SIGNAL(triggered()), this, SLOT(load_aircraft()) );
+	row++;
+	layoutAeroPane->addWidget(new QLabel(tr("Nav 2")), row, 0, 1, 1, Qt::AlignRight);
+	txtNav2 = new QLineEdit();
+	txtNav2->setValidator(new QDoubleValidator(0, 200, 2, this));
+	layoutAeroPane->addWidget(txtNav2,row, 1, 1, 1);
+
+	//* ADF
+	row++;
+	layoutAeroPane->addWidget(new QLabel(tr("Adf")), row, 0, 1, 1, Qt::AlignRight);
+	txtAdf = new QLineEdit();
+	txtAdf->setValidator(new QDoubleValidator(0, 200,0, this));
+	layoutAeroPane->addWidget(txtAdf, row, 1, 1, 1);
+
+	//* Comms
+	row++;
+	layoutAeroPane->addWidget(new QLabel(tr("Comm 1")), row, 0, 1, 1, Qt::AlignRight);
+	txtComm1 = new QLineEdit();
+	txtComm1->setValidator(new QDoubleValidator(0, 200, 2, this));
+	layoutAeroPane->addWidget(txtComm1,row, 1, 1, 1);
+
+	row++;
+	layoutAeroPane->addWidget(new QLabel(tr("Comm 2")), row, 0, 1, 1, Qt::AlignRight);
+	txtComm2 = new QLineEdit();
+	txtComm2->setValidator(new QDoubleValidator(0, 200, 2, this));
+	layoutAeroPane->addWidget(txtComm2,row, 1, 1, 1);
+
+	layoutAeroPane->setRowStretch(row + 1, 20); // stretch end
 
     //***********************************
     //** Setup
@@ -267,12 +289,6 @@ void AircraftWidget::on_tree_selection_changed(){
 
 
 
-
-//=====================================
-// Auto Coordination
-void AircraftWidget::on_auto_coordination(bool state){
-	emit set_arg(state ? "set" : "remove", "--enable-auto-coordination", ""); //** --disable-auto-coordination is default
-}
 
 
 
@@ -434,12 +450,15 @@ QStringList AircraftWidget::scan_xml_sets(){
 // Save Settings
 void AircraftWidget::save_settings(){
 	QTreeWidgetItem *item = treeWidget->currentItem();
-	if(!item or item->text(C_AERO).length() == 0){
-		return;
+	if(item && item->text(C_AERO).length() == 0){
+		settings.setValue("aircraft", item->text(C_AERO) );
 	}
-	settings.setValue("aircraft", item->text(C_AERO) );
+	settings.setValue("nav1", txtNav1->text());
+	settings.setValue("nav2", txtNav2->text());
+	settings.setValue("adf", txtAdf->text());
+	settings.setValue("comm1", txtComm1->text());
+	settings.setValue("comm2", txtComm2->text());
 	settings.sync();
-	qDebug() <<  "SAVE" << item->text(C_AERO);
 }
 
 
@@ -447,6 +466,12 @@ void AircraftWidget::save_settings(){
 // Load Settings
 void AircraftWidget::load_settings(){
 	select_node(settings.value("aircraft").toString());
+
+	txtNav1->setText(settings.value("nav1").toString());
+	txtNav2->setText(settings.value("nav2").toString());
+	txtAdf->setText(settings.value("adf").toString());
+	txtComm1->setText(settings.value("comm1").toString());
+	txtComm2->setText(settings.value("comm2").toString());
 }
 
 void AircraftWidget::select_node(QString aero){
@@ -554,6 +579,21 @@ QStringList AircraftWidget::get_args(){
 		args << QString("--aircraft=%1").arg(aircraft());
 	}
 
+	if(txtNav1->text().length() > 0){
+		args << QString("--nav1=%1").arg(txtNav1->text());
+	}
+	if(txtNav2->text().length() > 0){
+		args << QString("--nav2=%1").arg(txtNav2->text());
+	}
+	if(txtAdf->text().length() > 0){
+		args << QString("--adf=%1").arg(txtAdf->text());
+	}
+	if(txtComm1->text().length() > 0){
+		args << QString("--com1=%1").arg(txtComm1->text());
+	}
+	if(txtComm2->text().length() > 0){
+		args << QString("--com2=%1").arg(txtComm2->text());
+	}
 
 	return args;
 

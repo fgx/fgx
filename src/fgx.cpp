@@ -36,6 +36,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	setupUi(this);
 
+
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	settings.restoreWindow(this);
 
@@ -269,11 +270,6 @@ QStringList fgx::fg_args(){
 	argtime.append(second->text());
 	
 
-
-	
-
-
-
 	//++ WARNING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 	//** Please make sure there are no spaces in the args.
 	//** Any args with spaces are quoted eg ' --foo=bar'
@@ -292,6 +288,9 @@ QStringList fgx::fg_args(){
 	if (checkboxFullScreen->isChecked()) {
 		args << QString("--enable-fullscreen");
 	}
+
+	//** Controls
+	args << QString(checkBoxEnableAutoCordination->isChecked() ? "--enable-auto-coordination" : "--disable-auto-coordination");
 
 
 	//** Terrasync
