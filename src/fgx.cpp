@@ -368,7 +368,7 @@ QStringList fgx::fg_args(){
 		argwritelog.append(argwritelogdir);
 		argwritelog = " &> fgfslog.log";
 
-		args << QString("--log-level=").append( buttonGroupLog->button(buttonGroupLog->checkedId())->text().toLower() );
+		args << QString("--log-level=").append( buttonGroupLog->checkedButton()->text().toLower() );
 		args << QString(argwritelog);
 	}
 

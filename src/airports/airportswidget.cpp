@@ -51,16 +51,16 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	buttonGroupUse->setExclusive(true);
 	connect(buttonGroupUse, SIGNAL(buttonClicked(int)), this, SLOT(on_buttonGroupUse()));
 
-	radioButtonUseDefault = new QRadioButton("Default (KSFO)");
+	radioButtonUseDefault = new QRadioButton(tr("Default (KSFO)"));
 	radioButtonUseDefault->setChecked(true);
 	layoutTop->addWidget(radioButtonUseDefault);
 	buttonGroupUse->addButton(radioButtonUseDefault);
 
-	radioButtonUseAirport = new QRadioButton("Start at Airport");
+	radioButtonUseAirport = new QRadioButton(tr("Start at Airport"));
 	layoutTop->addWidget(radioButtonUseAirport);
 	buttonGroupUse->addButton(radioButtonUseAirport);
 
-	radioButtonUseCoordinates = new QRadioButton("Start at Coordinates");
+	radioButtonUseCoordinates = new QRadioButton(tr("Start at Coordinates"));
 	layoutTop->addWidget(radioButtonUseCoordinates);
 	buttonGroupUse->addButton(radioButtonUseCoordinates);
 
