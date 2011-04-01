@@ -34,34 +34,36 @@ public:
 		C_NAME = 4,
 		C_XML = 5
     };
+	enum USE{
+		USE_DEFAULT = 0,
+		USE_AIRPORT = 1,
+		USE_COORDINATES = 2
+	};
 
 	explicit AirportsWidget(QWidget *parent = 0);
 
 	XSettings settings;
 
-	QRadioButton *radioButtonUseDefault;
-	QRadioButton *radioButtonUseAirport;
-	QRadioButton *radioButtonUseCoordinates;
+	QButtonGroup *buttonGroupUse;
 
 	QGroupBox *groupBoxAirport;
 	QGroupBox *groupBoxUseCoordinates;
 
-    QStandardItemModel *model;
-    QSortFilterProxyModel *proxyModel;
+	QButtonGroup *buttonGroupFilter;
+    QLineEdit *txtAirportsFilter;
+
+	QStandardItemModel *model;
+	QSortFilterProxyModel *proxyModel;
 	QTreeView *treeViewAirports;
 	QPushButton *buttonRefreshTree;
 	QStatusBar *statusBarAirports;
-	QStatusBar *statusBarRunways;
-	//QProgressBar *progressAirportsLoad;
-
-    QLineEdit *txtAirportsFilter;
-    QButtonGroup *buttGroupFilter;
 
     QTreeWidget *treeWidgetRunways;
+	QStatusBar *statusBarRunways;
 
-    void show_progress(bool state);
 
 	void scan_airports_xml();
+	void show_progress(bool state);
 	void load_airports_tree();
 	void load_runways(QString airportXmlFile);
 
@@ -73,11 +75,10 @@ public:
 	QLineEdit *txtPitch;
 	QLineEdit *txtAirspeed;
 
-	QStringList get_args();
-
 	void save_settings();
 	void load_settings();
 	QString validate();
+	QStringList get_args();
 
 
 
@@ -88,7 +89,7 @@ public slots:
 
 	void initialize();
 
-    void on_update_filter();
+	void on_filter_button(QAbstractButton*);
 	void on_aiport_row_changed(QModelIndex, QModelIndex);
 
 	void on_refresh_clicked();

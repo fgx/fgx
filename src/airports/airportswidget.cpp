@@ -10,7 +10,7 @@
 #include <QtGui/QSplitter>
 
 #include <QtGui/QToolBar>
-//#include <QtGui/QToolButton>
+#include <QtGui/QToolButton>
 #include <QtGui/QPushButton>
 
 
@@ -47,22 +47,22 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	QHBoxLayout *layoutTop = new QHBoxLayout();
 	mainLayout->addLayout(layoutTop,0,0,1,2);
 
-	QButtonGroup *buttonGroupUse = new QButtonGroup(this);
+	buttonGroupUse = new QButtonGroup(this);
 	buttonGroupUse->setExclusive(true);
 	connect(buttonGroupUse, SIGNAL(buttonClicked(int)), this, SLOT(on_buttonGroupUse()));
 
-	radioButtonUseDefault = new QRadioButton(tr("Default (KSFO)"));
+	QRadioButton *radioButtonUseDefault = new QRadioButton(tr("Default (KSFO)"));
 	radioButtonUseDefault->setChecked(true);
 	layoutTop->addWidget(radioButtonUseDefault);
-	buttonGroupUse->addButton(radioButtonUseDefault);
+	buttonGroupUse->addButton(radioButtonUseDefault, USE_DEFAULT);
 
-	radioButtonUseAirport = new QRadioButton(tr("Start at Airport"));
+	QRadioButton *radioButtonUseAirport = new QRadioButton(tr("Start at Airport"));
 	layoutTop->addWidget(radioButtonUseAirport);
-	buttonGroupUse->addButton(radioButtonUseAirport);
+	buttonGroupUse->addButton(radioButtonUseAirport, USE_AIRPORT);
 
-	radioButtonUseCoordinates = new QRadioButton(tr("Start at Coordinates"));
+	QRadioButton *radioButtonUseCoordinates = new QRadioButton(tr("Start at Coordinates"));
 	layoutTop->addWidget(radioButtonUseCoordinates);
-	buttonGroupUse->addButton(radioButtonUseCoordinates);
+	buttonGroupUse->addButton(radioButtonUseCoordinates, USE_COORDINATES);
 
 	layoutTop->addStretch(10);
 
@@ -73,7 +73,6 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
 	QVBoxLayout *airportsLayout = new QVBoxLayout();
 	groupBoxAirport->setLayout(airportsLayout);
-	//layoutAirport->setLayout(airportsLayout);
 	airportsLayout->setContentsMargins(10,10,10,10);
 	airportsLayout->setSpacing(0);
 
@@ -82,43 +81,34 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	//** Airports Top Bar
 	QHBoxLayout *layoutAptTopBar = new QHBoxLayout();
 	layoutAptTopBar->setContentsMargins(0,0,0,0);
+	layoutAptTopBar->setSpacing(10);
 	airportsLayout->addLayout(layoutAptTopBar);
 
     //** Filter Code
 	layoutAptTopBar->addWidget(new QLabel(tr("Filter").append(":  ")));
 
 	//** Filter Buttons - TODO
-	 /*
-    buttGroupFilter = new QButtonGroup(this);
-    buttGroupFilter->setExclusive(true);
-    connect(buttGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
-            this,           SLOT(on_update_filter())
+	buttonGroupFilter = new QButtonGroup(this);
+	buttonGroupFilter->setExclusive(true);
+	connect(buttonGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
+			this,           SLOT(on_filter_button(QAbstractButton*))
     );
 
-    QToolButton *buttAll = new QToolButton();
-    treeToolbar->addWidget(buttAll);
-    buttViewGroup->addButton(buttAll);
-    buttAll->setText("All");
-    buttAll->setCheckable(true);
-    buttAll->setIcon(QIcon(":/icons/pink"));
-    buttAll->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    */
-    //** Code Filter
-	/*
+
+	//** ICAO Code Filter
     QRadioButton *buttCode = new QRadioButton();
-    treeToolbar->addWidget(buttCode);
-    buttGroupFilter->addButton(buttCode);
     buttCode->setText("Code");
 	buttCode->setProperty("column", QVariant(C_ICAO));
+	layoutAptTopBar->addWidget(buttCode);
+	buttonGroupFilter->addButton(buttCode);
 
-	// Name Filter
+	//** Name Filter
     QRadioButton *buttName = new QRadioButton();
-    treeToolbar->addWidget(buttName);
-    buttGroupFilter->addButton(buttName);
     buttName->setText("Name");
     buttName->setProperty("column", QVariant(C_NAME));
     buttName->setChecked(true);
-	*/
+	layoutAptTopBar->addWidget(buttName);
+	buttonGroupFilter->addButton(buttName);
 
     //** Find Text
     txtAirportsFilter = new QLineEdit();
@@ -407,11 +397,9 @@ void AirportsWidget::load_airports_tree(){
 
 //**********************************************
 //*** Update Filter
-void AirportsWidget::on_update_filter(){
-
-   /* LATER TODO int column = buttGroupFilter->checkedButton()->property("column").toInt();
-		proxyModel->setFilterKeyColumn( column ); */
-    proxyModel->setFilterFixedString( txtAirportsFilter->text() );
+void AirportsWidget::on_filter_button(QAbstractButton *button){
+	proxyModel->setFilterKeyColumn( button->property("column").toInt() );
+	proxyModel->setFilterFixedString( txtAirportsFilter->text() );
 }
 
 
@@ -527,8 +515,8 @@ void AirportsWidget::on_refresh_clicked(){
 }
 
 void AirportsWidget::on_buttonGroupUse(){
-	groupBoxAirport->setEnabled(radioButtonUseAirport->isChecked());;
-	groupBoxUseCoordinates->setEnabled(radioButtonUseCoordinates->isChecked());;
+	groupBoxAirport->setEnabled(buttonGroupUse->checkedId() == USE_AIRPORT);
+	groupBoxUseCoordinates->setEnabled(buttonGroupUse->checkedId() == USE_COORDINATES);
 }
 
 
@@ -538,30 +526,23 @@ QStringList AirportsWidget::get_args(){
 	//if (parkPosition->isEnabled() == true) {
 	//	args << QString("--parkpos=").append(parkPosition->currentText());
 	//}
+	buttonGroupUse->button(settings.value("use_position", USE_DEFAULT).toInt());
 
-	//* Coordinates
-	if(radioButtonUseCoordinates->isChecked()){
-		if( txtLat->text().length() > 0 and txtLng->text().length() > 0){
-			args << QString("--lat=").append(txtLat->text());
-			args << QString("--lon=").append(txtLng->text());
-		}
-
-	//* Airports
-	}else{
-		if(treeViewAirports->selectionModel()->hasSelection()){
-
-		}
-
-	}
 	return args;
 }
 
 // Save Settings
 void AirportsWidget::save_settings(){
 
-	settings.setValue("use_coordinates", radioButtonUseCoordinates->isChecked());
-	settings.setValue("lon", txtLat->text());
-	settings.setValue("lat", txtLng->text());
+	settings.setValue("use_position", buttonGroupUse->checkedId());
+
+	settings.setValue("lat", txtLat->text());
+	settings.setValue("lng", txtLng->text());
+	settings.setValue("altitude", txtAltitude->text());
+	settings.setValue("heading", txtHeading->text());
+	settings.setValue("roll", txtRoll->text());
+	settings.setValue("pitch", txtPitch->text());
+	settings.setValue("airspeed", txtAirspeed->text());
 
 
 	//settings.setValue("runway", runWay->currentText());
@@ -584,16 +565,23 @@ void AirportsWidget::load_settings(){
 		locationIcao->insertItem(1, "----");
 		//timeoftheDay->setCurrentIndex(0);
 	}*/
-	radioButtonUseCoordinates->setChecked(settings.value("use_coordinates").toBool());
+	buttonGroupUse->button( settings.value("use_position", USE_DEFAULT).toInt() )->setChecked(true);
+
 	txtLat->setText(settings.value("lat").toString());
 	txtLng->setText(settings.value("lng").toString());
-	//settings.setValue("airport", locationIcao->currentText());
+	txtAltitude->setText(settings.value("altitude").toString());
+	txtHeading->setText(settings.value("heading").toString());
+	txtRoll->setText(settings.value("roll").toString());
+	txtPitch->setText(settings.value("pitch").toString());
+	txtAirspeed->setText(settings.value("airspeed").toString());
+
+	on_buttonGroupUse();
 }
 
 
 QString AirportsWidget::validate(){
 
-	if(radioButtonUseCoordinates->isChecked()){
+	if(buttonGroupUse->checkedId() == USE_COORDINATES){
 		if(txtLat->text().trimmed().length() == 0){
 			txtLat->setFocus();
 			return QString("Need Latitude");

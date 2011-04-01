@@ -438,11 +438,6 @@ void fgx::load_settings()
 	checkboxDisableSplash->setChecked(settings.value("screen_splash").toBool());
 
 	
-
-		
-
-
-
 	//** Time Of Day
 	bool setTime = settings.value("set_time").toBool();
 	groupBoxSetTime->setChecked(setTime);
