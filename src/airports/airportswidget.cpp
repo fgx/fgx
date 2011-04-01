@@ -70,7 +70,6 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	groupBoxAirport = new QGroupBox(this);
 	groupBoxAirport->setTitle("Airport Details");
 	mainLayout->addWidget(groupBoxAirport, 1, 0);
-	connect(groupBoxAirport, SIGNAL(clicked()), this, SLOT(on_groupbox_airports()));
 
 	QVBoxLayout *airportsLayout = new QVBoxLayout();
 	groupBoxAirport->setLayout(airportsLayout);
@@ -274,7 +273,6 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	groupBoxUseCoordinates = new QGroupBox(this);
 	groupBoxUseCoordinates->setTitle("Coordinates");
 	mainLayout->addWidget(groupBoxUseCoordinates, 1, 2);
-	connect(groupBoxUseCoordinates, SIGNAL(clicked()), this, SLOT(on_groupbox_use_coordinates()));
 	QVBoxLayout *layoutCoordinates = new QVBoxLayout();
 	groupBoxUseCoordinates->setLayout(layoutCoordinates);
 

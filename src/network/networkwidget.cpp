@@ -152,21 +152,17 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 
 
     QTreeWidgetItem * headerItem = treeWidget->headerItem();
-    headerItem->setText(C_SERVER_NO, tr("No"));
     headerItem->setText(C_SERVER_NAME, tr("Name"));
     headerItem->setText(C_DOMAIN, tr("Domain"));
     headerItem->setText(C_IP_ADDRESS, tr("IP Address"));
     headerItem->setText(C_PILOTS_COUNT, tr("Pilots"));
 	headerItem->setText(C_FLAG, "-");
     treeWidget->header()->setStretchLastSection(true);
-    treeWidget->setColumnWidth(C_SERVER_NO, 40);
-	treeWidget->setColumnWidth(C_SERVER_NAME, 80);
+	treeWidget->setColumnWidth(C_SERVER_NAME, 100);
     treeWidget->setColumnWidth(C_DOMAIN, 100);
 	treeWidget->setColumnWidth(C_PILOTS_COUNT, 50);
-	treeWidget->setColumnWidth(C_FLAG, 10);
 
 	treeWidget->setColumnHidden(C_DOMAIN, true);
-	treeWidget->setColumnHidden(C_SERVER_NO, true);
 	treeWidget->setColumnHidden(C_FLAG, true);
 	treeWidget->setColumnHidden(C_PILOTS_COUNT, true);
 
@@ -182,7 +178,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	layoutBottomTreeBar->addWidget(refreshButton);
 	refreshButton->setIcon(QIcon(":/icon/refresh"));
 	refreshButton->setToolButtonStyle(Qt::ToolButtonIconOnly);
-	connect(refreshButton, SIGNAL(clicked()), this, SLOT(dns_lookup_all()) );
+	connect(refreshButton, SIGNAL(clicked()), this, SLOT(dns_lookup()) );
 
 
 
@@ -318,8 +314,8 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 
 
 	//** Setup network stuff
-	dns_lookup_all();
-	load_addresses();
+	dns_lookup();
+	load_local_addresses();
 	on_checkbox_in();
 	on_checkbox_out();
 
@@ -330,7 +326,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 
 //=============================================================
 //** Network Addresses
-void NetworkWidget::load_addresses(){
+void NetworkWidget::load_local_addresses(){
 	QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
 	for (int i = 0; i < addresses.size(); ++i) {
 		if(addresses.at(i).protocol() == QAbstractSocket::IPv4Protocol){
@@ -343,73 +339,28 @@ void NetworkWidget::load_addresses(){
 
 //=============================================================
 //** Dns Lookup All
-void NetworkWidget::dns_lookup_all(){
+void NetworkWidget::dns_lookup(){
+	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 	for(int i=1; i < 25; i++){
-        dns_lookup(i);
+		QString domain_name = QString("mpserver%1.flightgear.org").arg(i, 2, 10, QChar('0'));
+		QHostInfo::lookupHost(domain_name, this, SLOT(on_dns_lookup_callback(QHostInfo)));
     }
 }
 
-//** Dns Lookup (server_no)
-void NetworkWidget::dns_lookup(int server_int){
-
-    //* make server info
-    QString domain_name = QString("mpserver%1.flightgear.org").arg(server_int, 2, 10, QChar('0'));
-    QString server_name = QString("mpserver%1").arg(server_int, 2, 10, QChar('0'));
-    QString server_no = QString("%1").arg(server_int, 2, 10, QChar('0'));
-
-
-    //* find domain_name in tree and add if not there
-    QList<QTreeWidgetItem*> items = treeWidget->findItems(domain_name, Qt::MatchExactly, C_DOMAIN);
-    if(items.count() == 0){
-        QTreeWidgetItem *newItem = new QTreeWidgetItem();
-        newItem->setText(C_SERVER_NO, server_no);
-        newItem->setText(C_SERVER_NAME, server_name);
-        newItem->setText(C_DOMAIN, domain_name);
-
-		newItem->setText(C_IP_ADDRESS, tr("Looking up"));
-		QBrush b = newItem->foreground(NetworkWidget::C_IP_ADDRESS);
-        b.setColor(QColor(100, 100, 100));
-        newItem->setForeground(C_IP_ADDRESS, b);
-
-        int newIdx = treeWidget->invisibleRootItem()->childCount();
-        treeWidget->insertTopLevelItem(newIdx, newItem);
-    }
-    //* execute lookup
-    QHostInfo::lookupHost(domain_name, this, SLOT(on_dns_lookup_host(QHostInfo)));
-
-}
 
 // DNS Callback
-void NetworkWidget::on_dns_lookup_host(const QHostInfo &hostInfo){
-
-    //* Find row matching by domain
-    QList<QTreeWidgetItem*> items = treeWidget->findItems(hostInfo.hostName(), Qt::MatchExactly, C_DOMAIN);
-
-    //** Make the colors change if address found
+void NetworkWidget::on_dns_lookup_callback(const QHostInfo &hostInfo){
 
     bool has_address = hostInfo.addresses().count() > 0;
 	if(!has_address){
-		//* address not found to remove from list
-		items[0]->parent()->removeChild(items[0]);
 		return;
 	}
-
-	//* Address found
-	//QString lbl =  hostInfo.addresses().first().toString();
-	//QColor  QColor(0, 150, 0);;
-	//QBrush brush = items[0]->foreground(C_IP_ADDRESS);
-	//brush.setColor(color);
-	items[0]->setForeground(C_IP_ADDRESS, QColor(0, 150, 0));
-	items[0]->setText(C_IP_ADDRESS, hostInfo.addresses().first().toString());
-
-	items[0]->setText(C_FLAG, "1");
-	QString ip_or_domain( comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString());
-	QList<QTreeWidgetItem*> selItems = treeWidget->findItems(settings.value("mpserver").toString(),
-																Qt::MatchExactly,
-																ip_or_domain == "domain" ? C_DOMAIN : C_IP_ADDRESS);
-	if(selItems.length() > 0){
-		treeWidget->setCurrentItem(selItems[0]);
-	}
+	QTreeWidgetItem *newItem = new QTreeWidgetItem();
+	newItem->setText(C_SERVER_NAME, hostInfo.hostName().split(".")[0]);
+	newItem->setText(C_DOMAIN, hostInfo.hostName());
+	newItem->setText(C_IP_ADDRESS, hostInfo.addresses().first().toString());
+	newItem->setText(C_FLAG, "1");
+	treeWidget->addTopLevelItem(newItem);
 
 		/* TODO
 		MpTelnet *telnet = new MpTelnet(this );

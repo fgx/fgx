@@ -20,7 +20,6 @@ Q_OBJECT
 public:
 
     enum COLS{
-        C_SERVER_NO,
         C_SERVER_NAME,
         C_DOMAIN,
         C_PILOTS_COUNT,
@@ -60,8 +59,8 @@ public:
 	QGroupBox *grpScreenShot;
 	QLineEdit *txtScreenShot;
 
-    void dns_lookup(int server_no);
-	void load_addresses();
+
+	void load_local_addresses();
 	void populate_combo_hz(QComboBox *combo);
 	void save_settings();
 	void load_settings();
@@ -73,8 +72,8 @@ signals:
 
 
 public slots:
-     void dns_lookup_all();
-     void on_dns_lookup_host(const QHostInfo &hostInfo);
+	 void dns_lookup();
+	 void on_dns_lookup_callback(const QHostInfo &hostInfo);
      void on_telnet_data(QString, QString);
 
 	 void on_mp_server_checked(bool);
