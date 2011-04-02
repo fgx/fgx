@@ -9,13 +9,18 @@
 
 #include "xsettings.h"
 
-/* Extends the QSettings with fg_root(), savewindow and other util functions
-   callable as mainObject->settings->foo()
-*/
 
 XSettings::XSettings(QObject *parent) :
     QSettings(parent)
 {
+}
+
+//===========================================================================
+//** hAcKer - this to be removed
+//===========================================================================
+bool XSettings::_dev_mode(){
+	//** Hack for petes workstation in dev mode
+	return QFile::exists("/home/ffs/fgx/DEV.txt");
 }
 
 //===========================================================================
@@ -125,7 +130,9 @@ QString XSettings::_windowName(QWidget *widget){
 	return key_name;
 }
 
-
+//===========================================================================
+//** OS detection
+//===========================================================================
 int XSettings::runningOS() {
     #ifdef Q_WS_X11
 		return XSettings::LINUX;
@@ -142,7 +149,9 @@ int XSettings::runningOS() {
 	return XSettings::UNKNOWN;
 }
 
-
+//===========================================================================
+//** FGCom
+//===========================================================================
 QString XSettings::default_fgcom_no(){
 	return QString("fgcom -Sfgcom.flightgear.org.uk");
 }
@@ -150,8 +159,15 @@ QString XSettings::default_fgcom_port(){
 	return QString("16661");
 }
 
-
-bool XSettings::_dev_mode(){
-	//** Hack for petes workstation in dev mode
-	return QFile::exists("/home/ffs/fgx/DEV.txt");
+//===========================================================================
+//** Database
+//===========================================================================
+QString XSettings::db_file(){
+	QString storedir = QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath();
+	//** Wtf = expected Qt to create this location automatically mydata/<exe>/<App Name>
+	if(!QFile::exists(storedir)){
+		QDir *dir = new QDir("");
+		dir->mkpath(storedir);
+	}
+	return storedir.append("/fgx.sqlite.db");
 }

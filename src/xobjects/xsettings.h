@@ -18,6 +18,8 @@ public:
 
 	bool _dev_mode(); //* pete's hack - ../DEV.txt exists for local dev
 
+	QString db_file();
+
 	QString temp_dir();
 	QString temp_dir(QString append_path);
 

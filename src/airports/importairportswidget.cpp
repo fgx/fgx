@@ -119,6 +119,7 @@ void ImportAirportsWidget::on_import_button_clicked(){
 
 	//* TODO message you are about to do this and take a few moment etc (or background)
 	if(1 == 0){
+		/*
 		QString pat_dat_file = settings.fg_root("/Airports/apt.dat.gz");
 		QFileInfo fileInfo = QFileInfo(pat_dat_file);
 		if(!fileInfo.exists()){
@@ -128,11 +129,10 @@ void ImportAirportsWidget::on_import_button_clicked(){
 		QFileInfo unpacked_file = settings.temp_dir("/apt.dat-unpacked.txt");
 
 
-		statusBar->showMessage(QString("Unpacking tarball to %1").arg(unpacked_file));
-		//** Unzip to temp file
+		statusBar->showMessage(QString("Unpacking tarball apt.dat.gz to temp dir") );
+		// Unzip to temp file
 		//TODO but does it work on WindoZE ?? need embedded zlib or is it in Qt ??
-		QString command = QString("zcat %1")
-						  .arg(tarball_path);
+		QString command = QString("zcat %1").arg(unpacked_file);
 
 		QProcess unzipProcess;
 		unzipProcess.setStandardOutputFile(temp_file);
@@ -142,9 +142,10 @@ void ImportAirportsWidget::on_import_button_clicked(){
 		if (!unzipProcess.waitForFinished())
 			return; // false;
 		QByteArray result = unzipProcess.readAll();
+		*/
 	}
 	QString fName = settings.fg_root("/Airports/apt.dat");
-    statusBar->showMessage( QString("Importing '%1'").arg(temp_file) );
+	statusBar->showMessage( QString("Importing '%1'").arg(fName) );
 
     AptDatParser *aptDatParser = new AptDatParser(this);
 	aptDatParser->import_aptdat(fName, this);

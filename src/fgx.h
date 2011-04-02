@@ -10,10 +10,15 @@
 #ifndef FGX_H
 #define FGX_H
 
-#include <QProcess>
-#include <QMessageBox>
-#include <QButtonGroup>
-#include <QActionGroup>
+
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlError>
+
+#include <QtCore/QProcess>
+
+#include <QtGui/QMessageBox>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QActionGroup>
 
 #include "ui_fgx.h"
 #include "xobjects/xsettings.h"
@@ -23,7 +28,8 @@
 #include "network/networkwidget.h"
 
 
-class fgx : public QMainWindow, public Ui::mainWindow{
+class fgx : public QMainWindow, public Ui::mainWindow
+{
 	Q_OBJECT
 	
 protected:
@@ -33,7 +39,9 @@ public:
 
 	fgx (QMainWindow *parent = 0);
 	~fgx();
-	bool listchecked;
+
+	QSqlDatabase db;
+	//bool listchecked;
 	
 	Q_PID pid_fg;
 	Q_PID pid_terra;

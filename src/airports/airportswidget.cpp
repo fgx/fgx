@@ -98,16 +98,16 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
     QRadioButton *buttCode = new QRadioButton();
     buttCode->setText("Code");
 	buttCode->setProperty("column", QVariant(C_ICAO));
+	buttCode->setChecked(true);
 	layoutAptTopBar->addWidget(buttCode);
-	buttonGroupFilter->addButton(buttCode);
+	buttonGroupFilter->addButton(buttCode, 0);
 
 	//** Name Filter
     QRadioButton *buttName = new QRadioButton();
     buttName->setText("Name");
     buttName->setProperty("column", QVariant(C_NAME));
-    buttName->setChecked(true);
 	layoutAptTopBar->addWidget(buttName);
-	buttonGroupFilter->addButton(buttName);
+	buttonGroupFilter->addButton(buttName, 1);
 
     //** Find Text
     txtAirportsFilter = new QLineEdit();
@@ -200,9 +200,6 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	statusBarAirports->setSizeGripEnabled(false);
 	leftLayout->addWidget(statusBarAirports);
 	statusBarAirports->showMessage("Idle");
-
-	//progressAirportsLoad = new QProgressBar();
-	//statusBarTree->addPermanentWidget(progressAirportsLoad);
 
 
     //************************************************************************************************
@@ -403,6 +400,7 @@ void AirportsWidget::load_airports_tree(){
 //==============================================================
 //*** Update Filters
 void AirportsWidget::on_filter_button(QAbstractButton *button){
+	settings.setValue("airports_button_filter", buttonGroupFilter->checkedId());
 	proxyModel->setFilterKeyColumn( button->property("column").toInt() );
 	proxyModel->setFilterFixedString( txtAirportsFilter->text() );
 }
@@ -594,6 +592,7 @@ void AirportsWidget::load_settings(){
 	txtAirspeed->setText(settings.value("airspeed").toString());
 
 	on_buttonGroupUse();
+	buttonGroupFilter->button(settings.value("airports_button_filter", 0).toInt())->setChecked(true);
 }
 
 

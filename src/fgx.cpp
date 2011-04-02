@@ -21,11 +21,12 @@
 #include <QTimer>
 
 
-#include <QtGui/QCloseEvent>
-#include <QStyleFactory>
+//#include <QtGui/QCloseEvent>
+#include <QtGui/QStyleFactory>
 
-#include <QFileDialog>
-//#include <QProgressDialog>
+#include <QtGui/QFileDialog>
+
+//#include <QtGui/QProgressDialog>
 
 
 #include "fgx.h"
@@ -36,7 +37,14 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	setupUi(this);
 
-
+	db = QSqlDatabase::addDatabase("QSQLITE");
+	qDebug() << settings.db_file();
+	db.setDatabaseName(settings.db_file());
+	if( !db.open() ){
+		// TODO - maybe will crash - or move later
+		//QMessageBox::critical(this->wid, "DB fail", db.lastError());
+		//return;
+	}
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	settings.restoreWindow(this);
 
