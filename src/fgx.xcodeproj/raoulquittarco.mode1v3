@@ -202,7 +202,7 @@
 			<key>Content</key>
 			<dict>
 				<key>PBXProjectModuleGUID</key>
-				<string>33DBE2AB133BFF4800A9BA93</string>
+				<string>33BE8F43133D0B3400505993</string>
 				<key>PBXProjectModuleLabel</key>
 				<string>fgx.cpp</string>
 				<key>PBXSplitModuleInNavigatorKey</key>
@@ -210,16 +210,16 @@
 					<key>Split0</key>
 					<dict>
 						<key>PBXProjectModuleGUID</key>
-						<string>33DBE2AC133BFF4800A9BA93</string>
+						<string>33BE8F44133D0B3400505993</string>
 						<key>PBXProjectModuleLabel</key>
 						<string>fgx.cpp</string>
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>33D5F41C133C07DD00179ED1</string>
+						<string>33E85F9B133DE68B00393A93</string>
 						<key>history</key>
 						<array>
-							<string>33DBE2CF133C014500A9BA93</string>
+							<string>33BE8F48133D109400505993</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -235,7 +235,7 @@
 				<key>PBXModuleWindowStatusBarHidden2</key>
 				<false/>
 				<key>RubberWindowFrame</key>
-				<string>152 162 1793 1084 0 0 2560 1418 </string>
+				<string>267 124 1793 1084 0 0 2560 1418 </string>
 			</dict>
 		</dict>
 	</array>
@@ -372,7 +372,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>33D5F41B133C07DD00179ED1</string>
+										<string>33E85F98133DE68B00393A93</string>
 										<key>history</key>
 										<array>
 											<string>33963090131F0E2A002B9FB0</string>
@@ -394,7 +394,7 @@
 											<string>33564FF11337EBB100BBD54D</string>
 											<string>33564FF21337EBB100BBD54D</string>
 											<string>33F51D2D133969DE004E4C31</string>
-											<string>332CAEC8133BAF3B0079D517</string>
+											<string>33BE8F47133D109400505993</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -452,9 +452,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>33D5F3D5133C027800179ED1</string>
+				<string>33E85F99133DE68B00393A93</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>33D5F3D6133C027800179ED1</string>
+				<string>33E85F9A133DE68B00393A93</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -592,13 +592,9 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>33D5F3EC133C02D400179ED1</string>
-		<string>33D5F3ED133C02D400179ED1</string>
-		<string>1C78EAAD065D492600B07095</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>332C3AF4131F0C7800C360F1</string>
+		<string>33BE8F43133D0B3400505993</string>
 		<string>/Users/raoulquittarco/Desktop/fgx/fgx/src/fgx.xcodeproj</string>
-		<string>33DBE2AB133BFF4800A9BA93</string>
 	</array>
 	<key>WindowString</key>
 	<string>432 233 1331 1134 0 0 2560 1418 </string>
@@ -678,7 +674,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>332C3AF4131F0C7800C360F1</string>
-				<string>33D5F3D9133C027800179ED1</string>
+				<string>33E85F9C133DE68B00393A93</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
