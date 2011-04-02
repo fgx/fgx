@@ -8,26 +8,19 @@
  */
 
 
-#include <QFile>
-#include <QDir>
-#include <QDirIterator>
-#include <iostream>
-#include <QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QDirIterator>
+#include <QtCore/QTextStream>
 
 #include <QXmlStreamReader>
-#include <QSettings>
-#include <QAbstractSocket>
-#include <QHostInfo>
-#include <QTimer>
+#include <QtCore/QSettings>
+#include <QtNetwork/QAbstractSocket>
+//#include <QtNetwork/QHostInfo>
+#include <QtCore/QTimer>
 
-
-//#include <QtGui/QCloseEvent>
 #include <QtGui/QStyleFactory>
-
 #include <QtGui/QFileDialog>
-
-//#include <QtGui/QProgressDialog>
-
 
 #include "fgx.h"
 #include "settings/settingsdialog.h"
@@ -36,7 +29,7 @@
 fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	setupUi(this);
-
+	/* TODO - coming Soon to an airports near you
 	db = QSqlDatabase::addDatabase("QSQLITE");
 	qDebug() << settings.db_file();
 	db.setDatabaseName(settings.db_file());
@@ -45,6 +38,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 		//QMessageBox::critical(this->wid, "DB fail", db.lastError());
 		//return;
 	}
+	*/
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	settings.restoreWindow(this);
 

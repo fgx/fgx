@@ -87,7 +87,7 @@ void AptDatParser::import_aptdat(QString tarball_fullpath, QWidget *parentWidget
 
     //** Create airports table
     if( !queryCreate.exec("DROP TABLE IF EXISTS airports") ){
-        qDebug() << queryCreate.lastError();
+		qDebug() << queryCreate.lastError();
         return;
     }
     if( !queryCreate.exec("CREATE TABLE airports(airport varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL, elevation int, tower tinyint NULL) ")){
@@ -116,8 +116,6 @@ void AptDatParser::import_aptdat(QString tarball_fullpath, QWidget *parentWidget
     //queryRunwayInsert.prepare("insert into runways(  airport, runways, width, lat1, lng1, lat2, lng2)values(?, ?, ?, ?, ?, ?, ?)");
 
 
-
-    QString airport;
     bool is_icao;
 
 	QProgressDialog progress("Importing Airports", "Cancel", 0, estimated_lines, parentWidget);
