@@ -242,13 +242,13 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
 
 
-	//====================================================================
+	//========================================================================================================
 	//** Use Coordinates
 	//====================================================================
 
-
 	groupBoxUseCoordinates = new QGroupBox(this);
 	groupBoxUseCoordinates->setTitle("Coordinates");
+	groupBoxUseCoordinates->setMaximumWidth(300);
 	mainLayout->addWidget(groupBoxUseCoordinates, 1, 2);
 	QVBoxLayout *layoutCoordinates = new QVBoxLayout();
 	groupBoxUseCoordinates->setLayout(layoutCoordinates);
@@ -558,10 +558,20 @@ void AirportsWidget::save_settings(){
 	settings.setValue("pitch", txtPitch->text());
 	settings.setValue("airspeed", txtAirspeed->text());
 
+	//** Save Airport
 	if(treeViewAirports->currentIndex().row() != -1){
 		QModelIndex index = proxyModel->index(treeViewAirports->currentIndex().row(), C_ICAO);
 		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(index));
 		settings.setValue("airport", item->text());
+
+		//** save runway or parking
+		if(treeWidgetRunways->currentItem()){
+			// check its not one of the parents ie savable
+			if(treeWidgetRunways->indexOfTopLevelItem( treeWidgetRunways->currentItem()  ) != -1){
+				// TODO
+			}
+
+		}
 	}
 
 	settings.sync();

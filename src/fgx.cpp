@@ -77,11 +77,16 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	//** Restore Settings
 	tabs->setCurrentIndex( settings.value("last_tab").toInt() );
 
-	//centralWidget()->setDisabled(true);
+
 
 	//***** Qt Has no Show event for a form, so we need to present Widgets first
 	//** and then initialise. THis is achieved with a timer that triggers in a moment
+
+	// TODO  - disable widget till sane
+	//centralWidget()->setDisabled(true);
 	QTimer::singleShot(500, this, SLOT(initialize()));
+
+
 
 }/* end constructor */
 
@@ -96,12 +101,13 @@ void fgx::initialize(){
 
 
 	load_settings();
-	aircraftWidget->initialize();
-	airportsWidget->initialize();
-
 	if(!settings.paths_sane()){
 		show_settings_dialog();
 	}
+	aircraftWidget->initialize();
+	airportsWidget->initialize();
+	load_joysticks();
+
 	centralWidget()->setDisabled(false);
 
 
@@ -371,9 +377,17 @@ QStringList fgx::fg_args(){
 }
 
 
+
+
+
+
 //================================================================================
 // Save Settings
 //================================================================================
+void fgx::on_buttonSaveSettings_clicked(){
+	save_settings();
+}
+
 void fgx::save_settings()
 {
 	//## NB: fgfs path and FG_ROOT are saves in SettingsDialog ##
@@ -420,6 +434,10 @@ void fgx::save_settings()
 //================================================================================
 // Load Settings
 //================================================================================
+void fgx::on_buttonLoadSettings_clicked(){
+	load_settings();
+}
+
 void fgx::load_settings()
 {
 
@@ -636,12 +654,25 @@ void fgx::on_buttonViewHelp_clicked(){
 	}
 }
 
+void fgx::load_joysticks(){
+	comboJoystick->clear();
+	comboJoystick->addItem("-- None--");
+	QProcess process;
+	process.start("js_demo", QStringList(), QIODevice::ReadOnly);
+	if(process.waitForStarted()){
+		process.waitForFinished();
+		QString ok_result = process.readAllStandardOutput();
+		QString error_result = process.readAllStandardError();
+		qDebug() << ok_result << error_result;
+		//* take result and split into parts
+		QStringList entries = ok_result.trimmed().split("\n");
+		for(int i=2; i < entries.count(); i++){ //First 2 lines are crap
+			comboJoystick->addItem(entries.at(i));
+		}
+	}
 
 
-
-void fgx::on_buttonLoadSettings_clicked(){
-	load_settings();
 }
-void fgx::on_buttonSaveSettings_clicked(){
-	save_settings();
-}
+
+
+

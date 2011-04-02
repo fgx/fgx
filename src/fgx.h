@@ -65,6 +65,8 @@ private:
 	bool validate();
 	QActionGroup *actionGroupStyle;
 
+	void load_joysticks();
+
 private slots:
 
 	//* paths

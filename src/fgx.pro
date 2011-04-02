@@ -7,8 +7,8 @@ DEPENDPATH += .
 INCLUDEPATH += .
 QT += network \
     xml \
-	xmlpatterns \
-	sql
+    xmlpatterns \
+    sql
 
 # Input
 HEADERS += fgx.h \
@@ -31,4 +31,5 @@ SOURCES += main.cpp \
     airports/airportswidget.cpp \
     airports/aptdatparser.cpp \
     airports/importairportswidget.cpp
-RESOURCES += resources/icons.qrc
+RESOURCES += resources/icons.qrc \
+    resources/artwork.qrc

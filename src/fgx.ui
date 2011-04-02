@@ -37,13 +37,16 @@
     <item>
      <widget class="QLabel" name="fgx_logo">
       <property name="styleSheet">
-       <string notr="true">border: 1px outset #AAAAAA; padding: 5px; font-family: monospace; font-size: 12pt; font-weight: bold; background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 white, stop: 1 #6095B6);</string>
+       <string notr="true">border: 1px outset #AAAAAA; 
+padding: 5px 5px 5px 100px; 
+font-family: monospace;
+font-size: 12pt; font-weight: bold;
+background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 white, stop: 1 #6095B6);
+background-image: url(&quot;:/images/logo.png&quot;);
+background-repeat: no-repeat;</string>
       </property>
       <property name="text">
        <string/>
-      </property>
-      <property name="pixmap">
-       <pixmap>../../originaldateien/logo-version-release22.png</pixmap>
       </property>
       <property name="margin">
        <number>10</number>
