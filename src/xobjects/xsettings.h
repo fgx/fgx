@@ -23,6 +23,8 @@ public:
 	QString temp_dir();
 	QString temp_dir(QString append_path);
 
+	QString fgx_path();
+
 	QString fgfs_path();
 	QString default_fgfs_path();
 
@@ -37,12 +39,17 @@ public:
 
 	QString scenery_path();
 	bool use_terrasync();
-	QString terrasync_path();
+	QString terrasync_exe_path();
+	QString terrasync_sync_path();
+
 
 	void saveWindow(QWidget *widget);
 	void restoreWindow(QWidget *widget);
 	QString _windowName(QWidget *widget);
 
+	QString fgcom_exe_path();
+	QString fgcom_port();
+	QString fgcom_no();
 	QString default_fgcom_no();
 	QString default_fgcom_port();
 

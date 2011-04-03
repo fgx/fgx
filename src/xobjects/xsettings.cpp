@@ -24,17 +24,24 @@ bool XSettings::_dev_mode(){
 }
 
 //===========================================================================
+//** fgx Install path
+//===========================================================================
+QString XSettings::fgx_path(){
+	return QDir::currentPath().append("/fgx.app/Contents/MacOS");
+}
+
+
+//===========================================================================
 //** fgfs Executable Full Path
 //===========================================================================
 QString XSettings::fgfs_path(){
-	// TODO = return the default windows path
 	return this->value("FGFS", default_fgfs_path()).toString();
 }
 
 QString XSettings::default_fgfs_path(){
-
+	// TODO = return the default windows path
 	if(runningOS() == MAC){
-		return QDir::currentPath().append("/fgx.app/Contents/MacOS/fgfs");
+		return QDir::currentPath().append("/fgfs");
 
 	}else if(runningOS() == LINUX){
 		return QString("fgfs");
@@ -110,7 +117,7 @@ QString XSettings::airports_path(){
 //===========================================================================
 QString XSettings::scenery_path(){
 	if(use_terrasync()){
-		return terrasync_path();
+		return terrasync_exe_path();
 	}
 	return fg_root("/Scenery");
 }
@@ -121,8 +128,17 @@ QString XSettings::scenery_path(){
 bool XSettings::use_terrasync(){
 	return value("use_terrasync").toBool();
 }
-QString XSettings::terrasync_path(){
-	return value("terrasync_path").toString();
+QString XSettings::terrasync_exe_path(){
+	if(runningOS() == MAC){
+		return fgx_path().append("/terrasync");
+
+	}else if(runningOS() == LINUX){
+		return QString("terrasync");
+	}
+	return QString("TODO - terrasync");
+}
+QString XSettings::terrasync_sync_path(){
+	return value("terrasync_sync_path").toString();
 }
 
 
@@ -176,11 +192,17 @@ int XSettings::runningOS() {
 //** FGCom
 //===========================================================================
 QString XSettings::default_fgcom_no(){
-	return QString("fgcom -Sfgcom.flightgear.org.uk");
+	return QString("-Sfgcom.flightgear.org.uk");
 }
 QString XSettings::default_fgcom_port(){
 	return QString("16661");
 }
+
+
+QString XSettings::fgcom_exe_path(){
+	return "fgcom";
+}
+
 
 //===========================================================================
 //** Database

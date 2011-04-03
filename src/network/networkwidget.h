@@ -29,6 +29,8 @@ public:
 
 	explicit NetworkWidget(QWidget *parent = 0);
 
+	qint64 pid_fgcom;
+
 	//MainObject *mainObject;
 	XSettings settings;
 
@@ -72,25 +74,28 @@ signals:
 
 
 public slots:
-	 void dns_lookup();
-	 void on_dns_lookup_callback(const QHostInfo &hostInfo);
-     void on_telnet_data(QString, QString);
+	void dns_lookup();
+	void on_dns_lookup_callback(const QHostInfo &hostInfo);
+	void on_telnet_data(QString, QString);
 
-	 void on_mp_server_checked(bool);
-	 void on_callsign_changed(QString);
-	 void set_mp_server();
+	void on_mp_server_checked(bool);
+	void on_callsign_changed(QString);
+	void set_mp_server();
 
-	 void set_fgcom();
-	 void set_http();
-	 void set_telnet();
-	 void set_screenshot();
+	void set_fgcom();
+	void on_fgcom_start();
+	void on_fgcom_stop();
 
-	 void on_checkbox_in();
-	 void on_checkbox_out();
+	void set_http();
+	void set_telnet();
+	void set_screenshot();
 
-	 void on_browse_http();
-	 void on_browse_screenshot();
-	 void on_open_telnet();
+	void on_checkbox_in();
+	void on_checkbox_out();
+
+	void on_browse_http();
+	void on_browse_screenshot();
+	void on_open_telnet();
 };
 
 #endif // NETWORKWIDGET_H

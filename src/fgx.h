@@ -45,7 +45,6 @@ public:
 	
 	Q_PID pid_fg;
 	Q_PID pid_terra;
-	Q_PID pid_fgcom;
 	void kill_process(QString pid);
 	
 private:
@@ -58,8 +57,6 @@ private:
 
 
 	QStringList fg_args();
-	void start_fgcom();
-	void stop_fgcom();
 	void start_terrasync();
 	void stop_terrasync();
 	bool validate();

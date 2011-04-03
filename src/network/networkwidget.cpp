@@ -6,6 +6,8 @@
 #include <QtCore/QMapIterator>
 #include <QtCore/QUrl>
 
+#include <QtCore/QProcess>
+
 #include <QtNetwork/QHostInfo>
 #include <QtNetwork/QHostAddress>
 #include <QtNetwork/QNetworkInterface>
@@ -24,6 +26,7 @@
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QHeaderView>
 #include <QtGui/QToolButton>
+#include <QtGui/QPushButton>
 
 #include "network/networkwidget.h"
 #include "network/mptelnet.h"
@@ -196,34 +199,55 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	grpFgCom->setChecked(false);
 	connect(grpFgCom, SIGNAL(clicked(bool)), this, SLOT(set_fgcom()));
 
-	QVBoxLayout *layoutFgCom = new QVBoxLayout();
+	QGridLayout *layoutFgCom = new QGridLayout();
 	grpFgCom->setLayout(layoutFgCom);
 
 	QString style("font-size: 8pt; color: #666666;");
 
 	// fgCom NO
+	row = 0;
+	layoutFgCom->addWidget(new QLabel("Options"), row, 0, 1, 1, Qt::AlignRight);
 	txtFgComNo = new QLineEdit();
-	layoutFgCom->addWidget(txtFgComNo);
+	layoutFgCom->addWidget(txtFgComNo, row, 1);
 	connect(txtFgComNo, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
 
-	QLabel *lblHelp1 = new QLabel("Call default FlightGear fgCom server");
+	row++;
+	QLabel *lblHelp1 = new QLabel("eg: -Sfgcom.flightgear.org.uk");
 	lblHelp1->setStyleSheet(style);
-	layoutFgCom->addWidget(lblHelp1);
+	layoutFgCom->addWidget(lblHelp1, row, 1, 1, 2);
 
 
-	layoutFgCom->addSpacing(10);
-
+	//layoutFgCom->addSpacing(10);
 
 	//* fgCom Port
+	row++;
+	layoutFgCom->addWidget(new QLabel("Port"), row, 0, 1, 1, Qt::AlignRight);
 	txtFgComPort = new QLineEdit();
 	txtFgComPort->setMaximumWidth(100);
 	layoutFgCom->addWidget(txtFgComPort);
 	connect(txtFgComPort, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
 
-	QLabel *lblHelp2 = new QLabel("Default fgCom UDP port");
+	row++;
+	QLabel *lblHelp2 = new QLabel("eg: 16661");
 	lblHelp2->setStyleSheet(style);
-	layoutFgCom->addWidget(lblHelp2);
+	layoutFgCom->addWidget(lblHelp2, row, 1, 1, 2);
 
+	row++;
+	QHBoxLayout *hboxfgCom = new QHBoxLayout();
+	layoutFgCom->addLayout(hboxfgCom, row,0,1,2);
+	hboxfgCom->addStretch(20);
+
+	QPushButton *buttonStopFgCom = new QPushButton();
+	buttonStopFgCom->setText("Stop");
+	buttonStopFgCom->setIcon(QIcon(":/icon/stop_disabled"));
+	hboxfgCom->addWidget(buttonStopFgCom);
+	connect(buttonStopFgCom, SIGNAL(clicked()), this, SLOT(on_fgcom_stop()));
+
+	QPushButton *buttonStartFgCom = new QPushButton();
+	buttonStartFgCom->setText("Start");
+	buttonStartFgCom->setIcon(QIcon(":/icon/start_enabled"));
+	hboxfgCom->addWidget(buttonStartFgCom);
+	connect(buttonStartFgCom, SIGNAL(clicked()), this, SLOT(on_fgcom_start()));
 
 	//===========================================================
 	//** Telnet
@@ -555,12 +579,12 @@ void NetworkWidget::on_checkbox_out(){
 // Open Browsers
 void NetworkWidget::on_browse_http(){
 	QString url = QString("http://localhost:%1").arg(txtHttp ->text());
-	QDesktopServices::openUrl(url);
+	QDesktopServices::openUrl(QUrl(url));
 }
 
 void NetworkWidget::on_browse_screenshot(){
 	QString url = QString("http://localhost:%1").arg(txtScreenShot ->text());
-	QDesktopServices::openUrl(url);
+	QDesktopServices::openUrl(QUrl(url));
 }
 
 //=================================================
@@ -724,6 +748,43 @@ QString NetworkWidget::validate(){
 	}
 	return QString();
 }
+
+
+//=============================================================
+// Fgcoms
+void NetworkWidget::on_fgcom_start(){
+	QStringList args;
+	args << settings.value("fgcom_no").toString() << settings.value("fgcom_port").toString();
+	int start = QProcess::startDetached(settings.fgcom_exe_path(), args, QString(), &pid_fgcom);
+	Q_UNUSED(start);
+}
+void NetworkWidget::on_fgcom_stop(){
+	QStringList args;
+	args << "-ef";
+	QProcess process;
+	process.start("ps", args, QIODevice::ReadOnly);
+	if(process.waitForStarted()){
+		process.waitForFinished();
+		QString ok_result = process.readAllStandardOutput();
+		//QString error_result = process.readAllStandardError(); Unused atmo
+
+		//* take result and split into parts
+		QStringList entries = ok_result.split("\n");
+		for(int i=0; i < entries.count(); i++){
+			if(entries.at(i).contains("fgcom")){
+				//* found a fgcom  so murder it
+				QStringList parts = entries.at(i).split(" ", QString::SkipEmptyParts);
+				QStringList killargs;
+				killargs << "-9" << parts.at(1);
+				int start = QProcess::startDetached("kill", killargs);
+				Q_UNUSED(start);
+			}
+		}
+	}
+}
+
+
+
 
 
 

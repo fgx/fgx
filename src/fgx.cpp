@@ -76,7 +76,8 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	//** Restore Settings
 	tabs->setCurrentIndex( settings.value("last_tab").toInt() );
 
-
+	buttonSaveSettings->setVisible(settings._dev_mode());
+	buttonLoadSettings->setVisible(settings._dev_mode());
 
 	//***** Qt Has no Show event for a form, so we need to present Widgets first
 	//** and then initialise. THis is achieved with a timer that triggers in a moment
@@ -146,24 +147,6 @@ void fgx::on_buttonStopFg_clicked() {
 }
 
 
-//=======================================================================================================================
-// Start FGCom
-//=======================================================================================================================
-void fgx::start_fgcom(){
-
-	QString command("nice");
-
-	QStringList args;
-	args << "fgcom" << networkWidget->txtFgComNo->text() << "-p" << networkWidget->txtFgComPort->text();
-
-	QProcess::startDetached(command, args, QString(), &pid_fgcom);
-}
-//=======================================================================================================================
-// Stop FGCom
-//=======================================================================================================================
-void fgx::stop_fgcom() {
-	kill_process(QString::number(pid_fgcom));
-}
 
 
 
@@ -178,8 +161,7 @@ void fgx::start_terrasync(){
 
 	QString command("nice");
 	QStringList args;
-	args << "terrasync" << "-p" << "5505" << "-S" << "-d" << "settings";
-
+	args << settings.terrasync_exe_path() << "-p" << "5500" << "-S" << "-d" << settings.terrasync_sync_path();
 	int start = QProcess::startDetached(command, args, QString(), &pid_terra);
 	Q_UNUSED(start);
 }
@@ -210,7 +192,7 @@ void fgx::stop_terrasync() {
 		//* take result and split into parts
 		QStringList entries = ok_result.split("\n");
 		for(int i=0; i < entries.count(); i++){
-			if(entries.at(i).contains("terrasync -p 5505")){
+			if(entries.at(i).contains("terrasync")){
 				//* found a terrasync  so murder it
 				QStringList parts = entries.at(i).split(" ", QString::SkipEmptyParts);
 				QStringList killargs;
@@ -400,7 +382,7 @@ void fgx::save_settings()
 
 
 	settings.setValue("use_terrasync", groupBoxTerraSync->isChecked());
-	settings.setValue("terrasync_path", txtTerraSyncPath->text());
+	settings.setValue("terrasync_sync_path", txtTerraSyncPath->text());
 
 
 	settings.setValue("screen_size", comboScreenSize->currentText());
@@ -449,7 +431,7 @@ void fgx::load_settings()
 	networkWidget->load_settings();
 	
 	groupBoxTerraSync->setChecked(settings.value("use_terrasync").toBool());
-	txtTerraSyncPath->setText( settings.value("terrasync_path").toString() );
+	txtTerraSyncPath->setText( settings.value("terrasync_sync_path").toString() );
 
 	//** Sartup sxreens	
 	comboScreenSize->setCurrentIndex( comboScreenSize->findText(settings.value("screen_size").toString()) );
