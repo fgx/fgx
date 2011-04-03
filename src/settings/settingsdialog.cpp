@@ -106,7 +106,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 	//===============================================================
 	//*** FG_Scenery - UNUSED at the moment
     grpFgScenery = new QGroupBox(tr("FG_Scenery - Paths to the scenery directories."));
-	grpFgfs->setVisible(false);
+	grpFgScenery->setVisible(false);
     mainLayout->addWidget(grpFgScenery);
 
     QHBoxLayout *layoutFgScenery = new QHBoxLayout();
