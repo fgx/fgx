@@ -69,6 +69,9 @@ QString XSettings::default_fg_root(){
 //** Paths Sane
 //===========================================================================
 bool XSettings::paths_sane(){
+	if(value("USE_DEFAULT_PATHS").toBool()){
+		return true;
+	}
 	if(!QFile::exists(fgfs_path())){
 		return false;
 	}
