@@ -28,22 +28,42 @@ bool XSettings::_dev_mode(){
 //===========================================================================
 QString XSettings::fgfs_path(){
 	// TODO = return the default windows path
-	return this->value("FGFS", "fgfs").toString();
+	return this->value("FGFS", default_fgfs_path()).toString();
 }
 
+QString XSettings::default_fgfs_path(){
 
+	if(runningOS() == MAC){
+		return QDir::currentPath().append("/fgx.app/Contents/MacOS/fgfs");
+
+	}else if(runningOS() == LINUX){
+		return QString("fgfs");
+	}
+
+	return QString("TODO - default_fgfs_path()");
+}
 
 //===========================================================================
 //** fg_root()
 //===========================================================================
 QString XSettings::fg_root(){
-    return this->value("FG_ROOT", "/usr/share/games/FlightGear/").toString();
+	return this->value("FG_ROOT", default_fg_root()).toString();
 }
 
 QString XSettings::fg_root(QString append_path){
     return this->fg_root().append(append_path);
 }
 
+QString XSettings::default_fg_root(){
+	if(runningOS() == MAC){
+		return QDir::currentPath().append("/fgx.app/Contents/Resources");
+
+	}else if(runningOS() == LINUX){
+		return QString("/usr/share/games/FlightGear");
+	}
+
+	return QString("TODO - default_fg_root()");
+}
 
 //===========================================================================
 //** Paths Sane

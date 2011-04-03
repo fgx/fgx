@@ -24,9 +24,11 @@ public:
 	QString temp_dir(QString append_path);
 
 	QString fgfs_path();
+	QString default_fgfs_path();
 
     QString fg_root();
     QString fg_root(QString append_path);
+	QString default_fg_root();
 
 	QString aircraft_path();
 	QString aircraft_path(QString dir);

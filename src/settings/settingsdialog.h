@@ -12,6 +12,7 @@
 #include <QtGui/QTreeWidget>
 #include <QtGui/QPushButton>
 #include <QtGui/QGroupBox>
+#include <QtGui/QCheckBox>
 
 #include "xobjects/xsettings.h"
 
@@ -24,6 +25,7 @@ public:
 private:
 	XSettings settings;
 
+	QCheckBox *checkBoxUseDefaults;
 	QGroupBox *grpFgfs;
     QGroupBox *grpFgRoot;
     QGroupBox *grpFgScenery;
@@ -53,6 +55,7 @@ public slots:
 
 	void load_settings();
 	void on_save_clicked();
+	void on_use_defaults();
 };
 
 #endif // SettingsDialog_H

@@ -45,6 +45,10 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     mainLayout->setContentsMargins(m,m,m,m);
 
 
+	checkBoxUseDefaults = new QCheckBox("Use default paths");
+	mainLayout->addWidget(checkBoxUseDefaults);
+	connect(checkBoxUseDefaults, SIGNAL(clicked()), this, SLOT(on_use_defaults()));
+
 	//===============================================================
 	//*** FGFS Group
 	grpFgfs = new QGroupBox(tr("Path to FlightGear executable"));
@@ -105,6 +109,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
 	//===============================================================
 	//*** FG_Scenery - UNUSED at the moment
+	/*
     grpFgScenery = new QGroupBox(tr("FG_Scenery - Paths to the scenery directories."));
 	grpFgScenery->setVisible(false);
     mainLayout->addWidget(grpFgScenery);
@@ -156,7 +161,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
     layoutFgActionBox->addStretch(10);
     disable_scenery_actions(true);
-
+	*/
 
     //*** Bottom Button Box
     QHBoxLayout *buttonBox = new QHBoxLayout();
@@ -177,14 +182,25 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
 
 	load_settings();
-	validate_paths();
 }
 
 //=================================================================================
 //** Settings
 void SettingsDialog::load_settings(){
-	txtFgfs->setText(settings.fgfs_path());
-	txtFgRoot->setText(settings.fg_root());
+	bool use_defaults = settings.value("USE_DEFAULT_PATHS", "1").toBool();
+	checkBoxUseDefaults->setChecked(use_defaults);
+	if(use_defaults){
+		txtFgfs->setText(settings.default_fgfs_path());
+		txtFgRoot->setText(settings.default_fg_root());
+
+	}else{
+		txtFgfs->setText(settings.fgfs_path());
+		txtFgRoot->setText(settings.fg_root());
+	}
+	grpFgfs->setDisabled(use_defaults);
+	grpFgRoot->setDisabled(use_defaults);
+	grpFgfs->setStyleSheet( get_frame_style(true) );
+	grpFgRoot->setStyleSheet( get_frame_style(true) );
 }
 
 
@@ -217,6 +233,7 @@ void SettingsDialog::on_fgfs_autodetect(){
 			// none found
 		}else{
 			txtFgfs->setText(exe);
+
 		}
 		validate_paths();
 	}
@@ -263,6 +280,9 @@ void SettingsDialog::closeEvent(QCloseEvent *event){
 // Validate
 bool SettingsDialog::validate_paths(){
 
+	if(checkBoxUseDefaults->isChecked()){
+		return true;
+	}
 	bool fgfs_ok = QFile::exists( txtFgfs->text() );
 	grpFgfs->setStyleSheet( get_frame_style(fgfs_ok) );
 
@@ -294,6 +314,27 @@ void SettingsDialog::on_save_clicked(){
 
 	settings.setValue("FGFS", txtFgfs->text());
 	settings.setValue("FG_ROOT", txtFgRoot->text());
+	settings.setValue("USE_DEFAULT_PATHS", checkBoxUseDefaults->isChecked());
 	settings.sync();
 	accept();
+}
+
+
+void SettingsDialog::on_use_defaults(){
+
+	grpFgfs->setDisabled(checkBoxUseDefaults->isChecked());
+	grpFgRoot->setDisabled(checkBoxUseDefaults->isChecked());
+	if(checkBoxUseDefaults->isChecked()){
+		settings.setValue("custom_FGFS", txtFgfs->text());
+		txtFgfs->setText(settings.default_fgfs_path());
+		settings.setValue("custom_FG_ROOT", txtFgRoot->text());
+		txtFgRoot->setText(settings.default_fg_root());
+		settings.sync();
+
+	}else{
+		txtFgfs->setText(settings.value("custom_FGFS").toString());
+		settings.setValue("custom_FG_ROOT", txtFgRoot->text());
+		txtFgRoot->setText(settings.value("custom_FG_ROOT").toString());
+	}
+
 }
