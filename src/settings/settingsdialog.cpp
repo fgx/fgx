@@ -128,7 +128,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     layoutFgScenery->addLayout(layoutFgActionBox);
 
 
-    //*** Action Scenery
+	// Action Scenery
     buttSceneryUp = new QPushButton();
     layoutFgActionBox->addWidget(buttSceneryUp);
     buttSceneryUp->setText(tr("Up"));

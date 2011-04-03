@@ -3,7 +3,6 @@
         <file alias="save">accept.png</file>
         <file alias="settings">cog.png</file>
         <file alias="cancel">bullet_black.png</file>
-        <file alias="favicon">asterisk_orange.png</file>
         <file alias="start_enabled">control_play_blue.png</file>
         <file alias="refresh">arrow_refresh.png</file>
         <file alias="quit">book_previous.png</file>
@@ -17,5 +16,6 @@
         <file alias="browse">browse.png</file>
         <file alias="terminal">application_osx_terminal.png</file>
         <file alias="import">database_go.png</file>
+        <file alias="favicon">fgx16.png</file>
     </qresource>
 </RCC>
