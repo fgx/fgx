@@ -105,6 +105,7 @@ private slots:
 
 	void on_actionAboutFGX_triggered();
 	void on_actionAboutQT_triggered();
+	void on_actionQuit_triggered();
 
 };
 

@@ -7,7 +7,7 @@
  *
  */
 
-
+#include <QApplication>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QDirIterator>
@@ -564,6 +564,12 @@ void fgx::on_actionAboutQT_triggered(){
 	QMessageBox::aboutQt(this, "About Qt");
 }
 
+void fgx::on_actionQuit_triggered(){
+	QApplication::quit();
+}
+
+
+//========================================================================
 // Set Time checked
 void fgx::on_groupBoxSetTime_clicked() {
 	

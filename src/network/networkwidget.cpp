@@ -364,7 +364,7 @@ void NetworkWidget::on_dns_lookup_callback(const QHostInfo &hostInfo){
 	if(settings.value("mpserver").toString() == hostInfo.hostName()){
 		treeWidget->setCurrentItem(newItem);
 	}
-
+	return; //######################
 	MpTelnet *telnet = new MpTelnet(this );
 	telnet->get_info(hostInfo.addresses().first().toString());
 	connect(telnet, SIGNAL(telnet_data(QString, QString)),
