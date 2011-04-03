@@ -14,7 +14,7 @@
    <string>FlightGear Launcher</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="resources/icons.qrc">
     <normaloff>:/icon/favicon</normaloff>:/icon/favicon</iconset>
   </property>
   <property name="autoFillBackground">
@@ -163,6 +163,13 @@ background-repeat: no-repeat;</string>
                  </item>
                 </widget>
                </item>
+               <item row="5" column="0">
+                <widget class="QCheckBox" name="checkBoxMpMap">
+                 <property name="text">
+                  <string>Show Multiplayer Map</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </widget>
             </item>
@@ -243,7 +250,7 @@ background-repeat: no-repeat;</string>
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -279,7 +286,7 @@ background-repeat: no-repeat;</string>
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -311,7 +318,7 @@ background-repeat: no-repeat;</string>
                      <string/>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -335,7 +342,7 @@ background-repeat: no-repeat;</string>
                      <string>Start Terrasync</string>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
                     </property>
                    </widget>
@@ -346,7 +353,7 @@ background-repeat: no-repeat;</string>
                      <string>Stop Terrasync</string>
                     </property>
                     <property name="icon">
-                     <iconset>
+                     <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
                     </property>
                    </widget>
@@ -847,7 +854,7 @@ background-repeat: no-repeat;</string>
            <string>Stop Fg</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="resources/icons.qrc">
             <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
           </property>
          </widget>
@@ -858,7 +865,7 @@ background-repeat: no-repeat;</string>
            <string>Start Fg</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="resources/icons.qrc">
             <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
           </property>
          </widget>
@@ -913,7 +920,7 @@ background-repeat: no-repeat;</string>
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset>
+    <iconset resource="resources/icons.qrc">
      <normaloff>:/icon/quit</normaloff>:/icon/quit</iconset>
    </property>
    <property name="text">
@@ -934,7 +941,9 @@ background-repeat: no-repeat;</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources/icons.qrc"/>
+ </resources>
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroupWeather"/>

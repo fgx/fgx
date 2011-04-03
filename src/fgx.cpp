@@ -12,15 +12,14 @@
 #include <QtCore/QDir>
 #include <QtCore/QDirIterator>
 #include <QtCore/QTextStream>
-
-#include <QXmlStreamReader>
-#include <QtCore/QSettings>
-#include <QtNetwork/QAbstractSocket>
-//#include <QtNetwork/QHostInfo>
 #include <QtCore/QTimer>
+#include <QtCore/QUrl>
+
 
 #include <QtGui/QStyleFactory>
 #include <QtGui/QFileDialog>
+#include <QtGui/QDesktopServices>
+
 
 #include "fgx.h"
 #include "settings/settingsdialog.h"
@@ -131,6 +130,10 @@ void fgx::on_buttonStartFg_clicked() {
 	//** This process will always start on the shell as fgfs returns an error help if incorrect args
 	bool start = QProcess::startDetached( settings.fgfs_path(), fg_args(), QString(), &pid_fg);
 	Q_UNUSED(start);
+
+	if(checkBoxMpMap->isChecked()){
+		QDesktopServices::openUrl(QUrl("http://mpmap01.flightgear.org/"));
+	}
 
 }
 
@@ -391,7 +394,6 @@ void fgx::on_buttonSaveSettings_clicked(){
 void fgx::save_settings()
 {
 	//## NB: fgfs path and FG_ROOT are saves in SettingsDialog ##
-	//qDebug() << "saves settings";
 	aircraftWidget->save_settings();
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
@@ -426,8 +428,6 @@ void fgx::save_settings()
 	settings.setValue("extra_args", lineEditExtraArgs->toPlainText());
 	settings.setValue("log_enabled", checkBoxLogEnabled->isChecked());
 	settings.setValue("log_level", buttonGroupLog->checkedButton()->text());
-	qDebug() << buttonGroupLog->checkedButton()->text();
-	
 	
 }
 
@@ -669,7 +669,7 @@ void fgx::load_joysticks(){
 		process.waitForFinished();
 		QString ok_result = process.readAllStandardOutput();
 		QString error_result = process.readAllStandardError();
-		qDebug() << ok_result << error_result;
+		Q_UNUSED(error_result);
 		//* take result and split into parts
 		QStringList entries = ok_result.trimmed().split("\n");
 		for(int i=2; i < entries.count(); i++){ //First 2 lines are crap
