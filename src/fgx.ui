@@ -901,8 +901,11 @@ background-repeat: no-repeat;</string>
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAboutQT"/>
+    <addaction name="actionHelpMeNow"/>
+    <addaction name="actionBugs"/>
+    <addaction name="separator"/>
     <addaction name="actionAboutFGX"/>
+    <addaction name="actionAboutQT"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuStyle"/>
@@ -938,6 +941,16 @@ background-repeat: no-repeat;</string>
   <action name="actionAboutQT">
    <property name="text">
     <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionBugs">
+   <property name="text">
+    <string>Report Bug</string>
+   </property>
+  </action>
+  <action name="actionHelpMeNow">
+   <property name="text">
+    <string>Help me now</string>
    </property>
   </action>
  </widget>
