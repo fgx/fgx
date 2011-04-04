@@ -535,7 +535,7 @@ void fgx::on_menuStyle_triggered(QAction *action){
 void fgx::on_actionAboutFGX_triggered(){
 	QString txt;
 	txt.append("<html><body><p><b>Launcher for OSX</b></p>");
-	txt.append("<p>© 2011 Gral aka Yves Sablonier, Zurich</p>");
+	txt.append("<p>&copy; 2011 Gral aka Yves Sablonier, Zurich</p>");
 	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPL2</a></p>");
 	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear</a></p>");
 	txt.append("</body></html>");
