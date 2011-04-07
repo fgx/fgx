@@ -919,7 +919,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QPushButton" name="buttonStopFg">
           <property name="text">
-           <string>Stop Fg</string>
+           <string>Stop FlightGear</string>
           </property>
           <property name="icon">
            <iconset resource="resources/icons.qrc">
@@ -930,7 +930,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QPushButton" name="buttonStartFg">
           <property name="text">
-           <string>Start Fg</string>
+           <string>Start FlightGear</string>
           </property>
           <property name="icon">
            <iconset resource="resources/icons.qrc">
