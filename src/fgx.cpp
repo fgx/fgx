@@ -276,7 +276,7 @@ QStringList fgx::fg_args(){
 	args << QString("--fg-root=").append(settings.fg_root());
 
 
-	//** Startup , Spalsh, Geometry
+	//** Startup , Splash, Geometry
 	args << QString("--geometry=").append(comboScreenSize->currentText());
 	if (checkboxDisableSplash->isChecked()) {
 		args << QString("--disable-splash-screen");
