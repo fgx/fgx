@@ -203,19 +203,15 @@ background-repeat: no-repeat;</string>
               <property name="title">
                <string>Map features</string>
               </property>
-              <widget class="QCheckBox" name="checkBoxMpMap">
-               <property name="geometry">
-                <rect>
-                 <x>10</x>
-                 <y>20</y>
-                 <width>161</width>
-                 <height>41</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>Show Multiplayer Map</string>
-               </property>
-              </widget>
+              <layout class="QVBoxLayout" name="verticalLayout_11">
+               <item>
+                <widget class="QCheckBox" name="checkBoxMpMap">
+                 <property name="text">
+                  <string>Show Multiplayer Map</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
             <item>
@@ -951,7 +947,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>878</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

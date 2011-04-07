@@ -133,11 +133,9 @@ void fgx::on_buttonStartFg_clicked() {
 	Q_UNUSED(start);
 
 	if(checkBoxMpMap->isChecked()){
-		QString mapurl;
-		mapurl.append("http://mpmap02.flightgear.org/?");
-		mapurl.append("follow=");
-		mapurl.append(networkWidget->txtCallSign->text());
-		QDesktopServices::openUrl(QUrl(mapurl));
+		QUrl mapUrl("http://mpmap02.flightgear.org/");
+		mapUrl.addQueryItem("follow", networkWidget->txtCallSign->text());
+		QDesktopServices::openUrl(mapUrl);
 	}
 
 }
