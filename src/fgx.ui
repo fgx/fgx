@@ -101,7 +101,7 @@ background-repeat: no-repeat;</string>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
-             <widget class="QGroupBox" name="groupBox_2">
+             <widget class="QGroupBox" name="groupBox_screen">
               <property name="title">
                <string>Screen options</string>
               </property>
@@ -167,7 +167,7 @@ background-repeat: no-repeat;</string>
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_8">
+             <widget class="QGroupBox" name="groupBox_controls">
               <property name="title">
                <string>Controls</string>
               </property>
@@ -193,10 +193,29 @@ background-repeat: no-repeat;</string>
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="checkBoxMpMap">
-              <property name="text">
-               <string>Show Multiplayer Map in browser</string>
+             <widget class="QGroupBox" name="groupBox_3">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>60</height>
+               </size>
               </property>
+              <property name="title">
+               <string>Map features</string>
+              </property>
+              <widget class="QCheckBox" name="checkBoxMpMap">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>20</y>
+                 <width>161</width>
+                 <height>41</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Show Multiplayer Map</string>
+               </property>
+              </widget>
              </widget>
             </item>
             <item>
@@ -217,7 +236,7 @@ background-repeat: no-repeat;</string>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
-             <widget class="QCheckBox" name="checkBox">
+             <widget class="QCheckBox" name="checkBoxUseBuiltIn">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -231,18 +250,18 @@ background-repeat: no-repeat;</string>
                </size>
               </property>
               <property name="text">
-               <string>Use built-in FlightGear 2.2</string>
+               <string>Use built-in FlightGear</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_3">
+             <widget class="QGroupBox" name="groupBox_paths">
               <property name="title">
-               <string>Paths</string>
+               <string>Paths to other FlightGear installation:</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_5">
                <item>
-                <widget class="QGroupBox" name="groupBox_4">
+                <widget class="QGroupBox" name="groupBox_fgfspath">
                  <property name="title">
                   <string>FlightGear executable</string>
                  </property>
@@ -266,7 +285,7 @@ background-repeat: no-repeat;</string>
                      <string>Click this when you enter a new path to flightgear data. Will refresh aircraft and airport list with the new fgdata path (if exists!)</string>
                     </property>
                     <property name="text">
-                     <string/>
+                     <string>Set path</string>
                     </property>
                     <property name="icon">
                      <iconset resource="resources/icons.qrc">
@@ -278,7 +297,7 @@ background-repeat: no-repeat;</string>
                 </widget>
                </item>
                <item>
-                <widget class="QGroupBox" name="groupBox_5">
+                <widget class="QGroupBox" name="groupBox_datadirectory">
                  <property name="title">
                   <string>Data Directory</string>
                  </property>
@@ -302,78 +321,11 @@ background-repeat: no-repeat;</string>
                      <string>Click this when you enter a new path to flightgear data. Will refresh aircraft and airport list with the new fgdata path (if exists!)</string>
                     </property>
                     <property name="text">
-                     <string/>
+                     <string>Set path</string>
                     </property>
                     <property name="icon">
                      <iconset resource="resources/icons.qrc">
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QGroupBox" name="groupBoxTerraSync">
-                 <property name="title">
-                  <string>Use TerraSync</string>
-                 </property>
-                 <property name="checkable">
-                  <bool>true</bool>
-                 </property>
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_2">
-                  <item row="0" column="0" colspan="3">
-                   <widget class="QLineEdit" name="txtTerraSyncPath"/>
-                  </item>
-                  <item row="0" column="3">
-                   <widget class="QPushButton" name="buttonTerraSyncPath">
-                    <property name="toolTip">
-                     <string>Click this when you enter a new path to flightgear data. Will refresh aircraft and airport list with the new fgdata path (if exists!)</string>
-                    </property>
-                    <property name="text">
-                     <string/>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="resources/icons.qrc">
-                      <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <spacer name="horizontalSpacer_4">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>218</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item row="1" column="2" colspan="2">
-                   <widget class="QPushButton" name="buttonStartTerraSync">
-                    <property name="text">
-                     <string>Start Terrasync</string>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="resources/icons.qrc">
-                      <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QPushButton" name="buttonStopTerraSync">
-                    <property name="text">
-                     <string>Stop Terrasync</string>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="resources/icons.qrc">
-                      <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
                     </property>
                    </widget>
                   </item>
@@ -381,6 +333,103 @@ background-repeat: no-repeat;</string>
                 </widget>
                </item>
               </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_2">
+              <property name="minimumSize">
+               <size>
+                <width>460</width>
+                <height>190</height>
+               </size>
+              </property>
+              <property name="title">
+               <string>Terrasync for Custom Scenery</string>
+              </property>
+              <widget class="QGroupBox" name="groupBoxTerraSync">
+               <property name="geometry">
+                <rect>
+                 <x>20</x>
+                 <y>30</y>
+                 <width>426</width>
+                 <height>141</height>
+                </rect>
+               </property>
+               <property name="title">
+                <string>Use TerraSync</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_2">
+                <item row="1" column="0" colspan="3">
+                 <widget class="QLineEdit" name="txtTerraSyncPath"/>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QPushButton" name="buttonTerraSyncPath">
+                  <property name="toolTip">
+                   <string>Click this when you enter a new path to flightgear data. Will refresh aircraft and airport list with the new fgdata path (if exists!)</string>
+                  </property>
+                  <property name="text">
+                   <string>Set path</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="resources/icons.qrc">
+                    <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <spacer name="horizontalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>218</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="2" column="2" colspan="2">
+                 <widget class="QPushButton" name="buttonStartTerraSync">
+                  <property name="text">
+                   <string>Start Terrasync</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="resources/icons.qrc">
+                    <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QPushButton" name="buttonStopTerraSync">
+                  <property name="text">
+                   <string>Stop Terrasync</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="resources/icons.qrc">
+                    <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="4">
+                 <widget class="QLabel" name="label_3">
+                  <property name="text">
+                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Set path to TerraSync Custom Scenery Directory:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
              </widget>
             </item>
             <item>
