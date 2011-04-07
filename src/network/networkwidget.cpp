@@ -760,25 +760,20 @@ void NetworkWidget::on_fgcom_start(){
 }
 void NetworkWidget::on_fgcom_stop(){
 	QStringList args;
-	args << "-ef";
+	args << "fgcom";
 	QProcess process;
-	process.start("ps", args, QIODevice::ReadOnly);
+	process.start("pidof", args, QIODevice::ReadOnly);
 	if(process.waitForStarted()){
 		process.waitForFinished();
 		QString ok_result = process.readAllStandardOutput();
 		//QString error_result = process.readAllStandardError(); Unused atmo
 
-		//* take result and split into parts
-		QStringList entries = ok_result.split("\n");
-		for(int i=0; i < entries.count(); i++){
-			if(entries.at(i).contains("fgcom")){
-				//* found a fgcom  so murder it
-				QStringList parts = entries.at(i).split(" ", QString::SkipEmptyParts);
-				QStringList killargs;
-				killargs << "-9" << parts.at(1);
-				int start = QProcess::startDetached("kill", killargs);
-				Q_UNUSED(start);
-			}
+		QString pid = ok_result.trimmed();
+		if(pid.length() > 0){
+			QStringList killargs;
+			killargs << "-9" << pid;
+			int start = QProcess::startDetached("kill", killargs);
+			Q_UNUSED(start);
 		}
 	}
 }
