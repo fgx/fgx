@@ -103,7 +103,7 @@ background-repeat: no-repeat;</string>
             <item>
              <widget class="QGroupBox" name="groupBox_2">
               <property name="title">
-               <string>Startup Options</string>
+               <string>Screen options</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_3">
                <item row="0" column="0">
@@ -163,13 +163,6 @@ background-repeat: no-repeat;</string>
                  </item>
                 </widget>
                </item>
-               <item row="5" column="0">
-                <widget class="QCheckBox" name="checkBoxMpMap">
-                 <property name="text">
-                  <string>Show Multiplayer Map</string>
-                 </property>
-                </widget>
-               </item>
               </layout>
              </widget>
             </item>
@@ -200,6 +193,13 @@ background-repeat: no-repeat;</string>
              </widget>
             </item>
             <item>
+             <widget class="QCheckBox" name="checkBoxMpMap">
+              <property name="text">
+               <string>Show Multiplayer Map in browser</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <spacer name="verticalSpacer_4">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -216,6 +216,25 @@ background-repeat: no-repeat;</string>
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <widget class="QCheckBox" name="checkBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>40</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Use built-in FlightGear 2.2</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <widget class="QGroupBox" name="groupBox_3">
               <property name="title">
@@ -883,7 +902,7 @@ background-repeat: no-repeat;</string>
      <x>0</x>
      <y>0</y>
      <width>878</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
