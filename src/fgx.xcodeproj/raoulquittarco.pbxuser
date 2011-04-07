@@ -1,5 +1,19 @@
 // !$*UTF8*$!
 {
+	3373B6A2134DE84100D0E172 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 6D354CC3205B4251A0EFB840 /* moc_airportswidget.cpp */;
+	};
+	3373B6A3134DE84100D0E172 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6D354CC3205B4251A0EFB840 /* moc_airportswidget.cpp */;
+		name = "moc_airportswidget.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 696;
+		vrLoc = 3185;
+	};
 	338D212B134DD4F100C741C7 /* fgx */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
@@ -50,6 +64,13 @@
 		executables = (
 			338D212B134DD4F100C741C7 /* fgx */,
 		);
+	};
+	6D354CC3205B4251A0EFB840 /* moc_airportswidget.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1349, 1313}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{3185, 696}";
+		};
 	};
 	91B15E841AA80083484172DE /* Project object */ = {
 		activeBuildConfigurationName = Debug;
@@ -121,8 +142,12 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 323868936;
-			PBXWorkspaceStateSaveDate = 323868936;
+			PBXPerProjectTemplateStateSaveDate = 323873403;
+			PBXWorkspaceStateSaveDate = 323873403;
+		};
+		perUserProjectItems = {
+			3373B6A2134DE84100D0E172 = 3373B6A2134DE84100D0E172 /* PBXBookmark */;
+			3373B6A3134DE84100D0E172 = 3373B6A3134DE84100D0E172 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 338D2140134DD50F00C741C7 /* Source Control */;
 		userBuildSettings = {
