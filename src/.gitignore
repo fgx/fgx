@@ -5,4 +5,4 @@ ui_*.h
 Makefile
 fgx
 fgx.pro.user
-
+fgx.xcodeproj
