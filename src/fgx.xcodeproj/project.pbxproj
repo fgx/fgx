@@ -13,8 +13,7 @@
 		1CCC7E1FC06C062A970F5E30 /* networkwidget.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 7B0B502EE4C80ACB0632E290 /* networkwidget.cpp */; settings = {ATTRIBUTES = (); }; };
 		2497464F1D7DD67EB6CDDFCB /* fgx.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = F34E5AEF6684E84E2C55C110 /* fgx.cpp */; settings = {ATTRIBUTES = (); }; };
 		2B093CA6F071B023A473CED0 /* main.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 118FCBAABA162BA17933C789 /* main.cpp */; settings = {ATTRIBUTES = (); }; };
-		3373B682134DD93E00D0E172 /* fgx22.icns in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 3373B681134DD93E00D0E172 /* fgx22.icns */; };
-		338D212C134DD4F100C741C7 /* fgx.app in Project Copy */ = {isa = PBXBuildFile; fileRef = 338D2129134DD4F100C741C7 /* fgx.app */; };
+		33044008134FA6BB004B146B /* fgx.app in Project Copy */ = {isa = PBXBuildFile; fileRef = 33044005134FA6BB004B146B /* fgx.app */; };
 		3826A0833FCB54E86728C6EF /* QtNetwork.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = B6B9970B86A6C219B0869FE9 /* QtNetwork.framework */; };
 		3856F1C05E59E6FFCFE0426B /* moc_fgx.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = E72DC64BA6A58D8837C090D7 /* moc_fgx.cpp */; settings = {ATTRIBUTES = (); }; };
 		3CC391639B7E9A012B2340D6 /* aptdatparser.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = BBC1B4528D6756A7B35878F0 /* aptdatparser.cpp */; settings = {ATTRIBUTES = (); }; };
@@ -45,7 +44,7 @@
 			dstPath = /Users/raoulquittarco/Desktop/fgx/gitoriousnew/fgx/src;
 			dstSubfolderSpec = 0;
 			files = (
-				338D212C134DD4F100C741C7 /* fgx.app in Project Copy */,
+				33044008134FA6BB004B146B /* fgx.app in Project Copy */,
 			);
 			name = "Project Copy";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -59,8 +58,7 @@
 		2A72C0415F4CC91A8D268FDA /* airportswidget.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = airportswidget.cpp; path = airports/airportswidget.cpp; sourceTree = "<group>"; };
 		2AF48EE6259E359C7F1E34B8 /* settingsdialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = settingsdialog.cpp; path = settings/settingsdialog.cpp; sourceTree = "<group>"; };
 		3258536F172E930CBF0720D4 /* moc_aptdatparser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = moc_aptdatparser.cpp; sourceTree = "<group>"; };
-		3373B681134DD93E00D0E172 /* fgx22.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = fgx22.icns; sourceTree = "<group>"; };
-		338D2129134DD4F100C741C7 /* fgx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fgx.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		33044005134FA6BB004B146B /* fgx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fgx.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3451A6A08A216BF5ADF1B13D /* aptdatparser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = aptdatparser.h; path = airports/aptdatparser.h; sourceTree = "<group>"; };
 		4554A6F0D9E01E00FB3498F8 /* moc_xsettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = moc_xsettings.cpp; sourceTree = "<group>"; };
 		4BB2F1B9490146E6B0229BDF /* mptelnet.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = mptelnet.cpp; path = network/mptelnet.cpp; sourceTree = "<group>"; };
@@ -119,7 +117,6 @@
 		05596AB53D8D521C69802C27 /* fgx */ = {
 			isa = PBXGroup;
 			children = (
-				3373B681134DD93E00D0E172 /* fgx22.icns */,
 				FB61758D0F0FDA4BA867C3D5 /* Sources */,
 				46E892BBB6BB6952967E0561 /* Temporary Sources */,
 				883D7615C4D2DE3FA1218F12 /* Headers */,
@@ -127,7 +124,7 @@
 				52C235EBF1C9B07808119459 /* Sources [RCC] */,
 				EEC299C65D5017EB9DD513B0 /* Sources [UIC] */,
 				ED1E82605DD74B483AF3C982 /* External Frameworks and Libraries */,
-				338D212A134DD4F100C741C7 /* Products */,
+				33044006134FA6BB004B146B /* Products */,
 			);
 			name = fgx;
 			sourceTree = "<group>";
@@ -166,10 +163,10 @@
 			name = settings;
 			sourceTree = "<group>";
 		};
-		338D212A134DD4F100C741C7 /* Products */ = {
+		33044006134FA6BB004B146B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				338D2129134DD4F100C741C7 /* fgx.app */,
+				33044005134FA6BB004B146B /* fgx.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -323,7 +320,7 @@
 /* Begin PBXNativeTarget section */
 		6B90845ABBF33087E7DB4B58 /* fgx */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 338D213F134DD50F00C741C7 /* Build configuration list for PBXNativeTarget "fgx" */;
+			buildConfigurationList = 33044022134FA6D3004B146B /* Build configuration list for PBXNativeTarget "fgx" */;
 			buildPhases = (
 				D7BA7D76DAB5DD13389D6332 /* Qt Qmake */,
 				A0A52A2ADF7A1E2A99738674 /* Qt Preprocessors */,
@@ -338,7 +335,7 @@
 			);
 			name = fgx;
 			productName = fgx;
-			productReference = 338D2129134DD4F100C741C7 /* fgx.app */;
+			productReference = 33044005134FA6BB004B146B /* fgx.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -357,7 +354,7 @@
 				German,
 			);
 			mainGroup = 05596AB53D8D521C69802C27 /* fgx */;
-			productRefGroup = 338D212A134DD4F100C741C7 /* Products */;
+			productRefGroup = 33044006134FA6BB004B146B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -371,7 +368,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3373B682134DD93E00D0E172 /* fgx22.icns in Bundle Resources */,
 			);
 			name = "Bundle Resources";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,18 +430,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		338D213C134DD4F100C741C7 /* Debug */ = {
+		33044018134FA6BB004B146B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				BUILD_ROOT = /Users/raoulquittarco/Desktop/fgx/gitoriousnew/fgx/src;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1.0;
 				DYLIB_CURRENT_VERSION = 1.0.0;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_MODEL_TUNING = "";
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = (
 					/Library/Frameworks/QtCore.framework/Versions/4/Headers,
 					/usr/include/QtCore,
@@ -470,7 +463,7 @@
 				INFOPLIST_FILE = Info.plist;
 				LEXFLAGS = "";
 				LIBRARY_SEARCH_PATHS = /Library/Frameworks;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CFLAGS = (
 					"-pipe",
 					"-g",
@@ -505,15 +498,13 @@
 				OTHER_REZFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = fgx;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SECTORDER_FLAGS = "";
-				VALID_ARCHS = "i386 x86_64";
 				WARNING_CFLAGS = "";
 				YACCFLAGS = "-d";
 			};
 			name = Debug;
 		};
-		338D213D134DD4F100C741C7 /* Release */ = {
+		33044019134FA6BB004B146B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/raoulquittarco/Desktop/fgx/gitoriousnew/fgx/src;
@@ -586,7 +577,7 @@
 			};
 			name = Release;
 		};
-		338D213E134DD4F100C741C7 /* Default */ = {
+		3304401A134FA6BB004B146B /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/raoulquittarco/Desktop/fgx/gitoriousnew/fgx/src;
@@ -686,12 +677,12 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		338D213F134DD50F00C741C7 /* Build configuration list for PBXNativeTarget "fgx" */ = {
+		33044022134FA6D3004B146B /* Build configuration list for PBXNativeTarget "fgx" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				338D213C134DD4F100C741C7 /* Debug */,
-				338D213D134DD4F100C741C7 /* Release */,
-				338D213E134DD4F100C741C7 /* Default */,
+				33044018134FA6BB004B146B /* Debug */,
+				33044019134FA6BB004B146B /* Release */,
+				3304401A134FA6BB004B146B /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;

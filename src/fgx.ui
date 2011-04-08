@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>878</width>
-    <height>664</height>
+    <height>685</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,13 +36,19 @@
     </property>
     <item>
      <widget class="QLabel" name="fgx_logo">
+      <property name="minimumSize">
+       <size>
+        <width>800</width>
+        <height>80</height>
+       </size>
+      </property>
       <property name="styleSheet">
-       <string notr="true">border: 1px outset #AAAAAA; 
-padding: 5px 5px 5px 100px; 
-font-family: monospace;
-font-size: 12pt; font-weight: bold;
-background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 white, stop: 1 #6095B6);
-background-image: url(&quot;:/images/logo.png&quot;);
+       <string notr="true">padding: 10px 0px 0px 370px; 
+vertical-align: top;
+font-family: arial;
+color: #2559c6;
+font-size: 11pt; font-weight: normal;
+background-image: url(&quot;:/images/fgx-logo.png&quot;);
 background-repeat: no-repeat;</string>
       </property>
       <property name="text">
@@ -175,7 +181,7 @@ background-repeat: no-repeat;</string>
                <item>
                 <widget class="QCheckBox" name="checkBoxEnableAutoCordination">
                  <property name="text">
-                  <string>Enable Auto Cordination</string>
+                  <string>Enable Auto Coordination</string>
                  </property>
                 </widget>
                </item>
@@ -193,7 +199,7 @@ background-repeat: no-repeat;</string>
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_3">
+             <widget class="QGroupBox" name="groupBox_map">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -332,7 +338,7 @@ background-repeat: no-repeat;</string>
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_2">
+             <widget class="QGroupBox" name="groupBox_terrasync">
               <property name="minimumSize">
                <size>
                 <width>460</width>
@@ -888,14 +894,14 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QPushButton" name="buttonLoadSettings">
           <property name="text">
-           <string>Load</string>
+           <string>Restore settings</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="buttonSaveSettings">
           <property name="text">
-           <string>Save</string>
+           <string>Save settings</string>
           </property>
          </widget>
         </item>
@@ -947,7 +953,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>878</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -65,7 +65,7 @@ QString XSettings::fg_root(QString append_path){
 
 QString XSettings::default_fg_root(){
 	if(runningOS() == MAC){
-		return QDir::currentPath().append("/fgx.app/Contents/Resources");
+		return QDir::currentPath().append("/fgx.app/Contents/Resources/fgx-data");
 
 	}else if(runningOS() == LINUX){
 		return QString("/usr/share/games/FlightGear");

@@ -42,11 +42,11 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	settings.restoreWindow(this);
 
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
-	fgx_logo->setText(QCoreApplication::applicationName());
+	fgx_logo->setText(QCoreApplication::applicationVersion());
 
 
 	//** Setup Styles
-	QApplication::setStyle( QStyleFactory::create(settings.value("gui_style","Cleanlooks").toString()) );
+	QApplication::setStyle( QStyleFactory::create(settings.value("gui_style","Macintosh (aqua)").toString()) );
 	actionGroupStyle = new QActionGroup(this);
 	actionGroupStyle->setExclusive(true);
 	QStringList styles =  QStyleFactory::keys();
@@ -530,8 +530,8 @@ void fgx::on_menuStyle_triggered(QAction *action){
 
 void fgx::on_actionAboutFGX_triggered(){
 	QString txt;
-	txt.append("<html><body><p><b>Launcher for OSX</b></p>");
-	txt.append("<p>&copy; 2011 Gral aka Yves Sablonier, Zurich</p>");
+	txt.append("<html><body><p>FGX FlightGear Launcher</b></p>");
+	txt.append("<p>&copy; 2011 Gral aka Yves Sablonier and Pete Morgan</p>");
 	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPL2</a></p>");
 	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear</a></p>");
 	txt.append("</body></html>");
