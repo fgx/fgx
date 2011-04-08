@@ -6,3 +6,4 @@ Makefile
 fgx
 fgx.pro.user
 fgx.xcodeproj
+Info.plist
