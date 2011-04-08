@@ -1,6 +1,6 @@
 FGX - FREE AND OPEN SOURCE LAUNCHER FOR FLIGHTGEAR
 --------------------------------------------------
-Version 2.2-1
+Version 2.2-1beta
 
 ==== Requirements
 Apples: Intel-based Mac, OSX 10.5.8 or later
@@ -55,3 +55,10 @@ http://www.gitorious.org/fg
 FGX Sites:
 http://www.gitorious.org/fgx
 http://fgx.googlecode.com
+
+
+==== HISTORY =====
+
+03-25-2011 or so, Pete is joining, project becomes a huge push and better code at all (see gitorious.org/fgx)
+03-25-2011 Starting to distribute first pre-alpha versions via FlightGear forum (see http://www.flightgear.org/forums/viewforum.php?f=21), adding bugtracker at fgx.googlecode.com 
+03-02-2011 Starting the project
