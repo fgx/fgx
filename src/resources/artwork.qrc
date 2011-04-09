@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/images">
-        <file alias="fgx-logo.png">logo.png</file>
+        <file alias="fgx-logo">fgx-logo.png</file>
     </qresource>
 </RCC>
