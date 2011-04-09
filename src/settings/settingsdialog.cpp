@@ -36,6 +36,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 	setWindowTitle(tr("Settings"));
 	setWindowIcon(QIcon(":/icon/settings"));
 
+	setMinimumWidth(400);
 
     //* Main Layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
