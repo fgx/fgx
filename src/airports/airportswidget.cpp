@@ -504,7 +504,7 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 	parkingPositions.sort();
 
 	QTreeWidgetItem *parkingParent = new QTreeWidgetItem();
-	parkingParent->setText(0, "Parking Stands" );
+	parkingParent->setText(0, "Park Positions" );
 	parkingParent->setIcon(0, QIcon(":/icon/folder"));
 	treeWidgetRunways->addTopLevelItem(parkingParent);
 	treeWidgetRunways->setItemExpanded(parkingParent, true);
@@ -520,8 +520,13 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 	}
 	
 	QString messagecount;
-	messagecount.append(QString("%1 runway(s), ").arg(runwaysParent->childCount()));
-	messagecount.append(QString("%1 park position(s)").arg(parkingParent->childCount()));
+	messagecount.append(QString("%1 Runways, ").arg(runwaysParent->childCount()));
+	if(parkingPositions.count() != 0) {
+		messagecount.append(QString("%1 Park Position(s)").arg(parkingParent->childCount()));
+	} else {
+		messagecount.append(QString("No park Positions").arg(parkingParent->childCount()));
+	}
+
 	statusBarRunways->showMessage(messagecount);
 }
 
