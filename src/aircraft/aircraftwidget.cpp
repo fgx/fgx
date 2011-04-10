@@ -1,12 +1,13 @@
 
 /**
-  This widget displays a list of aircraft,
-    does a background call to a process that executes FG
-  */
+	Started apr 2011 by: pete at freeflightsim.org
+	then ..
+
+	TODO: Convert QTreeWidget to QTreeView with A filterSortProxy Model
+
+*/
 
 
-#include <QtXmlPatterns/QXmlQuery>
-#include <QtXml/QDomDocument>
 
 #include <QtCore/QDebug>
 
@@ -14,7 +15,8 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QDir>
+//#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHBoxLayout>
@@ -39,7 +41,7 @@
 
 
 #include "aircraft/aircraftwidget.h"
-
+#include "aircraft/aerotools.h"
 
 
 
@@ -355,96 +357,6 @@ void AircraftWidget::load_aircraft_shell(){
 	}
 }
 
-//========================================================
-//*** Walk XML - sets
-QStringList AircraftWidget::scan_xml_sets(){
-
-	int c = 0;
-	int found = 0;
-	QProgressDialog progress("Loading Aircraft to Cache", "Cancel", 0, 0, this);
-	progress.setWindowModality(Qt::WindowModal);
-
-	QStringList aeroList;
-
-	QDir aircraftDir( settings.aircraft_path() );
-	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
-	QStringList entries = aircraftDir.entryList();
-
-	for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry ){
-
-		// Filter out default dir names, should be a QDir name filter?
-		if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
-
-			//** get the List of *-set.xml files in dir
-			QDir dir( settings.aircraft_path(*entry) );
-			QStringList filters;
-			filters << "*-set.xml";
-			QStringList list_xml = dir.entryList(filters);
-
-			if(list_xml.count() > 0){ // << Scan MOdels
-				QString directory;
-				QString description;
-				QString author;
-				QString fdm;
-				QString xml_file;
-				QString aero;
-
-				//** Add Path Node
-				directory = QString(*entry);
-				//** Add Models
-				for (int i = 0; i < list_xml.size(); ++i){
-
-					xml_file = QString(list_xml.at(i));
-					aero = QString(xml_file);
-					aero.chop(8);
-
-					//** parse the Xml file - fucking long winded
-					QString file_path =  settings.aircraft_path(*entry);
-					file_path.append("/");
-					file_path.append(list_xml.at(i));
-					QFile xmlFile( file_path);
-					if (xmlFile.open(QIODevice::ReadOnly | QIODevice::Text)){
-
-						QXmlQuery query;
-						query.setFocus(&xmlFile);
-						query.setQuery("PropertyList/sim");
-						if (query.isValid()){
-
-							QString res;
-							query.evaluateTo(&res);
-							xmlFile.close();
-
-							QDomDocument dom;
-							dom.setContent("" + res + "");
-							QDomNodeList nodes = dom.elementsByTagName("sim");
-
-							QDomNode n = nodes.at(0);
-							description = n.firstChildElement("description").text();
-							author = n.firstChildElement("author").text();
-							fdm = n.firstChildElement("flight-model").text();
-						} /* !query.isValid() */
-					} /*  xmlFile.open() */
-
-					QString record = QString("%1~|~%2~|~%3~|~%4~|~%5~|~%6").arg(directory, xml_file, aero, fdm, description, author );
-					aeroList << record;
-					found++;
-
-					if(c % 100 == 0){
-						QString str = QString("%1 aircraft found").arg(found);
-						statusBarAero->showMessage(str);
-					}
-					if(progress.wasCanceled()){
-						break;
-					}
-					c++;
-				} // <Add models
-
-			}
-		}
-	}
-	return aeroList;
-
-}
 
 //=============================================================
 // Save Settings
@@ -505,7 +417,12 @@ QString AircraftWidget::validate(){
 
 void AircraftWidget::on_refresh_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
-	scan_xml_sets();
+	qDebug() << "on refresh_cache";
+	//* scan Airraft dirs and save in settings (mad encoding for now)
+	AeroTools *aeroTool = new AeroTools(this);
+	aeroList = aeroTool->scan_xml_sets();
+	settings.setValue("AIRCRAFT_CACHED", aeroList );
+	settings.sync();
 	load_tree();
 }
 
@@ -559,12 +476,12 @@ void AircraftWidget::load_tree(){
 //=============================================================
 // Initialize
 void AircraftWidget::initialize(){
-	aeroList = settings.value("aircraft_list").toStringList();
+	aeroList = settings.value("AIRCRAFT_CACHED").toStringList();
 	if(aeroList.count() == 0){
 		//assume its never been initialised
-		scan_xml_sets();
+		//scan_xml_sets();
 	}
-	aeroList = settings.value("aircraft_list").toStringList();
+	aeroList = settings.value("AIRCRAFT_CACHED").toStringList();
 	load_tree();
 }
 
