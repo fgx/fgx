@@ -524,7 +524,7 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 	if(parkingPositions.count() != 0) {
 		messagecount.append(QString("%1 Park Position(s)").arg(parkingParent->childCount()));
 	} else {
-		messagecount.append(QString("No park Positions").arg(parkingParent->childCount()));
+		messagecount.append(QString("No Park Positions."));
 	}
 
 	statusBarRunways->showMessage(messagecount);

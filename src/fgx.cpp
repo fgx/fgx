@@ -129,8 +129,10 @@ void fgx::on_buttonStartFg_clicked() {
 	txtPreview->setPlainText(fg_args().join("\n"));
 
 	//** This process will always start on the shell as fgfs returns an error help if incorrect args
-	bool start = QProcess::startDetached( settings.fgfs_path(), fg_args(), QString(), &pid_fg);
-	Q_UNUSED(start);
+	QProcess startfg;
+	startfg.QProcess::startDetached( settings.fgfs_path(), fg_args(), QString(), &pid_fg);
+	//bool start = QProcess::startDetached( settings.fgfs_path(), fg_args(), QString(), &pid_fg);
+	Q_UNUSED(startfg);
 
 	if(checkBoxMpMap->isChecked()){
 		QUrl mapUrl("http://mpmap02.flightgear.org/");
@@ -350,8 +352,10 @@ QStringList fgx::fg_args(){
 
 	//* Log Level - Redirect stdout and stderr to logfile
 	if(checkBoxLogEnabled->isChecked()){
-		args << QString("--log-level=").append( buttonGroupLog->checkedButton()->text().toLower() );
-		args << QDir::currentPath().append(" &> fgfslog.log");
+		args << QString("--log-level=warn");
+		
+		//could not be passed with args:
+		//args << QString(" &> fgfslog.txt");
 	}
 
 	return args;
