@@ -364,10 +364,7 @@ QStringList fgx::fg_args(){
 	//* Log Level - Redirect stdout and stderr to logfile MUST be last argument
 	if(checkBoxLogEnabled->isChecked()){
 		args << QString("--log-level=warn");
-		
-		//could not be passed with args:
-		args << QString("&>");
-		args << QString("fgfslog.txt");
+		args << QString("&>fgfslog.txt");
 	}
 
 	return args;
