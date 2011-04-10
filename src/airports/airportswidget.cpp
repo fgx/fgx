@@ -518,7 +518,11 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 			item->setText(1, "stand");
 		}
 	}
-	statusBarRunways->showMessage( QString("%1 runways, %2 park position(s)").arg(runwaysParent->childCount(), parkingParent->childCount()) );
+	
+	QString messagecount;
+	messagecount.append(QString("%1 runway(s), ").arg(runwaysParent->childCount()));
+	messagecount.append(QString("%1 park position(s)").arg(parkingParent->childCount()));
+	statusBarRunways->showMessage(messagecount);
 }
 
 //===========================================================================
