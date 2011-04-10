@@ -469,7 +469,13 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 	QStringList parkingPositions;
 	QString parkPosFile = QString(airportXmlFile);
 	parkPosFile.chop(13); // strip the threshold.xml part
-	parkPosFile.append("parking.xml");  //"groundnet.xml"
+	
+	//terrasync custom scenery check because with terrasync parking.xml is renamed to groundnet.xml
+	if (settings.value("use_terrasync").toString() == "true") {
+	parkPosFile.append("groundnet.xml");  //"groundnet.xml"
+	} else {
+		parkPosFile.append("parking.xml");
+	}
 
 	QFile ppfile(parkPosFile);
 	if(ppfile.open(QIODevice::ReadOnly)) {
@@ -512,7 +518,7 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 			item->setText(1, "stand");
 		}
 	}
-	statusBarRunways->showMessage( QString("%1 runways, %2 stangs").arg(runwaysParent->childCount(), parkingParent->childCount()) );
+	statusBarRunways->showMessage( QString("%1 runways, %2 park position(s)").arg(runwaysParent->childCount(), parkingParent->childCount()) );
 }
 
 //===========================================================================
