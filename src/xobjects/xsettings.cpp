@@ -104,11 +104,14 @@ QString XSettings::aircraft_path(QString dir){
 
 
 //===========================================================================
-//** Aiprots path
+//** Airports path
 //===========================================================================
 QString XSettings::airports_path(){
 	if(use_terrasync()){
-		return scenery_path().append("/Airports");
+		// osx at home
+		QString terrascenehome(QDir::homePath());
+		terrascenehome.append("/Documents/TerrasyncScenery");
+		return terrascenehome;
 	}
 	return fg_root().append("/Scenery/Airports");
 }
