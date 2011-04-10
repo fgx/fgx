@@ -282,7 +282,7 @@ QStringList fgx::fg_args(){
 
 
 	//** Startup , Splash, Geometry
-	args << QString("--geometry=").append(comboScreenSize->currentText());
+	args << QString("--geometry=").append( comboScreenSize->currentText() );
 	if (checkboxDisableSplash->isChecked()) {
 		args << QString("--disable-splash-screen");
 	}
@@ -361,12 +361,13 @@ QStringList fgx::fg_args(){
 		}
 	}
 
-	//* Log Level - Redirect stdout and stderr to logfile
+	//* Log Level - Redirect stdout and stderr to logfile MUST be last argument
 	if(checkBoxLogEnabled->isChecked()){
 		args << QString("--log-level=warn");
 		
 		//could not be passed with args:
-		//args << QString(" &> fgfslog.txt");
+		args << QString("&>");
+		args << QString("fgfslog.txt");
 	}
 
 	return args;
@@ -445,7 +446,8 @@ void fgx::load_settings()
 	txtTerraSyncPath->setText( settings.value("terrasync_sync_path").toString() );
 
 	//** Sartup sxreens	
-	comboScreenSize->setCurrentIndex( comboScreenSize->findText(settings.value("screen_size").toString()) );
+	int idx = comboScreenSize->findText(settings.value("screen_size").toString());
+	comboScreenSize->setCurrentIndex( idx == -1 ? 0 : idx );
 	checkboxFullScreen->setChecked(settings.value("screen_full").toBool());
 	checkboxDisableSplash->setChecked(settings.value("screen_splash").toBool());
 
