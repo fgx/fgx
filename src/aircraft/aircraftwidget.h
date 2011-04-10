@@ -72,7 +72,7 @@ signals:
 public slots:
 	void load_tree();
 	void load_aircraft_shell();
-	QStringList scan_xml_sets();
+	//QStringList scan_xml_sets();
 
 	void on_tree_selection_changed();
 
