@@ -128,10 +128,21 @@ void fgx::kill_process(QString pid) {
 void fgx::on_buttonStartFg_clicked() {
 	txtPreview->setPlainText(fg_args().join("\n"));
 
-	//** This process will always start on the shell as fgfs returns an error help if incorrect args
+	// starting process not detached and write log file
 	QProcess startfg;
-	startfg.QProcess::startDetached( settings.fgfs_path(), fg_args(), QString(), &pid_fg);
-	//bool start = QProcess::startDetached( settings.fgfs_path(), fg_args(), QString(), &pid_fg);
+	QString program = settings.fgfs_path();
+	QStringList arguments = fg_args();
+	
+	startfg.start(program, arguments);	
+	
+	if (startfg.waitForFinished(-1)) {
+	QFile file("fgfslog.log");
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&file);
+	QByteArray logData = startfg.readAllStandardError();
+		out << logData;
+	}
+	
 	Q_UNUSED(startfg);
 
 	if(checkBoxMpMap->isChecked()){
@@ -456,7 +467,7 @@ void fgx::load_settings()
 	QString secondSet = settings.value("second").toString();
 	second->setText(secondSet);
 
-	QString tod = settings.value("timeofday", "Real Time").toString();
+	QString tod = settings.value("timeofday", "real").toString();
 	QList<QAbstractButton *> todButtons = buttonGroupTime->buttons();
 	for (int i = 0; i < todButtons.size(); ++i) {
 		if(todButtons.at(i)->text() == tod){

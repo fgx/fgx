@@ -214,7 +214,7 @@ void SettingsDialog::disable_scenery_actions(bool state){
 }
 
 //=================================================================================
-//* Autodetect fgfs - this wont work on windows proabably
+//* Autodetect fgfs - this wont work on windows probably
 void SettingsDialog::on_fgfs_autodetect(){
 
 	//if(settings.runningOs() == )
