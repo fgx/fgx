@@ -470,9 +470,9 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 	QString parkPosFile = QString(airportXmlFile);
 	parkPosFile.chop(13); // strip the threshold.xml part
 	
-	//terrasync custom scenery check because with terrasync parking.xml is renamed to groundnet.xml
-	if (settings.value("use_terrasync").toString() == "true") {
-	parkPosFile.append("groundnet.xml");  //"groundnet.xml"
+	//terrasync check because with terrasync scenery parking.xml is renamed to groundnet.xml
+	if (settings.value("use_terrasync").toBool() == true) {
+	parkPosFile.append("groundnet.xml");
 	} else {
 		parkPosFile.append("parking.xml");
 	}
