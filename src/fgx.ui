@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>878</width>
-    <height>685</height>
+    <height>715</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>FlightGear Launcher</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources/icons.qrc">
+   <iconset>
     <normaloff>:/icon/favicon</normaloff>:/icon/favicon</iconset>
   </property>
   <property name="autoFillBackground">
@@ -79,7 +79,7 @@ background-repeat: no-repeat;</string>
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="usesScrollButtons">
          <bool>false</bool>
@@ -290,7 +290,7 @@ background-repeat: no-repeat;</string>
                      <string>Set path</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -326,7 +326,7 @@ background-repeat: no-repeat;</string>
                      <string>Set path</string>
                     </property>
                     <property name="icon">
-                     <iconset resource="resources/icons.qrc">
+                     <iconset>
                       <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                     </property>
                    </widget>
@@ -379,7 +379,7 @@ background-repeat: no-repeat;</string>
                    <string>Set path</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources/icons.qrc">
+                   <iconset>
                     <normaloff>:/icon/settings</normaloff>:/icon/settings</iconset>
                   </property>
                  </widget>
@@ -904,7 +904,7 @@ background-repeat: no-repeat;</string>
               <string>Stop</string>
              </property>
              <property name="icon">
-              <iconset resource="resources/icons.qrc">
+              <iconset>
                <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
              </property>
             </widget>
@@ -915,7 +915,7 @@ background-repeat: no-repeat;</string>
               <string>Start</string>
              </property>
              <property name="icon">
-              <iconset resource="resources/icons.qrc">
+              <iconset>
                <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
              </property>
             </widget>
@@ -935,7 +935,7 @@ background-repeat: no-repeat;</string>
               <string>Stop</string>
              </property>
              <property name="icon">
-              <iconset resource="resources/icons.qrc">
+              <iconset>
                <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
              </property>
             </widget>
@@ -946,7 +946,7 @@ background-repeat: no-repeat;</string>
               <string>Start</string>
              </property>
              <property name="icon">
-              <iconset resource="resources/icons.qrc">
+              <iconset>
                <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
              </property>
             </widget>
@@ -1007,7 +1007,7 @@ background-repeat: no-repeat;</string>
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="resources/icons.qrc">
+    <iconset>
      <normaloff>:/icon/quit</normaloff>:/icon/quit</iconset>
    </property>
    <property name="text">
@@ -1038,9 +1038,7 @@ background-repeat: no-repeat;</string>
    </property>
   </action>
  </widget>
- <resources>
-  <include location="resources/icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroupWeather"/>

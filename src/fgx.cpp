@@ -35,6 +35,9 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	fgx_logo->setText(QCoreApplication::applicationVersion());
 
+	//** Hide future widgets maybe
+	groupBoxSetTime->setVisible(false);
+
 	//===================================================================
 	//** Setup Styles - TODO make defult style from ptatform.. in settings. (pedro)
 	//* This adds a menu Style items and attempts to set default or setting
