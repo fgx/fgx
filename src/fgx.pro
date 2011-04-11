@@ -17,10 +17,11 @@ HEADERS += fgx.h \
     network/networkwidget.h \
     network/mptelnet.h \
     aircraft/aircraftwidget.h \
-	aircraft/aerotools.h \
+    aircraft/aerotools.h \
     airports/airportswidget.h \
     airports/importairportswidget.h \
-	airports/aptdatparser.h
+    airports/aptdatparser.h \
+    xwidgets/execontrols.h
 FORMS += fgx.ui
 SOURCES += main.cpp \
     fgx.cpp \
@@ -29,9 +30,10 @@ SOURCES += main.cpp \
     network/networkwidget.cpp \
     network/mptelnet.cpp \
     aircraft/aircraftwidget.cpp \
-	aircraft/aerotools.cpp \
+    aircraft/aerotools.cpp \
     airports/airportswidget.cpp \
     airports/aptdatparser.cpp \
-	airports/importairportswidget.cpp
+    airports/importairportswidget.cpp \
+    xwidgets/execontrols.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc

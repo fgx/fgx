@@ -11,8 +11,8 @@
 #define FGX_H
 
 
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlError>
+//#include <QtSql/QSqlDatabase> TODO - pedro
+//#include <QtSql/QSqlError> TODO - pedro
 
 #include <QtCore/QProcess>
 
@@ -27,6 +27,8 @@
 #include "airports/airportswidget.h"
 #include "network/networkwidget.h"
 
+#include "xwidgets/execontrols.h"
+
 
 class fgx : public QMainWindow, public Ui::mainWindow
 {
@@ -40,9 +42,11 @@ public:
 	fgx (QMainWindow *parent = 0);
 	~fgx();
 
-	QSqlDatabase db;
+	//QSqlDatabase db;
 	//bool listchecked;
 	
+
+
 	Q_PID pid_fg;
 	Q_PID pid_terra;
 	void kill_process(QString pid);

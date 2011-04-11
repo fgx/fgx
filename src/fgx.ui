@@ -367,10 +367,10 @@ background-repeat: no-repeat;</string>
                 <bool>false</bool>
                </property>
                <layout class="QGridLayout" name="gridLayout_2">
-                <item row="1" column="0" colspan="3">
+                <item row="1" column="0" colspan="2">
                  <widget class="QLineEdit" name="txtTerraSyncPath"/>
                 </item>
-                <item row="1" column="3">
+                <item row="1" column="2">
                  <widget class="QPushButton" name="buttonTerraSyncPath">
                   <property name="toolTip">
                    <string>Click this when you enter a new path to flightgear data. Will refresh aircraft and airport list with the new fgdata path (if exists!)</string>
@@ -397,36 +397,10 @@ background-repeat: no-repeat;</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="2" column="2" colspan="2">
-                 <widget class="QPushButton" name="buttonStartTerraSync">
-                  <property name="text">
-                   <string>Start Terrasync</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="resources/icons.qrc">
-                    <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QPushButton" name="buttonStopTerraSync">
-                  <property name="text">
-                   <string>Stop Terrasync</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="resources/icons.qrc">
-                    <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0" colspan="4">
+                <item row="0" column="0" colspan="3">
                  <widget class="QLabel" name="label_3">
                   <property name="text">
-                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Set path to TerraSync Custom Scenery Directory:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>Set path to TerraSync Custom Scenery</string>
                   </property>
                  </widget>
                 </item>
@@ -887,7 +861,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="bottonActionLayout">
         <property name="spacing">
          <number>20</number>
         </property>
@@ -919,25 +893,65 @@ p, li { white-space: pre-wrap; }
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="buttonStopFg">
-          <property name="text">
-           <string>Stop FlightGear</string>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>TerraSync</string>
           </property>
-          <property name="icon">
-           <iconset resource="resources/icons.qrc">
-            <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
-          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <item>
+            <widget class="QPushButton" name="buttonStopTerraSync">
+             <property name="text">
+              <string>Stop</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resources/icons.qrc">
+               <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="buttonStartTerraSync">
+             <property name="text">
+              <string>Start</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resources/icons.qrc">
+               <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="buttonStartFg">
-          <property name="text">
-           <string>Start FlightGear</string>
+         <widget class="QGroupBox" name="groupBoxFgControls">
+          <property name="title">
+           <string>FlightGear</string>
           </property>
-          <property name="icon">
-           <iconset resource="resources/icons.qrc">
-            <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
-          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QPushButton" name="buttonStopFg">
+             <property name="text">
+              <string>Stop</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resources/icons.qrc">
+               <normaloff>:/icon/stop_disabled</normaloff>:/icon/stop_disabled</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="buttonStartFg">
+             <property name="text">
+              <string>Start</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resources/icons.qrc">
+               <normaloff>:/icon/start_enabled</normaloff>:/icon/start_enabled</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>

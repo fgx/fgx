@@ -28,24 +28,16 @@
 fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	setupUi(this);
-	/* TODO - coming Soon to an airports near you
-	db = QSqlDatabase::addDatabase("QSQLITE");
-	qDebug() << settings.db_file();
-	db.setDatabaseName(settings.db_file());
-	if( !db.open() ){
-		// TODO - maybe will crash - or move later
-		//QMessageBox::critical(this->wid, "DB fail", db.lastError());
-		//return;
-	}
-	*/
+
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	settings.restoreWindow(this);
 
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	fgx_logo->setText(QCoreApplication::applicationVersion());
 
-
-	//** Setup Styles
+	//===================================================================
+	//** Setup Styles - TODO make defult style from ptatform.. in settings. (pedro)
+	//* This adds a menu Style items and attempts to set default or setting
 	QApplication::setStyle( QStyleFactory::create(settings.value("gui_style","Macintosh (aqua)").toString()) );
 	actionGroupStyle = new QActionGroup(this);
 	actionGroupStyle->setExclusive(true);
@@ -61,28 +53,41 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	}
 
 
-	//** Initialse Extra Widgets
+	//===================================================================================
+	// These are "hardcoded" widgets inserted into the tabWidget in "ui" MainWindow
+	//===================================================================================
+	//** Aircraft tab
 	aircraftWidget = new AircraftWidget(this);
 	tabs->insertTab(2, aircraftWidget, "Aircraft");
 
+	//** Airports Tab
 	airportsWidget = new AirportsWidget(this);
 	tabs->insertTab(3, airportsWidget, "Airports");
 
+	//** Network Tab
 	networkWidget = new NetworkWidget(this);
 	tabs->insertTab(4, networkWidget, "Network");
 
 
+	//====================================
+	//** Insert the "Controls" into the bottom Bar
 
-	//** Restore Settings
+
+	//#bottonActionLayout
+
+
+	//=================================================
+	//** Restore Last tab
 	tabs->setCurrentIndex( settings.value("last_tab").toInt() );
 
 	buttonSaveSettings->setVisible(settings._dev_mode());
 	buttonLoadSettings->setVisible(settings._dev_mode());
 
-	//***** Qt Has no Show event for a form, so we need to present Widgets first
-	//** and then initialise. THis is achieved with a timer that triggers in a moment
+	//====================================================================================
+	//* Problem:  Qt Has no "Show event" for a "widget", so we need to present Widgets first
+	//** and then initialise. This is achieved with a timer that triggers in a moment
 
-	// TODO  - disable widget till sane
+	// TODO  - disable widget till sane in initialize()
 	//centralWidget()->setDisabled(true);
 	QTimer::singleShot(500, this, SLOT(initialize()));
 
@@ -95,23 +100,26 @@ fgx::~fgx(){
 
 
 //=======================================================================================================================
-// Initial Setup
+// initialize and  Setup
 //=======================================================================================================================
 void fgx::initialize(){
 
-
+	//** First load the settings, and check the "paths" to fg_root and fg are sane
 	load_settings();
 	if(!settings.paths_sane()){
 		show_settings_dialog();
 	}
+
+	//** Paths are sane so we can initialize;
+	//TODO setup wizard to import data first time
 	aircraftWidget->initialize();
 	airportsWidget->initialize();
 	load_joysticks();
 
 	centralWidget()->setDisabled(false);
-
-
 }
+
+
 //=======================================================================================================================
 // Process Related
 //=======================================================================================================================
