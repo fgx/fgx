@@ -25,7 +25,7 @@ signals:
 
 public slots:
 	void on_stop_clicked();
-	//void on_start_clicked();
+	void on_refresh_clicked();
 
 
 

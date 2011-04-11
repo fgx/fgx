@@ -17,59 +17,64 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 {
 	exe_name = exeCmd;
 	setTitle(title);
+
+	//** Grid layout just in case..
 	QGridLayout *layout = new QGridLayout();
 	setLayout(layout);
 	layout->setContentsMargins(5,5,5,5);
 	layout->setSpacing(5);
+
 	int row = 0;
+	QString buttStyle("padding: 2px;");
 
-	//** First Row is the label with the "status".. colors set in stylsheet
 
-	//* Second row is the Push buttons
-	//#row++;
+	//** Stop Button
 	buttonStop = new QPushButton();
 	buttonStop->setText(tr("Stop"));
 	buttonStop->setIcon(QIcon(":/icon/stop_disabled"));
-	//buttonStop->setStyleSheet("padding: 0px;");
+	buttonStop->setStyleSheet(buttStyle);
 	layout->addWidget(buttonStop, row, 0, 1, 1);
 	connect(buttonStop, SIGNAL(clicked()), this, SLOT(on_stop_clicked()));
 
+	//** Start Button
 	buttonStart = new QPushButton();
 	buttonStart->setText(tr("Start"));
 	buttonStart->setIcon(QIcon(":/icon/start_enabled"));
-	//buttonStart->setStyleSheet("padding: 0px;");
+	buttonStart->setStyleSheet(buttStyle);
 	layout->addWidget(buttonStart, row, 1, 1, 1);
-	///connect(buttonStart, SIGNAL(clicked()), this, SLOT(on_start_clicked()));
+	//* connection is done in fgx not here..
 
+	//** Pid Label, this might end up being LCD maybe
 	labelPid = new QLabel("---");
 	labelPid->setStyleSheet("font-size: 8pt; font-family: monospaced;");
 	layout->addWidget(labelPid, row, 2, 1, 1);
 
+	//** Refresh Button
 	buttonRefresh = new QPushButton();
-	//buttonRefresh->setText(tr("Start"));
 	buttonRefresh->setIcon(QIcon(":/icon/refresh"));
-	//buttonStart->setStyleSheet("padding: 0px;");
+	buttonRefresh->setStyleSheet(buttStyle);
 	layout->addWidget(buttonRefresh, row, 3, 1, 1);
-
+	connect(buttonRefresh, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()));
 
 }
 
+//==========================================================================
+// GUI Events
+//==========================================================================
 
+//** Stop Button clicked so kill process
 void ExeControls::on_stop_clicked(){
-	qDebug() <<  "stop";
 	kill_pid();
 }
-/*
-void ExeControls::on_start_clicked(){
-	qDebug() <<  "start kill";
 
+//** Refresh Button clicked
+void ExeControls::on_refresh_clicked(){
+	update_pid();
 }
-*/
-
 
 
 //==========================================================================
-// Return process ID of executable on mac/linue - TODO windows ?
+// Return process ID of executable on mac/linux - TODO windows ?
 //==========================================================================
 int ExeControls::get_pid(){
 	QStringList args;
@@ -89,7 +94,7 @@ int ExeControls::get_pid(){
 }
 
 //==========================================================================
-// Check if app is running and updates label
+// Check if app is running and update label
 //==========================================================================
 void ExeControls::update_pid(){
 	int pid = get_pid();
@@ -108,8 +113,8 @@ void ExeControls::kill_pid(){
 	if(pid == 0){
 		return;
 	}
-	QString command("kill ");
-	command.append(pid);
-	QProcess::startDetached(command);
+	QStringList killargs;
+	killargs << "-9" << QString::number(pid);
+	QProcess::startDetached("kill", killargs);
 }
 
