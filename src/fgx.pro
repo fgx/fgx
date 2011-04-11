@@ -21,7 +21,7 @@ HEADERS += fgx.h \
     airports/airportswidget.h \
     airports/importairportswidget.h \
     airports/aptdatparser.h \
-    xwidgets/execontrols.h
+	xwidgets/execontrols.h
 FORMS += fgx.ui
 SOURCES += main.cpp \
     fgx.cpp \

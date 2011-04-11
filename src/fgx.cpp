@@ -71,9 +71,16 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	//====================================
 	//** Insert the "Controls" into the bottom Bar
+	exeFgCom = new ExeControls("FgCom", "fgcom");
+	bottonActionLayout->addWidget(exeFgCom);
 
+	exeTerraSync = new ExeControls("TerraSync", "terrasync");
+	bottonActionLayout->addWidget(exeTerraSync);
+	connect(exeTerraSync->buttonStart, SIGNAL(clicked()), this, SLOT(on_buttonStartTerraSync_clicked()));
 
-	//#bottonActionLayout
+	exeFgfs = new ExeControls("FlightGear", "fgfs");
+	bottonActionLayout->addWidget(exeFgfs);
+	connect(exeFgfs->buttonStart, SIGNAL(clicked()), this, SLOT(on_buttonStartFg_clicked()));
 
 
 	//=================================================
@@ -115,6 +122,7 @@ void fgx::initialize(){
 	aircraftWidget->initialize();
 	airportsWidget->initialize();
 	load_joysticks();
+	update_pids();
 
 	centralWidget()->setDisabled(false);
 }
@@ -221,7 +229,17 @@ void fgx::stop_terrasync() {
 	}
 }
 
-
+void fgx::update_pids(){
+	if (exeFgCom->isEnabled()){
+		exeFgCom->update_pid();
+	}
+	if (exeTerraSync->isEnabled()){
+		exeTerraSync->update_pid();
+	}
+	if (exeFgfs->isEnabled()){
+		exeFgfs->update_pid();
+	}
+}
 
 //=======================================================================================================================
 //* Validate
@@ -448,6 +466,7 @@ void fgx::load_settings()
 	networkWidget->load_settings();
 	
 	groupBoxTerraSync->setChecked(settings.value("use_terrasync").toBool());
+	exeTerraSync->setEnabled( settings.value("use_terrasync").toBool() );
 	txtTerraSyncPath->setText( settings.value("terrasync_sync_path").toString() );
 
 	//** Sartup sxreens	
@@ -540,6 +559,7 @@ void fgx::on_buttonTerraSyncPath_clicked(){
 void fgx::on_groupBoxTerraSync_clicked(){
 	settings.setValue("use_terrasync", groupBoxTerraSync->isChecked());
 	settings.sync();
+	exeTerraSync->setEnabled(groupBoxTerraSync->isChecked());
 }
 
 //===============================================================

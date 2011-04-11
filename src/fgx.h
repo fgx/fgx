@@ -45,7 +45,9 @@ public:
 	//QSqlDatabase db;
 	//bool listchecked;
 	
-
+	ExeControls *exeFgfs;
+	ExeControls *exeTerraSync;
+	ExeControls *exeFgCom;
 
 	Q_PID pid_fg;
 	Q_PID pid_terra;
@@ -108,6 +110,7 @@ private slots:
 	void on_actionAboutQT_triggered();
 	void on_actionQuit_triggered();
 
+	void update_pids();
 };
 
 
