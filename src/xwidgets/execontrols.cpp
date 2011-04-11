@@ -25,7 +25,7 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	layout->setSpacing(5);
 
 	int row = 0;
-	QString buttStyle("padding: 2px;");
+	QString buttStyle("padding: 2px;"); //* make button smaller. this need to go into global style sheet said pedro
 
 
 	//** Stop Button
@@ -45,9 +45,9 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	//* connection is done in fgx not here..
 
 	//** Pid Label, this might end up being LCD maybe
-	labelPid = new QLabel("---");
-	labelPid->setStyleSheet("font-size: 8pt; font-family: monospaced;");
-	layout->addWidget(labelPid, row, 2, 1, 1);
+	//labelPid = new QLabel("---");
+	//labelPid->setStyleSheet("font-size: 8pt; font-family: monospaced;");
+	//layout->addWidget(labelPid, row, 2, 1, 1);
 
 	//** Refresh Button
 	buttonRefresh = new QPushButton();
@@ -55,6 +55,10 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	buttonRefresh->setStyleSheet(buttStyle);
 	layout->addWidget(buttonRefresh, row, 3, 1, 1);
 	connect(buttonRefresh, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()));
+
+	row++;
+	statusBar = new QStatusBar();
+	layout->addWidget(statusBar, row, 0, 1, 4);
 
 }
 
@@ -99,9 +103,9 @@ int ExeControls::get_pid(){
 void ExeControls::update_pid(){
 	int pid = get_pid();
 	if(pid == 0){
-		labelPid->setText("--");
+		statusBar->showMessage("--");
 	}else{
-		labelPid->setText(QString::number(pid));
+		statusBar->showMessage(QString::number(pid));
 	}
 }
 

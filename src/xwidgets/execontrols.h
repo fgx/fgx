@@ -2,8 +2,8 @@
 #define EXECONTROLS_H
 
 #include <QtGui/QGroupBox>
-#include <QtGui/QLabel>
 #include <QtGui/QPushButton>
+#include <QtGui/QStatusBar>
 
 class ExeControls : public QGroupBox
 {
@@ -12,7 +12,7 @@ public:
 	explicit ExeControls(QString title, QString exeNam, QWidget *parent = 0);
 
 	QString exe_name;
-	QLabel *labelPid;
+	QStatusBar *statusBar;
 	QPushButton *buttonStart;
 	QPushButton *buttonStop;
 	QPushButton *buttonRefresh;
