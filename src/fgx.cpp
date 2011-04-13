@@ -207,49 +207,19 @@ void fgx::on_start_fg_clicked() {
 
 //=======================================================================================================================
 // Start Terrasync
-//void fgx::on_buttonStartTerraSync_clicked(){
-//	start_terrasync();
-//}
-
 void fgx::on_start_terrasync_clicked(){
-	QString command("nice");
+
 	QStringList args;
 	args << settings.terrasync_exe_path() << "-p" << "5500" << "-S" << "-d" << settings.terrasync_sync_path();
-	//exeTerraSync->start(command, args);
+	QString command_line("nice");
+	command_line.append(" ").append(args.join(" "));
+	exeTerraSync->start(command_line);
 }
 
 
+
 //=======================================================================================================================
-// Stop TerraSync
-//void fgx::on_buttonStopTerraSync_clicked(){
-//	stop_terrasync();
-//}
-
-//void fgx::stop_terrasync() {
-//
-//	/* This is a really nasty hack cos I dont know what Im doing!! (said pete)
-//	   Gets a list of processes, and find terrasync arg
-//	   Then kills it - is there a better way ?
-//	*/
-//	//** Get a list of ALL process
-//	QStringList args;
-//	args << "terrasync";
-//	QProcess process;
-//	process.start("pidof", args, QIODevice::ReadOnly);
-//	if(process.waitForStarted()){
-//		process.waitForFinished();
-//		QString ok_result = process.readAllStandardOutput();
-//		//QString error_result = process.readAllStandardError(); Unused atmo
-//		QString pid = ok_result.trimmed();
-//		if(pid.length() > 0){
-//			QStringList killargs;
-//			killargs << "-9" << pid;
-//			int start = QProcess::startDetached("kill", killargs);
-//			Q_UNUSED(start);
-//		}
-//	}
-//}
-
+// Updates as the external processes
 void fgx::update_pids(){
 	if (exeFgCom->isEnabled()){
 		exeFgCom->update_pid();
@@ -302,8 +272,17 @@ bool fgx::validate(){
 //=======================================================================================================================
 // FlightGear Command Args
 //=======================================================================================================================
+/* This function return the "command-line=args --as-a=string near end
+   However all the args are added as a string list until join() near end
+   +++ WARNING >>>
+   * the QStringLIst args = Please make sure there are no spaces in the args.
+   * any args with spaces are quoted eg " --foo=bar" instead of --foo=bar
+   -- end Warning <<<
+*/
 QString fgx::fg_args(){
 
+	//** This is unused atmo ??
+	/*
 	QString argtime;
 	argtime.append(year->text());
 	argtime.append(":");
@@ -316,12 +295,9 @@ QString fgx::fg_args(){
 	argtime.append(minute->text());
 	argtime.append(":");
 	argtime.append(second->text());
-	
+	*/
 
-	//++ WARNING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	//** Please make sure there are no spaces in the args.
-	//** Any args with spaces are quoted eg ' --foo=bar'
-	//-- end Warning <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 	QStringList args;
 
 	//** fg_root
@@ -415,7 +391,6 @@ QString fgx::fg_args(){
 		args_string.append("--log-level=warn ");
 		args_string.append("&>").append(QDir::currentPath()).append("/fgfslog.txt");
 	}
-
 	return args_string;
 }
 
