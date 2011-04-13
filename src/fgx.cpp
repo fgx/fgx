@@ -313,16 +313,16 @@ QString fgx::fg_args(){
 		args << QString("--enable-fullscreen");
 	}
 
-	//** Controls
+	//** Autocoordination with Moouse - is this the same for joysticks ??
 	args << QString(checkBoxEnableAutoCordination->isChecked() ? "--enable-auto-coordination" : "--disable-auto-coordination");
 
 
-	//** Terrasync
+	//** Terrasync - send on socket
 	if (groupBoxTerraSync->isChecked()) {
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}
 
-	//** Scenery
+	//** Scenery Path
 	args << QString("--fg-scenery=%1").arg(settings.scenery_path());
 
 
@@ -332,18 +332,22 @@ QString fgx::fg_args(){
 		//content.append("--start-date-lat=");
 		//content.append(argtime);
 	} else {
+		//* replaces "Dawn" with "dawn", and "Real Time" with "realtime" as a hack
 		args << QString("--timeofday=").append( buttonGroupTime->checkedButton()->text().toLower().replace(" ","") );
 	}
 
 
 	//* Weather/Metar fetch
 	if(radioButtonWeatherNone->isChecked()) {
+		//* Disable real weather
 		args << QString("--disable-real-weather-fetch");
 
 	}else if(radioButtonWeatherLive->isChecked()) {
+		//* Enable real weather
 		args << QString("--enable-real-weather-fetch");
 
 	}else if(radioButtonWeatherMetar->isChecked()){
+		//* Use metar string ? do we need to parse ?
 		args << QString("--metar=").append("\"").append(metarText->toPlainText()).append("\"");
 	}
 
@@ -370,7 +374,7 @@ QString fgx::fg_args(){
 
 	args.sort();
 
-	//*  Additonal args
+	//*  Additonal args in text box..
 	QString extra = lineEditExtraArgs->toPlainText().trimmed();
 	if (extra.length() > 0) {
 		QStringList parts = extra.split("\n");
@@ -384,6 +388,7 @@ QString fgx::fg_args(){
 		}
 	}
 
+	//** Create the return string
 	QString args_string = args.join(" ");
 
 	//* Log Level - Redirect stdout and stderr to logfile MUST be last argument
@@ -443,7 +448,7 @@ void fgx::save_settings()
 	settings.setValue("extra_args", lineEditExtraArgs->toPlainText());
 	settings.setValue("log_enabled", checkBoxLogEnabled->isChecked());
 	settings.setValue("log_level", buttonGroupLog->checkedButton()->text());
-	
+	settings.sync();
 }
 
 //================================================================================
