@@ -83,8 +83,6 @@ public slots:
 	void set_mp_server();
 
 	void set_fgcom();
-	void on_fgcom_start();
-	void on_fgcom_stop();
 
 	void set_http();
 	void set_telnet();

@@ -237,6 +237,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	layoutFgCom->addLayout(hboxfgCom, row,0,1,2);
 	hboxfgCom->addStretch(20);
 
+	/*
 	QPushButton *buttonStopFgCom = new QPushButton();
 	buttonStopFgCom->setText("Stop");
 	buttonStopFgCom->setIcon(QIcon(":/icon/stop_disabled"));
@@ -248,6 +249,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 	buttonStartFgCom->setIcon(QIcon(":/icon/start_enabled"));
 	hboxfgCom->addWidget(buttonStartFgCom);
 	connect(buttonStartFgCom, SIGNAL(clicked()), this, SLOT(on_fgcom_start()));
+	*/
 
 	//===========================================================
 	//** Telnet
@@ -748,38 +750,6 @@ QString NetworkWidget::validate(){
 	}
 	return QString();
 }
-
-
-//=============================================================
-// Fgcoms
-void NetworkWidget::on_fgcom_start(){
-	QStringList args;
-	args << settings.value("fgcom_no").toString() << settings.value("fgcom_port").toString();
-	int start = QProcess::startDetached(settings.fgcom_exe_path(), args, QString(), &pid_fgcom);
-	Q_UNUSED(start);
-}
-void NetworkWidget::on_fgcom_stop(){
-	QStringList args;
-	args << "fgcom";
-	QProcess process;
-	process.start("pidof", args, QIODevice::ReadOnly);
-	if(process.waitForStarted()){
-		process.waitForFinished();
-		QString ok_result = process.readAllStandardOutput();
-		//QString error_result = process.readAllStandardError(); Unused atmo
-
-		QString pid = ok_result.trimmed();
-		if(pid.length() > 0){
-			QStringList killargs;
-			killargs << "-9" << pid;
-			int start = QProcess::startDetached("kill", killargs);
-			Q_UNUSED(start);
-		}
-	}
-}
-
-
-
 
 
 

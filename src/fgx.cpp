@@ -1,8 +1,9 @@
 /*
  *  fgx.cpp
- *  fgx
+ *  part of the fgx project
  *
  *  Created by Yves Sablonier, Zurich
+ *  Adapted by pedro in Wales - pete at freflightsim dot org
  *  Copyright 2011 --- GPL2
  *
  */
@@ -53,9 +54,9 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	}
 
 
-	//===================================================================================
+	//========================================================================================
 	// These are "hardcoded" widgets inserted into the tabWidget in "ui" MainWindow
-	//===================================================================================
+	//========================================================================================
 	//** Aircraft tab
 	aircraftWidget = new AircraftWidget(this);
 	tabs->insertTab(2, aircraftWidget, "Aircraft");
@@ -69,20 +70,26 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	tabs->insertTab(4, networkWidget, "Network");
 
 
-	//====================================
+	//========================================================================================
 	//** Insert the "Controls" into the bottom Bar
+	//========================================================================================
 	exeFgCom = new ExeControls("FgCom", "fgcom");
 	bottonActionLayout->addWidget(exeFgCom);
+	connect(	exeFgCom->buttonStart, SIGNAL(clicked()),
+				this, SLOT(on_start_fgcom_clicked())
+	);
 
 	exeTerraSync = new ExeControls("TerraSync", "terrasync");
 	bottonActionLayout->addWidget(exeTerraSync);
-	connect(exeTerraSync->buttonStart, SIGNAL(clicked()),
-			this, SLOT(on_start_terrasync_clicked())
-			);
+	connect(	exeTerraSync->buttonStart, SIGNAL(clicked()),
+				this, SLOT(on_start_terrasync_clicked())
+	);
 
 	exeFgfs = new ExeControls("FlightGear", "fgfs");
 	bottonActionLayout->addWidget(exeFgfs);
-	connect(exeFgfs->buttonStart, SIGNAL(clicked()), this, SLOT(on_start_fg_clicked()));
+	connect(	exeFgfs->buttonStart, SIGNAL(clicked()),
+				this, SLOT(on_start_fg_clicked())
+	);
 
 
 	//=================================================
@@ -129,97 +136,9 @@ void fgx::initialize(){
 	centralWidget()->setDisabled(false);
 }
 
-
 //=======================================================================================================================
-// Process Related
+// Updates as the external processes in the "command buttons"
 //=======================================================================================================================
-/*
-void fgx::kill_process(QString pid) {
-
-	QString command("kill ");
-	command.append(pid);
-	QProcess::startDetached(command);
-}
-*/
-
-//=======================================================================================================================
-// Start FlightGear
-//=======================================================================================================================
-void fgx::on_start_fg_clicked() {
-
-	QString command = settings.fgfs_path();
-	//##QStringList arguments = fg_args();
-
-	QString command_line = QString(command).append(" ").append(fg_args());
-	//preview.append("\n").append( arguments.join("\n"));
-	//#command_line.append(" ").append(arguments.join(" "));
-	txtPreview->setPlainText(command_line);
-
-	if(checkBoxMpMap->isChecked()){
-		QUrl mapUrl("http://mpmap02.flightgear.org/");
-		mapUrl.addQueryItem("follow", networkWidget->txtCallSign->text());
-		QDesktopServices::openUrl(mapUrl);
-	}
-	qDebug() << command_line;
-	exeFgfs->start(command_line);
-
-
-
-
-
-	/*
-	QProcess startfg;
-	QString program = settings.fgfs_path();
-	QStringList arguments = fg_args();
-	
-	startfg.start(program, arguments);	
-	
-	if (startfg.waitForFinished(-1)) {
-	QFile file("fgfslog.log");
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out(&file);
-	QByteArray logData = startfg.readAllStandardError();
-		out << logData;
-	}
-	
-	Q_UNUSED(startfg);
-
-	if(checkBoxMpMap->isChecked()){
-		QUrl mapUrl("http://mpmap02.flightgear.org/");
-		mapUrl.addQueryItem("follow", networkWidget->txtCallSign->text());
-		QDesktopServices::openUrl(mapUrl);
-	}
-	*/
-}
-
-
-//=======================================================================================================================
-// Stop FlightGear
-//=======================================================================================================================
-//void fgx::on_buttonStopFg_clicked() {
-//	kill_process(QString::number(pid_fg));
-//}
-
-
-
-
-
-
-//=======================================================================================================================
-// Start Terrasync
-void fgx::on_start_terrasync_clicked(){
-
-	QStringList args;
-	args << settings.terrasync_exe_path() << "-p" << "5500" << "-S" << "-d" << settings.terrasync_sync_path();
-	QString command_line("nice");
-	command_line.append(" ").append(args.join(" "));
-	exeTerraSync->start(command_line);
-}
-
-
-
-//=======================================================================================================================
-// Updates as the external processes
 void fgx::update_pids(){
 	if (exeFgCom->isEnabled()){
 		exeFgCom->update_pid();
@@ -231,6 +150,53 @@ void fgx::update_pids(){
 		exeFgfs->update_pid();
 	}
 }
+
+
+//=======================================================================================================================
+// Start FlightGear
+//=======================================================================================================================
+void fgx::on_start_fg_clicked() {
+
+	QString command = settings.fgfs_path();
+	//##QStringList arguments = fg_args();
+
+	QString command_line = QString(command).append(" ").append(fg_args());
+	txtPreview->setPlainText(command_line);
+
+	if(checkBoxMpMap->isChecked()){
+		QUrl mapUrl("http://mpmap02.flightgear.org/");
+		mapUrl.addQueryItem("follow", networkWidget->txtCallSign->text());
+		QDesktopServices::openUrl(mapUrl);
+	}
+	// qDebug() << command_line;
+	exeFgfs->start(command_line);
+}
+
+//=======================================================================================================================
+// Start Terrasync
+//=======================================================================================================================
+void fgx::on_start_terrasync_clicked(){
+
+	QStringList args;
+	args << settings.terrasync_exe_path() << "-p" << "5500" << "-S" << "-d" << settings.terrasync_sync_path();
+	QString command_line("nice");
+	command_line.append(" ").append(args.join(" "));
+	// qDebug() << command_line;
+	exeTerraSync->start(command_line);
+}
+//=======================================================================================================================
+// Start FGCom
+//=======================================================================================================================
+void fgx::on_start_fgcom_clicked(){
+	QString command_line = settings.fgcom_exe_path();
+	command_line.append(" ");
+	QStringList args;
+	args << settings.value("fgcom_no").toString() << settings.value("fgcom_port").toString();
+	command_line.append( args.join(" ") );
+	// qDebug() << command_line;
+	exeFgCom->start(command_line);
+}
+
 
 //=======================================================================================================================
 //* Validate
@@ -542,7 +508,8 @@ void fgx::load_settings()
 //===============================================================
 // Terrasync
 //===============================================================
-//** Path buttons Clicked
+
+//** Path buttons Clicked - Opens the path dialog
 void fgx::on_buttonTerraSyncPath_clicked(){
 
 	QString filePath = QFileDialog::getExistingDirectory(this,

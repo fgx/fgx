@@ -63,8 +63,6 @@ private:
 
 
 	QString fg_args();
-	void start_terrasync();
-	void stop_terrasync();
 	bool validate();
 	QActionGroup *actionGroupStyle;
 
@@ -72,15 +70,15 @@ private:
 
 private slots:
 
-	//* paths
+	//** Paths
 	void on_buttonFgFsPath_clicked();
 	void on_buttonFgRootPath_clicked();
 
+	//** Terrasync
 	void on_groupBoxTerraSync_clicked();
 	void on_buttonTerraSyncPath_clicked();
-	//void on_buttonStartTerraSync_clicked();
-	//void on_buttonStopTerraSync_clicked();
 	void on_start_terrasync_clicked();
+
 
 	void on_buttonViewCommand_clicked();
 	void on_buttonViewHelp_clicked();
@@ -88,10 +86,11 @@ private slots:
 	void on_buttonLoadSettings_clicked();
 	void on_buttonSaveSettings_clicked();
 
-	//* Processstart actions
+	//* FlightGear
 	void on_start_fg_clicked();
-	//void on_buttonStopFg_clicked();
 
+	//** FgCom
+	void on_start_fgcom_clicked();
 
 	void on_groupBoxSetTime_clicked();
 	void on_buttonGroupWeather_buttonClicked(int);
