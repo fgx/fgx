@@ -69,8 +69,8 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 // Start Executable
 // - not interested in Pid as anything could have happened elsewhere
 //==========================================================================
-void ExeControls::start(QString command, QStringList args){
-	int start = QProcess::startDetached(command, args, QString());
+void ExeControls::start(QString command_line){
+	int start = QProcess::startDetached(command_line);
 	Q_UNUSED(start);
 	if(start){
 		statusBar->showMessage("Starting", 2000);
@@ -91,9 +91,9 @@ void ExeControls::on_stop_clicked(){
 	//qDebug() << "stop clicked";
 	if(get_pid() > 0){
 		this->kill_pid();
-		statusBar->showMessage("Killed Process", 4000);
+		statusBar->showMessage("Killed Process", 2000);
 	}else{
-		statusBar->showMessage("Process not found", 4000);
+		statusBar->showMessage("Not found", 2000);
 	}
 }
 

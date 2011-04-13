@@ -23,7 +23,7 @@ public:
 	QPushButton *buttonRefresh;
 
 	//** Start is called from fgx
-	void start(QString command, QStringList args);
+	void start(QString command_line);
 	int get_pid();
 	void update_pid();
 	void kill_pid();

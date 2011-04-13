@@ -62,7 +62,7 @@ private:
 	NetworkWidget *networkWidget;
 
 
-	QStringList fg_args();
+	QString fg_args();
 	void start_terrasync();
 	void stop_terrasync();
 	bool validate();

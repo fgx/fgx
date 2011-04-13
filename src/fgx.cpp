@@ -133,20 +133,41 @@ void fgx::initialize(){
 //=======================================================================================================================
 // Process Related
 //=======================================================================================================================
+/*
 void fgx::kill_process(QString pid) {
 
 	QString command("kill ");
 	command.append(pid);
 	QProcess::startDetached(command);
 }
+*/
 
 //=======================================================================================================================
 // Start FlightGear
 //=======================================================================================================================
 void fgx::on_start_fg_clicked() {
-	txtPreview->setPlainText(fg_args().join("\n"));
 
-	// starting process not detached and write log file
+	QString command = settings.fgfs_path();
+	//##QStringList arguments = fg_args();
+
+	QString command_line = QString(command).append(" ").append(fg_args());
+	//preview.append("\n").append( arguments.join("\n"));
+	//#command_line.append(" ").append(arguments.join(" "));
+	txtPreview->setPlainText(command_line);
+
+	if(checkBoxMpMap->isChecked()){
+		QUrl mapUrl("http://mpmap02.flightgear.org/");
+		mapUrl.addQueryItem("follow", networkWidget->txtCallSign->text());
+		QDesktopServices::openUrl(mapUrl);
+	}
+	qDebug() << command_line;
+	exeFgfs->start(command_line);
+
+
+
+
+
+	/*
 	QProcess startfg;
 	QString program = settings.fgfs_path();
 	QStringList arguments = fg_args();
@@ -168,7 +189,7 @@ void fgx::on_start_fg_clicked() {
 		mapUrl.addQueryItem("follow", networkWidget->txtCallSign->text());
 		QDesktopServices::openUrl(mapUrl);
 	}
-
+	*/
 }
 
 
@@ -194,7 +215,7 @@ void fgx::on_start_terrasync_clicked(){
 	QString command("nice");
 	QStringList args;
 	args << settings.terrasync_exe_path() << "-p" << "5500" << "-S" << "-d" << settings.terrasync_sync_path();
-	exeTerraSync->start(command, args);
+	//exeTerraSync->start(command, args);
 }
 
 
@@ -281,7 +302,7 @@ bool fgx::validate(){
 //=======================================================================================================================
 // FlightGear Command Args
 //=======================================================================================================================
-QStringList fgx::fg_args(){
+QString fgx::fg_args(){
 
 	QString argtime;
 	argtime.append(year->text());
@@ -387,13 +408,15 @@ QStringList fgx::fg_args(){
 		}
 	}
 
+	QString args_string = args.join(" ");
+
 	//* Log Level - Redirect stdout and stderr to logfile MUST be last argument
 	if(checkBoxLogEnabled->isChecked()){
-		args << QString("--log-level=warn");
-		args << QString("&>fgfslog.txt");
+		args_string.append("--log-level=warn ");
+		args_string.append("&>").append(QDir::currentPath()).append("/fgfslog.txt");
 	}
 
-	return args;
+	return args_string;
 }
 
 
@@ -650,7 +673,7 @@ void fgx::on_buttonFgRootPath_clicked(){
 
 
 void fgx::on_tabs_currentChanged(int index){
-	settings.setValue("last_tab", index);
+	settings.setValue("last_tab", index); //** Save this tab as the last one.. on next startup
 	if(index == 6){
 		on_buttonViewCommand_clicked();
 	}
@@ -662,8 +685,7 @@ void fgx::on_buttonViewCommand_clicked(){
 	if(!validate()){
 		return;
 	}
-	QString str = QString(settings.fgfs_path()).append(" \\\n");
-	str.append( fg_args().join(" \\\n"));
+	QString str = QString(settings.fgfs_path()).append(" ").append( fg_args());
 	txtPreview->setPlainText(str);
 }
 
