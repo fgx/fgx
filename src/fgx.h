@@ -78,8 +78,9 @@ private slots:
 
 	void on_groupBoxTerraSync_clicked();
 	void on_buttonTerraSyncPath_clicked();
-	void on_buttonStartTerraSync_clicked();
-	void on_buttonStopTerraSync_clicked();
+	//void on_buttonStartTerraSync_clicked();
+	//void on_buttonStopTerraSync_clicked();
+	void on_start_terrasync_clicked();
 
 	void on_buttonViewCommand_clicked();
 	void on_buttonViewHelp_clicked();

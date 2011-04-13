@@ -2,6 +2,7 @@
 #include <QDebug>
 
 #include <QtCore/QProcess>
+#include <QtCore/QTimer>
 
 #include <QtGui/QHBoxLayout>
 
@@ -22,7 +23,7 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	QGridLayout *layout = new QGridLayout();
 	setLayout(layout);
 	layout->setContentsMargins(5,5,5,5);
-	layout->setSpacing(5);
+	layout->setSpacing(2);
 
 	int row = 0;
 	QString buttStyle("padding: 2px;"); //* make button smaller. this need to go into global style sheet said pedro
@@ -44,23 +45,42 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	layout->addWidget(buttonStart, row, 1, 1, 1);
 	//* connection is done in fgx not here..
 
-	//** Pid Label, this might end up being LCD maybe
-	//labelPid = new QLabel("---");
-	//labelPid->setStyleSheet("font-size: 8pt; font-family: monospaced;");
-	//layout->addWidget(labelPid, row, 2, 1, 1);
+
+
+
+	row++;
+	statusBar = new QStatusBar();
+	statusBar->setSizeGripEnabled(false);
+	statusBar->setContentsMargins(5,5,5,5);
+	layout->addWidget(statusBar, row, 0, 1, 2);
 
 	//** Refresh Button
 	buttonRefresh = new QPushButton();
 	buttonRefresh->setIcon(QIcon(":/icon/refresh"));
-	buttonRefresh->setStyleSheet(buttStyle);
-	layout->addWidget(buttonRefresh, row, 3, 1, 1);
+	buttonRefresh->setFlat(true);
+	buttonRefresh->setStyleSheet("padding: 0px;");
+	statusBar->addPermanentWidget(buttonRefresh, 0);
 	connect(buttonRefresh, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()));
 
-	row++;
-	statusBar = new QStatusBar();
-	layout->addWidget(statusBar, row, 0, 1, 4);
-
 }
+
+
+//==========================================================================
+// Start Executable
+// - not interested in Pid as anything could have happened elsewhere
+//==========================================================================
+void ExeControls::start(QString command, QStringList args){
+	int start = QProcess::startDetached(command, args, QString());
+	Q_UNUSED(start);
+	if(start){
+		statusBar->showMessage("Starting", 2000);
+		QTimer::singleShot(2000,this, SLOT(on_refresh_clicked()));
+	}else{
+		statusBar->showMessage("Failed", 4000);
+	}
+}
+
+
 
 //==========================================================================
 // GUI Events
@@ -68,9 +88,12 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 
 //** Stop Button clicked so kill process
 void ExeControls::on_stop_clicked(){
-	qDebug() << "stop clicked";
-	if(get_pid() >0){
+	//qDebug() << "stop clicked";
+	if(get_pid() > 0){
 		this->kill_pid();
+		statusBar->showMessage("Killed Process", 4000);
+	}else{
+		statusBar->showMessage("Process not found", 4000);
 	}
 }
 

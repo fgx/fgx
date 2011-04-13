@@ -76,7 +76,9 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	exeTerraSync = new ExeControls("TerraSync", "terrasync");
 	bottonActionLayout->addWidget(exeTerraSync);
-	connect(exeTerraSync->buttonStart, SIGNAL(clicked()), this, SLOT(on_buttonStartTerraSync_clicked()));
+	connect(exeTerraSync->buttonStart, SIGNAL(clicked()),
+			this, SLOT(on_start_terrasync_clicked())
+			);
 
 	exeFgfs = new ExeControls("FlightGear", "fgfs");
 	bottonActionLayout->addWidget(exeFgfs);
@@ -184,50 +186,48 @@ void fgx::on_start_fg_clicked() {
 
 //=======================================================================================================================
 // Start Terrasync
-void fgx::on_buttonStartTerraSync_clicked(){
-	start_terrasync();
-}
+//void fgx::on_buttonStartTerraSync_clicked(){
+//	start_terrasync();
+//}
 
-void fgx::start_terrasync(){
-
+void fgx::on_start_terrasync_clicked(){
 	QString command("nice");
 	QStringList args;
 	args << settings.terrasync_exe_path() << "-p" << "5500" << "-S" << "-d" << settings.terrasync_sync_path();
-	int start = QProcess::startDetached(command, args, QString());
-	Q_UNUSED(start);
+	exeTerraSync->start(command, args);
 }
 
 
 //=======================================================================================================================
 // Stop TerraSync
-void fgx::on_buttonStopTerraSync_clicked(){
-	stop_terrasync();
-}
+//void fgx::on_buttonStopTerraSync_clicked(){
+//	stop_terrasync();
+//}
 
-void fgx::stop_terrasync() {
-
-	/* This is a really nasty hack cos I dont know what Im doing!! (said pete)
-	   Gets a list of processes, and find terrasync arg
-	   Then kills it - is there a better way ?
-	*/
-	//** Get a list of ALL process
-	QStringList args;
-	args << "terrasync";
-	QProcess process;
-	process.start("pidof", args, QIODevice::ReadOnly);
-	if(process.waitForStarted()){
-		process.waitForFinished();
-		QString ok_result = process.readAllStandardOutput();
-		//QString error_result = process.readAllStandardError(); Unused atmo
-		QString pid = ok_result.trimmed();
-		if(pid.length() > 0){
-			QStringList killargs;
-			killargs << "-9" << pid;
-			int start = QProcess::startDetached("kill", killargs);
-			Q_UNUSED(start);
-		}
-	}
-}
+//void fgx::stop_terrasync() {
+//
+//	/* This is a really nasty hack cos I dont know what Im doing!! (said pete)
+//	   Gets a list of processes, and find terrasync arg
+//	   Then kills it - is there a better way ?
+//	*/
+//	//** Get a list of ALL process
+//	QStringList args;
+//	args << "terrasync";
+//	QProcess process;
+//	process.start("pidof", args, QIODevice::ReadOnly);
+//	if(process.waitForStarted()){
+//		process.waitForFinished();
+//		QString ok_result = process.readAllStandardOutput();
+//		//QString error_result = process.readAllStandardError(); Unused atmo
+//		QString pid = ok_result.trimmed();
+//		if(pid.length() > 0){
+//			QStringList killargs;
+//			killargs << "-9" << pid;
+//			int start = QProcess::startDetached("kill", killargs);
+//			Q_UNUSED(start);
+//		}
+//	}
+//}
 
 void fgx::update_pids(){
 	if (exeFgCom->isEnabled()){
