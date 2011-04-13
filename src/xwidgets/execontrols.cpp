@@ -68,7 +68,10 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 
 //** Stop Button clicked so kill process
 void ExeControls::on_stop_clicked(){
-	kill_pid();
+	qDebug() << "stop clicked";
+	if(get_pid() >0){
+		this->kill_pid();
+	}
 }
 
 //** Refresh Button clicked

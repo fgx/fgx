@@ -88,8 +88,8 @@ private slots:
 	void on_buttonSaveSettings_clicked();
 
 	//* Processstart actions
-	void on_buttonStartFg_clicked();
-	void on_buttonStopFg_clicked();
+	void on_start_fg_clicked();
+	//void on_buttonStopFg_clicked();
 
 
 	void on_groupBoxSetTime_clicked();

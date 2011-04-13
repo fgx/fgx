@@ -80,7 +80,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	exeFgfs = new ExeControls("FlightGear", "fgfs");
 	bottonActionLayout->addWidget(exeFgfs);
-	connect(exeFgfs->buttonStart, SIGNAL(clicked()), this, SLOT(on_buttonStartFg_clicked()));
+	connect(exeFgfs->buttonStart, SIGNAL(clicked()), this, SLOT(on_start_fg_clicked()));
 
 
 	//=================================================
@@ -141,7 +141,7 @@ void fgx::kill_process(QString pid) {
 //=======================================================================================================================
 // Start FlightGear
 //=======================================================================================================================
-void fgx::on_buttonStartFg_clicked() {
+void fgx::on_start_fg_clicked() {
 	txtPreview->setPlainText(fg_args().join("\n"));
 
 	// starting process not detached and write log file
@@ -173,9 +173,9 @@ void fgx::on_buttonStartFg_clicked() {
 //=======================================================================================================================
 // Stop FlightGear
 //=======================================================================================================================
-void fgx::on_buttonStopFg_clicked() {
-	kill_process(QString::number(pid_fg));
-}
+//void fgx::on_buttonStopFg_clicked() {
+//	kill_process(QString::number(pid_fg));
+//}
 
 
 
@@ -193,7 +193,7 @@ void fgx::start_terrasync(){
 	QString command("nice");
 	QStringList args;
 	args << settings.terrasync_exe_path() << "-p" << "5500" << "-S" << "-d" << settings.terrasync_sync_path();
-	int start = QProcess::startDetached(command, args, QString(), &pid_terra);
+	int start = QProcess::startDetached(command, args, QString());
 	Q_UNUSED(start);
 }
 
