@@ -2,6 +2,8 @@
 #include <QDebug>
 #include <QtCore/QUrl>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QTimer>
+#include <QtCore/QProcess>
 
 #include <QtGui/QApplication>
 #include <QtGui/QVBoxLayout>
@@ -43,10 +45,11 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//** Style Menu
 	QMenu *menuStyle = new QMenu(tr("Style"));
 	menuBar->addMenu(menuStyle);
-	// TODO make defult style from xplatform.. in settings. (pedro)
+	// TODO make defult style from xplatform.. in mainObject->settings-> (pedro)
 	QApplication::setStyle( QStyleFactory::create(mainObject->settings->value("gui_style","Macintosh (aqua)").toString()) );
 	actionGroupStyle = new QActionGroup(this);
 	actionGroupStyle->setExclusive(true);
+	connect(actionGroupStyle, SIGNAL(triggered(QAction*)), this, SLOT(mainObject->settings->(QAction*)));
 	QStringList styles =  QStyleFactory::keys();
 	for(int idx=0; idx < styles.count(); idx++){
 		QString sty = QString(styles.at(idx));
@@ -99,7 +102,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//* Core Settings
 	coreSettingsWidget = new CoreSettingsWidget(mainObject);
 	tabWidget->addTab(coreSettingsWidget, tr("Core Settings"));
-
+	connect(coreSettingsWidget->groupBoxTerraSync, SIGNAL(clicked()), this, SLOT(on_group_box_terrasync_clicked()));
 
 	//* Time / Weather Widget
 	timeWeatherWidget = new TimeWeatherWidget(mainObject);
@@ -130,7 +133,8 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//* Output + Preview
 	outputPreviewWidget = new OutputPreviewWidget(mainObject);
 	tabWidget->addTab( outputPreviewWidget, tr("Output / Preview"));
-
+	connect(outputPreviewWidget->buttonCommandPreview, SIGNAL(clicked()), this, SLOT(on_command_preview()));
+	connect(outputPreviewWidget->buttonCommandHelp, SIGNAL(clicked()), this, SLOT(on_command_help()));
 
 
 	//========================================================================================
@@ -158,7 +162,18 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 				this, SLOT(on_start_fgfs_clicked())
 	);
 
-	//set_paths();
+
+	//=================================================
+	//** Restore Last tab
+	tabWidget->setCurrentIndex( mainOb->settings->value("launcher_last_tab", 0).toInt() );
+
+	//====================================================================================
+	//* Problem:  Qt Has no "Show event" for a "widget", so we need to present Widgets first
+	//** and then initialise. This is achieved with a timer that triggers in a moment
+
+	// TODO  - disable widget till sane in initialize()
+	//centralWidget()->setDisabled(true);
+	QTimer::singleShot(500, this, SLOT(initialize()));
 
 }
 
@@ -167,24 +182,25 @@ LauncherWindow::~LauncherWindow()
 }
 
 
-
-//void LauncherWindow::closeEvent( event ){
-//   //     self.main.mainObject->settings->save_window( "account_dialog", self )
-//    qDebug() << "close";
-//}
-
 void LauncherWindow::closeEvent(QCloseEvent *event){
 	Q_UNUSED(event);
-    mainObject->settings->saveWindow(this);
+	save_settings();
+	mainObject->settings->saveWindow(this);
+	mainObject->settings->sync();
+	event->accept();
 }
 
+void LauncherWindow::on_menu_style(QAction *action){
+	mainObject->settings->setValue("gui_style", action->text());
+	QApplication::setStyle(QStyleFactory::create(action->text()));
+}
 
+void LauncherWindow::on_tab_changed(int idx){
+	mainObject->settings->setValue("launcher_last_tab", idx);
+		//if(index == 6){
+		//	on_buttonViewCommand_clicked();
+		//}
 
-void LauncherWindow::on_tab_changed(int tab_index){
-	Q_UNUSED(tab_index);
-	//TODO maybe we dont need this..
-	// pusedo code
-	// if isistance(widget, FooClass) : load()
 }
 
 
@@ -243,6 +259,20 @@ void LauncherWindow::set_paths(){
 
 
 
+//=====================================================================================================================
+// Updates as the external processes in the "command buttons"
+//=======================================================================================================================
+void LauncherWindow::update_pids(){
+	if (exeFgCom->isEnabled()){
+		exeFgCom->update_pid();
+	}
+	if (exeTerraSync->isEnabled()){
+		exeTerraSync->update_pid();
+	}
+	if (exeFgfs->isEnabled()){
+		exeFgfs->update_pid();
+	}
+}
 
 //=======================================================================================================================
 // Start FlightGear
@@ -421,3 +451,198 @@ void LauncherWindow::on_quit(){
 	QApplication::quit();
 }
 
+
+
+
+//================================================================================
+// Save Settings
+//================================================================================
+
+void LauncherWindow::save_settings()
+{
+	//## NB: fgfs path and FG_ROOT are saves in SettingsDialog ##
+	coreSettingsWidget->save_settings();
+	aircraftWidget->save_settings();
+	airportsWidget->save_settings();
+	networkWidget->save_settings();
+	advancedOptionsWidget->save_settings();
+
+
+
+
+	/* TODO
+	mainObject->settings->setValue("year", year->text());
+	mainObject->settings->setValue("month", month->text());
+	mainObject->settings->setValue("day", day->text());
+	mainObject->settings->setValue("hour", hour->text());
+	mainObject->settings->setValue("minute", minute->text());
+	mainObject->settings->setValue("second", second->text());
+	*/
+
+	//* Time
+	mainObject->settings->setValue("timeofday", timeWeatherWidget->buttonGroupTime->checkedButton()->property("value").toString());
+	//mainObject->settings->setValue("set_time", groupBoxSetTime->isChecked());
+
+
+	//* Weather
+	mainObject->settings->setValue("weather", timeWeatherWidget->buttonGroupMetar->checkedId());
+	mainObject->settings->setValue("metar", timeWeatherWidget->txtMetar->toPlainText());
+
+	//* Advanced
+
+	mainObject->settings->sync();
+}
+
+//================================================================================
+// Load Settings
+//================================================================================
+
+void LauncherWindow::load_settings()
+{
+
+
+
+	coreSettingsWidget->load_settings();
+	aircraftWidget->load_settings();
+	airportsWidget->load_settings();
+	networkWidget->load_settings();
+	advancedOptionsWidget->load_settings();
+
+
+	exeTerraSync->setEnabled( mainObject->settings->value("use_terrasync").toBool() );
+
+
+
+
+	//** Time Of Day - TODO
+	/*
+	bool setTime = mainObject->settings->value("set_time").toBool();
+	groupBoxSetTime->setChecked(setTime);
+
+	QString yearSet = mainObject->settings->value("year").toString();
+	year->setText(yearSet);
+	QString monthSet = mainObject->settings->value("month").toString();
+	month->setText(monthSet);
+	QString daySet = mainObject->settings->value("day").toString();
+	day->setText(daySet);
+	QString hourSet = mainObject->settings->value("hour").toString();
+	hour->setText(hourSet);
+	QString minuteSet = mainObject->settings->value("minute").toString();
+	minute->setText(minuteSet);
+	QString secondSet = mainObject->settings->value("second").toString();
+	second->setText(secondSet);
+	*/
+
+	QString tod = mainObject->settings->value("timeofday", "real").toString();
+	QList<QAbstractButton *> todButtons = timeWeatherWidget->buttonGroupTime->buttons();
+	for (int i = 0; i < todButtons.size(); ++i) {
+		if(todButtons.at(i)->property("value").toString() == tod){
+			todButtons.at(i)->setChecked(true);
+		}
+		//todButtons.at(i)->setEnabled(!setTime);
+	 }
+
+
+
+
+	//** Weather
+	int weather = mainObject->settings->value("weather").toInt();
+	timeWeatherWidget->buttonGroupMetar->button(weather)->setChecked(true);
+
+	timeWeatherWidget->txtMetar->setPlainText(mainObject->settings->value("metar").toString());
+	timeWeatherWidget->txtMetar->setEnabled(weather == 2);
+
+
+
+
+}
+
+
+//=======================================================================================================================
+// initialize and  Setup
+//=======================================================================================================================
+void LauncherWindow::initialize(){
+
+	//** First load the settings, and check the "paths" to fg_root and fg are sane
+	load_settings();
+	if(!mainObject->settings->paths_sane()){
+		coreSettingsWidget->show_settings_dialog();
+	}
+
+	//** Paths are sane so we can initialize;
+	//TODO setup wizard to import data first time
+	aircraftWidget->initialize();
+	airportsWidget->initialize();
+	coreSettingsWidget->initialize();
+	update_pids();
+
+	centralWidget()->setDisabled(false);
+}
+
+
+//==============================================
+//** View Buttons
+void LauncherWindow::on_command_preview(){
+	if(!validate()){
+		return;
+	}
+	QString str = QString(mainObject->settings->fgfs_path()).append(" ").append( fg_args());
+	outputPreviewWidget->txtPreviewOutput->setPlainText(str);
+}
+
+void LauncherWindow::on_command_help(){
+	QProcess process;
+	QStringList args;
+	args << "-h" << "-v" << QString("--fg-root=").append(mainObject->settings->fg_root());
+	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
+	if(process.waitForStarted()){
+		process.waitForFinished();
+		QString ok_result = process.readAllStandardOutput();
+		QString error_result = process.readAllStandardError();
+		outputPreviewWidget->txtPreviewOutput->setPlainText(ok_result);
+	}
+}
+
+
+//=======================================================================================================================
+//* Validate
+//=======================================================================================================================
+bool LauncherWindow::validate(){
+	int TIMEOUT = 5000;
+	QString v;
+
+	v = aircraftWidget->validate();
+	if(v != ""){
+		tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
+		statusBar()->showMessage(v, TIMEOUT);
+		return false;
+	}
+
+	v = airportsWidget->validate();
+	if(v != ""){
+		tabWidget->setCurrentIndex( tabWidget->indexOf(airportsWidget));
+		statusBar()->showMessage(v, TIMEOUT);
+		return false;
+	}
+
+	v = networkWidget->validate();
+	if(v != ""){
+		tabWidget->setCurrentIndex( tabWidget->indexOf(networkWidget));
+		statusBar()->showMessage(v, TIMEOUT);
+		return false;
+	}
+
+	if(coreSettingsWidget->groupBoxTerraSync->isChecked() and coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
+		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget) );
+		coreSettingsWidget->txtTerraSyncPath->setFocus();
+		statusBar()->showMessage("Need a Terrasync directory", TIMEOUT);
+		return false;
+	}
+	return true;
+}
+
+void LauncherWindow::on_group_box_terrasync_clicked(){
+	mainObject->settings->setValue("use_terrasync", coreSettingsWidget->groupBoxTerraSync->isChecked());
+	mainObject->settings->sync();
+	exeTerraSync->setEnabled(coreSettingsWidget->groupBoxTerraSync->isChecked());
+}

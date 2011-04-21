@@ -3,12 +3,11 @@
 
 #include <QtGui/QMainWindow>
 
-
-
 #include <QtGui/QLabel>
 #include <QtGui/QTreeWidget>
 #include <QtGui/QTabWidget>
 #include <QtGui/QSplitter>
+#include <QtGui/QAction>
 #include <QtGui/QActionGroup>
 
 #include "xobjects/mainobject.h"
@@ -78,13 +77,26 @@ public slots:
 
 
 	void on_start_terrasync_clicked();
+	void update_pids();
 
-
-
+	//* Actions
 	void on_about_fgx();
 	void on_about_qt();
 	void on_quit();
+	void on_menu_style(QAction *act);
 
+	//* Functions
+	void load_settings();
+	void save_settings();
+	void initialize();
+	bool validate();
+
+	//* Ouput
+	void on_command_preview();
+	void on_command_help();
+
+
+	void on_group_box_terrasync_clicked();
 };
 
 #endif // LAUNCHERWINDOW_H
