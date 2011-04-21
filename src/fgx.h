@@ -23,12 +23,14 @@
 #include "ui_fgx.h"
 #include "xobjects/xsettings.h"
 
+#include "panes/coresettingswidget.h"
 #include "panes/timeweatherwidget.h"
 #include "aircraft/aircraftwidget.h"
 #include "airports/airportswidget.h"
 #include "network/networkwidget.h"
 #include "panes/advancedoptionswidget.h"
 #include "panes/outputpreviewwidget.h"
+
 
 #include "xwidgets/execontrols.h"
 
@@ -60,6 +62,7 @@ private:
 	Ui::mainWindow *ui;
 	XSettings settings;
 
+	CoreSettingsWidget *coreSettingsWidget;
 	TimeWeatherWidget *timeWeatherWidget;
 	AircraftWidget *aircraftWidget;
 	AirportsWidget *airportsWidget;

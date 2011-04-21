@@ -58,6 +58,10 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	// These are "hardcoded" widgets inserted into the tabWidget in "ui" MainWindow
 	//========================================================================================
 
+	//** Core Settings
+	coreSettingsWidget = new CoreSettingsWidget(this);
+	tabs->addTab(coreSettingsWidget, tr("Core Settings"));
+
 	//** Time / Weather Widget
 	timeWeatherWidget = new TimeWeatherWidget(this);
 	tabs->addTab(timeWeatherWidget, tr("Time and Weather"));

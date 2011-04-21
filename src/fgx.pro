@@ -24,7 +24,9 @@ HEADERS += fgx.h \
     xwidgets/execontrols.h \
     panes/timeweatherwidget.h \
     panes/advancedoptionswidget.h \
-	panes/outputpreviewwidget.h
+    panes/outputpreviewwidget.h \
+	panes/coresettingswidget.h \
+    xwidgets/xgroupvbox.h
 FORMS += fgx.ui
 SOURCES += main.cpp \
     fgx.cpp \
@@ -40,6 +42,8 @@ SOURCES += main.cpp \
     xwidgets/execontrols.cpp \
     panes/timeweatherwidget.cpp \
     panes/advancedoptionswidget.cpp \
-	panes/outputpreviewwidget.cpp
+    panes/outputpreviewwidget.cpp \
+	panes/coresettingswidget.cpp \
+    xwidgets/xgroupvbox.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
