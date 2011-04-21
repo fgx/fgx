@@ -27,6 +27,7 @@
 #include "aircraft/aircraftwidget.h"
 #include "airports/airportswidget.h"
 #include "network/networkwidget.h"
+#include "panes/advancedoptionswidget.h"
 
 #include "xwidgets/execontrols.h"
 
@@ -62,7 +63,7 @@ private:
 	AircraftWidget *aircraftWidget;
 	AirportsWidget *airportsWidget;
 	NetworkWidget *networkWidget;
-
+	AdvancedOptionsWidget *advancedOptionsWidget;
 
 	QString fg_args();
 	bool validate();

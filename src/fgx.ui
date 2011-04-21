@@ -438,7 +438,6 @@ background-repeat: no-repeat;</string>
           </item>
          </layout>
         </widget>
-        
         <widget class="QWidget" name="tab_3">
          <attribute name="title">
           <string>Advanced</string>
@@ -451,13 +450,13 @@ background-repeat: no-repeat;</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_10">
              <item>
-              <widget class="QPlainTextEdit" name="lineEditExtraArgs"/>
+              <widget class="QPlainTextEdit" name="lineEditExtraArgsss"/>
              </item>
             </layout>
            </widget>
           </item>
           <item>
-           <widget class="QGroupBox" name="checkBoxLogEnabled">
+           <widget class="QGroupBox" name="checkBoxLogEnabledss">
             <property name="title">
              <string>Write Log Files</string>
             </property>
@@ -712,8 +711,6 @@ background-repeat: no-repeat;</string>
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroupWeatherX"/>
-  <buttongroup name="buttonGroupTimeX"/>
   <buttongroup name="buttonGroupLog"/>
  </buttongroups>
 </ui>

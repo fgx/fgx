@@ -74,6 +74,9 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	networkWidget = new NetworkWidget(this);
 	tabs->insertTab(4, networkWidget, tr("Network"));
 
+	//** Advanced Options
+	advancedOptionsWidget = new AdvancedOptionsWidget(this);
+	tabs->insertTab(5, advancedOptionsWidget, tr("Advanced Options"));
 
 	//========================================================================================
 	//** Insert the "Controls" into the bottom Bar
@@ -333,6 +336,9 @@ QString fgx::fg_args(){
 	//** Network
 	args << networkWidget->get_args();
 
+
+	args << advancedOptionsWidget->get_args();
+
 	//* Ai Traffic TODO
 	/*
 	if (enableAITraffic->isChecked()) {
@@ -347,6 +353,7 @@ QString fgx::fg_args(){
 	args.sort();
 
 	//*  Additonal args in text box..
+	/*
 	QString extra = lineEditExtraArgs->toPlainText().trimmed();
 	if (extra.length() > 0) {
 		QStringList parts = extra.split("\n");
@@ -359,15 +366,12 @@ QString fgx::fg_args(){
 			}
 		}
 	}
+	*/
 
 	//** Create the return string
 	QString args_string = args.join(" ");
 
-	//* Log Level - Redirect stdout and stderr to logfile MUST be last argument
-	if(checkBoxLogEnabled->isChecked()){
-		args_string.append("--log-level=warn ");
-		args_string.append("&>").append(QDir::currentPath()).append("/fgfslog.txt");
-	}
+
 	return args_string;
 }
 
@@ -389,7 +393,7 @@ void fgx::save_settings()
 	aircraftWidget->save_settings();
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
-
+	advancedOptionsWidget->save_settings();
 
 	settings.setValue("use_terrasync", groupBoxTerraSync->isChecked());
 	settings.setValue("terrasync_sync_path", txtTerraSyncPath->text());
@@ -418,9 +422,7 @@ void fgx::save_settings()
 	settings.setValue("metar", timeWeatherWidget->txtMetar->toPlainText());
 	
 	//* Advanced
-	settings.setValue("extra_args", lineEditExtraArgs->toPlainText());
-	settings.setValue("log_enabled", checkBoxLogEnabled->isChecked());
-	settings.setValue("log_level", buttonGroupLog->checkedButton()->text());
+
 	settings.sync();
 }
 
@@ -437,9 +439,11 @@ void fgx::load_settings()
 	fgdataPath->setText(settings.fg_root());
 	fgfsPath->setText(settings.fgfs_path());
 
+
 	aircraftWidget->load_settings();
 	airportsWidget->load_settings();
 	networkWidget->load_settings();
+	advancedOptionsWidget->load_settings();
 	
 	groupBoxTerraSync->setChecked(settings.value("use_terrasync").toBool());
 	exeTerraSync->setEnabled( settings.value("use_terrasync").toBool() );
@@ -491,19 +495,7 @@ void fgx::load_settings()
 	timeWeatherWidget->txtMetar->setEnabled(weather == 2);
 	
 
-		
-	lineEditExtraArgs->setPlainText(settings.value("extra_args").toString());
 
-	checkBoxLogEnabled->setChecked(settings.value("log_enabled").toBool());
-	radioButtonLogWarn->setChecked(true);
-	QString log_level = settings.value("log_level").toString();
-	QList<QAbstractButton *> logButtons = buttonGroupLog->buttons();
-	for (int i = 0; i < logButtons.size(); ++i) {
-		if(logButtons.at(i)->text() == log_level){
-			logButtons.at(i)->setChecked(true);
-			break;
-		}
-	 }
 
 }
 
