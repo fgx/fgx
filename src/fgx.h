@@ -79,12 +79,12 @@ private:
 private slots:
 
 	//** Paths
-	void on_buttonFgFsPath_clicked();
-	void on_buttonFgRootPath_clicked();
+	//void on_buttonFgFsPath_clicked();
+	//void on_buttonFgRootPath_clicked();
 
 	//** Terrasync
-	void on_groupBoxTerraSync_clicked();
-	void on_buttonTerraSyncPath_clicked();
+	void on_group_box_terrasync_clicked();
+	//void on_buttonTerraSyncPath_clicked();
 	void on_start_terrasync_clicked();
 
 
@@ -108,7 +108,7 @@ private slots:
 
 
 	void on_tabs_currentChanged(int);
-	void show_settings_dialog();
+	//void show_settings_dialog();
 	void load_settings();
 	void save_settings();
 	void initialize();

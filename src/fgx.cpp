@@ -61,6 +61,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	//** Core Settings
 	coreSettingsWidget = new CoreSettingsWidget(this);
 	tabs->addTab(coreSettingsWidget, tr("Core Settings"));
+	connect(coreSettingsWidget->groupBoxTerraSync, SIGNAL(clicked()), this, SLOT(on_group_box_terrasync_clicked()));
 
 	//** Time / Weather Widget
 	timeWeatherWidget = new TimeWeatherWidget(this);
@@ -143,7 +144,7 @@ void fgx::initialize(){
 	//** First load the settings, and check the "paths" to fg_root and fg are sane
 	load_settings();
 	if(!settings.paths_sane()){
-		show_settings_dialog();
+		coreSettingsWidget->show_settings_dialog();
 	}
 
 	//** Paths are sane so we can initialize;
@@ -246,9 +247,9 @@ bool fgx::validate(){
 		return false;
 	}
 
-	if(groupBoxTerraSync->isChecked() and txtTerraSyncPath->text().length() == 0){
-		tabs->setCurrentIndex(0);
-		txtTerraSyncPath->setFocus();
+	if(coreSettingsWidget->groupBoxTerraSync->isChecked() and coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
+		tabs->setCurrentIndex( tabs->indexOf(coreSettingsWidget) );
+		coreSettingsWidget->txtTerraSyncPath->setFocus();
 		statusBar()->showMessage("Need a Terrasync directory", TIMEOUT);
 		return false;
 	}
@@ -292,10 +293,6 @@ QString fgx::fg_args(){
 
 
 
-	//** Terrasync - send on socket
-	if (groupBoxTerraSync->isChecked()) {
-		args << QString("--atlas=socket,out,5,localhost,5505,udp");
-	}
 
 	//** Scenery Path
 	args << QString("--fg-scenery=%1").arg(settings.scenery_path());
@@ -400,9 +397,6 @@ void fgx::save_settings()
 	networkWidget->save_settings();
 	advancedOptionsWidget->save_settings();
 
-	settings.setValue("use_terrasync", groupBoxTerraSync->isChecked());
-	settings.setValue("terrasync_sync_path", txtTerraSyncPath->text());
-
 
 
 
@@ -439,8 +433,7 @@ void fgx::on_buttonLoadSettings_clicked(){
 void fgx::load_settings()
 {
 
-	fgdataPath->setText(settings.fg_root());
-	fgfsPath->setText(settings.fgfs_path());
+
 
 	coreSettingsWidget->load_settings();
 	aircraftWidget->load_settings();
@@ -448,9 +441,9 @@ void fgx::load_settings()
 	networkWidget->load_settings();
 	advancedOptionsWidget->load_settings();
 	
-	groupBoxTerraSync->setChecked(settings.value("use_terrasync").toBool());
+
 	exeTerraSync->setEnabled( settings.value("use_terrasync").toBool() );
-	txtTerraSyncPath->setText( settings.value("terrasync_sync_path").toString() );
+
 
 
 	
@@ -501,27 +494,11 @@ void fgx::load_settings()
 // Terrasync
 //===============================================================
 
-//** Path buttons Clicked - Opens the path dialog
-void fgx::on_buttonTerraSyncPath_clicked(){
-
-	QString filePath = QFileDialog::getExistingDirectory(this,
-														 tr("Select Terrasync Directory"),
-														 txtTerraSyncPath->text(),
-														 QFileDialog::ShowDirsOnly);
-	if(filePath.length() > 0){
-		txtTerraSyncPath->setText(filePath);
-	}
-
-	//* Need to write out the terrasync dir as its used other places ;-(
-	settings.setValue("terrasync_path", txtTerraSyncPath->text());
-	settings.sync();
-}
-
 //** Group Box Checked
-void fgx::on_groupBoxTerraSync_clicked(){
-	settings.setValue("use_terrasync", groupBoxTerraSync->isChecked());
+void fgx::on_group_box_terrasync_clicked(){
+	settings.setValue("use_terrasync", coreSettingsWidget->groupBoxTerraSync->isChecked());
 	settings.sync();
-	exeTerraSync->setEnabled(groupBoxTerraSync->isChecked());
+	exeTerraSync->setEnabled(coreSettingsWidget->groupBoxTerraSync->isChecked());
 }
 
 //===============================================================
@@ -562,23 +539,6 @@ void fgx::closeEvent(QCloseEvent *event)
 	event->accept();
 }
 
-//===============================================================
-// Settings Dialog
-void fgx::show_settings_dialog(){
-	SettingsDialog *settingsDialog = new SettingsDialog();
-	if(settingsDialog->exec()){
-		fgfsPath->setText(settings.fgfs_path());
-		fgdataPath->setText(settings.fg_root());
-	}
-}
-void fgx::on_buttonFgFsPath_clicked(){
-	show_settings_dialog();
-}
-void fgx::on_buttonFgRootPath_clicked(){
-	show_settings_dialog();
-}
-
-
 
 
 
@@ -591,7 +551,6 @@ void fgx::on_tabs_currentChanged(int index){
 
 //==============================================
 //** View Buttons
-
 void fgx::on_buttonCommandPreview_clicked(){
 	if(!validate()){
 		return;

@@ -62,6 +62,13 @@ public slots:
 	void load_joysticks();
 
 	void on_radio_fg_path();
+
+	void on_button_fgfs_path();
+	void on_button_fgroot_path();
+	void on_button_terrasync_path();
+
+	void show_settings_dialog();
+
 };
 
 #endif // CORESETTINGSWIDGET_H

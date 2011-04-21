@@ -6,8 +6,10 @@
 #include <QtGui/QLabel>
 #include <QtGui/QRadioButton>
 #include <QtGui/QPushButton>
+#include <QtGui/QFileDialog>
 
 #include "panes/coresettingswidget.h"
+#include "settings/settingsdialog.h"
 
 CoreSettingsWidget::CoreSettingsWidget(QWidget *parent) :
     QWidget(parent)
@@ -135,7 +137,7 @@ CoreSettingsWidget::CoreSettingsWidget(QWidget *parent) :
 	QPushButton *buttonSetTerraPath = new QPushButton();
 	buttonSetTerraPath->setText(tr("Set Path"));
 	groupBoxTerraSync->addWidget(buttonSetTerraPath, 1);
-
+	connect(buttonSetTerraPath, SIGNAL(clicked()), this, SLOT(on_button_terrasync_path()));
 	layoutTerraCol->addStretch(20);
 
 
@@ -164,6 +166,15 @@ void CoreSettingsWidget::load_settings(){
 	checkBoxShowMpMap->setChecked(settings.value("show_map_map", false).toBool());
 	comboMpMapServer->setCurrentIndex(settings.value("mpmap", 0).toInt());
 	on_checkbox_show_mp_map();
+
+	//* Paths
+	txtFgFs->setText(settings.fgfs_path());
+	txtFgRoot->setText(settings.fg_root());
+
+
+	groupBoxTerraSync->setChecked(settings.value("use_terrasync").toBool());
+	txtTerraSyncPath->setText( settings.value("terrasync_sync_path").toString() );
+
 }
 
 
@@ -171,14 +182,24 @@ void CoreSettingsWidget::load_settings(){
 //====================================================
 //* Save Settings
 void CoreSettingsWidget::save_settings(){
+
+	//* screen
 	settings.setValue("screen_size", comboScreenSize->currentText());
 	settings.setValue("screen_full", checkBoxFullScreenStartup->isChecked());
 	settings.setValue("screen_splash", checkBoxDisableSplashScreen->isChecked());
 
+	//* Controls
 	settings.setValue("enable_auto_coordination", checkBoxEnableAutoCoordination->isChecked());
+	//TODO joystick
 
+	//* Map
 	settings.setValue("show_map_map", checkBoxShowMpMap->isChecked());
 	settings.setValue("mpmap", comboMpMapServer->currentIndex());
+
+	//* Paths
+	settings.setValue("use_terrasync", groupBoxTerraSync->isChecked());
+	settings.setValue("terrasync_sync_path", txtTerraSyncPath->text());
+
 }
 
 
@@ -197,8 +218,15 @@ QStringList CoreSettingsWidget::get_args(){
 		args << QString("--enable-fullscreen");
 	}
 
-	//** Autocoordination with Moouse - is this the same for joysticks ??
+	//** Autocordination with Mouse - is this the same for joysticks ??
 	args << QString(checkBoxEnableAutoCoordination->isChecked() ? "--enable-auto-coordination" : "--disable-auto-coordination");
+
+
+
+	//** Terrasync - send on socket
+	if (groupBoxTerraSync->isChecked()) {
+		args << QString("--atlas=socket,out,5,localhost,5505,udp");
+	}
 
 	return args;
 }
@@ -213,7 +241,7 @@ void CoreSettingsWidget::initialize(){
 }
 
 //==============================================
-//** Load Jotsticks
+//** Load Joysticks
 void CoreSettingsWidget::load_joysticks(){
 	comboJoystick->clear();
 	comboJoystick->addItem("-- None--");
@@ -238,3 +266,45 @@ void CoreSettingsWidget::on_radio_fg_path(){
 	groupBoxFgFs->setEnabled(use_custom);
 	groupBoxFgRoot->setEnabled(use_custom);
 }
+
+
+//================================================================================
+//** Path buttons Clicked - Opens the path dialog
+void CoreSettingsWidget::on_button_terrasync_path(){
+
+	QString filePath = QFileDialog::getExistingDirectory(this,
+														 tr("Select TerraSync Directory"),
+														 txtTerraSyncPath->text(),
+														 QFileDialog::ShowDirsOnly);
+	if(filePath.length() > 0){
+		txtTerraSyncPath->setText(filePath);
+	}
+
+	//* Need to write out the terrasync dir as its used other places ;-(
+	settings.setValue("terrasync_path", txtTerraSyncPath->text());
+	settings.sync();
+}
+
+
+
+
+void CoreSettingsWidget::on_button_fgfs_path(){
+	show_settings_dialog();
+}
+
+
+void CoreSettingsWidget::on_button_fgroot_path(){
+	show_settings_dialog();
+}
+
+
+//===============================================================
+// Settings Dialog
+void CoreSettingsWidget::show_settings_dialog(){
+	SettingsDialog *settingsDialog = new SettingsDialog();
+	if(settingsDialog->exec()){
+		txtFgFs->setText(settings.fgfs_path());
+		txtFgRoot->setText(settings.fg_root());
+	}
+}
+
