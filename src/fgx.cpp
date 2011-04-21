@@ -150,7 +150,7 @@ void fgx::initialize(){
 	//TODO setup wizard to import data first time
 	aircraftWidget->initialize();
 	airportsWidget->initialize();
-	load_joysticks();
+	coreSettingsWidget->initialize();
 	update_pids();
 
 	centralWidget()->setDisabled(false);
@@ -183,8 +183,8 @@ void fgx::on_start_fgfs_clicked() {
 	QString command_line = QString(command).append(" ").append(fg_args());
 	outputPreviewWidget->txtPreviewOutput->setPlainText(command_line);
 
-	if(checkBoxMpMap->isChecked()){
-		QUrl mapUrl("http://mpmap02.flightgear.org/");
+	if(coreSettingsWidget->checkBoxShowMpMap->isChecked()){
+		QUrl mapUrl(coreSettingsWidget->comboMpMapServer->itemData(coreSettingsWidget->comboMpMapServer->currentIndex()).toString());
 		mapUrl.addQueryItem("follow", networkWidget->txtCallSign->text());
 		QDesktopServices::openUrl(mapUrl);
 	}
@@ -290,17 +290,6 @@ QString fgx::fg_args(){
 	args << QString("--fg-root=").append(settings.fg_root());
 
 
-	//** Startup , Splash, Geometry
-	args << QString("--geometry=").append( comboScreenSize->currentText() );
-	if (checkboxDisableSplash->isChecked()) {
-		args << QString("--disable-splash-screen");
-	}
-	if (checkboxFullScreen->isChecked()) {
-		args << QString("--enable-fullscreen");
-	}
-
-	//** Autocoordination with Moouse - is this the same for joysticks ??
-	args << QString(checkBoxEnableAutoCordination->isChecked() ? "--enable-auto-coordination" : "--disable-auto-coordination");
 
 
 	//** Terrasync - send on socket
@@ -322,6 +311,9 @@ QString fgx::fg_args(){
 		//* replaces "Dawn" with "dawn", and "Real Time" with "realtime" as a hack
 		//args << QString("--timeofday=").append( timeWeatherWidget->buttonGroupTime->checkedButton()->property("value").toString() );
 	//}
+
+	//** Core Settings
+	args << coreSettingsWidget->get_args();
 
 
 	//* Weather/Metar fetch
@@ -348,7 +340,7 @@ QString fgx::fg_args(){
 	//** Network
 	args << networkWidget->get_args();
 
-
+	//** Advanced Options
 	args << advancedOptionsWidget->get_args();
 
 	//* Ai Traffic TODO
@@ -402,6 +394,7 @@ void fgx::on_buttonSaveSettings_clicked(){
 void fgx::save_settings()
 {
 	//## NB: fgfs path and FG_ROOT are saves in SettingsDialog ##
+	coreSettingsWidget->save_settings();
 	aircraftWidget->save_settings();
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
@@ -411,9 +404,7 @@ void fgx::save_settings()
 	settings.setValue("terrasync_sync_path", txtTerraSyncPath->text());
 
 
-	settings.setValue("screen_size", comboScreenSize->currentText());
-	settings.setValue("screen_full", checkboxFullScreen->isChecked());
-	settings.setValue("screen_splash", checkboxDisableSplash->isChecked());
+
 
 	/* TODO
 	settings.setValue("year", year->text());
@@ -451,7 +442,7 @@ void fgx::load_settings()
 	fgdataPath->setText(settings.fg_root());
 	fgfsPath->setText(settings.fgfs_path());
 
-
+	coreSettingsWidget->load_settings();
 	aircraftWidget->load_settings();
 	airportsWidget->load_settings();
 	networkWidget->load_settings();
@@ -461,11 +452,6 @@ void fgx::load_settings()
 	exeTerraSync->setEnabled( settings.value("use_terrasync").toBool() );
 	txtTerraSyncPath->setText( settings.value("terrasync_sync_path").toString() );
 
-	//** Sartup sxreens	
-	int idx = comboScreenSize->findText(settings.value("screen_size").toString());
-	comboScreenSize->setCurrentIndex( idx == -1 ? 0 : idx );
-	checkboxFullScreen->setChecked(settings.value("screen_full").toBool());
-	checkboxDisableSplash->setChecked(settings.value("screen_splash").toBool());
 
 	
 	//** Time Of Day - TODO
@@ -624,27 +610,6 @@ void fgx::on_buttonCommandHelp_clicked(){
 		QString ok_result = process.readAllStandardOutput();
 		QString error_result = process.readAllStandardError();
 		outputPreviewWidget->txtPreviewOutput->setPlainText(ok_result);
-	}
-}
-
-
-//==============================================
-//** Load Joysticks
-void fgx::load_joysticks(){
-	comboJoystick->clear();
-	comboJoystick->addItem("-- None--");
-	QProcess process;
-	process.start("js_demo", QStringList(), QIODevice::ReadOnly);
-	if(process.waitForStarted()){
-		process.waitForFinished();
-		QString ok_result = process.readAllStandardOutput();
-		QString error_result = process.readAllStandardError();
-		Q_UNUSED(error_result);
-		//* take result and split into parts
-		QStringList entries = ok_result.trimmed().split("\n");
-		for(int i=2; i < entries.count(); i++){ //First 2 lines are crap
-			comboJoystick->addItem(entries.at(i));
-		}
 	}
 }
 

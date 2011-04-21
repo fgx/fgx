@@ -79,7 +79,7 @@ background-repeat: no-repeat;</string>
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="usesScrollButtons">
          <bool>false</bool>
@@ -107,7 +107,7 @@ background-repeat: no-repeat;</string>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
-             <widget class="QGroupBox" name="groupBox_screen">
+             <widget class="QGroupBox" name="groupBox_screensssss">
               <property name="title">
                <string>Screen options</string>
               </property>
@@ -120,7 +120,7 @@ background-repeat: no-repeat;</string>
                 </widget>
                </item>
                <item row="3" column="0">
-                <widget class="QCheckBox" name="checkboxDisableSplash">
+                <widget class="QCheckBox" name="checkboxDisableSplashsssss">
                  <property name="text">
                   <string>Disable Splash Screen</string>
                  </property>
@@ -137,7 +137,7 @@ background-repeat: no-repeat;</string>
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QComboBox" name="comboScreenSize">
+                <widget class="QComboBox" name="comboScreenSizessss">
                  <property name="editable">
                   <bool>true</bool>
                  </property>
@@ -173,13 +173,13 @@ background-repeat: no-repeat;</string>
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_controls">
+             <widget class="QGroupBox" name="groupBox_controlsssss">
               <property name="title">
                <string>Controls</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_12">
                <item>
-                <widget class="QCheckBox" name="checkBoxEnableAutoCordination">
+                <widget class="QCheckBox" name="checkBoxEnableAutoCordinationssss">
                  <property name="text">
                   <string>Enable Auto Coordination</string>
                  </property>
@@ -193,7 +193,7 @@ background-repeat: no-repeat;</string>
                 </widget>
                </item>
                <item>
-                <widget class="QComboBox" name="comboJoystick"/>
+                <widget class="QComboBox" name="comboJoystickssss"/>
                </item>
               </layout>
              </widget>
@@ -211,7 +211,7 @@ background-repeat: no-repeat;</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_11">
                <item>
-                <widget class="QCheckBox" name="checkBoxMpMap">
+                <widget class="QCheckBox" name="checkBoxMpMapsssss">
                  <property name="text">
                   <string>Show Multiplayer Map</string>
                  </property>
