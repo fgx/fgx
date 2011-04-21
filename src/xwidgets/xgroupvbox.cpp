@@ -7,6 +7,7 @@ XGroupVBox::XGroupVBox(QString title, QWidget *parent) :
 {
 	setTitle(title);
 	xLayout = new QVBoxLayout();
+	setLayout(xLayout);
 }
 
 void XGroupVBox::addWidget(QWidget *widget){
