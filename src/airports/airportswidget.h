@@ -20,7 +20,7 @@
 #include <QtGui/QTreeView>
 #include <QtGui/QTreeWidget>
 
-#include "xobjects/xsettings.h"
+#include "xobjects/mainobject.h"
 
 class AirportsWidget : public QWidget
 {
@@ -40,9 +40,9 @@ public:
 		USE_COORDINATES = 2
 	};
 
-	explicit AirportsWidget(QWidget *parent = 0);
+	explicit AirportsWidget(MainObject *mOb, QWidget *parent = 0);
 
-	XSettings settings;
+	MainObject *mainObject;
 
 	QButtonGroup *buttonGroupUse;
 

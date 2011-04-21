@@ -30,9 +30,11 @@
 #include "airports/importairportswidget.h"
 
 
-AirportsWidget::AirportsWidget(QWidget *parent) :
+AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
+
+	mainObject = mOb;
 
     //* Main Layout
 	QGridLayout *mainLayout = new QGridLayout();
@@ -295,7 +297,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 }
 
 void AirportsWidget::initialize(){
-	QStringList airports = settings.value("cache/airports").toStringList();
+	QStringList airports = mainObject->settings->value("cache/airports").toStringList();
 	if(airports.count() == 0){
 		scan_airports_xml();
 	}
@@ -311,8 +313,8 @@ void AirportsWidget::scan_airports_xml(){
 	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0, this);
 	progress.setWindowModality(Qt::WindowModal);
 
-	qDebug() << settings.airports_path();
-	QString directory = settings.airports_path();
+	qDebug() << mainObject->settings->airports_path();
+	QString directory = mainObject->settings->airports_path();
 
 	QStringList airportsList;
 	QString entry;
@@ -338,8 +340,8 @@ void AirportsWidget::scan_airports_xml(){
 		}
 	}
 
-	settings.setValue("cache/airports", airportsList);
-	settings.sync();
+	mainObject->settings->setValue("cache/airports", airportsList);
+	mainObject->settings->sync();
 	progress.hide();
 }
 //============================================================================
@@ -349,7 +351,7 @@ void AirportsWidget::load_airports_tree(){
 
 	model->removeRows(0, model->rowCount());
 	treeViewAirports->setUpdatesEnabled(false);
-	QStringList airports = settings.value("cache/airports").toStringList();
+	QStringList airports = mainObject->settings->value("cache/airports").toStringList();
 	for (int i = 0; i < airports.size(); ++i){
 		QStringList airport = airports.at(i).split("~|~");
 		int new_row_index = model->rowCount();
@@ -385,7 +387,7 @@ void AirportsWidget::load_airports_tree(){
 
 	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
 
-	QList<QStandardItem *> items = model->findItems( settings.value("airport", "KSFO").toString(), Qt::MatchExactly, C_ICAO);
+	QList<QStandardItem *> items = model->findItems( mainObject->settings->value("airport", "KSFO").toString(), Qt::MatchExactly, C_ICAO);
 	if(items.count() > 0){
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
 		QModelIndex proxIdx = proxyModel->mapFromSource(srcIdx);
@@ -400,7 +402,7 @@ void AirportsWidget::load_airports_tree(){
 //==============================================================
 //*** Update Filters
 void AirportsWidget::on_filter_button(QAbstractButton *button){
-	settings.setValue("airports_button_filter", buttonGroupFilter->checkedId());
+	mainObject->settings->setValue("airports_button_filter", buttonGroupFilter->checkedId());
 	proxyModel->setFilterKeyColumn( button->property("column").toInt() );
 	proxyModel->setFilterFixedString( txtAirportsFilter->text() );
 }
@@ -471,7 +473,7 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 	parkPosFile.chop(13); // strip the threshold.xml part
 	
 	//terrasync check because with terrasync scenery parking.xml is renamed to groundnet.xml
-	if (settings.value("use_terrasync").toBool() == true) {
+	if (mainObject->settings->value("use_terrasync").toBool() == true) {
 	parkPosFile.append("groundnet.xml");
 	} else {
 		parkPosFile.append("parking.xml");
@@ -554,7 +556,7 @@ QStringList AirportsWidget::get_args(){
 	//if (parkPosition->isEnabled() == true) {
 	//	args << QString("--parkpos=").append(parkPosition->currentText());
 	//}
-	buttonGroupUse->button(settings.value("use_position", USE_DEFAULT).toInt());
+	buttonGroupUse->button(mainObject->settings->value("use_position", USE_DEFAULT).toInt());
 
 	return args;
 }
@@ -563,21 +565,21 @@ QStringList AirportsWidget::get_args(){
 // Save Settings
 void AirportsWidget::save_settings(){
 
-	settings.setValue("use_position", buttonGroupUse->checkedId());
+	mainObject->settings->setValue("use_position", buttonGroupUse->checkedId());
 
-	settings.setValue("lat", txtLat->text());
-	settings.setValue("lng", txtLng->text());
-	settings.setValue("altitude", txtAltitude->text());
-	settings.setValue("heading", txtHeading->text());
-	settings.setValue("roll", txtRoll->text());
-	settings.setValue("pitch", txtPitch->text());
-	settings.setValue("airspeed", txtAirspeed->text());
+	mainObject->settings->setValue("lat", txtLat->text());
+	mainObject->settings->setValue("lng", txtLng->text());
+	mainObject->settings->setValue("altitude", txtAltitude->text());
+	mainObject->settings->setValue("heading", txtHeading->text());
+	mainObject->settings->setValue("roll", txtRoll->text());
+	mainObject->settings->setValue("pitch", txtPitch->text());
+	mainObject->settings->setValue("airspeed", txtAirspeed->text());
 
 	//** Save Airport
 	if(treeViewAirports->currentIndex().row() != -1){
 		QModelIndex index = proxyModel->index(treeViewAirports->currentIndex().row(), C_ICAO);
 		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(index));
-		settings.setValue("airport", item->text());
+		mainObject->settings->setValue("airport", item->text());
 
 		//** save runway or parking
 		if(treeWidgetRunways->currentItem()){
@@ -589,16 +591,16 @@ void AirportsWidget::save_settings(){
 		}
 	}
 
-	settings.sync();
+	mainObject->settings->sync();
 }
 
 
 //=============================================================
 // Load Settings
 void AirportsWidget::load_settings(){
-	//select_node(settings.value("aircraft").toString());
-	/*if (settings.value("locationIcao").toString() != "") {
-		QString locationICAOSet = settings.value("locationIcao").toString();
+	//select_node(mainObject->settings->value("aircraft").toString());
+	/*if (mainObject->settings->value("locationIcao").toString() != "") {
+		QString locationICAOSet = mainObject->settings->value("locationIcao").toString();
 		locationIcao->insertItem(0, locationICAOSet);
 		locationIcao->insertItem(1, "----");
 	} else {
@@ -606,18 +608,18 @@ void AirportsWidget::load_settings(){
 		locationIcao->insertItem(1, "----");
 		//timeoftheDay->setCurrentIndex(0);
 	}*/
-	buttonGroupUse->button( settings.value("use_position", USE_DEFAULT).toInt() )->setChecked(true);
+	buttonGroupUse->button( mainObject->settings->value("use_position", USE_DEFAULT).toInt() )->setChecked(true);
 
-	txtLat->setText(settings.value("lat").toString());
-	txtLng->setText(settings.value("lng").toString());
-	txtAltitude->setText(settings.value("altitude").toString());
-	txtHeading->setText(settings.value("heading").toString());
-	txtRoll->setText(settings.value("roll").toString());
-	txtPitch->setText(settings.value("pitch").toString());
-	txtAirspeed->setText(settings.value("airspeed").toString());
+	txtLat->setText(mainObject->settings->value("lat").toString());
+	txtLng->setText(mainObject->settings->value("lng").toString());
+	txtAltitude->setText(mainObject->settings->value("altitude").toString());
+	txtHeading->setText(mainObject->settings->value("heading").toString());
+	txtRoll->setText(mainObject->settings->value("roll").toString());
+	txtPitch->setText(mainObject->settings->value("pitch").toString());
+	txtAirspeed->setText(mainObject->settings->value("airspeed").toString());
 
 	on_buttonGroupUse();
-	buttonGroupFilter->button(settings.value("airports_button_filter", 0).toInt())->setChecked(true);
+	buttonGroupFilter->button(mainObject->settings->value("airports_button_filter", 0).toInt())->setChecked(true);
 }
 
 

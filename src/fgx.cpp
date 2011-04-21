@@ -64,7 +64,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	//connect(coreSettingsWidget->groupBoxTerraSync, SIGNAL(clicked()), this, SLOT(on_group_box_terrasync_clicked()));
 
 	//** Time / Weather Widget
-	timeWeatherWidget = new TimeWeatherWidget(this);
+	//timeWeatherWidget = new TimeWeatherWidget(this);
 	tabs->addTab(timeWeatherWidget, tr("Time and Weather"));
 
 	//** Aircraft tab
@@ -72,16 +72,16 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	//tabs->addTab( aircraftWidget, tr("Aircraft"));
 
 	//** Airports Tab
-	airportsWidget = new AirportsWidget(this);
-	tabs->addTab(  airportsWidget, tr("Airports"));
+	//airportsWidget = new AirportsWidget(this);
+	//tabs->addTab(  airportsWidget, tr("Airports"));
 
 	//** Network Tab
-	networkWidget = new NetworkWidget(this);
-	tabs->addTab( networkWidget, tr("Network"));
+	//networkWidget = new NetworkWidget(this);
+	//tabs->addTab( networkWidget, tr("Network"));
 
 	//** Advanced Options
-	advancedOptionsWidget = new AdvancedOptionsWidget(this);
-	tabs->addTab( advancedOptionsWidget, tr("Advanced Options"));
+	//advancedOptionsWidget = new AdvancedOptionsWidget(this);
+	//tabs->addTab( advancedOptionsWidget, tr("Advanced Options"));
 
 	//** Output + Preview
 	outputPreviewWidget = new OutputPreviewWidget(this);

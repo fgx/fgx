@@ -13,9 +13,11 @@
 
 #include "advancedoptionswidget.h"
 
-AdvancedOptionsWidget::AdvancedOptionsWidget(QWidget *parent) :
+AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
+	mainObject = mOb;
+
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	setLayout(mainLayout);
@@ -100,9 +102,9 @@ QStringList AdvancedOptionsWidget::get_args(){
 //** Load Settings
 void AdvancedOptionsWidget::load_settings(){
 
-	txtExtraArgs->setPlainText(settings.value("extra_args").toString());
-	groupBoxWriteLog->setChecked(settings.value("log_enabled").toBool());
-	buttonGroupLogOptions->button( settings.value("log_level", 0).toInt() )->setChecked(true);
+	txtExtraArgs->setPlainText(mainObject->settings->value("extra_args").toString());
+	groupBoxWriteLog->setChecked(mainObject->settings->value("log_enabled").toBool());
+	buttonGroupLogOptions->button( mainObject->settings->value("log_level", 0).toInt() )->setChecked(true);
 }
 
 
@@ -110,7 +112,7 @@ void AdvancedOptionsWidget::load_settings(){
 //** Save Settings
 void AdvancedOptionsWidget::save_settings(){
 
-	settings.setValue("extra_args", txtExtraArgs->toPlainText());
-	settings.setValue("log_enabled", groupBoxWriteLog->isChecked());
-	settings.setValue("log_level", buttonGroupLogOptions->checkedId());
+	mainObject->settings->setValue("extra_args", txtExtraArgs->toPlainText());
+	mainObject->settings->setValue("log_enabled", groupBoxWriteLog->isChecked());
+	mainObject->settings->setValue("log_level", buttonGroupLogOptions->checkedId());
 }

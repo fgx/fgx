@@ -6,15 +6,15 @@
 #include <QtGui/QGroupBox>
 #include <QtGui/QButtonGroup>
 
-#include "xobjects/xsettings.h"
+#include "xobjects/mainobject.h"
 
 class AdvancedOptionsWidget : public QWidget
 {
 Q_OBJECT
 public:
-    explicit AdvancedOptionsWidget(QWidget *parent = 0);
+	explicit AdvancedOptionsWidget(MainObject *mOb, QWidget *parent = 0);
 
-	XSettings settings;
+	MainObject *mainObject;
 
 	QPlainTextEdit *txtExtraArgs;
 

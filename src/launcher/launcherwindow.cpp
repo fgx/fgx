@@ -53,23 +53,27 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	coreSettingsWidget = new CoreSettingsWidget(mainObject);
 	tabWidget->addTab(coreSettingsWidget, tr("Core Settings"));
 
+	//** Time / Weather Widget
+	//timeWeatherWidget = new TimeWeatherWidget(this);
+	//tabs->addTab(timeWeatherWidget, tr("Time and Weather"));
+
 	//* Aircraft Widget
 	aircraftWidget = new AircraftWidget(mainObject);
 	tabWidget->addTab(aircraftWidget, tr("Aircraft"));
 	//#connect(aircraftWidget, SIGNAL(set_arg(QString,QString,QString)), this, SLOT(set_arg(QString,QString,QString)));
 
 
-	//* Options
-	//mainOptionsWidget = new MainOptionsWidget(this);
-	//tabWidget->addTab(mainOptionsWidget, tr("Main Options"));
-	//connect(mainOptionsWidget, SIGNAL(set_arg(QString,QString,QString)), this, SLOT(set_arg(QString,QString,QString)));
+	//** Airports Tab
+	airportsWidget = new AirportsWidget(mainObject);
+	tabWidget->addTab(  airportsWidget, tr("Airports"));
 
-	//* MpServers
-	//mpServersWidget = new MpServersWidget(mainObject);
-	//tabWidget->addTab(mpServersWidget, tr("Network"));
-	//connect(mpServersWidget, SIGNAL(set_arg(QString,QString,QString)), this, SLOT(set_arg(QString,QString,QString)));
+	//** Network Tab
+	networkWidget = new NetworkWidget(mainObject);
+	tabWidget->addTab( networkWidget, tr("Network"));
 
-
+	//** Advanced Options
+	advancedOptionsWidget = new AdvancedOptionsWidget(mainObject);
+	tabWidget->addTab( advancedOptionsWidget, tr("Advanced Options"));
 
 
 

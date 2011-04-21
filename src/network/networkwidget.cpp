@@ -36,9 +36,11 @@
 */
 
 
-NetworkWidget::NetworkWidget(QWidget *parent) :
+NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
+
+	mainObject = mOb;
 
     //* Main Layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -387,7 +389,7 @@ void NetworkWidget::on_dns_lookup_callback(const QHostInfo &hostInfo){
 	newItem->setText(C_IP_ADDRESS, hostInfo.addresses().first().toString());
 	newItem->setText(C_PILOTS_COUNT, "-");
 	treeWidget->addTopLevelItem(newItem);
-	if(settings.value("mpserver").toString() == hostInfo.hostName()){
+	if(mainObject->settings->value("mpserver").toString() == hostInfo.hostName()){
 		treeWidget->setCurrentItem(newItem);
 	}
 	return; //######################
@@ -505,10 +507,10 @@ void NetworkWidget::set_mp_server(){
 void NetworkWidget::set_fgcom(){
 	if(grpFgCom->isChecked()){
 		if(txtFgComNo->text().trimmed().length() == 0){
-			txtFgComNo->setText(settings.default_fgcom_no());
+			txtFgComNo->setText(mainObject->settings->default_fgcom_no());
 		}
 		if(txtFgComPort->text().trimmed().length() == 0){
-			txtFgComPort->setText(settings.default_fgcom_port());
+			txtFgComPort->setText(mainObject->settings->default_fgcom_port());
 		}
 		emit set_arg("set", "--fgcom=", txtFgComNo->text().append(":").append( txtFgComPort->text() ) );
 	}else{
@@ -650,41 +652,41 @@ QStringList NetworkWidget::get_args(){
 //=============================================================
 // Save Settings
 void NetworkWidget::save_settings(){
-	settings.setValue("enable_mp", grpMpServer->isChecked());
-	settings.setValue("callsign", txtCallSign->text());
+	mainObject->settings->setValue("enable_mp", grpMpServer->isChecked());
+	mainObject->settings->setValue("callsign", txtCallSign->text());
 
-	settings.setValue("in", checkBoxIn->isChecked());
-	settings.setValue("out", checkBoxOut->isChecked());
+	mainObject->settings->setValue("in", checkBoxIn->isChecked());
+	mainObject->settings->setValue("out", checkBoxOut->isChecked());
 
-	settings.setValue("in_address", comboLocalIpAddress->currentText());
+	mainObject->settings->setValue("in_address", comboLocalIpAddress->currentText());
 
 	QString ip_or_domain( comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString());
-	settings.setValue("out_with", ip_or_domain);
+	mainObject->settings->setValue("out_with", ip_or_domain);
 	if(treeWidget->currentItem()){
-		settings.setValue("mpserver", treeWidget->currentItem()->text(C_DOMAIN));
+		mainObject->settings->setValue("mpserver", treeWidget->currentItem()->text(C_DOMAIN));
 	}
 
-	settings.setValue("in_port", comboLocalPort->currentText());
-	settings.setValue("out_port", comboRemotePort->currentText());
+	mainObject->settings->setValue("in_port", comboLocalPort->currentText());
+	mainObject->settings->setValue("out_port", comboRemotePort->currentText());
 
-	settings.setValue("in_hz", comboHzIn->currentText());
-	settings.setValue("out_hz", comboHzOut->currentText());
+	mainObject->settings->setValue("in_hz", comboHzIn->currentText());
+	mainObject->settings->setValue("out_hz", comboHzOut->currentText());
 
-	settings.setValue("fgcom", grpFgCom->isChecked());
-	settings.setValue("fgcom_no", txtFgComNo->text());
-	settings.setValue("fgcom_port", txtFgComPort->text());
+	mainObject->settings->setValue("fgcom", grpFgCom->isChecked());
+	mainObject->settings->setValue("fgcom_no", txtFgComNo->text());
+	mainObject->settings->setValue("fgcom_port", txtFgComPort->text());
 
 
-	settings.setValue("telnet", grpTelnet->isChecked());
-	settings.setValue("telnet_port", txtTelnet->text());
+	mainObject->settings->setValue("telnet", grpTelnet->isChecked());
+	mainObject->settings->setValue("telnet_port", txtTelnet->text());
 
-	settings.setValue("http", grpHttp->isChecked());
-	settings.setValue("http_port", txtHttp->text());
+	mainObject->settings->setValue("http", grpHttp->isChecked());
+	mainObject->settings->setValue("http_port", txtHttp->text());
 
-	settings.setValue("screenshot", grpScreenShot->isChecked());
-	settings.setValue("screenshot_port", txtScreenShot->text());
+	mainObject->settings->setValue("screenshot", grpScreenShot->isChecked());
+	mainObject->settings->setValue("screenshot_port", txtScreenShot->text());
 
-	settings.sync();
+	mainObject->settings->sync();
 }
 
 
@@ -693,41 +695,41 @@ void NetworkWidget::save_settings(){
 void NetworkWidget::load_settings(){
 	int idx;
 
-	grpMpServer->setChecked( settings.value("enable_mp").toBool() );
-	txtCallSign->setText( settings.value("callsign").toString() );
+	grpMpServer->setChecked( mainObject->settings->value("enable_mp").toBool() );
+	txtCallSign->setText( mainObject->settings->value("callsign").toString() );
 
-	checkBoxIn->setChecked( settings.value("in").toBool() );
-	checkBoxOut->setChecked( settings.value("out").toBool() );
+	checkBoxIn->setChecked( mainObject->settings->value("in").toBool() );
+	checkBoxOut->setChecked( mainObject->settings->value("out").toBool() );
 
-	idx = comboLocalIpAddress->findText(settings.value("in_address").toString(), Qt::MatchExactly);
+	idx = comboLocalIpAddress->findText(mainObject->settings->value("in_address").toString(), Qt::MatchExactly);
 	comboLocalIpAddress->setCurrentIndex( idx == -1 ? 0 : idx);
 
-	idx = comboRemoteAddress->findData(settings.value("out_with").toString(), Qt::UserRole, Qt::MatchExactly);
+	idx = comboRemoteAddress->findData(mainObject->settings->value("out_with").toString(), Qt::UserRole, Qt::MatchExactly);
 	comboRemoteAddress->setCurrentIndex( idx == -1 ? 0 : idx);
 
-	idx = comboHzIn->findText(settings.value("in_hz").toString(), Qt::MatchExactly);
+	idx = comboHzIn->findText(mainObject->settings->value("in_hz").toString(), Qt::MatchExactly);
 	comboHzIn->setCurrentIndex( idx == -1 ? 0 : idx );
-	idx = comboHzOut->findText(settings.value("out_hz").toString(), Qt::MatchExactly);
+	idx = comboHzOut->findText(mainObject->settings->value("out_hz").toString(), Qt::MatchExactly);
 	comboHzOut->setCurrentIndex( idx == -1 ? 0 : idx );
 
-	idx = comboLocalPort->findText(settings.value("in_port").toString(), Qt::MatchExactly);
+	idx = comboLocalPort->findText(mainObject->settings->value("in_port").toString(), Qt::MatchExactly);
 	comboLocalPort->setCurrentIndex( idx == -1 ? 0 : idx );
-	idx = comboRemotePort->findText(settings.value("out_port").toString(), Qt::MatchExactly);
+	idx = comboRemotePort->findText(mainObject->settings->value("out_port").toString(), Qt::MatchExactly);
 	comboRemotePort->setCurrentIndex( idx == -1 ? 0 : idx );
 
 
-	grpFgCom->setChecked( settings.value("fgcom").toBool() );
-	txtFgComNo->setText( settings.value("fgcom_no", settings.default_fgcom_no()).toString());
-	txtFgComPort->setText( settings.value("fgcom_port", settings.default_fgcom_port()).toString());
+	grpFgCom->setChecked( mainObject->settings->value("fgcom").toBool() );
+	txtFgComNo->setText( mainObject->settings->value("fgcom_no", mainObject->settings->default_fgcom_no()).toString());
+	txtFgComPort->setText( mainObject->settings->value("fgcom_port", mainObject->settings->default_fgcom_port()).toString());
 
 
-	grpHttp->setChecked( settings.value("http").toBool() );
-	grpTelnet->setChecked( settings.value("telnet").toBool() );
-	grpScreenShot->setChecked( settings.value("screenshot").toBool() );
+	grpHttp->setChecked( mainObject->settings->value("http").toBool() );
+	grpTelnet->setChecked( mainObject->settings->value("telnet").toBool() );
+	grpScreenShot->setChecked( mainObject->settings->value("screenshot").toBool() );
 
-	txtHttp->setText(settings.value("http_port", "8080").toString());
-	txtTelnet->setText(settings.value("telnet_port", "5555").toString());
-	txtScreenShot->setText(settings.value("screenshot_port", "8081").toString());
+	txtHttp->setText(mainObject->settings->value("http_port", "8080").toString());
+	txtTelnet->setText(mainObject->settings->value("telnet_port", "5555").toString());
+	txtScreenShot->setText(mainObject->settings->value("screenshot_port", "8081").toString());
 
 	on_checkbox_in();
 	on_checkbox_out();
