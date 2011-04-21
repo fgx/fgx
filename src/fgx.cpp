@@ -60,23 +60,31 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 
 	//** Time / Weather Widget
 	timeWeatherWidget = new TimeWeatherWidget(this);
-	tabs->insertTab(1, timeWeatherWidget, tr("Time and Weather"));
+	tabs->addTab(timeWeatherWidget, tr("Time and Weather"));
 
 	//** Aircraft tab
 	aircraftWidget = new AircraftWidget(this);
-	tabs->insertTab(2, aircraftWidget, tr("Aircraft"));
+	tabs->addTab( aircraftWidget, tr("Aircraft"));
 
 	//** Airports Tab
 	airportsWidget = new AirportsWidget(this);
-	tabs->insertTab(3, airportsWidget, tr("Airports"));
+	tabs->addTab(  airportsWidget, tr("Airports"));
 
 	//** Network Tab
 	networkWidget = new NetworkWidget(this);
-	tabs->insertTab(4, networkWidget, tr("Network"));
+	tabs->addTab( networkWidget, tr("Network"));
 
 	//** Advanced Options
 	advancedOptionsWidget = new AdvancedOptionsWidget(this);
-	tabs->insertTab(5, advancedOptionsWidget, tr("Advanced Options"));
+	tabs->addTab( advancedOptionsWidget, tr("Advanced Options"));
+
+	//** Output + Preview
+	outputPreviewWidget = new OutputPreviewWidget(this);
+	tabs->addTab( outputPreviewWidget, tr("Output / Preview"));
+	connect(outputPreviewWidget->buttonCommandPreview, SIGNAL(clicked()), this, SLOT(on_buttonCommandPreview_clicked()));
+	connect(outputPreviewWidget->buttonCommandHelp, SIGNAL(clicked()), this, SLOT(on_buttonCommandHelp_clicked()));
+
+
 
 	//========================================================================================
 	//** Insert the "Controls" into the bottom Bar
@@ -169,7 +177,7 @@ void fgx::on_start_fgfs_clicked() {
 	//##QStringList arguments = fg_args();
 
 	QString command_line = QString(command).append(" ").append(fg_args());
-	txtPreview->setPlainText(command_line);
+	outputPreviewWidget->txtPreviewOutput->setPlainText(command_line);
 
 	if(checkBoxMpMap->isChecked()){
 		QUrl mapUrl("http://mpmap02.flightgear.org/");
@@ -553,26 +561,6 @@ void fgx::on_actionQuit_triggered(){
 }
 
 
-//========================================================================
-// Set Time checked
-void fgx::on_groupBoxSetTime_clicked() {
-	
-	/* TODO
-	bool enabled  = groupBoxSetTime->isChecked();
-	year->setEnabled(enabled);
-	month->setEnabled(enabled);
-	day->setEnabled(enabled);
-	hour->setEnabled(enabled);
-	minute->setEnabled(enabled);
-	second->setEnabled(enabled);
-	*/
-	QList<QAbstractButton *> buttons = timeWeatherWidget->buttonGroupTime->buttons();
-	for(int i=0; i < buttons.count(); i++){
-		QAbstractButton *butt = buttons.at(i);
-		butt->setEnabled(true);
-	}
-}
-
 
 //===============================================================
 // Write settings on close
@@ -606,22 +594,23 @@ void fgx::on_buttonFgRootPath_clicked(){
 
 void fgx::on_tabs_currentChanged(int index){
 	settings.setValue("last_tab", index); //** Save this tab as the last one.. on next startup
-	if(index == 6){
-		on_buttonViewCommand_clicked();
-	}
+	//if(index == 6){
+	//	on_buttonViewCommand_clicked();
+	//}
 }
 
 //==============================================
 //** View Buttons
-void fgx::on_buttonViewCommand_clicked(){
+
+void fgx::on_buttonCommandPreview_clicked(){
 	if(!validate()){
 		return;
 	}
 	QString str = QString(settings.fgfs_path()).append(" ").append( fg_args());
-	txtPreview->setPlainText(str);
+	outputPreviewWidget->txtPreviewOutput->setPlainText(str);
 }
 
-void fgx::on_buttonViewHelp_clicked(){
+void fgx::on_buttonCommandHelp_clicked(){
 	QProcess process;
 	QStringList args;
 	args << "-h" << "-v" << QString("--fg-root=").append(settings.fg_root());
@@ -630,7 +619,7 @@ void fgx::on_buttonViewHelp_clicked(){
 		process.waitForFinished();
 		QString ok_result = process.readAllStandardOutput();
 		QString error_result = process.readAllStandardError();
-		txtPreview->setPlainText(ok_result);
+		outputPreviewWidget->txtPreviewOutput->setPlainText(ok_result);
 	}
 }
 

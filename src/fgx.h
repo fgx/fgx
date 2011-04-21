@@ -28,6 +28,7 @@
 #include "airports/airportswidget.h"
 #include "network/networkwidget.h"
 #include "panes/advancedoptionswidget.h"
+#include "panes/outputpreviewwidget.h"
 
 #include "xwidgets/execontrols.h"
 
@@ -64,6 +65,7 @@ private:
 	AirportsWidget *airportsWidget;
 	NetworkWidget *networkWidget;
 	AdvancedOptionsWidget *advancedOptionsWidget;
+	OutputPreviewWidget *outputPreviewWidget;
 
 	QString fg_args();
 	bool validate();
@@ -83,8 +85,8 @@ private slots:
 	void on_start_terrasync_clicked();
 
 
-	void on_buttonViewCommand_clicked();
-	void on_buttonViewHelp_clicked();
+	void on_buttonCommandPreview_clicked();
+	void on_buttonCommandHelp_clicked();
 
 	void on_buttonLoadSettings_clicked();
 	void on_buttonSaveSettings_clicked();
@@ -95,7 +97,7 @@ private slots:
 	//** FgCom
 	void on_start_fgcom_clicked();
 
-	void on_groupBoxSetTime_clicked();
+	//void on_groupBoxSetTime_clicked();
 	//void on_buttonGroupWeather_buttonClicked(int);
 	void on_menuStyle_triggered(QAction *act);
 
