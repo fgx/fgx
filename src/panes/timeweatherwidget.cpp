@@ -11,9 +11,10 @@
 
 #include "timeweatherwidget.h"
 
-TimeWeatherWidget::TimeWeatherWidget(QWidget *parent) :
+TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
+	mainObject = mOb;
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	setLayout(mainLayout);

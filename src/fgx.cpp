@@ -84,10 +84,10 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	//tabs->addTab( advancedOptionsWidget, tr("Advanced Options"));
 
 	//** Output + Preview
-	outputPreviewWidget = new OutputPreviewWidget(this);
-	tabs->addTab( outputPreviewWidget, tr("Output / Preview"));
-	connect(outputPreviewWidget->buttonCommandPreview, SIGNAL(clicked()), this, SLOT(on_buttonCommandPreview_clicked()));
-	connect(outputPreviewWidget->buttonCommandHelp, SIGNAL(clicked()), this, SLOT(on_buttonCommandHelp_clicked()));
+	//outputPreviewWidget = new OutputPreviewWidget(this);
+	//tabs->addTab( outputPreviewWidget, tr("Output / Preview"));
+	//connect(outputPreviewWidget->buttonCommandPreview, SIGNAL(clicked()), this, SLOT(on_buttonCommandPreview_clicked()));
+	//connect(outputPreviewWidget->buttonCommandHelp, SIGNAL(clicked()), this, SLOT(on_buttonCommandHelp_clicked()));
 
 
 

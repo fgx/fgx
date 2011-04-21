@@ -9,10 +9,10 @@
 
 #include "panes/outputpreviewwidget.h"
 
-OutputPreviewWidget::OutputPreviewWidget(QWidget *parent) :
+OutputPreviewWidget::OutputPreviewWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
-
+	mainObject = mOb;
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	setLayout(mainLayout);

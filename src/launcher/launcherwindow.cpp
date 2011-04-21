@@ -1,10 +1,18 @@
 
 #include <QDebug>
 #include <QtCore/QUrl>
+#include <QtCore/QCoreApplication>
 
+#include <QtGui/QApplication>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QMenuBar>
+#include <QtGui/QMenu>
+#include <QtGui/QAction>
+#include <QtGui/QStyleFactory>
+#include <QtGui/QMessageBox>
+
 
 #include "launcher/launcherwindow.h"
 
@@ -16,46 +24,87 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	mainObject->settings->restoreWindow(this);
 
-	setWindowTitle("fgX Launcher");
+	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	setWindowIcon(QIcon(":/icon/favicon"));
     //setWindowFlags(  Qt::WindowStaysOnTopHint);
 
+	//====================================================
+	//** Setup Menus
+	//====================================================
+	QMenuBar *menuBar = new QMenuBar();
+	setMenuBar(menuBar);
 
-    //* MainWidget and MainLayout
+	//** File Menu
+	QMenu *menuFile = new QMenu(tr("File"));
+	menuBar->addMenu(menuFile);
+	QAction *actionQuit = menuFile->addAction(QIcon(":/icon/quit"), tr("Quit"), this, SLOT(on_quit()));
+	actionQuit->setIconVisibleInMenu(true);
+
+	//** Style Menu
+	QMenu *menuStyle = new QMenu(tr("Style"));
+	menuBar->addMenu(menuStyle);
+	// TODO make defult style from xplatform.. in settings. (pedro)
+	QApplication::setStyle( QStyleFactory::create(mainObject->settings->value("gui_style","Macintosh (aqua)").toString()) );
+	actionGroupStyle = new QActionGroup(this);
+	actionGroupStyle->setExclusive(true);
+	QStringList styles =  QStyleFactory::keys();
+	for(int idx=0; idx < styles.count(); idx++){
+		QString sty = QString(styles.at(idx));
+		QAction *act = menuStyle->addAction( sty );
+		actionGroupStyle->addAction( act );
+		act->setCheckable(true);
+		if(QApplication::style()->objectName() == sty.toLower()){
+			act->setChecked(true);
+		}
+	}
+
+	//** File Menu
+	QMenu *menuHelp = new QMenu(tr("Help"));
+	menuBar->addMenu(menuHelp);
+	menuHelp->addAction(tr("About FGX"), this, SLOT(on_about_fgx()));
+	menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
+
+
+	//====================================================
+	//** Main Central Widget and Layout
+	//====================================================
     QWidget *mainWidget = new QWidget(this);
     setCentralWidget(mainWidget);
-
 
     QVBoxLayout *mainVBox = new QVBoxLayout();
     mainVBox->setContentsMargins(0,0,0,0);
     mainVBox->setSpacing(0);
     mainWidget->setLayout(mainVBox);
 
-	//** Header Banner across the top =========================
-	QString header_style("padding: 10px; font-size: 11pt; font-weight: bold; background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 white, stop: 1 #F0DD17);");
+	//====================================================
+	//** Header Banner
+	//====================================================
+	QString header_style("padding: 10px 0px 0px 370px; vertical-align: top;	 background-image: url(':/images/fgx-logo'); background-repeat: no-repeat; background-color: white;");
     headerLabel = new QLabel(this);
-	headerLabel->setText("fgX Launcher");
+	headerLabel->setFixedHeight(100);
 	headerLabel->setStyleSheet(header_style);
 	mainVBox->addWidget(headerLabel, 0);
 
 	splitter = new QSplitter();
 	mainVBox->addWidget(splitter, 20);
 
-	//** Main Tab =========================
+	//====================================================
+	//** Main TabWidget with Widgets
+	//====================================================
     tabWidget = new QTabWidget(this);
 	splitter->addWidget(tabWidget);
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed(int)));
 
-	//==================================================
-	// Widgets
 
 	//* Core Settings
 	coreSettingsWidget = new CoreSettingsWidget(mainObject);
 	tabWidget->addTab(coreSettingsWidget, tr("Core Settings"));
 
-	//** Time / Weather Widget
-	//timeWeatherWidget = new TimeWeatherWidget(this);
-	//tabs->addTab(timeWeatherWidget, tr("Time and Weather"));
+
+	//* Time / Weather Widget
+	timeWeatherWidget = new TimeWeatherWidget(mainObject);
+	tabWidget->addTab(timeWeatherWidget, tr("Time and Weather"));
+
 
 	//* Aircraft Widget
 	aircraftWidget = new AircraftWidget(mainObject);
@@ -67,32 +116,29 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	airportsWidget = new AirportsWidget(mainObject);
 	tabWidget->addTab(  airportsWidget, tr("Airports"));
 
-	//** Network Tab
+
+	//* Network Tab
 	networkWidget = new NetworkWidget(mainObject);
 	tabWidget->addTab( networkWidget, tr("Network"));
 
-	//** Advanced Options
+
+	//* Advanced Options
 	advancedOptionsWidget = new AdvancedOptionsWidget(mainObject);
 	tabWidget->addTab( advancedOptionsWidget, tr("Advanced Options"));
 
 
-
-
-
-
-
-	//* Airports Widget
-	//airportsWidget = new AirportsWidget(this);
-   // tabWidget->addTab(airportsWidget, tr("Airports"));
-	//#connect(airportsWidget, SIGNAL(set_arg(QString,QString,QString)), this, SLOT(set_arg(QString,QString,QString)));
+	//* Output + Preview
+	outputPreviewWidget = new OutputPreviewWidget(mainObject);
+	tabWidget->addTab( outputPreviewWidget, tr("Output / Preview"));
 
 
 
 	//========================================================================================
-	//** Insert the "Controls" into the bottom Bar
+	//** EXE "Controls" into a bottom Bar
 	//========================================================================================
 	QHBoxLayout *bottomActionLayout = new QHBoxLayout();
 	mainVBox->addLayout(bottomActionLayout);
+	bottomActionLayout->addStretch(100); // force to right
 
 	exeFgCom = new ExeControls("FgCom", "fgcom");
 	bottomActionLayout->addWidget(exeFgCom);
@@ -355,4 +401,23 @@ QString LauncherWindow::fg_args(){
 	return args_string;
 }
 
+
+
+void LauncherWindow::on_about_fgx(){
+	QString txt;
+	txt.append("<html><body><p>FGX FlightGear Launcher</b></p>");
+	txt.append("<p>&copy; 2011 Gral aka Yves Sablonier and Pete Morgan</p>");
+	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPL2</a></p>");
+	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear</a></p>");
+	txt.append("</body></html>");
+	QMessageBox::about(this, "About FGX", txt);
+}
+
+void LauncherWindow::on_about_qt(){
+	QMessageBox::aboutQt(this, "About Qt");
+}
+
+void LauncherWindow::on_quit(){
+	QApplication::quit();
+}
 

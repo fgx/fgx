@@ -5,11 +5,15 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QWidget>
 
+#include "xobjects/mainobject.h"
+
 class OutputPreviewWidget : public QWidget
 {
 Q_OBJECT
 public:
-    explicit OutputPreviewWidget(QWidget *parent = 0);
+	explicit OutputPreviewWidget(MainObject *mOb, QWidget *parent = 0);
+
+	MainObject *mainObject;
 
 	QPlainTextEdit *txtPreviewOutput;
 	QPushButton *buttonCommandPreview;

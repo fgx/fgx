@@ -9,6 +9,7 @@
 #include <QtGui/QTreeWidget>
 #include <QtGui/QTabWidget>
 #include <QtGui/QSplitter>
+#include <QtGui/QActionGroup>
 
 #include "xobjects/mainobject.h"
 
@@ -38,6 +39,7 @@ public:
 
     MainObject *mainObject;
 
+	QActionGroup *actionGroupStyle;
     QLabel *headerLabel;
 	QSplitter *splitter;
     QTabWidget *tabWidget;
@@ -76,6 +78,13 @@ public slots:
 
 
 	void on_start_terrasync_clicked();
+
+
+
+	void on_about_fgx();
+	void on_about_qt();
+	void on_quit();
+
 };
 
 #endif // LAUNCHERWINDOW_H

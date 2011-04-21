@@ -5,11 +5,15 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QPlainTextEdit>
 
+#include "xobjects/mainobject.h"
+
 class TimeWeatherWidget : public QWidget
 {
 Q_OBJECT
 public:
-    explicit TimeWeatherWidget(QWidget *parent = 0);
+	explicit TimeWeatherWidget(MainObject *mOb, QWidget *parent = 0);
+
+	MainObject *mainObject;
 
 	QButtonGroup *buttonGroupTime;
 	QButtonGroup *buttonGroupSeason;
