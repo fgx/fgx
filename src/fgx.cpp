@@ -299,13 +299,14 @@ QString fgx::fg_args(){
 
 
 	//** Time Of Day
-	if (groupBoxSetTime->isChecked()) {
+	// TODO
+	//if (groupBoxSetTime->isChecked()) {
 		//content.append("--start-date-lat=");
 		//content.append(argtime);
-	} else {
+	//} else {
 		//* replaces "Dawn" with "dawn", and "Real Time" with "realtime" as a hack
-		args << QString("--timeofday=").append( timeWeatherWidget->buttonGroupTime->checkedButton()->property("value").toString() );
-	}
+		//args << QString("--timeofday=").append( timeWeatherWidget->buttonGroupTime->checkedButton()->property("value").toString() );
+	//}
 
 
 	//* Weather/Metar fetch
@@ -398,17 +399,18 @@ void fgx::save_settings()
 	settings.setValue("screen_full", checkboxFullScreen->isChecked());
 	settings.setValue("screen_splash", checkboxDisableSplash->isChecked());
 
-	
+	/* TODO
 	settings.setValue("year", year->text());
 	settings.setValue("month", month->text());
 	settings.setValue("day", day->text());
 	settings.setValue("hour", hour->text());
 	settings.setValue("minute", minute->text());
 	settings.setValue("second", second->text());
-	
+	*/
+
 	//* Time
 	settings.setValue("timeofday", timeWeatherWidget->buttonGroupTime->checkedButton()->property("value").toString());
-	settings.setValue("set_time", groupBoxSetTime->isChecked());
+	//settings.setValue("set_time", groupBoxSetTime->isChecked());
 
 	
 	//* Weather
@@ -450,7 +452,8 @@ void fgx::load_settings()
 	checkboxDisableSplash->setChecked(settings.value("screen_splash").toBool());
 
 	
-	//** Time Of Day
+	//** Time Of Day - TODO
+	/*
 	bool setTime = settings.value("set_time").toBool();
 	groupBoxSetTime->setChecked(setTime);
 
@@ -466,6 +469,7 @@ void fgx::load_settings()
 	minute->setText(minuteSet);
 	QString secondSet = settings.value("second").toString();
 	second->setText(secondSet);
+	*/
 
 	QString tod = settings.value("timeofday", "real").toString();
 	QList<QAbstractButton *> todButtons = timeWeatherWidget->buttonGroupTime->buttons();
@@ -473,7 +477,7 @@ void fgx::load_settings()
 		if(todButtons.at(i)->property("value").toString() == tod){
 			todButtons.at(i)->setChecked(true);
 		}
-		todButtons.at(i)->setEnabled(!setTime);
+		//todButtons.at(i)->setEnabled(!setTime);
 	 }
 
 
@@ -561,6 +565,7 @@ void fgx::on_actionQuit_triggered(){
 // Set Time checked
 void fgx::on_groupBoxSetTime_clicked() {
 	
+	/* TODO
 	bool enabled  = groupBoxSetTime->isChecked();
 	year->setEnabled(enabled);
 	month->setEnabled(enabled);
@@ -568,24 +573,13 @@ void fgx::on_groupBoxSetTime_clicked() {
 	hour->setEnabled(enabled);
 	minute->setEnabled(enabled);
 	second->setEnabled(enabled);
-
+	*/
 	QList<QAbstractButton *> buttons = timeWeatherWidget->buttonGroupTime->buttons();
 	for(int i=0; i < buttons.count(); i++){
 		QAbstractButton *butt = buttons.at(i);
-		butt->setEnabled(!enabled);
+		butt->setEnabled(true);
 	}
 }
-
-// Metar checked
-/*
-void fgx::on_buttonGroupWeather_buttonClicked(int id) {
-	Q_UNUSED(id);
-	metarText->setEnabled(radioButtonWeatherMetar->isChecked());
-	if(radioButtonWeatherMetar->isChecked()){
-		metarText->setFocus();
-	}
-}
-*/
 
 
 //===============================================================
