@@ -11,8 +11,7 @@ QT += network \
     sql
 
 # Input
-HEADERS += fgx.h \
-    xobjects/xsettings.h \
+HEADERS +=  xobjects/xsettings.h \
     settings/settingsdialog.h \
     network/networkwidget.h \
     network/mptelnet.h \
@@ -29,9 +28,7 @@ HEADERS += fgx.h \
     xwidgets/xgroupboxes.h \
     xobjects/mainobject.h \
     launcher/launcherwindow.h
-FORMS += fgx.ui
 SOURCES += main.cpp \
-    fgx.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
     network/networkwidget.cpp \

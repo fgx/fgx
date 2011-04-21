@@ -11,9 +11,8 @@
 #include <QtGui/QLabel>
 #include <QtGui/QWidgetAction>
 
-//#include "props/telnetslave.h"
 #include "xobjects/xsettings.h"
-//#include "props/propstreewidget.h"
+#include "launcher/launcherwindow.h" // << This included "mainobject.h" also !!
 
 class MainObject : public QObject
 {
@@ -26,6 +25,7 @@ public:
    // QSqlDatabase db;
     XSettings *settings;
 
+	LauncherWindow *launcherWindow;
 	//PropsTreeWidget *propertiesTree;
 
     QAction *actionTelnetConnect;
