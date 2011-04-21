@@ -164,8 +164,8 @@ MainObject::MainObject(QObject *parent) :
 //*****************************************************************************
 //** Shows the Launcher window
 void MainObject::on_launcher(){
-	qDebug() << launcherWindow;
-	launcherWindow = new LauncherWindow(this);
+	//qDebug() << launcherWindow;
+	LauncherWindow *launcherWindow = new LauncherWindow(this);
     launcherWindow->show();
 }
 

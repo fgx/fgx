@@ -49,7 +49,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	QApplication::setStyle( QStyleFactory::create(mainObject->settings->value("gui_style","Macintosh (aqua)").toString()) );
 	actionGroupStyle = new QActionGroup(this);
 	actionGroupStyle->setExclusive(true);
-	connect(actionGroupStyle, SIGNAL(triggered(QAction*)), this, SLOT(mainObject->settings->(QAction*)));
+	connect(actionGroupStyle, SIGNAL(triggered(QAction*)), this, SLOT(on_action_style(QAction*)));
 	QStringList styles =  QStyleFactory::keys();
 	for(int idx=0; idx < styles.count(); idx++){
 		QString sty = QString(styles.at(idx));

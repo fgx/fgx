@@ -12,7 +12,7 @@
 #include <QtGui/QWidgetAction>
 
 #include "xobjects/xsettings.h"
-#include "launcher/launcherwindow.h" // << This included "mainobject.h" also !!
+//#include "launcher/launcherwindow.h" // << This included "mainobject.h" also !!
 
 class MainObject : public QObject
 {
@@ -25,7 +25,8 @@ public:
    // QSqlDatabase db;
     XSettings *settings;
 
-	LauncherWindow *launcherWindow;
+	int launcher_flag;
+	//LauncherWindow *launcherWindow;
 	//PropsTreeWidget *propertiesTree;
 
     QAction *actionTelnetConnect;
