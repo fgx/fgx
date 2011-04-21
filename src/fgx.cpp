@@ -642,6 +642,9 @@ void fgx::on_buttonViewHelp_clicked(){
 	}
 }
 
+
+//==============================================
+//** Load Joysticks
 void fgx::load_joysticks(){
 	comboJoystick->clear();
 	comboJoystick->addItem("-- None--");
@@ -658,8 +661,6 @@ void fgx::load_joysticks(){
 			comboJoystick->addItem(entries.at(i));
 		}
 	}
-
-
 }
 
 
