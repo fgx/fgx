@@ -539,7 +539,7 @@ background-repeat: no-repeat;</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <item>
-              <widget class="QRadioButton" name="radioButtonWeatherNone">
+              <widget class="QRadioButton" name="radioButtonWeatherNoness">
                <property name="text">
                 <string>None</string>
                </property>
@@ -552,7 +552,7 @@ background-repeat: no-repeat;</string>
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButtonWeatherLive">
+              <widget class="QRadioButton" name="radioButtonWeatherLivess">
                <property name="text">
                 <string>Fetch METAR live</string>
                </property>
@@ -562,7 +562,7 @@ background-repeat: no-repeat;</string>
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButtonWeatherMetar">
+              <widget class="QRadioButton" name="radioButtonWeatherMetarss">
                <property name="text">
                 <string>METAR</string>
                </property>
@@ -572,7 +572,7 @@ background-repeat: no-repeat;</string>
               </widget>
              </item>
              <item>
-              <widget class="QPlainTextEdit" name="metarText">
+              <widget class="QPlainTextEdit" name="metarTextss">
                <property name="enabled">
                 <bool>false</bool>
                </property>

@@ -95,7 +95,7 @@ private slots:
 	void on_start_fgcom_clicked();
 
 	void on_groupBoxSetTime_clicked();
-	void on_buttonGroupWeather_buttonClicked(int);
+	//void on_buttonGroupWeather_buttonClicked(int);
 	void on_menuStyle_triggered(QAction *act);
 
 	//void on_buttonGroupTime_buttonClicked(int);

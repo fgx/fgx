@@ -316,7 +316,7 @@ QString fgx::fg_args(){
 
 	}else if(metar == "custom"){
 		//* Use metar string ? do we need to parse ?
-		args << QString("--metar=").append("\"").append(metarText->toPlainText()).append("\"");
+		args << QString("--metar=").append("\"").append(timeWeatherWidget->txtMetar->toPlainText()).append("\"");
 
 	}else{
 		args << QString("--disable-real-weather-fetch");
@@ -407,13 +407,13 @@ void fgx::save_settings()
 	settings.setValue("second", second->text());
 	
 	//* Time
-	settings.setValue("timeofday", buttonGroupTime->checkedButton()->property("value").toString());
+	settings.setValue("timeofday", timeWeatherWidget->buttonGroupTime->checkedButton()->property("value").toString());
 	settings.setValue("set_time", groupBoxSetTime->isChecked());
 
 	
 	//* Weather
-	settings.setValue("weather", buttonGroupWeather->checkedButton()->text());
-	settings.setValue("metar", metarText->toPlainText());
+	settings.setValue("weather", timeWeatherWidget->buttonGroupMetar->checkedId());
+	settings.setValue("metar", timeWeatherWidget->txtMetar->toPlainText());
 	
 	//* Advanced
 	settings.setValue("extra_args", lineEditExtraArgs->toPlainText());
@@ -468,9 +468,9 @@ void fgx::load_settings()
 	second->setText(secondSet);
 
 	QString tod = settings.value("timeofday", "real").toString();
-	QList<QAbstractButton *> todButtons = buttonGroupTime->buttons();
+	QList<QAbstractButton *> todButtons = timeWeatherWidget->buttonGroupTime->buttons();
 	for (int i = 0; i < todButtons.size(); ++i) {
-		if(todButtons.at(i)->text() == tod){
+		if(todButtons.at(i)->property("value").toString() == tod){
 			todButtons.at(i)->setChecked(true);
 		}
 		todButtons.at(i)->setEnabled(!setTime);
@@ -480,18 +480,11 @@ void fgx::load_settings()
 
 
 	//** Weather
-	QString weather = settings.value("weather").toString();
-	if(weather == radioButtonWeatherMetar->text()){
-		radioButtonWeatherMetar->setChecked(true);
+	int weather = settings.value("weather").toInt();
+	timeWeatherWidget->buttonGroupMetar->button(weather)->setChecked(true);
 
-	}else if(weather == radioButtonWeatherLive->text()){
-		radioButtonWeatherLive->setChecked(true);
-
-	}else{
-		radioButtonWeatherNone->setChecked(true);
-	}
-	metarText->setPlainText(settings.value("metar").toString());
-	metarText->setEnabled(weather == radioButtonWeatherMetar->text());
+	timeWeatherWidget->txtMetar->setPlainText(settings.value("metar").toString());
+	timeWeatherWidget->txtMetar->setEnabled(weather == 2);
 	
 
 		
@@ -576,7 +569,7 @@ void fgx::on_groupBoxSetTime_clicked() {
 	minute->setEnabled(enabled);
 	second->setEnabled(enabled);
 
-	QList<QAbstractButton *> buttons = buttonGroupTime->buttons();
+	QList<QAbstractButton *> buttons = timeWeatherWidget->buttonGroupTime->buttons();
 	for(int i=0; i < buttons.count(); i++){
 		QAbstractButton *butt = buttons.at(i);
 		butt->setEnabled(!enabled);
@@ -584,6 +577,7 @@ void fgx::on_groupBoxSetTime_clicked() {
 }
 
 // Metar checked
+/*
 void fgx::on_buttonGroupWeather_buttonClicked(int id) {
 	Q_UNUSED(id);
 	metarText->setEnabled(radioButtonWeatherMetar->isChecked());
@@ -591,7 +585,7 @@ void fgx::on_buttonGroupWeather_buttonClicked(int id) {
 		metarText->setFocus();
 	}
 }
-
+*/
 
 
 //===============================================================

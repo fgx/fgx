@@ -94,18 +94,26 @@ TimeWeatherWidget::TimeWeatherWidget(QWidget *parent) :
 	grpBoxMetar->setLayout(layBoxMetar);
 	buttonGroupMetar = new QButtonGroup(this);
 	buttonGroupMetar->setExclusive(true);
-
+	connect(buttonGroupMetar, SIGNAL(buttonClicked(int)), this, SLOT(on_metar_clicked(int)));
 	for(int i=0;  i < metar_vals.size(); i++){
 		QRadioButton *buttM = new QRadioButton();
 		buttM->setText(metar_labels.at(i));
 		buttM->setProperty("value", QVariant(metar_vals.at(i)));
 		layBoxMetar->addWidget(buttM);
-		buttonGroupTime->addButton(buttM);
+		buttonGroupMetar->addButton(buttM, i);
 	}
 
 	txtMetar = new QPlainTextEdit();
 	layBoxMetar->addWidget(txtMetar);
 
+
+}
+
+void TimeWeatherWidget::on_metar_clicked(int idx){
+	txtMetar->setEnabled(idx == 2);
+	if(idx == 2){
+		txtMetar->setFocus();
+	}
 
 }
 
