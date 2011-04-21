@@ -21,7 +21,8 @@ HEADERS += fgx.h \
     airports/airportswidget.h \
     airports/importairportswidget.h \
     airports/aptdatparser.h \
-	xwidgets/execontrols.h
+    xwidgets/execontrols.h \
+    panes/timeweatherwidget.h
 FORMS += fgx.ui
 SOURCES += main.cpp \
     fgx.cpp \
@@ -34,6 +35,7 @@ SOURCES += main.cpp \
     airports/airportswidget.cpp \
     airports/aptdatparser.cpp \
     airports/importairportswidget.cpp \
-    xwidgets/execontrols.cpp
+    xwidgets/execontrols.cpp \
+    panes/timeweatherwidget.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc

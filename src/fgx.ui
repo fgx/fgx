@@ -79,7 +79,7 @@ background-repeat: no-repeat;</string>
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="usesScrollButtons">
          <bool>false</bool>
@@ -547,7 +547,7 @@ background-repeat: no-repeat;</string>
                 <bool>true</bool>
                </property>
                <attribute name="buttonGroup">
-                <string>buttonGroupWeather</string>
+                <string>buttonGroupWeatherX</string>
                </attribute>
               </widget>
              </item>
@@ -557,7 +557,7 @@ background-repeat: no-repeat;</string>
                 <string>Fetch METAR live</string>
                </property>
                <attribute name="buttonGroup">
-                <string>buttonGroupWeather</string>
+                <string>buttonGroupWeatherX</string>
                </attribute>
               </widget>
              </item>
@@ -567,7 +567,7 @@ background-repeat: no-repeat;</string>
                 <string>METAR</string>
                </property>
                <attribute name="buttonGroup">
-                <string>buttonGroupWeather</string>
+                <string>buttonGroupWeatherX</string>
                </attribute>
               </widget>
              </item>
@@ -596,7 +596,7 @@ background-repeat: no-repeat;</string>
                 <bool>true</bool>
                </property>
                <attribute name="buttonGroup">
-                <string>buttonGroupTime</string>
+                <string>buttonGroupTimeX</string>
                </attribute>
               </widget>
              </item>
@@ -613,7 +613,7 @@ background-repeat: no-repeat;</string>
                 <string>Dawn</string>
                </property>
                <attribute name="buttonGroup">
-                <string>buttonGroupTime</string>
+                <string>buttonGroupTimeX</string>
                </attribute>
               </widget>
              </item>
@@ -623,7 +623,7 @@ background-repeat: no-repeat;</string>
                 <string>Morning</string>
                </property>
                <attribute name="buttonGroup">
-                <string>buttonGroupTime</string>
+                <string>buttonGroupTimeX</string>
                </attribute>
               </widget>
              </item>
@@ -633,7 +633,7 @@ background-repeat: no-repeat;</string>
                 <string>Noon</string>
                </property>
                <attribute name="buttonGroup">
-                <string>buttonGroupTime</string>
+                <string>buttonGroupTimeX</string>
                </attribute>
               </widget>
              </item>
@@ -643,7 +643,7 @@ background-repeat: no-repeat;</string>
                 <string>Afternoon</string>
                </property>
                <attribute name="buttonGroup">
-                <string>buttonGroupTime</string>
+                <string>buttonGroupTimeX</string>
                </attribute>
               </widget>
              </item>
@@ -653,7 +653,7 @@ background-repeat: no-repeat;</string>
                 <string>Dusk</string>
                </property>
                <attribute name="buttonGroup">
-                <string>buttonGroupTime</string>
+                <string>buttonGroupTimeX</string>
                </attribute>
               </widget>
              </item>
@@ -663,7 +663,7 @@ background-repeat: no-repeat;</string>
                 <string>Evening</string>
                </property>
                <attribute name="buttonGroup">
-                <string>buttonGroupTime</string>
+                <string>buttonGroupTimeX</string>
                </attribute>
               </widget>
              </item>
@@ -673,7 +673,7 @@ background-repeat: no-repeat;</string>
                 <string>Midnight</string>
                </property>
                <attribute name="buttonGroup">
-                <string>buttonGroupTime</string>
+                <string>buttonGroupTimeX</string>
                </attribute>
               </widget>
              </item>
@@ -981,8 +981,8 @@ background-repeat: no-repeat;</string>
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroupWeather"/>
-  <buttongroup name="buttonGroupTime"/>
+  <buttongroup name="buttonGroupWeatherX"/>
+  <buttongroup name="buttonGroupTimeX"/>
   <buttongroup name="buttonGroupLog"/>
  </buttongroups>
 </ui>

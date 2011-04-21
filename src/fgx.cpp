@@ -57,17 +57,22 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	//========================================================================================
 	// These are "hardcoded" widgets inserted into the tabWidget in "ui" MainWindow
 	//========================================================================================
+
+	//** Time / Weather Widget
+	timeWeatherWidget = new TimeWeatherWidget(this);
+	tabs->insertTab(1, timeWeatherWidget, tr("Time and Weather"));
+
 	//** Aircraft tab
 	aircraftWidget = new AircraftWidget(this);
-	tabs->insertTab(2, aircraftWidget, "Aircraft");
+	tabs->insertTab(2, aircraftWidget, tr("Aircraft"));
 
 	//** Airports Tab
 	airportsWidget = new AirportsWidget(this);
-	tabs->insertTab(3, airportsWidget, "Airports");
+	tabs->insertTab(3, airportsWidget, tr("Airports"));
 
 	//** Network Tab
 	networkWidget = new NetworkWidget(this);
-	tabs->insertTab(4, networkWidget, "Network");
+	tabs->insertTab(4, networkWidget, tr("Network"));
 
 
 	//========================================================================================
@@ -299,22 +304,22 @@ QString fgx::fg_args(){
 		//content.append(argtime);
 	} else {
 		//* replaces "Dawn" with "dawn", and "Real Time" with "realtime" as a hack
-		args << QString("--timeofday=").append( buttonGroupTime->checkedButton()->text().toLower().replace(" ","") );
+		args << QString("--timeofday=").append( timeWeatherWidget->buttonGroupTime->checkedButton()->property("value").toString() );
 	}
 
 
 	//* Weather/Metar fetch
-	if(radioButtonWeatherNone->isChecked()) {
-		//* Disable real weather
-		args << QString("--disable-real-weather-fetch");
-
-	}else if(radioButtonWeatherLive->isChecked()) {
+	QString metar = timeWeatherWidget->buttonGroupMetar->checkedButton()->property("value").toString();
+	if(metar == "live") {
 		//* Enable real weather
 		args << QString("--enable-real-weather-fetch");
 
-	}else if(radioButtonWeatherMetar->isChecked()){
+	}else if(metar == "custom"){
 		//* Use metar string ? do we need to parse ?
 		args << QString("--metar=").append("\"").append(metarText->toPlainText()).append("\"");
+
+	}else{
+		args << QString("--disable-real-weather-fetch");
 	}
 
 
@@ -402,7 +407,7 @@ void fgx::save_settings()
 	settings.setValue("second", second->text());
 	
 	//* Time
-	settings.setValue("timeofday", buttonGroupTime->checkedButton()->text());
+	settings.setValue("timeofday", buttonGroupTime->checkedButton()->property("value").toString());
 	settings.setValue("set_time", groupBoxSetTime->isChecked());
 
 	
