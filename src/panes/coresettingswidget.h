@@ -8,16 +8,16 @@
 #include <QtGui/QGroupBox>
 #include <QtGui/QButtonGroup>
 
-#include "xobjects/xsettings.h"
+#include "xobjects/mainobject.h"
 #include "xwidgets/xgroupboxes.h"
 
 class CoreSettingsWidget : public QWidget
 {
 Q_OBJECT
 public:
-	explicit CoreSettingsWidget(QWidget *parent = 0);
+	explicit CoreSettingsWidget(MainObject *mOb, QWidget *parent = 0);
 
-	XSettings settings;
+	MainObject *mainObject;
 
 
 	//* Screen

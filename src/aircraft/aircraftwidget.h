@@ -12,7 +12,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QStatusBar>
 
-#include "xobjects/xsettings.h"
+#include "xobjects/mainobject.h"
 
 
 class AircraftWidget : public QWidget
@@ -32,10 +32,10 @@ public:
 		V_NESTED = 1
 	};
 
-	explicit AircraftWidget(QWidget *parent = 0);
+	explicit AircraftWidget(MainObject *mOb, QWidget *parent = 0);
 
+	MainObject *mainObject;
 
-	XSettings settings;
 	QStringList aeroList;
 
 	QLabel *aeroImageLabel;

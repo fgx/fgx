@@ -11,9 +11,11 @@
 #include "panes/coresettingswidget.h"
 #include "settings/settingsdialog.h"
 
-CoreSettingsWidget::CoreSettingsWidget(QWidget *parent) :
+CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
+
+	mainObject = mOb;
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	setLayout(mainLayout);
@@ -153,27 +155,27 @@ void CoreSettingsWidget::on_checkbox_show_mp_map(){
 //* Load Settings
 void CoreSettingsWidget::load_settings(){
 	//** Sartup screens
-	int idx = comboScreenSize->findText(settings.value("screen_size").toString());
+	int idx = comboScreenSize->findText(mainObject->settings->value("screen_size").toString());
 	comboScreenSize->setCurrentIndex( idx == -1 ? 0 : idx );
-	checkBoxFullScreenStartup->setChecked(settings.value("screen_full").toBool());
-	checkBoxDisableSplashScreen->setChecked(settings.value("screen_splash").toBool());
+	checkBoxFullScreenStartup->setChecked(mainObject->settings->value("screen_full").toBool());
+	checkBoxDisableSplashScreen->setChecked(mainObject->settings->value("screen_splash").toBool());
 
 	//* controls
-	checkBoxEnableAutoCoordination->setChecked(settings.value("enable_auto_coordination", false).toBool());
+	checkBoxEnableAutoCoordination->setChecked(mainObject->settings->value("enable_auto_coordination", false).toBool());
 	// TODO - joystick
 
 	//* mpmap
-	checkBoxShowMpMap->setChecked(settings.value("show_map_map", false).toBool());
-	comboMpMapServer->setCurrentIndex(settings.value("mpmap", 0).toInt());
+	checkBoxShowMpMap->setChecked(mainObject->settings->value("show_map_map", false).toBool());
+	comboMpMapServer->setCurrentIndex(mainObject->settings->value("mpmap", 0).toInt());
 	on_checkbox_show_mp_map();
 
 	//* Paths
-	txtFgFs->setText(settings.fgfs_path());
-	txtFgRoot->setText(settings.fg_root());
+	txtFgFs->setText(mainObject->settings->fgfs_path());
+	txtFgRoot->setText(mainObject->settings->fg_root());
 
 
-	groupBoxTerraSync->setChecked(settings.value("use_terrasync").toBool());
-	txtTerraSyncPath->setText( settings.value("terrasync_sync_path").toString() );
+	groupBoxTerraSync->setChecked(mainObject->settings->value("use_terrasync").toBool());
+	txtTerraSyncPath->setText( mainObject->settings->value("terrasync_sync_path").toString() );
 
 }
 
@@ -184,21 +186,21 @@ void CoreSettingsWidget::load_settings(){
 void CoreSettingsWidget::save_settings(){
 
 	//* screen
-	settings.setValue("screen_size", comboScreenSize->currentText());
-	settings.setValue("screen_full", checkBoxFullScreenStartup->isChecked());
-	settings.setValue("screen_splash", checkBoxDisableSplashScreen->isChecked());
+	mainObject->settings->setValue("screen_size", comboScreenSize->currentText());
+	mainObject->settings->setValue("screen_full", checkBoxFullScreenStartup->isChecked());
+	mainObject->settings->setValue("screen_splash", checkBoxDisableSplashScreen->isChecked());
 
 	//* Controls
-	settings.setValue("enable_auto_coordination", checkBoxEnableAutoCoordination->isChecked());
+	mainObject->settings->setValue("enable_auto_coordination", checkBoxEnableAutoCoordination->isChecked());
 	//TODO joystick
 
 	//* Map
-	settings.setValue("show_map_map", checkBoxShowMpMap->isChecked());
-	settings.setValue("mpmap", comboMpMapServer->currentIndex());
+	mainObject->settings->setValue("show_map_map", checkBoxShowMpMap->isChecked());
+	mainObject->settings->setValue("mpmap", comboMpMapServer->currentIndex());
 
 	//* Paths
-	settings.setValue("use_terrasync", groupBoxTerraSync->isChecked());
-	settings.setValue("terrasync_sync_path", txtTerraSyncPath->text());
+	mainObject->settings->setValue("use_terrasync", groupBoxTerraSync->isChecked());
+	mainObject->settings->setValue("terrasync_sync_path", txtTerraSyncPath->text());
 
 }
 
@@ -281,8 +283,8 @@ void CoreSettingsWidget::on_button_terrasync_path(){
 	}
 
 	//* Need to write out the terrasync dir as its used other places ;-(
-	settings.setValue("terrasync_path", txtTerraSyncPath->text());
-	settings.sync();
+	mainObject->settings->setValue("terrasync_path", txtTerraSyncPath->text());
+	mainObject->settings->sync();
 }
 
 
@@ -303,8 +305,8 @@ void CoreSettingsWidget::on_button_fgroot_path(){
 void CoreSettingsWidget::show_settings_dialog(){
 	SettingsDialog *settingsDialog = new SettingsDialog();
 	if(settingsDialog->exec()){
-		txtFgFs->setText(settings.fgfs_path());
-		txtFgRoot->setText(settings.fg_root());
+		txtFgFs->setText(mainObject->settings->fgfs_path());
+		txtFgRoot->setText(mainObject->settings->fg_root());
 	}
 }
 

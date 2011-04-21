@@ -8,8 +8,11 @@
  */
 
 
-#include "fgx.h"
+//#include "fgx.h"
+
 #include <QApplication>
+
+#include "xobjects/mainobject.h"
 
 int main( int argc, char* argv[])
 {
@@ -20,9 +23,8 @@ int main( int argc, char* argv[])
 	QApplication::setApplicationName("FGX FlightGear Launcher");
 	QApplication::setApplicationVersion("2.2-1beta");
 
+	MainObject mainObject;
 
-	fgx w;
-	w.show();
 
 	return app.exec();
 }

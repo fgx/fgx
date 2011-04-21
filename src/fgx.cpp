@@ -59,17 +59,17 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	//========================================================================================
 
 	//** Core Settings
-	coreSettingsWidget = new CoreSettingsWidget(this);
-	tabs->addTab(coreSettingsWidget, tr("Core Settings"));
-	connect(coreSettingsWidget->groupBoxTerraSync, SIGNAL(clicked()), this, SLOT(on_group_box_terrasync_clicked()));
+	//coreSettingsWidget = new CoreSettingsWidget(this);
+	//tabs->addTab(coreSettingsWidget, tr("Core Settings"));
+	//connect(coreSettingsWidget->groupBoxTerraSync, SIGNAL(clicked()), this, SLOT(on_group_box_terrasync_clicked()));
 
 	//** Time / Weather Widget
 	timeWeatherWidget = new TimeWeatherWidget(this);
 	tabs->addTab(timeWeatherWidget, tr("Time and Weather"));
 
 	//** Aircraft tab
-	aircraftWidget = new AircraftWidget(this);
-	tabs->addTab( aircraftWidget, tr("Aircraft"));
+	//aircraftWidget = new AircraftWidget(mainObject);
+	//tabs->addTab( aircraftWidget, tr("Aircraft"));
 
 	//** Airports Tab
 	airportsWidget = new AirportsWidget(this);

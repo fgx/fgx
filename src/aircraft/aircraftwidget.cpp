@@ -46,9 +46,11 @@
 
 
 
-AircraftWidget::AircraftWidget(QWidget *parent) :
+AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
+
+	mainObject = mOb;
 
     //* Main Layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -276,7 +278,7 @@ void AircraftWidget::on_tree_selection_changed(){
 
 	emit set_arg("set", "--aircraft=", item->text(C_AERO));
 
-	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( settings.aircraft_path(),
+	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->settings->aircraft_path(),
 																item->text(C_DIR),
 																item->text(C_AERO));
 	if(QFile::exists(thumb_file)){
@@ -308,8 +310,8 @@ void AircraftWidget::on_tree_selection_changed(){
 //** Load Aircraft Shell
 void AircraftWidget::load_aircraft_shell(){
 
-	QString command = settings.fgfs_path();
-	command.append(" --fg-root=").append(settings.fg_root());
+	QString command = mainObject->settings->fgfs_path();
+	command.append(" --fg-root=").append(mainObject->settings->fg_root());
 	command.append(" --show-aircraft");
 
 	QProcess *process = new QProcess(this);
@@ -363,27 +365,27 @@ void AircraftWidget::load_aircraft_shell(){
 void AircraftWidget::save_settings(){
 	QTreeWidgetItem *item = treeWidget->currentItem();
 	if(item && item->text(C_AERO).length() == 0){
-		settings.setValue("aircraft", item->text(C_AERO) );
+		mainObject->settings->setValue("aircraft", item->text(C_AERO) );
 	}
-	settings.setValue("nav1", txtNav1->text());
-	settings.setValue("nav2", txtNav2->text());
-	settings.setValue("adf", txtAdf->text());
-	settings.setValue("comm1", txtComm1->text());
-	settings.setValue("comm2", txtComm2->text());
-	settings.sync();
+	mainObject->settings->setValue("nav1", txtNav1->text());
+	mainObject->settings->setValue("nav2", txtNav2->text());
+	mainObject->settings->setValue("adf", txtAdf->text());
+	mainObject->settings->setValue("comm1", txtComm1->text());
+	mainObject->settings->setValue("comm2", txtComm2->text());
+	mainObject->settings->sync();
 }
 
 
 //=============================================================
 // Load Settings
 void AircraftWidget::load_settings(){
-	select_node(settings.value("aircraft").toString());
+	select_node(mainObject->settings->value("aircraft").toString());
 
-	txtNav1->setText(settings.value("nav1").toString());
-	txtNav2->setText(settings.value("nav2").toString());
-	txtAdf->setText(settings.value("adf").toString());
-	txtComm1->setText(settings.value("comm1").toString());
-	txtComm2->setText(settings.value("comm2").toString());
+	txtNav1->setText(mainObject->settings->value("nav1").toString());
+	txtNav2->setText(mainObject->settings->value("nav2").toString());
+	txtAdf->setText(mainObject->settings->value("adf").toString());
+	txtComm1->setText(mainObject->settings->value("comm1").toString());
+	txtComm2->setText(mainObject->settings->value("comm2").toString());
 }
 
 void AircraftWidget::select_node(QString aero){
@@ -421,8 +423,8 @@ void AircraftWidget::on_refresh_cache(){
 	//* scan Airraft dirs and save in settings (mad encoding for now)
 	AeroTools *aeroTool = new AeroTools(this);
 	aeroList = aeroTool->scan_xml_sets();
-	settings.setValue("AIRCRAFT_CACHED", aeroList );
-	settings.sync();
+	mainObject->settings->setValue("AIRCRAFT_CACHED", aeroList );
+	mainObject->settings->sync();
 	load_tree();
 }
 
@@ -476,12 +478,12 @@ void AircraftWidget::load_tree(){
 //=============================================================
 // Initialize
 void AircraftWidget::initialize(){
-	aeroList = settings.value("AIRCRAFT_CACHED").toStringList();
+	aeroList = mainObject->settings->value("AIRCRAFT_CACHED").toStringList();
 	if(aeroList.count() == 0){
 		//assume its never been initialised
 		//scan_xml_sets();
 	}
-	aeroList = settings.value("AIRCRAFT_CACHED").toStringList();
+	aeroList = mainObject->settings->value("AIRCRAFT_CACHED").toStringList();
 	load_tree();
 }
 
