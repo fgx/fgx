@@ -87,7 +87,7 @@ private slots:
 	void on_buttonSaveSettings_clicked();
 
 	//* FlightGear
-	void on_start_fg_clicked();
+	void on_start_fgfs_clicked();
 
 	//** FgCom
 	void on_start_fgcom_clicked();

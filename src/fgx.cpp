@@ -88,7 +88,7 @@ fgx::fgx(QMainWindow *parent) : QMainWindow(parent){
 	exeFgfs = new ExeControls("FlightGear", "fgfs");
 	bottonActionLayout->addWidget(exeFgfs);
 	connect(	exeFgfs->buttonStart, SIGNAL(clicked()),
-				this, SLOT(on_start_fg_clicked())
+				this, SLOT(on_start_fgfs_clicked())
 	);
 
 
@@ -155,7 +155,7 @@ void fgx::update_pids(){
 //=======================================================================================================================
 // Start FlightGear
 //=======================================================================================================================
-void fgx::on_start_fg_clicked() {
+void fgx::on_start_fgfs_clicked() {
 
 	QString command = settings.fgfs_path();
 	//##QStringList arguments = fg_args();

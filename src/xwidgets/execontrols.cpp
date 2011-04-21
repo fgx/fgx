@@ -18,23 +18,26 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 {
 	exe_name = exeCmd;
 	setTitle(title);
+	setMaximumWidth(150);
 
 	//** Grid layout just in case..
-	QGridLayout *layout = new QGridLayout();
+	QVBoxLayout *layout = new QVBoxLayout();
 	setLayout(layout);
 	layout->setContentsMargins(5,5,5,5);
 	layout->setSpacing(2);
 
-	int row = 0;
 	QString buttStyle("padding: 2px;"); //* make button smaller. this need to go into global style sheet said pedro
 
+	//** Buttons layout
+	QHBoxLayout *buttlay = new QHBoxLayout();
+	layout->addLayout(buttlay);
 
 	//** Stop Button
 	buttonStop = new QPushButton();
 	buttonStop->setText(tr("Stop"));
 	buttonStop->setIcon(QIcon(":/icon/stop_disabled"));
 	buttonStop->setStyleSheet(buttStyle);
-	layout->addWidget(buttonStop, row, 0, 1, 1);
+	buttlay->addWidget(buttonStop);
 	connect(buttonStop, SIGNAL(clicked()), this, SLOT(on_stop_clicked()));
 
 	//** Start Button
@@ -42,24 +45,27 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	buttonStart->setText(tr("Start"));
 	buttonStart->setIcon(QIcon(":/icon/start_enabled"));
 	buttonStart->setStyleSheet(buttStyle);
-	layout->addWidget(buttonStart, row, 1, 1, 1);
+	buttlay->addWidget(buttonStart);
 	//* connection is done in fgx not here..
 
 
 
+	//** Bottom layout
+	QHBoxLayout *bottlay = new QHBoxLayout();
+	layout->addLayout(bottlay);
 
-	row++;
+	//* Status Bar
 	statusBar = new QStatusBar();
 	statusBar->setSizeGripEnabled(false);
 	statusBar->setContentsMargins(5,5,5,5);
-	layout->addWidget(statusBar, row, 0, 1, 2);
+	bottlay->addWidget(statusBar);
 
 	//** Refresh Button
 	buttonRefresh = new QPushButton();
 	buttonRefresh->setIcon(QIcon(":/icon/refresh"));
 	buttonRefresh->setFlat(true);
 	buttonRefresh->setStyleSheet("padding: 0px;");
-	statusBar->addPermanentWidget(buttonRefresh, 0);
+	bottlay->addWidget(buttonRefresh);
 	connect(buttonRefresh, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()));
 
 }
