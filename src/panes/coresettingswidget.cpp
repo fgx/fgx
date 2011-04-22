@@ -303,7 +303,7 @@ void CoreSettingsWidget::on_button_fgroot_path(){
 //===============================================================
 // Settings Dialog
 void CoreSettingsWidget::show_settings_dialog(){
-	SettingsDialog *settingsDialog = new SettingsDialog();
+	SettingsDialog *settingsDialog = new SettingsDialog(mainObject);
 	if(settingsDialog->exec()){
 		txtFgFs->setText(mainObject->settings->fgfs_path());
 		txtFgRoot->setText(mainObject->settings->fg_root());

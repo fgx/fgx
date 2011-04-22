@@ -25,7 +25,7 @@ public:
 
     //** Objects
    // TelnetSlave *telnet;
-   // QSqlDatabase db;
+	QSqlDatabase db;
     XSettings *settings;
 
 	int launcher_flag;
@@ -49,6 +49,7 @@ public:
 
     QAction *actionQuit;
 
+	void db_connect();
     bool db_sanity_check();
 
 	QString runningOS();
@@ -67,6 +68,7 @@ public slots:
     void on_mpmap();
     void on_map();
     void on_settings();
+	void on_settings(int);
 	void on_properties_browser();
     void on_quit();
 };

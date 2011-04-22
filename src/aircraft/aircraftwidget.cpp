@@ -400,7 +400,6 @@ void AircraftWidget::select_node(QString aero){
 }
 QString AircraftWidget::aircraft(){
 	QTreeWidgetItem *item = treeWidget->currentItem();
-	qDebug() << item;
 	if(!item or item->text(C_AERO).length() == 0){
 		return "";
 	}

@@ -17,7 +17,7 @@
 //#include "mpmap/mpmapwidget.h"
 //#include "map/googlemapwidget.h"
 
-//#include "settings/settingswidget.h"
+#include "settings/settingsdialog.h"
 
 
 MainObject::MainObject(QObject *parent) :
@@ -27,7 +27,6 @@ MainObject::MainObject(QObject *parent) :
     //**********************************************************************
     //** Settings connection
     settings = new XSettings();
-
 
 	launcher_flag = false;
 
@@ -48,12 +47,13 @@ MainObject::MainObject(QObject *parent) :
     //********************************************************************
     //** SQL database problem
 	// I dont want to connect until required
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+	//QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
 	//db = QSqlDatabase::addDatabase("QMYSQL");
 	//db.setHostName("localhost");
     //db.setUserName("root");
     //db.setPassword("mash");
     //db.setDatabaseName("ffs-desktop");
+	/*
 	qDebug() << QDesktopServices::storageLocation(QDesktopServices::DataLocation);
     db.setDatabaseName(QDesktopServices::storageLocation(QDesktopServices::DataLocation).append("ffs-desktop.sqlite"));
     if( !db.open() ){
@@ -64,6 +64,8 @@ MainObject::MainObject(QObject *parent) :
         qDebug() << "DB error";
         return;
     }
+	*/
+	qDebug() << "is open" << db.isOpen();
 
     //***********************************
     //** Tray Icon
@@ -156,14 +158,20 @@ MainObject::MainObject(QObject *parent) :
 	//==========================================
 	//***** Initial check if FG_ROOT is set
 	//qDebug() << settings->fg_root() << settings->fg_root().length();
-	if(settings->fg_root().length() == 0){
+	//if(settings->fg_root().length() == 0){
 
+	//}
+
+	if(!settings->value("initial_setup").toBool()){
+		on_settings();
 	}
-	//on_mpmap();
-	on_launcher();
+
+	//on_settings();
+	//on_launcher();
     //on_map();
 
-} /* constructor */
+}
+
 
 
 //============================================================================
@@ -178,12 +186,18 @@ void MainObject::on_launcher(){
 	launcher_flag = true;
 }
 
-//****************************************************************************
+
+//============================================================================
 //** Settings Dialog
 void MainObject::on_settings(){
-	//SettingsWidget *sWidget = new SettingsWidget(this);
-   // sWidget->show();
+	on_settings(0);
 }
+void MainObject::on_settings(int idx){
+	SettingsDialog *dialog = new SettingsDialog(this);
+	dialog->tabWidget->setCurrentIndex(idx);
+	dialog->exec();
+}
+
 
 //****************************************************************************
 //** Map
@@ -207,17 +221,28 @@ void MainObject::on_mpmap(){
 	//TODO need to set focus here.
 }
 
-//****************************************************************************
-//** MpMap
+//======================================
+//** Propertes Browser
 void MainObject::on_properties_browser(){
 	//propertiesTree = new PropsTreeWidget(this);
 	//propertiesTree->show()
 	//mpMapWidget->show();
 }
 
+//======================================
+//** DB Connect
+void MainObject::db_connect(){
+	qDebug() << settings->value("db_engine").toString();
+	QSqlDatabase db = QSqlDatabase::addDatabase(settings->value("db_engine").toString());
+	db.setHostName(settings->value("db_host").toString());
+	db.setUserName(settings->value("db_user").toString());
+	db.setPassword(settings->value("db_pass").toString());
+	db.setDatabaseName(settings->value("db_databse").toString());
+}
 
-//****************************************************************************
-//** Database Sanity Check - created database and tables if not exist
+
+//======================================
+//** Database Sanity Check - creates database and tables if not exist
 bool MainObject::db_sanity_check(){
     QSqlQuery query;
     query.prepare("select version from db_version;");

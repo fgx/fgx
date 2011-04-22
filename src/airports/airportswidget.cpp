@@ -313,7 +313,7 @@ void AirportsWidget::scan_airports_xml(){
 	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0, this);
 	progress.setWindowModality(Qt::WindowModal);
 
-	qDebug() << mainObject->settings->airports_path();
+	//qDebug() << mainObject->settings->airports_path();
 	QString directory = mainObject->settings->airports_path();
 
 	QStringList airportsList;
