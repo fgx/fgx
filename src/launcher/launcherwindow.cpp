@@ -18,17 +18,18 @@
 
 #include "launcher/launcherwindow.h"
 
+
 LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
     : QMainWindow(parent)
 {
 
     mainObject = mainOb;
+
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	mainObject->settings->restoreWindow(this);
 
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	setWindowIcon(QIcon(":/icon/favicon"));
-    //setWindowFlags(  Qt::WindowStaysOnTopHint);
 
 	//====================================================
 	//** Setup Menus
@@ -74,28 +75,29 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
     QWidget *mainWidget = new QWidget(this);
     setCentralWidget(mainWidget);
 
-    QVBoxLayout *mainVBox = new QVBoxLayout();
-    mainVBox->setContentsMargins(0,0,0,0);
-    mainVBox->setSpacing(0);
-    mainWidget->setLayout(mainVBox);
+	QVBoxLayout *mainLayout = new QVBoxLayout();
+	mainLayout->setContentsMargins(0, 0, 0, 0);
+	mainLayout->setSpacing(0);
+	mainWidget->setLayout(mainLayout);
+
 
 	//====================================================
 	//** Header Banner
 	//====================================================
 	QString header_style("padding: 10px 0px 0px 370px; vertical-align: top;	 background-image: url(':/images/fgx-logo'); background-repeat: no-repeat; background-color: white;");
     headerLabel = new QLabel(this);
-	headerLabel->setFixedHeight(100);
+	headerLabel->setFixedHeight(80);
 	headerLabel->setStyleSheet(header_style);
-	mainVBox->addWidget(headerLabel, 0);
+	mainLayout->addWidget(headerLabel, 0);
 
-	splitter = new QSplitter();
-	mainVBox->addWidget(splitter, 20);
+	mainLayout->addSpacing(10);
+
 
 	//====================================================
 	//** Main TabWidget with Widgets
 	//====================================================
     tabWidget = new QTabWidget(this);
-	splitter->addWidget(tabWidget);
+	mainLayout->addWidget(tabWidget);
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed(int)));
 
 
@@ -136,12 +138,14 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	connect(outputPreviewWidget->buttonCommandPreview, SIGNAL(clicked()), this, SLOT(on_command_preview()));
 	connect(outputPreviewWidget->buttonCommandHelp, SIGNAL(clicked()), this, SLOT(on_command_help()));
 
+	mainLayout->addSpacing(10);
+
 
 	//========================================================================================
 	//** EXE "Controls" into a bottom Bar
 	//========================================================================================
 	QHBoxLayout *bottomActionLayout = new QHBoxLayout();
-	mainVBox->addLayout(bottomActionLayout);
+	mainLayout->addLayout(bottomActionLayout);
 	bottomActionLayout->addStretch(100); // force to right
 
 	exeFgCom = new ExeControls("FgCom", "fgcom");
@@ -182,79 +186,25 @@ LauncherWindow::~LauncherWindow()
 }
 
 
-void LauncherWindow::closeEvent(QCloseEvent *event){
-	Q_UNUSED(event);
-	save_settings();
-	mainObject->settings->saveWindow(this);
-	mainObject->settings->sync();
-	event->accept();
-}
+//=======================================================================================================================
+// initialize and  Setup
+//=======================================================================================================================
+void LauncherWindow::initialize(){
 
-void LauncherWindow::on_menu_style(QAction *action){
-	mainObject->settings->setValue("gui_style", action->text());
-	QApplication::setStyle(QStyleFactory::create(action->text()));
-}
-
-void LauncherWindow::on_tab_changed(int idx){
-	mainObject->settings->setValue("launcher_last_tab", idx);
-		//if(index == 6){
-		//	on_buttonViewCommand_clicked();
-		//}
-
-}
-
-
-void LauncherWindow::setup_tree(){
-	return;
-	/*
-	QStringList args;
-	args << "fgfs" << "--fg-root" << "--aircraft" << "--airport" << "--runway" << "--callsign";
-
-	for (int i = 0; i < args.size(); ++i){
-		QTreeWidgetItem *item = new QTreeWidgetItem();
-		item->setText(0, args.at(i));
-		tree->addTopLevelItem(item);
-	}
-	*/
-}
-
-
-void LauncherWindow::set_arg(QString action, QString arg, QString val){
-	qDebug() << "set_arg" << action << " " << arg << " " << val;
-	/*
-	QList<QTreeWidgetItem *> items = tree->findItems(arg, Qt::MatchExactly, 0);
-
-	if(action == "remove"){
-		if(items.count() == 0){ //* item not there
-			return;
-		}
-		QTreeWidgetItem *removeItem = items.first();
-		tree->invisibleRootItem()->removeChild(removeItem);
-		return;
+	//* First load the settings, and check the "paths" to fg_root and fg are sane
+	load_settings();
+	if(!mainObject->settings->paths_sane()){
+		coreSettingsWidget->show_settings_dialog();
 	}
 
-	if(action == "set"){
-		if(items.count() == 0){
-			QTreeWidgetItem *newItem = new QTreeWidgetItem(); //* add Item if not exist
-			newItem->setText(C_ARG, arg);
-			newItem->setTextAlignment(C_ARG, Qt::AlignRight);
-			newItem->setText(C_VAL, val);
-			tree->addTopLevelItem(newItem);
-			return;
-		}else{
-			QTreeWidgetItem *item =  items.first();  //* update existing
-			item->setText(C_VAL, val);
-			return;
-		}
+	//* Paths are sane so we can initialize;
+	//TODO setup wizard to import data first time
+	aircraftWidget->initialize();
+	airportsWidget->initialize();
+	coreSettingsWidget->initialize();
+	update_pids();
 
-	}
-	qDebug() << "UNHANDLED";
-	*/
-}
-
-void LauncherWindow::set_paths(){
-	set_arg("set", "fgfs", mainObject->settings->fgfs_path());
-	set_arg("set", "--fg-root=", mainObject->settings->fg_root());
+	centralWidget()->setDisabled(false);
 }
 
 
@@ -274,13 +224,14 @@ void LauncherWindow::update_pids(){
 	}
 }
 
+
+
 //=======================================================================================================================
 // Start FlightGear
 //=======================================================================================================================
 void LauncherWindow::on_start_fgfs_clicked() {
 
 	QString command = mainObject->settings->fgfs_path();
-	//##QStringList arguments = fg_args();
 
 	QString command_line = QString(command).append(" ").append(fg_args());
 	outputPreviewWidget->txtPreviewOutput->setPlainText(command_line);
@@ -290,9 +241,10 @@ void LauncherWindow::on_start_fgfs_clicked() {
 		mapUrl.addQueryItem("follow", networkWidget->txtCallSign->text());
 		QDesktopServices::openUrl(mapUrl);
 	}
-	// qDebug() << command_line;
 	exeFgfs->start(command_line);
 }
+
+
 
 //=======================================================================================================================
 // Start Terrasync
@@ -306,6 +258,9 @@ void LauncherWindow::on_start_terrasync_clicked(){
 	// qDebug() << command_line;
 	exeTerraSync->start(command_line);
 }
+
+
+
 //=======================================================================================================================
 // Start FGCom
 //=======================================================================================================================
@@ -320,79 +275,36 @@ void LauncherWindow::on_start_fgcom_clicked(){
 }
 
 
-
+//=======================================================================================================================
+// Command Arguments
+//=======================================================================================================================
 QString LauncherWindow::fg_args(){
-
-	//** This is unused atmo ??
-	/*
-	QString argtime;
-	argtime.append(year->text());
-	argtime.append(":");
-	argtime.append(month->text());
-	argtime.append(":");
-	argtime.append(day->text());
-	argtime.append(":");
-	argtime.append(hour->text());
-	argtime.append(":");
-	argtime.append(minute->text());
-	argtime.append(":");
-	argtime.append(second->text());
-	*/
 
 
 	QStringList args;
 
-	//** fg_root
+	//* fg_root
 	args << QString("--fg-root=").append(mainObject->settings->fg_root());
 
-
-
-
-
-	//** Scenery Path
+	//* Scenery Path
 	args << QString("--fg-scenery=%1").arg(mainObject->settings->scenery_path());
 
-
-
-	//** Time Of Day
-	// TODO
-	//if (groupBoxSetTime->isChecked()) {
-		//content.append("--start-date-lat=");
-		//content.append(argtime);
-	//} else {
-		//* replaces "Dawn" with "dawn", and "Real Time" with "realtime" as a hack
-		//args << QString("--timeofday=").append( timeWeatherWidget->buttonGroupTime->checkedButton()->property("value").toString() );
-	//}
-
-	//** Core Settings
+	//* Core Settings
 	args << coreSettingsWidget->get_args();
 
+	//* Time and Weather
+	args << timeWeatherWidget->get_args();
 
-	//* Weather/Metar fetch
-	QString metar = timeWeatherWidget->buttonGroupMetar->checkedButton()->property("value").toString();
-	if(metar == "live") {
-		//* Enable real weather
-		args << QString("--enable-real-weather-fetch");
-
-	}else if(metar == "custom"){
-		//* Use metar string ? do we need to parse ?
-		args << QString("--metar=").append("\"").append(timeWeatherWidget->txtMetar->toPlainText()).append("\"");
-
-	}else{
-		args << QString("--disable-real-weather-fetch");
-	}
-
-
-	//** Aircraft
+	//* Aircraft
 	args << aircraftWidget->get_args();
 
-	//** Airport, Runway Start pos
+	//* Airport, Runway Start pos
 	args << airportsWidget->get_args();
 
-	//** Network
+	//* Network
 	args << networkWidget->get_args();
 
-	//** Advanced Options
+	//**Advanced Options
 	args << advancedOptionsWidget->get_args();
 
 	//* Ai Traffic TODO
@@ -408,87 +320,25 @@ QString LauncherWindow::fg_args(){
 
 	args.sort();
 
-	//*  Additonal args in text box..
-	/*
-	QString extra = lineEditExtraArgs->toPlainText().trimmed();
-	if (extra.length() > 0) {
-		QStringList parts = extra.split("\n");
-		if(parts.count() > 0){
-			for(int i=0; i < parts.count(); i++){
-				QString part = parts.at(i).trimmed();
-				if(part.length() > 0){
-					args << part;
-				}
-			}
-		}
-	}
-	*/
-
 	//** Create the return string
 	QString args_string = args.join(" ");
-
-
 	return args_string;
 }
-
-
-
-void LauncherWindow::on_about_fgx(){
-	QString txt;
-	txt.append("<html><body><p>FGX FlightGear Launcher</b></p>");
-	txt.append("<p>&copy; 2011 Gral aka Yves Sablonier and Pete Morgan</p>");
-	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPL2</a></p>");
-	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear</a></p>");
-	txt.append("</body></html>");
-	QMessageBox::about(this, "About FGX", txt);
-}
-
-void LauncherWindow::on_about_qt(){
-	QMessageBox::aboutQt(this, "About Qt");
-}
-
-void LauncherWindow::on_quit(){
-	QApplication::quit();
-}
-
 
 
 
 //================================================================================
 // Save Settings
 //================================================================================
-
 void LauncherWindow::save_settings()
 {
-	//## NB: fgfs path and FG_ROOT are saves in SettingsDialog ##
+
 	coreSettingsWidget->save_settings();
+	timeWeatherWidget->save_settings();
 	aircraftWidget->save_settings();
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
 	advancedOptionsWidget->save_settings();
-
-
-
-
-	/* TODO
-	mainObject->settings->setValue("year", year->text());
-	mainObject->settings->setValue("month", month->text());
-	mainObject->settings->setValue("day", day->text());
-	mainObject->settings->setValue("hour", hour->text());
-	mainObject->settings->setValue("minute", minute->text());
-	mainObject->settings->setValue("second", second->text());
-	*/
-
-	//* Time
-	mainObject->settings->setValue("timeofday", timeWeatherWidget->buttonGroupTime->checkedButton()->property("value").toString());
-	//mainObject->settings->setValue("set_time", groupBoxSetTime->isChecked());
-
-
-	//* Weather
-	mainObject->settings->setValue("weather", timeWeatherWidget->buttonGroupMetar->checkedId());
-	mainObject->settings->setValue("metar", timeWeatherWidget->txtMetar->toPlainText());
-
-	//* Advanced
 
 	mainObject->settings->sync();
 }
@@ -496,11 +346,8 @@ void LauncherWindow::save_settings()
 //================================================================================
 // Load Settings
 //================================================================================
-
 void LauncherWindow::load_settings()
 {
-
-
 
 	coreSettingsWidget->load_settings();
 	aircraftWidget->load_settings();
@@ -508,49 +355,14 @@ void LauncherWindow::load_settings()
 	networkWidget->load_settings();
 	advancedOptionsWidget->load_settings();
 
-
 	exeTerraSync->setEnabled( mainObject->settings->value("use_terrasync").toBool() );
 
-
-
-
-	//** Time Of Day - TODO
-	/*
-	bool setTime = mainObject->settings->value("set_time").toBool();
-	groupBoxSetTime->setChecked(setTime);
-
-	QString yearSet = mainObject->settings->value("year").toString();
-	year->setText(yearSet);
-	QString monthSet = mainObject->settings->value("month").toString();
-	month->setText(monthSet);
-	QString daySet = mainObject->settings->value("day").toString();
-	day->setText(daySet);
-	QString hourSet = mainObject->settings->value("hour").toString();
-	hour->setText(hourSet);
-	QString minuteSet = mainObject->settings->value("minute").toString();
-	minute->setText(minuteSet);
-	QString secondSet = mainObject->settings->value("second").toString();
-	second->setText(secondSet);
-	*/
-
-	QString tod = mainObject->settings->value("timeofday", "real").toString();
-	QList<QAbstractButton *> todButtons = timeWeatherWidget->buttonGroupTime->buttons();
-	for (int i = 0; i < todButtons.size(); ++i) {
-		if(todButtons.at(i)->property("value").toString() == tod){
-			todButtons.at(i)->setChecked(true);
-		}
-		//todButtons.at(i)->setEnabled(!setTime);
-	 }
-
-
-
-
 	//** Weather
-	int weather = mainObject->settings->value("weather").toInt();
-	timeWeatherWidget->buttonGroupMetar->button(weather)->setChecked(true);
+	//int weather = mainObject->settings->value("weather").toInt();
+	//timeWeatherWidget->buttonGroupMetar->button(weather)->setChecked(true);
 
-	timeWeatherWidget->txtMetar->setPlainText(mainObject->settings->value("metar").toString());
-	timeWeatherWidget->txtMetar->setEnabled(weather == 2);
+	//timeWeatherWidget->txtMetar->setPlainText(mainObject->settings->value("metar").toString());
+	//timeWeatherWidget->txtMetar->setEnabled(weather == 2);
 
 
 
@@ -558,26 +370,6 @@ void LauncherWindow::load_settings()
 }
 
 
-//=======================================================================================================================
-// initialize and  Setup
-//=======================================================================================================================
-void LauncherWindow::initialize(){
-
-	//** First load the settings, and check the "paths" to fg_root and fg are sane
-	load_settings();
-	if(!mainObject->settings->paths_sane()){
-		coreSettingsWidget->show_settings_dialog();
-	}
-
-	//** Paths are sane so we can initialize;
-	//TODO setup wizard to import data first time
-	aircraftWidget->initialize();
-	airportsWidget->initialize();
-	coreSettingsWidget->initialize();
-	update_pids();
-
-	centralWidget()->setDisabled(false);
-}
 
 
 //==============================================
@@ -641,8 +433,57 @@ bool LauncherWindow::validate(){
 	return true;
 }
 
+//=======================================================================================================================
+//* Help Menu Events
+//=======================================================================================================================
+void LauncherWindow::on_about_fgx(){
+	QString txt;
+	txt.append("<html><body><p>FGX FlightGear Launcher</b></p>");
+	txt.append("<p>&copy; 2011 Gral aka Yves Sablonier and Pete Morgan</p>");
+	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPL2</a></p>");
+	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear</a></p>");
+	txt.append("</body></html>");
+	QMessageBox::about(this, "About FGX", txt);
+}
+
+void LauncherWindow::on_about_qt(){
+	QMessageBox::aboutQt(this, "About Qt");
+}
+
+
+
+//=======================================================================================================================
+//* Missc Events
+//=======================================================================================================================
+
+void LauncherWindow::on_quit(){
+	QApplication::quit();
+}
+
+
 void LauncherWindow::on_group_box_terrasync_clicked(){
 	mainObject->settings->setValue("use_terrasync", coreSettingsWidget->groupBoxTerraSync->isChecked());
 	mainObject->settings->sync();
 	exeTerraSync->setEnabled(coreSettingsWidget->groupBoxTerraSync->isChecked());
+}
+
+
+void LauncherWindow::closeEvent(QCloseEvent *event){
+	Q_UNUSED(event);
+	save_settings();
+	mainObject->settings->saveWindow(this);
+	mainObject->settings->sync();
+	event->accept();
+}
+
+void LauncherWindow::on_action_style(QAction *action){
+	mainObject->settings->setValue("gui_style", action->text());
+	QApplication::setStyle(QStyleFactory::create(action->text()));
+}
+
+void LauncherWindow::on_tab_changed(int idx){
+	mainObject->settings->setValue("launcher_last_tab", idx);
+	if(idx == tabWidget->indexOf(outputPreviewWidget)){
+		on_command_preview();
+	}
 }

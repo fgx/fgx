@@ -28,7 +28,7 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	//===============================================================
 	// Time group
 	QStringList time_vals; //* The command arg stored in property
-	time_vals << "realtime" << "dawn" << "morning" << "noon" << "afternoon" << "dusk" << "evening" << "midnight";
+	time_vals << "real" << "dawn" << "morning" << "noon" << "afternoon" << "dusk" << "evening" << "midnight";
 	QStringList time_labels; //* The labels - subject ot transtation
 	time_labels << tr("Real Time") << tr("Dawn") << tr("Morning") << tr("Noon") << tr("Afternoon") << tr("Dusk") << tr("Evening") << tr("Midnight");
 
@@ -66,7 +66,7 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 		buttS->setText(season_labels.at(i));
 		buttS->setProperty("value", QVariant(season_vals.at(i)));
 		layBoxSeason->addWidget(buttS);
-		buttonGroupSeason->addButton(buttS);
+		buttonGroupSeason->addButton(buttS, i);
 	}
 
 	//** Add some stretch to column bottom
@@ -118,3 +118,45 @@ void TimeWeatherWidget::on_metar_clicked(int idx){
 
 }
 
+QStringList TimeWeatherWidget::get_args(){
+	QStringList args;
+	//* Weather/Metar fetch
+	QString metar = buttonGroupMetar->checkedButton()->property("value").toString();
+	if(metar == "live") {
+		//* Enable real weather
+		args << QString("--enable-real-weather-fetch");
+
+	}else if(metar == "custom"){
+		//* Use metar string ? do we need to parse ?
+		args << QString("--metar=").append("\"").append(txtMetar->toPlainText()).append("\"");
+
+	}else{
+		args << QString("--disable-real-weather-fetch");
+	}
+	return args;
+}
+
+
+void TimeWeatherWidget::load_settings(){
+
+
+	buttonGroupTime->button(mainObject->settings->value("timeofday", 0).toInt())->setChecked(true);
+	buttonGroupSeason->button(mainObject->settings->value("season", 0).toInt())->setChecked(true);
+
+	buttonGroupMetar->button(mainObject->settings->value("weather", 0).toInt())->setChecked(true);
+	txtMetar->setPlainText(mainObject->settings->value("metar").toString());
+
+}
+
+void TimeWeatherWidget::save_settings(){
+
+	//* Time
+	mainObject->settings->setValue("timeofday", buttonGroupTime->checkedId());
+	mainObject->settings->setValue("season", buttonGroupSeason->checkedId());
+	//mainObject->settings->setValue("set_time", groupBoxSetTime->isChecked());
+
+	//* Weather
+	mainObject->settings->setValue("weather", buttonGroupMetar->checkedId());
+	mainObject->settings->setValue("metar", txtMetar->toPlainText());
+
+}
