@@ -9,14 +9,18 @@
 
 
 
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+
 #include <QtCore/QDebug>
 
 #include <QtCore/QProcess>
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-//#include <QtCore/QDir>
+
 #include <QtCore/QFile>
+
 
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHBoxLayout>
@@ -276,7 +280,7 @@ void AircraftWidget::on_tree_selection_changed(){
 		return;
 	}
 
-	emit set_arg("set", "--aircraft=", item->text(C_AERO));
+	//emit set_arg("set", "--aircraft=", item->text(C_AERO));
 
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->settings->aircraft_path(),
 																item->text(C_DIR),
@@ -389,9 +393,7 @@ void AircraftWidget::load_settings(){
 }
 
 void AircraftWidget::select_node(QString aero){
-	if(aero.length() == 0){
-		return;
-	}
+
 	QList<QTreeWidgetItem*> items = treeWidget->findItems(aero, Qt::MatchExactly | Qt::MatchRecursive, C_AERO);
 	if(items.length() > 0){
 		treeWidget->setCurrentItem(items[0]);
@@ -418,17 +420,17 @@ QString AircraftWidget::validate(){
 
 void AircraftWidget::on_refresh_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
-	qDebug() << "on refresh_cache";
-	//* scan Airraft dirs and save in settings (mad encoding for now)
-	AeroTools *aeroTool = new AeroTools(this);
-	aeroList = aeroTool->scan_xml_sets();
-	mainObject->settings->setValue("AIRCRAFT_CACHED", aeroList );
-	mainObject->settings->sync();
+
+	//* scan Airaft dirs and save in db
+	AeroTools *aeroTool = new AeroTools(this, mainObject);
+	aeroTool->scan_xml_sets();
+
 	load_tree();
 }
 
 void AircraftWidget::load_tree(){
 	int c =0;
+
 	QString currAero = aircraft();
 	treeWidget->setUpdatesEnabled(false);
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
@@ -440,49 +442,50 @@ void AircraftWidget::load_tree(){
 	treeWidget->setColumnHidden(C_DIR, view == V_LIST);
 	treeWidget->setRootIsDecorated(view == V_NESTED);
 
-	 for (int i = 0; i < aeroList.size(); ++i) {
-		record = aeroList.at(i);
-		QStringList fields = record.split("~|~");
+	QSqlQuery query("SELECT directory, xml_file, aero, description, fdm, author from aircraft ORDER BY directory, aero ASC", mainObject->db);
+
+	while(query.next()){
 
 		if(view == V_LIST){
 			parentItem = treeWidget->invisibleRootItem();
-		}else if(last_dir != fields.at(C_DIR)){
+		}else if(last_dir != query.value(0).toString()){
 			parentItem = new QTreeWidgetItem(treeWidget->invisibleRootItem());
-			parentItem->setText( C_DIR, fields.at(0));
+			parentItem->setText( C_DIR, query.value(0).toString());
 			parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
 			treeWidget->addTopLevelItem(parentItem);
 			treeWidget->setFirstItemColumnSpanned(parentItem, true);
-			last_dir = fields.at(C_DIR);
+			last_dir = query.value(0).toString();
 		}
 
 		//directory, xml_file, aero, fdm, description, author
 		QTreeWidgetItem *aeroItem = new QTreeWidgetItem(parentItem);
-		QString xml_path = QString("%1/%2").arg(fields.at(0), fields.at(1));
-		aeroItem->setText(C_XML, xml_path);
-		aeroItem->setText(C_AERO, fields.at(2));
+		QString xml_path = QString("%1/%2").arg(query.value(0).toString(), query.value(1).toString());
+		aeroItem->setText(C_XML, query.value(1).toString());
+		aeroItem->setText(C_AERO, query.value(2).toString());
 		aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
-		aeroItem->setText(C_FDM, fields.at(3));
-		aeroItem->setText(C_DESCRIPTION, fields.at(4));
-		aeroItem->setText(C_AUTHOR, fields.at(5));
+		aeroItem->setText(C_DESCRIPTION, query.value(3).toString());
+		aeroItem->setText(C_FDM, query.value(4).toString());
+		aeroItem->setText(C_AUTHOR, query.value(5).toString());
 		c++;
 	 }
+
 	 treeWidget->sortByColumn(view == V_NESTED ? C_DIR : C_AERO, Qt::AscendingOrder);
 	 treeWidget->setUpdatesEnabled(true);
 
 	 select_node(currAero);
 	 QString str = QString("%1 aircraft").arg(c);
 	 statusBarAero->showMessage(str);
+
 }
 
 //=============================================================
 // Initialize
 void AircraftWidget::initialize(){
-	aeroList = mainObject->settings->value("AIRCRAFT_CACHED").toStringList();
-	if(aeroList.count() == 0){
-		//assume its never been initialised
+	if(1 == 0){
+		//TODO assume its never been initialised
 		//scan_xml_sets();
 	}
-	aeroList = mainObject->settings->value("AIRCRAFT_CACHED").toStringList();
+
 	load_tree();
 }
 

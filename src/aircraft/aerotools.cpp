@@ -3,6 +3,9 @@
 
 #include <QtCore/QDir>
 
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+
 #include <QtGui/QProgressDialog>
 
 #include <QtXmlPatterns/QXmlQuery>
@@ -11,9 +14,10 @@
 
 #include "aerotools.h"
 
-AeroTools::AeroTools(QObject *parent) :
+AeroTools::AeroTools(QObject *parent, MainObject *mOb) :
     QObject(parent)
 {
+	mainObject = mOb;
 }
 
 
@@ -28,7 +32,7 @@ AeroTools::AeroTools(QObject *parent) :
    and therby engquires the xml fo
 */
 
-QStringList AeroTools::scan_xml_sets(){
+void AeroTools::scan_xml_sets(){
 
 	int c = 0;
 	int found = 0;
@@ -36,9 +40,17 @@ QStringList AeroTools::scan_xml_sets(){
 	progress.setWindowModality(Qt::WindowModal);
 	progress.show();
 
-	QStringList aeroList;
 
-	QDir aircraftDir( settings.aircraft_path() );
+	//* Clear any records in the database
+	QSqlQuery sql("delete from aircraft;", mainObject->db);
+	sql.exec();
+
+	//* Insert Aircraft query			
+	QSqlQuery sqlAero(mainObject->db);
+	sqlAero.prepare("INSERT INTO aircraft(aero, directory, xml_file, description, fdm, author)VALUES(?,?,?,?,?,?)");
+
+	//* Get Entries from Aircaft/ directory
+	QDir aircraftDir( mainObject->settings->aircraft_path() );
 	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
 
 	QStringList entries = aircraftDir.entryList();
@@ -52,7 +64,7 @@ QStringList AeroTools::scan_xml_sets(){
 			progress.setValue(progress.value() + 1);
 
 			//** get the List of *-set.xml files in dir
-			QDir dir( settings.aircraft_path(*entry) );
+			QDir dir( mainObject->settings->aircraft_path(*entry) );
 			QStringList filters;
 			filters << "*-set.xml";
 			QStringList list_xml = dir.entryList(filters);
@@ -75,7 +87,7 @@ QStringList AeroTools::scan_xml_sets(){
 					aero.chop(8);
 
 					//** parse the Xml file - f&*& long winded
-					QString file_path =  settings.aircraft_path(*entry);
+					QString file_path =  mainObject->settings->aircraft_path(*entry);
 					file_path.append("/");
 					file_path.append(list_xml.at(i));
 					QFile xmlFile( file_path);
@@ -111,8 +123,16 @@ QStringList AeroTools::scan_xml_sets(){
 					//## TODO Here we go with stuff to cache - Later DB
 					//#1 This version saves to settings and an embedded dam dirty delimiter string stuff..
 
-					QString record = QString("%1~|~%2~|~%3~|~%4~|~%5~|~%6").arg(directory, xml_file, aero, fdm, description, author );
-					aeroList << record;
+					//aero,path, description, fdm, author
+					sqlAero.bindValue(0, aero);
+					sqlAero.bindValue(1, directory);
+					sqlAero.bindValue(2, xml_file);
+					sqlAero.bindValue(3, description);
+					sqlAero.bindValue(4, fdm);
+					sqlAero.bindValue(5, author);
+					if(!sqlAero.exec()){
+						qDebug() << mainObject->db.lastError();
+					}
 
 					found++;
 
@@ -125,7 +145,6 @@ QStringList AeroTools::scan_xml_sets(){
 			} /* list_xml.count() > 0 */
 		} /* entry != INstruments etc */
 	} /* loop entries.() */	
-	return aeroList;
 
 }
 

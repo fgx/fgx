@@ -4,21 +4,21 @@
 #include <QObject>
 #include <QtCore/QStringList>
 
-#include "xobjects/xsettings.h"
+#include "xobjects/mainobject.h"
 
 class AeroTools : public QObject
 {
 Q_OBJECT
 public:
-    explicit AeroTools(QObject *parent = 0);
+	explicit AeroTools(QObject *parent, MainObject *mOb);
 
-	XSettings settings;
+	MainObject *mainObject;
 
 signals:
 
 public slots:
 
-	QStringList scan_xml_sets();
+	void scan_xml_sets();
 
 };
 

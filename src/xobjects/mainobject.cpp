@@ -1,15 +1,17 @@
 
 #include <QDebug>
 #include <QCoreApplication>
-#include <QtGui/QDesktopServices>
+#include <QTimer>
 
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+
+
+#include <QtGui/QDesktopServices>
 #include <QtGui/QAction>
 #include <QtGui/QMenu>
 #include <QtGui/QCursor>
 
-
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
 
 #include "xobjects/mainobject.h"
 #include "launcher/launcherwindow.h"
@@ -162,20 +164,28 @@ MainObject::MainObject(QObject *parent) :
 
 	//}
 
-	if(!settings->value("initial_setup").toBool()){
-		on_settings();
-	}
+	//if(!settings->value("initial_setup").toBool()){
+	//	on_settings();
+	//}
 
 	//on_settings();
 	//on_launcher();
     //on_map();
+	connect(this, SIGNAL(show_settings(int)), this, SLOT(on_settings(int)));
+
+	QTimer::singleShot(300, this, SLOT(initialize()));
 
 }
 
-
-
 //============================================================================
 //** Shows the Launcher window
+void MainObject::initialize(){
+	db_connect();
+	on_launcher();
+}
+
+//============================================================================
+//**  Launcher window
 void MainObject::on_launcher(){
 	//TODO there HAS to be a better was than using a flag
 	if(launcher_flag == true){
@@ -232,12 +242,36 @@ void MainObject::on_properties_browser(){
 //======================================
 //** DB Connect
 void MainObject::db_connect(){
-	qDebug() << settings->value("db_engine").toString();
-	QSqlDatabase db = QSqlDatabase::addDatabase(settings->value("db_engine").toString());
-	db.setHostName(settings->value("db_host").toString());
-	db.setUserName(settings->value("db_user").toString());
-	db.setPassword(settings->value("db_pass").toString());
-	db.setDatabaseName(settings->value("db_databse").toString());
+
+	trayIcon->showMessage("DB", "Opening DB");
+	qDebug() << "ENIGNE" << settings->value("db_engine").toString();
+	if (settings->value("db_engine").toString() == "QMYSQL"){
+		//** Setup MySql
+		db = QSqlDatabase::addDatabase("QMYSQL");
+		db.setHostName(settings->value("db_host").toString());
+		db.setUserName(settings->value("db_user").toString());
+		db.setPassword(settings->value("db_pass").toString());
+		db.setDatabaseName(settings->value("db_database").toString());
+		qDebug() << "myyyyy";
+	}else{
+		trayIcon->showMessage("DB Error", "Could not open DB", QSystemTrayIcon::Critical, 5000);
+		emit(show_settings(1));
+		qDebug() << "NO ENGINE";
+		return;
+	}
+	//* Catch DB Open error
+	if(!db.open()){
+		qDebug() << db.lastError();
+		trayIcon->showMessage("DB Error", "Could not open DB", QSystemTrayIcon::Critical, 5000);
+		db.close();
+		emit(show_settings(1));
+		return;
+	}
+
+	//* Database connected
+	trayIcon->showMessage("DB", "Connected", QSystemTrayIcon::Information, 3000);
+	bool foo = db_sanity_check();
+
 }
 
 
@@ -251,6 +285,14 @@ bool MainObject::db_sanity_check(){
         QStringList queries;
         queries.append("CREATE TABLE IF NOT EXISTS db_version( `version` varchar(20) );");
         queries.append("INSERT INTO db_version ( `version` )VALUES( 0.1 );");
+
+		//* Aircraft
+		queries.append("CREATE TABLE IF NOT EXISTS aircraft(  `aero` varchar(20), `directory` varchar(20), `xml_file` varchar(30), `description` varchar(100), `fdm` varchar(20), `author` varchar(255), PRIMARY KEY(aero) );");
+		queries.append("CREATE INDEX directory ON aircraft(directory);");
+		queries.append("CREATE INDEX xml_file ON aircraft(xml_file);");
+		queries.append("CREATE INDEX fdm ON aircraft(fdm);");
+		queries.append("CREATE INDEX description ON aircraft(description);");
+
         queries.append("CREATE TABLE IF NOT EXISTS airport_favs( airport varchar(20) );");
         for(int i = 0; i < queries.size(); ++i){
             qDebug() << queries.at(i);

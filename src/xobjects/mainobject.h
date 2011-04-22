@@ -55,8 +55,12 @@ public:
 	QString runningOS();
 
 signals:
+	void show_settings(int);
 
 public slots:
+
+	void initialize();
+
     void on_tray_icon(QSystemTrayIcon::ActivationReason reason);
 
     void on_telnet_connected(bool);

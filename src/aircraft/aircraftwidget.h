@@ -36,8 +36,6 @@ public:
 
 	MainObject *mainObject;
 
-	QStringList aeroList;
-
 	QLabel *aeroImageLabel;
 	QButtonGroup *buttViewGroup;
 
