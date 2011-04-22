@@ -17,5 +17,6 @@
         <file alias="terminal">application_osx_terminal.png</file>
         <file alias="import">database_go.png</file>
         <file alias="favicon">fgx16.png</file>
+        <file alias="mpmap">map.png</file>
     </qresource>
 </RCC>

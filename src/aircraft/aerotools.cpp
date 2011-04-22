@@ -23,8 +23,8 @@ AeroTools::AeroTools(QObject *parent) :
 //*** Walk XML - sets
 //========================================================
 
-/* This function walks the /Aircraft/* directory
- its find files in a directory maching "*-set.xml"
+/* This function walks the /Aircraft/ directory
+ its find files in a directory maching "-set.xml"
    and therby engquires the xml fo
 */
 

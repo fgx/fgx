@@ -8,10 +8,11 @@ INCLUDEPATH += .
 QT += network \
     xml \
     xmlpatterns \
-    sql
+	sql \
+	webkit
 
 # Input
-HEADERS +=  xobjects/xsettings.h \
+HEADERS += xobjects/xsettings.h \
     settings/settingsdialog.h \
     network/networkwidget.h \
     network/mptelnet.h \
@@ -27,7 +28,9 @@ HEADERS +=  xobjects/xsettings.h \
     panes/coresettingswidget.h \
     xwidgets/xgroupboxes.h \
     xobjects/mainobject.h \
-    launcher/launcherwindow.h
+    launcher/launcherwindow.h \
+    settings/dbsettingswidget.h \
+    mpmap/mpmapwidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -45,6 +48,8 @@ SOURCES += main.cpp \
     panes/coresettingswidget.cpp \
     xwidgets/xgroupboxes.cpp \
     xobjects/mainobject.cpp \
-    launcher/launcherwindow.cpp
+    launcher/launcherwindow.cpp \
+    settings/dbsettingswidget.cpp \
+    mpmap/mpmapwidget.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc

@@ -14,7 +14,7 @@
 #include "xobjects/mainobject.h"
 #include "launcher/launcherwindow.h"
 
-//#include "mp/mpmapwidget.h"
+//#include "mpmap/mpmapwidget.h"
 //#include "map/googlemapwidget.h"
 
 //#include "settings/settingswidget.h"
@@ -27,6 +27,11 @@ MainObject::MainObject(QObject *parent) :
     //**********************************************************************
     //** Settings connection
     settings = new XSettings();
+
+
+	launcher_flag = false;
+
+	mpMapWidget = 0;
 
     //********************************************************************
     //** Telnet connection
@@ -44,8 +49,8 @@ MainObject::MainObject(QObject *parent) :
     //** SQL database problem
 	// I dont want to connect until required
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    //db = QSqlDatabase::addDatabase("QMYSQL");
-    //db.setHostName("localhost");
+	//db = QSqlDatabase::addDatabase("QMYSQL");
+	//db.setHostName("localhost");
     //db.setUserName("root");
     //db.setPassword("mash");
     //db.setDatabaseName("ffs-desktop");
@@ -80,14 +85,14 @@ MainObject::MainObject(QObject *parent) :
     lblCallsign->setStyleSheet("font-family: monospace; background-color: black; color: white; padding: 5px; font-weight: bold;");
     actionCallsign->setDefaultWidget(lblCallsign);
 
-    popupMenu->addAction(actionCallsign); //QIcon(":/icons/mpmap"), tr("Multiplayer Map"));
+	popupMenu->addAction(actionCallsign);
 
 
-	actionLauncher = popupMenu->addAction(QIcon(":/icons/launcher"), tr("Launcher"));
+	actionLauncher = popupMenu->addAction(QIcon(":/icon/favicon"), tr("Launcher"));
 	actionLauncher->setIconVisibleInMenu(true);
 	connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
 
-    actionMpMap = popupMenu->addAction(QIcon(":/icons/mpmap"), tr("Multiplayer Map"));
+	actionMpMap = popupMenu->addAction(QIcon(":/icon/mpmap"), tr("Multiplayer Map"));
 	actionMpMap->setIconVisibleInMenu(true);
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));
 
@@ -141,7 +146,7 @@ MainObject::MainObject(QObject *parent) :
 
 
     //*** Quit
-    actionQuit = popupMenu->addAction(QIcon(":/icons/quit"), tr("Quit"));
+	actionQuit = popupMenu->addAction(QIcon(":/icon/quit"), tr("Quit"));
 	actionQuit->setIconVisibleInMenu(true);
     connect(actionQuit, SIGNAL(triggered()), this, SLOT(on_quit()));
 
@@ -150,7 +155,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//==========================================
 	//***** Initial check if FG_ROOT is set
-	qDebug() << settings->fg_root() << settings->fg_root().length();
+	//qDebug() << settings->fg_root() << settings->fg_root().length();
 	if(settings->fg_root().length() == 0){
 
 	}
@@ -161,12 +166,16 @@ MainObject::MainObject(QObject *parent) :
 } /* constructor */
 
 
-//*****************************************************************************
+//============================================================================
 //** Shows the Launcher window
 void MainObject::on_launcher(){
-	//qDebug() << launcherWindow;
+	//TODO there HAS to be a better was than using a flag
+	if(launcher_flag == true){
+		return;
+	}
 	LauncherWindow *launcherWindow = new LauncherWindow(this);
     launcherWindow->show();
+	launcher_flag = true;
 }
 
 //****************************************************************************
@@ -183,11 +192,19 @@ void MainObject::on_map(){
    // gmapWidget->show();
 }
 
-//****************************************************************************
+//============================================================================
 //** MpMap
 void MainObject::on_mpmap(){
-	//MpMapWidget *mpMapWidget = new MpMapWidget(this);
-   // mpMapWidget->show();
+	if(mpMapWidget == 0){
+		//qDebug() << "NO mpmap";
+		mpMapWidget = new MpMapWidget(this);
+
+	}else{
+		//qDebug() << "exists";
+	}
+	mpMapWidget->show();
+	mpMapWidget->setFocus();
+	//TODO need to set focus here.
 }
 
 //****************************************************************************

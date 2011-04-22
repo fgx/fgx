@@ -474,6 +474,7 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	event->accept();
+	mainObject->launcher_flag = false;
 }
 
 void LauncherWindow::on_action_style(QAction *action){

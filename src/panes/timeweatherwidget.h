@@ -1,9 +1,15 @@
 #ifndef TIMEWEATHERWIDGET_H
 #define TIMEWEATHERWIDGET_H
 
+
+#include <QtCore/QString>
+#include <QtCore/QMap>
+
+
 #include <QtGui/QWidget>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QPlainTextEdit>
+
 
 #include "xobjects/mainobject.h"
 
@@ -14,6 +20,8 @@ public:
 	explicit TimeWeatherWidget(MainObject *mOb, QWidget *parent = 0);
 
 	MainObject *mainObject;
+
+	QMap<QString, QString> mpMapServers;
 
 	QButtonGroup *buttonGroupTime;
 	QButtonGroup *buttonGroupSeason;

@@ -13,6 +13,9 @@
 
 #include "xobjects/xsettings.h"
 //#include "launcher/launcherwindow.h" // << This included "mainobject.h" also !!
+#include "mpmap/mpmapwidget.h"
+
+class MpMapWidget;
 
 class MainObject : public QObject
 {
@@ -26,6 +29,8 @@ public:
     XSettings *settings;
 
 	int launcher_flag;
+
+	MpMapWidget *mpMapWidget;
 	//LauncherWindow *launcherWindow;
 	//PropsTreeWidget *propertiesTree;
 
