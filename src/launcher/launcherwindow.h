@@ -77,6 +77,7 @@ public slots:
 	void on_about_qt();
 	void on_quit();
 	void on_action_style(QAction *act);
+	void on_action_open_url(QAction *act);
 
 	//* Functions
 	void load_settings();

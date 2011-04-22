@@ -73,9 +73,26 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 		}
 	}
 
-	//** File Menu
+	//** Help Menu
 	QMenu *menuHelp = new QMenu(tr("Help"));
 	menuBar->addMenu(menuHelp);
+
+	QActionGroup *actionGroupUrls = new QActionGroup(this);
+	connect(actionGroupUrls, SIGNAL(triggered(QAction*)), this, SLOT(on_action_open_url(QAction*)));
+
+	QAction *act = menuHelp->addAction(tr("Project Page"));
+	act->setProperty("url", "http://code.google.com/p/fgx");
+	actionGroupUrls->addAction(act);
+
+	act = menuHelp->addAction(tr("Bugs and Issues"));
+	act->setProperty("url", "http://code.google.com/p/fgx/issues/list");
+	actionGroupUrls->addAction(act);
+
+	act = menuHelp->addAction(tr("Source Code"));
+	act->setProperty("url", "https://gitorious.org/fgx/fgx/");
+	actionGroupUrls->addAction(act);
+
+	menuHelp->addSeparator();
 	menuHelp->addAction(tr("About FGX"), this, SLOT(on_about_fgx()));
 	menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
 
@@ -518,4 +535,10 @@ void LauncherWindow::on_tab_changed(int idx){
 	if(idx == tabWidget->indexOf(outputPreviewWidget)){
 		on_command_preview();
 	}
+}
+
+void LauncherWindow::on_action_open_url(QAction *action){
+	qDebug() << "URL";
+	QUrl url(action->property("url").toString());
+	QDesktopServices::openUrl(url);
 }
