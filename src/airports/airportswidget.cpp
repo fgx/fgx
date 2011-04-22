@@ -166,7 +166,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	//==============================================
 	//** Airport Models
     model = new QStandardItemModel(this);
-	model->setColumnCount(6);
+	model->setColumnCount(3);
     QStringList headerLabelsList;
 	headerLabelsList << "Fav" << "Code" << "Name";
     model->setHorizontalHeaderLabels(headerLabelsList);
@@ -354,6 +354,7 @@ void AirportsWidget::load_airports_tree(){
 		model->setItem(new_row_index, C_ELEVATION, itemAirportElevation);
 		*/
 	}
+	treeViewAirports->setUpdatesEnabled(true);
 	return;
 	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
 
