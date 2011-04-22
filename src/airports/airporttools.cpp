@@ -35,16 +35,30 @@ void AirportTools::scan_airports_xml(){
 	QString directory = mainObject->settings->airports_path();
 
 
-	//* Clear any records in the database
-	QSqlQuery sql("delete from airports;", mainObject->db);
-	sql.exec();
+	//* Drop and recreate the Aiports table - then idex after import later	
+	QStringList sql_commands;
+	sql_commands.append("DROP TABLE IF EXISTS airports;");
+	sql_commands.append("DROP TABLE IF EXISTS runways;");
+	sql_commands.append("CREATE TABLE airports(code varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL);");
+	sql_commands.append("CREATE TABLE runways(airport_code varchar(10) NOT NULL, runway varchar(15), length int, lat float, lng float, heading float )");
 
+	QSqlQuery query(mainObject->db);
+
+	for(int i = 0; i < sql_commands.size(); ++i){
+		qDebug() << sql_commands.at(i);
+
+		if(!query.exec(sql_commands.at(i))){
+			qDebug() << "OOps=" << mainObject->db.lastError();
+			return;
+		}
+	}
+	return;
 	//* Insert Aircraft query
 	QSqlQuery sqlApt(mainObject->db);
 	sqlApt.prepare("INSERT INTO airports(code)VALUES(?);");
 
 
-	//QStringList airportsList;
+	//QStringList airportsList;PageName
 	QString entry;
 
 	QDirIterator it(directory, QDirIterator::Subdirectories);
@@ -75,6 +89,10 @@ void AirportTools::scan_airports_xml(){
 		}
 		if(progress.wasCanceled()){
 			return;
+		}
+		if(c == 1000){
+			qDebug() <<  "CRASH out";
+			progress.hide();
 		}
 	}
 

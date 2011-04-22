@@ -272,8 +272,8 @@ bool MainObject::db_sanity_check(){
 		queries.append("CREATE INDEX fdm ON aircraft(fdm);");
 		queries.append("CREATE INDEX description ON aircraft(description);");
 
-		queries.append("CREATE TABLE airports(code varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL, elevation int, tower tinyint NULL);");
-		queries.append("CREATE TABLE runways(airport varchar(10) NOT NULL, runway varchar(15), width numeric(2,2), length int, lat float, lng float, heading float )");
+		//queries.append("CREATE TABLE airports(code varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL, elevation int, tower tinyint NULL);");
+		//queries.append("CREATE TABLE runways(airport varchar(10) NOT NULL, runway varchar(15), width numeric(2,2), length int, lat float, lng float, heading float )");
         for(int i = 0; i < queries.size(); ++i){
             qDebug() << queries.at(i);
             QSqlQuery q;

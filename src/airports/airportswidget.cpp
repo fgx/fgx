@@ -136,7 +136,6 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	buttonRefreshAirports->setText("Reload");
 	buttonRefreshAirports->setToolTip("Scan directories and reload cache");
 	buttonRefreshAirports->setIcon(QIcon(":/icon/refresh"));
-	//buttonRefreshAirports->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttonRefreshAirports->setFlat(true);
 	connect(buttonRefreshAirports, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()) );
 
@@ -155,12 +154,12 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	airportsLayout->setSpacing(0);
 	airportWidget->setLayout(airportsLayout);
 
-	/* ======== NOTE ============
+	/*  ======== NOTE ============
 		# The Airports tree is a treeView
-		  ## with a model/proxt to enable filtersing
-		  ## and the columns constants a CA_
-	   # The Runways/Parking/Meta is a treeWidget
-		  ## uses CM_ as the columd constants
+			## with a model/proxt to enable filtersing
+			## and the columns constants a CA_
+		# The Runways/Parking/Meta is a treeWidget
+			## uses CM_ as the columd constants
 	*/
 
 	//==============================================
@@ -225,7 +224,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	runwayParkingaLayout->addWidget(treeWidgetRunways, 3);
     treeWidgetRunways->setAlternatingRowColors(true);
 	treeWidgetRunways->setRootIsDecorated(true);
-    QTreeWidgetItem *headerItem = treeWidgetRunways->headerItem();
+	QTreeWidgetItem *headerItem = treeWidgetRunways->headerItem();
     headerItem->setText(0, tr("Runway"));
     headerItem->setText(1, tr("Width"));
     headerItem->setText(2, tr("Length"));
@@ -331,7 +330,7 @@ void AirportsWidget::load_airports_tree(){
 		//QFont font = itemCode->font();
 		//font.setFamily("monospace");
 		//itemCode->setFont(font);
-		qDebug() << query.value(0).toString();
+		//qDebug() << query.value(0).toString();
 		itemCode->setText(query.value(0).toString());
 		model->setItem(new_row_index, CA_CODE, itemCode);
 
