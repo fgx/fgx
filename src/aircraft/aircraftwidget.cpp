@@ -243,7 +243,6 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	splitter->setStretchFactor(1, 1);
 
 	initialize();
-	//load_aircraft_xml_set();
 }
 
 
@@ -280,7 +279,6 @@ void AircraftWidget::on_tree_selection_changed(){
 		return;
 	}
 
-	//emit set_arg("set", "--aircraft=", item->text(C_AERO));
 
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->settings->aircraft_path(),
 																item->text(C_DIR),
@@ -411,6 +409,9 @@ QString AircraftWidget::aircraft(){
 //=============================================================
 // Validate
 QString AircraftWidget::validate(){
+	if(!treeWidget->currentItem()){
+		return QString("No Aircraft Selected");
+	}
 	return QString();
 }
 

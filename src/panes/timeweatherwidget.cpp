@@ -1,4 +1,5 @@
 
+#include <QDebug>
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -44,9 +45,9 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 		butt->setText(time_labels.at(i));
 		butt->setProperty("value", QVariant(time_vals.at(i)));
 		layBoxTime->addWidget(butt);
-		buttonGroupTime->addButton(butt);
+		buttonGroupTime->addButton(butt, i);
 	}
-
+	buttonGroupTime->button(0)->setChecked(true);
 
 	//===============================================================
 	// Season group
@@ -68,6 +69,7 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 		layBoxSeason->addWidget(buttS);
 		buttonGroupSeason->addButton(buttS, i);
 	}
+	buttonGroupSeason->button(0)->setChecked(true);
 
 	//** Add some stretch to column bottom
 	layTimeSeason->addStretch(100);
@@ -103,6 +105,7 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 		layBoxMetar->addWidget(buttM);
 		buttonGroupMetar->addButton(buttM, i);
 	}
+	buttonGroupMetar->button(0)->setChecked(true);
 
 	txtMetar = new QPlainTextEdit();
 	layBoxMetar->addWidget(txtMetar);
@@ -139,12 +142,13 @@ QStringList TimeWeatherWidget::get_args(){
 
 void TimeWeatherWidget::load_settings(){
 
-
 	buttonGroupTime->button(mainObject->settings->value("timeofday", 0).toInt())->setChecked(true);
+
 	buttonGroupSeason->button(mainObject->settings->value("season", 0).toInt())->setChecked(true);
 
 	buttonGroupMetar->button(mainObject->settings->value("weather", 0).toInt())->setChecked(true);
 	txtMetar->setPlainText(mainObject->settings->value("metar").toString());
+	txtMetar->setEnabled(buttonGroupMetar->button(2)->isChecked());
 
 }
 

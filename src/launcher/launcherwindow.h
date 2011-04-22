@@ -1,14 +1,16 @@
 #ifndef LAUNCHERWINDOW_H
 #define LAUNCHERWINDOW_H
 
-#include <QtGui/QMainWindow>
+#include <QtGui/QWidget>
 
-#include <QtGui/QLabel>
-#include <QtGui/QTreeWidget>
+//#include <QtGui/QLabel>
+//#include <QtGui/QTreeWidget>
 #include <QtGui/QTabWidget>
-#include <QtGui/QSplitter>
+//#include <QtGui/QSplitter>
 #include <QtGui/QAction>
 #include <QtGui/QActionGroup>
+#include <QtGui/QPushButton>
+#include <QtGui/QStatusBar>
 
 #include "xobjects/mainobject.h"
 
@@ -22,7 +24,7 @@
 
 #include "xwidgets/execontrols.h"
 
-class LauncherWindow : public QMainWindow
+class LauncherWindow : public QWidget
 {
     Q_OBJECT
 
@@ -46,9 +48,14 @@ public:
 	AdvancedOptionsWidget *advancedOptionsWidget;
 	OutputPreviewWidget *outputPreviewWidget;
 
+	QPushButton *buttonLoadSettings;
+	QPushButton *buttonSaveSettings;
+
 	ExeControls *exeFgfs;
 	ExeControls *exeTerraSync;
 	ExeControls *exeFgCom;
+
+	QStatusBar *statusBar;
 
     void closeEvent(QCloseEvent *event);
 

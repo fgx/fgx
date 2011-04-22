@@ -83,9 +83,6 @@ public slots:
 
 	void set_fgcom();
 
-	void set_http();
-	void set_telnet();
-	void set_screenshot();
 
 	void on_checkbox_in();
 	void on_checkbox_out();

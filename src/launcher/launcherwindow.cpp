@@ -20,7 +20,7 @@
 
 
 LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
-    : QMainWindow(parent)
+	: QWidget(parent)
 {
 
     mainObject = mainOb;
@@ -31,11 +31,22 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	setWindowIcon(QIcon(":/icon/favicon"));
 
+
+	//====================================================
+	//** Main Central Widget and Layout
+	//====================================================
+
+	QVBoxLayout *mainLayout = new QVBoxLayout();
+	mainLayout->setContentsMargins(0, 0, 0, 0);
+	mainLayout->setSpacing(0);
+	setLayout(mainLayout);
+
+
 	//====================================================
 	//** Setup Menus
 	//====================================================
 	QMenuBar *menuBar = new QMenuBar();
-	setMenuBar(menuBar);
+	mainLayout->addWidget(menuBar);
 
 	//** File Menu
 	QMenu *menuFile = new QMenu(tr("File"));
@@ -69,16 +80,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
 
 
-	//====================================================
-	//** Main Central Widget and Layout
-	//====================================================
-    QWidget *mainWidget = new QWidget(this);
-    setCentralWidget(mainWidget);
 
-	QVBoxLayout *mainLayout = new QVBoxLayout();
-	mainLayout->setContentsMargins(0, 0, 0, 0);
-	mainLayout->setSpacing(0);
-	mainWidget->setLayout(mainLayout);
 
 
 	//====================================================
@@ -141,25 +143,43 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	mainLayout->addSpacing(10);
 
 
+
+
 	//========================================================================================
-	//** EXE "Controls" into a bottom Bar
+	//**Bottom Bar
 	//========================================================================================
 	QHBoxLayout *bottomActionLayout = new QHBoxLayout();
 	mainLayout->addLayout(bottomActionLayout);
-	bottomActionLayout->addStretch(100); // force to right
 
+
+	//** Load Save Buttons
+	buttonLoadSettings = new QPushButton();
+	buttonLoadSettings->setText("Load Settings");
+	bottomActionLayout->addWidget(buttonLoadSettings);
+	connect(buttonLoadSettings, SIGNAL(clicked()), this, SLOT(load_settings()));
+
+	buttonSaveSettings = new QPushButton();
+	buttonSaveSettings->setText("Save Settings");
+	bottomActionLayout->addWidget(buttonSaveSettings);
+	connect(buttonSaveSettings, SIGNAL(clicked()), this, SLOT(save_settings()));
+
+	bottomActionLayout->addStretch(100);
+
+	//* FgCom
 	exeFgCom = new ExeControls("FgCom", "fgcom");
 	bottomActionLayout->addWidget(exeFgCom);
 	connect(	exeFgCom->buttonStart, SIGNAL(clicked()),
 				this, SLOT(on_start_fgcom_clicked())
 	);
 
+	//* TerraSync
 	exeTerraSync = new ExeControls("TerraSync", "terrasync");
 	bottomActionLayout->addWidget(exeTerraSync);
 	connect(	exeTerraSync->buttonStart, SIGNAL(clicked()),
 				this, SLOT(on_start_terrasync_clicked())
 	);
 
+	//* FlightGear
 	exeFgfs = new ExeControls("FlightGear", "fgfs");
 	bottomActionLayout->addWidget(exeFgfs);
 	connect(	exeFgfs->buttonStart, SIGNAL(clicked()),
@@ -167,9 +187,13 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	);
 
 
+	statusBar = new QStatusBar();
+	mainLayout->addWidget(statusBar);
+
+
 	//=================================================
 	//** Restore Last tab
-	tabWidget->setCurrentIndex( mainOb->settings->value("launcher_last_tab", 0).toInt() );
+	tabWidget->setCurrentIndex( mainObject->settings->value("launcher_last_tab", 0).toInt() );
 
 	//====================================================================================
 	//* Problem:  Qt Has no "Show event" for a "widget", so we need to present Widgets first
@@ -204,7 +228,7 @@ void LauncherWindow::initialize(){
 	coreSettingsWidget->initialize();
 	update_pids();
 
-	centralWidget()->setDisabled(false);
+	//centralWidget()->setDisabled(false);
 }
 
 
@@ -296,16 +320,16 @@ QString LauncherWindow::fg_args(){
 	args << timeWeatherWidget->get_args();
 
 	//* Aircraft
-	args << aircraftWidget->get_args();
+	//args << aircraftWidget->get_args();
 
 	//* Airport, Runway Start pos
-	args << airportsWidget->get_args();
+	//args << airportsWidget->get_args();
 
 	//* Network
-	args << networkWidget->get_args();
+	//args << networkWidget->get_args();
 
 	//**Advanced Options
-	args << advancedOptionsWidget->get_args();
+	//args << advancedOptionsWidget->get_args();
 
 	//* Ai Traffic TODO
 	/*
@@ -341,6 +365,7 @@ void LauncherWindow::save_settings()
 	advancedOptionsWidget->save_settings();
 
 	mainObject->settings->sync();
+	statusBar->showMessage("Settings Saved", 3000);
 }
 
 //================================================================================
@@ -350,6 +375,7 @@ void LauncherWindow::load_settings()
 {
 
 	coreSettingsWidget->load_settings();
+	timeWeatherWidget->load_settings();
 	aircraftWidget->load_settings();
 	airportsWidget->load_settings();
 	networkWidget->load_settings();
@@ -364,7 +390,7 @@ void LauncherWindow::load_settings()
 	//timeWeatherWidget->txtMetar->setPlainText(mainObject->settings->value("metar").toString());
 	//timeWeatherWidget->txtMetar->setEnabled(weather == 2);
 
-
+	statusBar->showMessage("Settings Loaded", 3000);
 
 
 }
@@ -406,30 +432,34 @@ bool LauncherWindow::validate(){
 	v = aircraftWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
-		statusBar()->showMessage(v, TIMEOUT);
+		statusBar->showMessage(v, TIMEOUT);
 		return false;
 	}
+	qDebug() << "aircraft ok";
 
 	v = airportsWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(airportsWidget));
-		statusBar()->showMessage(v, TIMEOUT);
+		statusBar->showMessage(v, TIMEOUT);
 		return false;
 	}
+	qDebug() << "aircports ok";
 
 	v = networkWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(networkWidget));
-		statusBar()->showMessage(v, TIMEOUT);
+		statusBar->showMessage(v, TIMEOUT);
 		return false;
 	}
+	qDebug() << "network";
 
-	if(coreSettingsWidget->groupBoxTerraSync->isChecked() and coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
+;	if(coreSettingsWidget->groupBoxTerraSync->isChecked() && coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget) );
 		coreSettingsWidget->txtTerraSyncPath->setFocus();
-		statusBar()->showMessage("Need a Terrasync directory", TIMEOUT);
+		statusBar->showMessage("Need a Terrasync directory", TIMEOUT);
 		return false;
 	}
+	qDebug() << "VALID";
 	return true;
 }
 

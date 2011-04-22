@@ -239,19 +239,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	layoutFgCom->addLayout(hboxfgCom, row,0,1,2);
 	hboxfgCom->addStretch(20);
 
-	/*
-	QPushButton *buttonStopFgCom = new QPushButton();
-	buttonStopFgCom->setText("Stop");
-	buttonStopFgCom->setIcon(QIcon(":/icon/stop_disabled"));
-	hboxfgCom->addWidget(buttonStopFgCom);
-	connect(buttonStopFgCom, SIGNAL(clicked()), this, SLOT(on_fgcom_stop()));
-
-	QPushButton *buttonStartFgCom = new QPushButton();
-	buttonStartFgCom->setText("Start");
-	buttonStartFgCom->setIcon(QIcon(":/icon/start_enabled"));
-	hboxfgCom->addWidget(buttonStartFgCom);
-	connect(buttonStartFgCom, SIGNAL(clicked()), this, SLOT(on_fgcom_start()));
-	*/
 
 	//===========================================================
 	//** Telnet
@@ -260,7 +247,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	grpTelnet->setCheckable(true);
 	grpTelnet->setChecked(false);
 	rightLayout->addWidget(grpTelnet);
-	connect(grpTelnet, SIGNAL(clicked()), this, SLOT(set_telnet()));
 
 	QHBoxLayout *layoutNetTelnet = new QHBoxLayout();
 	grpTelnet->setLayout(layoutNetTelnet);
@@ -275,7 +261,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	txtTelnet = new QLineEdit("5500");
 	txtTelnet->setValidator(new QIntValidator(80, 32000, this));
 	layoutNetTelnet->addWidget(txtTelnet);
-	connect(txtTelnet, SIGNAL(textChanged(QString)), this, SLOT(set_telnet()));
 
 	QToolButton *buttTelnet = new QToolButton();
 	layoutNetTelnet->addWidget(buttTelnet);
@@ -291,7 +276,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	grpScreenShot->setCheckable(true);
 	grpScreenShot->setChecked(false);
 	rightLayout->addWidget(grpScreenShot);
-	connect(grpScreenShot, SIGNAL(clicked()), this, SLOT(set_screenshot()));
 
 	QHBoxLayout *layoutScreenShot = new QHBoxLayout();
 	grpScreenShot->setLayout(layoutScreenShot);
@@ -304,7 +288,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	txtScreenShot = new QLineEdit("8088");
 	txtScreenShot->setValidator(new QIntValidator(80, 32000, this));
 	layoutScreenShot->addWidget(txtScreenShot);
-	connect(txtScreenShot, SIGNAL(textChanged(QString)), this, SLOT(set_screenshot()));
 
 	QToolButton *buttScreenshot = new QToolButton();
 	layoutScreenShot->addWidget(buttScreenshot);
@@ -319,7 +302,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	grpHttp->setCheckable(true);
 	grpHttp->setChecked(false);
 	rightLayout->addWidget(grpHttp);
-	//connect(grpHttp, SIGNAL(clicked(bool)), this, SLOT(set_http()));
 
 	QHBoxLayout *layoutNetHttp = new QHBoxLayout();
 	grpHttp->setLayout(layoutNetHttp);
@@ -330,7 +312,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	txtHttp = new QLineEdit("8080");
 	txtHttp->setValidator(new QIntValidator(80, 32000, this));
 	layoutNetHttp->addWidget(txtHttp);
-	connect(txtHttp, SIGNAL(textChanged(QString)), this, SLOT(set_http()));
 
 	QToolButton *butHttp = new QToolButton();
 	layoutNetHttp->addWidget(butHttp);
@@ -461,14 +442,7 @@ void NetworkWidget::on_mp_server_checked(bool state){
 //=====================================
 // Callsign Changed
 void NetworkWidget::on_callsign_changed(QString txt){
-	QString callsign = txt.trimmed();
-	if(callsign.length() == 0){
-		emit set_arg("remove", "--callsign=","");
-
-
-	}else{
-		emit set_arg("set", "--callsign=",callsign);
-	}
+	mainObject->actionCallsign->setText(txt.trimmed());
 }
 
 //=====================================
@@ -478,9 +452,6 @@ void NetworkWidget::set_mp_server(){
 	QTreeWidgetItem *item = treeWidget->currentItem();
 
 	if(!item or item->text(C_FLAG).length() == 0){
-		//* No Muliplayer server selected to no multiplay
-		emit set_arg("remove", "--multiplay=out", "");
-		emit set_arg("remove", "--multiplay=in", "");
 		return;
 	}
 
@@ -530,37 +501,7 @@ void NetworkWidget::populate_combo_hz(QComboBox *combo){
 
 
 
-//=================================================
-// Set Http
-void NetworkWidget::set_http(){
-	if( grpHttp->isChecked() ){
-		emit set_arg("set", "--http=", txtHttp->text());
-	}else{
-		emit set_arg("remove", "--http=", "");
-	}
-}
 
-
-//=================================================
-// Set Telnet
-void NetworkWidget::set_telnet(){
-	if( grpTelnet->isChecked() ){
-		emit set_arg("set", "--telnet=", txtTelnet->text());
-	}else{
-		emit set_arg("remove", "--telnet=", "");
-	}
-}
-
-
-//=================================================
-// Set ScreenShot
-void NetworkWidget::set_screenshot(){
-	if( grpScreenShot->isChecked() ){
-		emit set_arg("set", "--jpg-httpd=", txtScreenShot->text());
-	}else{
-		emit set_arg("remove", "--jpg-httpd=", "");
-	}
-}
 
 //=================================================
 // MP IN / Out Events
@@ -601,6 +542,7 @@ void NetworkWidget::on_open_telnet(){
 // Get Args
 QStringList NetworkWidget::get_args(){
 
+	validate();
 	QStringList args;
 	return args;
 	//* Enable Multiplay
