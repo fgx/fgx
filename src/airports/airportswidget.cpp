@@ -634,6 +634,10 @@ QString AirportsWidget::validate(){
 			txtLng->setFocus();
 			return QString("Need Longtitude");
 		}
+	}else if(buttonGroupUse->checkedId() == USE_AIRPORT){
+		if (!treeViewAirports->selectionModel()->hasSelection()){
+			return QString(tr("No Airport selected"));
+		}
 	}
 
 	return QString();

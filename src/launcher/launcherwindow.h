@@ -3,16 +3,10 @@
 
 #include <QtGui/QWidget>
 
-//#include <QtGui/QLabel>
-//#include <QtGui/QTreeWidget>
 #include <QtGui/QTabWidget>
-//#include <QtGui/QSplitter>
 #include <QtGui/QAction>
 #include <QtGui/QActionGroup>
 #include <QtGui/QPushButton>
-#include <QtGui/QStatusBar>
-
-#include "xobjects/mainobject.h"
 
 #include "panes/coresettingswidget.h"
 #include "panes/timeweatherwidget.h"
@@ -23,6 +17,9 @@
 #include "panes/outputpreviewwidget.h"
 
 #include "xwidgets/execontrols.h"
+#include "xwidgets/xstatusbar.h"
+
+#include "xobjects/mainobject.h"
 
 class LauncherWindow : public QWidget
 {
@@ -55,7 +52,7 @@ public:
 	ExeControls *exeTerraSync;
 	ExeControls *exeFgCom;
 
-	QStatusBar *statusBar;
+	XStatusBar *statusBar;
 
     void closeEvent(QCloseEvent *event);
 

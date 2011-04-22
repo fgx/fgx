@@ -686,7 +686,7 @@ QString NetworkWidget::validate(){
 			return QString("Callsign required");
 		}
 		if(checkBoxOut->isChecked()){
-			if(!treeWidget->currentItem() or treeWidget->currentItem()->text(C_FLAG).length() == 0){
+			if(!treeWidget->currentItem()){
 				treeWidget->setFocus();
 				return QString("No multiplayer out server selected");;
 			}

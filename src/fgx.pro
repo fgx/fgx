@@ -11,7 +11,6 @@ QT += network \
     sql \
     webkit
 
-
 # Input
 HEADERS += xobjects/xsettings.h \
     settings/settingsdialog.h \
@@ -32,7 +31,9 @@ HEADERS += xobjects/xsettings.h \
     launcher/launcherwindow.h \
     mpmap/mpmapwidget.h \
     settings/pathssettingswidget.h \
-    settings/dbsettingswidget.h
+    settings/dbsettingswidget.h \
+    xwidgets/xstatusbar.h \
+    xwidgets/xtreewidgetitem.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -53,6 +54,7 @@ SOURCES += main.cpp \
     launcher/launcherwindow.cpp \
     mpmap/mpmapwidget.cpp \
     settings/pathssettingswidget.cpp \
-    settings/dbsettingswidget.cpp
+    settings/dbsettingswidget.cpp \
+    xwidgets/xstatusbar.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc

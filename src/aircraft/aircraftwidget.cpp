@@ -46,7 +46,7 @@
 
 #include "aircraft/aircraftwidget.h"
 #include "aircraft/aerotools.h"
-
+#include "xwidgets/xtreewidgetitem.h"
 
 
 

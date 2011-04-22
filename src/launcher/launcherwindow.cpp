@@ -187,12 +187,13 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	);
 
 
-	statusBar = new QStatusBar();
+	statusBar = new XStatusBar();
 	mainLayout->addWidget(statusBar);
 
 
 	//=================================================
 	//** Restore Last tab
+	qDebug() << mainObject->settings->value("launcher_last_tab", 0).toInt();
 	tabWidget->setCurrentIndex( mainObject->settings->value("launcher_last_tab", 0).toInt() );
 
 	//====================================================================================
@@ -432,7 +433,7 @@ bool LauncherWindow::validate(){
 	v = aircraftWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
-		statusBar->showMessage(v, TIMEOUT);
+		statusBar->showError(v, TIMEOUT);
 		return false;
 	}
 	qDebug() << "aircraft ok";
@@ -440,7 +441,7 @@ bool LauncherWindow::validate(){
 	v = airportsWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(airportsWidget));
-		statusBar->showMessage(v, TIMEOUT);
+		statusBar->showError(v, TIMEOUT);
 		return false;
 	}
 	qDebug() << "aircports ok";
@@ -448,7 +449,7 @@ bool LauncherWindow::validate(){
 	v = networkWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(networkWidget));
-		statusBar->showMessage(v, TIMEOUT);
+		statusBar->showError(v, TIMEOUT);
 		return false;
 	}
 	qDebug() << "network";
@@ -456,7 +457,7 @@ bool LauncherWindow::validate(){
 ;	if(coreSettingsWidget->groupBoxTerraSync->isChecked() && coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget) );
 		coreSettingsWidget->txtTerraSyncPath->setFocus();
-		statusBar->showMessage("Need a Terrasync directory", TIMEOUT);
+		statusBar->showError("Need a Terrasync directory", TIMEOUT);
 		return false;
 	}
 	qDebug() << "VALID";
