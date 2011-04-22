@@ -46,28 +46,7 @@ MainObject::MainObject(QObject *parent) :
 	//connect(telnet, SIGNAL(telnet_connected(bool)), this, SLOT(on_telnet_connected(bool)));
 	//    //void telnet_connected(bool);
 
-    //********************************************************************
-    //** SQL database problem
-	// I dont want to connect until required
-	//QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-	//db = QSqlDatabase::addDatabase("QMYSQL");
-	//db.setHostName("localhost");
-    //db.setUserName("root");
-    //db.setPassword("mash");
-    //db.setDatabaseName("ffs-desktop");
-	/*
-	qDebug() << QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-    db.setDatabaseName(QDesktopServices::storageLocation(QDesktopServices::DataLocation).append("ffs-desktop.sqlite"));
-    if( !db.open() ){
-        qDebug() << db.lastError();
-        return;
-    }
-    if(!db_sanity_check()){
-        qDebug() << "DB error";
-        return;
-    }
-	*/
-	qDebug() << "is open" << db.isOpen();
+
 
     //***********************************
     //** Tray Icon
@@ -293,7 +272,8 @@ bool MainObject::db_sanity_check(){
 		queries.append("CREATE INDEX fdm ON aircraft(fdm);");
 		queries.append("CREATE INDEX description ON aircraft(description);");
 
-        queries.append("CREATE TABLE IF NOT EXISTS airport_favs( airport varchar(20) );");
+		queries.append("CREATE TABLE airports(airport varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL, elevation int, tower tinyint NULL);");
+		queries.append("CREATE TABLE runways(airport varchar(10) NOT NULL, runway varchar(15), width numeric(2,2), length int, lat float, lng float, heading float )");
         for(int i = 0; i < queries.size(); ++i){
             qDebug() << queries.at(i);
             QSqlQuery q;

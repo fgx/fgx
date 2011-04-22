@@ -28,6 +28,7 @@
 
 #include "airports/airportswidget.h"
 #include "airports/importairportswidget.h"
+#include "airports/airporttools.h"
 
 
 AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
@@ -135,7 +136,6 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	//buttonRefreshAirports->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttonRefreshAirports->setFlat(true);
 	connect(buttonRefreshAirports, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()) );
-
 
 
 	//*==============================================================================
@@ -297,53 +297,16 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 }
 
 void AirportsWidget::initialize(){
-	QStringList airports = mainObject->settings->value("cache/airports").toStringList();
-	if(airports.count() == 0){
-		scan_airports_xml();
-	}
+	//QStringList airports = mainObject->settings->value("cache/airports").toStringList();
+	//if(airports.count() == 0){
+	//	scan_airports_xml();
+	//}
 	load_airports_tree();
 }
 
-//============================================================================
-//** Scan XML's for airports
-//============================================================================
-void AirportsWidget::scan_airports_xml(){
-	int c = 0;
-	int found = 0;
-	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0, this);
-	progress.setWindowModality(Qt::WindowModal);
 
-	//qDebug() << mainObject->settings->airports_path();
-	QString directory = mainObject->settings->airports_path();
 
-	QStringList airportsList;
-	QString entry;
 
-	QDirIterator it(directory, QDirIterator::Subdirectories);
-	while (it.hasNext()) {
-		progress.setValue(c);
-		entry = it.next();
-		if(entry.endsWith(".threshold.xml") ){
-			QFileInfo info(entry);
-			airportsList << QString("%1~|~%2").arg(	entry,
-													info.fileName().split(".").at(0)
-												);
-			found++;
-		}
-		c++;
-		if(c % 100 == 0){
-			QString str = QString("%1 airports found").arg(found);
-			statusBarAirports->showMessage(str);
-		}
-		if(progress.wasCanceled()){
-			return;
-		}
-	}
-
-	mainObject->settings->setValue("cache/airports", airportsList);
-	mainObject->settings->sync();
-	progress.hide();
-}
 //============================================================================
 //** Load Airports Tree
 //============================================================================
@@ -535,11 +498,15 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 //===========================================================================
 void AirportsWidget::on_import_clicked(){
 	ImportAirportsWidget *widget = new ImportAirportsWidget();
-	widget->exec();
+	widget->setWindowModality(Qt::WindowModal);
+	widget->show();
 }
 
 void AirportsWidget::on_refresh_clicked(){
-	scan_airports_xml();
+	qDebug() << "Refresh";
+	//scan_airports_xml();
+	AirportTools *aptTools = new AirportTools(this, mainObject);
+	aptTools->scan_airports_xml();
 	load_airports_tree();
 }
 
