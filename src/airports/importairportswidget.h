@@ -11,11 +11,11 @@
 
 #include "xobjects/xsettings.h"
 
-class ImportAirportsWidget : public QDialog
+class ImportAirportsWidget : public QWidget
 {
 Q_OBJECT
 public:
-	explicit ImportAirportsWidget(QDialog *parent = 0);
+	explicit ImportAirportsWidget(QWidget *parent = 0);
 
 	XSettings settings;
 

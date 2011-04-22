@@ -100,7 +100,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
     tabWidget = new QTabWidget(this);
 	mainLayout->addWidget(tabWidget);
-	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed(int)));
 
 
 	//* Core Settings
@@ -193,8 +192,8 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	//=================================================
 	//** Restore Last tab
-	qDebug() << mainObject->settings->value("launcher_last_tab", 0).toInt();
 	tabWidget->setCurrentIndex( mainObject->settings->value("launcher_last_tab", 0).toInt() );
+	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed(int)));
 
 	//====================================================================================
 	//* Problem:  Qt Has no "Show event" for a "widget", so we need to present Widgets first
@@ -514,7 +513,8 @@ void LauncherWindow::on_action_style(QAction *action){
 }
 
 void LauncherWindow::on_tab_changed(int idx){
-	mainObject->settings->setValue("launcher_last_tab", idx);
+	mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
+	qDebug() << "last=" << tabWidget->currentIndex();
 	if(idx == tabWidget->indexOf(outputPreviewWidget)){
 		on_command_preview();
 	}

@@ -366,7 +366,7 @@ void AircraftWidget::load_aircraft_shell(){
 // Save Settings
 void AircraftWidget::save_settings(){
 	QTreeWidgetItem *item = treeWidget->currentItem();
-	if(item && item->text(C_AERO).length() == 0){
+	if(item && item->text(C_AERO).length() > 0){
 		mainObject->settings->setValue("aircraft", item->text(C_AERO) );
 	}
 	mainObject->settings->setValue("nav1", txtNav1->text());
@@ -381,6 +381,7 @@ void AircraftWidget::save_settings(){
 //=============================================================
 // Load Settings
 void AircraftWidget::load_settings(){
+
 	select_node(mainObject->settings->value("aircraft").toString());
 
 	txtNav1->setText(mainObject->settings->value("nav1").toString());
@@ -398,7 +399,7 @@ void AircraftWidget::select_node(QString aero){
 		treeWidget->scrollToItem(items[0], QAbstractItemView::PositionAtCenter);
 	}
 }
-QString AircraftWidget::aircraft(){
+QString AircraftWidget::selected_aircraft(){
 	QTreeWidgetItem *item = treeWidget->currentItem();
 	if(!item or item->text(C_AERO).length() == 0){
 		return "";
@@ -432,10 +433,9 @@ void AircraftWidget::on_refresh_cache(){
 void AircraftWidget::load_tree(){
 	int c =0;
 
-	QString currAero = aircraft();
+	QString currAero = selected_aircraft();
 	treeWidget->setUpdatesEnabled(false);
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
-	QString record;
 	QString last_dir("");
 	QTreeWidgetItem *parentItem;
 
@@ -461,7 +461,7 @@ void AircraftWidget::load_tree(){
 		//directory, xml_file, aero, fdm, description, author
 		XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
 		QString xml_path = QString("%1/%2").arg(query.value(0).toString(), query.value(1).toString());
-		aeroItem->setText(C_XML, query.value(1).toString());
+		aeroItem->setText(C_XML, xml_path);
 		aeroItem->setText(C_AERO, query.value(2).toString());
 		aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
 		aeroItem->setText(C_DESCRIPTION, query.value(3).toString());
@@ -488,6 +488,7 @@ void AircraftWidget::initialize(){
 	}
 
 	load_tree();
+	select_node(mainObject->settings->value("aircraft").toString());
 }
 
 //=============================================================
@@ -496,8 +497,8 @@ QStringList AircraftWidget::get_args(){
 
 	QStringList args;
 
-	if(aircraft().length() > 0){
-		args << QString("--aircraft=%1").arg(aircraft());
+	if(selected_aircraft().length() > 0){
+		args << QString("--aircraft=%1").arg(selected_aircraft());
 	}
 
 	if(txtNav1->text().length() > 0){

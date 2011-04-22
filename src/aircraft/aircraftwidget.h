@@ -50,7 +50,7 @@ public:
 	void load_settings();
 	QString validate();
 	void select_node(QString aero);
-	QString aircraft();
+	QString selected_aircraft();
 
 	QStringList get_args();
 
