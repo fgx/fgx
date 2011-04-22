@@ -450,7 +450,7 @@ void AircraftWidget::load_tree(){
 		if(view == V_LIST){
 			parentItem = treeWidget->invisibleRootItem();
 		}else if(last_dir != query.value(0).toString()){
-			parentItem = new QTreeWidgetItem(treeWidget->invisibleRootItem());
+			parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
 			parentItem->setText( C_DIR, query.value(0).toString());
 			parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
 			treeWidget->addTopLevelItem(parentItem);
@@ -459,7 +459,7 @@ void AircraftWidget::load_tree(){
 		}
 
 		//directory, xml_file, aero, fdm, description, author
-		QTreeWidgetItem *aeroItem = new QTreeWidgetItem(parentItem);
+		XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
 		QString xml_path = QString("%1/%2").arg(query.value(0).toString(), query.value(1).toString());
 		aeroItem->setText(C_XML, query.value(1).toString());
 		aeroItem->setText(C_AERO, query.value(2).toString());
