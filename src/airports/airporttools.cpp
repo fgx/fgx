@@ -28,6 +28,8 @@ void AirportTools::scan_airports_xml(){
 	int found = 0;
 	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0);
 	progress.setWindowModality(Qt::WindowModal);
+	progress.setRange(0, 20000);
+	progress.show();
 
 	qDebug() << mainObject->settings->airports_path();
 	QString directory = mainObject->settings->airports_path();
@@ -39,7 +41,7 @@ void AirportTools::scan_airports_xml(){
 
 	//* Insert Aircraft query
 	QSqlQuery sqlApt(mainObject->db);
-	sqlApt.prepare("INSERT INTO airports(code)VALUES(?)");
+	sqlApt.prepare("INSERT INTO airports(code)VALUES(?);");
 
 
 	//QStringList airportsList;
@@ -47,19 +49,26 @@ void AirportTools::scan_airports_xml(){
 
 	QDirIterator it(directory, QDirIterator::Subdirectories);
 	while (it.hasNext()) {
-		progress.setValue(c);
+		c++;
+		if (c % 100 == 0){
+			progress.setValue(c);
+		}
 		entry = it.next();
 		if(entry.endsWith(".threshold.xml") ){
 			QFileInfo info(entry);
 			//#airportsList << QString("%1~|~%2").arg(	entry,
 			//										info.fileName().split(".").at(0)
-			//									);
-			//qDebug() << entry << info.fileName();
-			sqlApt.bindValue(0, info.fileName().split(".").at(0));
-			sqlApt.exec();
+			//
+			// Split out "FOO.threshold.xml"
+			QString code = info.fileName().split(".").at(0);
+			//qDebug() << entry << info.fileName() << code;
+			sqlApt.bindValue(0, code);
+			if(!sqlApt.exec()){
+				qDebug() << mainObject->db.lastError();
+			}
 			found++;
 		}
-		c++;
+
 		if(c % 100 == 0){
 			QString str = QString("%1 airports found").arg(found);
 			//statusBarAirports->showMessage(str);

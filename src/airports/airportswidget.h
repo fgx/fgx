@@ -27,12 +27,9 @@ class AirportsWidget : public QWidget
 Q_OBJECT
 public:
     enum COLS{
-        C_FAV = 0,
-		C_ICAO = 1,
-        C_TOWER = 2,
-        C_ELEVATION = 3,
-		C_NAME = 4,
-		C_XML = 5
+		CA_FAV = 0,
+		CA_CODE = 1,
+		CA_NAME = 2
     };
 	enum USE{
 		USE_DEFAULT = 0,
