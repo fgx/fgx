@@ -37,7 +37,7 @@ void AirportTools::create_db_tables(){
 	sql_commands.append("DROP TABLE IF EXISTS parking;");
 	sql_commands.append("CREATE TABLE airports(code varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL);");
 	sql_commands.append("CREATE TABLE runways(airport_code varchar(10) NOT NULL, runway varchar(15), length int, lat float, lng float, heading float )");
-	sql_commands.append("CREATE TABLE parking(airport_code varchar(10) NOT NULL, parking varchar(50), lat varchar(10), lng varchar(10), heading float )");
+	sql_commands.append("CREATE TABLE stands(airport_code varchar(10) NOT NULL, stand varchar(50), lat varchar(10), lng varchar(10), heading float )");
 
 	execute_sql_commands_list(sql_commands);
 }
@@ -52,7 +52,7 @@ void AirportTools::create_db_indexes(){
 	QStringList sql_commands;
 	sql_commands.append("CREATE INDEX airport_code_idx ON runways (airport_code);");
 	//sql_commands.append("CREATE INDEX runway ON TABLE runways (runway);");
-	sql_commands.append("CREATE INDEX airport_code_idx ON parking (airport_code);");
+	sql_commands.append("CREATE INDEX airport_code_idx ON stands (airport_code);");
 
 	execute_sql_commands_list(sql_commands);
 }
@@ -67,7 +67,6 @@ void AirportTools::execute_sql_commands_list(QStringList sql_commands){
 		if(!query.exec(sql_commands.at(i))){
 			//TODO ignored for now - mysql is safe .. maybe
 			//qDebug() << "OOps=" << mainObject->db.lastError(); //TODO
-
 		}
 	}
 }
@@ -151,7 +150,7 @@ void AirportTools::scan_airports_xml(){
 		if(progress.wasCanceled()){
 			return;
 		}
-		if(c == 2000){
+		if(c == 5000){
 			qDebug() <<  "<, KILLED CRASH out";
 			//progress.hide();
 			//return;
@@ -258,7 +257,7 @@ void AirportTools::parse_parking_xml(QDir dir, QString airport_code){
 
 	//* Prepare the Insert Parking Query
 	QSqlQuery sqlParkingInsert(mainObject->db);
-	sqlParkingInsert.prepare("INSERT INTO parking(airport_code, parking, heading, lat, lng)VALUES(?,?,?,?,?);");
+	sqlParkingInsert.prepare("INSERT INTO stands(airport_code, stand, heading, lat, lng)VALUES(?,?,?,?,?);");
 
 	//* Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
 	QString fileName(dir.absolutePath().append("/").append(airport_code));

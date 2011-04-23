@@ -26,12 +26,18 @@ class AirportsWidget : public QWidget
 {
 Q_OBJECT
 public:
-    enum COLS{
+	enum AIPORT_TREE_COLS{
 		CA_FAV = 0,
 		CA_CODE = 1,
 		CA_NAME = 2
     };
-	enum USE{
+	enum META_TREE_COLS{
+		CM_NODE = 0,
+		CM_LABEL = 1,
+		CM_KEY = 2
+	};
+
+	enum STARTUP_POSTITION{
 		USE_DEFAULT = 0,
 		USE_AIRPORT = 1,
 		USE_COORDINATES = 2
@@ -61,9 +67,12 @@ public:
 
 	void scan_airports_xml();
 	void show_progress(bool state);
+
 	void load_airports_tree();
-	void select_airport(QString);
-	void load_runways(QString airportXmlFile);
+
+	void on_airport_selected(QString);
+	QString load_runways_node(QString airport_code);
+	QString load_parking_node(QString airport_code);
 
 	QLineEdit *txtLat;
 	QLineEdit *txtLng;

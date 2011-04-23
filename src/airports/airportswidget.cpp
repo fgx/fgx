@@ -225,7 +225,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
     treeWidgetRunways->setAlternatingRowColors(true);
 	treeWidgetRunways->setRootIsDecorated(true);
 	QTreeWidgetItem *headerItem = treeWidgetRunways->headerItem();
-    headerItem->setText(0, tr("Runway"));
+	headerItem->setText(0, tr("Startup Position"));
     headerItem->setText(1, tr("Width"));
     headerItem->setText(2, tr("Length"));
     headerItem->setText(3, tr("Lat"));
@@ -383,128 +383,102 @@ void AirportsWidget::on_filter_airports(QString txt){
 
 //==============================================================
 //*** Airport Clicked 
-void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex previous){
-	Q_UNUSED(previous);
+void AirportsWidget::on_aiport_row_changed(QModelIndex currentIdx, QModelIndex previousIdx){
+
+	Q_UNUSED(previousIdx);
+
+	//* Clear the Runways tree
 	treeWidgetRunways->model()->removeRows(0, treeWidgetRunways->model()->rowCount());
-	return;
-	//QModelIndex proxyIndex =  treeViewAirports->selectionModel()->selectedRows(C_ICAO).first();
-	/*
-	QModelIndex proxyIndex =  proxyModel->index(current.row(), C_XML);
-    if(!proxyIndex.isValid()){
-		//emit set_arg("remove", "--airport=", "");
+
+	//* No selection -eg a filter removing a selected node
+	if(!currentIdx.isValid()){
 		return;
-    }
-    QModelIndex srcIndex = proxyModel->mapToSource(proxyIndex);
-	load_runways(model->item(srcIndex.row(), C_XML)->text());
-	*/
+	}
+
+	//* Get the airport code forn source model
+	QModelIndex srcIndex = proxyModel->mapToSource(currentIdx);
+	QString airport_code = model->item(srcIndex.row(), CA_CODE)->text();
+
+	//* Load Nodes from DB - with a count from each
+	QString count_label;
+	count_label.append( load_runways_node(airport_code) );
+	count_label.append( load_parking_node(airport_code) );
+	//statusBarRunways->setM
+
 }
 
 //==============================================================
 //*** load_runways
-void AirportsWidget::load_runways(QString airportXmlFile){
-	return;
-	/*
-	int i;
+QString AirportsWidget::load_runways_node(QString airport_code){
 
-	//*** Load Runways
-	QStringList runwayList;
-	QFile rwyfile(airportXmlFile);
-	if (rwyfile.open(QIODevice::ReadOnly)) {
-
-		QXmlStreamReader rwyreader(&rwyfile);
-		QXmlStreamReader::TokenType tokenType;
-
-		while ((tokenType = rwyreader.readNext()) != QXmlStreamReader::EndDocument) {
-			if (rwyreader.name() == "rwy") {
-				runwayList << rwyreader.readElementText();
-			}
-		}
-		rwyfile.close();
-	}
-	runwayList.removeDuplicates();
-	runwayList.sort();
-
+	//* Create the Runways Node
 	QTreeWidgetItem *runwaysParent = new QTreeWidgetItem();
 	runwaysParent->setText(0, "Runways" );
 	runwaysParent->setIcon(0, QIcon(":/icon/folder"));
 	treeWidgetRunways->addTopLevelItem(runwaysParent);
 	treeWidgetRunways->setItemExpanded(runwaysParent, true);
-	if(runwayList.count() == 0){
+
+	//* DB query
+	QSqlQuery query(mainObject->db);
+	query.prepare("SELECT runway, heading, lat, lng FROM runways WHERE airport_code = ? ORDER BY runway ASC;");
+	query.bindValue(0, airport_code);
+	query.exec();
+
+	//* No results so create a "none node"
+	if(query.size() == 0){
+
 		QTreeWidgetItem *item = new QTreeWidgetItem(runwaysParent);
 		item->setText(0, "None");
-	}else{
-		for(i =0; i < runwayList.count(); i++){
-			QTreeWidgetItem *item = new QTreeWidgetItem(runwaysParent);
-			item->setText(0, runwayList.at(i));
-			item->setText(1, "runway");
-		}
+		return QString("No Runways");
 	}
 
-	//*** Load Parking Positions
-	QStringList parkingPositions;
-	QString parkPosFile = QString(airportXmlFile);
-	parkPosFile.chop(13); // strip the threshold.xml part
-	
-	//terrasync check because with terrasync scenery parking.xml is renamed to groundnet.xml
-	if (mainObject->settings->value("use_terrasync").toBool() == true) {
-	parkPosFile.append("groundnet.xml");
-	} else {
-		parkPosFile.append("parking.xml");
+	//* Loop and add the runways
+	while(query.next()){
+		QTreeWidgetItem *item = new QTreeWidgetItem(runwaysParent);
+		item->setText(CM_NODE, query.value(0).toString());
+		item->setText(CM_KEY, "runway");
 	}
+	QString countLabel;
+	countLabel.append(QString("%1 Runways, ").arg(runwaysParent->childCount()));
 
-	QFile ppfile(parkPosFile);
-	if(ppfile.open(QIODevice::ReadOnly)) {
+	return countLabel;
+}
 
-		QXmlStreamReader ppreader(&ppfile);
-		QXmlStreamReader::TokenType tokenType;
+QString AirportsWidget::load_parking_node(QString airport_code){
 
-		while ((tokenType = ppreader.readNext()) != QXmlStreamReader::EndDocument) {
-			if (ppreader.name() == "Parking") {
-				QXmlStreamAttributes attributes = ppreader.attributes();
-
-				if (attributes.value("type").toString() == "gate" && attributes.value("name").toString() != "Startup Location") {
-					QString ppname = attributes.value("name").toString();
-					QString ppnumber = attributes.value("number").toString();
-					QString ppall ;
-					ppall.append(ppname); ppall.append(ppnumber);
-					parkingPositions << ppall;
-				}
-
-			}
-		}
-
-		ppfile.close();
-	}
-	parkingPositions.removeDuplicates();
-	parkingPositions.sort();
-
+	//* Create the Parkings Node
 	QTreeWidgetItem *parkingParent = new QTreeWidgetItem();
-	parkingParent->setText(0, "Park Positions" );
+	parkingParent->setText(0, "Parking" );
 	parkingParent->setIcon(0, QIcon(":/icon/folder"));
 	treeWidgetRunways->addTopLevelItem(parkingParent);
 	treeWidgetRunways->setItemExpanded(parkingParent, true);
-	if(parkingPositions.count() == 0){
+
+	//* DB query
+	QSqlQuery query(mainObject->db);
+	query.prepare("SELECT stand, heading, lat, lng FROM stands WHERE airport_code = ? ORDER BY stand ASC;");
+	query.bindValue(0, airport_code);
+	query.exec();
+
+	//* No results so create a "none node"
+	if(query.size() == 0){
 		QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
 		item->setText(0, "None");
-	}else{
-		for(i =0; i < parkingPositions.count(); i++){
-			QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
-			item->setText(0, parkingPositions.at(i));
-			item->setText(1, "stand");
-		}
-	}
-	
-	QString messagecount;
-	messagecount.append(QString("%1 Runways, ").arg(runwaysParent->childCount()));
-	if(parkingPositions.count() != 0) {
-		messagecount.append(QString("%1 Park Position(s)").arg(parkingParent->childCount()));
-	} else {
-		messagecount.append(QString("No Park Positions."));
+		return QString("No Parking Positions");
 	}
 
-	statusBarRunways->showMessage(messagecount);
-	*/
+	//* Loop and add the runways
+	while(query.next()){
+		QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
+		item->setText(CM_NODE, query.value(0).toString());
+		item->setText(CM_KEY, "stand");
+	}
+	QString countLabel;
+	countLabel.append(QString("%1 Park Position(s)").arg(parkingParent->childCount()));
+	return countLabel;
+
 }
+
+
 
 //===========================================================================
 void AirportsWidget::on_import_aptdat_clicked(){
