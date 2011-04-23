@@ -31,7 +31,7 @@
 
 #include "airports/airportswidget.h"
 #include "airports/importairportswidget.h"
-#include "airports/airporttools.h"
+#include "airports/airportsimport.h"
 
 
 AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
@@ -496,8 +496,8 @@ void AirportsWidget::on_import_aptdat_clicked(){
 void AirportsWidget::on_rescan_xml_clicked(){
 	qDebug() << "Refresh Clicked <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
 	//scan_airports_xml();
-	AirportTools *aptTools = new AirportTools(this, mainObject);
-	aptTools->scan_airports_xml();
+	AirportsImport *airportsImport = new AirportsImport(this, mainObject);
+	airportsImport->import_airports();
 	//load_airports_tree();
 }
 

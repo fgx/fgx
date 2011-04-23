@@ -1,5 +1,5 @@
-#ifndef AIRPORTTOOLS_H
-#define AIRPORTTOOLS_H
+#ifndef AIRPORTSIMPORT_H
+#define AIRPORTSIMPORT_H
 
 #include <QtCore/QObject>
 #include <QtCore/QDir>
@@ -8,28 +8,31 @@
 
 #include "xobjects/mainobject.h"
 
-class AirportTools : public QObject
+class AirportsImport : public QObject
 {
 Q_OBJECT
 public:
-	explicit AirportTools(QObject *parent, MainObject *mOb);
+	explicit AirportsImport(QObject *parent, MainObject *mOb);
 
 	MainObject *mainObject;
 
+	void import_airports();
+	
 	void create_db_tables();
 	void create_db_indexes();
 	void execute_sql_commands_list(QStringList sql_commands);
 
-	void scan_airports_xml();
+	
 	void parse_runways_xml(QDir dir, QString airport_code);
 	void parse_ils_xml(QDir dir, QString airport_code);
 	void parse_parking_xml(QDir dir, QString airport_code);
 
 	QStringList listParkingPositions;
+	QStringList listAirportCodes;
 signals:
 
 public slots:
 
 };
 
-#endif // AIRPORTTOOLS_H
+#endif // AIRPORTSIMPORT_H

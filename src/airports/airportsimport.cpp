@@ -14,9 +14,9 @@
 
 #include <QtGui/QProgressDialog>
 
-#include "airporttools.h"
+#include "airportsimport.h"
 
-AirportTools::AirportTools(QObject *parent, MainObject *mOb) :
+AirportsImport::AirportsImport(QObject *parent, MainObject *mOb) :
     QObject(parent)
 {
 
@@ -28,7 +28,7 @@ AirportTools::AirportTools(QObject *parent, MainObject *mOb) :
 //============================================================================
 //== DataBase De/Re-construction
 //============================================================================
-void AirportTools::create_db_tables(){
+void AirportsImport::create_db_tables(){
 
 	//* Drop and recreate the tables - then index after index later for speed..
 	QStringList sql_commands;
@@ -48,7 +48,7 @@ void AirportTools::create_db_tables(){
 //============================================================================
 //== Database Indexes - Indexing is done after import of raw data
 //============================================================================
-void AirportTools::create_db_indexes(){
+void AirportsImport::create_db_indexes(){
 
 	//* Create the indexes.. we only really nees the airport_code,, runways an parking are done in GUI atmo
 	QStringList sql_commands;
@@ -62,7 +62,7 @@ void AirportTools::create_db_indexes(){
 //============================================================================
 //== Execute Commands From List
 //============================================================================
-void AirportTools::execute_sql_commands_list(QStringList sql_commands){
+void AirportsImport::execute_sql_commands_list(QStringList sql_commands){
 	QSqlQuery query(mainObject->db);
 	for(int i = 0; i < sql_commands.size(); ++i){
 		qDebug() << sql_commands.at(i);
@@ -74,18 +74,20 @@ void AirportTools::execute_sql_commands_list(QStringList sql_commands){
 }
 
 //============================================================================
-//== Scan XML's for airports
+//== Import Airports
 //============================================================================
-// This function finds the threshold.xml files
-// The aiport CODE is derived from the file name in ICAO style
-// The runways are the nodes
-void AirportTools::scan_airports_xml(){
+// * Nukes then recreates tables
+// * Recursive search got .threshold.xml files
+// * The aiport CODE is derived from the file name in ICAO style
+// * The runways, ils, and stands imported (ils unused atmo)
+// * Create the db index
+void AirportsImport::import_airports(){
 
 	int c = 0;
 	int found = 0;
 
 	//=================================
-	//** Show something as this takes time
+	//** Show Progress as this takes time
 	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.setRange(0, 20000);
@@ -101,12 +103,9 @@ void AirportTools::scan_airports_xml(){
 
 	//================================================
 	//* Lets Loop the directories
-	//qDebug() << mainObject->settings->airports_path();
-
 	//* Get out aiports path from setings and get the the subdir also
-	QString airports_dir_path = mainObject->settings->airports_path();
-	QDirIterator loopAirportsFiles(airports_dir_path, QDirIterator::Subdirectories);
-	QString xFile;
+	QDirIterator loopAirportsFiles( mainObject->settings->airports_path(), QDirIterator::Subdirectories );
+	QString xFileName;
 
 	while (loopAirportsFiles.hasNext()) {
 
@@ -117,29 +116,26 @@ void AirportTools::scan_airports_xml(){
 		}
 
 		//* Get file handle if there is one
-		xFile = loopAirportsFiles.next();
+		xFileName = loopAirportsFiles.next();
 
 		//* Check if file entry is a *.threshold.xml - cos this is what we want
-		if(xFile.endsWith(".threshold.xml") ){		
+		if(xFileName.endsWith(".threshold.xml") ){
 
-			//* Split out "<CODE>.threshold.xml" with a .
-			QFileInfo fileInfoThreshold(xFile);
-			QString code = fileInfoThreshold.fileName().split(".").at(0);
+			//* Split out "CODE.threshold.xml" with a "."
+			QFileInfo fileInfoThreshold(xFileName);
+			QString airport_code = fileInfoThreshold.fileName().split(".").at(0);
 
-			//* Insert code to airports table == primary key
-			sqlAirportInsert.bindValue(0, code);
+			//* Insert airport_code to airports table == primary key
+			sqlAirportInsert.bindValue(0, airport_code);
 			if(!sqlAirportInsert.exec()){
-				qDebug() << "CRASH" << mainObject->db.lastError() << "=" << c;
+				//qDebug() << "CRASH" << mainObject->db.lastError() << "=" << c;
 				// TODO catch error log
-				return;
-			}else{
-				//qDebug() << "APT=" << code << " c=" << c;
 			}
 
 			//* Parse the XML files
-			parse_runways_xml(fileInfoThreshold.absoluteDir(), code);
-			parse_ils_xml(fileInfoThreshold.absoluteDir(), code);
-			parse_parking_xml(fileInfoThreshold.absoluteDir(), code);
+			parse_runways_xml(fileInfoThreshold.absoluteDir(), airport_code);
+			parse_ils_xml(fileInfoThreshold.absoluteDir(), airport_code);
+			parse_parking_xml(fileInfoThreshold.absoluteDir(), airport_code);
 
 
 
@@ -196,7 +192,7 @@ void AirportTools::scan_airports_xml(){
   </runway>
 </PropertyList>
 */
-void AirportTools::parse_runways_xml(QDir dir, QString airport_code){
+void AirportsImport::parse_runways_xml(QDir dir, QString airport_code){
 
 	//* Prepare the Insert Runway Query
 	QSqlQuery sqlRunwayInsert(mainObject->db);
@@ -252,7 +248,7 @@ void AirportTools::parse_runways_xml(QDir dir, QString airport_code){
 </PropertyList>
 */
 
-void AirportTools::parse_ils_xml(QDir dir, QString airport_code){
+void AirportsImport::parse_ils_xml(QDir dir, QString airport_code){
 
 	//* Prepare the Insert ILS Query
 	QSqlQuery sqlILSInsert(mainObject->db);
@@ -326,7 +322,7 @@ void AirportTools::parse_ils_xml(QDir dir, QString airport_code){
 			 airlineCodes="" />
   .... snipped ....
 */
-void AirportTools::parse_parking_xml(QDir dir, QString airport_code){
+void AirportsImport::parse_parking_xml(QDir dir, QString airport_code){
 
 	//* Prepare the Insert Parking Query
 	QSqlQuery sqlParkingInsert(mainObject->db);
