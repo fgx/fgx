@@ -58,11 +58,12 @@ public:
 	QStandardItemModel *model;
 	QSortFilterProxyModel *proxyModel;
 	QTreeView *treeViewAirports;
+
 	QPushButton *buttonRefreshTree;
 	QStatusBar *statusBarAirports;
 
-    QTreeWidget *treeWidgetRunways;
-	QStatusBar *statusBarRunways;
+	QTreeWidget *treeWidgetAirportInfo;
+	QStatusBar *statusBarAirportInfo;
 
 
 	void scan_airports_xml();
@@ -71,8 +72,8 @@ public:
 	void load_airports_tree();
 
 	void on_airport_selected(QString);
-	QString load_runways_node(QString airport_code);
-	QString load_parking_node(QString airport_code);
+	int load_runways_node(QString airport_code);
+	int load_parking_node(QString airport_code);
 
 	QLineEdit *txtLat;
 	QLineEdit *txtLng;

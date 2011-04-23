@@ -34,10 +34,12 @@ void AirportTools::create_db_tables(){
 	QStringList sql_commands;
 	sql_commands.append("DROP TABLE IF EXISTS airports;");
 	sql_commands.append("DROP TABLE IF EXISTS runways;");
+	sql_commands.append("DROP TABLE IF EXISTS ils;");
 	sql_commands.append("DROP TABLE IF EXISTS parking;");
 	sql_commands.append("CREATE TABLE airports(code varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL);");
-	sql_commands.append("CREATE TABLE runways(airport_code varchar(10) NOT NULL, runway varchar(15), length int, lat float, lng float, heading float )");
-	sql_commands.append("CREATE TABLE stands(airport_code varchar(10) NOT NULL, stand varchar(50), lat varchar(10), lng varchar(10), heading float )");
+	sql_commands.append("CREATE TABLE runways(airport_code varchar(10) NOT NULL, runway varchar(15), length int, lat float, lon float, heading float );");
+	sql_commands.append("CREATE TABLE ils(airport_code varchar(10) NOT NULL, runway varchar(15) NOT NULL, ident varchar(10), lat float, lon float, heading float );");
+	sql_commands.append("CREATE TABLE stands(airport_code varchar(10) NOT NULL, stand varchar(50), lat varchar(10), lon varchar(10), heading float );");
 
 	execute_sql_commands_list(sql_commands);
 }
@@ -51,7 +53,7 @@ void AirportTools::create_db_indexes(){
 	//* Create the indexes.. we only really nees the airport_code,, runways an parking are done in GUI atmo
 	QStringList sql_commands;
 	sql_commands.append("CREATE INDEX airport_code_idx ON runways (airport_code);");
-	//sql_commands.append("CREATE INDEX runway ON TABLE runways (runway);");
+	sql_commands.append("CREATE INDEX airport_runway_idx ON ils (airport_code, runway);");
 	sql_commands.append("CREATE INDEX airport_code_idx ON stands (airport_code);");
 
 	execute_sql_commands_list(sql_commands);
@@ -134,8 +136,9 @@ void AirportTools::scan_airports_xml(){
 				//qDebug() << "APT=" << code << " c=" << c;
 			}
 
-			//* Parse the XML files for runways and parking
+			//* Parse the XML files
 			parse_runways_xml(fileInfoThreshold.absoluteDir(), code);
+			parse_ils_xml(fileInfoThreshold.absoluteDir(), code);
 			parse_parking_xml(fileInfoThreshold.absoluteDir(), code);
 
 
@@ -157,15 +160,14 @@ void AirportTools::scan_airports_xml(){
 			break;
 		}
 	}
+
 	//* Create the database indexes
 	create_db_indexes();
+
 	progress.setLabelText("Creating Indexes");
 	progress.hide();
 }
 
-void AirportTools::parse_ils_xml(QDir dir, QString airport_code){
-
-}
 
 
 //==============================================================
@@ -198,7 +200,7 @@ void AirportTools::parse_runways_xml(QDir dir, QString airport_code){
 
 	//* Prepare the Insert Runway Query
 	QSqlQuery sqlRunwayInsert(mainObject->db);
-	sqlRunwayInsert.prepare("INSERT INTO runways(airport_code, runway, heading, lat, lng)VALUES(?,?,?,?,?);");
+	sqlRunwayInsert.prepare("INSERT INTO runways(airport_code, runway, heading, lat, lon)VALUES(?,?,?,?,?);");
 
 	//* Get the contents of the file whcile is path and code..
 	QFile fileXmlThrehsold(dir.absolutePath().append("/").append(airport_code).append(".threshold.xml"));
@@ -228,9 +230,80 @@ void AirportTools::parse_runways_xml(QDir dir, QString airport_code){
 	}
 }
 
-//================================================================
+
+
+
+//=======================================================================
+// Parse the ILS files
+//=======================================================================
+/*
+<?xml version="1.0"?>
+<PropertyList>
+  <runway>
+	<ils>
+	  <lon>-0.756683</lon>
+	  <lat>51.2823330000001</lat>
+	  <rwy>06</rwy>
+	  <hdg-deg>61.98</hdg-deg>
+	  <elev-m>69.49</elev-m>
+	  <nav-id>IFRG</nav-id>
+	</ils>
+  </runway>
+</PropertyList>
+*/
+
+void AirportTools::parse_ils_xml(QDir dir, QString airport_code){
+
+	//* Prepare the Insert ILS Query
+	QSqlQuery sqlILSInsert(mainObject->db);
+	sqlILSInsert.prepare("INSERT INTO ils(airport_code, runway, ident, heading, lat, lon)VALUES(?,?,?,?,?,?);");
+
+	QString fileName(dir.absolutePath().append("/").append(airport_code).append(".ils.xml"));
+
+	//* Check ILS file exists
+	if(QFile::exists(fileName)){
+
+		//* Open file and read contents to string
+		QFile ilsFile(fileName);
+		ilsFile.open(QIODevice::ReadOnly);
+		QString xmlString = ilsFile.readAll();
+
+		//* Create domDocument - important - don't pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
+		QDomDocument dom;
+		dom.setContent(xmlString); //* AFTER dom has been created, then set the content from a string from the file
+
+		//* Get <ils/> nodes and loop thru them
+		QDomNodeList ilsNodes = dom.elementsByTagName("ils");
+		if (ilsNodes.count() > 0){
+			for(int idxd =0; idxd < ilsNodes.count(); idxd++){
+
+				 QDomNode ilsNode = ilsNodes.at(idxd);
+				//* insert = airport_code, runway, ident, heading, lat, lon
+				sqlILSInsert.bindValue(0, airport_code);
+				sqlILSInsert.bindValue(1, ilsNode.firstChildElement("rwy").text());
+				sqlILSInsert.bindValue(2, ilsNode.firstChildElement("nav-id").text());
+				sqlILSInsert.bindValue(3, ilsNode.firstChildElement("hdg-deg").text());
+				sqlILSInsert.bindValue(4, ilsNode.firstChildElement("lat").text());
+				sqlILSInsert.bindValue(5, ilsNode.firstChildElement("lon").text());
+
+				if(!sqlILSInsert.exec()){
+					//TODO - ignore error
+					//qDebug() << mainObject->db.lastError() << "=" << ilsNode.firstChildElement("rwy").text();
+				}
+
+			}
+
+		}
+	} /* File Exists */
+}
+
+
+
+
+
+//=======================================================================
 // Parse the <groundnet/parking>.threshold.xml file for Parking Postiton
-//================================================================
+//=======================================================================
 /*
 <?xml version="1.0"?>
 <groundnet>
@@ -257,7 +330,7 @@ void AirportTools::parse_parking_xml(QDir dir, QString airport_code){
 
 	//* Prepare the Insert Parking Query
 	QSqlQuery sqlParkingInsert(mainObject->db);
-	sqlParkingInsert.prepare("INSERT INTO stands(airport_code, stand, heading, lat, lng)VALUES(?,?,?,?,?);");
+	sqlParkingInsert.prepare("INSERT INTO stands(airport_code, stand, heading, lat, lon)VALUES(?,?,?,?,?);");
 
 	//* Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
 	QString fileName(dir.absolutePath().append("/").append(airport_code));
@@ -286,7 +359,7 @@ void AirportTools::parse_parking_xml(QDir dir, QString airport_code){
 				//* Check it doesnt already exist - pete is confused as to multipkle entries
 				 if(!listParkingPositions.contains(attribs.namedItem("name").nodeValue())){
 
-					//* insert = airport_code, parking, heading, lat, lng
+					//* insert = airport_code, parking, heading, lat, lon
 					sqlParkingInsert.bindValue(0, airport_code);
 					sqlParkingInsert.bindValue(1, attribs.namedItem("name").nodeValue());
 					sqlParkingInsert.bindValue(2, attribs.namedItem("heading").nodeValue());
@@ -303,58 +376,6 @@ void AirportTools::parse_parking_xml(QDir dir, QString airport_code){
 
 		}
 	} /* File Exists */
-	/*
-	if(ppfile.open(QIODevice::ReadOnly)) {
 
-		QXmlStreamReader ppreader(&ppfile);
-		QXmlStreamReader::TokenType tokenType;
-
-		while ((tokenType = ppreader.readNext()) != QXmlStreamReader::EndDocument) {
-			if (ppreader.name() == "Parking") {
-				QXmlStreamAttributes attributes = ppreader.attributes();
-
-				if (attributes.value("type").toString() == "gate" && attributes.value("name").toString() != "Startup Location") {
-					QString ppname = attributes.value("name").toString();
-					QString ppnumber = attributes.value("number").toString();
-					QString ppall ;
-					ppall.append(ppname); ppall.append(ppnumber);
-					parkingPositions << ppall;
-				}
-
-			}
-		}
-
-		ppfile.close();
-	}
-	parkingPositions.removeDuplicates();
-	parkingPositions.sort();
-	*/
-	/*
-	QTreeWidgetItem *parkingParent = new QTreeWidgetItem();
-	parkingParent->setText(0, "Park Positions" );
-	parkingParent->setIcon(0, QIcon(":/icon/folder"));
-	treeWidgetRunways->addTopLevelItem(parkingParent);
-	treeWidgetRunways->setItemExpanded(parkingParent, true);
-	if(parkingPositions.count() == 0){
-		QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
-		item->setText(0, "None");
-	}else{
-		for(i =0; i < parkingPositions.count(); i++){
-			QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
-			item->setText(0, parkingPositions.at(i));
-			item->setText(1, "stand");
-		}
-	}
-
-	QString messagecount;
-	messagecount.append(QString("%1 Runways, ").arg(runwaysParent->childCount()));
-	if(parkingPositions.count() != 0) {
-		messagecount.append(QString("%1 Park Position(s)").arg(parkingParent->childCount()));
-	} else {
-		messagecount.append(QString("No Park Positions."));
-	}
-
-	statusBarRunways->showMessage(messagecount);
-	*/
 }
 
