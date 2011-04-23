@@ -1,7 +1,8 @@
 #ifndef AIRPORTTOOLS_H
 #define AIRPORTTOOLS_H
 
-#include <QObject>
+#include <QtCore/QObject>
+#include <QtCore/QFileInfo>
 
 #include "xobjects/mainobject.h"
 
@@ -14,6 +15,8 @@ public:
 	MainObject *mainObject;
 
 	void scan_airports_xml();
+
+	void parse_runways(QFileInfo thresholdXmlFileInfo);
 
 signals:
 

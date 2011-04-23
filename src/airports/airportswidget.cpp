@@ -402,7 +402,8 @@ void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex prev
 //==============================================================
 //*** load_runways
 void AirportsWidget::load_runways(QString airportXmlFile){
-
+	return;
+	/*
 	int i;
 
 	//*** Load Runways
@@ -502,6 +503,7 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 	}
 
 	statusBarRunways->showMessage(messagecount);
+	*/
 }
 
 //===========================================================================
@@ -512,11 +514,11 @@ void AirportsWidget::on_import_clicked(){
 }
 
 void AirportsWidget::on_refresh_clicked(){
-	qDebug() << "Refresh";
+	qDebug() << "Refresh Clicked <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
 	//scan_airports_xml();
 	AirportTools *aptTools = new AirportTools(this, mainObject);
 	aptTools->scan_airports_xml();
-	load_airports_tree();
+	//load_airports_tree();
 }
 
 void AirportsWidget::on_buttonGroupUse(){

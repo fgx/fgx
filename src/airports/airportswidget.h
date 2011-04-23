@@ -3,7 +3,7 @@
 
 #include <QtCore/QDirIterator>
 #include <QtCore/QStringList>
-#include <QXmlStreamReader>
+
 
 #include <QtGui/QWidget>
 #include <QtGui/QButtonGroup>
