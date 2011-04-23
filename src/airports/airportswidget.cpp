@@ -19,7 +19,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QAction>
 #include <QtGui/QLabel>
-#include <QtGui/QProgressDialog>
+//#include <QtGui/QProgressDialog>
 #include <QtGui/QLineEdit>
 
 #include <QtGui/QStandardItemModel>
@@ -160,16 +160,16 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 		# The Airports tree is a treeView
 			## with a model/proxt to enable filtersing
 			## and the columns constants a CA_
-		# The Runways/Parking/Meta is a treeWidget
-			## uses CM_ as the columd constants
+		# The Airport Info is a treeWidget
+			## uses CI_ as the column constants
 	*/
 
 	//==============================================
 	//** Airport Models
     model = new QStandardItemModel(this);
-	model->setColumnCount(3);
+	model->setColumnCount(2);
     QStringList headerLabelsList;
-	headerLabelsList << "Fav" << "Code" << "Name";
+	headerLabelsList << tr("Code") << tr("Name");
     model->setHorizontalHeaderLabels(headerLabelsList);
 
     proxyModel = new QSortFilterProxyModel(this);
@@ -195,13 +195,12 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	//** Headers and columns
 	treeViewAirports->header()->setStretchLastSection(true);
-	treeViewAirports->setColumnWidth(CA_FAV, 50);
 	treeViewAirports->setColumnWidth(CA_CODE, 80);
 	treeViewAirports->setColumnWidth(CA_NAME, 50);
 
 	connect( treeViewAirports->selectionModel(),
 			 SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ),
-			 this, SLOT( on_aiport_row_changed(QModelIndex, QModelIndex) )
+			 this, SLOT( on_airport_selected(QModelIndex,QModelIndex) )
 	);
 
 	//* StatusBar for Airports
@@ -385,7 +384,7 @@ void AirportsWidget::on_filter_airports(QString txt){
 
 //==============================================================
 //*** Airport Clicked 
-void AirportsWidget::on_aiport_row_changed(QModelIndex currentIdx, QModelIndex previousIdx){
+void AirportsWidget::on_airport_selected(QModelIndex currentIdx, QModelIndex previousIdx){
 
 	Q_UNUSED(previousIdx);
 
@@ -438,11 +437,11 @@ int AirportsWidget::load_runways_node(QString airport_code){
 	//* Loop and add the runways
 	while(query.next()){
 		QTreeWidgetItem *iRunway = new QTreeWidgetItem(runwaysParent);
-		iRunway->setText(CM_NODE, query.value(0).toString());
-		iRunway->setText(CM_KEY, "runway");
+		iRunway->setText(CI_NODE, query.value(0).toString());
+		iRunway->setText(CI_KEY, "runway");
 
 		QTreeWidgetItem *iHeading = new QTreeWidgetItem(iRunway);
-		iHeading->setText(CM_NODE, query.value(1).toString());
+		iHeading->setText(CI_NODE, query.value(1).toString());
 
 	}
 
@@ -470,15 +469,15 @@ int AirportsWidget::load_parking_node(QString airport_code){
 	//* No results so create a "none node"
 	if(query.size() == 0){
 		QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
-		item->setText(0, "None");
+		item->setText(0, tr("-- None --"));
 		return 0;
 	}
 
-	//* Loop and add the runways
+	//* Loop and add the Stands
 	while(query.next()){
 		QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
-		item->setText(CM_NODE, query.value(0).toString());
-		item->setText(CM_KEY, "stand");
+		item->setText(CI_NODE, query.value(0).toString());
+		item->setText(CI_KEY, "stand");
 	}
 
 	//* return the count

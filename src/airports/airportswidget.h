@@ -26,15 +26,14 @@ class AirportsWidget : public QWidget
 {
 Q_OBJECT
 public:
-	enum AIPORT_TREE_COLS{
-		CA_FAV = 0,
+	enum AIPORTS_TREE_COLS{
 		CA_CODE = 1,
-		CA_NAME = 2
+		CA_NAME
     };
-	enum META_TREE_COLS{
-		CM_NODE = 0,
-		CM_LABEL = 1,
-		CM_KEY = 2
+	enum AIRPORT_INFO_TREE_COLS{
+		CI_NODE = 0,
+		CI_LABEL,
+		CI_KEY
 	};
 
 	enum STARTUP_POSTITION{
@@ -99,7 +98,7 @@ public slots:
 
 	void on_filter_button(QAbstractButton*);
 	void on_filter_airports(QString);
-	void on_aiport_row_changed(QModelIndex, QModelIndex);
+	void on_airport_selected(QModelIndex, QModelIndex);
 
 	void on_import_aptdat_clicked();
 	void on_rescan_xml_clicked();
