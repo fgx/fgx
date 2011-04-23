@@ -16,6 +16,10 @@ public:
 
 	MainObject *mainObject;
 
+	void create_db_tables();
+	void create_db_indexes();
+	void execute_sql_commands_list(QStringList sql_commands);
+
 	void scan_airports_xml();
 	void parse_runways_xml(QDir dir, QString airport_code);
 	void parse_ils_xml(QDir dir, QString airport_code);

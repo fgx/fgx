@@ -26,53 +26,10 @@ AirportTools::AirportTools(QObject *parent, MainObject *mOb) :
 
 
 //============================================================================
-//== Scan XML's for airports
+//== DataBase De/Re-construction
 //============================================================================
-// This function finds the threshold.xml files
-// The aiport CODE is derived from the file name in ICAO style
-// The runways are the nodes
-/*
-<?xml version="1.0"?>
-<PropertyList>
-  <runway>
-	<threshold>
-	  <lon>0.044298885776989</lon>
-	  <lat>51.505569223906</lat>
-	  <rwy>10</rwy>
-	  <hdg-deg>92.88</hdg-deg>
-	  <displ-m>95</displ-m>
-	  <stopw-m>55</stopw-m>
-	</threshold>
-	<threshold>
-	  <lon>0.065996952433288</lon>
-	  <lat>51.5048897753222</lat>
-	  <rwy>28</rwy>
-	  <hdg-deg>272.88</hdg-deg>
-	  <displ-m>71</displ-m>
-	  <stopw-m>90</stopw-m>
-	</threshold>
-  </runway>
-</PropertyList>
-*/
+void AirportTools::create_db_tables(){
 
-void AirportTools::scan_airports_xml(){
-
-	int c = 0;
-	int found = 0;
-	qDebug() << "AirportTools::scan_airports_xml";
-	//return;
-
-
-	//=================================
-	//** Show something as this takes time
-	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0);
-	progress.setWindowModality(Qt::WindowModal);
-	progress.setRange(0, 20000);
-	progress.show();
-
-
-	//=================================
-	//* DataBase De/Re-construction
 	//* Drop and recreate the tables - then index after index later for speed..
 	QStringList sql_commands;
 	sql_commands.append("DROP TABLE IF EXISTS airports;");
@@ -82,13 +39,60 @@ void AirportTools::scan_airports_xml(){
 	sql_commands.append("CREATE TABLE runways(airport_code varchar(10) NOT NULL, runway varchar(15), length int, lat float, lng float, heading float )");
 	sql_commands.append("CREATE TABLE parking(airport_code varchar(10) NOT NULL, parking varchar(50), lat varchar(10), lng varchar(10), heading float )");
 
+	execute_sql_commands_list(sql_commands);
+}
+
+
+//============================================================================
+//== Database Indexes - Indexing is done after import of raw data
+//============================================================================
+void AirportTools::create_db_indexes(){
+
+	//* Create the indexes.. we only really nees the airport_code,, runways an parking are done in GUI atmo
+	QStringList sql_commands;
+	sql_commands.append("CREATE INDEX airport_code_idx ON runways (airport_code);");
+	//sql_commands.append("CREATE INDEX runway ON TABLE runways (runway);");
+	sql_commands.append("CREATE INDEX airport_code_idx ON parking (airport_code);");
+
+	execute_sql_commands_list(sql_commands);
+}
+
+//============================================================================
+//== Execute Commands From List
+//============================================================================
+void AirportTools::execute_sql_commands_list(QStringList sql_commands){
 	QSqlQuery query(mainObject->db);
 	for(int i = 0; i < sql_commands.size(); ++i){
+		qDebug() << sql_commands.at(i);
 		if(!query.exec(sql_commands.at(i))){
+			//TODO ignored for now - mysql is safe .. maybe
 			//qDebug() << "OOps=" << mainObject->db.lastError(); //TODO
-			return;
+
 		}
 	}
+}
+
+//============================================================================
+//== Scan XML's for airports
+//============================================================================
+// This function finds the threshold.xml files
+// The aiport CODE is derived from the file name in ICAO style
+// The runways are the nodes
+void AirportTools::scan_airports_xml(){
+
+	int c = 0;
+	int found = 0;
+
+	//=================================
+	//** Show something as this takes time
+	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0);
+	progress.setWindowModality(Qt::WindowModal);
+	progress.setRange(0, 20000);
+	progress.show();
+
+
+	//* Drop and recreate database tables
+	create_db_tables();
 
 	//* Insert Airport query
 	QSqlQuery sqlAirportInsert(mainObject->db);
@@ -131,7 +135,7 @@ void AirportTools::scan_airports_xml(){
 				//qDebug() << "APT=" << code << " c=" << c;
 			}
 
-			//* Parse the XMl files for runways and parking
+			//* Parse the XML files for runways and parking
 			parse_runways_xml(fileInfoThreshold.absoluteDir(), code);
 			parse_parking_xml(fileInfoThreshold.absoluteDir(), code);
 
@@ -149,11 +153,14 @@ void AirportTools::scan_airports_xml(){
 		}
 		if(c == 2000){
 			qDebug() <<  "<, KILLED CRASH out";
-			progress.hide();
-			return;
+			//progress.hide();
+			//return;
+			break;
 		}
 	}
-
+	//* Create the database indexes
+	create_db_indexes();
+	progress.setLabelText("Creating Indexes");
 	progress.hide();
 }
 
@@ -165,6 +172,29 @@ void AirportTools::parse_ils_xml(QDir dir, QString airport_code){
 //==============================================================
 // Parse the <CODE>.threshold.xml file to get runways
 //==============================================================
+/*
+<?xml version="1.0"?>
+<PropertyList>
+  <runway>
+	<threshold>
+	  <lon>0.044298885776989</lon>
+	  <lat>51.505569223906</lat>
+	  <rwy>10</rwy>
+	  <hdg-deg>92.88</hdg-deg>
+	  <displ-m>95</displ-m>
+	  <stopw-m>55</stopw-m>
+	</threshold>
+	<threshold>
+	  <lon>0.065996952433288</lon>
+	  <lat>51.5048897753222</lat>
+	  <rwy>28</rwy>
+	  <hdg-deg>272.88</hdg-deg>
+	  <displ-m>71</displ-m>
+	  <stopw-m>90</stopw-m>
+	</threshold>
+  </runway>
+</PropertyList>
+*/
 void AirportTools::parse_runways_xml(QDir dir, QString airport_code){
 
 	//* Prepare the Insert Runway Query
@@ -202,6 +232,28 @@ void AirportTools::parse_runways_xml(QDir dir, QString airport_code){
 //================================================================
 // Parse the <groundnet/parking>.threshold.xml file for Parking Postiton
 //================================================================
+/*
+<?xml version="1.0"?>
+<groundnet>
+  <frequencies>
+	<AWOS>12807</AWOS>
+	<CLEARANCE>12197</CLEARANCE>
+	<GROUND>12190</GROUND>
+	<TOWER>12447</TOWER>
+	<APPROACH>13497</APPROACH>
+  </frequencies>
+  <parkingList>
+	<Parking index="0"
+			 type="gate"
+			 name="EGLL London Heathrow Ramp #11111"
+			 number="1"
+			 lat="N51 28.192"
+			 lon="W00 27.892"
+			 heading="56"
+			 radius="54"
+			 airlineCodes="" />
+  .... snipped ....
+*/
 void AirportTools::parse_parking_xml(QDir dir, QString airport_code){
 
 	//* Prepare the Insert Parking Query
