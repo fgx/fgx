@@ -91,8 +91,8 @@ public slots:
 	void on_filter_airports(QString);
 	void on_aiport_row_changed(QModelIndex, QModelIndex);
 
-	void on_import_clicked();
-	void on_refresh_clicked();
+	void on_import_aptdat_clicked();
+	void on_rescan_xml_clicked();
 
 	void on_buttonGroupUse();
 };

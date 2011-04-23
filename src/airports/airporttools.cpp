@@ -8,6 +8,8 @@
 #include <QtSql/QSqlError>
 
 #include <QtXml/QXmlStreamReader>
+#include <QtXml/QDomDocument>
+#include <QtXml/QDomNodeList>
 
 
 #include <QtGui/QProgressDialog>
@@ -59,6 +61,8 @@ void AirportTools::scan_airports_xml(){
 	int found = 0;
 	qDebug() << "AirportTools::scan_airports_xml";
 	//return;
+
+
 	//=================================
 	//** Show something as this takes time
 	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0);
@@ -69,19 +73,19 @@ void AirportTools::scan_airports_xml(){
 
 	//=================================
 	//* DataBase De/Re-construction
-	//* Drop and recreate the Aiports table - then index after import later
+	//* Drop and recreate the tables - then index after index later for speed..
 	QStringList sql_commands;
 	sql_commands.append("DROP TABLE IF EXISTS airports;");
 	sql_commands.append("DROP TABLE IF EXISTS runways;");
+	sql_commands.append("DROP TABLE IF EXISTS parking;");
 	sql_commands.append("CREATE TABLE airports(code varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL);");
 	sql_commands.append("CREATE TABLE runways(airport_code varchar(10) NOT NULL, runway varchar(15), length int, lat float, lng float, heading float )");
+	sql_commands.append("CREATE TABLE parking(airport_code varchar(10) NOT NULL, parking varchar(50), lat varchar(10), lng varchar(10), heading float )");
 
 	QSqlQuery query(mainObject->db);
 	for(int i = 0; i < sql_commands.size(); ++i){
-		qDebug() << sql_commands.at(i);
-
 		if(!query.exec(sql_commands.at(i))){
-			qDebug() << "OOps=" << mainObject->db.lastError();
+			//qDebug() << "OOps=" << mainObject->db.lastError(); //TODO
 			return;
 		}
 	}
@@ -89,7 +93,6 @@ void AirportTools::scan_airports_xml(){
 	//* Insert Airport query
 	QSqlQuery sqlAirportInsert(mainObject->db);
 	sqlAirportInsert.prepare("INSERT INTO airports(code)VALUES(?);");
-
 
 	//================================================
 	//* Lets Loop the directories
@@ -104,7 +107,7 @@ void AirportTools::scan_airports_xml(){
 
 		//* Update counter and progress periodically
 		c++;
-		if (c % 100 == 0){
+		if (c % 10 == 0){
 			progress.setValue(c);
 		}
 
@@ -112,115 +115,144 @@ void AirportTools::scan_airports_xml(){
 		xFile = loopAirportsFiles.next();
 
 		//* Check if file entry is a *.threshold.xml - cos this is what we want
-		if(xFile.endsWith(".threshold.xml") ){
+		if(xFile.endsWith(".threshold.xml") ){		
 
-			//** This is an airport - so import
+			//* Split out "<CODE>.threshold.xml" with a .
 			QFileInfo fileInfoThreshold(xFile);
-
-			//* Split out "<CODE>.threshold.xml" with a period
 			QString code = fileInfoThreshold.fileName().split(".").at(0);
 
-			//* Insert code to aiports table == primary key
+			//* Insert code to airports table == primary key
 			sqlAirportInsert.bindValue(0, code);
 			if(!sqlAirportInsert.exec()){
-				qDebug() << "CRASH" << mainObject->db.lastError();
+				qDebug() << "CRASH" << mainObject->db.lastError() << "=" << c;
 				// TODO catch error log
 				return;
 			}else{
-				qDebug() << "Insert Aiport Done";
+				//qDebug() << "APT=" << code << " c=" << c;
 			}
 
-			//* Parse the XMl file for runways
-			parse_runways(fileInfoThreshold);
+			//* Parse the XMl files for runways and parking
+			parse_runways_xml(fileInfoThreshold.absoluteDir(), code);
+			parse_parking_xml(fileInfoThreshold.absoluteDir(), code);
+
+
 
 			found++;
 		}
 
 		if(c % 100 == 0){
-			QString str = QString("%1 airports found").arg(found);
+			//QString str = QString("%1 airports found").arg(found);
 			//statusBarAirports->showMessage(str);
 		}
 		if(progress.wasCanceled()){
 			return;
 		}
-		if(c == 100){
-			qDebug() <<  "100 and  ..k CRASH out";
+		if(c == 2000){
+			qDebug() <<  "<, KILLED CRASH out";
 			progress.hide();
+			return;
 		}
 	}
 
 	progress.hide();
 }
 
+void AirportTools::parse_ils_xml(QDir dir, QString airport_code){
 
+}
 
 
 //==============================================================
-// Parse the Threshold file to get runways
+// Parse the <CODE>.threshold.xml file to get runways
 //==============================================================
-void AirportTools::parse_runways(QFileInfo thresholdXmlFileInfo){
+void AirportTools::parse_runways_xml(QDir dir, QString airport_code){
 
-	//* Insert Runway Query
+	//* Prepare the Insert Runway Query
 	QSqlQuery sqlRunwayInsert(mainObject->db);
-	sqlRunwayInsert.prepare("INSERT INTO runways(airport_code, runway, heading, length, lat, lng)VALUES(?,?,?,?,?,?);");
+	sqlRunwayInsert.prepare("INSERT INTO runways(airport_code, runway, heading, lat, lng)VALUES(?,?,?,?,?);");
 
+	//* Get the contents of the file whcile is path and code..
+	QFile fileXmlThrehsold(dir.absolutePath().append("/").append(airport_code).append(".threshold.xml"));
+	fileXmlThrehsold.open(QIODevice::ReadOnly);
 
-	//*** Load Runways
-	QStringList runwayList;
-	QFile thresholdXmlFile(thresholdXmlFileInfo.absoluteFilePath());
-	if (thresholdXmlFile.open(QIODevice::ReadOnly)) {
+	//* Make file contents into a string from bytearray
+	QString xmlThresholdString = fileXmlThrehsold.readAll();
 
-		QXmlStreamReader rwyreader(&thresholdXmlFile);
-		QXmlStreamReader::TokenType tokenType;
+	//* Create domDocument - important dont pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
+	QDomDocument dom;
+	dom.setContent(xmlThresholdString); //* AFTER dom has been created, then set the content from a string from the file
 
-		while ((tokenType = rwyreader.readNext()) != QXmlStreamReader::EndDocument) {
-			if (rwyreader.name() == "rwy") {
-				runwayList << rwyreader.readElementText();
+	//* Get threhold nodes and loop for values to database
+	QDomNodeList nodesThreshold = dom.elementsByTagName("threshold");
+	if (nodesThreshold.count() > 0){
+		for(int idxd =0; idxd < nodesThreshold.count(); idxd++){
+			 QDomNode thresholdNode = nodesThreshold.at(idxd);
+			 sqlRunwayInsert.bindValue(0, airport_code);
+			 sqlRunwayInsert.bindValue(1, thresholdNode.firstChildElement("rwy").text());
+			 sqlRunwayInsert.bindValue(2, thresholdNode.firstChildElement("hdg-deg").text());
+			 sqlRunwayInsert.bindValue(3, thresholdNode.firstChildElement("lat").text());
+			 sqlRunwayInsert.bindValue(4, thresholdNode.firstChildElement("lon").text());
+			 if(!sqlRunwayInsert.exec()){
+				//* TODO - ignore error for now
+			 }
+		}
+	}
+}
 
+//================================================================
+// Parse the <groundnet/parking>.threshold.xml file for Parking Postiton
+//================================================================
+void AirportTools::parse_parking_xml(QDir dir, QString airport_code){
+
+	//* Prepare the Insert Parking Query
+	QSqlQuery sqlParkingInsert(mainObject->db);
+	sqlParkingInsert.prepare("INSERT INTO parking(airport_code, parking, heading, lat, lng)VALUES(?,?,?,?,?);");
+
+	//* Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
+	QString fileName(dir.absolutePath().append("/").append(airport_code));
+	fileName.append(mainObject->settings->value("use_terrasync").toBool() == true ? ".groundnet.xml" : ".parking.xml");
+
+	//* Check parking file exists
+	if(QFile::exists(fileName)){
+
+		//* Open file and read contents to string
+		QFile ppfile(fileName);
+		ppfile.open(QIODevice::ReadOnly);
+		QString xmlString = ppfile.readAll();
+
+		//* Create domDocument - important - don't pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
+		QDomDocument dom;
+		dom.setContent(xmlString); //* AFTER dom has been created, then set the content from a string from the file
+
+		//* Get <Parking/> nodes and loop thru them
+		QDomNodeList parkingNodes = dom.elementsByTagName("Parking");
+		if (parkingNodes.count() > 0){
+			for(int idxd =0; idxd < parkingNodes.count(); idxd++){
+
+				 QDomNode parkingNode = parkingNodes.at(idxd);
+				 QDomNamedNodeMap attribs = parkingNode.attributes();
+
+				//* Check it doesnt already exist - pete is confused as to multipkle entries
+				 if(!listParkingPositions.contains(attribs.namedItem("name").nodeValue())){
+
+					//* insert = airport_code, parking, heading, lat, lng
+					sqlParkingInsert.bindValue(0, airport_code);
+					sqlParkingInsert.bindValue(1, attribs.namedItem("name").nodeValue());
+					sqlParkingInsert.bindValue(2, attribs.namedItem("heading").nodeValue());
+					sqlParkingInsert.bindValue(3, attribs.namedItem("lat").nodeValue());
+					sqlParkingInsert.bindValue(4, attribs.namedItem("lon").nodeValue());
+
+					if(!sqlParkingInsert.exec()){
+						//TODO - ignore error qDebug() << mainObject->db.lastError();
+					}
+					//* Append position to eliminate dupes
+					listParkingPositions.append(attribs.namedItem("name").nodeValue());
+				}
 			}
+
 		}
-
-		thresholdXmlFile.close();
-	}
-	qDebug() <<"==================\n" << thresholdXmlFileInfo.absoluteFilePath();
-	qDebug() << "runway" << runwayList;
-
-
-	//runwayList.removeDuplicates();
-	//runwayList.sort();
-
+	} /* File Exists */
 	/*
-	QTreeWidgetItem *runwaysParent = new QTreeWidgetItem();
-	runwaysParent->setText(0, "Runways" );
-	runwaysParent->setIcon(0, QIcon(":/icon/folder"));
-	treeWidgetRunways->addTopLevelItem(runwaysParent);
-	treeWidgetRunways->setItemExpanded(runwaysParent, true);
-	if(runwayList.count() == 0){
-		QTreeWidgetItem *item = new QTreeWidgetItem(runwaysParent);
-		item->setText(0, "None");
-	}else{
-		for(i =0; i < runwayList.count(); i++){
-			QTreeWidgetItem *item = new QTreeWidgetItem(runwaysParent);
-			item->setText(0, runwayList.at(i));
-			item->setText(1, "runway");
-		}
-	}
-	*/
-
-	//*** Load Parking Positions
-	/*
-	QStringList parkingPositions;
-	QString parkPosFile = QString(airportXmlFile);
-	parkPosFile.chop(13); // strip the threshold.xml part
-
-	//terrasync check because with terrasync scenery parking.xml is renamed to groundnet.xml
-	if (mainObject->settings->value("use_terrasync").toBool() == true) {
-	parkPosFile.append("groundnet.xml");
-	} else {
-		parkPosFile.append("parking.xml");
-	}
-
-	QFile ppfile(parkPosFile);
 	if(ppfile.open(QIODevice::ReadOnly)) {
 
 		QXmlStreamReader ppreader(&ppfile);

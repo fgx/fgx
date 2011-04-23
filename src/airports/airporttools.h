@@ -2,7 +2,9 @@
 #define AIRPORTTOOLS_H
 
 #include <QtCore/QObject>
-#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include "xobjects/mainobject.h"
 
@@ -15,9 +17,11 @@ public:
 	MainObject *mainObject;
 
 	void scan_airports_xml();
+	void parse_runways_xml(QDir dir, QString airport_code);
+	void parse_ils_xml(QDir dir, QString airport_code);
+	void parse_parking_xml(QDir dir, QString airport_code);
 
-	void parse_runways(QFileInfo thresholdXmlFileInfo);
-
+	QStringList listParkingPositions;
 signals:
 
 public slots:

@@ -129,7 +129,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	buttonImportAirports->setToolTip("Scan directories and reload cache");
 	buttonImportAirports->setIcon(QIcon(":/icon/import"));
 	buttonImportAirports->setFlat(true);
-	connect(buttonImportAirports, SIGNAL(clicked()), this, SLOT(on_import_clicked()) );
+	connect(buttonImportAirports, SIGNAL(clicked()), this, SLOT(on_import_aptdat_clicked()) );
 
 	QPushButton *buttonRefreshAirports = new QPushButton(this);
 	layoutAptTopBar->addWidget(buttonRefreshAirports);
@@ -137,7 +137,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	buttonRefreshAirports->setToolTip("Scan directories and reload cache");
 	buttonRefreshAirports->setIcon(QIcon(":/icon/refresh"));
 	buttonRefreshAirports->setFlat(true);
-	connect(buttonRefreshAirports, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()) );
+	connect(buttonRefreshAirports, SIGNAL(clicked()), this, SLOT(on_rescan_xml_clicked()) );
 
 
 	//*==============================================================================
@@ -507,13 +507,13 @@ void AirportsWidget::load_runways(QString airportXmlFile){
 }
 
 //===========================================================================
-void AirportsWidget::on_import_clicked(){
+void AirportsWidget::on_import_aptdat_clicked(){
 	ImportAirportsWidget *widget = new ImportAirportsWidget();
 	widget->setWindowModality(Qt::WindowModal);
 	widget->show();
 }
 
-void AirportsWidget::on_refresh_clicked(){
+void AirportsWidget::on_rescan_xml_clicked(){
 	qDebug() << "Refresh Clicked <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
 	//scan_airports_xml();
 	AirportTools *aptTools = new AirportTools(this, mainObject);
