@@ -71,9 +71,8 @@ void AirportsImport::create_db_indexes(){
 void AirportsImport::execute_sql_commands_list(QStringList sql_commands){
 	QSqlQuery query(mainObject->db);
 	for(int i = 0; i < sql_commands.size(); ++i){
-		qDebug() << sql_commands.at(i);
 		if(!query.exec(sql_commands.at(i))){
-			//TODO ignored for now - mysql is safe .. maybe
+			//TODO ignored for now - mysql is safe .. maybe said pete
 			//qDebug() << "OOps=" << mainObject->db.lastError(); //TODO
 		}
 	}
@@ -129,9 +128,10 @@ void AirportsImport::import_airports(){
 			QString airport_code = fileInfoThreshold.fileName().split(".").at(0);
 
 			//* Update progress periodically
-			if (c % 10 == 0){
+			if (c % 1000 == 0){
 				progressDialog.setValue(c);
-				progressDialog.setLabelText(airport_code);
+				QString progLabel = QString("%2").arg(c).arg(airport_code);
+				progressDialog.setLabelText(progLabel);
 			}
 
 			//* Insert airport_code to airports table == primary key
@@ -153,15 +153,11 @@ void AirportsImport::import_airports(){
 			found++;
 		}
 
-		if(c % 100 == 0){
-			//QString str = QString("%1 airports found").arg(found);
-			//statusBarAirports->showMessage(str);
-		}
 		if(progressDialog.wasCanceled()){
 			return;
 		}
 		if(c == 5000){
-			qDebug() <<  "<, KILLED CRASH out";
+			//qDebug() <<  "<, KILLED CRASH out";
 			//progress.hide();
 			//return;
 			break;
@@ -396,6 +392,7 @@ void AirportsImport::parse_parking_xml(QDir dir, QString airport_code){
 void AirportsImport::parse_aptdat(){
 
 	progressDialog.setLabelText("Parsing AptDat");
+	progressDialog.setRange(0, 1510000);
 
 	//* Open the apt.dat file (TODO not dure is this is always unzipped
 	QFile file(mainObject->settings->apt_dat_file());
@@ -450,8 +447,7 @@ void AirportsImport::parse_aptdat(){
 		}
 
 		if(line_count % 100 == 0){
-			QString progress_text;
-			progress_text.append("AptDat line: %1").arg(line_count);
+			QString progress_text = QString("AptDat line: %1").arg(line_count);
 			progressDialog.setLabelText(progress_text);
 			progressDialog.setValue(line_count);
 		}
@@ -486,7 +482,6 @@ void AirportsImport::update_aptdat_airport(QStringList parts){
 
 	//* Airport code
 	airport_code = parts[4];
-	qDebug() << "aptdat" << airport_code;
 
 	//* Check its in our import list..
 	if( listAirportCodes.contains(airport_code) ){

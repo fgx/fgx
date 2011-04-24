@@ -362,7 +362,6 @@ void AirportsWidget::on_update_airports_filter(){
 	int filter_column_id = buttonGroupFilter->checkedButton()->property("filter_column_idx").toInt();
 	proxyModel->setFilterKeyColumn( filter_column_id );
 	proxyModel->setFilterFixedString( txtAirportsFilter->text() );
-	qDebug() << txtAirportsFilter->text() <<  filter_column_id;
 }
 
 
