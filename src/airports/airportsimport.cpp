@@ -22,6 +22,9 @@ AirportsImport::AirportsImport(QObject *parent, MainObject *mOb) :
 
 	mainObject = mOb;
 
+	progressDialog.setWindowModality(Qt::WindowModal);
+	progressDialog.hide();
+
 }
 
 
@@ -30,6 +33,7 @@ AirportsImport::AirportsImport(QObject *parent, MainObject *mOb) :
 //============================================================================
 void AirportsImport::create_db_tables(){
 
+	progressDialog.setLabelText(tr("Destroy and Create database tables"));
 	//* Drop and recreate the tables - then index after index later for speed..
 	QStringList sql_commands;
 	sql_commands.append("DROP TABLE IF EXISTS airports;");
@@ -50,6 +54,7 @@ void AirportsImport::create_db_tables(){
 //============================================================================
 void AirportsImport::create_db_indexes(){
 
+	progressDialog.setLabelText(tr("Create database indexes"));
 	//* Create the indexes.. we only really nees the airport_code,, runways an parking are done in GUI atmo
 	QStringList sql_commands;
 	sql_commands.append("CREATE INDEX airport_code_idx ON runways (airport_code);");
@@ -93,11 +98,9 @@ void AirportsImport::import_airports(){
 
 	//=================================
 	//** Show Progress as this takes time
-	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0);
-	progress.setWindowModality(Qt::WindowModal);
-	progress.setRange(0, 20000);
-	progress.show();
-
+	progressDialog.setLabelText("Loading Airports to Cache");
+	progressDialog.setRange(0, 20000);
+	progressDialog.show();
 
 	//* Drop and recreate database tables
 	create_db_tables();
@@ -114,13 +117,8 @@ void AirportsImport::import_airports(){
 
 	while (loopAirportsFiles.hasNext()) {
 
-		//* Update counter and progress periodically
-		c++;
-		if (c % 10 == 0){
-			progress.setValue(c);
-		}
-
 		//* Get file handle if there is one
+		c++;
 		xFileName = loopAirportsFiles.next();
 
 		//* Check if file entry is a *.threshold.xml - cos this is what we want
@@ -129,6 +127,12 @@ void AirportsImport::import_airports(){
 			//* Split out "CODE.threshold.xml" with a "."
 			QFileInfo fileInfoThreshold(xFileName);
 			QString airport_code = fileInfoThreshold.fileName().split(".").at(0);
+
+			//* Update progress periodically
+			if (c % 10 == 0){
+				progressDialog.setValue(c);
+				progressDialog.setLabelText(airport_code);
+			}
 
 			//* Insert airport_code to airports table == primary key
 			sqlAirportInsert.bindValue(0, airport_code);
@@ -153,7 +157,7 @@ void AirportsImport::import_airports(){
 			//QString str = QString("%1 airports found").arg(found);
 			//statusBarAirports->showMessage(str);
 		}
-		if(progress.wasCanceled()){
+		if(progressDialog.wasCanceled()){
 			return;
 		}
 		if(c == 5000){
@@ -165,14 +169,12 @@ void AirportsImport::import_airports(){
 	}
 
 	//* Create the database indexes
-	progress.setLabelText(tr("Creating Indexes"));
 	create_db_indexes();
 
 	//* Import APTDAT
-	progress.setLabelText(tr("Importing Airport Data from aptdat"));
 	parse_aptdat();
 
-	progress.hide();
+	progressDialog.hide();
 }
 
 
@@ -393,6 +395,8 @@ void AirportsImport::parse_parking_xml(QDir dir, QString airport_code){
 //====================================================================================================
 void AirportsImport::parse_aptdat(){
 
+	progressDialog.setLabelText("Parsing AptDat");
+
 	//* Open the apt.dat file (TODO not dure is this is always unzipped
 	QFile file(mainObject->settings->apt_dat_file());
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -422,13 +426,14 @@ void AirportsImport::parse_aptdat(){
 
 	//* Prepare the loop variables
 	int line_count = 0;
-	bool is_icao;
 	QRegExp rxICAOAirport("[A-Z]{4}");
 
 
 
 	//** Now loop the aptdat file
 	while( !file.atEnd() ){
+
+		line_count++;
 
 		QByteArray lineBytes = file.readLine();
 		QString line = QString(lineBytes).trimmed();
@@ -442,6 +447,18 @@ void AirportsImport::parse_aptdat(){
 		//* Process Rows
 		if(row_code == "1"){
 			update_aptdat_airport(parts);
+		}
+
+		if(line_count % 100 == 0){
+			QString progress_text;
+			progress_text.append("AptDat line: %1").arg(line_count);
+			progressDialog.setLabelText(progress_text);
+			progressDialog.setValue(line_count);
+		}
+
+		//* Get outta here
+		if(progressDialog.wasCanceled()){
+			return;
 		}
 	}
 }
