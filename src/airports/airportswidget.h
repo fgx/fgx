@@ -33,7 +33,8 @@ public:
 	enum AIRPORT_INFO_TREE_COLS{
 		CI_NODE = 0,
 		CI_LABEL = 1,
-		CI_KEY = 2
+		CI_TYPE = 2,
+		CI_KEY_VAL = 3
 	};
 
 	enum STARTUP_POSTITION{
@@ -70,7 +71,7 @@ public:
 
 	void load_airports_tree();
 
-	void on_airport_selected(QString);
+	void load_info_tree(QString airport_code);
 	int load_runways_node(QString airport_code);
 	int load_parking_node(QString airport_code);
 
@@ -98,7 +99,7 @@ public slots:
 
 	void on_update_airports_filter();
 
-	void on_airport_selected(QModelIndex, QModelIndex);
+	void on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx);
 
 	void on_import_aptdat_clicked();
 	void on_rescan_xml_clicked();

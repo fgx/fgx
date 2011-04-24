@@ -198,7 +198,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	connect( treeViewAirports->selectionModel(),
 			 SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ),
-			 this, SLOT( on_airport_selected(QModelIndex,QModelIndex) )
+			 this, SLOT( on_airport_tree_selected(QModelIndex,QModelIndex) )
 	);
 
 	//* StatusBar for Airports
@@ -224,17 +224,17 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	treeWidgetAirportInfo->setAlternatingRowColors(true);
 	treeWidgetAirportInfo->setRootIsDecorated(true);
 	QTreeWidgetItem *headerItem = treeWidgetAirportInfo->headerItem();
-	headerItem->setText(0, tr("Startup Position"));
+	headerItem->setText(CI_NODE, tr("Startup Position"));
     headerItem->setText(1, tr("Width"));
     headerItem->setText(2, tr("Length"));
     headerItem->setText(3, tr("Lat"));
     headerItem->setText(4, tr("Lng"));
     headerItem->setText(5, tr("Alignment"));
-	treeWidgetAirportInfo->setColumnHidden(1,true);
-	treeWidgetAirportInfo->setColumnHidden(2,true);
-	treeWidgetAirportInfo->setColumnHidden(3,true);
-	treeWidgetAirportInfo->setColumnHidden(4,true);
-	treeWidgetAirportInfo->setColumnHidden(5,true);
+	//treeWidgetAirportInfo->setColumnHidden(1,true);
+	//treeWidgetAirportInfo->setColumnHidden(2,true);
+	//treeWidgetAirportInfo->setColumnHidden(3,true);
+	//treeWidgetAirportInfo->setColumnHidden(4,true);
+	//treeWidgetAirportInfo->setColumnHidden(5,true);
 
 
 	statusBarAirportInfo = new QStatusBar();
@@ -348,7 +348,7 @@ void AirportsWidget::load_airports_tree(){
 		QModelIndex proxIdx = proxyModel->mapFromSource(srcIdx);
 		treeViewAirports->selectionModel()->select(proxIdx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
 		treeViewAirports->scrollTo(proxIdx, QAbstractItemView::PositionAtCenter);
-		//load_runways( model->item(srcIdx.row(), C_XML)->text() );
+		load_info_tree( model->item(srcIdx.row(), CA_CODE)->text() );
 	}
 	treeViewAirports->setUpdatesEnabled(true);
 }
@@ -367,7 +367,7 @@ void AirportsWidget::on_update_airports_filter(){
 
 //==============================================================
 //*** Airport Clicked 
-void AirportsWidget::on_airport_selected(QModelIndex currentIdx, QModelIndex previousIdx){
+void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx){
 
 	Q_UNUSED(previousIdx);
 
@@ -382,12 +382,38 @@ void AirportsWidget::on_airport_selected(QModelIndex currentIdx, QModelIndex pre
 	//* Get the airport code forn source model
 	QModelIndex srcIndex = proxyModel->mapToSource(currentIdx);
 	QString airport_code = model->item(srcIndex.row(), CA_CODE)->text();
+	load_info_tree(airport_code);
 
+}
+
+//==============================================================
+// Load the Info Tree
+//==============================================================
+void AirportsWidget::load_info_tree(QString airport_code){
 	//* Load Nodes from DB - with a count from each
 	QString count_label;
+
 	int runways_count = load_runways_node(airport_code);
+	if(runways_count == 0){
+		count_label.append(tr("No runway"));
+	}else if(runways_count == 1){
+		count_label.append(tr("One runway"));
+	}else{
+		count_label.append("%s runways").arg(runways_count);
+	}
+
+	count_label.append(" / ");
+
 	int stands_count =  load_parking_node(airport_code);
-	qDebug() << runways_count << "=" << stands_count;
+	if(stands_count == 0){
+		count_label.append(tr("No stands"));
+	}else if(stands_count == 1){
+		count_label.append(tr("One stand"));
+	}else{
+		count_label.append("%s stands").arg(runways_count);
+	}
+
+	statusBarAirportInfo->showMessage(count_label);
 
 }
 
@@ -421,7 +447,7 @@ int AirportsWidget::load_runways_node(QString airport_code){
 	while(query.next()){
 		QTreeWidgetItem *iRunway = new QTreeWidgetItem(runwaysParent);
 		iRunway->setText(CI_NODE, query.value(0).toString());
-		iRunway->setText(CI_KEY, "runway");
+		iRunway->setText(CI_KEY, QString("runway_").append(query.value(0).toString()));
 
 		QTreeWidgetItem *iHeading = new QTreeWidgetItem(iRunway);
 		iHeading->setText(CI_NODE, query.value(1).toString());
@@ -460,7 +486,7 @@ int AirportsWidget::load_parking_node(QString airport_code){
 	while(query.next()){
 		QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
 		item->setText(CI_NODE, query.value(0).toString());
-		item->setText(CI_KEY, "stand");
+		item->setText(CI_VAL, QString("stand_").append(query.value(0).toString()));
 	}
 
 	//* return the count
@@ -524,11 +550,22 @@ void AirportsWidget::save_settings(){
 
 		//** save runway or parking
 		if(treeWidgetAirportInfo->currentItem()){
-			// check its not one of the parents ie savable
+			//* check its not one of the parents ie savable
 			if(treeWidgetAirportInfo->indexOfTopLevelItem( treeWidgetAirportInfo->currentItem()  ) != -1){
-				// TODO
+				//QString key = treeWidgetAirportInfo->currentItem()->text(CI_KEY);
+				//QString val = treeWidgetAirportInfo->currentItem()->text(CI_NODE);
+				//if(key == "runway"){
+				//	mainObject->
+				//}else if(key == "stand"):
+				//	stand = treeWidgetAirportInfo->currentItem()->text(CI_NODE);
+				qDebug() << "saved" << treeWidgetAirportInfo->currentItem()->text(CI_VAL);
+				mainObject->settings->setValue("runway_stand", treeWidgetAirportInfo->currentItem()->text(CI_VAL));
+			}else{
+				mainObject->settings->setValue("runway_stand", "");
 			}
 
+		}else{
+			mainObject->settings->setValue("runway_stand", "");
 		}
 	}
 
@@ -536,8 +573,10 @@ void AirportsWidget::save_settings(){
 }
 
 
-//=============================================================
+//====================================================================
 // Load Settings
+// Restoring the airport/runway is done in the load_tree functions
+//====================================================================
 void AirportsWidget::load_settings(){
 
 	buttonGroupUse->button( mainObject->settings->value("use_position", USE_DEFAULT).toInt() )->setChecked(true);
@@ -551,7 +590,7 @@ void AirportsWidget::load_settings(){
 	txtAirspeed->setText(mainObject->settings->value("airspeed").toString());
 
 	on_buttonGroupUse();
-	//buttonGroupFilter->button(mainObject->settings->value("airports_button_filter", 0).toInt())->setChecked(true);
+
 }
 
 

@@ -90,6 +90,7 @@ void AirportsImport::execute_sql_commands_list(QStringList sql_commands){
 // * The aiport CODE is derived from the file name in ICAO style
 // * The runways, ils, and stands imported (ils unused atmo)
 // * Create the db index
+// * Import AptDat
 void AirportsImport::import_airports(){
 
 	int c = 0;

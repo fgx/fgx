@@ -1,19 +1,7 @@
 
 /*
-  Peel of the robin and gets out the airports and runways and minimal hopefully
 
-  TODO incomplete list
-
-  step 1
-
-  only load the ICAO aiports, ignore heliports and seway etc.. lite wiegt and wise..
-
-  assumed is ils etc..
-  Other aiports whousl be available on demand as a parse etc..
-  eg integration with FG
-
-  Make a way to send new data online for verification
-
+  THIS CLASS IS LEGACY.. WILL BE REMOVED SOON
   */
 
 #include <QtGui/QProgressDialog>
