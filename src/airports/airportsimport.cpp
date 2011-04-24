@@ -59,6 +59,7 @@ void AirportsImport::create_db_indexes(){
 	execute_sql_commands_list(sql_commands);
 }
 
+
 //============================================================================
 //== Execute Commands From List
 //============================================================================
@@ -72,6 +73,10 @@ void AirportsImport::execute_sql_commands_list(QStringList sql_commands){
 		}
 	}
 }
+
+
+
+
 
 //============================================================================
 //== Import Airports
@@ -130,6 +135,8 @@ void AirportsImport::import_airports(){
 			if(!sqlAirportInsert.exec()){
 				//qDebug() << "CRASH" << mainObject->db.lastError() << "=" << c;
 				// TODO catch error log
+			}else{
+				listAirportCodes.append(airport_code);
 			}
 
 			//* Parse the XML files
@@ -158,9 +165,13 @@ void AirportsImport::import_airports(){
 	}
 
 	//* Create the database indexes
+	progress.setLabelText(tr("Creating Indexes"));
 	create_db_indexes();
 
-	progress.setLabelText("Creating Indexes");
+	//* Import APTDAT
+	progress.setLabelText(tr("Importing Airport Data from aptdat"));
+	parse_aptdat();
+
 	progress.hide();
 }
 
@@ -375,3 +386,105 @@ void AirportsImport::parse_parking_xml(QDir dir, QString airport_code){
 
 }
 
+
+
+//====================================================================================================
+// Parse apt.dat file.. ta Robin
+//====================================================================================================
+void AirportsImport::parse_aptdat(){
+
+	//* Open the apt.dat file (TODO not dure is this is always unzipped
+	QFile file(mainObject->settings->apt_dat_file());
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+		qDebug("OOPS: file problem");
+		return;
+	 }
+
+	//* Update DB queries
+
+	QSqlQuery queryRunwayUpdate;
+	queryRunwayUpdate.prepare("TODO");
+
+	//====================================================
+	//* start File read >>
+
+	//* ignore first line
+	file.readLine();
+
+	//* second line contains the version string - unused ATMO
+	QString credits = file.readLine();
+	int version = -9999;
+	if(credits.startsWith("810 Version")){
+		version = 810;
+	}else{
+		version = -1; //* Future use
+	}
+
+	//* Prepare the loop variables
+	int line_count = 0;
+	bool is_icao;
+	QRegExp rxICAOAirport("[A-Z]{4}");
+
+
+
+	//** Now loop the aptdat file
+	while( !file.atEnd() ){
+
+		QByteArray lineBytes = file.readLine();
+		QString line = QString(lineBytes).trimmed();
+		//qDebug() << line;
+
+		QString row_code = line.section(' ',0, 0);
+		//qDebug() << row_code;
+		QStringList parts = line.split(" ", QString::SkipEmptyParts);
+
+		//==========================================
+		//* Process Rows
+		if(row_code == "1"){
+			update_aptdat_airport(parts);
+		}
+	}
+}
+
+//=====================================
+// Update aptdat airport row
+//=====================================
+/* http://data.x-plane.com/file_specs/Apt715.htm
+  0 = airport code
+  1 = elevation
+  2 = has tower
+  3 = not approp
+  4 = code
+  5+ description
+*/
+void AirportsImport::update_aptdat_airport(QStringList parts){
+
+	QString airport_code;
+	QString airport_name;
+	int elevation;
+	QString tower;
+
+	QSqlQuery queryAirportUpdate;
+	queryAirportUpdate.prepare("UPDATE airports SET name=? WHERE code=?;");
+
+	//* Airport code
+	airport_code = parts[4];
+	qDebug() << "aptdat" << airport_code;
+
+	//* Check its in our import list..
+	if( listAirportCodes.contains(airport_code) ){
+
+		//* Get values from row
+		elevation = parts[1].toInt();
+		tower =  parts[2] == "1" ? "1" : "";
+		airport_name.clear();
+		for(int p = 5; p < parts.size(); p++){ //** loop to the end to get description (spit on spaces..) - TODO neater way
+			airport_name.append(parts[p]).append(" ");
+		}
+		queryAirportUpdate.bindValue(0,airport_name.trimmed()  );
+		queryAirportUpdate.bindValue(1, airport_code  );
+		if(!queryAirportUpdate.exec()){
+			qDebug() << queryAirportUpdate.lastError();
+		}
+	}
+}

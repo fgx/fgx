@@ -25,6 +25,8 @@ bool XSettings::_dev_mode(){
 
 }
 
+
+
 //===========================================================================
 //** fgx Install path
 //===========================================================================
@@ -116,7 +118,7 @@ QString XSettings::airports_path(){
 			terrascenehome.append("/Documents/TerrasyncScenery");
 			return terrascenehome;
 		}else{
-			//* Use the settings
+			//* Use the terra sync path
 			return terrasync_sync_path().append("/Airports");
 		}
 	}
@@ -124,6 +126,10 @@ QString XSettings::airports_path(){
 	return fg_root().append("/Scenery/Airports");
 }
 
+//** Apt Dat
+QString XSettings::apt_dat_file(){
+	return fg_root("/Airports/apt.dat");
+}
 
 //===========================================================================
 //** Scenery Path

@@ -22,10 +22,12 @@ public:
 	void create_db_indexes();
 	void execute_sql_commands_list(QStringList sql_commands);
 
-	
 	void parse_runways_xml(QDir dir, QString airport_code);
 	void parse_ils_xml(QDir dir, QString airport_code);
 	void parse_parking_xml(QDir dir, QString airport_code);
+
+	void parse_aptdat();
+	void update_aptdat_airport(QStringList parts);
 
 	QStringList listParkingPositions;
 	QStringList listAirportCodes;

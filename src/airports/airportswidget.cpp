@@ -318,46 +318,32 @@ void AirportsWidget::initialize(){
 //============================================================================
 void AirportsWidget::load_airports_tree(){
 
+	//* Clear existing tree and inhibit updates till end
 	model->removeRows(0, model->rowCount());
 	treeViewAirports->setUpdatesEnabled(false);
 
+	//* Get Airports from database
 	QSqlQuery query("SELECT code, name FROM airports order by code ASC", mainObject->db);
 
+	//* Loop results  and appendRows
 	while(query.next()){
 
-		int new_row_index = model->rowCount();
-		model->insertRow(new_row_index);
-		QStandardItem *itemCode = new QStandardItem();
-		//QFont font = itemCode->font();
-		//font.setFamily("monospace");
-		//itemCode->setFont(font);
-		//qDebug() << query.value(0).toString();
-		itemCode->setText(query.value(0).toString());
-		model->setItem(new_row_index, CA_CODE, itemCode);
+		QStandardItem *itemAirportCode = new QStandardItem();
+		itemAirportCode->setText(query.value(0).toString());
 
-
-		//#QStandardItem *itemXml = new QStandardItem();
-		//itemXml->setText(airport.at(0));
-		//model->setItem(new_row_index, C_XML, itemXml);
-
-		/*
 		QStandardItem *itemAirportName = new QStandardItem();
 		itemAirportName->setText(query.value(1).toString());
-		model->setItem(new_row_index, C_NAME, itemAirportName);
 
-		QStandardItem *itemAirportTower = new QStandardItem();
-		itemAirportTower->setText(query.value(2).toString());
-		model->setItem(new_row_index, C_TOWER, itemAirportTower);
+		QList<QStandardItem *> items;
+		items << itemAirportCode << itemAirportName;
 
-		QStandardItem *itemAirportElevation = new QStandardItem();
-		itemAirportElevation->setText(query.value(3).toString());
-		model->setItem(new_row_index, C_ELEVATION, itemAirportElevation);
-		*/
+		model->appendRow(items);
 	}
-	treeViewAirports->setUpdatesEnabled(true);
-	return;
+
+	//* Update the status bar with the count
 	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
 
+	//* Restore previous aiport from settings.. if found
 	QList<QStandardItem *> items = model->findItems( mainObject->settings->value("airport", "KSFO").toString(), Qt::MatchExactly, CA_CODE);
 	if(items.count() > 0){
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
