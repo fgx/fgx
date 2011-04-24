@@ -19,7 +19,6 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QAction>
 #include <QtGui/QLabel>
-//#include <QtGui/QProgressDialog>
 #include <QtGui/QLineEdit>
 
 #include <QtGui/QStandardItemModel>
@@ -85,7 +84,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 
 	//==================================================================
-	//** Airports Top Bar
+	//** Airports Filter and Actions Top Bar
 	QHBoxLayout *layoutAptTopBar = new QHBoxLayout();
 	layoutAptTopBar->setContentsMargins(0,0,0,0);
 	layoutAptTopBar->setSpacing(10);
@@ -97,15 +96,12 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	//** Filter Buttons - TODO
 	buttonGroupFilter = new QButtonGroup(this);
 	buttonGroupFilter->setExclusive(true);
-	connect(buttonGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
-			this,           SLOT(on_filter_button(QAbstractButton*))
-    );
 
 
 	//** Aiport Code Filter
     QRadioButton *buttCode = new QRadioButton();
     buttCode->setText("Code");
-	buttCode->setProperty("column", QVariant(CA_CODE));
+	buttCode->setProperty("filter_column_idx", QVariant(CA_CODE));
 	buttCode->setChecked(true);
 	layoutAptTopBar->addWidget(buttCode);
 	buttonGroupFilter->addButton(buttCode, 0);
@@ -113,7 +109,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	//** Airport Name Filter
     QRadioButton *buttName = new QRadioButton();
     buttName->setText("Name");
-	buttName->setProperty("column", QVariant(CA_NAME));
+	buttName->setProperty("filter_column_idx", QVariant(CA_NAME));
 	layoutAptTopBar->addWidget(buttName);
 	buttonGroupFilter->addButton(buttName, 1);
 
@@ -121,7 +117,9 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
     txtAirportsFilter = new QLineEdit();
 	layoutAptTopBar->addWidget(txtAirportsFilter);
     txtAirportsFilter->setFixedWidth(100);
-	connect(txtAirportsFilter, SIGNAL(textChanged(QString)), this, SLOT(on_filter_airports(QString)));
+	connect(	txtAirportsFilter, SIGNAL(textChanged(QString)),
+				this, SLOT(on_update_airports_filter())
+	);
 
 	layoutAptTopBar->addStretch(20);
 
@@ -299,14 +297,14 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	layoutCoordinates->addStretch(20);
 
-	on_buttonGroupUse();
+	//on_buttonGroupUse();
+
+	connect(buttonGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
+			this, SLOT(on_update_airports_filter())
+	);
 }
 
 void AirportsWidget::initialize(){
-	//QStringList airports = mainObject->settings->value("cache/airports").toStringList();
-	//if(airports.count() == 0){
-	//	scan_airports_xml();
-	//}
 	load_airports_tree();
 }
 
@@ -343,7 +341,7 @@ void AirportsWidget::load_airports_tree(){
 	//* Update the status bar with the count
 	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
 
-	//* Restore previous aiport from settings.. if found
+	//* Restore previous airport from settings.. if found
 	QList<QStandardItem *> items = model->findItems( mainObject->settings->value("airport", "KSFO").toString(), Qt::MatchExactly, CA_CODE);
 	if(items.count() > 0){
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
@@ -358,13 +356,13 @@ void AirportsWidget::load_airports_tree(){
 
 //==============================================================
 //*** Update Filters
-void AirportsWidget::on_filter_button(QAbstractButton *button){
+void AirportsWidget::on_update_airports_filter(){
+
 	mainObject->settings->setValue("airports_button_filter", buttonGroupFilter->checkedId());
-	proxyModel->setFilterKeyColumn( button->property("column").toInt() );
+	int filter_column_id = buttonGroupFilter->checkedButton()->property("filter_column_idx").toInt();
+	proxyModel->setFilterKeyColumn( filter_column_id );
 	proxyModel->setFilterFixedString( txtAirportsFilter->text() );
-}
-void AirportsWidget::on_filter_airports(QString txt){
-	proxyModel->setFilterFixedString( txt );
+	qDebug() << txtAirportsFilter->text() <<  filter_column_id;
 }
 
 
@@ -542,16 +540,7 @@ void AirportsWidget::save_settings(){
 //=============================================================
 // Load Settings
 void AirportsWidget::load_settings(){
-	//select_node(mainObject->settings->value("aircraft").toString());
-	/*if (mainObject->settings->value("locationIcao").toString() != "") {
-		QString locationICAOSet = mainObject->settings->value("locationIcao").toString();
-		locationIcao->insertItem(0, locationICAOSet);
-		locationIcao->insertItem(1, "----");
-	} else {
-		locationIcao->insertItem(0, "KSFO");
-		locationIcao->insertItem(1, "----");
-		//timeoftheDay->setCurrentIndex(0);
-	}*/
+
 	buttonGroupUse->button( mainObject->settings->value("use_position", USE_DEFAULT).toInt() )->setChecked(true);
 
 	txtLat->setText(mainObject->settings->value("lat").toString());
@@ -563,7 +552,7 @@ void AirportsWidget::load_settings(){
 	txtAirspeed->setText(mainObject->settings->value("airspeed").toString());
 
 	on_buttonGroupUse();
-	buttonGroupFilter->button(mainObject->settings->value("airports_button_filter", 0).toInt())->setChecked(true);
+	//buttonGroupFilter->button(mainObject->settings->value("airports_button_filter", 0).toInt())->setChecked(true);
 }
 
 
