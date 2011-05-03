@@ -232,12 +232,17 @@ void MainObject::db_connect(){
 		db.setPassword(settings->value("db_pass").toString());
 		db.setDatabaseName(settings->value("db_database").toString());
 		qDebug() << "myyyyy";
+
+	}else if(settings->value("db_engine").toString() == "QSQLITE"){
+		db = QSqlDatabase::addDatabase("QSQLITE");
+		db.setDatabaseName(QDesktopServices::storageLocation(QDesktopServices::DataLocation).append("fgx-launcher.sqlite.db"));
 	}else{
 		trayIcon->showMessage("DB Error", "Could not open DB", QSystemTrayIcon::Critical, 5000);
 		emit(show_settings(1));
 		qDebug() << "NO ENGINE";
 		return;
 	}
+
 	//* Catch DB Open error
 	if(!db.open()){
 		qDebug() << db.lastError();

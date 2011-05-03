@@ -123,6 +123,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	layoutAptTopBar->addStretch(20);
 
+	/* DEAD for now
 	QPushButton *buttonImportAirports = new QPushButton(this);
 	layoutAptTopBar->addWidget(buttonImportAirports);
 	buttonImportAirports->setText("Reload");
@@ -130,12 +131,13 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	buttonImportAirports->setIcon(QIcon(":/icon/import"));
 	buttonImportAirports->setFlat(true);
 	connect(buttonImportAirports, SIGNAL(clicked()), this, SLOT(on_import_aptdat_clicked()) );
+	*/
 
 	QPushButton *buttonRefreshAirports = new QPushButton(this);
 	layoutAptTopBar->addWidget(buttonRefreshAirports);
-	buttonRefreshAirports->setText("Reload");
+	buttonRefreshAirports->setText("Import");
 	buttonRefreshAirports->setToolTip("Scan directories and reload cache");
-	buttonRefreshAirports->setIcon(QIcon(":/icon/refresh"));
+	buttonRefreshAirports->setIcon(QIcon(":/icon/import"));
 	buttonRefreshAirports->setFlat(true);
 	connect(buttonRefreshAirports, SIGNAL(clicked()), this, SLOT(on_rescan_xml_clicked()) );
 
