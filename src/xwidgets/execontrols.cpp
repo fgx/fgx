@@ -1,6 +1,9 @@
 
 #include <QDebug>
 
+#include <QtCore/QProcess>
+#include <QtCore/QTimer>
+
 #include <QtGui/QHBoxLayout>
 
 #include "execontrols.h"
@@ -10,51 +13,144 @@
    WANTED: expert advice
 */
 
-ExeControls::ExeControls(QWidget *parent) :
+ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
     QGroupBox(parent)
 {
+	exe_name = exeCmd;
+	setTitle(title);
+	setMaximumWidth(150);
 
-	QGridLayout *layout = new QGridLayout();
+	//** Grid layout just in case..
+	QVBoxLayout *layout = new QVBoxLayout();
 	setLayout(layout);
-	int row = 0;
+	layout->setContentsMargins(5,5,5,5);
+	layout->setSpacing(2);
 
-	//** First Row is the label with the "status".. colors set in stylsheet
-	labelPid = new QLabel("---");
-	labelPid->setStyleSheet("font-size: 8pt; font-family: monospaced;");
-	layout->addWidget(labelPid, row, 1, 1, 2);
+	QString buttStyle("padding: 2px;"); //* make button smaller. this need to go into global style sheet said pedro
 
-	//* Second row is the Push buttons
+	//** Buttons layout
+	QHBoxLayout *buttlay = new QHBoxLayout();
+	layout->addLayout(buttlay);
+
+	//** Stop Button
 	buttonStop = new QPushButton();
 	buttonStop->setText(tr("Stop"));
 	buttonStop->setIcon(QIcon(":/icon/stop_disabled"));
-	layout->addWidget(buttonStop, row, 0, 1, 1);
+	buttonStop->setStyleSheet(buttStyle);
+	buttlay->addWidget(buttonStop);
 	connect(buttonStop, SIGNAL(clicked()), this, SLOT(on_stop_clicked()));
 
+	//** Start Button
 	buttonStart = new QPushButton();
 	buttonStart->setText(tr("Start"));
 	buttonStart->setIcon(QIcon(":/icon/start_enabled"));
-	layout->addWidget(buttonStart, row, 2, 1, 1);
-	connect(buttonStart, SIGNAL(clicked()), this, SLOT(on_start_clicked()));
+	buttonStart->setStyleSheet(buttStyle);
+	buttlay->addWidget(buttonStart);
+	//* connection is done in fgx not here..
+
+
+
+	//** Bottom layout
+	QHBoxLayout *bottlay = new QHBoxLayout();
+	layout->addLayout(bottlay);
+
+	//* Status Bar
+	statusBar = new QStatusBar();
+	statusBar->setSizeGripEnabled(false);
+	statusBar->setContentsMargins(5,5,5,5);
+	bottlay->addWidget(statusBar);
+
+	//** Refresh Button
+	buttonRefresh = new QPushButton();
+	buttonRefresh->setIcon(QIcon(":/icon/refresh"));
+	buttonRefresh->setFlat(true);
+	buttonRefresh->setStyleSheet("padding: 0px;");
+	bottlay->addWidget(buttonRefresh);
+	connect(buttonRefresh, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()));
 
 }
 
 
+//==========================================================================
+// Start Executable
+// - not interested in Pid as anything could have happened elsewhere
+//==========================================================================
+void ExeControls::start(QString command_line){
+	int start = QProcess::startDetached(command_line);
+	Q_UNUSED(start);
+	if(start){
+		statusBar->showMessage("Starting", 2000);
+		QTimer::singleShot(2000,this, SLOT(on_refresh_clicked()));
+	}else{
+		statusBar->showMessage("Failed", 4000);
+	}
+}
+
+
+
+//==========================================================================
+// GUI Events
+//==========================================================================
+
+//** Stop Button clicked so kill process
 void ExeControls::on_stop_clicked(){
-	qDebug() <<  "start";
+	//qDebug() << "stop clicked";
+	if(get_pid() > 0){
+		this->kill_pid();
+		statusBar->showMessage("Killed Process", 2000);
+	}else{
+		statusBar->showMessage("Not found", 2000);
+	}
 }
 
-void ExeControls::on_start_clicked(){
-	qDebug() <<  "stop kill";
+//** Refresh Button clicked
+void ExeControls::on_refresh_clicked(){
+	update_pid();
 }
 
+
+//==========================================================================
+// Return process ID of executable on mac/linux - TODO windows ?
+//==========================================================================
+int ExeControls::get_pid(){
+	QStringList args;
+	args << exe_name;
+	QProcess process;
+	process.start("pidof", args, QIODevice::ReadOnly);
+	if(process.waitForStarted()){
+		process.waitForFinished();
+		QString ok_result = process.readAllStandardOutput();
+		//QString error_result = process.readAllStandardError(); Unused atmo
+		QString pid = ok_result.trimmed();
+		if(pid.length() > 0){
+			return pid.toInt();
+		}
+	}
+	return 0;
+}
+
+//==========================================================================
+// Check if app is running and update label
+//==========================================================================
 void ExeControls::update_pid(){
-	qDebug() << "Is the PID exe runnign or not";
+	int pid = get_pid();
+	if(pid == 0){
+		statusBar->showMessage("--");
+	}else{
+		statusBar->showMessage(QString::number(pid));
+	}
 }
 
+//==========================================================================
+// Kills process if running
+//==========================================================================
 void ExeControls::kill_pid(){
-	//QProcess pid of exe
+	int pid = get_pid();
+	if(pid == 0){
+		return;
+	}
+	QStringList killargs;
+	killargs << "-9" << QString::number(pid);
+	QProcess::startDetached("kill", killargs);
 }
-
-
-
 

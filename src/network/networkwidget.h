@@ -12,7 +12,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QComboBox>
 
-#include "xobjects/xsettings.h"
+#include "xobjects/mainobject.h"
 
 class NetworkWidget : public QWidget
 {
@@ -27,12 +27,11 @@ public:
 		C_FLAG
     };
 
-	explicit NetworkWidget(QWidget *parent = 0);
+	explicit NetworkWidget(MainObject *mOb, QWidget *parent = 0);
 
 	qint64 pid_fgcom;
 
-	//MainObject *mainObject;
-	XSettings settings;
+	MainObject *mainObject;
 
 	QGroupBox *grpMpServer;
 	QLineEdit *txtCallSign;
@@ -83,12 +82,7 @@ public slots:
 	void set_mp_server();
 
 	void set_fgcom();
-	void on_fgcom_start();
-	void on_fgcom_stop();
 
-	void set_http();
-	void set_telnet();
-	void set_screenshot();
 
 	void on_checkbox_in();
 	void on_checkbox_out();

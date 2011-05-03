@@ -3,7 +3,7 @@
 
 #include <QtCore/QDirIterator>
 #include <QtCore/QStringList>
-#include <QXmlStreamReader>
+
 
 #include <QtGui/QWidget>
 #include <QtGui/QButtonGroup>
@@ -20,29 +20,32 @@
 #include <QtGui/QTreeView>
 #include <QtGui/QTreeWidget>
 
-#include "xobjects/xsettings.h"
+#include "xobjects/mainobject.h"
 
 class AirportsWidget : public QWidget
 {
 Q_OBJECT
 public:
-    enum COLS{
-        C_FAV = 0,
-		C_ICAO = 1,
-        C_TOWER = 2,
-        C_ELEVATION = 3,
-		C_NAME = 4,
-		C_XML = 5
+	enum AIPORTS_TREE_COLS{
+		CA_CODE = 0,
+		CA_NAME = 1
     };
-	enum USE{
+	enum AIRPORT_INFO_TREE_COLS{
+		CI_NODE = 0,
+		CI_LABEL = 1,
+		CI_TYPE = 2,
+		CI_KEY_VAL = 3
+	};
+
+	enum STARTUP_POSTITION{
 		USE_DEFAULT = 0,
 		USE_AIRPORT = 1,
 		USE_COORDINATES = 2
 	};
 
-	explicit AirportsWidget(QWidget *parent = 0);
+	explicit AirportsWidget(MainObject *mOb, QWidget *parent = 0);
 
-	XSettings settings;
+	MainObject *mainObject;
 
 	QButtonGroup *buttonGroupUse;
 
@@ -55,18 +58,22 @@ public:
 	QStandardItemModel *model;
 	QSortFilterProxyModel *proxyModel;
 	QTreeView *treeViewAirports;
+
 	QPushButton *buttonRefreshTree;
 	QStatusBar *statusBarAirports;
 
-    QTreeWidget *treeWidgetRunways;
-	QStatusBar *statusBarRunways;
+	QTreeWidget *treeWidgetAirportInfo;
+	QStatusBar *statusBarAirportInfo;
 
 
 	void scan_airports_xml();
 	void show_progress(bool state);
+
 	void load_airports_tree();
-	void select_airport(QString);
-	void load_runways(QString airportXmlFile);
+
+	void load_info_tree(QString airport_code);
+	int load_runways_node(QString airport_code);
+	int load_parking_node(QString airport_code);
 
 	QLineEdit *txtLat;
 	QLineEdit *txtLng;
@@ -90,12 +97,12 @@ public slots:
 
 	void initialize();
 
-	void on_filter_button(QAbstractButton*);
-	void on_filter_airports(QString);
-	void on_aiport_row_changed(QModelIndex, QModelIndex);
+	void on_update_airports_filter();
 
-	void on_import_clicked();
-	void on_refresh_clicked();
+	void on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx);
+
+	void on_import_aptdat_clicked();
+	void on_rescan_xml_clicked();
 
 	void on_buttonGroupUse();
 };

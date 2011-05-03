@@ -9,14 +9,18 @@
 
 
 
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+
 #include <QtCore/QDebug>
 
 #include <QtCore/QProcess>
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-//#include <QtCore/QDir>
+
 #include <QtCore/QFile>
+
 
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHBoxLayout>
@@ -42,13 +46,15 @@
 
 #include "aircraft/aircraftwidget.h"
 #include "aircraft/aerotools.h"
+#include "xwidgets/xtreewidgetitem.h"
 
 
 
-
-AircraftWidget::AircraftWidget(QWidget *parent) :
+AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
+
+	mainObject = mOb;
 
     //* Main Layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -237,7 +243,6 @@ AircraftWidget::AircraftWidget(QWidget *parent) :
 	splitter->setStretchFactor(1, 1);
 
 	initialize();
-	//load_aircraft_xml_set();
 }
 
 
@@ -274,9 +279,8 @@ void AircraftWidget::on_tree_selection_changed(){
 		return;
 	}
 
-	emit set_arg("set", "--aircraft=", item->text(C_AERO));
 
-	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( settings.aircraft_path(),
+	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->settings->aircraft_path(),
 																item->text(C_DIR),
 																item->text(C_AERO));
 	if(QFile::exists(thumb_file)){
@@ -308,8 +312,8 @@ void AircraftWidget::on_tree_selection_changed(){
 //** Load Aircraft Shell
 void AircraftWidget::load_aircraft_shell(){
 
-	QString command = settings.fgfs_path();
-	command.append(" --fg-root=").append(settings.fg_root());
+	QString command = mainObject->settings->fgfs_path();
+	command.append(" --fg-root=").append(mainObject->settings->fg_root());
 	command.append(" --show-aircraft");
 
 	QProcess *process = new QProcess(this);
@@ -362,43 +366,41 @@ void AircraftWidget::load_aircraft_shell(){
 // Save Settings
 void AircraftWidget::save_settings(){
 	QTreeWidgetItem *item = treeWidget->currentItem();
-	if(item && item->text(C_AERO).length() == 0){
-		settings.setValue("aircraft", item->text(C_AERO) );
+	if(item && item->text(C_AERO).length() > 0){
+		mainObject->settings->setValue("aircraft", item->text(C_AERO) );
 	}
-	settings.setValue("nav1", txtNav1->text());
-	settings.setValue("nav2", txtNav2->text());
-	settings.setValue("adf", txtAdf->text());
-	settings.setValue("comm1", txtComm1->text());
-	settings.setValue("comm2", txtComm2->text());
-	settings.sync();
+	mainObject->settings->setValue("nav1", txtNav1->text());
+	mainObject->settings->setValue("nav2", txtNav2->text());
+	mainObject->settings->setValue("adf", txtAdf->text());
+	mainObject->settings->setValue("comm1", txtComm1->text());
+	mainObject->settings->setValue("comm2", txtComm2->text());
+	mainObject->settings->sync();
 }
 
 
 //=============================================================
 // Load Settings
 void AircraftWidget::load_settings(){
-	select_node(settings.value("aircraft").toString());
 
-	txtNav1->setText(settings.value("nav1").toString());
-	txtNav2->setText(settings.value("nav2").toString());
-	txtAdf->setText(settings.value("adf").toString());
-	txtComm1->setText(settings.value("comm1").toString());
-	txtComm2->setText(settings.value("comm2").toString());
+	select_node(mainObject->settings->value("aircraft").toString());
+
+	txtNav1->setText(mainObject->settings->value("nav1").toString());
+	txtNav2->setText(mainObject->settings->value("nav2").toString());
+	txtAdf->setText(mainObject->settings->value("adf").toString());
+	txtComm1->setText(mainObject->settings->value("comm1").toString());
+	txtComm2->setText(mainObject->settings->value("comm2").toString());
 }
 
 void AircraftWidget::select_node(QString aero){
-	if(aero.length() == 0){
-		return;
-	}
+
 	QList<QTreeWidgetItem*> items = treeWidget->findItems(aero, Qt::MatchExactly | Qt::MatchRecursive, C_AERO);
 	if(items.length() > 0){
 		treeWidget->setCurrentItem(items[0]);
 		treeWidget->scrollToItem(items[0], QAbstractItemView::PositionAtCenter);
 	}
 }
-QString AircraftWidget::aircraft(){
+QString AircraftWidget::selected_aircraft(){
 	QTreeWidgetItem *item = treeWidget->currentItem();
-	qDebug() << item;
 	if(!item or item->text(C_AERO).length() == 0){
 		return "";
 	}
@@ -408,6 +410,9 @@ QString AircraftWidget::aircraft(){
 //=============================================================
 // Validate
 QString AircraftWidget::validate(){
+	if(!treeWidget->currentItem()){
+		return QString("No Aircraft Selected");
+	}
 	return QString();
 }
 
@@ -417,21 +422,20 @@ QString AircraftWidget::validate(){
 
 void AircraftWidget::on_refresh_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
-	qDebug() << "on refresh_cache";
-	//* scan Airraft dirs and save in settings (mad encoding for now)
-	AeroTools *aeroTool = new AeroTools(this);
-	aeroList = aeroTool->scan_xml_sets();
-	settings.setValue("AIRCRAFT_CACHED", aeroList );
-	settings.sync();
+
+	//* scan Airaft dirs and save in db
+	AeroTools *aeroTool = new AeroTools(this, mainObject);
+	aeroTool->scan_xml_sets();
+
 	load_tree();
 }
 
 void AircraftWidget::load_tree(){
 	int c =0;
-	QString currAero = aircraft();
+
+	QString currAero = selected_aircraft();
 	treeWidget->setUpdatesEnabled(false);
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
-	QString record;
 	QString last_dir("");
 	QTreeWidgetItem *parentItem;
 
@@ -439,50 +443,52 @@ void AircraftWidget::load_tree(){
 	treeWidget->setColumnHidden(C_DIR, view == V_LIST);
 	treeWidget->setRootIsDecorated(view == V_NESTED);
 
-	 for (int i = 0; i < aeroList.size(); ++i) {
-		record = aeroList.at(i);
-		QStringList fields = record.split("~|~");
+	QSqlQuery query("SELECT directory, xml_file, aero, description, fdm, author from aircraft ORDER BY directory, aero ASC", mainObject->db);
+
+	while(query.next()){
 
 		if(view == V_LIST){
 			parentItem = treeWidget->invisibleRootItem();
-		}else if(last_dir != fields.at(C_DIR)){
-			parentItem = new QTreeWidgetItem(treeWidget->invisibleRootItem());
-			parentItem->setText( C_DIR, fields.at(0));
+		}else if(last_dir != query.value(0).toString()){
+			parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
+			parentItem->setText( C_DIR, query.value(0).toString());
 			parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
 			treeWidget->addTopLevelItem(parentItem);
 			treeWidget->setFirstItemColumnSpanned(parentItem, true);
-			last_dir = fields.at(C_DIR);
+			last_dir = query.value(0).toString();
 		}
 
 		//directory, xml_file, aero, fdm, description, author
-		QTreeWidgetItem *aeroItem = new QTreeWidgetItem(parentItem);
-		QString xml_path = QString("%1/%2").arg(fields.at(0), fields.at(1));
+		XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
+		QString xml_path = QString("%1/%2").arg(query.value(0).toString(), query.value(1).toString());
 		aeroItem->setText(C_XML, xml_path);
-		aeroItem->setText(C_AERO, fields.at(2));
+		aeroItem->setText(C_AERO, query.value(2).toString());
 		aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
-		aeroItem->setText(C_FDM, fields.at(3));
-		aeroItem->setText(C_DESCRIPTION, fields.at(4));
-		aeroItem->setText(C_AUTHOR, fields.at(5));
+		aeroItem->setText(C_DESCRIPTION, query.value(3).toString());
+		aeroItem->setText(C_FDM, query.value(4).toString());
+		aeroItem->setText(C_AUTHOR, query.value(5).toString());
 		c++;
 	 }
+
 	 treeWidget->sortByColumn(view == V_NESTED ? C_DIR : C_AERO, Qt::AscendingOrder);
 	 treeWidget->setUpdatesEnabled(true);
 
 	 select_node(currAero);
 	 QString str = QString("%1 aircraft").arg(c);
 	 statusBarAero->showMessage(str);
+
 }
 
 //=============================================================
 // Initialize
 void AircraftWidget::initialize(){
-	aeroList = settings.value("AIRCRAFT_CACHED").toStringList();
-	if(aeroList.count() == 0){
-		//assume its never been initialised
+	if(1 == 0){
+		//TODO assume its never been initialised
 		//scan_xml_sets();
 	}
-	aeroList = settings.value("AIRCRAFT_CACHED").toStringList();
+
 	load_tree();
+	select_node(mainObject->settings->value("aircraft").toString());
 }
 
 //=============================================================
@@ -491,8 +497,8 @@ QStringList AircraftWidget::get_args(){
 
 	QStringList args;
 
-	if(aircraft().length() > 0){
-		args << QString("--aircraft=%1").arg(aircraft());
+	if(selected_aircraft().length() > 0){
+		args << QString("--aircraft=%1").arg(selected_aircraft());
 	}
 
 	if(txtNav1->text().length() > 0){

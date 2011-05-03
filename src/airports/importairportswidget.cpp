@@ -23,8 +23,8 @@
 		 Close after import finished
    */
 
-ImportAirportsWidget::ImportAirportsWidget(QDialog *parent) :
-    QDialog(parent)
+ImportAirportsWidget::ImportAirportsWidget(QWidget *parent) :
+	QWidget(parent)
 {
 
 

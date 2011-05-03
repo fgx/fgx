@@ -7,37 +7,29 @@
 
 #include <QtGui/QDialog>
 #include <QtGui/QWidget>
-#include <QtGui/QLineEdit>
-#include <QtGui/QStatusBar>
-#include <QtGui/QTreeWidget>
+//#include <QtGui/QStatusBar>
 #include <QtGui/QPushButton>
-#include <QtGui/QGroupBox>
-#include <QtGui/QCheckBox>
+#include <QtGui/QTabWidget>
 
-#include "xobjects/xsettings.h"
+#include "xobjects/mainobject.h"
+#include "settings/pathssettingswidget.h"
+#include "settings/dbsettingswidget.h"
 
 class SettingsDialog : public QDialog
 {
 Q_OBJECT
 public:
-	explicit SettingsDialog(QWidget *parent = 0);
+	explicit SettingsDialog(MainObject *mOb, QWidget *parent = 0);
+
+	QTabWidget *tabWidget;
 
 private:
-	XSettings settings;
+	MainObject *mainObject;
 
-	QCheckBox *checkBoxUseDefaults;
-	QGroupBox *grpFgfs;
-    QGroupBox *grpFgRoot;
-    QGroupBox *grpFgScenery;
 
-	QLineEdit *txtFgfs;
-    QLineEdit *txtFgRoot;
-    QTreeWidget *treeFgScenery;
-    QStatusBar *statusBar;
 
-    QPushButton *buttSceneryUp;
-    QPushButton *buttSceneryDown;
-    QPushButton *buttSceneryRemove;
+	PathsSettingsWidget *pathsSettingsWidget;
+	DbSettingsWidget *dbSettingsWidget;
 
 
 	QString get_frame_style(bool is_valid);
@@ -49,13 +41,11 @@ private:
 signals:
 
 public slots:
-	void on_select_fgfs_path();
-	void on_fgfs_autodetect();
-	void on_select_fg_root_path();
+
 
 	void load_settings();
 	void on_save_clicked();
-	void on_use_defaults();
+
 };
 
 #endif // SettingsDialog_H

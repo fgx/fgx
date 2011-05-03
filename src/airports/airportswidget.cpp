@@ -2,6 +2,11 @@
 #include <QtCore/QDebug>
 #include <QtCore/QString>
 
+
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+
+
 #include <QtGui/QSizePolicy>
 #include <QtGui/QFont>
 
@@ -12,11 +17,8 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QToolButton>
 #include <QtGui/QPushButton>
-
-
 #include <QtGui/QAction>
 #include <QtGui/QLabel>
-#include <QtGui/QProgressDialog>
 #include <QtGui/QLineEdit>
 
 #include <QtGui/QStandardItemModel>
@@ -28,11 +30,14 @@
 
 #include "airports/airportswidget.h"
 #include "airports/importairportswidget.h"
+#include "airports/airportsimport.h"
 
 
-AirportsWidget::AirportsWidget(QWidget *parent) :
+AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
+
+	mainObject = mOb;
 
     //* Main Layout
 	QGridLayout *mainLayout = new QGridLayout();
@@ -42,7 +47,7 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	mainLayout->setContentsMargins(m,m,m,m);
 
 	//=====================================
-	//** Top Option Buttons
+	//** Top Startup Option Buttons
 	QHBoxLayout *layoutTop = new QHBoxLayout();
 	mainLayout->addLayout(layoutTop,0,0,1,2);
 
@@ -66,22 +71,24 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	layoutTop->addStretch(10);
 
 
+	//=================================================================================
+	//* Airport Details
 	groupBoxAirport = new QGroupBox(this);
 	groupBoxAirport->setTitle("Airport Details");
 	mainLayout->addWidget(groupBoxAirport, 1, 0);
 
-	QVBoxLayout *airportsLayout = new QVBoxLayout();
-	groupBoxAirport->setLayout(airportsLayout);
-	airportsLayout->setContentsMargins(10,10,10,10);
-	airportsLayout->setSpacing(0);
+	QVBoxLayout *airportsContainerLayout = new QVBoxLayout();
+	groupBoxAirport->setLayout(airportsContainerLayout);
+	airportsContainerLayout->setContentsMargins(10,10,10,10);
+	airportsContainerLayout->setSpacing(0);
 
 
 	//==================================================================
-	//** Airports Top Bar
+	//** Airports Filter and Actions Top Bar
 	QHBoxLayout *layoutAptTopBar = new QHBoxLayout();
 	layoutAptTopBar->setContentsMargins(0,0,0,0);
 	layoutAptTopBar->setSpacing(10);
-	airportsLayout->addLayout(layoutAptTopBar);
+	airportsContainerLayout->addLayout(layoutAptTopBar);
 
     //** Filter Code
 	layoutAptTopBar->addWidget(new QLabel(tr("Filter").append(":")));
@@ -89,31 +96,30 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	//** Filter Buttons - TODO
 	buttonGroupFilter = new QButtonGroup(this);
 	buttonGroupFilter->setExclusive(true);
-	connect(buttonGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
-			this,           SLOT(on_filter_button(QAbstractButton*))
-    );
 
 
-	//** ICAO Code Filter
+	//** Aiport Code Filter
     QRadioButton *buttCode = new QRadioButton();
     buttCode->setText("Code");
-	buttCode->setProperty("column", QVariant(C_ICAO));
+	buttCode->setProperty("filter_column_idx", QVariant(CA_CODE));
 	buttCode->setChecked(true);
 	layoutAptTopBar->addWidget(buttCode);
 	buttonGroupFilter->addButton(buttCode, 0);
 
-	//** Name Filter
+	//** Airport Name Filter
     QRadioButton *buttName = new QRadioButton();
     buttName->setText("Name");
-    buttName->setProperty("column", QVariant(C_NAME));
+	buttName->setProperty("filter_column_idx", QVariant(CA_NAME));
 	layoutAptTopBar->addWidget(buttName);
 	buttonGroupFilter->addButton(buttName, 1);
 
-    //** Find Text
+	//** Find Airport Text
     txtAirportsFilter = new QLineEdit();
 	layoutAptTopBar->addWidget(txtAirportsFilter);
     txtAirportsFilter->setFixedWidth(100);
-	connect(txtAirportsFilter, SIGNAL(textChanged(QString)), this, SLOT(on_filter_airports(QString)));
+	connect(	txtAirportsFilter, SIGNAL(textChanged(QString)),
+				this, SLOT(on_update_airports_filter())
+	);
 
 	layoutAptTopBar->addStretch(20);
 
@@ -123,118 +129,118 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 	buttonImportAirports->setToolTip("Scan directories and reload cache");
 	buttonImportAirports->setIcon(QIcon(":/icon/import"));
 	buttonImportAirports->setFlat(true);
-	connect(buttonImportAirports, SIGNAL(clicked()), this, SLOT(on_import_clicked()) );
+	connect(buttonImportAirports, SIGNAL(clicked()), this, SLOT(on_import_aptdat_clicked()) );
 
 	QPushButton *buttonRefreshAirports = new QPushButton(this);
 	layoutAptTopBar->addWidget(buttonRefreshAirports);
 	buttonRefreshAirports->setText("Reload");
 	buttonRefreshAirports->setToolTip("Scan directories and reload cache");
 	buttonRefreshAirports->setIcon(QIcon(":/icon/refresh"));
-	//buttonRefreshAirports->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttonRefreshAirports->setFlat(true);
-	connect(buttonRefreshAirports, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()) );
-
+	connect(buttonRefreshAirports, SIGNAL(clicked()), this, SLOT(on_rescan_xml_clicked()) );
 
 
 	//*==============================================================================
-	//** Airports Splitter
+	//** Airports/Runways Splitter
 	QSplitter *splitter = new QSplitter(this);
-	airportsLayout->addWidget(splitter);
+	airportsContainerLayout->addWidget(splitter);
 
 
-	//************************************************************************************************
-	//** Left
-	QWidget *leftWidget = new QWidget();
-	splitter->addWidget(leftWidget);
-	QVBoxLayout *leftLayout = new QVBoxLayout();
-	leftLayout->setContentsMargins(0,0,0,0);
-	leftLayout->setSpacing(0);
-	leftWidget->setLayout(leftLayout);
+	//=== Airport Widget + Layout
+	QWidget *airportWidget = new QWidget();
+	splitter->addWidget(airportWidget);
+	QVBoxLayout *airportsLayout = new QVBoxLayout();
+	airportsLayout->setContentsMargins(0,0,0,0);
+	airportsLayout->setSpacing(0);
+	airportWidget->setLayout(airportsLayout);
 
-    //******************************************************
-    //** Models
+	/*  ======== NOTE ============
+		# The Airports tree is a treeView
+			## with a model/proxt to enable filtersing
+			## and the columns constants a CA_
+		# The Airport Info is a treeWidget
+			## uses CI_ as the column constants
+	*/
+
+	//==============================================
+	//** Airport Models
     model = new QStandardItemModel(this);
-	model->setColumnCount(6);
+	model->setColumnCount(2);
     QStringList headerLabelsList;
-	headerLabelsList << "Location" << "ICAO"  << "Twr" <<  "Elevation" << "Name" << "Path";
+	headerLabelsList << tr("Code") << tr("Name");
     model->setHorizontalHeaderLabels(headerLabelsList);
 
     proxyModel = new QSortFilterProxyModel(this);
     proxyModel->setSourceModel(model);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    proxyModel->setFilterKeyColumn( C_NAME );
+	proxyModel->setFilterKeyColumn( CA_NAME );
 
-    //******************************************************
-    //**  Tree
+	//==============================================
+	//**  TreeView aiports
 	treeViewAirports = new QTreeView(this);
-	leftLayout->addWidget(treeViewAirports, 1, 0);
+	airportsLayout->addWidget(treeViewAirports, 1, 0);
 	treeViewAirports->setModel(proxyModel);
 
 	treeViewAirports->setUniformRowHeights(true);
 	treeViewAirports->setAlternatingRowColors(true);
 	treeViewAirports->setRootIsDecorated(false);
 	treeViewAirports->setSortingEnabled(true);
-	treeViewAirports->sortByColumn(C_NAME, Qt::AscendingOrder);
+	treeViewAirports->sortByColumn(CA_NAME, Qt::AscendingOrder);
 	treeViewAirports->setSelectionMode(QAbstractItemView::SingleSelection);
 	treeViewAirports->setSelectionBehavior(QAbstractItemView::SelectRows);
 	treeViewAirports->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    //** Deaders and columns
+	//** Headers and columns
 	treeViewAirports->header()->setStretchLastSection(true);
-	treeViewAirports->setColumnHidden(C_ELEVATION, true);
-	treeViewAirports->setColumnHidden(C_TOWER, true);
-	treeViewAirports->setColumnHidden(C_FAV, true);
-	treeViewAirports->setColumnHidden(C_XML, true);
-	treeViewAirports->setColumnWidth(C_FAV, 50);
-	treeViewAirports->setColumnWidth(C_ICAO, 80);
-	treeViewAirports->setColumnWidth(C_TOWER, 50);
-	treeViewAirports->setColumnWidth(C_ELEVATION, 80);
+	treeViewAirports->setColumnWidth(CA_CODE, 80);
+	treeViewAirports->setColumnWidth(CA_NAME, 50);
 
 	connect( treeViewAirports->selectionModel(),
 			 SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ),
-			 this, SLOT( on_aiport_row_changed(QModelIndex, QModelIndex) )
+			 this, SLOT( on_airport_tree_selected(QModelIndex,QModelIndex) )
 	);
 
+	//* StatusBar for Airports
 	statusBarAirports = new QStatusBar();
 	statusBarAirports->setSizeGripEnabled(false);
-	leftLayout->addWidget(statusBarAirports);
+	airportsLayout->addWidget(statusBarAirports);
 	statusBarAirports->showMessage("Idle");
 
 
-    //************************************************************************************************
-    //** Right
-    QWidget *rightWidget = new QWidget();
-    splitter->addWidget(rightWidget);
-	QVBoxLayout *rightLayout = new QVBoxLayout();
-	rightWidget->setLayout(rightLayout);
-	rightLayout->setContentsMargins(0,0,0,0);
-	rightLayout->setSpacing(0);
+	//========================================================
+	//** Airport Info Widget
+	QWidget *airportInfoWidget = new QWidget();
+	splitter->addWidget(airportInfoWidget);
+	QVBoxLayout *airportInfoLayout = new QVBoxLayout();
+	airportInfoLayout->setContentsMargins(0,0,0,0);
+	airportInfoLayout->setSpacing(0);
+	airportInfoWidget->setLayout(airportInfoLayout);
 
-
-    //*** Runways Tree
-    treeWidgetRunways = new QTreeWidget();
-	rightLayout->addWidget(treeWidgetRunways, 3);
-    treeWidgetRunways->setAlternatingRowColors(true);
-	treeWidgetRunways->setRootIsDecorated(true);
-    QTreeWidgetItem *headerItem = treeWidgetRunways->headerItem();
-    headerItem->setText(0, tr("Runway"));
+	//=========================================================
+	//* Airport Info TreeWidget
+	treeWidgetAirportInfo = new QTreeWidget();
+	airportInfoLayout->addWidget(treeWidgetAirportInfo, 3);
+	treeWidgetAirportInfo->setAlternatingRowColors(true);
+	treeWidgetAirportInfo->setRootIsDecorated(true);
+	QTreeWidgetItem *headerItem = treeWidgetAirportInfo->headerItem();
+	headerItem->setText(CI_NODE, tr("Startup Position"));
     headerItem->setText(1, tr("Width"));
     headerItem->setText(2, tr("Length"));
     headerItem->setText(3, tr("Lat"));
     headerItem->setText(4, tr("Lng"));
     headerItem->setText(5, tr("Alignment"));
-	treeWidgetRunways->setColumnHidden(1,true);
-	treeWidgetRunways->setColumnHidden(2,true);
-	treeWidgetRunways->setColumnHidden(3,true);
-	treeWidgetRunways->setColumnHidden(4,true);
-	treeWidgetRunways->setColumnHidden(5,true);
+	//treeWidgetAirportInfo->setColumnHidden(1,true);
+	//treeWidgetAirportInfo->setColumnHidden(2,true);
+	//treeWidgetAirportInfo->setColumnHidden(3,true);
+	//treeWidgetAirportInfo->setColumnHidden(4,true);
+	//treeWidgetAirportInfo->setColumnHidden(5,true);
 
 
-	statusBarRunways = new QStatusBar();
-	statusBarRunways->setSizeGripEnabled(false);
-	rightLayout->addWidget(statusBarRunways);
-	statusBarAirports->showMessage("");
+	statusBarAirportInfo = new QStatusBar();
+	statusBarAirportInfo->setSizeGripEnabled(false);
+	airportInfoLayout->addWidget(statusBarAirportInfo);
+	statusBarAirportInfo->showMessage("");
 
 
 	splitter->setStretchFactor(0, 2);
@@ -291,107 +297,58 @@ AirportsWidget::AirportsWidget(QWidget *parent) :
 
 	layoutCoordinates->addStretch(20);
 
-	on_buttonGroupUse();
+	//on_buttonGroupUse();
+
+	connect(buttonGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
+			this, SLOT(on_update_airports_filter())
+	);
 }
 
 void AirportsWidget::initialize(){
-	QStringList airports = settings.value("cache/airports").toStringList();
-	if(airports.count() == 0){
-		scan_airports_xml();
-	}
 	load_airports_tree();
 }
 
-//============================================================================
-//** Scan XML's for airports
-//============================================================================
-void AirportsWidget::scan_airports_xml(){
-	int c = 0;
-	int found = 0;
-	QProgressDialog progress("Loading Airports to Cache", "Cancel", 0, 0, this);
-	progress.setWindowModality(Qt::WindowModal);
 
-	qDebug() << settings.airports_path();
-	QString directory = settings.airports_path();
 
-	QStringList airportsList;
-	QString entry;
 
-	QDirIterator it(directory, QDirIterator::Subdirectories);
-	while (it.hasNext()) {
-		progress.setValue(c);
-		entry = it.next();
-		if(entry.endsWith(".threshold.xml") ){
-			QFileInfo info(entry);
-			airportsList << QString("%1~|~%2").arg(	entry,
-													info.fileName().split(".").at(0)
-												);
-			found++;
-		}
-		c++;
-		if(c % 100 == 0){
-			QString str = QString("%1 airports found").arg(found);
-			statusBarAirports->showMessage(str);
-		}
-		if(progress.wasCanceled()){
-			return;
-		}
-	}
-
-	settings.setValue("cache/airports", airportsList);
-	settings.sync();
-	progress.hide();
-}
 //============================================================================
 //** Load Airports Tree
 //============================================================================
 void AirportsWidget::load_airports_tree(){
 
+	//* Clear existing tree and inhibit updates till end
 	model->removeRows(0, model->rowCount());
 	treeViewAirports->setUpdatesEnabled(false);
-	QStringList airports = settings.value("cache/airports").toStringList();
-	for (int i = 0; i < airports.size(); ++i){
-		QStringList airport = airports.at(i).split("~|~");
-		int new_row_index = model->rowCount();
-		model->insertRow(new_row_index);
 
+	//* Get Airports from database
+	QSqlQuery query("SELECT code, name FROM airports order by code ASC", mainObject->db);
 
-		QStandardItem *itemIcao = new QStandardItem();
-		QFont font = itemIcao->font();
-		font.setFamily("monospace");
-		itemIcao->setFont(font);
-		itemIcao->setText(airport.at(1));
-		model->setItem(i, C_ICAO, itemIcao);
+	//* Loop results  and appendRows
+	while(query.next()){
 
+		QStandardItem *itemAirportCode = new QStandardItem();
+		itemAirportCode->setText(query.value(0).toString());
 
-		QStandardItem *itemXml = new QStandardItem();
-		itemXml->setText(airport.at(0));
-		model->setItem(new_row_index, C_XML, itemXml);
-
-		/*
 		QStandardItem *itemAirportName = new QStandardItem();
 		itemAirportName->setText(query.value(1).toString());
-		model->setItem(new_row_index, C_NAME, itemAirportName);
 
-		QStandardItem *itemAirportTower = new QStandardItem();
-		itemAirportTower->setText(query.value(2).toString());
-		model->setItem(new_row_index, C_TOWER, itemAirportTower);
+		QList<QStandardItem *> items;
+		items << itemAirportCode << itemAirportName;
 
-		QStandardItem *itemAirportElevation = new QStandardItem();
-		itemAirportElevation->setText(query.value(3).toString());
-		model->setItem(new_row_index, C_ELEVATION, itemAirportElevation);
-		*/
+		model->appendRow(items);
 	}
 
+	//* Update the status bar with the count
 	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
 
-	QList<QStandardItem *> items = model->findItems( settings.value("airport", "KSFO").toString(), Qt::MatchExactly, C_ICAO);
+	//* Restore previous airport from settings.. if found
+	QList<QStandardItem *> items = model->findItems( mainObject->settings->value("airport", "KSFO").toString(), Qt::MatchExactly, CA_CODE);
 	if(items.count() > 0){
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
 		QModelIndex proxIdx = proxyModel->mapFromSource(srcIdx);
 		treeViewAirports->selectionModel()->select(proxIdx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
 		treeViewAirports->scrollTo(proxIdx, QAbstractItemView::PositionAtCenter);
-		load_runways( model->item(srcIdx.row(), C_XML)->text() );
+		load_info_tree( model->item(srcIdx.row(), CA_CODE)->text() );
 	}
 	treeViewAirports->setUpdatesEnabled(true);
 }
@@ -399,146 +356,158 @@ void AirportsWidget::load_airports_tree(){
 
 //==============================================================
 //*** Update Filters
-void AirportsWidget::on_filter_button(QAbstractButton *button){
-	settings.setValue("airports_button_filter", buttonGroupFilter->checkedId());
-	proxyModel->setFilterKeyColumn( button->property("column").toInt() );
+void AirportsWidget::on_update_airports_filter(){
+
+	mainObject->settings->setValue("airports_button_filter", buttonGroupFilter->checkedId());
+	int filter_column_id = buttonGroupFilter->checkedButton()->property("filter_column_idx").toInt();
+	proxyModel->setFilterKeyColumn( filter_column_id );
 	proxyModel->setFilterFixedString( txtAirportsFilter->text() );
-}
-void AirportsWidget::on_filter_airports(QString txt){
-	proxyModel->setFilterFixedString( txt );
 }
 
 
 //==============================================================
 //*** Airport Clicked 
-void AirportsWidget::on_aiport_row_changed(QModelIndex current, QModelIndex previous){
-	Q_UNUSED(previous);
-	treeWidgetRunways->model()->removeRows(0, treeWidgetRunways->model()->rowCount());
+void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx){
 
-	//QModelIndex proxyIndex =  treeViewAirports->selectionModel()->selectedRows(C_ICAO).first();
-	QModelIndex proxyIndex =  proxyModel->index(current.row(), C_XML);
-    if(!proxyIndex.isValid()){
-		//emit set_arg("remove", "--airport=", "");
+	Q_UNUSED(previousIdx);
+
+	//* Clear the Runways tree
+	treeWidgetAirportInfo->model()->removeRows(0, treeWidgetAirportInfo->model()->rowCount());
+
+	//* No selection -eg a filter removing a selected node
+	if(!currentIdx.isValid()){
 		return;
-    }
-    QModelIndex srcIndex = proxyModel->mapToSource(proxyIndex);
-	load_runways(model->item(srcIndex.row(), C_XML)->text());
+	}
+
+	//* Get the airport code forn source model
+	QModelIndex srcIndex = proxyModel->mapToSource(currentIdx);
+	QString airport_code = model->item(srcIndex.row(), CA_CODE)->text();
+	load_info_tree(airport_code);
+
 }
 
 //==============================================================
-//*** load_runways
-void AirportsWidget::load_runways(QString airportXmlFile){
+// Load the Info Tree
+//==============================================================
+void AirportsWidget::load_info_tree(QString airport_code){
+	//* Load Nodes from DB - with a count from each
+	QString count_label;
 
-	int i;
-
-	//*** Load Runways
-	QStringList runwayList;
-	QFile rwyfile(airportXmlFile);
-	if (rwyfile.open(QIODevice::ReadOnly)) {
-
-		QXmlStreamReader rwyreader(&rwyfile);
-		QXmlStreamReader::TokenType tokenType;
-
-		while ((tokenType = rwyreader.readNext()) != QXmlStreamReader::EndDocument) {
-			if (rwyreader.name() == "rwy") {
-				runwayList << rwyreader.readElementText();
-			}
-		}
-		rwyfile.close();
+	int runways_count = load_runways_node(airport_code);
+	if(runways_count == 0){
+		count_label.append(tr("No runway"));
+	}else if(runways_count == 1){
+		count_label.append(tr("One runway"));
+	}else{
+		count_label.append("%s runways").arg(runways_count);
 	}
-	runwayList.removeDuplicates();
-	runwayList.sort();
 
+	count_label.append(" / ");
+
+	int stands_count =  load_parking_node(airport_code);
+	if(stands_count == 0){
+		count_label.append(tr("No stands"));
+	}else if(stands_count == 1){
+		count_label.append(tr("One stand"));
+	}else{
+		count_label.append("%s stands").arg(runways_count);
+	}
+
+	statusBarAirportInfo->showMessage(count_label);
+
+}
+
+//==============================================================
+// Load Runways
+//==============================================================
+int AirportsWidget::load_runways_node(QString airport_code){
+
+	//* Create the Runways Node
 	QTreeWidgetItem *runwaysParent = new QTreeWidgetItem();
 	runwaysParent->setText(0, "Runways" );
 	runwaysParent->setIcon(0, QIcon(":/icon/folder"));
-	treeWidgetRunways->addTopLevelItem(runwaysParent);
-	treeWidgetRunways->setItemExpanded(runwaysParent, true);
-	if(runwayList.count() == 0){
+	treeWidgetAirportInfo->addTopLevelItem(runwaysParent);
+	treeWidgetAirportInfo->setItemExpanded(runwaysParent, true);
+
+	//* DB query
+	QSqlQuery query(mainObject->db);
+	query.prepare("SELECT runway, heading, lat, lon FROM runways WHERE airport_code = ? ORDER BY runway ASC;");
+	query.bindValue(0, airport_code);
+	query.exec();
+
+	//* No results so create a "none node"
+	if(query.size() == 0){
+
 		QTreeWidgetItem *item = new QTreeWidgetItem(runwaysParent);
-		item->setText(0, "None");
-	}else{
-		for(i =0; i < runwayList.count(); i++){
-			QTreeWidgetItem *item = new QTreeWidgetItem(runwaysParent);
-			item->setText(0, runwayList.at(i));
-			item->setText(1, "runway");
-		}
+		item->setText(0, "-- None --");
+		return 0;
 	}
 
-	//*** Load Parking Positions
-	QStringList parkingPositions;
-	QString parkPosFile = QString(airportXmlFile);
-	parkPosFile.chop(13); // strip the threshold.xml part
-	
-	//terrasync check because with terrasync scenery parking.xml is renamed to groundnet.xml
-	if (settings.value("use_terrasync").toBool() == true) {
-	parkPosFile.append("groundnet.xml");
-	} else {
-		parkPosFile.append("parking.xml");
+	//* Loop and add the runways
+	while(query.next()){
+		QTreeWidgetItem *iRunway = new QTreeWidgetItem(runwaysParent);
+		iRunway->setText(CI_NODE, query.value(0).toString());
+		iRunway->setText(CI_KEY, QString("runway_").append(query.value(0).toString()));
+
+		QTreeWidgetItem *iHeading = new QTreeWidgetItem(iRunway);
+		iHeading->setText(CI_NODE, query.value(1).toString());
+
 	}
 
-	QFile ppfile(parkPosFile);
-	if(ppfile.open(QIODevice::ReadOnly)) {
-
-		QXmlStreamReader ppreader(&ppfile);
-		QXmlStreamReader::TokenType tokenType;
-
-		while ((tokenType = ppreader.readNext()) != QXmlStreamReader::EndDocument) {
-			if (ppreader.name() == "Parking") {
-				QXmlStreamAttributes attributes = ppreader.attributes();
-
-				if (attributes.value("type").toString() == "gate" && attributes.value("name").toString() != "Startup Location") {
-					QString ppname = attributes.value("name").toString();
-					QString ppnumber = attributes.value("number").toString();
-					QString ppall ;
-					ppall.append(ppname); ppall.append(ppnumber);
-					parkingPositions << ppall;
-				}
-
-			}
-		}
-
-		ppfile.close();
-	}
-	parkingPositions.removeDuplicates();
-	parkingPositions.sort();
-
-	QTreeWidgetItem *parkingParent = new QTreeWidgetItem();
-	parkingParent->setText(0, "Park Positions" );
-	parkingParent->setIcon(0, QIcon(":/icon/folder"));
-	treeWidgetRunways->addTopLevelItem(parkingParent);
-	treeWidgetRunways->setItemExpanded(parkingParent, true);
-	if(parkingPositions.count() == 0){
-		QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
-		item->setText(0, "None");
-	}else{
-		for(i =0; i < parkingPositions.count(); i++){
-			QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
-			item->setText(0, parkingPositions.at(i));
-			item->setText(1, "stand");
-		}
-	}
-	
-	QString messagecount;
-	messagecount.append(QString("%1 Runways, ").arg(runwaysParent->childCount()));
-	if(parkingPositions.count() != 0) {
-		messagecount.append(QString("%1 Park Position(s)").arg(parkingParent->childCount()));
-	} else {
-		messagecount.append(QString("No Park Positions."));
-	}
-
-	statusBarRunways->showMessage(messagecount);
+	return runwaysParent->childCount();
 }
+
+//==============================================================
+// Load Stands + Parking
+//==============================================================
+int AirportsWidget::load_parking_node(QString airport_code){
+
+	//* Create the Parkings Node
+	QTreeWidgetItem *parkingParent = new QTreeWidgetItem();
+	parkingParent->setText(0, "Parking" );
+	parkingParent->setIcon(0, QIcon(":/icon/folder"));
+	treeWidgetAirportInfo->addTopLevelItem(parkingParent);
+	treeWidgetAirportInfo->setItemExpanded(parkingParent, true);
+
+	//* DB query
+	QSqlQuery query(mainObject->db);
+	query.prepare("SELECT stand, heading, lat, lng FROM stands WHERE airport_code = ? ORDER BY stand ASC;");
+	query.bindValue(0, airport_code);
+	query.exec();
+
+	//* No results so create a "none node"
+	if(query.size() == 0){
+		QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
+		item->setText(0, tr("-- None --"));
+		return 0;
+	}
+
+	//* Loop and add the Stands
+	while(query.next()){
+		QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
+		item->setText(CI_NODE, query.value(0).toString());
+		item->setText(CI_VAL, QString("stand_").append(query.value(0).toString()));
+	}
+
+	//* return the count
+	return parkingParent->childCount();
+}
+
+
 
 //===========================================================================
-void AirportsWidget::on_import_clicked(){
+void AirportsWidget::on_import_aptdat_clicked(){
 	ImportAirportsWidget *widget = new ImportAirportsWidget();
-	widget->exec();
+	widget->setWindowModality(Qt::WindowModal);
+	widget->show();
 }
 
-void AirportsWidget::on_refresh_clicked(){
-	scan_airports_xml();
-	load_airports_tree();
+void AirportsWidget::on_rescan_xml_clicked(){
+	qDebug() << "Refresh Clicked <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
+	//scan_airports_xml();
+	AirportsImport *airportsImport = new AirportsImport(this, mainObject);
+	airportsImport->import_airports();
+	//load_airports_tree();
 }
 
 void AirportsWidget::on_buttonGroupUse(){
@@ -554,7 +523,7 @@ QStringList AirportsWidget::get_args(){
 	//if (parkPosition->isEnabled() == true) {
 	//	args << QString("--parkpos=").append(parkPosition->currentText());
 	//}
-	buttonGroupUse->button(settings.value("use_position", USE_DEFAULT).toInt());
+	buttonGroupUse->button(mainObject->settings->value("use_position", USE_DEFAULT).toInt());
 
 	return args;
 }
@@ -563,61 +532,65 @@ QStringList AirportsWidget::get_args(){
 // Save Settings
 void AirportsWidget::save_settings(){
 
-	settings.setValue("use_position", buttonGroupUse->checkedId());
+	mainObject->settings->setValue("use_position", buttonGroupUse->checkedId());
 
-	settings.setValue("lat", txtLat->text());
-	settings.setValue("lng", txtLng->text());
-	settings.setValue("altitude", txtAltitude->text());
-	settings.setValue("heading", txtHeading->text());
-	settings.setValue("roll", txtRoll->text());
-	settings.setValue("pitch", txtPitch->text());
-	settings.setValue("airspeed", txtAirspeed->text());
+	mainObject->settings->setValue("lat", txtLat->text());
+	mainObject->settings->setValue("lng", txtLng->text());
+	mainObject->settings->setValue("altitude", txtAltitude->text());
+	mainObject->settings->setValue("heading", txtHeading->text());
+	mainObject->settings->setValue("roll", txtRoll->text());
+	mainObject->settings->setValue("pitch", txtPitch->text());
+	mainObject->settings->setValue("airspeed", txtAirspeed->text());
 
 	//** Save Airport
 	if(treeViewAirports->currentIndex().row() != -1){
-		QModelIndex index = proxyModel->index(treeViewAirports->currentIndex().row(), C_ICAO);
+		QModelIndex index = proxyModel->index(treeViewAirports->currentIndex().row(), CA_CODE);
 		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(index));
-		settings.setValue("airport", item->text());
+		mainObject->settings->setValue("airport", item->text());
 
 		//** save runway or parking
-		if(treeWidgetRunways->currentItem()){
-			// check its not one of the parents ie savable
-			if(treeWidgetRunways->indexOfTopLevelItem( treeWidgetRunways->currentItem()  ) != -1){
-				// TODO
+		if(treeWidgetAirportInfo->currentItem()){
+			//* check its not one of the parents ie savable
+			if(treeWidgetAirportInfo->indexOfTopLevelItem( treeWidgetAirportInfo->currentItem()  ) != -1){
+				//QString key = treeWidgetAirportInfo->currentItem()->text(CI_KEY);
+				//QString val = treeWidgetAirportInfo->currentItem()->text(CI_NODE);
+				//if(key == "runway"){
+				//	mainObject->
+				//}else if(key == "stand"):
+				//	stand = treeWidgetAirportInfo->currentItem()->text(CI_NODE);
+				qDebug() << "saved" << treeWidgetAirportInfo->currentItem()->text(CI_VAL);
+				mainObject->settings->setValue("runway_stand", treeWidgetAirportInfo->currentItem()->text(CI_VAL));
+			}else{
+				mainObject->settings->setValue("runway_stand", "");
 			}
 
+		}else{
+			mainObject->settings->setValue("runway_stand", "");
 		}
 	}
 
-	settings.sync();
+	mainObject->settings->sync();
 }
 
 
-//=============================================================
+//====================================================================
 // Load Settings
+// Restoring the airport/runway is done in the load_tree functions
+//====================================================================
 void AirportsWidget::load_settings(){
-	//select_node(settings.value("aircraft").toString());
-	/*if (settings.value("locationIcao").toString() != "") {
-		QString locationICAOSet = settings.value("locationIcao").toString();
-		locationIcao->insertItem(0, locationICAOSet);
-		locationIcao->insertItem(1, "----");
-	} else {
-		locationIcao->insertItem(0, "KSFO");
-		locationIcao->insertItem(1, "----");
-		//timeoftheDay->setCurrentIndex(0);
-	}*/
-	buttonGroupUse->button( settings.value("use_position", USE_DEFAULT).toInt() )->setChecked(true);
 
-	txtLat->setText(settings.value("lat").toString());
-	txtLng->setText(settings.value("lng").toString());
-	txtAltitude->setText(settings.value("altitude").toString());
-	txtHeading->setText(settings.value("heading").toString());
-	txtRoll->setText(settings.value("roll").toString());
-	txtPitch->setText(settings.value("pitch").toString());
-	txtAirspeed->setText(settings.value("airspeed").toString());
+	buttonGroupUse->button( mainObject->settings->value("use_position", USE_DEFAULT).toInt() )->setChecked(true);
+
+	txtLat->setText(mainObject->settings->value("lat").toString());
+	txtLng->setText(mainObject->settings->value("lng").toString());
+	txtAltitude->setText(mainObject->settings->value("altitude").toString());
+	txtHeading->setText(mainObject->settings->value("heading").toString());
+	txtRoll->setText(mainObject->settings->value("roll").toString());
+	txtPitch->setText(mainObject->settings->value("pitch").toString());
+	txtAirspeed->setText(mainObject->settings->value("airspeed").toString());
 
 	on_buttonGroupUse();
-	buttonGroupFilter->button(settings.value("airports_button_filter", 0).toInt())->setChecked(true);
+
 }
 
 
@@ -631,6 +604,10 @@ QString AirportsWidget::validate(){
 		if(txtLng->text().trimmed().length() == 0){
 			txtLng->setFocus();
 			return QString("Need Longtitude");
+		}
+	}else if(buttonGroupUse->checkedId() == USE_AIRPORT){
+		if (!treeViewAirports->selectionModel()->hasSelection()){
+			return QString(tr("No Airport selected"));
 		}
 	}
 
