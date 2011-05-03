@@ -223,7 +223,7 @@ void MainObject::on_properties_browser(){
 void MainObject::db_connect(){
 
 	trayIcon->showMessage("DB", "Opening DB");
-	qDebug() << "ENIGNE" << settings->value("db_engine").toString();
+
 	if (settings->value("db_engine").toString() == "QMYSQL"){
 		//** Setup MySql
 		db = QSqlDatabase::addDatabase("QMYSQL");
@@ -231,7 +231,6 @@ void MainObject::db_connect(){
 		db.setUserName(settings->value("db_user").toString());
 		db.setPassword(settings->value("db_pass").toString());
 		db.setDatabaseName(settings->value("db_database").toString());
-		qDebug() << "myyyyy";
 
 	}else if(settings->value("db_engine").toString() == "QSQLITE"){
 		db = QSqlDatabase::addDatabase("QSQLITE");

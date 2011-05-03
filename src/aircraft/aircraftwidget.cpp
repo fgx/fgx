@@ -76,46 +76,27 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     treeLayout->setSpacing(0);
 
 
-    //** Toolbar
-    QToolBar *treeToolbar = new QToolBar();
-    treeLayout->addWidget(treeToolbar);
-    treeToolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	//** Top Bar Layout
+	QHBoxLayout *treeTopBar = new QHBoxLayout();
+	treeLayout->addLayout(treeTopBar);
 
+	//==========================
+	//** Filter tabs
+	tabsView = new QTabBar();
+	tabsView->addTab(tr("View List"));
+	tabsView->addTab(tr("View Nested"));
+	treeTopBar->addWidget(tabsView);
+	connect(tabsView, SIGNAL(currentChanged(int)), this, SLOT(load_tree()));
 
-    //******************************************************
-    //** Filter Buttons
-	buttViewGroup = new QButtonGroup(this);
-    buttViewGroup->setExclusive(true);
-    connect(buttViewGroup, SIGNAL(buttonClicked(QAbstractButton*)),
-            this, SLOT(on_view_button_clicked(QAbstractButton*))
-    );
+	treeTopBar->addStretch(20);
 
-	QToolButton *buttList = new QToolButton();
-	buttList->setText("List");
-	buttList->setCheckable(true);
-	buttList->setIcon(QIcon(":/icon/pink"));
-	buttList->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttList->setChecked(true);
-	treeToolbar->addWidget(buttList);
-	buttViewGroup->addButton(buttList, V_LIST);
-
-
-	QToolButton *buttNested = new QToolButton();
-	buttNested->setText("Nested");
-	buttNested->setCheckable(true);
-	buttNested->setIcon(QIcon(":/icon/purple"));
-	buttNested->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-
-	treeToolbar->addWidget(buttNested);
-	buttViewGroup->addButton(buttNested, V_NESTED);
-
-	treeToolbar->addSeparator();
-
-	QAction *actionRefreshTree = new QAction(this);
-	treeToolbar->addAction(actionRefreshTree);
-	actionRefreshTree->setText("Import");
-	actionRefreshTree->setIcon(QIcon(":/icon/import"));
-	connect(actionRefreshTree, SIGNAL(triggered()), this, SLOT(on_refresh_cache()) );
+	QToolButton *actionReloadCacheDb = new QToolButton(this);
+	actionReloadCacheDb->setText("Import");
+	actionReloadCacheDb->setIcon(QIcon(":/icon/import"));
+	actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	actionReloadCacheDb->setAutoRaise(true);
+	treeTopBar->addWidget(actionReloadCacheDb);
+	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_db_cache()) );
 
 	//===============================================================
     //** Aircraft Tree
@@ -248,20 +229,6 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 
 
-void AircraftWidget::on_view_button_clicked(QAbstractButton *button){
-	Q_UNUSED(button);
-	if(buttViewGroup->checkedId() == V_LIST){
-		buttViewGroup->button(V_LIST)->setIcon(QIcon(":/icon/pink"));
-		buttViewGroup->button(V_NESTED)->setIcon(QIcon(":/icon/purple"));
-	}else{
-		buttViewGroup->button(V_LIST)->setIcon(QIcon(":/icon/purple"));
-		buttViewGroup->button(V_NESTED)->setIcon(QIcon(":/icon/pink"));
-	}
-	load_tree();
-}
-
-
-
 //==========================================================================
 // Aircraft Selected
 //==========================================================================
@@ -297,69 +264,6 @@ void AircraftWidget::on_tree_selection_changed(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-//========================================================
-//** Load Aircraft Shell
-void AircraftWidget::load_aircraft_shell(){
-
-	QString command = mainObject->settings->fgfs_path();
-	command.append(" --fg-root=").append(mainObject->settings->fg_root());
-	command.append(" --show-aircraft");
-
-	QProcess *process = new QProcess(this);
-	process->start(command);
-
-	QStringList::Iterator it;
-	QString line;
-	int row_count=0;
-
-	if(process->waitForStarted()){
-			process->waitForFinished();
-			QByteArray result =  process->readAllStandardOutput();
-			QByteArray errorResult = process->readAllStandardError();
-
-			//** The fgfs --show_a_mistake returns the "--help" and not an error output ;-(
-			//* so only way to detect is to get "-available aircraft" as text
-			QStringList lines = QString(result).split("\n");
-
-			for ( it = lines.begin() ; it != lines.end() ; it++ ){
-
-				line = it->simplified();
-
-				//* Unless first item == Available aircraft: then its an error (messy)
-				if(it == lines.begin()){
-					if(line  != "Available aircraft:"){
-						  //TODO emit("error")
-						return;
-					}else{
-						//  first_line
-
-					}
-				}else{
-					/*
-					QStandardItem *modelItem = new QStandardItem();
-					modelItem->setText( line.section( ' ', 0, 0 )); // first chars to space
-					model->setItem(row_count, 0, modelItem);
-					QStandardItem *descriptionItem = new QStandardItem();
-					descriptionItem->setText( line.section( ' ', 1 )); // after first space
-					model->setItem(row_count, 1, descriptionItem);
-					*/
-					row_count++;
-				}
-			}
-
-	}
-}
 
 
 //=============================================================
@@ -420,7 +324,7 @@ QString AircraftWidget::validate(){
 //=============================================================
 // Load Airraft To Tree
 
-void AircraftWidget::on_refresh_cache(){
+void AircraftWidget::on_reload_db_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 
 	//* scan Airaft dirs and save in db
@@ -439,7 +343,7 @@ void AircraftWidget::load_tree(){
 	QString last_dir("");
 	QTreeWidgetItem *parentItem;
 
-	int view = buttViewGroup->checkedId();
+	int view = tabsView->currentIndex();
 	treeWidget->setColumnHidden(C_DIR, view == V_LIST);
 	treeWidget->setRootIsDecorated(view == V_NESTED);
 

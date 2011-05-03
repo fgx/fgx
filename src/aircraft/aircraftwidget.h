@@ -9,6 +9,7 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QLineEdit>
 #include <QtGui/QTreeWidget>
+#include <QtGui/QTabBar>
 #include <QtGui/QLabel>
 #include <QtGui/QStatusBar>
 
@@ -37,7 +38,7 @@ public:
 	MainObject *mainObject;
 
 	QLabel *aeroImageLabel;
-	QButtonGroup *buttViewGroup;
+	QTabBar *tabsView;
 
 	QLineEdit *txtNav1;
 	QLineEdit *txtNav2;
@@ -69,13 +70,9 @@ signals:
 
 public slots:
 	void load_tree();
-	void load_aircraft_shell();
-	//QStringList scan_xml_sets();
 
 	void on_tree_selection_changed();
-
-    void on_view_button_clicked(QAbstractButton *button);
-	void on_refresh_cache();
+	void on_reload_db_cache();
 };
 
 #endif // AIRCRAFTWIDGET_H
