@@ -399,7 +399,7 @@ void AirportsWidget::load_info_tree(QString airport_code){
 	}else if(runways_count == 1){
 		count_label.append(tr("One runway"));
 	}else{
-		count_label.append("%s runways").arg(runways_count);
+		count_label.append(QString::number(runways_count)).append(" runways");
 	}
 
 	count_label.append(" / ");
@@ -410,7 +410,7 @@ void AirportsWidget::load_info_tree(QString airport_code){
 	}else if(stands_count == 1){
 		count_label.append(tr("One stand"));
 	}else{
-		count_label.append("%s stands").arg(runways_count);
+		count_label.append(QString::number(stands_count)).append(" stands");
 	}
 
 	statusBarAirportInfo->showMessage(count_label);
