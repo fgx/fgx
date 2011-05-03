@@ -1,7 +1,9 @@
 
 /*
+  ######### IMPORTANT ############
 
   THIS CLASS IS LEGACY.. WILL BE REMOVED SOON
+
   */
 
 #include <QtGui/QProgressDialog>
