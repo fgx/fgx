@@ -235,7 +235,11 @@ void MainObject::db_connect(){
 
 	}else if(settings->value("db_engine").toString() == "QSQLITE"){
 		db = QSqlDatabase::addDatabase("QSQLITE");
-		db.setDatabaseName(QDesktopServices::storageLocation(QDesktopServices::DataLocation).append("fgx-launcher.sqlite.db"));
+		QString db_path(QDesktopServices::storageLocation(QDesktopServices::DataLocation));
+		db_path.append("-fgx-launcher.sqlite.db");
+		qDebug() << db_path;
+		db.setDatabaseName(db_path);
+
 	}else{
 		trayIcon->showMessage("DB Error", "Could not open DB", QSystemTrayIcon::Critical, 5000);
 		emit(show_settings(1));
@@ -245,7 +249,7 @@ void MainObject::db_connect(){
 
 	//* Catch DB Open error
 	if(!db.open()){
-		qDebug() << db.lastError();
+		qDebug() << db.lastError().text();
 		trayIcon->showMessage("DB Error", "Could not open DB", QSystemTrayIcon::Critical, 5000);
 		db.close();
 		emit(show_settings(1));
