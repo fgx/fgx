@@ -138,7 +138,7 @@ void AirportsImport::import_airports(){
 			//* Insert airport_code to airports table == primary key
 			sqlAirportInsert.bindValue(0, airport_code);
 			if(!sqlAirportInsert.exec()){
-				//qDebug() << "CRASH" << mainObject->db.lastError() << "=" << c;
+				qDebug() << "CRASH" << mainObject->db.lastError() << "=" << c;
 				// TODO catch error log
 			}else{
 				listAirportCodes.append(airport_code);
@@ -156,12 +156,6 @@ void AirportsImport::import_airports(){
 
 		if(progressDialog.wasCanceled()){
 			return;
-		}
-		if(c == 5000){
-			//qDebug() <<  "<, KILLED CRASH out";
-			//progress.hide();
-			//return;
-			break;
 		}
 	}
 
