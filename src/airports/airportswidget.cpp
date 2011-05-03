@@ -447,7 +447,7 @@ int AirportsWidget::load_runways_node(QString airport_code){
 	while(query.next()){
 		QTreeWidgetItem *iRunway = new QTreeWidgetItem(runwaysParent);
 		iRunway->setText(CI_NODE, query.value(0).toString());
-		iRunway->setText(CI_KEY, QString("runway_").append(query.value(0).toString()));
+		iRunway->setText(CI_SETTING_KEY, QString("runway_").append(query.value(0).toString()));
 
 		QTreeWidgetItem *iHeading = new QTreeWidgetItem(iRunway);
 		iHeading->setText(CI_NODE, query.value(1).toString());
@@ -486,7 +486,7 @@ int AirportsWidget::load_parking_node(QString airport_code){
 	while(query.next()){
 		QTreeWidgetItem *item = new QTreeWidgetItem(parkingParent);
 		item->setText(CI_NODE, query.value(0).toString());
-		item->setText(CI_VAL, QString("stand_").append(query.value(0).toString()));
+		item->setText(CI_SETTING_KEY, QString("stand_").append(query.value(0).toString()));
 	}
 
 	//* return the count
@@ -558,8 +558,8 @@ void AirportsWidget::save_settings(){
 				//	mainObject->
 				//}else if(key == "stand"):
 				//	stand = treeWidgetAirportInfo->currentItem()->text(CI_NODE);
-				qDebug() << "saved" << treeWidgetAirportInfo->currentItem()->text(CI_VAL);
-				mainObject->settings->setValue("runway_stand", treeWidgetAirportInfo->currentItem()->text(CI_VAL));
+				qDebug() << "saved" << treeWidgetAirportInfo->currentItem()->text(CI_SETTING_KEY);
+				mainObject->settings->setValue("runway_stand", treeWidgetAirportInfo->currentItem()->text(CI_SETTING_KEY));
 			}else{
 				mainObject->settings->setValue("runway_stand", "");
 			}
