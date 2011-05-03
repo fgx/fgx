@@ -235,10 +235,7 @@ void MainObject::db_connect(){
 
 	}else if(settings->value("db_engine").toString() == "QSQLITE"){
 		db = QSqlDatabase::addDatabase("QSQLITE");
-		QString db_path(QDesktopServices::storageLocation(QDesktopServices::DataLocation));
-		db_path.append("-fgx-launcher.sqlite.db");
-		qDebug() << db_path;
-		db.setDatabaseName(db_path);
+		db.setDatabaseName(settings->db_file());
 
 	}else{
 		trayIcon->showMessage("DB Error", "Could not open DB", QSystemTrayIcon::Critical, 5000);
@@ -341,21 +338,4 @@ void MainObject::on_telnet_connected(bool state){
     trayIcon->setIcon(QIcon(state ? ":/icons/connect" : ":/icons/disconnect"));
     actionTelnetConnect->setDisabled(state);
     actionTelnetDisconnect->setDisabled(!state);
-}
-
-//=====================================
-QString MainObject::runningOS() {
-	#ifdef Q_WS_X11
-	return QString("linux");
-	#endif
-
-	#ifdef Q_WS_MAC
-	return QString("mac");
-	#endif
-
-	#ifdef Q_WS_WIN
-	return QString("windows");
-	#endif
-
-	return QString("unknown");
 }
