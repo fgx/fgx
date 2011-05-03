@@ -113,8 +113,8 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 	QAction *actionRefreshTree = new QAction(this);
 	treeToolbar->addAction(actionRefreshTree);
-	actionRefreshTree->setText("Reload");
-	actionRefreshTree->setIcon(QIcon(":/icon/refresh"));
+	actionRefreshTree->setText("Import");
+	actionRefreshTree->setIcon(QIcon(":/icon/import"));
 	connect(actionRefreshTree, SIGNAL(triggered()), this, SLOT(on_refresh_cache()) );
 
 	//===============================================================

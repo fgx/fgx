@@ -31,7 +31,7 @@ public slots:
 	void load_settings();
 	void save_settings();
 
-	void on_combo_engine(int);
+	void on_combo_engine();
 	void on_test_connection();
 };
 

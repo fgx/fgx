@@ -39,7 +39,7 @@ DbSettingsWidget::DbSettingsWidget(MainObject *mOb, QWidget *parent) :
 	comboDbType->addItem("Sqlite", "QSQLITE");
 	comboDbType->addItem("mySql", "QMYSQL");
 	layoutServer->addWidget(comboDbType, row, 1);
-	connect(comboDbType, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_engine(int)));
+	connect(comboDbType, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_engine()));
 
 
 	//* Host
@@ -86,7 +86,7 @@ DbSettingsWidget::DbSettingsWidget(MainObject *mOb, QWidget *parent) :
 	statusBar->setSizeGripEnabled(false);
 	layoutServer->addWidget(statusBar, row, 0, 1, 2);
 
-
+	on_combo_engine();
 }
 
 
@@ -116,8 +116,8 @@ void DbSettingsWidget::load_settings(){
 
 //=======================================================
 //* On Combo Engine changed
-void DbSettingsWidget::on_combo_engine(int idx){
-	bool enabled = idx == 1;
+void DbSettingsWidget::on_combo_engine(){
+	bool enabled = comboDbType->currentIndex() == 1;
 	txtHost->setEnabled(enabled);
 	txtUser->setEnabled(enabled);
 	txtPass->setEnabled(enabled);
