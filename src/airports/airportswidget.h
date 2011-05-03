@@ -101,8 +101,7 @@ public slots:
 
 	void on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx);
 
-	void on_import_aptdat_clicked();
-	void on_rescan_xml_clicked();
+	void on_reload_cache();
 
 	void on_buttonGroupUse();
 };

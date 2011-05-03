@@ -22,8 +22,8 @@ AirportsImport::AirportsImport(QObject *parent, MainObject *mOb) :
 
 	mainObject = mOb;
 
-	progressDialog.setWindowModality(Qt::WindowModal);
-	progressDialog.hide();
+	//progressDialog.setWindowModality(Qt::WindowModal);
+	//progressDialog.hide();
 
 }
 
@@ -33,7 +33,7 @@ AirportsImport::AirportsImport(QObject *parent, MainObject *mOb) :
 //============================================================================
 void AirportsImport::create_db_tables(){
 
-	progressDialog.setLabelText(tr("Destroy and Create database tables"));
+
 	//* Drop and recreate the tables - then index after index later for speed..
 	QStringList sql_commands;
 	sql_commands.append("DROP TABLE IF EXISTS airports;");
@@ -54,7 +54,7 @@ void AirportsImport::create_db_tables(){
 //============================================================================
 void AirportsImport::create_db_indexes(){
 
-	progressDialog.setLabelText(tr("Create database indexes"));
+
 	//* Create the indexes.. we only really nees the airport_code,, runways an parking are done in GUI atmo
 	QStringList sql_commands;
 	sql_commands.append("CREATE INDEX airport_code_idx ON runways (airport_code);");
@@ -91,18 +91,19 @@ void AirportsImport::execute_sql_commands_list(QStringList sql_commands){
 // * The runways, ils, and stands imported (ils unused atmo)
 // * Create the db index
 // * Import AptDat
-void AirportsImport::import_airports(){
+void AirportsImport::import_airports(QWidget *parent){
 
 	int c = 0;
 	int found = 0;
 
 	//=================================
 	//** Show Progress as this takes time
-	progressDialog.setLabelText("Loading Airports to Cache");
-	progressDialog.setRange(0, 20000);
+	QProgressDialog progressDialog(tr("Scanning Airports to Database"), tr("Cancel"), 0, 20000);
+	progressDialog.setWindowModality(Qt::WindowModal);
 	progressDialog.show();
 
 	//* Drop and recreate database tables
+	progressDialog.setLabelText(tr("Creating database tables"));
 	create_db_tables();
 
 	//* Insert Airport query
@@ -114,7 +115,7 @@ void AirportsImport::import_airports(){
 	//* Get out aiports path from setings and get the the subdir also
 	QDirIterator loopAirportsFiles( mainObject->settings->airports_path(), QDirIterator::Subdirectories );
 	QString xFileName;
-
+	progressDialog.setLabelText(tr("Scanning XML files"));
 	while (loopAirportsFiles.hasNext()) {
 
 		//* Get file handle if there is one
@@ -128,20 +129,18 @@ void AirportsImport::import_airports(){
 			QFileInfo fileInfoThreshold(xFileName);
 			QString airport_code = fileInfoThreshold.fileName().split(".").at(0);
 
-			//* Update progress periodically
-			if (c % 1000 == 0){
-				progressDialog.setValue(c);
-				QString progLabel = QString("%2").arg(c).arg(airport_code);
-				progressDialog.setLabelText(progLabel);
-			}
+			//* Update progress
+			progressDialog.setValue(progressDialog.value() + 1);
+			progressDialog.setLabelText(airport_code);
 
 			//* Insert airport_code to airports table == primary key
 			sqlAirportInsert.bindValue(0, airport_code);
 			if(!sqlAirportInsert.exec()){
-				//qDebug() << "CRASH" << mainObject->db.lastError() << "=" << c;
+				qDebug() << "CRASH" << mainObject->db.lastError() << "=" << c;
 				// TODO catch error log
 			}else{
-				listAirportCodes.append(airport_code);
+				//listAirportCodes.append(airport_code);
+				//qDebug() << airport_code;
 			}
 
 			//* Parse the XML files
@@ -160,10 +159,11 @@ void AirportsImport::import_airports(){
 	}
 
 	//* Create the database indexes
+	progressDialog.setLabelText(tr("Creating database indexes"));
 	create_db_indexes();
 
 	//* Import APTDAT
-	parse_aptdat();
+	//parse_aptdat();
 
 	progressDialog.hide();
 }
@@ -384,7 +384,7 @@ void AirportsImport::parse_parking_xml(QDir dir, QString airport_code){
 //====================================================================================================
 // Parse apt.dat file.. ta Robin
 //====================================================================================================
-void AirportsImport::parse_aptdat(){
+void AirportsImport::parse_aptdat(QProgressDialog progressDialog){
 
 	progressDialog.setLabelText("Parsing AptDat");
 	progressDialog.setRange(0, 1510000);
@@ -488,7 +488,7 @@ void AirportsImport::update_aptdat_airport(QStringList parts){
 		for(int p = 5; p < parts.size(); p++){ //** loop to the end to get description (spit on spaces..) - TODO neater way
 			airport_name.append(parts[p]).append(" ");
 		}
-		queryAirportUpdate.bindValue(0,airport_name.trimmed()  );
+		queryAirportUpdate.bindValue(0, airport_name.trimmed() );
 		queryAirportUpdate.bindValue(1, airport_code  );
 		if(!queryAirportUpdate.exec()){
 			qDebug() << queryAirportUpdate.lastError();

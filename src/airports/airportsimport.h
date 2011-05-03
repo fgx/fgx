@@ -22,8 +22,8 @@ public:
 	QStringList listParkingPositions;
 	QStringList listAirportCodes;
 
-	QProgressDialog progressDialog;
-	void import_airports();
+	//QProgressDialog progressDialog;
+	void import_airports(QWidget *parent);
 	
 	void execute_sql_commands_list(QStringList sql_commands);
 	void create_db_tables();
@@ -34,7 +34,7 @@ public:
 	void parse_ils_xml(QDir dir, QString airport_code);
 	void parse_parking_xml(QDir dir, QString airport_code);
 
-	void parse_aptdat();
+	void parse_aptdat(QProgressDialog progressDialog);
 	void update_aptdat_airport(QStringList parts);
 
 

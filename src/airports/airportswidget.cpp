@@ -6,7 +6,7 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 
-
+#include <QtGui/QMessageBox>
 #include <QtGui/QSizePolicy>
 #include <QtGui/QFont>
 
@@ -26,6 +26,8 @@
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QHeaderView>
+
+
 
 
 #include "airports/airportswidget.h"
@@ -123,23 +125,15 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	layoutAptTopBar->addStretch(20);
 
-	/* DEAD for now
-	QPushButton *buttonImportAirports = new QPushButton(this);
-	layoutAptTopBar->addWidget(buttonImportAirports);
-	buttonImportAirports->setText("Reload");
-	buttonImportAirports->setToolTip("Scan directories and reload cache");
-	buttonImportAirports->setIcon(QIcon(":/icon/import"));
-	buttonImportAirports->setFlat(true);
-	connect(buttonImportAirports, SIGNAL(clicked()), this, SLOT(on_import_aptdat_clicked()) );
-	*/
 
-	QPushButton *buttonRefreshAirports = new QPushButton(this);
-	layoutAptTopBar->addWidget(buttonRefreshAirports);
-	buttonRefreshAirports->setText("Import");
-	buttonRefreshAirports->setToolTip("Scan directories and reload cache");
-	buttonRefreshAirports->setIcon(QIcon(":/icon/import"));
-	buttonRefreshAirports->setFlat(true);
-	connect(buttonRefreshAirports, SIGNAL(clicked()), this, SLOT(on_rescan_xml_clicked()) );
+	QToolButton *buttonReloadCache = new QToolButton(this);
+	layoutAptTopBar->addWidget(buttonReloadCache);
+	buttonReloadCache->setText("Import");
+	buttonReloadCache->setToolTip("Scan directories and reload cache");
+	buttonReloadCache->setIcon(QIcon(":/icon/import"));
+	buttonReloadCache->setAutoRaise(true);
+	buttonReloadCache->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	connect(buttonReloadCache, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
 
 	//*==============================================================================
@@ -497,19 +491,19 @@ int AirportsWidget::load_parking_node(QString airport_code){
 
 
 
-//===========================================================================
-void AirportsWidget::on_import_aptdat_clicked(){
-	ImportAirportsWidget *widget = new ImportAirportsWidget();
-	widget->setWindowModality(Qt::WindowModal);
-	widget->show();
-}
 
-void AirportsWidget::on_rescan_xml_clicked(){
-	qDebug() << "Refresh Clicked <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
-	//scan_airports_xml();
+void AirportsWidget::on_reload_cache(){
+
+	int resp = QMessageBox::information(this, tr("Import Airports Cache"),
+										tr("Importing airports can take some time. Click Ok to continue."),
+										QMessageBox::Cancel | QMessageBox::Ok);
+	if(resp == QMessageBox::Cancel){
+		return;
+	}
+
 	AirportsImport *airportsImport = new AirportsImport(this, mainObject);
-	airportsImport->import_airports();
-	//load_airports_tree();
+	airportsImport->import_airports(this);
+	load_airports_tree();
 }
 
 void AirportsWidget::on_buttonGroupUse(){

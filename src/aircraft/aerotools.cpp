@@ -36,7 +36,7 @@ void AeroTools::scan_xml_sets(){
 
 	int c = 0;
 	int found = 0;
-	QProgressDialog progress("Scanning Aircraft to Database", "Cancel", 0, 0);
+	QProgressDialog progress(tr("Scanning Aircraft to Database"), tr("Cancel"), 0, 0);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.show();
 

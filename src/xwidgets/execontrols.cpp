@@ -18,7 +18,6 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 {
 	exe_name = exeCmd;
 	setTitle(title);
-	setMaximumWidth(150);
 
 	//** Grid layout just in case..
 	QVBoxLayout *layout = new QVBoxLayout();
