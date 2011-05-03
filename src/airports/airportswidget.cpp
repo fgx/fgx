@@ -226,7 +226,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	treeWidgetAirportInfo->setAlternatingRowColors(true);
 	treeWidgetAirportInfo->setRootIsDecorated(true);
 	QTreeWidgetItem *headerItem = treeWidgetAirportInfo->headerItem();
-	headerItem->setText(CI_NODE, tr("Startup Position"));
+	headerItem->setText(CI_NODE, tr(""));
     headerItem->setText(1, tr("Width"));
     headerItem->setText(2, tr("Length"));
     headerItem->setText(3, tr("Lat"));
