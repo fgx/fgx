@@ -28,7 +28,8 @@ Q_OBJECT
 public:
 	enum AIPORTS_TREE_COLS{
 		CA_CODE = 0,
-		CA_NAME = 1
+		CA_NAME = 1,
+		CA_DIR = 2
     };
 	enum AIRPORT_INFO_TREE_COLS{
 		CI_NODE = 0,
@@ -71,9 +72,9 @@ public:
 
 	void load_airports_tree();
 
-	void load_info_tree(QString airport_code);
-	int load_runways_node(QString airport_code);
-	int load_parking_node(QString airport_code);
+	void load_info_tree(QString airport_dir, QString airport_code);
+	int load_runways_node(QString airport_dir, QString airport_code);
+	int load_parking_node(QString airport_dir, QString airport_code);
 
 	QLineEdit *txtLat;
 	QLineEdit *txtLng;

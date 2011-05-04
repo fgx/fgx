@@ -40,7 +40,7 @@ void AirportsImport::create_db_tables(){
 	sql_commands.append("DROP TABLE IF EXISTS runways;");
 	sql_commands.append("DROP TABLE IF EXISTS ils;");
 	sql_commands.append("DROP TABLE IF EXISTS parking;");
-	sql_commands.append("CREATE TABLE airports(code varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL);");
+	sql_commands.append("CREATE TABLE airports(code varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL, dir varchar(255) NOT NULL);");
 	sql_commands.append("CREATE TABLE runways(airport_code varchar(10) NOT NULL, runway varchar(15), length int, lat float, lon float, heading float );");
 	sql_commands.append("CREATE TABLE ils(airport_code varchar(10) NOT NULL, runway varchar(15) NOT NULL, ident varchar(10), lat float, lon float, heading float );");
 	sql_commands.append("CREATE TABLE stands(airport_code varchar(10) NOT NULL, stand varchar(50), lat varchar(10), lon varchar(10), heading float );");
@@ -108,7 +108,7 @@ void AirportsImport::import_airports(QWidget *parent){
 
 	//* Insert Airport query
 	QSqlQuery sqlAirportInsert(mainObject->db);
-	sqlAirportInsert.prepare("INSERT INTO airports(code)VALUES(?);");
+	sqlAirportInsert.prepare("INSERT INTO airports(code, dir)VALUES(?,?);");
 
 	//================================================
 	//* Lets Loop the directories
@@ -135,18 +135,19 @@ void AirportsImport::import_airports(QWidget *parent){
 
 			//* Insert airport_code to airports table == primary key
 			sqlAirportInsert.bindValue(0, airport_code);
+			sqlAirportInsert.bindValue(1, fileInfoThreshold.absoluteDir().absolutePath());
 			if(!sqlAirportInsert.exec()){
 				qDebug() << "CRASH" << mainObject->db.lastError() << "=" << c;
 				// TODO catch error log
 			}else{
 				//listAirportCodes.append(airport_code);
-				//qDebug() << airport_code;
+				//qDebug() << airport_code << " = " << fileInfoThreshold.absoluteDir().absolutePath();
 			}
 
 			//* Parse the XML files
-			parse_runways_xml(fileInfoThreshold.absoluteDir(), airport_code);
-			parse_ils_xml(fileInfoThreshold.absoluteDir(), airport_code);
-			parse_parking_xml(fileInfoThreshold.absoluteDir(), airport_code);
+			//parse_runways_xml(fileInfoThreshold.absoluteDir(), airport_code);
+			//parse_ils_xml(fileInfoThreshold.absoluteDir(), airport_code);
+			//parse_parking_xml(fileInfoThreshold.absoluteDir(), airport_code);
 
 
 
@@ -199,8 +200,11 @@ void AirportsImport::import_airports(QWidget *parent){
 void AirportsImport::parse_runways_xml(QDir dir, QString airport_code){
 
 	//* Prepare the Insert Runway Query
-	QSqlQuery sqlRunwayInsert(mainObject->db);
-	sqlRunwayInsert.prepare("INSERT INTO runways(airport_code, runway, heading, lat, lon)VALUES(?,?,?,?,?);");
+
+	//QSqlQuery sqlRunwayInsert(mainObject->db);
+	//sqlRunwayInsert.prepare("INSERT INTO runways(airport_code, runway, heading, lat, lon)VALUES(?,?,?,?,?);");
+	QStringList attribs;
+	attribs << "rwy" << "hdg-deg" << "lat" << "lon";
 
 	//* Get the contents of the file whcile is path and code..
 	QFile fileXmlThrehsold(dir.absolutePath().append("/").append(airport_code).append(".threshold.xml"));
@@ -215,9 +219,18 @@ void AirportsImport::parse_runways_xml(QDir dir, QString airport_code){
 
 	//* Get threhold nodes and loop for values to database
 	QDomNodeList nodesThreshold = dom.elementsByTagName("threshold");
+
+
+
 	if (nodesThreshold.count() > 0){
 		for(int idxd =0; idxd < nodesThreshold.count(); idxd++){
 			 QDomNode thresholdNode = nodesThreshold.at(idxd);
+			 QHash<QString, QString> hash;
+			 for(int i=0; i < attribs.size(); i++){
+				 hash[attribs.at(i)] = thresholdNode.firstChildElement(attribs.at(i)).text();
+			 }
+
+			 /*
 			 sqlRunwayInsert.bindValue(0, airport_code);
 			 sqlRunwayInsert.bindValue(1, thresholdNode.firstChildElement("rwy").text());
 			 sqlRunwayInsert.bindValue(2, thresholdNode.firstChildElement("hdg-deg").text());
@@ -226,6 +239,9 @@ void AirportsImport::parse_runways_xml(QDir dir, QString airport_code){
 			 if(!sqlRunwayInsert.exec()){
 				//* TODO - ignore error for now
 			 }
+			 */
+
+			// emit(SIGNAL("runway"), hash);
 		}
 	}
 }
