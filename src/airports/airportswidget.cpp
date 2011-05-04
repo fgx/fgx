@@ -192,11 +192,11 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	treeViewAirports->setSelectionBehavior(QAbstractItemView::SelectRows);
 	treeViewAirports->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-	//** Headers and columns
+	//* Headers and columns
 	treeViewAirports->header()->setStretchLastSection(true);
 	treeViewAirports->setColumnWidth(CA_CODE, 80);
 	treeViewAirports->setColumnWidth(CA_NAME, 50);
-	treeViewAirports->setColumnWidth(CA_DIR, 50);
+	treeViewAirports->setColumnHidden(CA_DIR, true);
 
 	connect( treeViewAirports->selectionModel(),
 			 SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ),
@@ -232,11 +232,11 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
     headerItem->setText(3, tr("Lat"));
     headerItem->setText(4, tr("Lng"));
     headerItem->setText(5, tr("Alignment"));
-	//treeWidgetAirportInfo->setColumnHidden(1,true);
-	//treeWidgetAirportInfo->setColumnHidden(2,true);
-	//treeWidgetAirportInfo->setColumnHidden(3,true);
-	//treeWidgetAirportInfo->setColumnHidden(4,true);
-	//treeWidgetAirportInfo->setColumnHidden(5,true);
+	treeWidgetAirportInfo->setColumnHidden(1,true);
+	treeWidgetAirportInfo->setColumnHidden(2,true);
+	treeWidgetAirportInfo->setColumnHidden(3,true);
+	treeWidgetAirportInfo->setColumnHidden(4,true);
+	treeWidgetAirportInfo->setColumnHidden(5,true);
 
 
 	statusBarAirportInfo = new QStatusBar();
@@ -558,13 +558,17 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 
 				//* Check it doesnt already exist - pete is confused as to multiple entries
 				 if(!listParkingPositions.contains(attribs.namedItem("name").nodeValue())){
+					 if(attribs.namedItem("type").nodeValue() == "gate"){
 
-					QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
-					pItem->setText(CI_NODE, attribs.namedItem("name").nodeValue());
-					pItem->setText(CI_TYPE, "stand");
+						QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
+						QString gate(attribs.namedItem("name").nodeValue());
+						gate.append(attribs.namedItem("number").nodeValue());
+						pItem->setText(CI_NODE, gate);
+						pItem->setText(CI_TYPE, "stand");
 
-					//* Append position to eliminate dupes
-					listParkingPositions.append(attribs.namedItem("name").nodeValue());
+						//* Append position to eliminate dupes
+						listParkingPositions.append(attribs.namedItem("name").nodeValue());
+					}
 				}
 			}
 
