@@ -555,19 +555,20 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 
 				 QDomNode parkingNode = parkingNodes.at(idxd);
 				 QDomNamedNodeMap attribs = parkingNode.attributes();
+				 QString gate(attribs.namedItem("name").nodeValue());
+				 gate.append(attribs.namedItem("number").nodeValue());
 
 				//* Check it doesnt already exist - pete is confused as to multiple entries
-				 if(!listParkingPositions.contains(attribs.namedItem("name").nodeValue())){
+				 if(!listParkingPositions.contains(gate)){
 					 if(attribs.namedItem("type").nodeValue() == "gate"){
 
 						QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
-						QString gate(attribs.namedItem("name").nodeValue());
-						gate.append(attribs.namedItem("number").nodeValue());
+
 						pItem->setText(CI_NODE, gate);
 						pItem->setText(CI_TYPE, "stand");
 
 						//* Append position to eliminate dupes
-						listParkingPositions.append(attribs.namedItem("name").nodeValue());
+						listParkingPositions.append(gate);
 					}
 				}
 			}
