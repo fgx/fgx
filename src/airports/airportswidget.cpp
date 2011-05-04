@@ -225,6 +225,8 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	airportInfoLayout->addWidget(treeWidgetAirportInfo, 3);
 	treeWidgetAirportInfo->setAlternatingRowColors(true);
 	treeWidgetAirportInfo->setRootIsDecorated(true);
+	//treeWidgetAirportInfo->setSortingEnabled(true);
+
 	QTreeWidgetItem *headerItem = treeWidgetAirportInfo->headerItem();
 	headerItem->setText(CI_NODE, tr(""));
     headerItem->setText(1, tr("Width"));
@@ -562,10 +564,6 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 				 if(!listParkingPositions.contains(gate)){
 					 if(attribs.namedItem("type").nodeValue() == "gate"){
 
-						QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
-
-						pItem->setText(CI_NODE, gate);
-						pItem->setText(CI_TYPE, "stand");
 
 						//* Append position to eliminate dupes
 						listParkingPositions.append(gate);
@@ -573,9 +571,19 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 				}
 			}
 
-		}else{
+		}
+
+		if(listParkingPositions.length() == 0){
 			QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
 			pItem->setText(CI_NODE, "None");
+			return 0;
+		}else{
+			listParkingPositions.sort();
+			for(int i =0; i < listParkingPositions.size(); i++){
+				QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
+				pItem->setText(CI_NODE, listParkingPositions.at(i));
+				pItem->setText(CI_TYPE, "stand");
+			}
 		}
 	} /* File Exists */
 
