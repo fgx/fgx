@@ -480,17 +480,24 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 
 	//* Get threhold nodes
 	QDomNodeList nodesThreshold = dom.elementsByTagName("threshold");
+	QStringList list;
 
 	if (nodesThreshold.count() > 0){
 		for(int idxd =0; idxd < nodesThreshold.count(); idxd++){
 			//* Nodes "rwy" << "hdg-deg" << "lat" << "lon";
 			QDomNode thresholdNode = nodesThreshold.at(idxd);
-			QTreeWidgetItem *rItem = new QTreeWidgetItem(runwaysParent);
-			rItem->setText(CI_NODE, thresholdNode.firstChildElement("rwy").text());
-			rItem->setText(CI_TYPE, "runway");
+			list << thresholdNode.firstChildElement("rwy").text();
 		}
 	}
 
+	if(list.size() > 0){
+		list.sort();
+		for(int i = 0; i  < list.size(); i++){
+			QTreeWidgetItem *rItem = new QTreeWidgetItem(runwaysParent);
+			rItem->setText(CI_NODE, list.at(i));
+			rItem->setText(CI_TYPE, "runway");
+		}
+	}
 
 	return runwaysParent->childCount();
 }
@@ -573,7 +580,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 
 		}
 
-		if(listParkingPositions.length() == 0){
+		if(listParkingPositions.size() == 0){
 			QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
 			pItem->setText(CI_NODE, "None");
 			return 0;
