@@ -64,7 +64,7 @@ MainObject::MainObject(QObject *parent) :
 
     actionCallsign = new QWidgetAction(this);
     lblCallsign = new QLabel();
-    lblCallsign->setText("CALLSIGN");
+    lblCallsign->setText("(your callsign)");
     lblCallsign->setStyleSheet("color: #ff0000; padding: 0px; font-weight: bold;");
     actionCallsign->setDefaultWidget(lblCallsign);
 
@@ -80,28 +80,28 @@ MainObject::MainObject(QObject *parent) :
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));
 
     //**** Telnet Menu
-    QMenu *actionTelnetMenu = new QMenu();    
-    popupMenu->addMenu(actionTelnetMenu);
-    actionTelnetMenu->setTitle("Telnet");
+    //QMenu *actionTelnetMenu = new QMenu();    
+    //popupMenu->addMenu(actionTelnetMenu);
+    //actionTelnetMenu->setTitle("Telnet");
 
-    actionTelnetConnect = new QAction(actionTelnetMenu);
-    actionTelnetMenu->addAction(actionTelnetConnect);
-    actionTelnetConnect->setText(tr("Connect"));
-    actionTelnetConnect->setIcon(QIcon(":/icons/connect"));
-	actionTelnetConnect->setIconVisibleInMenu(true);
-    connect(actionTelnetConnect, SIGNAL(triggered()),
-            this, SLOT(on_telnet_connect_action())
-    );
+    //actionTelnetConnect = new QAction(actionTelnetMenu);
+    //actionTelnetMenu->addAction(actionTelnetConnect);
+    //actionTelnetConnect->setText(tr("Connect"));
+    //actionTelnetConnect->setIcon(QIcon(":/icons/connect"));
+	//actionTelnetConnect->setIconVisibleInMenu(true);
+    //connect(actionTelnetConnect, SIGNAL(triggered()),
+    //        this, SLOT(on_telnet_connect_action())
+    //);
 
-    actionTelnetDisconnect = new QAction(actionTelnetMenu);
-    actionTelnetMenu->addAction(actionTelnetDisconnect);
-    actionTelnetDisconnect->setText(tr("Disconnect"));
-    actionTelnetDisconnect->setIcon(QIcon(":/icons/disconnect"));
-	actionTelnetDisconnect->setIconVisibleInMenu(true);
-    actionTelnetDisconnect->setDisabled(true);
-    connect(actionTelnetDisconnect, SIGNAL(triggered()),
-            this, SLOT(on_telnet_disconnect_action())
-    );
+    //actionTelnetDisconnect = new QAction(actionTelnetMenu);
+    //actionTelnetMenu->addAction(actionTelnetDisconnect);
+    //actionTelnetDisconnect->setText(tr("Disconnect"));
+    //actionTelnetDisconnect->setIcon(QIcon(":/icons/disconnect"));
+	//actionTelnetDisconnect->setIconVisibleInMenu(true);
+    //actionTelnetDisconnect->setDisabled(true);
+    //connect(actionTelnetDisconnect, SIGNAL(triggered()),
+    //        this, SLOT(on_telnet_disconnect_action())
+    //);
 
 	//*** Properties
 	//QAction *actionPropsBrowser= new QAction(this);
@@ -117,7 +117,7 @@ MainObject::MainObject(QObject *parent) :
     //*** Settings
     QAction *actionSettings= new QAction(this);
     actionSettings->setIcon(QIcon(":/icons/settings"));
-    actionSettings->setText(tr("Settings"));
+    actionSettings->setText(tr("Path and database settings"));
 	actionSettings->setIconVisibleInMenu(true);
     popupMenu->addAction(actionSettings);
     connect(actionSettings, SIGNAL(triggered()),
