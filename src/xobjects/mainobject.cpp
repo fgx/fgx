@@ -71,11 +71,11 @@ MainObject::MainObject(QObject *parent) :
 	popupMenu->addAction(actionCallsign);
 
 
-	actionLauncher = popupMenu->addAction(QIcon(":/icon/favicon"), tr("Launcher"));
+	actionLauncher = popupMenu->addAction(tr("Launcher"));
 	actionLauncher->setIconVisibleInMenu(true);
 	connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
 
-	actionMpMap = popupMenu->addAction(QIcon(":/icon/mpmap"), tr("Start Map Widget"));
+	actionMpMap = popupMenu->addAction(tr("Start Map Widget"));
 	actionMpMap->setIconVisibleInMenu(true);
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));
 
