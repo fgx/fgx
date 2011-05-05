@@ -135,9 +135,9 @@ QString XSettings::apt_dat_file(){
 //** Scenery Path
 //===========================================================================
 QString XSettings::scenery_path(){
-	if(use_terrasync()){
-		return terrasync_exe_path();
-	}
+	//if(use_terrasync()){
+	//	return terrasync_exe_path();
+	//}
 	return fg_root("/Scenery");
 }
 
