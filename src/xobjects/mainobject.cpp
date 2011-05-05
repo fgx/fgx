@@ -65,7 +65,7 @@ MainObject::MainObject(QObject *parent) :
     actionCallsign = new QWidgetAction(this);
     lblCallsign = new QLabel();
     lblCallsign->setText("CALLSIGN");
-    lblCallsign->setStyleSheet("font-family: monospace; background-color: black; color: white; padding: 5px; font-weight: bold;");
+    lblCallsign->setStyleSheet("color: #ff0000; padding: 0px; font-weight: bold;");
     actionCallsign->setDefaultWidget(lblCallsign);
 
 	popupMenu->addAction(actionCallsign);
