@@ -113,6 +113,7 @@ void ExeControls::on_refresh_clicked(){
 //==========================================================================
 int ExeControls::get_pid(){
 	QStringList args;
+	// i.e. how to get pid of fgfs OSX: % ps axc|awk "{if (\$5==\"fgfs\") print \$1}" 
 	args << exe_name;
 	QProcess process;
 	process.start("pidof", args, QIODevice::ReadOnly);
