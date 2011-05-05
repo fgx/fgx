@@ -328,8 +328,6 @@ QString LauncherWindow::fg_args(){
 	//* fg_root
 	args << QString("--fg-root=").append(mainObject->settings->fg_root());
 
-	//* Scenery Path
-	args << QString("--fg-scenery=%1").arg(mainObject->settings->scenery_path());
 
 	//* Core Settings
 	args << coreSettingsWidget->get_args();

@@ -228,6 +228,9 @@ QStringList CoreSettingsWidget::get_args(){
 	//** Terrasync - send on socket
 	if (groupBoxTerraSync->isChecked()) {
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
+		args << QString("--fg-scenery=").append(txtTerraSyncPath->text());
+	}else{
+		args << QString("--fg-scenery=").append(mainObject->settings->scenery_path());
 	}
 
 	return args;
