@@ -398,7 +398,7 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 // Load the Info Tree
 //==============================================================
 void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
-	//* Load Nodes from DB - with a count from each
+
 	QString count_label;
 
 	int runways_count = load_runways_node(airport_dir, airport_code);
@@ -422,6 +422,15 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 	}
 
 	statusBarAirportInfo->showMessage(count_label);
+
+	//* Restore previous node from settings
+	QList<QTreeWidgetItem *> items = treeWidgetAirportInfo->findItems(
+														mainObject->settings->value("runway_stand").toString(),
+														Qt::MatchExactly | Qt::MatchRecursive,
+														CI_SETTING_KEY);
+	if(items.size() > 0){
+		treeWidgetAirportInfo->setCurrentItem(items.at(0));
+	}
 
 }
 
@@ -496,6 +505,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			QTreeWidgetItem *rItem = new QTreeWidgetItem(runwaysParent);
 			rItem->setText(CI_NODE, list.at(i));
 			rItem->setText(CI_TYPE, "runway");
+			rItem->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(list.at(i))); //* settings to search for on restore
 		}
 	}
 
@@ -557,7 +567,8 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 		dom.setContent(xmlString); //* AFTER dom has been created, then set the content from a string from the file
 
 		QStringList listParkingPositions;
-		//* Get <Parking/> nodes and loop thru them
+
+		//* Get <Parking/> nodes and loop thru them and add to list (removing dupes)
 		QDomNodeList parkingNodes = dom.elementsByTagName("Parking");
 		if (parkingNodes.count() > 0){
 			for(int idxd =0; idxd < parkingNodes.count(); idxd++){
@@ -571,7 +582,6 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 				 if(!listParkingPositions.contains(gate)){
 					 if(attribs.namedItem("type").nodeValue() == "gate"){
 
-
 						//* Append position to eliminate dupes
 						listParkingPositions.append(gate);
 					}
@@ -580,6 +590,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 
 		}
 
+		//* Create the tree nodes
 		if(listParkingPositions.size() == 0){
 			QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
 			pItem->setText(CI_NODE, "None");
@@ -590,6 +601,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 				QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
 				pItem->setText(CI_NODE, listParkingPositions.at(i));
 				pItem->setText(CI_TYPE, "stand");
+				pItem->setText(CI_SETTING_KEY, QString(airport_code).append("stand").append(listParkingPositions.at(i)));
 			}
 		}
 	} /* File Exists */
@@ -674,28 +686,16 @@ void AirportsWidget::save_settings(){
 	mainObject->settings->setValue("roll", txtRoll->text());
 	mainObject->settings->setValue("pitch", txtPitch->text());
 	mainObject->settings->setValue("airspeed", txtAirspeed->text());
-
+	qDebug() << "save_aiport_settings()";
 	//** Save Airport
-	if(treeViewAirports->currentIndex().row() != -1){
+	if(treeViewAirports->selectionModel()->selectedIndexes().size() > 0){
 		//QModelIndex index = proxyModel->index(treeViewAirports->currentIndex().row(), CA_CODE);
 		//QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(index));
 		mainObject->settings->setValue("airport", current_airport());
-
+		qDebug() << treeWidgetAirportInfo->currentItem()->text(CI_SETTING_KEY);
 		//** save runway or parking
 		if(treeWidgetAirportInfo->currentItem()){
-			//* check its not one of the parents ie savable
-			if(treeWidgetAirportInfo->indexOfTopLevelItem( treeWidgetAirportInfo->currentItem()  ) != -1){
-				//QString key = treeWidgetAirportInfo->currentItem()->text(CI_KEY);
-				//QString val = treeWidgetAirportInfo->currentItem()->text(CI_NODE);
-				//if(key == "runway"){
-				//	mainObject->
-				//}else if(key == "stand"):
-				//	stand = treeWidgetAirportInfo->currentItem()->text(CI_NODE);
-				qDebug() << "saved" << treeWidgetAirportInfo->currentItem()->text(CI_SETTING_KEY);
 				mainObject->settings->setValue("runway_stand", treeWidgetAirportInfo->currentItem()->text(CI_SETTING_KEY));
-			}else{
-				mainObject->settings->setValue("runway_stand", "");
-			}
 
 		}else{
 			mainObject->settings->setValue("runway_stand", "");
