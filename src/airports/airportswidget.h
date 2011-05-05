@@ -88,7 +88,7 @@ public:
 	void load_settings();
 	QString validate();
 	QStringList get_args();
-
+	QString current_airport();
 
 
 signals:

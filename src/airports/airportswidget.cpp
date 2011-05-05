@@ -621,15 +621,43 @@ void AirportsWidget::on_buttonGroupUse(){
 }
 
 
+//====================================================================
+// Current Selected Aiport
+//====================================================================
+
+QString AirportsWidget::current_airport(){
+	if(treeViewAirports->selectionModel()->selectedIndexes().size() == 0){
+		return "";
+	}
+	QModelIndex index = proxyModel->index(treeViewAirports->selectionModel()->selectedIndexes().at(0).row(), CA_CODE);
+	QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(index));
+	return item->text();
+}
+
 //================================================================
 // Get Args
 QStringList AirportsWidget::get_args(){
 	QStringList args;
-	//if (parkPosition->isEnabled() == true) {
-	//	args << QString("--parkpos=").append(parkPosition->currentText());
-	//}
-	buttonGroupUse->button(mainObject->settings->value("use_position", USE_DEFAULT).toInt());
 
+	if(buttonGroupUse->checkedId() == USE_AIRPORT){
+		if(current_airport().length() > 0){
+
+			args << QString("--airport=").append(current_airport());
+
+			if(treeWidgetAirportInfo->selectionModel()->hasSelection()){
+				QTreeWidgetItem *cItem = treeWidgetAirportInfo->currentItem();				
+				if(cItem->text(CI_TYPE) == "runway"){
+					args << QString("--runway=").append(cItem->text(CI_NODE));
+
+				}else if(cItem->text(CI_TYPE) == "stand"){
+					args << QString("--parkpos=").append(cItem->text(CI_NODE));
+				}
+
+			}
+		}
+	}else{
+		//TODO Startup COORDINATES
+	}
 	return args;
 }
 
@@ -649,9 +677,9 @@ void AirportsWidget::save_settings(){
 
 	//** Save Airport
 	if(treeViewAirports->currentIndex().row() != -1){
-		QModelIndex index = proxyModel->index(treeViewAirports->currentIndex().row(), CA_CODE);
-		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(index));
-		mainObject->settings->setValue("airport", item->text());
+		//QModelIndex index = proxyModel->index(treeViewAirports->currentIndex().row(), CA_CODE);
+		//QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(index));
+		mainObject->settings->setValue("airport", current_airport());
 
 		//** save runway or parking
 		if(treeWidgetAirportInfo->currentItem()){

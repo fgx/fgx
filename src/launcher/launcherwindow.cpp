@@ -340,7 +340,7 @@ QString LauncherWindow::fg_args(){
 	//args << aircraftWidget->get_args();
 
 	//* Airport, Runway Start pos
-	//args << airportsWidget->get_args();
+	args << airportsWidget->get_args();
 
 	//* Network
 	//args << networkWidget->get_args();
