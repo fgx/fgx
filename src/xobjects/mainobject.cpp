@@ -75,7 +75,7 @@ MainObject::MainObject(QObject *parent) :
 	actionLauncher->setIconVisibleInMenu(true);
 	connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
 
-	actionMpMap = popupMenu->addAction(QIcon(":/icon/mpmap"), tr("Multiplayer Map"));
+	actionMpMap = popupMenu->addAction(QIcon(":/icon/mpmap"), tr("Start Map Widget"));
 	actionMpMap->setIconVisibleInMenu(true);
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));
 
@@ -104,14 +104,14 @@ MainObject::MainObject(QObject *parent) :
     );
 
 	//*** Properties
-	QAction *actionPropsBrowser= new QAction(this);
-	actionPropsBrowser->setIcon(QIcon(":/icons/properties_browser"));
-	actionPropsBrowser->setText(tr("Properties Browser"));
-	actionPropsBrowser->setIconVisibleInMenu(true);
-	popupMenu->addAction(actionPropsBrowser);
-	connect(actionPropsBrowser, SIGNAL(triggered()),
-			this, SLOT(on_properties_browser())
-	);
+	//QAction *actionPropsBrowser= new QAction(this);
+	//actionPropsBrowser->setIcon(QIcon(":/icons/properties_browser"));
+	//actionPropsBrowser->setText(tr("Properties Browser"));
+	//actionPropsBrowser->setIconVisibleInMenu(true);
+	//popupMenu->addAction(actionPropsBrowser);
+	//connect(actionPropsBrowser, SIGNAL(triggered()),
+	//		this, SLOT(on_properties_browser())
+	//);
 
 
     //*** Settings
