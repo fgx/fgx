@@ -686,13 +686,12 @@ void AirportsWidget::save_settings(){
 	mainObject->settings->setValue("roll", txtRoll->text());
 	mainObject->settings->setValue("pitch", txtPitch->text());
 	mainObject->settings->setValue("airspeed", txtAirspeed->text());
-	qDebug() << "save_aiport_settings()";
+
 	//** Save Airport
 	if(treeViewAirports->selectionModel()->selectedIndexes().size() > 0){
-		//QModelIndex index = proxyModel->index(treeViewAirports->currentIndex().row(), CA_CODE);
-		//QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(index));
+
 		mainObject->settings->setValue("airport", current_airport());
-		qDebug() << treeWidgetAirportInfo->currentItem()->text(CI_SETTING_KEY);
+
 		//** save runway or parking
 		if(treeWidgetAirportInfo->currentItem()){
 				mainObject->settings->setValue("runway_stand", treeWidgetAirportInfo->currentItem()->text(CI_SETTING_KEY));
@@ -729,6 +728,7 @@ void AirportsWidget::load_settings(){
 
 QString AirportsWidget::validate(){
 
+	//* Validate Coordinates TODO - other stuff
 	if(buttonGroupUse->checkedId() == USE_COORDINATES){
 		if(txtLat->text().trimmed().length() == 0){
 			txtLat->setFocus();
@@ -738,6 +738,8 @@ QString AirportsWidget::validate(){
 			txtLng->setFocus();
 			return QString("Need Longtitude");
 		}
+
+	//* Validate Airport
 	}else if(buttonGroupUse->checkedId() == USE_AIRPORT){
 		if (!treeViewAirports->selectionModel()->hasSelection()){
 			return QString(tr("No Airport selected"));

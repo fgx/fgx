@@ -337,16 +337,16 @@ QString LauncherWindow::fg_args(){
 	args << timeWeatherWidget->get_args();
 
 	//* Aircraft
-	//args << aircraftWidget->get_args();
+	args << aircraftWidget->get_args();
 
 	//* Airport, Runway Start pos
 	args << airportsWidget->get_args();
 
 	//* Network
-	//args << networkWidget->get_args();
+	args << networkWidget->get_args();
 
 	//**Advanced Options
-	//args << advancedOptionsWidget->get_args();
+	args << advancedOptionsWidget->get_args();
 
 	//* Ai Traffic TODO
 	/*
