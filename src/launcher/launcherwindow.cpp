@@ -309,9 +309,10 @@ void LauncherWindow::on_start_fgcom_clicked(){
 	QString command_line = mainObject->settings->fgcom_exe_path();
 	command_line.append(" ");
 	QStringList args;
-	args << mainObject->settings->value("fgcom_no").toString() << mainObject->settings->value("fgcom_port").toString();
+	//args << mainObject->settings->value("fgcom_no").toString() << mainObject->settings->value("fgcom_port").toString();
+	args << mainObject->settings->value("fgcom_no").toString() << "-f910";
 	command_line.append( args.join(" ") );
-	// qDebug() << command_line;
+	qDebug() << command_line;
 	exeFgCom->start(command_line);
 }
 
@@ -486,7 +487,7 @@ bool LauncherWindow::validate(){
 void LauncherWindow::on_about_fgx(){
 	QString txt;
 	txt.append("<html><body><p>FGX FlightGear Launcher</b></p>");
-	txt.append("<p>&copy; 2011 Gral aka Yves Sablonier and Pete Morgan</p>");
+	txt.append("<p>&copy; 2011 Gral aka Yves Sablonier and Peteffs aka Pete Morgan</p>");
 	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPL2</a></p>");
 	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear</a></p>");
 	txt.append("</body></html>");
