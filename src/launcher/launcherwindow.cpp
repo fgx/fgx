@@ -293,10 +293,14 @@ void LauncherWindow::on_start_fgfs_clicked() {
 void LauncherWindow::on_start_terrasync_clicked(){
 
 	QStringList args;
-	args << mainObject->settings->terrasync_exe_path() << "-p" << "5500" << "-S" << "-d" << mainObject->settings->terrasync_sync_path();
-	QString command_line("nice");
+	//example: nice terrasync -p 5505 -S -d \"$HOME/Documents/TerrasyncScenery\"\n");
+	//start("nice terrasync blablabla") not possible
+	//terrasync_sync_path -> settings?
+	
+	args << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_path(); 
+	QString command_line("terrasync");
 	command_line.append(" ").append(args.join(" "));
-	// qDebug() << command_line;
+	 qDebug() << command_line;
 	exeTerraSync->start(command_line);
 }
 

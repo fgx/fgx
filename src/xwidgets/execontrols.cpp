@@ -23,9 +23,9 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	QVBoxLayout *layout = new QVBoxLayout();
 	setLayout(layout);
 	layout->setContentsMargins(5,5,5,5);
-	layout->setSpacing(2);
+	layout->setSpacing(10);
 
-	QString buttStyle("padding: 2px;"); //* make button smaller. this need to go into global style sheet said pedro
+	QString buttStyle("padding: 8px;"); //* make button smaller. this need to go into global style sheet said pedro
 
 	//** Buttons layout
 	QHBoxLayout *buttlay = new QHBoxLayout();
@@ -33,7 +33,7 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 
 	//** Stop Button
 	buttonStop = new QPushButton();
-	buttonStop->setText(tr("Stop"));
+	buttonStop->setText(tr(" Stop "));
 	buttonStop->setIcon(QIcon(":/icon/stop_disabled"));
 	buttonStop->setStyleSheet(buttStyle);
 	buttlay->addWidget(buttonStop);
@@ -41,7 +41,7 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 
 	//** Start Button
 	buttonStart = new QPushButton();
-	buttonStart->setText(tr("Start"));
+	buttonStart->setText(tr(" Start "));
 	buttonStart->setIcon(QIcon(":/icon/start_enabled"));
 	buttonStart->setStyleSheet(buttStyle);
 	buttlay->addWidget(buttonStart);

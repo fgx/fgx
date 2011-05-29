@@ -18,12 +18,12 @@ XSettings::XSettings(QObject *parent) :
 //===========================================================================
 //** hAcKer - this to be removed
 //===========================================================================
-bool XSettings::_dev_mode(){
+//bool XSettings::_dev_mode(){
 //** Hack for petes workstation in dev mode
 
-	return QFile::exists("/home/ffs/fgx/DEV.txt");
+//	return QFile::exists("/home/ffs/fgx/DEV.txt");
 
-}
+//}
 
 
 
@@ -149,8 +149,7 @@ bool XSettings::use_terrasync(){
 }
 QString XSettings::terrasync_exe_path(){
 	if(runningOS() == MAC){
-		return QString("/Documents/TerrasyncScenery");
-
+		return QString("terrasync");
 	}else if(runningOS() == LINUX){
 		return QString("terrasync");
 	}
