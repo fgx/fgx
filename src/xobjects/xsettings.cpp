@@ -227,6 +227,13 @@ QString XSettings::default_fgcom_port(){
 
 
 QString XSettings::fgcom_exe_path(){
+		if (runningOS() == MAC) {
+			// Default fgcomx installation
+			return QString("/usr/local/bin/fgcom");
+		}
+		else if(runningOS() == LINUX){
+			return QString("fgcom");
+		}
 	return "fgcom";
 }
 
