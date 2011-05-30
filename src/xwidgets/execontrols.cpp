@@ -1,6 +1,6 @@
 
 #include <QDebug>
-
+#include <QFile>
 #include <QtCore/QProcess>
 #include <QtCore/QTimer>
 
@@ -108,25 +108,64 @@ void ExeControls::on_refresh_clicked(){
 }
 
 
+/*
+ if (enableFGCom->isChecked() == true || enableMultiplayer->isChecked() == true) {
+ content.append(" --multiplay=out,10,");
+ content.append(argmultiplayerpathout);
+ content.append(",");
+ content.append(argmultiplayerport);
+ 
+ content.append(" --multiplay=in,10,");
+ 
+ system("ipconfig getifaddr en0 > ip.txt");
+ 
+ QFile ipFile("");
+ ipFile.setFileName("ip.txt");
+ 
+ if (!ipFile.open(QIODevice::ReadOnly | QIODevice::Text))
+ return;
+ 
+ while (!ipFile.atEnd()) {
+ 
+ QString line;
+ line.append(ipFile.readAll());
+ line.remove("\n");
+ content.append(line);	
+ }
+ 
+ content.append(",5000");
+ }
+ */
+
+
+
 //==========================================================================
 // Return process ID of executable on mac/linux - TODO windows ?
 //==========================================================================
 int ExeControls::get_pid(){
-	QStringList args;
-	// i.e. how to get pid of fgfs OSX: % ps axc|awk "{if (\$5==\"fgfs\") print \$1}" 
-	args << exe_name;
-	QProcess process;
-	process.start("pidof", args, QIODevice::ReadOnly);
-	if(process.waitForStarted()){
-		process.waitForFinished();
-		QString ok_result = process.readAllStandardOutput();
-		//QString error_result = process.readAllStandardError(); Unused atmo
-		QString pid = ok_result.trimmed();
+	
+	system("ps axc|awk '{if ($5==\"terrasync\") print $1}' > pid-terrasync.txt");
+	
+	QFile pidFile("");
+	pidFile.setFileName("pid-terrasync.txt");
+	
+	if (!pidFile.open(QIODevice::ReadOnly | QIODevice::Text))
+		
+	
+	while (!pidFile.atEnd()) {
+
+		QString ok_result = pidFile.readAll();
+		
+		QString pid = ok_result;
 		if(pid.length() > 0){
 			return pid.toInt();
 		}
+
+
 	}
-	return 0;
+		
+	
+
 }
 
 //==========================================================================
