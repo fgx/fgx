@@ -297,7 +297,9 @@ void LauncherWindow::on_start_terrasync_clicked(){
 	QString command_line = mainObject->settings->terrasync_exe_path();
 	command_line.append(" ").append(args.join(" "));
 	qDebug() << command_line;
+	
 	exeTerraSync->start(command_line);
+	
 }
 
 
