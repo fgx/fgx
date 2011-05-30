@@ -113,7 +113,6 @@ QString XSettings::airports_path(){
 	//* Using terrasync
 	if(use_terrasync()){
 		if(runningOS() == MAC){
-			//* osx at home - this is confusing pete TODO
 			QString terrascenehome(QDir::homePath());
 			terrascenehome.append("/Documents/TerrasyncScenery");
 			return terrascenehome;
@@ -138,7 +137,12 @@ QString XSettings::scenery_path(){
 	//if(use_terrasync()){
 	//	return terrasync_exe_path();
 	//}
-	return fg_root("/Scenery");
+	if(runningOS() == MAC){
+		QString terrascenehome(QDir::homePath());
+		terrascenehome.append("/Documents/TerrasyncScenery:/Scenery");
+		return terrascenehome;
+	}
+	//return fg_root("/Scenery");
 }
 
 //===========================================================================
@@ -148,16 +152,18 @@ bool XSettings::use_terrasync(){
 	return value("use_terrasync").toBool();
 }
 QString XSettings::terrasync_exe_path(){
-	if(runningOS() == MAC){
-		return QString("terrasync");
-	}else if(runningOS() == LINUX){
+	if (runningOS() == MAC) {
+				return QDir::currentPath().append("/fgx.app/Contents/MacOS/terrasync");
+	}
+	else if(runningOS() == LINUX){
 		return QString("terrasync");
 	}
 	return QString("TODO - terrasync");
 }
 QString XSettings::terrasync_sync_path(){
 	return value("terrasync_sync_path").toString();
-}
+}	
+	
 
 
 //===========================================================================
