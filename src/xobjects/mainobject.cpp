@@ -254,7 +254,7 @@ void MainObject::db_connect(){
 
 	//* Database connected
 	trayIcon->showMessage("DB", "Connected", QSystemTrayIcon::Information, 3000);
-	bool foo = db_sanity_check();
+	//bool foo = db_sanity_check();
 
 }
 

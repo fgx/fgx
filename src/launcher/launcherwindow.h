@@ -70,7 +70,6 @@ public slots:
 
 	//* Terrasync
 	void on_start_terrasync_clicked();
-	void update_pids();
 
 	//* Actions
 	void on_about_fgx();

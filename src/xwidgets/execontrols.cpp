@@ -1,6 +1,7 @@
 
 #include <QDebug>
 #include <QFile>
+#include <QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QTimer>
 
@@ -59,14 +60,6 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	statusBar->setContentsMargins(5,5,5,5);
 	bottlay->addWidget(statusBar);
 
-	//** Refresh Button
-	buttonRefresh = new QPushButton();
-	buttonRefresh->setIcon(QIcon(":/icon/refresh"));
-	buttonRefresh->setFlat(true);
-	buttonRefresh->setStyleSheet("padding: 0px;");
-	bottlay->addWidget(buttonRefresh);
-	connect(buttonRefresh, SIGNAL(clicked()), this, SLOT(on_refresh_clicked()));
-
 }
 
 
@@ -114,59 +107,50 @@ void ExeControls::start(QString command_line){
 
 
 //==========================================================================
-// GUI Events
+// Stop Executable
+// Get recent PIDs from /tmp/exe.pid and kill
 //==========================================================================
-
-//** Stop Button clicked so kill process
 void ExeControls::on_stop_clicked(){
-	//qDebug() << "stop clicked";
-	if(get_pid() > 0){
-		this->kill_pid();
-		statusBar->showMessage("Killed Process", 2000);
-	}else{
-		statusBar->showMessage("Not found", 2000);
+	
+	QString pid;
+	
+	QFile pidFile;
+	if (ExeControls::exe_name.contains("terrasync")) {
+	pidFile.setFileName("/tmp/terrasync.pid");
 	}
+	if (ExeControls::exe_name.contains("fgfs")) {
+		pidFile.setFileName("/tmp/fgfs.pid");
+	}
+	if (ExeControls::exe_name.contains("fgcom")) {
+		pidFile.setFileName("/tmp/fgcom.pid");
+	}
+	
+	
+		if (!pidFile.open(QIODevice::ReadOnly | QIODevice::Text))
+			return;
+	
+		while (!pidFile.atEnd()) {
+		
+			QString line;
+			line.append(pidFile.readAll());
+			line.remove("\n");
+			pid.append(line);	
+		}
+	
+		if(pid > ""){
+			QStringList killargs;
+			killargs << "-9" << pid;
+			QProcess::startDetached("kill", killargs);
+		
+			statusBar->showMessage("Killed Process", 2000);
+		}else{
+			statusBar->showMessage("Not found", 2000);
+		}
 }
 
 //** Refresh Button clicked
 void ExeControls::on_refresh_clicked(){
-	update_pid();
+	//update_pid();
 }
 
-
-//==========================================================================
-// Return process ID of executable on mac/linux - TODO windows ?
-//==========================================================================
-int ExeControls::get_pid(){
-	
-	// TODO
-		
-	
-
-}
-
-//==========================================================================
-// Check if app is running and update label
-//==========================================================================
-void ExeControls::update_pid(){
-	int pid = get_pid();
-	if(pid == 0){
-		statusBar->showMessage("--");
-	}else{
-		statusBar->showMessage(QString::number(pid));
-	}
-}
-
-//==========================================================================
-// Kills process if running
-//==========================================================================
-void ExeControls::kill_pid(){
-	int pid = get_pid();
-	if(pid == 0){
-		return;
-	}
-	QStringList killargs;
-	killargs << "-9" << QString::number(pid);
-	QProcess::startDetached("kill", killargs);
-}
 

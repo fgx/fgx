@@ -237,7 +237,7 @@ void AirportsImport::parse_runways_xml(QDir dir, QString airport_code){
 			 sqlRunwayInsert.bindValue(3, thresholdNode.firstChildElement("lat").text());
 			 sqlRunwayInsert.bindValue(4, thresholdNode.firstChildElement("lon").text());
 			 if(!sqlRunwayInsert.exec()){
-				//* TODO - ignore error for now
+				// TODO - ignore error for now
 			 }
 			 */
 
