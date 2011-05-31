@@ -134,63 +134,12 @@ void ExeControls::on_refresh_clicked(){
 }
 
 
-/*
- if (enableFGCom->isChecked() == true || enableMultiplayer->isChecked() == true) {
- content.append(" --multiplay=out,10,");
- content.append(argmultiplayerpathout);
- content.append(",");
- content.append(argmultiplayerport);
- 
- content.append(" --multiplay=in,10,");
- 
- system("ipconfig getifaddr en0 > ip.txt");
- 
- QFile ipFile("");
- ipFile.setFileName("ip.txt");
- 
- if (!ipFile.open(QIODevice::ReadOnly | QIODevice::Text))
- return;
- 
- while (!ipFile.atEnd()) {
- 
- QString line;
- line.append(ipFile.readAll());
- line.remove("\n");
- content.append(line);	
- }
- 
- content.append(",5000");
- }
- */
-
-
-
 //==========================================================================
 // Return process ID of executable on mac/linux - TODO windows ?
 //==========================================================================
 int ExeControls::get_pid(){
 	
-	/*
-	system("ps axc|awk '{if ($5==\"terrasync\") print $1}' > pid-terrasync.txt");
-	
-	QFile pidFile;
-	pidFile.setFileName("pid-terrasync.txt");
-	
-	if (!pidFile.open(QIODevice::ReadOnly | QIODevice::Text))
-		
-	
-	while (!pidFile.atEnd()) {
-
-		QString ok_result = pidFile.readAll();
-		
-		QString pid = ok_result;
-		if(pid.length() > 0){
-			return pid.toInt();
-		}
-
-
-	}
-	 */
+	// TODO
 		
 	
 
