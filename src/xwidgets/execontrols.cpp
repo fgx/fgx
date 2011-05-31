@@ -72,7 +72,7 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 
 //==========================================================================
 // Start Executable
-// - not interested in Pid as anything could have happened elsewhere
+// Writing recent PIDs to /tmp/exe.pid
 //==========================================================================
 void ExeControls::start(QString command_line){
 	int start = QProcess::startDetached(command_line);
@@ -80,6 +80,32 @@ void ExeControls::start(QString command_line){
 	if(start){
 		statusBar->showMessage("Starting", 2000);
 		QTimer::singleShot(2000,this, SLOT(on_refresh_clicked()));
+		
+		if (command_line.contains("terrasync")) {
+			QString whichExe = "terrasync";
+			QString OSXGetPid = "ps axc|awk '{if ($5==\"";
+			OSXGetPid.append(whichExe);
+			OSXGetPid.append("\") print $1}' > /tmp/terrasync.pid");
+			system(OSXGetPid.toLatin1());
+		}
+		
+		if (command_line.contains("fgcom")) {
+			QString whichExe = "fgcom";
+			QString OSXGetPid = "ps axc|awk '{if ($5==\"";
+			OSXGetPid.append(whichExe);
+			OSXGetPid.append("\") print $1}' > /tmp/fgcom.pid");
+			system(OSXGetPid.toLatin1());
+		}
+		
+		if (command_line.contains("fgfs")) {
+			QString whichExe = "fgfs";
+			QString OSXGetPid = "ps axc|awk '{if ($5==\"";
+			OSXGetPid.append(whichExe);
+			OSXGetPid.append("\") print $1}' > /tmp/fgfs.pid");
+			system(OSXGetPid.toLatin1());
+		}
+
+			
 	}else{
 		statusBar->showMessage("Failed", 4000);
 	}
@@ -144,9 +170,10 @@ void ExeControls::on_refresh_clicked(){
 //==========================================================================
 int ExeControls::get_pid(){
 	
+	/*
 	system("ps axc|awk '{if ($5==\"terrasync\") print $1}' > pid-terrasync.txt");
 	
-	QFile pidFile("");
+	QFile pidFile;
 	pidFile.setFileName("pid-terrasync.txt");
 	
 	if (!pidFile.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -163,6 +190,7 @@ int ExeControls::get_pid(){
 
 
 	}
+	 */
 		
 	
 
