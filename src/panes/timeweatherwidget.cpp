@@ -31,7 +31,7 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	QStringList time_vals; //* The command arg stored in property
 	time_vals << "real" << "dawn" << "morning" << "noon" << "afternoon" << "dusk" << "evening" << "midnight";
 	QStringList time_labels; //* The labels - subject ot transtation
-	time_labels << tr("Real Time") << tr("Dawn") << tr("Morning") << tr("Noon") << tr("Afternoon") << tr("Dusk") << tr("Evening") << tr("Midnight");
+	time_labels << tr("Real time") << tr("Dawn") << tr("Morning") << tr("Noon") << tr("Afternoon") << tr("Dusk") << tr("Evening") << tr("Midnight");
 
 	QGroupBox *grpBoxTime = new QGroupBox(tr("Time"));
 	layTimeSeason->addWidget(grpBoxTime);

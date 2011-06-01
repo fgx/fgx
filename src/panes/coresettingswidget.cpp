@@ -229,7 +229,12 @@ QStringList CoreSettingsWidget::get_args(){
 	if (groupBoxTerraSync->isChecked()) {
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 		args << QString("--fg-scenery=").append(txtTerraSyncPath->text()).append(":").append(mainObject->settings->scenery_path());
-	}else{
+	}
+	
+	
+	/* This is actually not needed because fgroot finds scenery path by default, 
+	but it is needed in case terrasync scenery is active, then we need both paths with ":" separated, hmpf */
+	else{
 		args << QString("--fg-scenery=").append(mainObject->settings->scenery_path());
 	}
 

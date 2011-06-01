@@ -131,18 +131,11 @@ QString XSettings::apt_dat_file(){
 }
 
 //===========================================================================
-//** Scenery Path
+//** Scenery Path - TODO x/win
 //===========================================================================
 QString XSettings::scenery_path(){
-	//if(use_terrasync()){
-	//	return terrasync_exe_path();
-	//}
-	if(runningOS() == MAC){
-		QString terrascenehome(QDir::homePath());
-		terrascenehome.append("/Documents/TerrasyncScenery:/Scenery");
-		return terrascenehome;
-	}
-	//return fg_root("/Scenery");
+
+	return fg_root("/Scenery");
 }
 
 //===========================================================================
