@@ -547,7 +547,6 @@ QStringList NetworkWidget::get_args(){
 
 	//* Enable Multiplay
 	if(grpMpServer->isChecked()){
-		args << "--enable-ai-models";
 		if(checkBoxIn->isChecked()){
 			args << QString("--multiplay=in,%1,%2,%3").arg(
 									comboHzIn->currentText()).arg(
