@@ -462,14 +462,12 @@ void NetworkWidget::set_mp_server(){
 				? item->text(C_DOMAIN)
 				: item->text(C_IP_ADDRESS));
 	out.append(",").append("5000");
-	emit set_arg("set", "--multiplay=out", out);
 
 	QString in(",");
 	in.append(comboHzIn->currentText());
 	in.append(",");
 	in.append(comboLocalIpAddress->currentText());
 	in.append(",").append("5000");
-	emit set_arg("set", "--multiplay=in", in);
 }
 
 
@@ -545,6 +543,7 @@ QStringList NetworkWidget::get_args(){
 	validate();
 	QStringList args;
 
+	
 	//* Enable Multiplay
 	if(grpMpServer->isChecked()){
 		if(checkBoxIn->isChecked()){
@@ -565,6 +564,9 @@ QStringList NetworkWidget::get_args(){
 								comboRemotePort->currentText());
 			}
 		}
+		
+		//args << QString("--callsign=") << txtCallSign->text();
+		
 	}
 
 	//* FgCom
@@ -586,7 +588,12 @@ QStringList NetworkWidget::get_args(){
 	if(grpScreenShot->isChecked()){
 		args << QString("--jpg-httpd=%1").arg( txtScreenShot->text() );
 	}
-
+	
+	QString argCallsign;
+	argCallsign.append("--callsign=");
+	argCallsign.append(txtCallSign->text());
+	args << argCallsign;
+	
 	return args;
 }
 
