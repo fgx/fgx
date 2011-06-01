@@ -544,7 +544,7 @@ QStringList NetworkWidget::get_args(){
 
 	validate();
 	QStringList args;
-	return args;
+
 	//* Enable Multiplay
 	if(grpMpServer->isChecked()){
 		args << "--enable-ai-models";
