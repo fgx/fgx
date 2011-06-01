@@ -142,7 +142,7 @@ void ExeControls::on_stop_clicked(){
 			killargs << "-9" << pid;
 			QProcess::startDetached("kill", killargs);
 		
-			statusBar->showMessage("Killed Process", 2000);
+			statusBar->showMessage("Stopped", 2000);
 		}else{
 			statusBar->showMessage("Not found", 2000);
 		}
