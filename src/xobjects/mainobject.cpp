@@ -298,6 +298,10 @@ bool MainObject::db_sanity_check(){
 //****************************************************************************
 //** Quit
 void MainObject::on_quit(){
+	
+	// delete pid files on quit ?
+	// system("rm -f /tmp/terrasync.pid");
+	
     QCoreApplication::instance()->quit();
 }
 

@@ -243,27 +243,7 @@ void LauncherWindow::initialize(){
 	aircraftWidget->initialize();
 	airportsWidget->initialize();
 	coreSettingsWidget->initialize();
-	//update_pids();
-
-	//centralWidget()->setDisabled(false);
 }
-
-
-
-//=====================================================================================================================
-// Updates as the external processes in the "command buttons"
-//=======================================================================================================================
-/*void LauncherWindow::update_pids(){
-	if (exeFgCom->isEnabled()){
-		exeFgCom->update_pid();
-	}
-	if (exeTerraSync->isEnabled()){
-		exeTerraSync->update_pid();
-	}
-	if (exeFgfs->isEnabled()){
-		exeFgfs->update_pid();
-	}
-}*/
 
 
 
