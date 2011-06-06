@@ -23,6 +23,7 @@ Q_OBJECT
 public:
     explicit MainObject(QObject *parent = 0);
 
+	
     //** Objects
    // TelnetSlave *telnet;
 	QSqlDatabase db;
@@ -75,6 +76,7 @@ public slots:
 	void on_settings(int);
 	void on_properties_browser();
     void on_quit();
+
 };
 
 #endif // MAINOBJECT_H

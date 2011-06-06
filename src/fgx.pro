@@ -60,3 +60,5 @@ SOURCES += main.cpp \
 	airports/airportsimport.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
+
+CONFIG += console

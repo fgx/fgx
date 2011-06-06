@@ -47,6 +47,7 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	buttonStart->setStyleSheet(buttStyle);
 	buttlay->addWidget(buttonStart);
 	//* connection is done in fgx not here..
+	
 
 
 
@@ -63,46 +64,41 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 }
 
 
+// Read standard output
+void ExeControls::readOutput()
+
+{
+	QString output = P->readAllStandardOutput();
+	statusBar->showMessage(output, 1000);
+}
+
+
+// Read standard error
+void ExeControls::readError()
+
+{
+	QString error = P->readAllStandardError();
+	statusBar->showMessage(error, 1000);
+}
+
+
 //==========================================================================
 // Start Executable
 // Writing recent PIDs to /tmp/exe.pid
 //==========================================================================
 void ExeControls::start(QString command_line){
-	int start = QProcess::startDetached(command_line);
-	Q_UNUSED(start);
-	if(start){
-		statusBar->showMessage("Starting", 2000);
-		QTimer::singleShot(2000,this, SLOT(on_refresh_clicked()));
-		
-		if (command_line.contains("terrasync")) {
-			QString whichExe = "terrasync";
-			QString OSXGetPid = "ps axc|awk '{if ($5==\"";
-			OSXGetPid.append(whichExe);
-			OSXGetPid.append("\") print $1}' > /tmp/terrasync.pid");
-			system(OSXGetPid.toLatin1());
-		}
-		
-		if (command_line.contains("fgcom")) {
-			QString whichExe = "fgcom";
-			QString OSXGetPid = "ps axc|awk '{if ($5==\"";
-			OSXGetPid.append(whichExe);
-			OSXGetPid.append("\") print $1}' > /tmp/fgcom.pid");
-			system(OSXGetPid.toLatin1());
-		}
-		
-		if (command_line.contains("fgfs")) {
-			QString whichExe = "fgfs";
-			QString OSXGetPid = "ps axc|awk '{if ($5==\"";
-			OSXGetPid.append(whichExe);
-			OSXGetPid.append("\") print $1}' > /tmp/fgfs.pid");
-			system(OSXGetPid.toLatin1());
-		}
-
-			
-	}else{
-		statusBar->showMessage("Failed", 4000);
+	
+	//QProcess *P =new QProcess;
+	
+	//QProcess P;
+	P = new QProcess();
+	
+	connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
+	connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
+	
+	P->start( QString(command_line)); 
+	
 	}
-}
 
 
 
