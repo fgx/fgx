@@ -65,6 +65,7 @@ void ExeControls::readOutput()
 
 {
 	QString output = P->readAllStandardOutput();
+	//Should go into log file
 	statusBar->showMessage(output, 1000);
 }
 
@@ -74,13 +75,14 @@ void ExeControls::readError()
 
 {
 	QString error = P->readAllStandardError();
+	//Should go into log file
 	statusBar->showMessage(error, 1000);
 }
 
 
 //==========================================================================
 // Start Executable
-// Connecting console output/errors for log
+// and connecting console output/errors for log
 //==========================================================================
 void ExeControls::start(QString command_line){
 	
