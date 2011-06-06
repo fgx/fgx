@@ -52,9 +52,12 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	layout->addLayout(bottlay);
 
 	//* Status Bar
+	
+	QString statusStyle("font-size: 10px"); //* make font smaller. this need to go into global style sheet said yves
 	statusBar = new QStatusBar();
 	statusBar->setSizeGripEnabled(false);
 	statusBar->setContentsMargins(5,5,5,5);
+	statusBar->setStyleSheet(statusStyle);
 	bottlay->addWidget(statusBar);
 
 }
