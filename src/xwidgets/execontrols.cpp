@@ -9,11 +9,6 @@
 
 #include "execontrols.h"
 
-/* The idea of this is to have a widget that both launches a "service"..
-   But also can check and kill it, on linux or mac.. Windows got no idea
-   WANTED: expert advice
-*/
-
 ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
     QGroupBox(parent)
 {
