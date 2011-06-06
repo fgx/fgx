@@ -38,6 +38,7 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	buttonStop->setIcon(QIcon(":/icon/stop_disabled"));
 	buttonStop->setStyleSheet(buttStyle);
 	buttlay->addWidget(buttonStop);
+	buttonStop->setEnabled(false);
 	connect(buttonStop, SIGNAL(clicked()), this, SLOT(on_stop_clicked()));
 
 	//** Start Button
@@ -93,7 +94,9 @@ void ExeControls::start(QString command_line){
 	connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
 	connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
 	
-	P->start( QString(command_line)); 
+	P->start( QString(command_line));
+	buttonStart->setEnabled(false);
+	buttonStop->setEnabled(true);
 	
 	}
 
@@ -106,6 +109,8 @@ void ExeControls::start(QString command_line){
 void ExeControls::on_stop_clicked(){
 	//danger!danger!
 	P->kill();
+	buttonStop->setEnabled(false);
+	buttonStart->setEnabled(true);
 }
 
 //** Refresh Button clicked
