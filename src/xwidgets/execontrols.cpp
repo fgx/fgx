@@ -84,13 +84,10 @@ void ExeControls::readError()
 
 //==========================================================================
 // Start Executable
-// Writing recent PIDs to /tmp/exe.pid
+// Connecting console output/errors for log
 //==========================================================================
 void ExeControls::start(QString command_line){
 	
-	//QProcess *P =new QProcess;
-	
-	//QProcess P;
 	P = new QProcess();
 	
 	connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
@@ -104,44 +101,11 @@ void ExeControls::start(QString command_line){
 
 //==========================================================================
 // Stop Executable
-// Get recent PIDs from /tmp/exe.pid and kill
+// 
 //==========================================================================
 void ExeControls::on_stop_clicked(){
-	
-	QString pid;
-	
-	QFile pidFile;
-	if (ExeControls::exe_name.contains("terrasync")) {
-	pidFile.setFileName("/tmp/terrasync.pid");
-	}
-	if (ExeControls::exe_name.contains("fgfs")) {
-		pidFile.setFileName("/tmp/fgfs.pid");
-	}
-	if (ExeControls::exe_name.contains("fgcom")) {
-		pidFile.setFileName("/tmp/fgcom.pid");
-	}
-	
-	
-		if (!pidFile.open(QIODevice::ReadOnly | QIODevice::Text))
-			return;
-	
-		while (!pidFile.atEnd()) {
-		
-			QString line;
-			line.append(pidFile.readAll());
-			line.remove("\n");
-			pid.append(line);	
-		}
-	
-		if(pid > ""){
-			QStringList killargs;
-			killargs << "-9" << pid;
-			QProcess::startDetached("kill", killargs);
-		
-			statusBar->showMessage("Stopped", 2000);
-		}else{
-			statusBar->showMessage("Not found", 2000);
-		}
+	//danger!danger!
+	P->kill();
 }
 
 //** Refresh Button clicked
