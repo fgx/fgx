@@ -116,9 +116,6 @@ void ExeControls::start(QString command_line){
 	//QStringList env = QProcess::systemEnvironment();
 	//env << "LD_LIBRARY_PATH=/home/geoff/fg/fg15/install/OSG283/lib";
 	//P->setEnvironment(env);
-	
- 	//connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
- 	//connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
  	
  	P->start( QString(command_line));
 	
