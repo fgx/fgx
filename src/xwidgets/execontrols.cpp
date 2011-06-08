@@ -30,7 +30,7 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	//** Stop Button
 	buttonStop = new QPushButton();
 	buttonStop->setText(tr(" Stop "));
-	buttonStop->setIcon(QIcon(":/icon/stop_disabled"));
+	//buttonStop->setIcon(QIcon(":/icon/stop_disabled"));
 	buttonStop->setStyleSheet(buttStyle);
 	buttlay->addWidget(buttonStop);
 	buttonStop->setEnabled(false);
@@ -39,7 +39,7 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	//** Start Button
 	buttonStart = new QPushButton();
 	buttonStart->setText(tr(" Start "));
-	buttonStart->setIcon(QIcon(":/icon/start_enabled"));
+	//buttonStart->setIcon(QIcon(":/icon/start_enabled"));
 	buttonStart->setStyleSheet(buttStyle);
 	buttlay->addWidget(buttonStart);
 	//* connection is done in fgx not here..
@@ -53,10 +53,12 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 
 	//* Status Bar
 	
-	QString statusStyle("font-size: 10px"); //* make font smaller. this need to go into global style sheet said yves
+	QString statusStyle("font-size: 9px; color: #666666"); //* make font smaller. this need to go into global style sheet said yves
 	statusBar = new QStatusBar();
 	statusBar->setSizeGripEnabled(false);
-	statusBar->setContentsMargins(5,5,5,5);
+	statusBar->setMinimumWidth(200);
+	statusBar->setMinimumHeight(12);
+	statusBar->setContentsMargins(0,0,0,0);
 	statusBar->setStyleSheet(statusStyle);
 	bottlay->addWidget(statusBar);
 
