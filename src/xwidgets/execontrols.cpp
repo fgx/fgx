@@ -100,6 +100,23 @@ void ExeControls::start(QString command_line){
 	buttonStart->setEnabled(false);
 	buttonStop->setEnabled(true);
 	
+	//Geoff says we need a OSG or LD_LIBRARY_PATH option once!
+	//QStringList env = QProcess::systemEnvironment();
+	//env << "LD_LIBRARY_PATH=/home/geoff/fg/fg15/install/OSG283/lib";
+	//P->setEnvironment(env);
+	
+ 	connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
+ 	connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
+ 	
+ 	P->start( QString(command_line));
+	
+	int res = P->waitForStarted();
+		if (res) {
+			buttonStart->setEnabled(false);
+			buttonStop->setEnabled(true);
+		}
+	
+	
 	}
 
 
