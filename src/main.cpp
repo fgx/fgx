@@ -7,7 +7,7 @@
  *
  */
 
-
+#include <QDebug>
 #include <QApplication>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,7 +28,18 @@ int main( int argc, char* argv[])
 	QApplication::setApplicationVersion("2.3-0pre");
 
 	MainObject mainObject;
+	
+	// Global Styles
+	QString styles;
+	styles.append("QLineEdit { background-color: white }");
+	styles.append("QGroupBox { font-size: 11px; text-transform: uppercase }");
+	styles.append("QPushButton { padding: 5px; }");
+	styles.append("QStatusBar { font-size: 9px; color: #666666 }");
+	
+	qApp->setStyleSheet(styles);
 
+	
+	
 	return app.exec();
 }
 
