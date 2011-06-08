@@ -15,17 +15,6 @@ XSettings::XSettings(QObject *parent) :
 {
 }
 
-//===========================================================================
-//** hAcKer - this to be removed
-//===========================================================================
-//bool XSettings::_dev_mode(){
-//** Hack for petes workstation in dev mode
-
-//	return QFile::exists("/home/ffs/fgx/DEV.txt");
-
-//}
-
-
 
 //===========================================================================
 //** fgx Install path

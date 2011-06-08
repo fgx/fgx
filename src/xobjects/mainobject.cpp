@@ -25,6 +25,8 @@
 MainObject::MainObject(QObject *parent) :
     QObject(parent)
 {
+	
+	
 
     //**********************************************************************
     //** Settings connection

@@ -29,7 +29,6 @@ public:
 	//** Start is called from fgx
 	void start(QString command_line);
 	void get_pid();
-	//void update_pid();
 	void kill_pid();
 
 

@@ -95,11 +95,8 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	menuHelp->addSeparator();
 	menuHelp->addAction(tr("About FGX"), this, SLOT(on_about_fgx()));
 	menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
-
-
-
-
-
+	
+	
 	//====================================================
 	//** Header Banner
 	//====================================================
