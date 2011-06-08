@@ -20,7 +20,7 @@ public:
 	QProcess *P;
 
 
-	QString exe_name; //* This is the exe name we find the "pidof foo"
+	QString exe_name;
 	QStatusBar *statusBar;
 	QPushButton *buttonStart;
 	QPushButton *buttonStop;

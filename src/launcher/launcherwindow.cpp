@@ -164,18 +164,21 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//========================================================================================
 	//**Bottom Bar
 	//========================================================================================
+	
+	//* Show bottom bar
 	QHBoxLayout *bottomActionLayout = new QHBoxLayout();
 	mainLayout->addLayout(bottomActionLayout);
 
 
 	//** Load Save Buttons
+	
 	buttonLoadSettings = new QPushButton();
-	buttonLoadSettings->setText("Load Settings");
+	buttonLoadSettings->setText(tr("Load"));
 	bottomActionLayout->addWidget(buttonLoadSettings);
 	connect(buttonLoadSettings, SIGNAL(clicked()), this, SLOT(load_settings()));
 
 	buttonSaveSettings = new QPushButton();
-	buttonSaveSettings->setText("Save Settings");
+	buttonSaveSettings->setText(tr("Save"));
 	bottomActionLayout->addWidget(buttonSaveSettings);
 	connect(buttonSaveSettings, SIGNAL(clicked()), this, SLOT(save_settings()));
 
