@@ -92,6 +92,8 @@ public slots:
 	//8 Widget Events
 	void on_tab_changed(int);
 	void on_group_box_terrasync_clicked();
+	
+	void removePids();
 };
 
 #endif // LAUNCHERWINDOW_H

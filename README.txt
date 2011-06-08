@@ -33,7 +33,7 @@ Qt Open Source Edition is under Qt GNU GPL v. 3.0 Version
 
 
 ==== Thanks ====
-First I send my BIG Thanks to Pedro, who decided to contribute and committed a new, fast and professional FGX after some days in eraly 20111. Second my thanks goes to ALL the FlightGear developers and associated projects. Without all this developers it would never be possible to have a cool, free, open source Flight Simulator available. 
+First I send my BIG Thanks to Pedro, who decided to contribute and committed a new, fast and professional FGX after some days in eraly 2011. Second my thanks goes to ALL the FlightGear developers and associated projects. Without all this developers it would never be possible to have a cool, free, open source Flight Simulator available. 
 
 (Beware of other distributions where you have to pay for, FlightGear is free, has a huge community, a living forum and wiki, it is THE ORIGINAL, and you will never get a better version than the original. When you find other statements, it’s just a well known lie.)
 
@@ -55,10 +55,3 @@ http://www.gitorious.org/fg
 FGX Sites:
 http://www.gitorious.org/fgx
 http://fgx.googlecode.com
-
-
-==== HISTORY =====
-
-03-25-2011 or so, Pete is joining, project becomes a huge push and better code at all (see gitorious.org/fgx)
-03-25-2011 Starting to distribute first pre-alpha versions via FlightGear forum (see http://www.flightgear.org/forums/viewforum.php?f=21), adding bugtracker at fgx.googlecode.com 
-03-02-2011 Starting the project

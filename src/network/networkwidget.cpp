@@ -565,8 +565,6 @@ QStringList NetworkWidget::get_args(){
 			}
 		}
 		
-		//args << QString("--callsign=") << txtCallSign->text();
-		
 	}
 
 	//* FgCom
@@ -588,11 +586,15 @@ QStringList NetworkWidget::get_args(){
 	if(grpScreenShot->isChecked()){
 		args << QString("--jpg-httpd=%1").arg( txtScreenShot->text() );
 	}
+
+	if (txtCallSign->text().size()) {
+		//  only add a callsign IFF there is an argument
+		QString argCallsign;
+		argCallsign.append("--callsign=");
+		argCallsign.append(txtCallSign->text());
+		args << argCallsign;
+	}
 	
-	QString argCallsign;
-	argCallsign.append("--callsign=");
-	argCallsign.append(txtCallSign->text());
-	args << argCallsign;
 	
 	return args;
 }

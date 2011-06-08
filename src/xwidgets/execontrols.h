@@ -9,14 +9,18 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QToolButton>
 #include <QtGui/QStatusBar>
+#include <QProcess>
 
 class ExeControls : public QGroupBox
 {
 Q_OBJECT
 public:
 	explicit ExeControls(QString title, QString exeNam, QWidget *parent = 0);
+	
+	QProcess *P;
 
-	QString exe_name; //* This is the exe name we find the "pidof foo"
+
+	QString exe_name;
 	QStatusBar *statusBar;
 	QPushButton *buttonStart;
 	QPushButton *buttonStop;
@@ -25,7 +29,6 @@ public:
 	//** Start is called from fgx
 	void start(QString command_line);
 	void get_pid();
-	//void update_pid();
 	void kill_pid();
 
 
@@ -36,7 +39,8 @@ public slots:
 	void on_stop_clicked();
 	void on_refresh_clicked();
 
-
+	void readError();
+	void readOutput();
 };
 
 #endif // EXECONTROLS_H

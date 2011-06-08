@@ -95,11 +95,8 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	menuHelp->addSeparator();
 	menuHelp->addAction(tr("About FGX"), this, SLOT(on_about_fgx()));
 	menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
-
-
-
-
-
+	
+	
 	//====================================================
 	//** Header Banner
 	//====================================================
@@ -164,18 +161,21 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//========================================================================================
 	//**Bottom Bar
 	//========================================================================================
+	
+	//* Show bottom bar
 	QHBoxLayout *bottomActionLayout = new QHBoxLayout();
 	mainLayout->addLayout(bottomActionLayout);
 
 
 	//** Load Save Buttons
+	
 	buttonLoadSettings = new QPushButton();
-	buttonLoadSettings->setText("Load Settings");
+	buttonLoadSettings->setText(tr("Load"));
 	bottomActionLayout->addWidget(buttonLoadSettings);
 	connect(buttonLoadSettings, SIGNAL(clicked()), this, SLOT(load_settings()));
 
 	buttonSaveSettings = new QPushButton();
-	buttonSaveSettings->setText("Save Settings");
+	buttonSaveSettings->setText(tr("Save"));
 	bottomActionLayout->addWidget(buttonSaveSettings);
 	connect(buttonSaveSettings, SIGNAL(clicked()), this, SLOT(save_settings()));
 
@@ -243,27 +243,7 @@ void LauncherWindow::initialize(){
 	aircraftWidget->initialize();
 	airportsWidget->initialize();
 	coreSettingsWidget->initialize();
-	//update_pids();
-
-	//centralWidget()->setDisabled(false);
 }
-
-
-
-//=====================================================================================================================
-// Updates as the external processes in the "command buttons"
-//=======================================================================================================================
-/*void LauncherWindow::update_pids(){
-	if (exeFgCom->isEnabled()){
-		exeFgCom->update_pid();
-	}
-	if (exeTerraSync->isEnabled()){
-		exeTerraSync->update_pid();
-	}
-	if (exeFgfs->isEnabled()){
-		exeFgfs->update_pid();
-	}
-}*/
 
 
 
@@ -504,7 +484,92 @@ void LauncherWindow::on_about_qt(){
 //* Misc Events
 //=======================================================================================================================
 
+
+// kill process and remove pid files for close/quit
+void LauncherWindow::removePids() {
+	
+	QFile pidFileTerrasync( "/tmp/terrasync.pid" );
+	QFile pidFileFgfs( "/tmp/fgfs.pid" );
+	QFile pidFileFgcom( "/tmp/fgcom.pid" );
+	
+	if( pidFileTerrasync.exists() )
+	{	QString pid;
+		if (!pidFileTerrasync.open(QIODevice::ReadOnly | QIODevice::Text))
+		return;
+		
+		while (!pidFileTerrasync.atEnd()) {
+			
+			QString line;
+			line.append(pidFileTerrasync.readAll());
+			line.remove("\n");
+			pid.append(line);	
+		}
+		
+		if(pid > ""){
+			QStringList killargs;
+			killargs << "-9" << pid;
+			QProcess::startDetached("kill", killargs);
+			
+			statusBar->showMessage("Terrasync stopped", 2000);
+		}
+		
+		pidFileTerrasync.remove(); 
+	}
+	
+	if( pidFileFgfs.exists() )
+		{	QString pid;
+			if (!pidFileFgfs.open(QIODevice::ReadOnly | QIODevice::Text))
+				return;
+			
+			while (!pidFileFgfs.atEnd()) {
+				
+				QString line;
+				line.append(pidFileFgfs.readAll());
+				line.remove("\n");
+				pid.append(line);	
+			}
+			
+			if(pid > ""){
+				QStringList killargs;
+				killargs << "-9" << pid;
+				QProcess::startDetached("kill", killargs);
+				
+				statusBar->showMessage("FlightGear (fgfs) stopped", 2000);
+			}
+			
+			pidFileFgfs.remove(); 
+		}
+	
+	if( pidFileFgcom.exists() )
+	{	QString pid;
+		if (!pidFileFgcom.open(QIODevice::ReadOnly | QIODevice::Text))
+			return;
+		
+		while (!pidFileFgcom.atEnd()) {
+			
+			QString line;
+			line.append(pidFileFgcom.readAll());
+			line.remove("\n");
+			pid.append(line);	
+		}
+		
+		if(pid > ""){
+			QStringList killargs;
+			killargs << "-9" << pid;
+			QProcess::startDetached("kill", killargs);
+			
+			statusBar->showMessage("FGCom stopped", 2000);
+		}
+		
+		pidFileFgcom.remove(); 
+	}
+}
+	
+// quit
 void LauncherWindow::on_quit(){
+	
+	removePids();
+	
 	QApplication::quit();
 }
 
@@ -515,7 +580,7 @@ void LauncherWindow::on_group_box_terrasync_clicked(){
 	exeTerraSync->setEnabled(coreSettingsWidget->groupBoxTerraSync->isChecked());
 }
 
-
+// window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
 	Q_UNUSED(event);
 	save_settings();
@@ -523,6 +588,9 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 	mainObject->settings->sync();
 	event->accept();
 	mainObject->launcher_flag = false;
+	
+	removePids();
+	
 }
 
 void LauncherWindow::on_action_style(QAction *action){

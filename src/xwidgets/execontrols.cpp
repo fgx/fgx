@@ -9,11 +9,6 @@
 
 #include "execontrols.h"
 
-/* The idea of this is to have a widget that both launches a "service"..
-   But also can check and kill it, on linux or mac.. Windows got no idea
-   WANTED: expert advice
-*/
-
 ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
     QGroupBox(parent)
 {
@@ -35,18 +30,20 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	//** Stop Button
 	buttonStop = new QPushButton();
 	buttonStop->setText(tr(" Stop "));
-	buttonStop->setIcon(QIcon(":/icon/stop_disabled"));
+	//buttonStop->setIcon(QIcon(":/icon/stop_disabled"));
 	buttonStop->setStyleSheet(buttStyle);
 	buttlay->addWidget(buttonStop);
+	buttonStop->setEnabled(false);
 	connect(buttonStop, SIGNAL(clicked()), this, SLOT(on_stop_clicked()));
 
 	//** Start Button
 	buttonStart = new QPushButton();
 	buttonStart->setText(tr(" Start "));
-	buttonStart->setIcon(QIcon(":/icon/start_enabled"));
+	//buttonStart->setIcon(QIcon(":/icon/start_enabled"));
 	buttonStart->setStyleSheet(buttStyle);
 	buttlay->addWidget(buttonStart);
 	//* connection is done in fgx not here..
+	
 
 
 
@@ -55,97 +52,84 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	layout->addLayout(bottlay);
 
 	//* Status Bar
+	
+	QString statusStyle("font-size: 9px; color: #666666"); //* make font smaller. this need to go into global style sheet said yves
 	statusBar = new QStatusBar();
 	statusBar->setSizeGripEnabled(false);
-	statusBar->setContentsMargins(5,5,5,5);
+	statusBar->setMinimumWidth(200);
+	statusBar->setMinimumHeight(12);
+	statusBar->setContentsMargins(0,0,0,0);
+	statusBar->setStyleSheet(statusStyle);
 	bottlay->addWidget(statusBar);
 
 }
 
 
+// Read standard output
+void ExeControls::readOutput()
+
+{
+	QString output = P->readAllStandardOutput();
+	//Should go into log file
+	statusBar->showMessage(output, 1000);
+}
+
+
+// Read standard error
+void ExeControls::readError()
+
+{
+	QString error = P->readAllStandardError();
+	//Should go into log file
+	statusBar->showMessage(error, 1000);
+}
+
+
 //==========================================================================
 // Start Executable
-// Writing recent PIDs to /tmp/exe.pid
+// and connecting console output/errors for log
 //==========================================================================
 void ExeControls::start(QString command_line){
-	int start = QProcess::startDetached(command_line);
-	Q_UNUSED(start);
-	if(start){
-		statusBar->showMessage("Starting", 2000);
-		QTimer::singleShot(2000,this, SLOT(on_refresh_clicked()));
-		
-		if (command_line.contains("terrasync")) {
-			QString whichExe = "terrasync";
-			QString OSXGetPid = "ps axc|awk '{if ($5==\"";
-			OSXGetPid.append(whichExe);
-			OSXGetPid.append("\") print $1}' > /tmp/terrasync.pid");
-			system(OSXGetPid.toLatin1());
+	
+	P = new QProcess();
+	
+	connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
+	connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
+	
+	P->start( QString(command_line));
+	buttonStart->setEnabled(false);
+	buttonStop->setEnabled(true);
+	
+	//Geoff says we need a OSG or LD_LIBRARY_PATH option once!
+	//QStringList env = QProcess::systemEnvironment();
+	//env << "LD_LIBRARY_PATH=/home/geoff/fg/fg15/install/OSG283/lib";
+	//P->setEnvironment(env);
+	
+ 	connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
+ 	connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
+ 	
+ 	P->start( QString(command_line));
+	
+	int res = P->waitForStarted();
+		if (res) {
+			buttonStart->setEnabled(false);
+			buttonStop->setEnabled(true);
 		}
-		
-		if (command_line.contains("fgcom")) {
-			QString whichExe = "fgcom";
-			QString OSXGetPid = "ps axc|awk '{if ($5==\"";
-			OSXGetPid.append(whichExe);
-			OSXGetPid.append("\") print $1}' > /tmp/fgcom.pid");
-			system(OSXGetPid.toLatin1());
-		}
-		
-		if (command_line.contains("fgfs")) {
-			QString whichExe = "fgfs";
-			QString OSXGetPid = "ps axc|awk '{if ($5==\"";
-			OSXGetPid.append(whichExe);
-			OSXGetPid.append("\") print $1}' > /tmp/fgfs.pid");
-			system(OSXGetPid.toLatin1());
-		}
-
-			
-	}else{
-		statusBar->showMessage("Failed", 4000);
+	
+	
 	}
-}
 
 
 
 //==========================================================================
 // Stop Executable
-// Get recent PIDs from /tmp/exe.pid and kill
+// 
 //==========================================================================
 void ExeControls::on_stop_clicked(){
-	
-	QString pid;
-	
-	QFile pidFile;
-	if (ExeControls::exe_name.contains("terrasync")) {
-	pidFile.setFileName("/tmp/terrasync.pid");
-	}
-	if (ExeControls::exe_name.contains("fgfs")) {
-		pidFile.setFileName("/tmp/fgfs.pid");
-	}
-	if (ExeControls::exe_name.contains("fgcom")) {
-		pidFile.setFileName("/tmp/fgcom.pid");
-	}
-	
-	
-		if (!pidFile.open(QIODevice::ReadOnly | QIODevice::Text))
-			return;
-	
-		while (!pidFile.atEnd()) {
-		
-			QString line;
-			line.append(pidFile.readAll());
-			line.remove("\n");
-			pid.append(line);	
-		}
-	
-		if(pid > ""){
-			QStringList killargs;
-			killargs << "-9" << pid;
-			QProcess::startDetached("kill", killargs);
-		
-			statusBar->showMessage("Stopped", 2000);
-		}else{
-			statusBar->showMessage("Not found", 2000);
-		}
+	//danger!danger!
+	P->kill();
+	buttonStop->setEnabled(false);
+	buttonStart->setEnabled(true);
 }
 
 //** Refresh Button clicked

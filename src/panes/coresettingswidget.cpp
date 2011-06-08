@@ -79,7 +79,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	QVBoxLayout *layoutPaths = new QVBoxLayout();
 	mainLayout->addLayout(layoutPaths, 2);
 
-	XGroupVBox *grpFgPaths = new XGroupVBox("Flight Gear Paths");
+	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
 	layoutPaths->addWidget(grpFgPaths);
 
 	buttonGroupPaths = new QButtonGroup(this);
@@ -129,7 +129,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	QVBoxLayout *layoutTerraCol = new QVBoxLayout();
 	mainLayout->addLayout(layoutTerraCol, 2);
 
-	groupBoxTerraSync = new XGroupHBox(tr("Use TerraSync for Custom Scenery"));
+	groupBoxTerraSync = new XGroupHBox(tr("Download scenery via Terrasync"));
 	groupBoxTerraSync->setCheckable(true);
 	layoutTerraCol->addWidget(groupBoxTerraSync);
 
