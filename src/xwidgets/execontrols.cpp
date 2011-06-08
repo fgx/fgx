@@ -45,14 +45,17 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	//** Bottom layout
 	QHBoxLayout *bottlay = new QHBoxLayout();
 	layout->addLayout(bottlay);
-
+	
 	//* Status Bar
+	
+	QString statusStyle("font-size: 9px; color: #666666");
 	
 	statusBar = new QStatusBar();
 	statusBar->setSizeGripEnabled(false);
 	statusBar->setMinimumWidth(200);
-	statusBar->setMinimumHeight(12);
+	statusBar->setMinimumHeight(30);
 	statusBar->setContentsMargins(0,0,0,0);
+	statusBar->setStyleSheet(statusStyle);
 	bottlay->addWidget(statusBar);
 
 }
@@ -62,9 +65,19 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 void ExeControls::readOutput()
 
 {
-	QString output = P->readAllStandardOutput();
-	//Should go into log file
-	statusBar->showMessage(output, 1000);
+	QString fgxoutput = P->readAllStandardOutput();
+	
+	// show some lines in statusbar as feedback
+	statusBar->showMessage(fgxoutput, 1000);
+
+	// write output to fgxlog
+	QFile file("fgxlog.txt");
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+		return;
+	
+	// show exe name in log
+	QTextStream out(&file);
+	out << ExeControls::title() << ": " << fgxoutput;
 }
 
 
@@ -72,9 +85,19 @@ void ExeControls::readOutput()
 void ExeControls::readError()
 
 {
-	QString error = P->readAllStandardError();
-	//Should go into log file
-	statusBar->showMessage(error, 1000);
+	QString fgxerror = P->readAllStandardError();
+	
+	// show some lines in statusbar as feedback
+	statusBar->showMessage(fgxerror, 1000);
+	
+	// write errors to fgxlog
+	QFile file("fgxlog.txt");
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+		return;
+	
+	// show exe name in log
+	QTextStream out(&file);
+	out << ExeControls::title() << ": " << fgxerror;
 }
 
 
@@ -89,17 +112,13 @@ void ExeControls::start(QString command_line){
 	connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
 	connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
 	
-	P->start( QString(command_line));
-	buttonStart->setEnabled(false);
-	buttonStop->setEnabled(true);
-	
 	//Geoff says we need a OSG or LD_LIBRARY_PATH option once!
 	//QStringList env = QProcess::systemEnvironment();
 	//env << "LD_LIBRARY_PATH=/home/geoff/fg/fg15/install/OSG283/lib";
 	//P->setEnvironment(env);
 	
- 	connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
- 	connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
+ 	//connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
+ 	//connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
  	
  	P->start( QString(command_line));
 	

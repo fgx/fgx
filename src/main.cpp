@@ -7,7 +7,6 @@
  *
  */
 
-#include <QDebug>
 #include <QApplication>
 #include <stdio.h>
 #include <stdlib.h>
