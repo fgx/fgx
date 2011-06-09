@@ -12,10 +12,27 @@
 #include <stdlib.h>
 #include <QFile>
 #include <QTextStream>
-#include <iostream>
 
 
 #include "xobjects/mainobject.h"
+
+void fgxErrorMessage(QtMsgType type, const char *msg)
+{
+	switch (type) {
+		case QtDebugMsg:
+			fprintf(stderr, "FGX Debug: %s\n", msg);
+			break;
+		case QtWarningMsg:
+			fprintf(stderr, "FGX Warning: %s\n", msg);
+			break;
+		case QtCriticalMsg:
+			fprintf(stderr, "FGX Critical: %s\n", msg);
+			break;
+		case QtFatalMsg:
+			fprintf(stderr, "FGX Fatal: %s\n", msg);
+			abort();
+	}
+}
 
 int main( int argc, char* argv[])
 {
@@ -37,9 +54,12 @@ int main( int argc, char* argv[])
 	
 	qApp->setStyleSheet(styles);
 
-	
+	qInstallMsgHandler(fgxErrorMessage);
 	
 	return app.exec();
 }
+
+
+
 
 
