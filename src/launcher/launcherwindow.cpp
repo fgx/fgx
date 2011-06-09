@@ -190,7 +190,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 			);
 	bottomActionLayout->addStretch(10);
 
-	//** Load Save Settings
+	//* Settings: load/save
 	
 	QVBoxLayout *buttlay = new QVBoxLayout();
 	bottomActionLayout->addLayout(buttlay);
@@ -209,14 +209,18 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	buttonSaveSettings = new QPushButton();
 	buttonSaveSettings->setText(tr(" Save "));
-	//buttonSaveSettings->setStyleSheet("background: url(images/stripe.png)");
 	buttonSaveSettings->setIcon(QIcon(":/icon/save"));
 	buttlay->addWidget(buttonSaveSettings);
 	connect(buttonSaveSettings, SIGNAL(clicked()), this, SLOT(save_settings()));
-
+	
+	
+	// Bottom Statusbar 
 	statusBar = new XStatusBar();
 	statusBar->setMinimumHeight(30);
-	statusBar->setContentsMargins(0,0,0,0);
+	statusBar->setContentsMargins(10,0,0,0);
+	
+	mainLayout->addSpacing(10);
+	
 	mainLayout->addWidget(statusBar);
 
 
@@ -376,7 +380,7 @@ void LauncherWindow::save_settings()
 	advancedOptionsWidget->save_settings();
 
 	mainObject->settings->sync();
-	statusBar->showMessage("Settings Saved", 3000);
+	statusBar->showMessage("Settings Saved", 6000);
 }
 
 //================================================================================
@@ -401,7 +405,7 @@ void LauncherWindow::load_settings()
 	//timeWeatherWidget->txtMetar->setPlainText(mainObject->settings->value("metar").toString());
 	//timeWeatherWidget->txtMetar->setEnabled(weather == 2);
 
-	statusBar->showMessage("Settings Loaded", 3000);
+	statusBar->showMessage("Settings Loaded", 6000);
 
 
 }
@@ -446,7 +450,7 @@ bool LauncherWindow::validate(){
 		statusBar->showError(v, TIMEOUT);
 		return false;
 	}
-	qDebug() << "aircraft ok";
+	qDebug() << "aircrafts ok";
 
 	v = airportsWidget->validate();
 	if(v != ""){
@@ -454,7 +458,7 @@ bool LauncherWindow::validate(){
 		statusBar->showError(v, TIMEOUT);
 		return false;
 	}
-	qDebug() << "aircports ok";
+	qDebug() << "airports ok";
 
 	v = networkWidget->validate();
 	if(v != ""){
@@ -462,7 +466,7 @@ bool LauncherWindow::validate(){
 		statusBar->showError(v, TIMEOUT);
 		return false;
 	}
-	qDebug() << "network";
+	qDebug() << "network ok";
 
 ;	if(coreSettingsWidget->groupBoxTerraSync->isChecked() && coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget) );
@@ -470,7 +474,7 @@ bool LauncherWindow::validate(){
 		statusBar->showError("Need a Terrasync directory", TIMEOUT);
 		return false;
 	}
-	qDebug() << "VALID";
+	qDebug() << "ALL VALID";
 	return true;
 }
 

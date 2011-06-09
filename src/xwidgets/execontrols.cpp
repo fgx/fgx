@@ -65,7 +65,7 @@ void ExeControls::readOutput()
 	QString fgxoutput = P->readAllStandardOutput();
 	
 	// show some lines in statusbar as feedback
-	statusBar->showMessage(fgxoutput, 1000);
+	statusBar->showMessage(fgxoutput, 6000);
 
 	// write output to fgxlog
 	QFile file("fgxlog.txt");
@@ -85,7 +85,7 @@ void ExeControls::readError()
 	QString fgxerror = P->readAllStandardError();
 	
 	// show some lines in statusbar as feedback
-	statusBar->showMessage(fgxerror, 1000);
+	statusBar->showMessage(fgxerror, 6000);
 	
 	// write errors to fgxlog
 	QFile file("fgxlog.txt");

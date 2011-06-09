@@ -55,7 +55,7 @@ PathsSettingsWidget::PathsSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 	QAction *actionFgfsSelectPath = new QAction(menuFgfs);
 	menuFgfs->addAction(actionFgfsSelectPath);
-	actionFgfsSelectPath->setText(tr("Select path.."));
+	actionFgfsSelectPath->setText(tr("Select path ..."));
 	connect(actionFgfsSelectPath, SIGNAL(triggered()), this, SLOT(on_select_fgfs_path()));
 
 	QAction *actionFgfsAutoSelect = new QAction(menuFgfs);
@@ -88,7 +88,7 @@ PathsSettingsWidget::PathsSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 	QAction *actFgRootPath = new QAction(menuFgRoot);
 	menuFgRoot->addAction(actFgRootPath);
-	actFgRootPath->setText(tr("Select path.."));
+	actFgRootPath->setText(tr("Select path ..."));
 	connect(actFgRootPath, SIGNAL(triggered()), this, SLOT(on_select_fg_root_path()));
 
 
@@ -215,7 +215,7 @@ void PathsSettingsWidget::on_fgfs_autodetect(){
 //=================================================================================
 //* Selct FGFS  Dialog
 void PathsSettingsWidget::on_select_fgfs_path(){
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Select FGFS  binary"),
+	QString filePath = QFileDialog::getOpenFileName(this, tr("Select FGFS binary"),
 														 txtFgfs->text());
 	if(filePath.length() > 0){
 		txtFgfs->setText(filePath);

@@ -52,7 +52,7 @@ int main( int argc, char* argv[])
 	styles.append("QLineEdit { background-color: white }");
 	styles.append("QGroupBox { font-size: 11px; text-transform: uppercase }");
 	styles.append("QPushButton { padding: 5px; }");
-	styles.append("QStatusBar { font-family: monospace; font-size: 10px; font-weight: bold; color: #ff0000 }");
+	styles.append("QStatusBar { font-family: monospace; font-size: 9px; font-weight: bold; color: #666666 }");
 	
 	// apply styles
 	qApp->setStyleSheet(styles);
