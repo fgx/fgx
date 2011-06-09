@@ -468,7 +468,7 @@ bool LauncherWindow::validate(){
 	}
 	qDebug() << "network ok";
 
-;	if(coreSettingsWidget->groupBoxTerraSync->isChecked() && coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
+	if(coreSettingsWidget->groupBoxTerraSync->isChecked() && coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget) );
 		coreSettingsWidget->txtTerraSyncPath->setFocus();
 		statusBar->showError("Need a Terrasync directory", TIMEOUT);
