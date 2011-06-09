@@ -495,92 +495,9 @@ void LauncherWindow::on_about_qt(){
 //=======================================================================================================================
 //* Misc Events
 //=======================================================================================================================
-
-
-// kill process and remove pid files for close/quit
-void LauncherWindow::removePids() {
-	
-	QFile pidFileTerrasync( "/tmp/terrasync.pid" );
-	QFile pidFileFgfs( "/tmp/fgfs.pid" );
-	QFile pidFileFgcom( "/tmp/fgcom.pid" );
-	
-	if( pidFileTerrasync.exists() )
-	{	QString pid;
-		if (!pidFileTerrasync.open(QIODevice::ReadOnly | QIODevice::Text))
-		return;
-		
-		while (!pidFileTerrasync.atEnd()) {
-			
-			QString line;
-			line.append(pidFileTerrasync.readAll());
-			line.remove("\n");
-			pid.append(line);	
-		}
-		
-		if(pid > ""){
-			QStringList killargs;
-			killargs << "-9" << pid;
-			QProcess::startDetached("kill", killargs);
-			
-			statusBar->showMessage("Terrasync stopped", 2000);
-		}
-		
-		pidFileTerrasync.remove(); 
-	}
-	
-	if( pidFileFgfs.exists() )
-		{	QString pid;
-			if (!pidFileFgfs.open(QIODevice::ReadOnly | QIODevice::Text))
-				return;
-			
-			while (!pidFileFgfs.atEnd()) {
-				
-				QString line;
-				line.append(pidFileFgfs.readAll());
-				line.remove("\n");
-				pid.append(line);	
-			}
-			
-			if(pid > ""){
-				QStringList killargs;
-				killargs << "-9" << pid;
-				QProcess::startDetached("kill", killargs);
-				
-				statusBar->showMessage("FlightGear (fgfs) stopped", 2000);
-			}
-			
-			pidFileFgfs.remove(); 
-		}
-	
-	if( pidFileFgcom.exists() )
-	{	QString pid;
-		if (!pidFileFgcom.open(QIODevice::ReadOnly | QIODevice::Text))
-			return;
-		
-		while (!pidFileFgcom.atEnd()) {
-			
-			QString line;
-			line.append(pidFileFgcom.readAll());
-			line.remove("\n");
-			pid.append(line);	
-		}
-		
-		if(pid > ""){
-			QStringList killargs;
-			killargs << "-9" << pid;
-			QProcess::startDetached("kill", killargs);
-			
-			statusBar->showMessage("FGCom stopped", 2000);
-		}
-		
-		pidFileFgcom.remove(); 
-	}
-}
 	
 // quit
 void LauncherWindow::on_quit(){
-	
-	removePids();
 	
 	QApplication::quit();
 }
@@ -600,8 +517,6 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 	mainObject->settings->sync();
 	event->accept();
 	mainObject->launcher_flag = false;
-	
-	removePids();
 	
 }
 
