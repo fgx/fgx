@@ -95,7 +95,7 @@ void AirportsImport::import_airports(QWidget *parent){
 
 	int c = 0;
 	int found = 0;
-
+        Q_UNUSED(parent);
 	//=================================
 	//** Show Progress as this takes time
 	QProgressDialog progressDialog(tr("Scanning Airports to Database"), tr("Cancel"), 0, 20000);
