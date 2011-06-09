@@ -34,7 +34,8 @@ HEADERS += xobjects/xsettings.h \
     settings/dbsettingswidget.h \
     xwidgets/xstatusbar.h \
     xwidgets/xtreewidgetitem.h \
-	airports/airportsimport.h
+	airports/airportsimport.h \
+    utilities/utilities.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -57,7 +58,8 @@ SOURCES += main.cpp \
     settings/pathssettingswidget.cpp \
     settings/dbsettingswidget.cpp \
     xwidgets/xstatusbar.cpp \
-	airports/airportsimport.cpp
+	airports/airportsimport.cpp \
+    utilities/utilities.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
 

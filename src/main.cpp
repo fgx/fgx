@@ -15,28 +15,28 @@
 
 
 #include "xobjects/mainobject.h"
+#include "utilities/utilities.h"
 
 // own message handler, could be used once ...
 void fgxErrorMessage(QtMsgType type, const char *msg)
 {
-	switch (type) {
-		case QtDebugMsg:
-			QFile file("fgxlog.txt");
-			if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
-				return;
-			QTextStream out(&file);
-			out << "*** FGX says: " << msg << " ***\n";
-			break;
-		/*case QtWarningMsg:
-			fprintf(stderr, "FGX Warning: %s\n", msg);
-			break;
-		case QtCriticalMsg:
-			fprintf(stderr, "FGX Critical: %s\n", msg);
-			break;
-		case QtFatalMsg:
-			fprintf(stderr, "FGX Fatal: %s\n", msg);
-			abort();*/
-	}
+    QString m = msg;
+    switch (type)
+    {
+    case QtDebugMsg:
+        outLog("*** FGX says: "+m+" ***\n",0);
+        break;
+    case QtWarningMsg:
+        outLog("*** FGX warning: "+m+" ***\n",0);
+        break;
+    case QtCriticalMsg:
+        outLog("*** FGX critical: "+m+" ***\n",0);
+        break;
+    case QtFatalMsg:
+        outLog("*** FGX Fatal: "+m+" ***\n",0);
+        abort();
+        break;
+    }
 }
 
 int main( int argc, char* argv[])
