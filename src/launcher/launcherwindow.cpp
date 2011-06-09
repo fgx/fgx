@@ -37,7 +37,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
 
 	QVBoxLayout *mainLayout = new QVBoxLayout();
-	mainLayout->setContentsMargins(0, 0, 0, 0);
+	mainLayout->setContentsMargins(10, 10, 10, 10);
 	mainLayout->setSpacing(0);
 	setLayout(mainLayout);
 
@@ -166,41 +166,53 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	QHBoxLayout *bottomActionLayout = new QHBoxLayout();
 	mainLayout->addLayout(bottomActionLayout);
 
-
-	//** Load Save Buttons
-	
-	buttonLoadSettings = new QPushButton();
-	buttonLoadSettings->setText(tr("Load"));
-	bottomActionLayout->addWidget(buttonLoadSettings);
-	connect(buttonLoadSettings, SIGNAL(clicked()), this, SLOT(load_settings()));
-
-	buttonSaveSettings = new QPushButton();
-	buttonSaveSettings->setText(tr("Save"));
-	bottomActionLayout->addWidget(buttonSaveSettings);
-	connect(buttonSaveSettings, SIGNAL(clicked()), this, SLOT(save_settings()));
-
-	bottomActionLayout->addStretch(100);
-
 	//* FgCom
 	exeFgCom = new ExeControls("FgCom", "fgcom");
 	bottomActionLayout->addWidget(exeFgCom);
 	connect(	exeFgCom->buttonStart, SIGNAL(clicked()),
-				this, SLOT(on_start_fgcom_clicked())
-	);
-
+			this, SLOT(on_start_fgcom_clicked())
+			);
+	bottomActionLayout->addStretch(10);
+	
 	//* TerraSync
 	exeTerraSync = new ExeControls("TerraSync", "terrasync");
 	bottomActionLayout->addWidget(exeTerraSync);
 	connect(	exeTerraSync->buttonStart, SIGNAL(clicked()),
-				this, SLOT(on_start_terrasync_clicked())
-	);
-
+			this, SLOT(on_start_terrasync_clicked())
+			);
+	bottomActionLayout->addStretch(10);
+	
 	//* FlightGear
 	exeFgfs = new ExeControls("FlightGear", "fgfs");
 	bottomActionLayout->addWidget(exeFgfs);
 	connect(	exeFgfs->buttonStart, SIGNAL(clicked()),
-				this, SLOT(on_start_fgfs_clicked())
-	);
+			this, SLOT(on_start_fgfs_clicked())
+			);
+	bottomActionLayout->addStretch(10);
+
+	//** Load Save Settings
+	
+	QVBoxLayout *buttlay = new QVBoxLayout();
+	bottomActionLayout->addLayout(buttlay);
+	
+	QLabel *settingsLabel = new QLabel(this);
+	settingsLabel->setText("Settings");
+	buttlay->addWidget(settingsLabel, 0);
+	
+	buttonLoadSettings = new QPushButton();
+	buttonLoadSettings->setText(tr(" Load "));
+	buttonLoadSettings->setIcon(QIcon(":/icon/refresh"));
+	buttlay->addWidget(buttonLoadSettings);
+	connect(buttonLoadSettings, SIGNAL(clicked()), this, SLOT(load_settings()));
+
+	buttonSaveSettings = new QPushButton();
+	buttonSaveSettings->setText(tr(" Save "));
+	//buttonSaveSettings->setStyleSheet("background: url(images/stripe.png)");
+	buttonSaveSettings->setIcon(QIcon(":/icon/save"));
+	buttlay->addWidget(buttonSaveSettings);
+	connect(buttonSaveSettings, SIGNAL(clicked()), this, SLOT(save_settings()));
+
+
 
 
 	statusBar = new XStatusBar();

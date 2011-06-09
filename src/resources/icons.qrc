@@ -18,5 +18,7 @@
         <file alias="import">database_go.png</file>
         <file alias="favicon">fgx16.png</file>
         <file alias="mpmap">map.png</file>
+		
+		<file alias="stripe">stripe.png</file>
     </qresource>
 </RCC>
