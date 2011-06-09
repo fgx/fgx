@@ -21,9 +21,13 @@ void fgxErrorMessage(QtMsgType type, const char *msg)
 {
 	switch (type) {
 		case QtDebugMsg:
-			fprintf(stderr, "FGX Debug: %s\n", msg);
+			QFile file("fgxlog.txt");
+			if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+				return;
+			QTextStream out(&file);
+			out << "*** FGX says: " << msg << " ***\n";
 			break;
-		case QtWarningMsg:
+		/*case QtWarningMsg:
 			fprintf(stderr, "FGX Warning: %s\n", msg);
 			break;
 		case QtCriticalMsg:
@@ -31,7 +35,7 @@ void fgxErrorMessage(QtMsgType type, const char *msg)
 			break;
 		case QtFatalMsg:
 			fprintf(stderr, "FGX Fatal: %s\n", msg);
-			abort();
+			abort();*/
 	}
 }
 
