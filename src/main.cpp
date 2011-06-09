@@ -16,6 +16,7 @@
 
 #include "xobjects/mainobject.h"
 
+// own message handler, could be used once ...
 void fgxErrorMessage(QtMsgType type, const char *msg)
 {
 	switch (type) {
@@ -37,6 +38,7 @@ void fgxErrorMessage(QtMsgType type, const char *msg)
 int main( int argc, char* argv[])
 {
 	
+	// versioning
 	QApplication app(argc, argv);
 	QApplication::setOrganizationName("FGX");
 	QApplication::setOrganizationDomain("fgx.googlecode.com");
@@ -45,15 +47,17 @@ int main( int argc, char* argv[])
 
 	MainObject mainObject;
 	
-	// Global Styles
+	// global styles
 	QString styles;
 	styles.append("QLineEdit { background-color: white }");
 	styles.append("QGroupBox { font-size: 11px; text-transform: uppercase }");
 	styles.append("QPushButton { padding: 5px; }");
-	styles.append("QStatusBar { font-size: 9px; color: #666666 }");
+	styles.append("QStatusBar { font-family: monospace; font-size: 10px; font-weight: bold; color: #ff0000 }");
 	
+	// apply styles
 	qApp->setStyleSheet(styles);
 
+	// install message handler
 	qInstallMsgHandler(fgxErrorMessage);
 	
 	return app.exec();

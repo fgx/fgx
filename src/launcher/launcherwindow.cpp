@@ -196,7 +196,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	bottomActionLayout->addLayout(buttlay);
 	
 	QLabel *settingsLabel = new QLabel(this);
-	settingsLabel->setText("Settings");
+	settingsLabel->setText("Settings:");
 	buttlay->addWidget(settingsLabel, 0);
 	
 	buttonLoadSettings = new QPushButton();
@@ -204,6 +204,8 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	buttonLoadSettings->setIcon(QIcon(":/icon/refresh"));
 	buttlay->addWidget(buttonLoadSettings);
 	connect(buttonLoadSettings, SIGNAL(clicked()), this, SLOT(load_settings()));
+	
+	bottomActionLayout->addStretch(10);
 
 	buttonSaveSettings = new QPushButton();
 	buttonSaveSettings->setText(tr(" Save "));
@@ -212,10 +214,9 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	buttlay->addWidget(buttonSaveSettings);
 	connect(buttonSaveSettings, SIGNAL(clicked()), this, SLOT(save_settings()));
 
-
-
-
 	statusBar = new XStatusBar();
+	statusBar->setMinimumHeight(30);
+	statusBar->setContentsMargins(0,0,0,0);
 	mainLayout->addWidget(statusBar);
 
 

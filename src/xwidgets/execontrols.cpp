@@ -48,14 +48,11 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	
 	//* Status Bar
 	
-	QString statusStyle("font-size: 9px; color: #666666");
-	
 	statusBar = new QStatusBar();
 	statusBar->setSizeGripEnabled(false);
 	statusBar->setMinimumWidth(200);
 	statusBar->setMinimumHeight(30);
 	statusBar->setContentsMargins(0,0,0,0);
-	statusBar->setStyleSheet(statusStyle);
 	bottlay->addWidget(statusBar);
 
 }
