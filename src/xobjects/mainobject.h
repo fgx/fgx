@@ -22,7 +22,7 @@ class MainObject : public QObject
 Q_OBJECT
 public:
     explicit MainObject(QObject *parent = 0);
-
+    ~MainObject();
 	
     //** Objects
    // TelnetSlave *telnet;

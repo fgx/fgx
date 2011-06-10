@@ -8,6 +8,7 @@
 #include <QtGui/QHBoxLayout>
 
 #include "execontrols.h"
+#include "utilities/utilities.h"
 
 ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
     QGroupBox(parent)
@@ -68,13 +69,7 @@ void ExeControls::readOutput()
 	statusBar->showMessage(fgxoutput, 6000);
 
 	// write output to fgxlog
-	QFile file("fgxlog.txt");
-	if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
-		return;
-	
-	// show exe name in log
-	QTextStream out(&file);
-	out << ExeControls::title() << ": " << fgxoutput;
+        outLog(ExeControls::title()+": "+fgxoutput);
 }
 
 
@@ -88,13 +83,7 @@ void ExeControls::readError()
 	statusBar->showMessage(fgxerror, 6000);
 	
 	// write errors to fgxlog
-	QFile file("fgxlog.txt");
-	if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
-		return;
-	
-	// show exe name in log
-	QTextStream out(&file);
-	out << ExeControls::title() << ": " << fgxerror;
+        outLog(ExeControls::title()+": "+fgxerror);
 }
 
 
@@ -113,7 +102,8 @@ void ExeControls::start(QString command_line){
 	//QStringList env = QProcess::systemEnvironment();
 	//env << "LD_LIBRARY_PATH=/home/geoff/fg/fg15/install/OSG283/lib";
 	//P->setEnvironment(env);
- 	
+
+        outLog("Starting: "+command_line);
  	P->start( QString(command_line));
 	
 	int res = P->waitForStarted();

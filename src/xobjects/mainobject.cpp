@@ -20,13 +20,13 @@
 //#include "map/googlemapwidget.h"
 
 #include "settings/settingsdialog.h"
-
+#include "utilities/utilities.h"
 
 MainObject::MainObject(QObject *parent) :
     QObject(parent)
 {
 	
-	
+    util_setStdLogFile(); // init the LOG file
 
     //**********************************************************************
     //** Settings connection
@@ -156,6 +156,11 @@ MainObject::MainObject(QObject *parent) :
 
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
+}
+
+MainObject::~MainObject()
+{
+    outLog(util_getDateTimestg()+" - Application close");
 }
 
 //============================================================================
