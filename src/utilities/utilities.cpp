@@ -48,13 +48,11 @@ bool util_setStdLogFile()
     QString dir;
     QString file;
     QString log;
-#if defined(Q_OS_MAC)
-   dir  = "/var/log";
-   file = "fgx.log";
-#elif defined(Q_OS_WIN)
+
+#if defined(Q_OS_WIN)
    dir  = getenv("TEMP"); // check for NULL???
    file = "fgx.txt";
-#elif defined(Q_OS_UNIX)
+#elif defined(Q_OS_UNIX) | defined(Q_OS_MAC)
    dir  = "/tmp";
    file = "fgx.log";
 #else
