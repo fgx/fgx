@@ -21,6 +21,32 @@ AeroTools::AeroTools(QObject *parent, MainObject *mOb) :
 }
 
 
+//============================================================================
+//== DataBase De/Re-construction
+//============================================================================
+void AeroTools::create_db_tables(){
+	
+	
+	//* Drop and recreate the tables - then index after index later for speed..
+	QStringList sql_commands;
+	sql_commands.append("DROP TABLE IF EXISTS aircraft;");
+	sql_commands.append("CREATE TABLE aircraft(aero varchar(10) NOT NULL PRIMARY KEY, directory varchar(64) NULL, xml_file varchar(64) NULL, description varchar(255) NULL, fdm varchar(255) NULL, author varchar(255) NULL);");
+	
+	execute_sql_commands_list(sql_commands);
+}
+
+//============================================================================
+//== Execute Commands From List
+//============================================================================
+void AeroTools::execute_sql_commands_list(QStringList sql_commands){
+	QSqlQuery query(mainObject->db);
+	for(int i = 0; i < sql_commands.size(); ++i){
+		if(!query.exec(sql_commands.at(i))){
+			//TODO ignored for now - mysql is safe .. maybe said pete
+			//qDebug() << "OOps=" << mainObject->db.lastError(); //TODO
+		}
+	}
+}
 
 
 //========================================================
@@ -36,22 +62,29 @@ void AeroTools::scan_xml_sets(){
 
 	int c = 0;
 	int found = 0;
-	QProgressDialog progress(tr("Scanning Aircraft to Database"), tr("Cancel"), 0, 0);
+	QProgressDialog progress(tr("Importing ..."), tr("Cancel"), 0, 0);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.show();
+	
+	// clear and create db tables
+	create_db_tables();
 
+	progress.setLabelText(tr("Scanning aircraft directories"));
 
-	//* Clear any records in the database
+	/* Clear any records in the database
 	QSqlQuery sql("delete from aircraft;", mainObject->db);
 	sql.exec();
+	qDebug() << "sql: delete table aircraft";*/
 
 	//* Insert Aircraft query			
 	QSqlQuery sqlAero(mainObject->db);
-	sqlAero.prepare("INSERT INTO aircraft(aero, directory, xml_file, description, fdm, author)VALUES(?,?,?,?,?,?)");
+	sqlAero.prepare("INSERT INTO aircraft(aero, directory, xml_file, description, fdm, author)VALUES(?,?,?,?,?,?);");
+	qDebug() << "sql: insert prepared";
 
 	//* Get Entries from Aircaft/ directory
 	QDir aircraftDir( mainObject->settings->aircraft_path() );
 	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+	qDebug() << "aircraft directory path: " << mainObject->settings->aircraft_path();
 
 	QStringList entries = aircraftDir.entryList();
 	progress.setMaximum(entries.size());
@@ -130,6 +163,14 @@ void AeroTools::scan_xml_sets(){
 					sqlAero.bindValue(3, description);
 					sqlAero.bindValue(4, fdm);
 					sqlAero.bindValue(5, author);
+					
+					qDebug() << "aero: " << aero 
+					<< " directory: " << directory
+					<< " xml_file: " << xml_file
+					<< " description: " << description
+					<< " fdm: " << fdm
+					<< " author: " << author;
+					
 					if(!sqlAero.exec()){
 						qDebug() << mainObject->db.lastError() << sqlAero.lastError();
 					}
@@ -141,7 +182,7 @@ void AeroTools::scan_xml_sets(){
 						break; // TODO ?? why..
 					}
 					c++;
-				} // <Add models
+				} 
 
 			} /* list_xml.count() > 0 */
 		} /* entry != INstruments etc */
