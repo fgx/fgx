@@ -237,6 +237,7 @@ void MainObject::db_connect(){
 	}else if(settings->value("db_engine").toString() == "QSQLITE"){
 		db = QSqlDatabase::addDatabase("QSQLITE");
 		db.setDatabaseName(settings->db_file());
+		qDebug() << "dbfile settings: " << settings->db_file();
 
 	}else{
 		trayIcon->showMessage("DB Error", "Could not open DB", QSystemTrayIcon::Critical, 5000);

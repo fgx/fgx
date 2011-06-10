@@ -131,12 +131,13 @@ void AeroTools::scan_xml_sets(){
 					sqlAero.bindValue(4, fdm);
 					sqlAero.bindValue(5, author);
 					if(!sqlAero.exec()){
-						qDebug() << mainObject->db.lastError();
+						qDebug() << mainObject->db.lastError() << sqlAero.lastError();
 					}
 
 					found++;
 
 					if(progress.wasCanceled()){
+						qDebug() << "Progress cancelled!";
 						break; // TODO ?? why..
 					}
 					c++;

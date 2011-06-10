@@ -46,7 +46,7 @@ int main( int argc, char* argv[])
 	QApplication app(argc, argv);
 	QApplication::setOrganizationName("FGX");
 	QApplication::setOrganizationDomain("fgx.googlecode.com");
-	QApplication::setApplicationName("FGX FlightGear Launcher");
+	QApplication::setApplicationName("FGX");
 	QApplication::setApplicationVersion("2.3-0pre");
 
 	MainObject mainObject;
