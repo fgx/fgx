@@ -52,9 +52,13 @@ bool util_setStdLogFile()
 #if defined(Q_OS_WIN)
    dir  = getenv("TEMP"); // check for NULL???
    file = "fgx.txt";
-#elif defined(Q_OS_UNIX) | defined(Q_OS_MAC)
-   dir  = "/tmp";
+#elif defined(Q_OS_MAC)
+   dir.append(QDir::homePath());
+   dir.append("/Library/Logs");
    file = "fgx.log";
+#elif defined(Q_OS_UNIX)
+	dir  = "/tmp";
+	file = "fgx.log";
 #else
 #error Unknown OS - Add default log dir and file for this OS!
 #endif
