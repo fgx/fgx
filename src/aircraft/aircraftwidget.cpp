@@ -47,7 +47,7 @@
 #include "aircraft/aircraftwidget.h"
 #include "aircraft/aerotools.h"
 #include "xwidgets/xtreewidgetitem.h"
-
+#include "utilities/utilities.h"
 
 
 AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
@@ -55,6 +55,8 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 {
 
 	mainObject = mOb;
+        aeroTool = new AeroTools(this, mainObject);
+        aeroTool->rows.clear();
 
     //* Main Layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -236,27 +238,33 @@ void AircraftWidget::on_tree_selection_changed(){
 
 	QTreeWidgetItem *item = treeWidget->currentItem();
 	if(!item){
+            outLog("on_tree_selection_changed: no selected item");
 		return;
 	}
 
 	//** Check there is item and its a model
 	if(item->text(C_AERO).length() == 0){
-		aeroImageLabel->clear();
+                outLog("on_tree_selection_changed: no C_AERO item");
+                aeroImageLabel->clear();
 		emit set_arg("remove", "--aircraft=", "");
 		return;
 	}
 
 
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->settings->aircraft_path(),
-																item->text(C_DIR),
-																item->text(C_AERO));
+                                                                    item->text(C_DIR),
+                                                                    item->text(C_AERO));
 	if(QFile::exists(thumb_file)){
 		QPixmap aeroImage(thumb_file);
 		if(!aeroImage.isNull()){
-			aeroImageLabel->setPixmap(aeroImage);
-		}
+                    outLog("on_tree_selection_changed: Loaded thumb "+thumb_file);
+                        aeroImageLabel->setPixmap(aeroImage);
+                } else
+                    outLog("on_tree_selection_changed: NO thumb load "+thumb_file);
+
 	}else{
-		aeroImageLabel->clear();
+            outLog("on_tree_selection_changed: NO thumb "+thumb_file);
+                aeroImageLabel->clear();
 	}
 }
 
@@ -328,7 +336,7 @@ void AircraftWidget::on_reload_db_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 
 	//* scan Airaft dirs and save in db
-	AeroTools *aeroTool = new AeroTools(this, mainObject);
+        // AeroTools * aeroTool = new AeroTools(this, mainObject);
 	aeroTool->scan_xml_sets();
 
 	load_tree();
@@ -349,30 +357,60 @@ void AircraftWidget::load_tree(){
 
 	QSqlQuery query("SELECT directory, xml_file, aero, description, fdm, author from aircraft ORDER BY directory, aero ASC", mainObject->db);
 
-	while(query.next()){
+        if (query.isValid()) {
+            while(query.next()){
 
-		if(view == V_LIST){
-			parentItem = treeWidget->invisibleRootItem();
-		}else if(last_dir != query.value(0).toString()){
-			parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
-			parentItem->setText( C_DIR, query.value(0).toString());
-			parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
-			treeWidget->addTopLevelItem(parentItem);
-			treeWidget->setFirstItemColumnSpanned(parentItem, true);
-			last_dir = query.value(0).toString();
-		}
+                    if(view == V_LIST){
+                            parentItem = treeWidget->invisibleRootItem();
+                    }else if(last_dir != query.value(0).toString()){
+                            parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
+                            parentItem->setText( C_DIR, query.value(0).toString());
+                            parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
+                            treeWidget->addTopLevelItem(parentItem);
+                            treeWidget->setFirstItemColumnSpanned(parentItem, true);
+                            last_dir = query.value(0).toString();
+                    }
 
-		//directory, xml_file, aero, fdm, description, author
-		XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
-		QString xml_path = QString("%1/%2").arg(query.value(0).toString(), query.value(1).toString());
-		aeroItem->setText(C_XML, xml_path);
-		aeroItem->setText(C_AERO, query.value(2).toString());
-		aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
-		aeroItem->setText(C_DESCRIPTION, query.value(3).toString());
-		aeroItem->setText(C_FDM, query.value(4).toString());
-		aeroItem->setText(C_AUTHOR, query.value(5).toString());
-		c++;
-	 }
+                    //directory, xml_file, aero, fdm, description, author
+                    XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
+                    QString xml_path = QString("%1/%2").arg(query.value(0).toString(), query.value(1).toString());
+                    aeroItem->setText(C_XML, xml_path);
+                    aeroItem->setText(C_AERO, query.value(2).toString());
+                    aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
+                    aeroItem->setText(C_DESCRIPTION, query.value(3).toString());
+                    aeroItem->setText(C_FDM, query.value(4).toString());
+                    aeroItem->setText(C_AUTHOR, query.value(5).toString());
+                    c++;
+             }
+        } else {
+            for (int i = 0; i < aeroTool->rows.size(); i++) {
+                QStringList list = aeroTool->rows.at(i);
+                // list is -
+                // 0=aero, 1=directory, 2=xml_file, 3=description, 4=fdm, 5=author
+                QString ndir = list.at(1);
+                if(view == V_LIST){
+                        parentItem = treeWidget->invisibleRootItem();
+                }else if(last_dir != ndir){
+                        parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
+                        parentItem->setText( C_DIR, ndir);
+                        parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
+                        treeWidget->addTopLevelItem(parentItem);
+                        treeWidget->setFirstItemColumnSpanned(parentItem, true);
+                        last_dir = ndir;
+                }
+
+                //directory, xml_file, aero, fdm, description, author
+                XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
+                QString xml_path = QString("%1/%2").arg(ndir, list.at(2));
+                aeroItem->setText(C_XML, xml_path);
+                aeroItem->setText(C_AERO, list.at(0));
+                aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
+                aeroItem->setText(C_DESCRIPTION, list.at(3));
+                aeroItem->setText(C_FDM, list.at(4));
+                aeroItem->setText(C_AUTHOR, list.at(5));
+                c++;
+            }
+        }
 
 	 treeWidget->sortByColumn(view == V_NESTED ? C_DIR : C_AERO, Qt::AscendingOrder);
 	 treeWidget->setUpdatesEnabled(true);
@@ -380,7 +418,7 @@ void AircraftWidget::load_tree(){
 	 select_node(currAero);
 	 QString str = QString("%1 aircraft").arg(c);
 	 statusBarAero->showMessage(str);
-
+         outLog("load_tree: with "+str);
 }
 
 //=============================================================
