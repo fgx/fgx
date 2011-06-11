@@ -34,13 +34,13 @@ QString XSettings::fgfs_path(){
 QString XSettings::default_fgfs_path(){
 	// TODO = return the default windows path
 	if(runningOS() == MAC){
-		return QDir::currentPath().append("/fgfs");
+		return QDir::currentPath().append("/fgx.app/Contents/MacOS/fgfs");
 
 	}else if(runningOS() == LINUX){
 		return QString("fgfs");
 	}
 
-	return QString("TODO - default_fgfs_path()");
+	return QString("/usr/bin/local/fgfs");
 }
 
 //===========================================================================
