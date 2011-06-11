@@ -13,6 +13,7 @@ public:
 	explicit AeroTools(QObject *parent, MainObject *mOb);
 
 	MainObject *mainObject;
+        QList<QStringList> rows;
 
 signals:
 

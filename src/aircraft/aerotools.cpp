@@ -13,6 +13,9 @@
 #include <QtScript/QScriptEngine>
 
 #include "aerotools.h"
+#include "utilities/utilities.h"
+
+#undef AEROTOOLS_DEBUG1 // to output a BIG list of aircraft read
 
 AeroTools::AeroTools(QObject *parent, MainObject *mOb) :
     QObject(parent)
@@ -44,7 +47,8 @@ void AeroTools::scan_xml_sets(){
 	//* Clear any records in the database
 	QSqlQuery sql("delete from aircraft;", mainObject->db);
 	sql.exec();
-
+        rows.clear(); // remove all current rows
+        QStringList list;
 	//* Insert Aircraft query			
 	QSqlQuery sqlAero(mainObject->db);
 	sqlAero.prepare("INSERT INTO aircraft(aero, directory, xml_file, description, fdm, author)VALUES(?,?,?,?,?,?)");
@@ -135,7 +139,17 @@ void AeroTools::scan_xml_sets(){
 					}
 
 					found++;
-
+                                        list.clear();
+                                        list += aero;
+                                        list += directory;
+                                        list += xml_file;
+                                        list += description;
+                                        list += fdm;
+                                        list += author;
+                                        rows += list;
+#ifdef AEROTOOLS_DEBUG1                 // if on, very noisy debug output
+                                        outLog("aero=["+aero+"] dir=["+directory+"] file=["+xml_file+"] desc=["+description+"] fdm=["+fdm+"] author=["+author+"]");
+#endif
 					if(progress.wasCanceled()){
 						break; // TODO ?? why..
 					}
