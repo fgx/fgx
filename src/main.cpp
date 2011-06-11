@@ -58,6 +58,8 @@ int main( int argc, char* argv[])
 	styles.append("QPushButton { padding: 5px; }");
 	styles.append("QStatusBar { font-family: monospace; font-size: 9px; font-weight: bold; color: #666666 }");
 	
+			main->setStyleSheet("background-image: url(:images/boxtop-gray);");
+	
 	// apply styles
 	qApp->setStyleSheet(styles);
 

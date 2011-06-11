@@ -19,6 +19,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	setLayout(mainLayout);
+	
 
 	QVBoxLayout *layoutLeft = new QVBoxLayout();
 	mainLayout->addLayout(layoutLeft, 1);
@@ -35,6 +36,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	comboScreenSize->addItem("1280x1024");
 	comboScreenSize->addItem("1600x900");
 	grpBoxScreen->addWidget(comboScreenSize);
+	
 
 	checkBoxFullScreenStartup = new QCheckBox(tr("Full screen at startup"));
 	grpBoxScreen->addWidget(checkBoxFullScreenStartup);
