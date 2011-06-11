@@ -33,7 +33,7 @@ void fgxErrorMessage(QtMsgType type, const char *msg)
         outLog("*** FGX critical: "+m+" ***\n",0);
         break;
     case QtFatalMsg:
-        outLog("*** FGX Fatal: "+m+" ***\n",0);
+        outLog("*** FGX fatal: "+m+" ***\n",0);
         abort();
         break;
     }
@@ -44,10 +44,10 @@ int main( int argc, char* argv[])
 	
 	// versioning
 	QApplication app(argc, argv);
-	QApplication::setOrganizationName("FGX");
+	QApplication::setOrganizationName("FGx");
 	QApplication::setOrganizationDomain("fgx.googlecode.com");
-	QApplication::setApplicationName("FGX");
-	QApplication::setApplicationVersion("2.3-0pre");
+	QApplication::setApplicationName("FGx");
+	QApplication::setApplicationVersion("2.3-0alpha");
 
 	MainObject mainObject;
 	
