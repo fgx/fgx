@@ -22,9 +22,6 @@ AirportsImport::AirportsImport(QObject *parent, MainObject *mOb) :
 
 	mainObject = mOb;
 
-	//progressDialog.setWindowModality(Qt::WindowModal);
-	//progressDialog.hide();
-
 }
 
 

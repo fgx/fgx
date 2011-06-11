@@ -62,19 +62,12 @@ void AeroTools::scan_xml_sets(){
 
 	int c = 0;
 	int found = 0;
-	QProgressDialog progress(tr("Importing ..."), tr("Cancel"), 0, 0);
+	QProgressDialog progress(tr("Scanning aircraft directory ..."), tr("Cancel"), 0, 0);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.show();
 	
 	// clear and create db tables
 	create_db_tables();
-
-	progress.setLabelText(tr("Scanning aircraft directories"));
-
-	/* Clear any records in the database
-	QSqlQuery sql("delete from aircraft;", mainObject->db);
-	sql.exec();
-	qDebug() << "sql: delete table aircraft";*/
 
 	//* Insert Aircraft query			
 	QSqlQuery sqlAero(mainObject->db);
