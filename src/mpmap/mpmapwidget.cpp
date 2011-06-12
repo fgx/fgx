@@ -1,6 +1,7 @@
 
 #include "mpmapwidget.h"
 
+
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 
@@ -38,14 +39,17 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
     comboServer = new QComboBox();
     toolbar->addWidget(comboServer);
 	
-	// Needs callsign from Network Widget
 	
-	QString *mpmapFollowCallsign = new QString("Callsign");
+	// yves says: needs recent callsign from Network Widget and not from settings like done here
+	QString mpmapFollowCallsign;
+	mpmapFollowCallsign.append(mainObject->settings->value("callsign").toString());
 	
-	QString mapURL("http://mpmap01.flightgear.org/?follow=");
-	mapURL.append(mpmapFollowCallsign);
-    comboServer->addItem("MpMap-01", QVariant(mapURL));
-    comboServer->addItem("MpMap-02", QVariant("http://mpmap02.flightgear.org"));
+	QString mapURL1("http://mpmap01.flightgear.org/?follow=");
+	QString mapURL2("http://mpmap01.flightgear.org/?follow=");
+	mapURL1.append(mpmapFollowCallsign);
+	mapURL2.append(mpmapFollowCallsign);
+    comboServer->addItem("MpMap-01", QVariant(mapURL1));
+    comboServer->addItem("MpMap-02", QVariant(mapURL2));
     connect(comboServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_server(int)));
 
 
@@ -74,6 +78,7 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
 void MpMapWidget::start_progress(){
     progressBar->setVisible(true);
 }
+
 void MpMapWidget::update_progress(int v){
     progressBar->setValue(v);
 }
