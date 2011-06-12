@@ -3,7 +3,6 @@
 
 #include <QtCore/QString>
 
-
 #include <QtGui/QWidget>
 #include <QtGui/QProgressBar>
 #include <QtGui/QStatusBar>
@@ -24,11 +23,14 @@ public:
 	explicit MpMapWidget(MainObject *mOb, QWidget *parent = 0);
 
 	MainObject *mainObject;
+	QString *mpmapFollowCallsign;
+	
 private:
     QWebView *browser;
     QProgressBar *progressBar;
     QStatusBar *statusBar;
     QComboBox *comboServer;
+	
     //QString *server_url;
 
 signals:
