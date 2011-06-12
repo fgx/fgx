@@ -39,11 +39,11 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
     comboServer = new QComboBox();
     toolbar->addWidget(comboServer);
 	
-	
-	// yves says: needs recent callsign from Network Widget and not from settings like done here
+	//**get callsign
 	QString mpmapFollowCallsign;
-	mpmapFollowCallsign.append(mainObject->settings->value("callsign").toString());
+	mpmapFollowCallsign.append(mainObject->actionCallsign->text());
 	
+	//**add callsign to url
 	QString mapURL1("http://mpmap01.flightgear.org/?follow=");
 	QString mapURL2("http://mpmap01.flightgear.org/?follow=");
 	mapURL1.append(mpmapFollowCallsign);
