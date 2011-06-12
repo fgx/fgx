@@ -3,5 +3,7 @@
         <file alias="fgx-logo">fgx-logo.png</file>
 		<file alias="boxtop-black">boxtop-black.gif</file>
 		<file alias="boxtop-gray">boxtop-gray.gif</file>
+		<file alias="background_yellow">background_yellow.gif</file>
+		<file alias="background_yellow_dark">background_yellow_dark.gif</file>
     </qresource>
 </RCC>

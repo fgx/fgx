@@ -88,7 +88,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	buttonGroupPaths->setExclusive(true);
 	connect(buttonGroupPaths, SIGNAL(buttonClicked(int)), this, SLOT(on_radio_fg_path()));
 
-
 	QRadioButton *radioFgUseDefault = new QRadioButton(tr("Use Default"));
 	grpFgPaths->addWidget(radioFgUseDefault);
 	buttonGroupPaths->addButton(radioFgUseDefault, 0);
@@ -96,32 +95,36 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	QRadioButton *radioFgUseCustom = new QRadioButton(tr("Use Custom"));
 	grpFgPaths->addWidget(radioFgUseCustom);
 	buttonGroupPaths->addButton(radioFgUseCustom, 1);
+	
+	// to be finished!!!!! said yves
+	QPushButton *buttonSetPaths = new QPushButton();
+	buttonSetPaths->setText(tr("Set Path"));
+	grpFgPaths->addWidget(buttonSetPaths, 1);
+	connect(buttonSetPaths, SIGNAL(clicked()), this, SLOT(on_button_path()));
+
 
 	//----------------------------------------------
 	//** FlightGear executable
-	groupBoxFgFs = new XGroupHBox(tr("FlightGear Executable"));
-	grpFgPaths->addWidget(groupBoxFgFs);
-
-	txtFgFs = new QLineEdit();
-	groupBoxFgFs->addWidget(txtFgFs, 4);
-
-	QPushButton *buttonSetFgFs = new QPushButton();
-	buttonSetFgFs->setText(tr("Set Path"));
-	groupBoxFgFs->addWidget(buttonSetFgFs, 1);
+	
+	QLabel *FgFsPathLabel = new QLabel(tr("Custom FlightGear Executable:"));
+	FgFsPathLabel->setStyleSheet("font-size: 11px; text-transform: uppercase; margin-top: 15px;");
+	grpFgPaths->addWidget(FgFsPathLabel);
+	txtFgFs = new QLabel();
+	txtFgFs->setMargin(4);
+	txtFgFs->setStyleSheet("background-image: url(:images/background_yellow); font-size: 10px;");
+	grpFgPaths->addWidget(txtFgFs);
 
 
 	//----------------------------------------------
 	//** Data Directory
-	groupBoxFgRoot = new XGroupHBox(tr("Data Directory"));
-	grpFgPaths->addWidget(groupBoxFgRoot);
-
-	txtFgRoot = new QLineEdit();
-	groupBoxFgRoot->addWidget(txtFgRoot, 4);
-
-	QPushButton *buttonSetFgRoot = new QPushButton();
-	buttonSetFgRoot->setText(tr("Set Path"));
-	groupBoxFgRoot->addWidget(buttonSetFgRoot, 1);
-
+	
+	QLabel *FgRootPathLabel = new QLabel(tr("Custom Data Directory:"));
+	FgRootPathLabel->setStyleSheet("font-size: 11px; text-transform: uppercase; margin-top: 15px;");
+	grpFgPaths->addWidget(FgRootPathLabel);
+	txtFgRoot = new QLabel();
+	txtFgRoot->setMargin(4);
+	txtFgRoot->setStyleSheet("background-image: url(:images/background_yellow); font-size: 10px;");
+	grpFgPaths->addWidget(txtFgRoot);
 
 	layoutPaths->addStretch(20);
 
@@ -274,9 +277,18 @@ void CoreSettingsWidget::load_joysticks(){
 
 
 void CoreSettingsWidget::on_radio_fg_path(){
-	bool use_custom = buttonGroupPaths->checkedId() == 1;
-	groupBoxFgFs->setEnabled(use_custom);
-	groupBoxFgRoot->setEnabled(use_custom);
+	bool use_custom = buttonGroupPaths->checkedId() == 0;
+		txtFgFs->setEnabled(use_custom);
+		txtFgRoot->setEnabled(use_custom);
+	
+	/*
+	txtFgRoot->setStyleSheet("background-image: url(:images/background_yellow); font-size: 10px;");
+	txtFgFs->setStyleSheet("background-image: url(:images/background_yellow_dark); font-size: 10px;");
+	*/
+	
+	bool use_default = buttonGroupPaths->checkedId() == 1;
+	txtFgFs->setEnabled(use_default);
+	txtFgRoot->setEnabled(use_default);
 }
 
 
