@@ -38,6 +38,8 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
     comboServer = new QComboBox();
     toolbar->addWidget(comboServer);
 	
+	// Needs callsign from Network Widget
+	
 	QString *mpmapFollowCallsign = new QString("Callsign");
 	
 	QString mapURL("http://mpmap01.flightgear.org/?follow=");
@@ -45,7 +47,6 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
     comboServer->addItem("MpMap-01", QVariant(mapURL));
     comboServer->addItem("MpMap-02", QVariant("http://mpmap02.flightgear.org"));
     connect(comboServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_server(int)));
-
 
 
     //** Browser
