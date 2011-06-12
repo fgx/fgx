@@ -5,5 +5,6 @@
 		<file alias="boxtop-gray">boxtop-gray.gif</file>
 		<file alias="background_yellow">background_yellow.gif</file>
 		<file alias="background_yellow_dark">background_yellow_dark.gif</file>
+		<file alias="background_blue">background_blue.gif</file>
     </qresource>
 </RCC>

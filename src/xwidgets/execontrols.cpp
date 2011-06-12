@@ -32,29 +32,20 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	buttonStop->setText(tr(" Stop "));
 	buttlay->addWidget(buttonStop);
 	buttonStop->setEnabled(false);
+	buttonStop->setMinimumSize(QSize( 100, 20));
 	connect(buttonStop, SIGNAL(clicked()), this, SLOT(on_stop_clicked()));
 
 	//** Start Button
 	buttonStart = new QPushButton();
 	buttonStart->setText(tr(" Start "));
+	buttonStart->setMinimumSize(QSize( 100, 20)); 
 	buttlay->addWidget(buttonStart);
 	//* connection is done in fgx not here..
-	
-
-
 
 	//** Bottom layout
 	QHBoxLayout *bottlay = new QHBoxLayout();
 	layout->addLayout(bottlay);
 	
-	//* Status Bar
-	
-	statusBar = new QStatusBar();
-	statusBar->setSizeGripEnabled(false);
-	statusBar->setMinimumWidth(200);
-	statusBar->setMinimumHeight(30);
-	statusBar->setContentsMargins(0,0,0,0);
-	bottlay->addWidget(statusBar);
 
 }
 
@@ -66,10 +57,10 @@ void ExeControls::readOutput()
 	QString fgxoutput = P->readAllStandardOutput();
 	
 	// show some lines in statusbar as feedback
-	statusBar->showMessage(fgxoutput, 6000);
+	//statusBar->showMessage(fgxoutput, 6000));
 
 	// write output to fgxlog
-        outLog(ExeControls::title()+": "+fgxoutput);
+	outLog(ExeControls::title()+": "+fgxoutput);
 }
 
 
@@ -80,10 +71,10 @@ void ExeControls::readError()
 	QString fgxerror = P->readAllStandardError();
 	
 	// show some lines in statusbar as feedback
-	statusBar->showMessage(fgxerror, 6000);
+	//statusBar->showMessage(fgxerror, 6000);
 	
 	// write errors to fgxlog
-        outLog(ExeControls::title()+": "+fgxerror);
+	outLog(ExeControls::title()+": "+fgxerror);
 }
 
 
@@ -103,7 +94,7 @@ void ExeControls::start(QString command_line){
 	//env << "LD_LIBRARY_PATH=/home/geoff/fg/fg15/install/OSG283/lib";
 	//P->setEnvironment(env);
 
-        outLog("Starting: "+command_line);
+	outLog("Starting: "+command_line);
  	P->start( QString(command_line));
 	
 	int res = P->waitForStarted();

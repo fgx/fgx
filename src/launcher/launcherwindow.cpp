@@ -484,9 +484,9 @@ bool LauncherWindow::validate(){
 void LauncherWindow::on_about_fgx(){
 	QString txt;
 	txt.append("<html><body><p>FGX FlightGear Launcher</b></p>");
-	txt.append("<p>&copy; 2011 Gral aka Yves Sablonier and Peteffs aka Pete Morgan</p>");
-	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPL2</a></p>");
-	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear</a></p>");
+	txt.append("<p>&copy; 2011 Yves Sablonier, Pete Morgan, Geoff McLane</p>");
+	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPLv2 and later</a></p>");
+	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear Wiki</a></p>");
 	txt.append("</body></html>");
 	QMessageBox::about(this, "About FGX", txt);
 }
