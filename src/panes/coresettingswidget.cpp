@@ -95,12 +95,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	QRadioButton *radioFgUseCustom = new QRadioButton(tr("Use Custom"));
 	grpFgPaths->addWidget(radioFgUseCustom);
 	buttonGroupPaths->addButton(radioFgUseCustom, 1);
-	
-	// to be finished!!!!! said yves
-	QPushButton *buttonSetPaths = new QPushButton();
-	buttonSetPaths->setText(tr("Set Path"));
-	grpFgPaths->addWidget(buttonSetPaths, 1);
-	connect(buttonSetPaths, SIGNAL(clicked()), this, SLOT(on_button_path()));
 
 
 	//----------------------------------------------
@@ -127,6 +121,14 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpFgPaths->addWidget(txtFgRoot);
 
 	layoutPaths->addStretch(20);
+	
+	
+	//----------------------------------------------
+	//** Set Path Button
+	QPushButton *buttonSetPaths = new QPushButton();
+	buttonSetPaths->setText(tr("Set Paths"));
+	grpFgPaths->addWidget(buttonSetPaths, 1);
+	//connect(buttonSetPaths, SIGNAL(clicked()), this, SLOT(on_buttonSetPath()));
 
 
 	//===========================================================================
