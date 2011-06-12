@@ -101,10 +101,10 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//** FlightGear executable
 	
 	QLabel *FgFsPathLabel = new QLabel(tr("Custom FlightGear Executable:"));
-	FgFsPathLabel->setStyleSheet("font-size: 11px; text-transform: uppercase; margin-top: 15px;");
-	grpFgPaths->addWidget(FgFsPathLabel);
-	txtFgFs = new QLabel();
-	txtFgFs->setMargin(4);
+	FgFsPathLabel->setStyleSheet("width: 200px; font-size: 11px; text-transform: uppercase; margin-top: 15px;");
+	grpFgPaths->addWidget(FgFsPathLabel, 1);
+	txtFgFs = new QLineEdit();
+	//txtFgFs->setMargin(4);
 	txtFgFs->setStyleSheet("background-image: url(:images/background_yellow); font-size: 10px;");
 	grpFgPaths->addWidget(txtFgFs);
 
@@ -114,9 +114,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	QLabel *FgRootPathLabel = new QLabel(tr("Custom Data Directory:"));
 	FgRootPathLabel->setStyleSheet("font-size: 11px; text-transform: uppercase; margin-top: 15px;");
-	grpFgPaths->addWidget(FgRootPathLabel);
-	txtFgRoot = new QLabel();
-	txtFgRoot->setMargin(4);
+	grpFgPaths->addWidget(FgRootPathLabel, 1);
+	txtFgRoot = new QLineEdit();
+	//txtFgRoot->setMargin(4);
 	txtFgRoot->setStyleSheet("background-image: url(:images/background_yellow); font-size: 10px;");
 	grpFgPaths->addWidget(txtFgRoot);
 
@@ -128,7 +128,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	QPushButton *buttonSetPaths = new QPushButton();
 	buttonSetPaths->setText(tr("Set Paths"));
 	grpFgPaths->addWidget(buttonSetPaths, 1);
-	//connect(buttonSetPaths, SIGNAL(clicked()), this, SLOT(on_buttonSetPath()));
+	connect(buttonSetPaths, SIGNAL(clicked()), this, SLOT(show_settings_dialog()));
 
 
 	//===========================================================================
@@ -279,18 +279,9 @@ void CoreSettingsWidget::load_joysticks(){
 
 
 void CoreSettingsWidget::on_radio_fg_path(){
-	bool use_custom = buttonGroupPaths->checkedId() == 0;
-		txtFgFs->setEnabled(use_custom);
-		txtFgRoot->setEnabled(use_custom);
-	
-	/*
-	txtFgRoot->setStyleSheet("background-image: url(:images/background_yellow); font-size: 10px;");
-	txtFgFs->setStyleSheet("background-image: url(:images/background_yellow_dark); font-size: 10px;");
-	*/
-	
-	bool use_default = buttonGroupPaths->checkedId() == 1;
-	txtFgFs->setEnabled(use_default);
-	txtFgRoot->setEnabled(use_default);
+	bool use_custom = buttonGroupPaths->checkedId() == 1;
+	txtFgFs->setEnabled(use_custom);
+	txtFgRoot->setEnabled(use_custom);
 }
 
 

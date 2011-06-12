@@ -41,8 +41,8 @@ public:
 	XGroupHBox *groupBoxFgFs;
 	XGroupHBox *groupBoxFgRoot;
 
-	QLabel *txtFgFs;
-	QLabel *txtFgRoot;
+	QLineEdit *txtFgFs;
+	QLineEdit *txtFgRoot;
 	QLabel *FgRootPathLabel;
 	QLabel *FgFsPathLabel;
 
