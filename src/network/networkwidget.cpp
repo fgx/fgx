@@ -268,6 +268,9 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	buttTelnet->setIcon(QIcon(":/icon/terminal"));
 	buttTelnet->setToolButtonStyle(Qt::ToolButtonIconOnly);
 	connect(buttTelnet, SIGNAL(clicked()), this, SLOT(on_open_telnet()));
+	
+	// disable Telnet for alpha
+	grpTelnet->setEnabled(false);
 
 	//===========================================================
 	//** Screenshot
@@ -497,10 +500,6 @@ void NetworkWidget::populate_combo_hz(QComboBox *combo){
 }
 
 
-
-
-
-
 //=================================================
 // MP IN / Out Events
 void NetworkWidget::on_checkbox_in( ){
@@ -546,6 +545,13 @@ QStringList NetworkWidget::get_args(){
 	
 	//* Enable Multiplay
 	if(grpMpServer->isChecked()){
+		
+		if (mainObject->settings->value("use_terrasync") == false) {
+			args << QString("--atlas=socket,out,5,localhost,5505,udp");
+		}
+		
+
+		
 		if(checkBoxIn->isChecked()){
 			args << QString("--multiplay=in,%1,%2,%3").arg(
 									comboHzIn->currentText()).arg(

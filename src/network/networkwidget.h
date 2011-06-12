@@ -90,6 +90,7 @@ public slots:
 	void on_browse_http();
 	void on_browse_screenshot();
 	void on_open_telnet();
+	
 };
 
 #endif // NETWORKWIDGET_H

@@ -232,10 +232,13 @@ QStringList CoreSettingsWidget::get_args(){
 
 
 
-	//** Terrasync - send on socket
+	//** Terrasync/Multiplayermap - send on socket
 	if (groupBoxTerraSync->isChecked()) {
-		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 		args << QString("--fg-scenery=").append(txtTerraSyncPath->text()).append(":").append(mainObject->settings->scenery_path());
+	}
+	
+	if (groupBoxTerraSync->isChecked() | checkBoxShowMpMap->isChecked()) {
+		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}
 	
 	

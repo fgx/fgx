@@ -89,7 +89,7 @@ public slots:
 	void on_command_help();
 
 
-	//8 Widget Events
+	//* Widget Events
 	void on_tab_changed(int);
 	void on_group_box_terrasync_clicked();
 };
