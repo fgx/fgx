@@ -389,7 +389,6 @@ void AircraftWidget::load_tree(){
 				outLog("Appears SQL database capability FAILED on your system! Check its installation.");
 			else
 				outLog("Aircraft database not initialized! Use Aircraft->Import button.");
-		}
 			
             for (int i = 0; i < aeroTool->rows.size(); i++) {
                 QStringList list = aeroTool->rows.at(i);
@@ -418,6 +417,7 @@ void AircraftWidget::load_tree(){
                 aeroItem->setText(C_AUTHOR, list.at(5));
                 c++;
             }
+		}
         
 
 	 treeWidget->sortByColumn(view == V_NESTED ? C_DIR : C_AERO, Qt::AscendingOrder);
