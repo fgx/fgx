@@ -197,8 +197,8 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	// FgCom Box
 	grpFgCom = new QGroupBox(tr("fgCom - Voice Communications"));
 	rightLayout->addWidget(grpFgCom, 2);
-	grpFgCom->setCheckable(true);
-	grpFgCom->setChecked(false);
+	//grpFgCom->setCheckable(true);
+	//grpFgCom->setChecked(false);
 	connect(grpFgCom, SIGNAL(clicked(bool)), this, SLOT(set_fgcom()));
 
 	QGridLayout *layoutFgCom = new QGridLayout();

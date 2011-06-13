@@ -63,7 +63,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	XGroupVBox *grpMapFeatures = new XGroupVBox("Map Features");
 	layoutLeft->addWidget(grpMapFeatures);
 
-	checkBoxShowMpMap = new QCheckBox("Show Multiplayer Map");
+	checkBoxShowMpMap = new QCheckBox("Show Map in Browser");
 	grpMapFeatures->addWidget(checkBoxShowMpMap);
 	connect(checkBoxShowMpMap, SIGNAL(clicked()), this, SLOT(on_checkbox_show_mp_map()));
 

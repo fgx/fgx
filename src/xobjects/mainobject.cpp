@@ -262,45 +262,8 @@ void MainObject::db_connect(){
 
 	//* Database connected
 	trayIcon->showMessage("DB", "Connected", QSystemTrayIcon::Information, 3000);
-	//bool foo = db_sanity_check();
 
 }
-
-
-//======================================
-//** Database Sanity Check - creates database and tables if not exist
-bool MainObject::db_sanity_check(){
-    QSqlQuery query;
-    query.prepare("select version from db_version;");
-    if(!query.exec()){
-        qDebug() << "Sanity=" << query.lastError();
-        QStringList queries;
-        queries.append("CREATE TABLE IF NOT EXISTS db_version( `version` varchar(20) );");
-        queries.append("INSERT INTO db_version ( `version` )VALUES( 0.1 );");
-
-		//* Aircraft
-		queries.append("CREATE TABLE IF NOT EXISTS aircraft(  `aero` varchar(20), `directory` varchar(20), `xml_file` varchar(30), `description` varchar(100), `fdm` varchar(20), `author` varchar(255), PRIMARY KEY(aero) );");
-		queries.append("CREATE INDEX directory ON aircraft(directory);");
-		queries.append("CREATE INDEX xml_file ON aircraft(xml_file);");
-		queries.append("CREATE INDEX fdm ON aircraft(fdm);");
-		queries.append("CREATE INDEX description ON aircraft(description);");
-
-		//queries.append("CREATE TABLE airports(code varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL, elevation int, tower tinyint NULL);");
-		//queries.append("CREATE TABLE runways(airport varchar(10) NOT NULL, runway varchar(15), width numeric(2,2), length int, lat float, lng float, heading float )");
-        for(int i = 0; i < queries.size(); ++i){
-            qDebug() << queries.at(i);
-            QSqlQuery q;
-            //query.prepare(queries.at(i));
-            if(!q.exec(queries.at(i))){
-                qDebug() << "OOps=" << q.lastError();
-                return false;
-            }
-        }
-        return true;
-    }
-    return true;
-}
-
 
 
 //****************************************************************************

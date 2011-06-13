@@ -357,7 +357,7 @@ void AircraftWidget::load_tree(){
 
 	QSqlQuery query("SELECT directory, xml_file, aero, description, fdm, author from aircraft ORDER BY directory, aero ASC", mainObject->db);
 
-        if (query.isValid()) {
+        if (query.first()) {
             while(query.next()){
 
                     if(view == V_LIST){
