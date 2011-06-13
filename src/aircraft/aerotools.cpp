@@ -33,7 +33,7 @@ void AeroTools::create_db_tables(){
 	//* Drop and recreate the tables - then index after index later for speed..
 	QStringList sql_commands;
 	sql_commands.append("DROP TABLE IF EXISTS aircraft;");
-	sql_commands.append("CREATE TABLE aircraft(aero varchar(10) NOT NULL PRIMARY KEY, directory varchar(64) NULL, xml_file varchar(64) NULL, description varchar(255) NULL, fdm varchar(255) NULL, author varchar(255) NULL);");
+	sql_commands.append("CREATE TABLE aircraft(id INT IDENTITY (1,1) PRIMARY KEY, aero varchar(10) NOT NULL, directory varchar(64) NULL, xml_file varchar(64) NULL, description varchar(255) NULL, fdm varchar(255) NULL, author varchar(255) NULL);");
 	
 	execute_sql_commands_list(sql_commands);
 }
