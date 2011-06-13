@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/images">
         <file alias="fgx-logo">fgx-logo.png</file>
-		<file alias="boxtop-black">boxtop-black.gif</file>
-		<file alias="boxtop-gray">boxtop-gray.gif</file>
     </qresource>
 </RCC>

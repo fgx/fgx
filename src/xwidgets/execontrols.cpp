@@ -8,6 +8,8 @@
 #include <QtGui/QHBoxLayout>
 
 #include "execontrols.h"
+//#include "panes/advancedoptionswidget.h"
+//#include "launcher/launcherwindow.h"
 #include "utilities/utilities.h"
 
 ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
@@ -60,6 +62,28 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 
 
 // Read standard output
+// *TBD* 2011-06-12: Unfortunately this can results in quite 'broken' messages, especially since we are
+// adding the 'title' to the head of the output, so we get things like :-
+// FlightGear: Initializing Nasal Electrical System
+//
+// FlightGear: C
+// FlightGear: o
+// FlightGear: uld not find at least one of the following objects for animation:
+//
+// An enhancement would be to 'collect' the 'reads', and only output to the LOG
+// (and status line) perhaps on a "\n" - same for readError()...
+//
+// This would also require ensuring the last 'read' as the app ended, or
+// when the user pushed [Quit], to get this last to the LOG also...
+//
+// AND if this collection is done, especially on a "\n" basis, then this
+// outLog should NOT add an ADDITIONAL line ending!!!
+// ie use outLog(string,0);
+//
+// And perhaps even at this stage, the 'title' should NOT be added, and
+// just depend on line endings being in the stream. This would ONLY
+// become 'confusing' when running more than one app, like fgfs and fgcom...
+//
 void ExeControls::readOutput()
 
 {
@@ -99,10 +123,26 @@ void ExeControls::start(QString command_line){
 	connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
 	
 	//Geoff says we need a OSG or LD_LIBRARY_PATH option once!
-	//QStringList env = QProcess::systemEnvironment();
-	//env << "LD_LIBRARY_PATH=/home/geoff/fg/fg15/install/OSG283/lib";
-	//P->setEnvironment(env);
-
+        // QStringList user_env = LauncherWindow->advancedOptionsWidget->get_env(); // hmm too difficult this way
+        // so during QString LauncherWindow::fg_args() set  exeFgfs->user_env = advancedOptionsWidget->get_env();
+        // and exeFgfs->runtime = advancedOptionsWidget->get_runtime(); ready for use here...
+        if (user_env.size()) {
+            QStringList env = QProcess::systemEnvironment();
+            // Add like env << "LD_LIBRARY_PATH=/home/geoff/fg/fg15/install/OSG283/lib";
+            // and/or env << "OSG_STEREO=ON" << "OSG_STEREO_MODE=ANAGLYPHIC" etc, etc
+            env << user_env;
+            P->setEnvironment(env); // establish the additional USER environment
+            outLog("Added User env ["+user_env.join(" && ")+"]");
+        }
+        if (runtime.size()) {
+            QDir d;
+            if (d.exists(runtime)) {
+                P->setWorkingDirectory(runtime);
+                outLog("Set runtime directory to ["+runtime+"]");
+            } else {
+                outLog("WARNING: User runtime directory ["+runtime+"] DOES NOT EXIST!");
+            }
+        }
         outLog("Starting: "+command_line);
  	P->start( QString(command_line));
 	

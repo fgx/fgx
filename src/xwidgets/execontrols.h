@@ -25,7 +25,8 @@ public:
 	QPushButton *buttonStart;
 	QPushButton *buttonStop;
 	//QPushButton *buttonRefresh;
-
+        QStringList user_env;
+        QString runtime;
 	//** Start is called from fgx
 	void start(QString command_line);
 	void get_pid();
