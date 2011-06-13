@@ -357,32 +357,40 @@ void AircraftWidget::load_tree(){
 
 	QSqlQuery query("SELECT directory, xml_file, aero, description, fdm, author from aircraft ORDER BY directory, aero ASC", mainObject->db);
 
-        if (query.first()) {
-            while(query.next()){
+		c = 0;
+		while(query.next()){
 
-                    if(view == V_LIST){
-                            parentItem = treeWidget->invisibleRootItem();
-                    }else if(last_dir != query.value(0).toString()){
-                            parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
-                            parentItem->setText( C_DIR, query.value(0).toString());
-                            parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
-                            treeWidget->addTopLevelItem(parentItem);
-                            treeWidget->setFirstItemColumnSpanned(parentItem, true);
-                            last_dir = query.value(0).toString();
-                    }
+				if(view == V_LIST){
+						parentItem = treeWidget->invisibleRootItem();
+				}else if(last_dir != query.value(0).toString()){
+						parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
+						parentItem->setText( C_DIR, query.value(0).toString());
+						parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
+						treeWidget->addTopLevelItem(parentItem);
+						treeWidget->setFirstItemColumnSpanned(parentItem, true);
+						last_dir = query.value(0).toString();
+				}
 
-                    //directory, xml_file, aero, fdm, description, author
-                    XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
-                    QString xml_path = QString("%1/%2").arg(query.value(0).toString(), query.value(1).toString());
-                    aeroItem->setText(C_XML, xml_path);
-                    aeroItem->setText(C_AERO, query.value(2).toString());
-                    aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
-                    aeroItem->setText(C_DESCRIPTION, query.value(3).toString());
-                    aeroItem->setText(C_FDM, query.value(4).toString());
-                    aeroItem->setText(C_AUTHOR, query.value(5).toString());
-                    c++;
-             }
-        } else {
+				//directory, xml_file, aero, fdm, description, author
+				XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
+				QString xml_path = QString("%1/%2").arg(query.value(0).toString(), query.value(1).toString());
+				aeroItem->setText(C_XML, xml_path);
+				aeroItem->setText(C_AERO, query.value(2).toString());
+				aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
+				aeroItem->setText(C_DESCRIPTION, query.value(3).toString());
+				aeroItem->setText(C_FDM, query.value(4).toString());
+				aeroItem->setText(C_AUTHOR, query.value(5).toString());
+				c++;
+		}
+			
+		if ( c == 0 ) {
+				// try using the backup code
+			if (aeroTool->rows.size())
+				outLog("Appears SQL database capability FAILED on your system! Check its installation.");
+			else
+				outLog("Aircraft database not initialized! Use Aircraft->Import button.");
+		}
+			
             for (int i = 0; i < aeroTool->rows.size(); i++) {
                 QStringList list = aeroTool->rows.at(i);
                 // list is -
@@ -410,7 +418,7 @@ void AircraftWidget::load_tree(){
                 aeroItem->setText(C_AUTHOR, list.at(5));
                 c++;
             }
-        }
+        
 
 	 treeWidget->sortByColumn(view == V_NESTED ? C_DIR : C_AERO, Qt::AscendingOrder);
 	 treeWidget->setUpdatesEnabled(true);
