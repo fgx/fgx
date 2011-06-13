@@ -37,8 +37,10 @@ QString XSettings::default_fgfs_path(){
 		return QDir::currentPath().append("/fgx.app/Contents/MacOS/fgfs");
 
 	}else if(runningOS() == LINUX){
-		return QString("fgfs");
-	}
+                return QString("fgfs");
+        }else if(runningOS() == WINDOWS){
+                return QString("C:/Program Files/FlightGear/bin/win32/fgfs.exe");
+        }
 
 	return QString("/usr/bin/local/fgfs");
 }
@@ -60,7 +62,9 @@ QString XSettings::default_fg_root(){
 
 	}else if(runningOS() == LINUX){
 		return QString("/usr/share/games/FlightGear");
-	}
+        }else if(runningOS() == WINDOWS){
+                return QString("C:/Program Files/FlightGear/data");
+        }
 
 	return QString("TODO - default_fg_root()");
 }
