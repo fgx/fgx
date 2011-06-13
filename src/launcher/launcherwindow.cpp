@@ -347,6 +347,8 @@ QString LauncherWindow::fg_args(){
 
 	//**Advanced Options
 	args << advancedOptionsWidget->get_args();
+        exeFgfs->user_env = advancedOptionsWidget->get_env();
+        exeFgfs->runtime = advancedOptionsWidget->get_runtime();
 
 	//* Ai Traffic TODO
 	/*

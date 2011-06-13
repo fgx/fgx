@@ -5,6 +5,7 @@
 #include <QtGui/QPlainTextEdit>
 #include <QtGui/QGroupBox>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QLineEdit>
 
 #include "xobjects/mainobject.h"
 
@@ -17,11 +18,16 @@ public:
 	MainObject *mainObject;
 
 	QPlainTextEdit *txtExtraArgs;
+        QPlainTextEdit *txtExtraEnv;
+        QLineEdit *txtRuntime;
 
 	QGroupBox *groupBoxWriteLog;
 	QButtonGroup *buttonGroupLogOptions;
 
 	QStringList get_args();
+        QStringList get_env();
+        QString     get_runtime();
+
 	void load_settings();
 	void save_settings();
 
