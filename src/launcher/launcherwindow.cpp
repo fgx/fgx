@@ -294,8 +294,8 @@ void LauncherWindow::on_start_terrasync_clicked(){
 	QString command_line = mainObject->settings->terrasync_exe_path();
 	command_line.append(" ").append(args.join(" "));
 	qDebug() << command_line;
-	
 	exeTerraSync->start(command_line);
+	statusBar->showMessage("Scenery synchronisation started by TerraSync", 6000);
 	
 }
 
@@ -313,6 +313,7 @@ void LauncherWindow::on_start_fgcom_clicked(){
 	command_line.append( args.join(" ") );
 	qDebug() << command_line;
 	exeFgCom->start(command_line);
+	statusBar->showMessage("FGCom started", 6000);
 }
 
 
