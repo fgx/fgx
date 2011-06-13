@@ -32,9 +32,9 @@ HEADERS += xobjects/xsettings.h \
     mpmap/mpmapwidget.h \
     settings/pathssettingswidget.h \
     settings/dbsettingswidget.h \
-    xwidgets/xstatusbar.h \
+    utilities/statusbar.h \
     xwidgets/xtreewidgetitem.h \
-	airports/airportsimport.h \
+    airports/airportsimport.h \
     utilities/utilities.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
@@ -57,8 +57,8 @@ SOURCES += main.cpp \
     mpmap/mpmapwidget.cpp \
     settings/pathssettingswidget.cpp \
     settings/dbsettingswidget.cpp \
-    xwidgets/xstatusbar.cpp \
-	airports/airportsimport.cpp \
+    utilities/statusbar.cpp \
+    airports/airportsimport.cpp \
     utilities/utilities.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc

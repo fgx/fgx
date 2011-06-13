@@ -215,7 +215,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	
 	
 	// Bottom Statusbar 
-	statusBar = new XStatusBar();
+	statusBar = new StatusBar();
 	statusBar->setMinimumHeight(30);
 	statusBar->setContentsMargins(10,0,0,0);
 	

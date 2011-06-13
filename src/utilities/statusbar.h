@@ -1,13 +1,13 @@
-#ifndef XSTATUSBAR_H
-#define XSTATUSBAR_H
+#ifndef STATUSBAR_H
+#define STATUSBAR_H
 
 #include <QStatusBar>
 
-class XStatusBar : public QStatusBar
+class StatusBar : public QStatusBar
 {
 Q_OBJECT
 public:
-    explicit XStatusBar(QWidget *parent = 0);
+    explicit StatusBar(QWidget *parent = 0);
 
     void showMessage(QString message, int timeout);
     void showMessage(QString message);
@@ -22,4 +22,4 @@ public slots:
 
 };
 
-#endif // XSTATUSBAR_H
+#endif // STATUSBAR_H

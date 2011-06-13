@@ -17,7 +17,7 @@
 #include "panes/outputpreviewwidget.h"
 
 #include "xwidgets/execontrols.h"
-#include "xwidgets/xstatusbar.h"
+#include "utilities/statusbar.h"
 
 #include "xobjects/mainobject.h"
 
@@ -52,7 +52,7 @@ public:
 	ExeControls *exeTerraSync;
 	ExeControls *exeFgCom;
 
-	XStatusBar *statusBar;
+	StatusBar *statusBar;
 
     void closeEvent(QCloseEvent *event);
 
