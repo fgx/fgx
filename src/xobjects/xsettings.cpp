@@ -145,8 +145,9 @@ QString XSettings::terrasync_exe_path(){
 	}
 	return QString("TODO - terrasync");
 }
+
 QString XSettings::terrasync_sync_path(){
-	return value("terrasync_sync_path").toString();
+	return value("hier der pfad").toString();
 }	
 	
 
@@ -225,7 +226,7 @@ QString XSettings::fgcom_exe_path(){
 //===========================================================================
 QString XSettings::db_file(){
 	QString storedir = QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath();
-	//** Wtf = expected Qt to create this location automatically mydata/<exe>/<App Name>
+
 	if(!QFile::exists(storedir)){
 		QDir *dir = new QDir("");
 		dir->mkpath(storedir);
