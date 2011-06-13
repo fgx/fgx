@@ -10,6 +10,10 @@
 #include <QMutex>
 #include "utilities.h"
 
+#if defined(Q_OS_WIN)
+#include <stdlib.h> // for getenv("TEMP")
+#endif
+
 
 /*
     LOG FILE FUNCTIONS

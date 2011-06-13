@@ -16,11 +16,9 @@
 #include "xobjects/mainobject.h"
 #include "launcher/launcherwindow.h"
 
-//#include "mpmap/mpmapwidget.h"
-//#include "map/googlemapwidget.h"
-
 #include "settings/settingsdialog.h"
 #include "utilities/utilities.h"
+
 
 MainObject::MainObject(QObject *parent) :
     QObject(parent)
