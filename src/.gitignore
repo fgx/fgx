@@ -7,5 +7,6 @@ fgx
 fgx.pro.user
 fgx.xcodeproj
 Info.plist
+fgx.app/*
 fgx.app
 PkgInfo
