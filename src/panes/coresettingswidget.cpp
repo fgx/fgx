@@ -89,11 +89,11 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	buttonGroupPaths->setExclusive(true);
 	connect(buttonGroupPaths, SIGNAL(buttonClicked(int)), this, SLOT(on_radio_fg_path()));
 
-	QRadioButton *radioFgUseDefault = new QRadioButton(tr("Use Default"));
+	radioFgUseDefault = new QRadioButton(tr("Use Default"));
 	grpFgPaths->addWidget(radioFgUseDefault);
 	buttonGroupPaths->addButton(radioFgUseDefault, 0);
 
-	QRadioButton *radioFgUseCustom = new QRadioButton(tr("Use Custom"));
+	radioFgUseCustom = new QRadioButton(tr("Use Custom"));
 	grpFgPaths->addWidget(radioFgUseCustom);
 	buttonGroupPaths->addButton(radioFgUseCustom, 1);
 
@@ -161,6 +161,7 @@ void CoreSettingsWidget::on_checkbox_show_mp_map(){
 //====================================================
 //* Load Settings
 void CoreSettingsWidget::load_settings(){
+
 	//** Sartup screens
 	int idx = comboScreenSize->findText(mainObject->settings->value("screen_size").toString());
 	comboScreenSize->setCurrentIndex( idx == -1 ? 0 : idx );
@@ -177,8 +178,14 @@ void CoreSettingsWidget::load_settings(){
 	on_checkbox_show_mp_map();
 
 	//* Paths
+	if(mainObject->settings->value("USE_DEFAULT_PATHS", 1).toBool()){
+		radioFgUseDefault->setChecked(true);
+	}else{
+		radioFgUseCustom->setChecked(true);
+	}
 	txtFgFs->setText(mainObject->settings->fgfs_path());
 	txtFgRoot->setText(mainObject->settings->fg_root());
+
 
 
 	groupBoxTerraSync->setChecked(mainObject->settings->value("use_terrasync").toBool());
@@ -213,6 +220,8 @@ void CoreSettingsWidget::save_settings(){
 	mainObject->settings->setValue("mpmap", comboMpMapServer->currentIndex());
 
 	//* Paths
+	mainObject->settings->setValue("USE_DEFAULT_PATHS", radioFgUseDefault->isChecked());
+
 	mainObject->settings->setValue("use_terrasync", groupBoxTerraSync->isChecked());
 	mainObject->settings->setValue("terrasync_sync_path", txtTerraSyncPath->text());
 

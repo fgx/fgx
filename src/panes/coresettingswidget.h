@@ -7,6 +7,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QGroupBox>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QRadioButton>
 
 #include "xobjects/mainobject.h"
 #include "xwidgets/xgroupboxes.h"
@@ -41,6 +42,8 @@ public:
 	XGroupHBox *groupBoxFgFs;
 	XGroupHBox *groupBoxFgRoot;
 
+	QRadioButton *radioFgUseDefault;
+	QRadioButton *radioFgUseCustom;
 	QLineEdit *txtFgFs;
 	QLineEdit *txtFgRoot;
 	QLabel *FgRootPathLabel;
