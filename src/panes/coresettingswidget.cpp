@@ -31,6 +31,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 	grpBoxScreen->addWidget(new QLabel("Initial Screen Size"));
 	comboScreenSize = new QComboBox();
+	comboScreenSize->addItem("-- Default --");
 	comboScreenSize->addItem("800x600");
 	comboScreenSize->addItem("1024x768");
 	comboScreenSize->addItem("1280x1024");
@@ -226,7 +227,9 @@ QStringList CoreSettingsWidget::get_args(){
 	QStringList args;
 
 	//** Startup , Splash, Geometry
-	args << QString("--geometry=").append( comboScreenSize->currentText() );
+	if(comboScreenSize->currentIndex() > 0){ /* zero is "--detault--" */
+		args << QString("--geometry=").append( comboScreenSize->currentText() );
+		}
 	if (checkBoxDisableSplashScreen->isChecked()) {
 		args << QString("--disable-splash-screen");
 	}
