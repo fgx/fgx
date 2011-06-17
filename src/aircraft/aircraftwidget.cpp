@@ -82,6 +82,14 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	QHBoxLayout *treeTopBar = new QHBoxLayout();
 	treeLayout->addLayout(treeTopBar);
 
+	//** Use Default Aircraft
+	checkBoxUseDefault = new QCheckBox(this);
+	checkBoxUseDefault->setText("Use Default");
+	treeTopBar->addWidget(checkBoxUseDefault);
+	connect(checkBoxUseDefault, SIGNAL(clicked()), this, SLOT(on_use_default_clicked()));
+
+	treeTopBar->addSpacing(10);
+
 	//==========================
 	//** Filter tabs
 	tabsView = new QTabBar();
@@ -89,6 +97,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	tabsView->addTab(tr("View Nested"));
 	treeTopBar->addWidget(tabsView);
 	connect(tabsView, SIGNAL(currentChanged(int)), this, SLOT(load_tree()));
+
 
 	treeTopBar->addStretch(20);
 
@@ -286,6 +295,7 @@ void AircraftWidget::save_settings(){
 	mainObject->settings->setValue("adf", txtAdf->text());
 	mainObject->settings->setValue("comm1", txtComm1->text());
 	mainObject->settings->setValue("comm2", txtComm2->text());
+	mainObject->settings->setValue("aircraft_use_default", checkBoxUseDefault->isChecked());
 	mainObject->settings->sync();
 }
 
@@ -301,6 +311,8 @@ void AircraftWidget::load_settings(){
 	txtAdf->setText(mainObject->settings->value("adf").toString());
 	txtComm1->setText(mainObject->settings->value("comm1").toString());
 	txtComm2->setText(mainObject->settings->value("comm2").toString());
+	checkBoxUseDefault->setChecked(mainObject->settings->value("aircraft_use_default", false).toBool());
+	on_use_default_clicked();
 }
 
 void AircraftWidget::select_node(QString aero){
@@ -447,8 +459,10 @@ QStringList AircraftWidget::get_args(){
 
 	QStringList args;
 
-	if(selected_aircraft().length() > 0){
-		args << QString("--aircraft=%1").arg(selected_aircraft());
+	if(!checkBoxUseDefault->isChecked()){
+		if(selected_aircraft().length() > 0){
+			args << QString("--aircraft=%1").arg(selected_aircraft());
+		}
 	}
 
 	if(txtNav1->text().length() > 0){
@@ -469,4 +483,9 @@ QStringList AircraftWidget::get_args(){
 
 	return args;
 
+}
+
+
+void AircraftWidget::on_use_default_clicked(){
+	treeWidget->setEnabled( !checkBoxUseDefault->isChecked() );
 }

@@ -7,6 +7,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QAbstractButton>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
 #include <QtGui/QLineEdit>
 #include <QtGui/QTreeWidget>
 #include <QtGui/QTabBar>
@@ -39,6 +40,7 @@ public:
 
 	QLabel *aeroImageLabel;
 	QTabBar *tabsView;
+	QCheckBox *checkBoxUseDefault;
 
 	QLineEdit *txtNav1;
 	QLineEdit *txtNav2;
@@ -71,7 +73,7 @@ signals:
 
 public slots:
 	void load_tree();
-
+	void on_use_default_clicked();
 	void on_tree_selection_changed();
 	void on_reload_db_cache();
 };

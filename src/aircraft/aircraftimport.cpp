@@ -177,14 +177,14 @@ void AircraftImport::scan_xml_sets(){
 					}
 
 					found++;
-                                        list.clear();
-                                        list += aero;
-                                        list += directory;
-                                        list += xml_file;
-                                        list += description;
-                                        list += fdm;
-                                        list += author;
-                                        rows += list;
+					list.clear();
+					list += aero;
+					list += directory;
+					list += xml_file;
+					list += description;
+					list += fdm;
+					list += author;
+					rows += list;
 
 					if(progress.wasCanceled()){
 						qDebug() << "Progress cancelled!";
