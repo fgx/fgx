@@ -14,7 +14,7 @@
 #include <QtGui/QStatusBar>
 
 #include "xobjects/mainobject.h"
-#include "aircraft/aerotools.h"
+#include "aircraft/aircraftimport.h"
 
 class AircraftWidget : public QWidget
 {
@@ -54,7 +54,7 @@ public:
 	QString selected_aircraft();
 
 	QStringList get_args();
-        AeroTools *aeroTool;
+		AircraftImport *aircraftImport;
 
 private:
 	QTreeWidget *treeWidget;

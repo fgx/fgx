@@ -45,7 +45,7 @@
 
 
 #include "aircraft/aircraftwidget.h"
-#include "aircraft/aerotools.h"
+#include "aircraft/aircraftimport.h"
 #include "xwidgets/xtreewidgetitem.h"
 #include "utilities/utilities.h"
 
@@ -55,8 +55,8 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 {
 
 	mainObject = mOb;
-        aeroTool = new AeroTools(this, mainObject);
-        aeroTool->rows.clear();
+	aircraftImport = new AircraftImport(this, mainObject);
+	aircraftImport->rows.clear();
 
     //* Main Layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -337,7 +337,7 @@ void AircraftWidget::on_reload_db_cache(){
 
 	//* scan Airaft dirs and save in db
         // AeroTools * aeroTool = new AeroTools(this, mainObject);
-	aeroTool->scan_xml_sets();
+	aircraftImport->scan_xml_sets();
 
 	load_tree();
 }
@@ -385,13 +385,13 @@ void AircraftWidget::load_tree(){
 			
 		if ( c == 0 ) {
 				// try using the backup code
-			if (aeroTool->rows.size())
+			if (aircraftImport->rows.size())
 				outLog("Appears SQL database capability FAILED on your system! Check its installation.");
 			else
 				outLog("Aircraft database not initialized! Use Aircraft->Import button.");
 			
-            for (int i = 0; i < aeroTool->rows.size(); i++) {
-                QStringList list = aeroTool->rows.at(i);
+			for (int i = 0; i < aircraftImport->rows.size(); i++) {
+				QStringList list = aircraftImport->rows.at(i);
                 // list is -
                 // 0=aero, 1=directory, 2=xml_file, 3=description, 4=fdm, 5=author
                 QString ndir = list.at(1);

@@ -6,11 +6,11 @@
 
 #include "xobjects/mainobject.h"
 
-class AeroTools : public QObject
+class AircraftImport : public QObject
 {
 Q_OBJECT
 public:
-	explicit AeroTools(QObject *parent, MainObject *mOb);
+	explicit AircraftImport(QObject *parent, MainObject *mOb);
 
 	MainObject *mainObject;
         QList<QStringList> rows;

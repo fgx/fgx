@@ -12,12 +12,12 @@
 #include <QtXml/QDomDocument>
 #include <QtScript/QScriptEngine>
 
-#include "aerotools.h"
+#include "aircraftimport.h"
 #include "utilities/utilities.h"
 
-#undef AEROTOOLS_DEBUG1 // to output a BIG list of aircraft read
+#undef AircraftImport_DEBUG1 // to output a BIG list of aircraft read
 
-AeroTools::AeroTools(QObject *parent, MainObject *mOb) :
+AircraftImport::AircraftImport(QObject *parent, MainObject *mOb) :
     QObject(parent)
 {
 	mainObject = mOb;
@@ -27,7 +27,7 @@ AeroTools::AeroTools(QObject *parent, MainObject *mOb) :
 //============================================================================
 //== DataBase De/Re-construction
 //============================================================================
-void AeroTools::create_db_tables(){
+void AircraftImport::create_db_tables(){
 	
 	
 	//* Drop and recreate the tables - then index after index later for speed..
@@ -41,7 +41,7 @@ void AeroTools::create_db_tables(){
 //============================================================================
 //== Execute Commands From List
 //============================================================================
-void AeroTools::execute_sql_commands_list(QStringList sql_commands){
+void AircraftImport::execute_sql_commands_list(QStringList sql_commands){
 	QSqlQuery query(mainObject->db);
 	for(int i = 0; i < sql_commands.size(); ++i){
 		if(!query.exec(sql_commands.at(i))){
@@ -61,7 +61,7 @@ void AeroTools::execute_sql_commands_list(QStringList sql_commands){
    and therby engquires the xml fo
 */
 
-void AeroTools::scan_xml_sets(){
+void AircraftImport::scan_xml_sets(){
 
 	int c = 0;
 	int found = 0;
@@ -163,8 +163,8 @@ void AeroTools::scan_xml_sets(){
 					sqlAero.bindValue(4, fdm);
 					sqlAero.bindValue(5, author);
 					
-#ifdef AEROTOOLS_DEBUG1                 // if on, very noisy debug output
-                                        qDebug() << "aero: " << aero
+#ifdef AircraftImport_DEBUG1                 // if on, very noisy debug output
+					qDebug() << "aero: " << aero
 					<< " directory: " << directory
 					<< " xml_file: " << xml_file
 					<< " description: " << description

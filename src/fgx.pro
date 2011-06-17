@@ -17,7 +17,7 @@ HEADERS += xobjects/xsettings.h \
     network/networkwidget.h \
     network/mptelnet.h \
     aircraft/aircraftwidget.h \
-    aircraft/aerotools.h \
+	aircraft/aircraftimport.h \
     airports/airportswidget.h \
     airports/importairportswidget.h \
     airports/aptdatparser.h \
@@ -42,7 +42,7 @@ SOURCES += main.cpp \
     network/networkwidget.cpp \
     network/mptelnet.cpp \
     aircraft/aircraftwidget.cpp \
-    aircraft/aerotools.cpp \
+	aircraft/aircraftimport.cpp \
     airports/airportswidget.cpp \
     airports/aptdatparser.cpp \
     airports/importairportswidget.cpp \
