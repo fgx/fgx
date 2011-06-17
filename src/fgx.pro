@@ -10,7 +10,6 @@ QT += network \
     xmlpatterns \
     sql \
     webkit
-
 # Input
 HEADERS += xobjects/xsettings.h \
     settings/settingsdialog.h \
@@ -62,5 +61,4 @@ SOURCES += main.cpp \
     utilities/utilities.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
-
 CONFIG += console
