@@ -285,7 +285,6 @@ void LauncherWindow::on_start_fgfs_clicked() {
 		QDesktopServices::openUrl(mapUrl);
 	}
 	exeFgfs->start(command_line);
-	statusBar->showMessage("FlightGear started ...", -1);
 }
 
 
@@ -301,7 +300,6 @@ void LauncherWindow::on_start_terrasync_clicked(){
 	command_line.append(" ").append(args.join(" "));
 	qDebug() << command_line;
 	exeTerraSync->start(command_line);
-	statusBar->showMessage("Starting Terrasync: " + command_line, -1);
 	
 }
 
@@ -319,7 +317,6 @@ void LauncherWindow::on_start_fgcom_clicked(){
 	command_line.append( args.join(" ") );
 	qDebug() << command_line;
 	exeFgCom->start(command_line);
-	statusBar->showMessage("Starting FGCom: " + command_line, -1);
 }
 
 
