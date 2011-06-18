@@ -98,7 +98,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	actionGroupUrls->addAction(act);
 
 	menuHelp->addSeparator();
-	menuHelp->addAction(tr("About FGX"), this, SLOT(on_about_fgx()));
+	menuHelp->addAction(tr("About FGx"), this, SLOT(on_about_fgx()));
 	menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
 	
 	
@@ -492,12 +492,12 @@ bool LauncherWindow::validate(){
 //=======================================================================================================================
 void LauncherWindow::on_about_fgx(){
 	QString txt;
-	txt.append("<html><body><p>FGX FlightGear Launcher</b></p>");
+	txt.append("<html><body><p>FGx FlightGear Launcher</b></p>");
 	txt.append("<p>&copy; 2011 Yves Sablonier, Pete Morgan, Geoff McLane</p>");
 	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPLv2 and later</a></p>");
 	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear Wiki</a></p>");
 	txt.append("</body></html>");
-	QMessageBox::about(this, "About FGX", txt);
+	QMessageBox::about(this, "About FGx", txt);
 }
 
 void LauncherWindow::on_about_qt(){
