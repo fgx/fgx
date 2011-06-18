@@ -36,7 +36,7 @@ void AirportsImport::create_db_tables(){
 	sql_commands.append("DROP TABLE IF EXISTS airports;");
 	sql_commands.append("DROP TABLE IF EXISTS runways;");
 	sql_commands.append("DROP TABLE IF EXISTS ils;");
-	sql_commands.append("DROP TABLE IF EXISTS parking;");
+	sql_commands.append("DROP TABLE IF EXISTS stands;");
 	sql_commands.append("CREATE TABLE airports(code varchar(10) NOT NULL PRIMARY KEY, name varchar(50) NULL, dir varchar(255) NOT NULL);");
 	sql_commands.append("CREATE TABLE runways(airport_code varchar(10) NOT NULL, runway varchar(15), length int, lat float, lon float, heading float );");
 	sql_commands.append("CREATE TABLE ils(airport_code varchar(10) NOT NULL, runway varchar(15) NOT NULL, ident varchar(10), lat float, lon float, heading float );");
