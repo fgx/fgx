@@ -17,6 +17,7 @@
 
 
 #include "launcher/launcherwindow.h"
+#include "utilities/utilities.h"
 
 
 LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
@@ -540,7 +541,10 @@ void LauncherWindow::on_action_style(QAction *action){
 
 void LauncherWindow::on_tab_changed(int idx){
 	mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
-	qDebug() << "last=" << tabWidget->currentIndex();
+	QStringList tablist;
+	// put "last used tab" to log, but more human now. To Pete: do we need it at all, or not ?
+	tablist << "Coresettings" << "Time and Weather" << "Aircraft" << "Airports" << "Network" << "Advanced Options" << "Output / Preview";
+	outLog("*** FGx reports: last tab used = " + tablist[tabWidget->currentIndex()] + " (" + QString::number(tabWidget->currentIndex()) + ") ***");
 	if(idx == tabWidget->indexOf(outputPreviewWidget)){
 		on_command_preview();
 	}

@@ -24,16 +24,16 @@ void fgxErrorMessage(QtMsgType type, const char *msg)
     switch (type)
     {
     case QtDebugMsg:
-        outLog("*** FGX says: "+m+" ***\n",0);
+        outLog("*** FGx says: "+m+" ***\n",0);
         break;
     case QtWarningMsg:
-        outLog("*** FGX warning: "+m+" ***\n",0);
+        outLog("*** FGx warning: "+m+" ***\n",0);
         break;
     case QtCriticalMsg:
-        outLog("*** FGX critical: "+m+" ***\n",0);
+        outLog("*** FGx critical: "+m+" ***\n",0);
         break;
     case QtFatalMsg:
-        outLog("*** FGX fatal: "+m+" ***\n",0);
+        outLog("*** FGx fatal: "+m+" ***\n",0);
         abort();
         break;
     }
