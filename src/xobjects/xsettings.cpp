@@ -139,10 +139,8 @@ bool XSettings::use_terrasync(){
 }
 QString XSettings::terrasync_exe_path(){
 	if (runningOS() == MAC) {
-		// Default terrasyncing with GIT installation:
-		return QString("/usr/local/bin/terrasync");
-		// Terrasyncing with FGX installation should be
-		//return QDir::currentPath().append("/fgx.app/Contents/MacOS/terrasync");
+		//* points to terrasync binary in app bundle
+		return QDir::currentPath().append("/fgx.app/Contents/MacOS/terrasync");
 	}
 	else if(runningOS() == LINUX){
 		return QString("terrasync");
