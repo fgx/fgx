@@ -58,7 +58,11 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	QMenu *menuStyle = new QMenu(tr("Style"));
 	menuBar->addMenu(menuStyle);
 	// TODO make defult style from xplatform.. in mainObject->settings-> (pedro)
-	QApplication::setStyle( QStyleFactory::create(mainObject->settings->value("gui_style","Macintosh (aqua)").toString()) );
+	#if defined(Q_OS_MAC)
+		QApplication::setStyle( QStyleFactory::create(mainObject->settings->value("gui_style","Macintosh (aqua)").toString()) );
+	#else
+		QApplication::setStyle( QStyleFactory::create(mainObject->settings->value("gui_style","Cleanlooks").toString()) );
+	#endif
 	actionGroupStyle = new QActionGroup(this);
 	actionGroupStyle->setExclusive(true);
 	connect(actionGroupStyle, SIGNAL(triggered(QAction*)), this, SLOT(on_action_style(QAction*)));
