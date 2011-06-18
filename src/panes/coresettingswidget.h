@@ -21,6 +21,9 @@ public:
 	MainObject *mainObject;
 
 
+	//* Callsign
+	QLineEdit *txtCallSign;
+
 	//* Screen
 	QComboBox *comboScreenSize;
 	QCheckBox *checkBoxDisableSplashScreen;
@@ -63,6 +66,8 @@ public:
 signals:
 
 public slots:
+
+	void on_callsign_changed(QString);
 	void on_checkbox_show_mp_map();
 	void load_joysticks();
 	bool check_js_demo_exists();

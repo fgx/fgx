@@ -62,9 +62,11 @@ int main( int argc, char* argv[])
 	//* apply styles
 	qApp->setStyleSheet(styles);
 
-	//* install message handler
-	qInstallMsgHandler(fgxErrorMessage);
-	
+	//* install message handler - with Pete's TEMP hack to be removed later
+	if( !QFile::exists("/home/ffs/fgx/LOCAL") ){
+		qInstallMsgHandler(fgxErrorMessage);
+	}
+
 	return app.exec();
 }
 

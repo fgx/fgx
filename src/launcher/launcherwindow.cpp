@@ -276,7 +276,7 @@ void LauncherWindow::on_start_fgfs_clicked() {
 
 	if(coreSettingsWidget->checkBoxShowMpMap->isChecked()){
 		QUrl mapUrl(coreSettingsWidget->comboMpMapServer->itemData(coreSettingsWidget->comboMpMapServer->currentIndex()).toString());
-		mapUrl.addQueryItem("follow", networkWidget->txtCallSign->text());
+		mapUrl.addQueryItem("follow", coreSettingsWidget->lblCallSign->text());
 		QDesktopServices::openUrl(mapUrl);
 	}
 	exeFgfs->start(command_line);

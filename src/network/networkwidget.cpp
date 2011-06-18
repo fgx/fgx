@@ -63,7 +63,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	middleLayout->addWidget(grpMpServer, 3);
 	grpMpServer->setCheckable(true);
 	grpMpServer->setChecked(false);
-	connect(grpMpServer, SIGNAL(clicked(bool)), this, SLOT(on_mp_server_checked(bool)));
 
 	QVBoxLayout *layoutMpServer = new QVBoxLayout();
 	grpMpServer->setLayout(layoutMpServer);
@@ -74,17 +73,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	layoutMpServer->addLayout(gridMP);
 
 	int row = 0;
-	//** Callsign
-	gridMP->addWidget(new QLabel("Callsign:"), row, 0, 1, 1, Qt::AlignRight);
-	txtCallSign = new QLineEdit();
-	txtCallSign->setText("");
-	txtCallSign->setMaximumWidth(100);
-	txtCallSign->setMaxLength(7);
-	gridMP->addWidget(txtCallSign, row, 1, 1, 1);
-	connect(txtCallSign, SIGNAL(textChanged(QString)), this, SLOT(on_callsign_changed(QString)) );
-
-
-
 
 	//** Mop IN
 	row++;
@@ -217,9 +205,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	QLabel *lblHelp1 = new QLabel("eg: -Sfgcom.flightgear.org.uk");
 	lblHelp1->setStyleSheet(style);
 	layoutFgCom->addWidget(lblHelp1, row, 1, 1, 2);
-
-
-	//layoutFgCom->addSpacing(10);
 
 	//* fgCom Port
 	row++;
@@ -434,15 +419,6 @@ void NetworkWidget::on_telnet_data(QString ip_address, QString telnet_reply){
 
 
 //=====================================
-// Mp Server Enabled
-void NetworkWidget::on_mp_server_checked(bool state){
-	if (state){
-		txtCallSign->setFocus();
-	}
-}
-
-
-//=====================================
 // Callsign Changed
 void NetworkWidget::on_callsign_changed(QString txt){
 	mainObject->actionCallsign->setText(txt.trimmed());
@@ -493,7 +469,7 @@ void NetworkWidget::set_fgcom(){
 //=====================================
 // Setup Combo Hz
 void NetworkWidget::populate_combo_hz(QComboBox *combo){
-	for(int i=1; i < 31; i++){
+	for(int i=5; i < 31; i++){
 		combo->addItem(QString("%1").arg(i));
 	}
 	combo->setCurrentIndex(4);
@@ -593,14 +569,6 @@ QStringList NetworkWidget::get_args(){
 		args << QString("--jpg-httpd=%1").arg( txtScreenShot->text() );
 	}
 
-	if (txtCallSign->text().size()) {
-		//  only add a callsign IFF there is an argument
-		QString argCallsign;
-		argCallsign.append("--callsign=");
-		argCallsign.append(txtCallSign->text());
-		args << argCallsign;
-	}
-	
 	
 	return args;
 }
@@ -608,8 +576,8 @@ QStringList NetworkWidget::get_args(){
 //=============================================================
 // Save Settings
 void NetworkWidget::save_settings(){
+
 	mainObject->settings->setValue("enable_mp", grpMpServer->isChecked());
-	mainObject->settings->setValue("callsign", txtCallSign->text());
 
 	mainObject->settings->setValue("in", checkBoxIn->isChecked());
 	mainObject->settings->setValue("out", checkBoxOut->isChecked());
@@ -652,7 +620,6 @@ void NetworkWidget::load_settings(){
 	int idx;
 
 	grpMpServer->setChecked( mainObject->settings->value("enable_mp").toBool() );
-	txtCallSign->setText( mainObject->settings->value("callsign").toString() );
 
 	checkBoxIn->setChecked( mainObject->settings->value("in").toBool() );
 	checkBoxOut->setChecked( mainObject->settings->value("out").toBool() );
@@ -695,10 +662,6 @@ void NetworkWidget::load_settings(){
 // Validate
 QString NetworkWidget::validate(){
 	if(grpMpServer->isChecked()){
-		if(txtCallSign->text().trimmed().length() == 0){
-			txtCallSign->setFocus();
-			return QString("Callsign required");
-		}
 		if(checkBoxOut->isChecked()){
 			if(!treeWidget->currentItem()){
 				treeWidget->setFocus();

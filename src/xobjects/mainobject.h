@@ -35,8 +35,6 @@ public:
 	//LauncherWindow *launcherWindow;
 	//PropsTreeWidget *propertiesTree;
 
-    QAction *actionTelnetConnect;
-    QAction *actionTelnetDisconnect;
 
     //* Widgets
     QSystemTrayIcon *trayIcon;
@@ -63,11 +61,6 @@ public slots:
 	void initialize();
 
     void on_tray_icon(QSystemTrayIcon::ActivationReason reason);
-
-    void on_telnet_connected(bool);
-    void on_telnet_connect_action();
-    void on_telnet_disconnect_action();
-
 
     void on_launcher();
     void on_mpmap();

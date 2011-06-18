@@ -34,7 +34,6 @@ public:
 	MainObject *mainObject;
 
 	QGroupBox *grpMpServer;
-	QLineEdit *txtCallSign;
 
 	QCheckBox *checkBoxIn;
 	QCheckBox *checkBoxOut;
@@ -77,7 +76,6 @@ public slots:
 	void on_dns_lookup_callback(const QHostInfo &hostInfo);
 	void on_telnet_data(QString, QString);
 
-	void on_mp_server_checked(bool);
 	void on_callsign_changed(QString);
 	void set_mp_server();
 

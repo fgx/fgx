@@ -34,19 +34,6 @@ MainObject::MainObject(QObject *parent) :
 
 	mpMapWidget = 0;
 
-    //********************************************************************
-    //** Telnet connection
-    //TODO ? problem
-    // I dont want to "create this object yet, as a socket might not be required
-	// Hoewever I need a trick to create this object as required?? dont know how to do that yet..
-    //telnet = NULL;
-	//telnet = new TelnetSlave(this);
-    // Somehow move this somewhere else and the first call is gonna be available based on a flag
-
-	//connect(telnet, SIGNAL(telnet_connected(bool)), this, SLOT(on_telnet_connected(bool)));
-	//    //void telnet_connected(bool);
-
-
 
     //***********************************
     //** Tray Icon
@@ -65,7 +52,7 @@ MainObject::MainObject(QObject *parent) :
     actionCallsign = new QWidgetAction(this);
     lblCallsign = new QLabel();
     lblCallsign->setText("(your callsign)");
-    lblCallsign->setStyleSheet("color: #ff0000; padding: 0px; font-weight: bold;");
+	lblCallsign->setStyleSheet("color: #0000ff; padding: 0px; font-weight: bold;");
     actionCallsign->setDefaultWidget(lblCallsign);
 
 	popupMenu->addAction(actionCallsign);
@@ -78,40 +65,6 @@ MainObject::MainObject(QObject *parent) :
 	actionMpMap = popupMenu->addAction(tr("Start Map Widget"));
 	actionMpMap->setIconVisibleInMenu(true);
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));
-
-    //**** Telnet Menu
-    //QMenu *actionTelnetMenu = new QMenu();    
-    //popupMenu->addMenu(actionTelnetMenu);
-    //actionTelnetMenu->setTitle("Telnet");
-
-    //actionTelnetConnect = new QAction(actionTelnetMenu);
-    //actionTelnetMenu->addAction(actionTelnetConnect);
-    //actionTelnetConnect->setText(tr("Connect"));
-    //actionTelnetConnect->setIcon(QIcon(":/icons/connect"));
-	//actionTelnetConnect->setIconVisibleInMenu(true);
-    //connect(actionTelnetConnect, SIGNAL(triggered()),
-    //        this, SLOT(on_telnet_connect_action())
-    //);
-
-    //actionTelnetDisconnect = new QAction(actionTelnetMenu);
-    //actionTelnetMenu->addAction(actionTelnetDisconnect);
-    //actionTelnetDisconnect->setText(tr("Disconnect"));
-    //actionTelnetDisconnect->setIcon(QIcon(":/icons/disconnect"));
-	//actionTelnetDisconnect->setIconVisibleInMenu(true);
-    //actionTelnetDisconnect->setDisabled(true);
-    //connect(actionTelnetDisconnect, SIGNAL(triggered()),
-    //        this, SLOT(on_telnet_disconnect_action())
-    //);
-
-	//*** Properties
-	//QAction *actionPropsBrowser= new QAction(this);
-	//actionPropsBrowser->setIcon(QIcon(":/icons/properties_browser"));
-	//actionPropsBrowser->setText(tr("Properties Browser"));
-	//actionPropsBrowser->setIconVisibleInMenu(true);
-	//popupMenu->addAction(actionPropsBrowser);
-	//connect(actionPropsBrowser, SIGNAL(triggered()),
-	//		this, SLOT(on_properties_browser())
-	//);
 
 
     //*** Settings
@@ -136,20 +89,6 @@ MainObject::MainObject(QObject *parent) :
     //** Setup
     trayIcon->show();
 
-	//==========================================
-	//***** Initial check if FG_ROOT is set
-	//qDebug() << settings->fg_root() << settings->fg_root().length();
-	//if(settings->fg_root().length() == 0){
-
-	//}
-
-	//if(!settings->value("initial_setup").toBool()){
-	//	on_settings();
-	//}
-
-	//on_settings();
-	//on_launcher();
-    //on_map();
 	connect(this, SIGNAL(show_settings(int)), this, SLOT(on_settings(int)));
 
 	QTimer::singleShot(300, this, SLOT(initialize()));
@@ -283,28 +222,4 @@ void MainObject::on_tray_icon(QSystemTrayIcon::ActivationReason reason){
     }
 }
 
-//*******************************************************************************************
-//*********************************
-//** Telnet Action  click events
-void MainObject::on_telnet_connect_action(){
-     qDebug() << "on_telnet_connect_action(@)";
-	//telnet->fg_connect();
-}
-void MainObject::on_telnet_disconnect_action(){
-    qDebug() << "on_telnet_disconnect_action(@)";
-	//telnet->fg_disconnect();
-}
 
-//*************************************************
-//** Telnet Events
-void MainObject::on_telnet_connected(bool state){
-    //telnet->fg_connect();
-    qDebug() << "on_telnet_connected SIGNAL" << state;
-    //qDebug() << state;
-    //statusBarTelnet->showMessage(state ? tr("Connected") : tr("Disconnected"), 4000);
-    //buttTelnetConnect->setDisabled(state);
-    //buttTelnetDisconnect->setDisabled(!state);
-    trayIcon->setIcon(QIcon(state ? ":/icons/connect" : ":/icons/disconnect"));
-    actionTelnetConnect->setDisabled(state);
-    actionTelnetDisconnect->setDisabled(!state);
-}

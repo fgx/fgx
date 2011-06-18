@@ -24,6 +24,18 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	QVBoxLayout *layoutLeft = new QVBoxLayout();
 	mainLayout->addLayout(layoutLeft, 1);
 
+
+	//==================================================================
+	//* Callsign
+	XGroupVBox *grpCallsign = new XGroupVBox(tr("Callsign"));
+	layoutLeft->addWidget(grpCallsign);
+
+	txtCallSign = new QLineEdit(this);
+	txtCallSign->setText("");
+	grpCallsign->addWidget(txtCallSign);
+	connect(txtCallSign, SIGNAL(textChanged(QString)), this, SLOT(on_callsign_changed(QString)) );
+
+
 	//==================================================================
 	//* Screen Options
 	XGroupVBox *grpBoxScreen = new XGroupVBox(tr("Screen Options"));
@@ -162,7 +174,10 @@ void CoreSettingsWidget::on_checkbox_show_mp_map(){
 //* Load Settings
 void CoreSettingsWidget::load_settings(){
 
-	//** Sartup screens
+	//* Callsign
+	txtCallSign->setText( mainObject->settings->value("callsign").toString() );
+
+	//* Sartup screens
 	int idx = comboScreenSize->findText(mainObject->settings->value("screen_size").toString());
 	comboScreenSize->setCurrentIndex( idx == -1 ? 0 : idx );
 	checkBoxFullScreenStartup->setChecked(mainObject->settings->value("screen_full").toBool());
@@ -206,6 +221,9 @@ void CoreSettingsWidget::load_settings(){
 //* Save Settings
 void CoreSettingsWidget::save_settings(){
 
+	//* Callsign
+	mainObject->settings->setValue("callsign", txtCallSign->text());
+
 	//* screen
 	mainObject->settings->setValue("screen_size", comboScreenSize->currentText());
 	mainObject->settings->setValue("screen_full", checkBoxFullScreenStartup->isChecked());
@@ -233,6 +251,16 @@ void CoreSettingsWidget::save_settings(){
 //* Get Args
 QStringList CoreSettingsWidget::get_args(){
 	QStringList args;
+
+
+	if (txtCallSign->text().size()) {
+		//  only add a callsign IFF there is an argument
+		QString argCallsign;
+		argCallsign.append("--callsign=");
+		argCallsign.append(txtCallSign->text());
+		args << argCallsign;
+	}
+
 
 	//** Startup , Splash, Geometry
 	if(comboScreenSize->currentIndex() > 0){ /* zero is "--detault--" */
@@ -367,3 +395,9 @@ void CoreSettingsWidget::show_settings_dialog(){
 	}
 }
 
+
+//=====================================
+// Callsign Changed
+void CoreSettingsWidget::on_callsign_changed(QString txt){
+	mainObject->lblCallsign->setText(txt);
+}
