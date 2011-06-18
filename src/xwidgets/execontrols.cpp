@@ -79,9 +79,6 @@ void ExeControls::readOutput()
 
 {
 	QString fgxoutput = P->readAllStandardOutput();
-	
-	// show some lines in statusbar as feedback
-	//statusBar->showMessage(fgxoutput, 6000));
 
 	// write output to fgxlog
 	outLog(ExeControls::title()+": "+fgxoutput);
@@ -93,9 +90,6 @@ void ExeControls::readError()
 
 {
 	QString fgxerror = P->readAllStandardError();
-	
-	// show some lines in statusbar as feedback
-	//statusBar->showMessage(fgxerror, 6000);
 	
 	// write errors to fgxlog
 	outLog(ExeControls::title()+": "+fgxerror);
@@ -112,8 +106,6 @@ void ExeControls::start(QString command_line){
 	
 	connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
 	connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
-
-	outLog("Starting: "+command_line);
 
         // QStringList user_env = LauncherWindow->advancedOptionsWidget->get_env(); // hmm too difficult this way
         // so during QString LauncherWindow::fg_args() set  exeFgfs->user_env = advancedOptionsWidget->get_env();
@@ -136,15 +128,30 @@ void ExeControls::start(QString command_line){
             }
         }
 	
-	outLog("Starting: "+command_line);
 
  	P->start( QString(command_line));
 	
+	//* hm ? 
 	int res = P->waitForStarted();
+	
+	//* we need process state
+	int pstate = P->state();
+	
+		//* command is sent anyway
 		if (res) {
-			buttonStart->setEnabled(false);
-			buttonStop->setEnabled(true);
+			outLog("*** FGx tries to execute: " + command_line + " ***");
+			//* but we can check process state
+			if (pstate != 2) {
+				outLog("SUCCESS");
+				buttonStart->setEnabled(false);
+				buttonStop->setEnabled(true);
+			} else {
+				outLog("*** FGx says: Process not started! ***");
+			}
+
+			
 		}
+
 	
 	
 	}
