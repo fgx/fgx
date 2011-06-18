@@ -386,7 +386,7 @@ void LauncherWindow::save_settings()
 	advancedOptionsWidget->save_settings();
 
 	mainObject->settings->sync();
-	statusBar->showMessage("Settings Saved", 6000);
+	outLog("*** FGx reports: Settings saved ***");
 }
 
 //================================================================================
@@ -411,7 +411,7 @@ void LauncherWindow::load_settings()
 	//timeWeatherWidget->txtMetar->setPlainText(mainObject->settings->value("metar").toString());
 	//timeWeatherWidget->txtMetar->setEnabled(weather == 2);
 
-	statusBar->showMessage("Settings Loaded", 6000);
+	outLog("*** FGx reports: Settings loaded ***");
 
 
 }
@@ -435,9 +435,7 @@ void LauncherWindow::on_command_help(){
 	args << "-h" << "-v" << QString("--fg-root=").append(mainObject->settings->fg_root());
 	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
 	if(process.waitForStarted()){
-		process.waitForFinished();
 		QString ok_result = process.readAllStandardOutput();
-		QString error_result = process.readAllStandardError();
 		outputPreviewWidget->txtPreviewOutput->setPlainText(ok_result);
 	}
 }
