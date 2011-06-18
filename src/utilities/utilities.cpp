@@ -54,8 +54,8 @@ bool util_setStdLogFile()
     QString log;
 
 #if defined(Q_OS_WIN)
-   dir.append(QDir::currentPath());
-   file = "fgx.txt";
+	dir  = "C:/Windows/Temp";
+	file = "fgx-log.txt";
 #elif defined(Q_OS_MAC)
    dir.append(QDir::homePath());
    dir.append("/Library/Logs");
