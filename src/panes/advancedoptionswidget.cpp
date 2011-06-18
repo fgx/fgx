@@ -10,8 +10,8 @@
 #include <QtGui/QGroupBox>
 #include <QtGui/QRadioButton>
 
-
 #include "advancedoptionswidget.h"
+#include "xwidgets/xgroupboxes.h"
 
 AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
@@ -19,7 +19,7 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
 	mainObject = mOb;
 
 
-	QHBoxLayout *mainLayout = new QHBoxLayout();
+	QVBoxLayout *mainLayout = new QVBoxLayout();
 	setLayout(mainLayout);
 
 	//================================================================
@@ -29,32 +29,37 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	QVBoxLayout *layoutBoxArgs = new QVBoxLayout();
 	groupBoxArgs->setLayout(layoutBoxArgs);
-
-
 	txtExtraArgs = new QPlainTextEdit();
 	layoutBoxArgs->addWidget(txtExtraArgs);
 
-        // *TBD* These need their own title
-        // so perhaps need QGroupBox() for each!
-        // but for now...
-        // try adding some labels - hmmm, look ok...
-        QLabel * labelEnv = new QLabel(tr("Additional Environment Variables (if any)"));
-        layoutBoxArgs->addWidget(labelEnv);
-        txtExtraEnv = new QPlainTextEdit();
-        layoutBoxArgs->addWidget(txtExtraEnv);
+	//================================================================
+	//** Environment Variables
+	QGroupBox *groupBoxEnv = new QGroupBox(tr("Additional Environment Variables"));
+	mainLayout->addWidget(groupBoxEnv);
+	
+	QHBoxLayout *layoutBoxEnv = new QHBoxLayout();
+	groupBoxEnv->setLayout(layoutBoxEnv);
+	txtExtraEnv = new QPlainTextEdit();
+	layoutBoxEnv->addWidget(txtExtraEnv);
+	
 
-        QLabel * labelRT = new QLabel(tr("Set a specific runtime directory. (if any needed)"));
-        layoutBoxArgs->addWidget(labelRT);
-        // *TBD* Would also be nice to have a button [...] to aid in setting this directory.
-        txtRuntime = new QLineEdit("");
-        layoutBoxArgs->addWidget(txtRuntime);
+	//================================================================
+	//** Runtime Directory
+	
+	// *TBD* Would also be nice to have a button [...] to aid in setting this directory.
+	
+	QGroupBox *groupBoxRun = new QGroupBox(tr("Set a specific runtime directory"));
+	mainLayout->addWidget(groupBoxRun);
+	
+	QHBoxLayout *layoutBoxRun = new QHBoxLayout();
+	groupBoxRun->setLayout(layoutBoxRun);
+	txtRuntime = new QLineEdit("");
+	layoutBoxRun->addWidget(txtRuntime);
 
 
 	//================================================================
 	//** Write Log
-	groupBoxWriteLog = new QGroupBox(tr("Write Log Files"));
-	groupBoxWriteLog->setCheckable(true);
-	groupBoxWriteLog->setChecked(false);
+	groupBoxWriteLog = new QGroupBox(tr("FlightGear Loglevel"));
 	mainLayout->addWidget(groupBoxWriteLog);
 
 	QVBoxLayout *layoutBoxLog = new QVBoxLayout();
@@ -74,8 +79,8 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
 		butt->setProperty("value", values.at(i));
 		layoutBoxLog->addWidget(butt);
 		buttonGroupLogOptions->addButton(butt, i);
+		buttonGroupLogOptions->setId(butt, i);
 	}
-	layoutBoxLog->addStretch(100); //* add spacer at end
 
 }
 
@@ -99,16 +104,15 @@ QStringList AdvancedOptionsWidget::get_args(){
 			}
 		}
 	}
-
-	//* Log Level - Redirect stdout and stderr to logfile MUST be last argument
-	// TODO
-	/*
-	if(checkBoxLogEnabled->isChecked()){
-		args_string.append("--log-level=warn ");
-		args_string.append("&>").append(QDir::currentPath()).append("/fgfslog.txt");
-	}
-	*/
-
+	
+	//* get fgfs log level argument
+	
+	QStringList values;
+	values << "warn" << "info" << "debug" << "bulk" << "alert";
+	
+	args << "--log-level=" + values[buttonGroupLogOptions->checkedId()];
+	
+	
 	return args;
 }
 
@@ -142,14 +146,14 @@ QString AdvancedOptionsWidget::get_runtime(){
     return rt;
 }
 
+
 //========================================================
 //** Load Settings
 void AdvancedOptionsWidget::load_settings(){
 
 	txtExtraArgs->setPlainText(mainObject->settings->value("extra_args").toString());
-        txtExtraEnv->setPlainText(mainObject->settings->value("extra_env").toString());
-        txtRuntime->setText(mainObject->settings->value("runtime_dir").toString());
-        groupBoxWriteLog->setChecked(mainObject->settings->value("log_enabled").toBool());
+	txtExtraEnv->setPlainText(mainObject->settings->value("extra_env").toString());
+	txtRuntime->setText(mainObject->settings->value("runtime_dir").toString());
 	buttonGroupLogOptions->button( mainObject->settings->value("log_level", 0).toInt() )->setChecked(true);
 }
 
@@ -159,8 +163,7 @@ void AdvancedOptionsWidget::load_settings(){
 void AdvancedOptionsWidget::save_settings(){
 
 	mainObject->settings->setValue("extra_args", txtExtraArgs->toPlainText());
-        mainObject->settings->setValue("extra_env", txtExtraEnv->toPlainText());
-        mainObject->settings->setValue("runtime_dir", txtRuntime->text());
-        mainObject->settings->setValue("log_enabled", groupBoxWriteLog->isChecked());
+	mainObject->settings->setValue("extra_env", txtExtraEnv->toPlainText());
+	mainObject->settings->setValue("runtime_dir", txtRuntime->text());
 	mainObject->settings->setValue("log_level", buttonGroupLogOptions->checkedId());
 }
