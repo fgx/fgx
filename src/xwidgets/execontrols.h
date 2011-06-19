@@ -29,7 +29,7 @@ public:
         QString runtime;
 	//** Start is called from fgx
 	void start(QString command_line);
-	void get_pid();
+	int get_pid();
 	void kill_pid();
 
 

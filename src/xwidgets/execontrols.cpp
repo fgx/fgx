@@ -141,10 +141,14 @@ void ExeControls::start(QString command_line){
 		if (res) {
 			outLog("*** FGx tries to execute: " + command_line + " ***");
 			//* but we can check process state
-			if (pstate != 2) {
-				outLog("SUCCESS");
+			if (pstate != 0) {
 				buttonStart->setEnabled(false);
 				buttonStop->setEnabled(true);
+				
+				// write pid to log
+				QString pidstr = QString::number( get_pid() );
+				outLog("*** FGx reports: SUCCESS ---> this is now PID " + pidstr + " ***");
+				
 			} else {
 				outLog("*** FGx says: Process not started! ***");
 			}
@@ -156,7 +160,14 @@ void ExeControls::start(QString command_line){
 	
 	}
 
-
+//==========================================================================
+// Get PID
+// 
+//==========================================================================
+int ExeControls::get_pid() {
+	quint16 PID = P->pid();
+	return PID;
+}
 
 //==========================================================================
 // Stop Executable
