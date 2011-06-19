@@ -58,12 +58,14 @@ PathsSettingsWidget::PathsSettingsWidget(MainObject *mOb, QWidget *parent) :
 	actionFgfsSelectPath->setText(tr("Select path ..."));
 	connect(actionFgfsSelectPath, SIGNAL(triggered()), this, SLOT(on_select_fgfs_path()));
 
+	// does not work for win/osx
+	#if defined(Q_OS_LINUX)
 	QAction *actionFgfsAutoSelect = new QAction(menuFgfs);
 	menuFgfs->addAction(actionFgfsAutoSelect);
 	actionFgfsAutoSelect->setText(tr("Autodetect"));
 	connect(actionFgfsAutoSelect, SIGNAL(triggered()), this, SLOT(on_fgfs_autodetect()));
 	actionFgfsAutoSelect->setVisible( mainObject->settings->runningOS() != XSettings::WINDOWS );
-
+	#endif
 
 
 
