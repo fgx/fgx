@@ -15,6 +15,8 @@
 #include <QtGui/QStyleFactory>
 #include <QtGui/QMessageBox>
 
+#include "xwidgets/xgroupboxes.h"
+
 
 #include "launcher/launcherwindow.h"
 #include "utilities/utilities.h"
@@ -170,6 +172,26 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//* Show bottom bar
 	QHBoxLayout *bottomActionLayout = new QHBoxLayout();
 	mainLayout->addLayout(bottomActionLayout);
+	
+	
+	//* Settings: load/save
+	XGroupVBox *grpSettings = new XGroupVBox(tr("Settings"));
+	bottomActionLayout->addWidget(grpSettings);
+	
+	buttonLoadSettings = new QPushButton();
+	buttonLoadSettings->setMinimumSize(QSize( 100, 30));
+	buttonLoadSettings->setText(tr(" Load "));
+	connect(buttonLoadSettings, SIGNAL(clicked()), this, SLOT(load_settings()));
+	grpSettings->addWidget(buttonLoadSettings);
+	
+	bottomActionLayout->addStretch(10);
+	
+	buttonSaveSettings = new QPushButton();
+	buttonSaveSettings->setMinimumSize(QSize( 100, 30));
+	buttonSaveSettings->setText(tr(" Save "));
+	connect(buttonSaveSettings, SIGNAL(clicked()), this, SLOT(save_settings()));
+	grpSettings->addWidget(buttonSaveSettings);
+	
 
 	//* FgCom
 	exeFgCom = new ExeControls("FgCom", "fgcom");
@@ -188,28 +210,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 			);
 	bottomActionLayout->addStretch(10);
 
-	//* Settings: load/save
 	
-	QVBoxLayout *buttlay = new QVBoxLayout();
-	bottomActionLayout->addLayout(buttlay);
-	
-	QLabel *settingsLabel = new QLabel(this);
-	settingsLabel->setText("Settings:");
-	buttlay->addWidget(settingsLabel, 0);
-	
-	buttonLoadSettings = new QPushButton();
-	buttonLoadSettings->setText(tr(" Load "));
-	buttonLoadSettings->setIcon(QIcon(":/icon/refresh"));
-	buttlay->addWidget(buttonLoadSettings);
-	connect(buttonLoadSettings, SIGNAL(clicked()), this, SLOT(load_settings()));
-	
-	bottomActionLayout->addStretch(10);
-
-	buttonSaveSettings = new QPushButton();
-	buttonSaveSettings->setText(tr(" Save "));
-	buttonSaveSettings->setIcon(QIcon(":/icon/save"));
-	buttlay->addWidget(buttonSaveSettings);
-	connect(buttonSaveSettings, SIGNAL(clicked()), this, SLOT(save_settings()));
 	
 	
 	// Bottom Statusbar 
