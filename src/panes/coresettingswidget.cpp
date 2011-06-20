@@ -207,10 +207,6 @@ void CoreSettingsWidget::load_settings(){
 	if (mainObject->settings->value("terrasync_sync_path").toBool()) {
 		txtTerraSyncPath->setText( mainObject->settings->value("terrasync_sync_path").toString() );
 	}
-	else {
-		// This is default for osx, TODO for x/win
-		txtTerraSyncPath->setText("/Documents/TerrasyncScenery");
-	}
 
 
 }

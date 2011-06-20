@@ -283,36 +283,43 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	exeFgfs->start(command_line);
 
 	//* Start TerraSync
-
-	QStringList terraargs;
-	terraargs << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_path(); 
-	QString terra_command_line = mainObject->settings->terrasync_exe_path();
-	terra_command_line.append(" ").append(terraargs.join(" "));
-	qDebug() << terra_command_line;
-	exeTerraSync->start(terra_command_line);
+	
+	if (coreSettingsWidget->groupBoxTerraSync->isChecked()) {
+		QStringList terraargs;
+		//terraargs << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_path(); 
+		terraargs << "-p" << "5505" << "-S" << "-d" << "/Documents/TerrasyncScenery";
+		QString terra_command_line = mainObject->settings->fgfs_path();
+		terra_command_line.chop(4);
+		terra_command_line.append("terrasync");
+		terra_command_line.append(" ").append(terraargs.join(" "));
+		qDebug() << terra_command_line;
+		exeTerraSync->start(terra_command_line);
+	}
 
 	//* Start FGCom
 
-	QStringList fgcomargs;
-	QString fgcom_command_line = mainObject->settings->fgcom_exe_path();
-	fgcom_command_line.append(" ");
+	if (networkWidget->grpFgCom->isChecked()) {
+		QStringList fgcomargs;
+		QString fgcom_command_line = mainObject->settings->fgcom_exe_path();
+		fgcom_command_line.append(" ");
 	
 	
-	QString argPort("-p");
-	argPort.append(mainObject->settings->value("fgcom_port").toString());
+		QString argPort("-p");
+		argPort.append(mainObject->settings->value("fgcom_port").toString());
 	
-	QString argServer("-S");
-	argServer.append(mainObject->settings->value("fgcom_no").toString());
+		QString argServer("-S");
+		argServer.append(mainObject->settings->value("fgcom_no").toString());
 	
-	//FGCom default
-	fgcomargs << argServer << argPort;
+		//FGCom default
+		fgcomargs << argServer << argPort;
 	
-	//Echoing for testing purposes
-	//fgcomargs << argServer << "-f910";
+		//Echoing for live debugging purposes
+		//fgcomargs << argServer << "-f910";
 	
-	fgcom_command_line.append(fgcomargs.join(" ") );
-	qDebug() << command_line;
-	exeFgCom->start(fgcom_command_line);
+		fgcom_command_line.append(fgcomargs.join(" ") );
+		qDebug() << command_line;
+		exeFgCom->start(fgcom_command_line);
+	}
 
 }
 
