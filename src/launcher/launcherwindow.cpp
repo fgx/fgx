@@ -529,9 +529,20 @@ void LauncherWindow::on_about_qt(){
 // quit
 void LauncherWindow::on_quit(){
 	
-	exeFgfs->P->kill();
-	exeTerraSync->P->kill();
-	exeFgCom->P->kill();
+	if (exeFgfs->P->state() != 0) {
+		exeFgfs->P->kill();
+		outLog("### FlightGear (fgfs) STOPPED ###");
+	}
+	
+	if (exeTerraSync->P->state() != 0) {
+		exeTerraSync->P->kill();
+		outLog("### Scenery syncing (terrsync) STOPPED ###");
+	}
+	
+	if (exeFgCom->P->state() != 0) {
+		exeFgCom->P->kill();
+		outLog("### Voice Communication (FGCom) STOPPED ###");
+	}
 	
 	QApplication::quit();
 }
@@ -552,9 +563,20 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 	event->accept();
 	mainObject->launcher_flag = false;
 	
-	exeFgfs->P->kill();
-	exeTerraSync->P->kill();
-	exeFgCom->P->kill();
+	if (exeFgfs->P->state() != 0) {
+		exeFgfs->P->kill();
+		outLog("### FlightGear (fgfs) STOPPED ###");
+	}
+	
+	if (exeTerraSync->P->state() != 0) {
+		exeTerraSync->P->kill();
+		outLog("### Scenery syncing (terrsync) STOPPED ###");
+	}
+	
+	if (exeFgCom->P->state() != 0) {
+		exeFgCom->P->kill();
+		outLog("### Voice Communication (FGCom) STOPPED ###");
+	}
 	
 }
 
