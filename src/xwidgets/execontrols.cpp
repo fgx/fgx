@@ -174,8 +174,7 @@ int ExeControls::get_pid() {
 // 
 //==========================================================================
 void ExeControls::on_stop_clicked(){
-	//danger!danger!
-	P->kill();
+
 	buttonStop->setEnabled(false);
 	buttonStart->setEnabled(true);
 }

@@ -66,10 +66,10 @@ public slots:
 	void on_start_fgfs_clicked();
 
 	//* FgCom
-	void on_start_fgcom_clicked();
+	//void on_start_fgcom_clicked();
 
 	//* Terrasync
-	void on_start_terrasync_clicked();
+	//void on_start_terrasync_clicked();
 
 	//* Actions
 	void on_about_fgx();

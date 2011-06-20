@@ -173,19 +173,19 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	//* FgCom
 	exeFgCom = new ExeControls("FgCom", "fgcom");
-	bottomActionLayout->addWidget(exeFgCom);
+	/*bottomActionLayout->addWidget(exeFgCom);
 	connect(	exeFgCom->buttonStart, SIGNAL(clicked()),
 			this, SLOT(on_start_fgcom_clicked())
 			);
-	bottomActionLayout->addStretch(10);
+	bottomActionLayout->addStretch(10);*/
 	
 	//* TerraSync
 	exeTerraSync = new ExeControls("TerraSync", "terrasync");
-	bottomActionLayout->addWidget(exeTerraSync);
+	/*bottomActionLayout->addWidget(exeTerraSync);
 	connect(	exeTerraSync->buttonStart, SIGNAL(clicked()),
 			this, SLOT(on_start_terrasync_clicked())
 			);
-	bottomActionLayout->addStretch(10);
+	bottomActionLayout->addStretch(10);*/
 	
 	//* FlightGear
 	exeFgfs = new ExeControls("FlightGear", "fgfs");
@@ -270,7 +270,7 @@ void LauncherWindow::initialize(){
 
 
 //=======================================================================================================================
-// Start FlightGear
+// Start FlightGear, TerraSync, FGCom
 //=======================================================================================================================
 void LauncherWindow::on_start_fgfs_clicked() {
 
@@ -285,33 +285,30 @@ void LauncherWindow::on_start_fgfs_clicked() {
 		QDesktopServices::openUrl(mapUrl);
 	}
 	exeFgfs->start(command_line);
-}
+	QString exeFgfsPID = QString::number(exeTerraSync->get_pid());
 
 
 
-//=======================================================================================================================
-// Start Terrasync
-//=======================================================================================================================
-void LauncherWindow::on_start_terrasync_clicked(){
+//* Start terrasync
 
-	QStringList args;
-	args << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_path(); 
-	QString command_line = mainObject->settings->terrasync_exe_path();
-	command_line.append(" ").append(args.join(" "));
-	qDebug() << command_line;
-	exeTerraSync->start(command_line);
+	QStringList terraargs;
+	terraargs << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_path(); 
+	QString terra_command_line = mainObject->settings->terrasync_exe_path();
+	terra_command_line.append(" ").append(terraargs.join(" "));
+	qDebug() << terra_command_line;
+	exeTerraSync->start(terra_command_line);
+	QString terrasyncPID = QString::number(exeTerraSync->get_pid());
 	
-}
 
 
 
-//=======================================================================================================================
-// Start FGCom
-//=======================================================================================================================
-void LauncherWindow::on_start_fgcom_clicked(){
-	QString command_line = mainObject->settings->fgcom_exe_path();
-	command_line.append(" ");
-	QStringList args;
+
+//* Start FGCom
+
+	QStringList fgcomargs;
+	QString fgcom_command_line = mainObject->settings->fgcom_exe_path();
+	fgcom_command_line.append(" ");
+	
 	
 	QString argPort("-p");
 	argPort.append(mainObject->settings->value("fgcom_port").toString());
@@ -319,11 +316,17 @@ void LauncherWindow::on_start_fgcom_clicked(){
 	QString argServer("-S");
 	argServer.append(mainObject->settings->value("fgcom_no").toString());
 	
-	args << argServer << argPort;
-	// Echotest: args << mainObject->settings->value("fgcom_no").toString() << "-f910";
-	command_line.append( args.join(" ") );
+	// Default
+	fgcomargs << argServer << argPort;
+	
+	// Echoing for testing purposes
+	//fgcomargs << argServer << "-f910";
+	
+	fgcom_command_line.append(fgcomargs.join(" ") );
 	qDebug() << command_line;
-	exeFgCom->start(command_line);
+	exeFgCom->start(fgcom_command_line);
+	QString fgcomPID = QString::number(exeFgCom->get_pid());
+
 }
 
 
@@ -515,6 +518,10 @@ void LauncherWindow::on_about_qt(){
 // quit
 void LauncherWindow::on_quit(){
 	
+	exeFgfs->P->kill();
+	exeTerraSync->P->kill();
+	exeFgCom->P->kill();
+	
 	QApplication::quit();
 }
 
@@ -533,6 +540,10 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 	mainObject->settings->sync();
 	event->accept();
 	mainObject->launcher_flag = false;
+	
+	exeFgfs->P->kill();
+	exeTerraSync->P->kill();
+	exeFgCom->P->kill();
 	
 }
 
