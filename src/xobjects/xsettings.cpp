@@ -204,7 +204,7 @@ int XSettings::runningOS() {
 //** FGCom
 //===========================================================================
 QString XSettings::default_fgcom_no(){
-	return QString("-Sfgcom.flightgear.org.uk");
+	return QString("fgcom.flightgear.org.uk");
 }
 QString XSettings::default_fgcom_port(){
 	return QString("16661");

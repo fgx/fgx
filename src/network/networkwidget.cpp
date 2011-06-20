@@ -183,10 +183,10 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 
 	//========================================================================
 	// FgCom Box
-	grpFgCom = new QGroupBox(tr("fgCom - Voice Communications"));
+	grpFgCom = new QGroupBox(tr("FGCom - Voice Communications"));
 	rightLayout->addWidget(grpFgCom, 2);
-	//grpFgCom->setCheckable(true);
-	//grpFgCom->setChecked(false);
+	grpFgCom->setCheckable(true);
+	grpFgCom->setChecked(false);
 	connect(grpFgCom, SIGNAL(clicked(bool)), this, SLOT(set_fgcom()));
 
 	QGridLayout *layoutFgCom = new QGridLayout();
@@ -196,13 +196,13 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 
 	// fgCom NO
 	row = 0;
-	layoutFgCom->addWidget(new QLabel("Options"), row, 0, 1, 1, Qt::AlignRight);
+	layoutFgCom->addWidget(new QLabel("Server"), row, 0, 1, 1, Qt::AlignRight);
 	txtFgComNo = new QLineEdit();
 	layoutFgCom->addWidget(txtFgComNo, row, 1);
 	connect(txtFgComNo, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
 
 	row++;
-	QLabel *lblHelp1 = new QLabel("eg: -Sfgcom.flightgear.org.uk");
+	QLabel *lblHelp1 = new QLabel("eg: fgcom.flightgear.org.uk");
 	lblHelp1->setStyleSheet(style);
 	layoutFgCom->addWidget(lblHelp1, row, 1, 1, 2);
 
@@ -465,7 +465,8 @@ void NetworkWidget::set_fgcom(){
 		emit set_arg("remove", "--fgcom=","");
 	}
 }
-
+		
+		
 //=====================================
 // Setup Combo Hz
 void NetworkWidget::populate_combo_hz(QComboBox *combo){
@@ -522,9 +523,9 @@ QStringList NetworkWidget::get_args(){
 	//* Enable Multiplay
 	if(grpMpServer->isChecked()){
 		
-		if (mainObject->settings->value("use_terrasync") == false) {
+		/*if (mainObject->settings->value("use_terrasync") == false) {
 			args << QString("--atlas=socket,out,5,localhost,5505,udp");
-		}
+		}*/
 		
 
 		

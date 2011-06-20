@@ -312,8 +312,15 @@ void LauncherWindow::on_start_fgcom_clicked(){
 	QString command_line = mainObject->settings->fgcom_exe_path();
 	command_line.append(" ");
 	QStringList args;
-	//args << mainObject->settings->value("fgcom_no").toString() << mainObject->settings->value("fgcom_port").toString();
-	args << mainObject->settings->value("fgcom_no").toString() << "-f910";
+	
+	QString argPort("-p");
+	argPort.append(mainObject->settings->value("fgcom_port").toString());
+	
+	QString argServer("-S");
+	argServer.append(mainObject->settings->value("fgcom_no").toString());
+	
+	args << argServer << argPort;
+	// Echotest: args << mainObject->settings->value("fgcom_no").toString() << "-f910";
 	command_line.append( args.join(" ") );
 	qDebug() << command_line;
 	exeFgCom->start(command_line);

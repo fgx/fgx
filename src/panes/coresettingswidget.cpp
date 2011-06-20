@@ -284,7 +284,7 @@ QStringList CoreSettingsWidget::get_args(){
 	}
 	
 	if (groupBoxTerraSync->isChecked() | checkBoxShowMpMap->isChecked()) {
-		args << QString("--atlas=socket,out,5,localhost,5505,udp");
+		args << QString("--atlas=socket,out,5,localhost,5500,udp");
 	}
 	
 	
