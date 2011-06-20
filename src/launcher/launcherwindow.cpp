@@ -286,8 +286,9 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	
 	if (coreSettingsWidget->groupBoxTerraSync->isChecked()) {
 		QStringList terraargs;
-		//terraargs << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_path(); 
-		terraargs << "-p" << "5505" << "-S" << "-d" << "/Documents/TerrasyncScenery";
+		QString terra_sync_path = coreSettingsWidget->txtTerraSyncPath->text();
+		terraargs << "-p" << "5505" << "-S" << "-d" << terra_sync_path; 
+		//for debugging only: terraargs << "-p" << "5505" << "-S" << "-d" << "/Documents/TerrasyncScenery";
 		QString terra_command_line = mainObject->settings->fgfs_path();
 		terra_command_line.chop(4);
 		terra_command_line.append("terrasync");
@@ -476,7 +477,7 @@ bool LauncherWindow::validate(){
 	v = aircraftWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
-		statusBar->showError(v, TIMEOUT);
+		//statusBar->showError(v, TIMEOUT);
 		return false;
 	}
 	qDebug() << "aircrafts ok";
@@ -492,7 +493,7 @@ bool LauncherWindow::validate(){
 	v = networkWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(networkWidget));
-		statusBar->showError(v, TIMEOUT);
+		//statusBar->showError(v, TIMEOUT);
 		return false;
 	}
 	qDebug() << "network ok";
@@ -500,7 +501,7 @@ bool LauncherWindow::validate(){
 	if(coreSettingsWidget->groupBoxTerraSync->isChecked() && coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget) );
 		coreSettingsWidget->txtTerraSyncPath->setFocus();
-		statusBar->showError("Need a Terrasync directory", TIMEOUT);
+		//statusBar->showError("Need a Terrasync directory", TIMEOUT);
 		return false;
 	}
 	qDebug() << "ALL VALID";

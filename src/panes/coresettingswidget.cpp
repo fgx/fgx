@@ -149,7 +149,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	QVBoxLayout *layoutTerraCol = new QVBoxLayout();
 	mainLayout->addLayout(layoutTerraCol, 2);
 
-	groupBoxTerraSync = new XGroupHBox(tr("Download scenery via Terrasync"));
+	groupBoxTerraSync = new XGroupHBox(tr("Download Scenery via Terrasync"));
 	groupBoxTerraSync->setCheckable(true);
 	layoutTerraCol->addWidget(groupBoxTerraSync);
 
@@ -206,7 +206,10 @@ void CoreSettingsWidget::load_settings(){
 	groupBoxTerraSync->setChecked(mainObject->settings->value("use_terrasync").toBool());
 	if (mainObject->settings->value("terrasync_sync_path").toBool()) {
 		txtTerraSyncPath->setText( mainObject->settings->value("terrasync_sync_path").toString() );
+	} else {
+		txtTerraSyncPath->setText("Please enter path!");
 	}
+
 
 
 }
