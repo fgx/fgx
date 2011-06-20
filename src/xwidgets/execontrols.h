@@ -36,9 +36,8 @@ public:
 signals:
 
 public slots:
-	//* on_start() is connected in fgx
+	//* on_start() is connected in fgx, stop too, but state of buttons changed here
 	void on_stop_clicked();
-	void on_refresh_clicked();
 
 	void readError();
 	void readOutput();

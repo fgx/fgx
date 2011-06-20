@@ -9,7 +9,7 @@
 
 #include "execontrols.h"
 //#include "panes/advancedoptionswidget.h"
-//#include "launcher/launcherwindow.h"
+#include "launcher/launcherwindow.h"
 #include "utilities/utilities.h"
 
 ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
@@ -174,14 +174,8 @@ int ExeControls::get_pid() {
 // 
 //==========================================================================
 void ExeControls::on_stop_clicked(){
-
 	buttonStop->setEnabled(false);
 	buttonStart->setEnabled(true);
-}
-
-//** Refresh Button clicked
-void ExeControls::on_refresh_clicked(){
-	//update_pid();
 }
 
 

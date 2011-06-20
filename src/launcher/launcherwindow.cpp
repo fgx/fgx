@@ -173,25 +173,18 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	//* FgCom
 	exeFgCom = new ExeControls("FgCom", "fgcom");
-	/*bottomActionLayout->addWidget(exeFgCom);
-	connect(	exeFgCom->buttonStart, SIGNAL(clicked()),
-			this, SLOT(on_start_fgcom_clicked())
-			);
-	bottomActionLayout->addStretch(10);*/
 	
 	//* TerraSync
 	exeTerraSync = new ExeControls("TerraSync", "terrasync");
-	/*bottomActionLayout->addWidget(exeTerraSync);
-	connect(	exeTerraSync->buttonStart, SIGNAL(clicked()),
-			this, SLOT(on_start_terrasync_clicked())
-			);
-	bottomActionLayout->addStretch(10);*/
 	
 	//* FlightGear
 	exeFgfs = new ExeControls("FlightGear", "fgfs");
 	bottomActionLayout->addWidget(exeFgfs);
 	connect(	exeFgfs->buttonStart, SIGNAL(clicked()),
 			this, SLOT(on_start_fgfs_clicked())
+			);
+	connect(	exeFgfs->buttonStop, SIGNAL(clicked()),
+			this, SLOT(on_stop_fgfs_clicked())
 			);
 	bottomActionLayout->addStretch(10);
 
@@ -285,7 +278,6 @@ void LauncherWindow::on_start_fgfs_clicked() {
 		QDesktopServices::openUrl(mapUrl);
 	}
 	exeFgfs->start(command_line);
-	QString exeFgfsPID = QString::number(exeTerraSync->get_pid());
 
 
 
@@ -297,7 +289,6 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	terra_command_line.append(" ").append(terraargs.join(" "));
 	qDebug() << terra_command_line;
 	exeTerraSync->start(terra_command_line);
-	QString terrasyncPID = QString::number(exeTerraSync->get_pid());
 	
 
 
@@ -325,10 +316,30 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	fgcom_command_line.append(fgcomargs.join(" ") );
 	qDebug() << command_line;
 	exeFgCom->start(fgcom_command_line);
-	QString fgcomPID = QString::number(exeFgCom->get_pid());
 
 }
 
+//=======================================================================================================================
+// Stop FlightGear, TerraSync, FGCom
+//=======================================================================================================================
+void LauncherWindow::on_stop_fgfs_clicked() {
+	
+	if (exeFgfs->P->state() != 0) {
+		exeFgfs->P->kill();
+		outLog("### FlightGear (fgfs) STOPPED ###");
+	}
+	
+	if (exeTerraSync->P->state() != 0) {
+		exeTerraSync->P->kill();
+		outLog("### Scenery syncing (terrsync) STOPPED ###");
+	}
+	
+	if (exeFgCom->P->state() != 0) {
+		exeFgCom->P->kill();
+		outLog("### Voice Communication (FGCom) STOPPED ###");
+	}
+	
+}
 
 //=======================================================================================================================
 // Command Arguments
