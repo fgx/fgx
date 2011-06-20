@@ -283,7 +283,7 @@ QStringList CoreSettingsWidget::get_args(){
 		args << QString("--fg-scenery=").append(txtTerraSyncPath->text()).append(":").append(mainObject->settings->scenery_path());
 	}
 	
-	if (groupBoxTerraSync->isChecked() | checkBoxShowMpMap->isChecked()) {
+	if (groupBoxTerraSync->isChecked()) {
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}
 	
