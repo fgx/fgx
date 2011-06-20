@@ -26,7 +26,7 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 
 
 	//** Buttons layout
-	QHBoxLayout *buttlay = new QHBoxLayout();
+	QVBoxLayout *buttlay = new QVBoxLayout();
 	layout->addLayout(buttlay);
 
 	//** Stop Button

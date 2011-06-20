@@ -208,7 +208,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	connect(	exeFgfs->buttonStop, SIGNAL(clicked()),
 			this, SLOT(on_stop_fgfs_clicked())
 			);
-	bottomActionLayout->addStretch(10);
+	//bottomActionLayout->addStretch(10);
 
 	
 	
@@ -268,6 +268,8 @@ void LauncherWindow::initialize(){
 //=======================================================================================================================
 void LauncherWindow::on_start_fgfs_clicked() {
 
+	//* Start FlightGear (fgfs)
+	
 	QString command = mainObject->settings->fgfs_path();
 
 	QString command_line = QString(command).append(" ").append(fg_args());
@@ -280,9 +282,7 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	}
 	exeFgfs->start(command_line);
 
-
-
-//* Start terrasync
+	//* Start TerraSync
 
 	QStringList terraargs;
 	terraargs << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_path(); 
@@ -290,12 +290,8 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	terra_command_line.append(" ").append(terraargs.join(" "));
 	qDebug() << terra_command_line;
 	exeTerraSync->start(terra_command_line);
-	
 
-
-
-
-//* Start FGCom
+	//* Start FGCom
 
 	QStringList fgcomargs;
 	QString fgcom_command_line = mainObject->settings->fgcom_exe_path();
@@ -308,10 +304,10 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	QString argServer("-S");
 	argServer.append(mainObject->settings->value("fgcom_no").toString());
 	
-	// Default
+	//FGCom default
 	fgcomargs << argServer << argPort;
 	
-	// Echoing for testing purposes
+	//Echoing for testing purposes
 	//fgcomargs << argServer << "-f910";
 	
 	fgcom_command_line.append(fgcomargs.join(" ") );
