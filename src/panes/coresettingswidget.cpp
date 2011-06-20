@@ -207,7 +207,7 @@ void CoreSettingsWidget::load_settings(){
 	if (mainObject->settings->value("terrasync_sync_path").toBool()) {
 		txtTerraSyncPath->setText( mainObject->settings->value("terrasync_sync_path").toString() );
 	} else {
-		txtTerraSyncPath->setText("Please enter path!");
+		txtTerraSyncPath->setText("Please set path!");
 	}
 
 
