@@ -30,7 +30,7 @@ public:
 	//** Start is called from fgx
 	void start(QString command_line);
 	int get_pid();
-	void kill_pid();
+	void killproc();
 
 
 signals:

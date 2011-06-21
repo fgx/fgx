@@ -16,7 +16,7 @@ HEADERS += xobjects/xsettings.h \
     network/networkwidget.h \
     network/mptelnet.h \
     aircraft/aircraftwidget.h \
-	aircraft/aircraftimport.h \
+    aircraft/aircraftimport.h \
     airports/airportswidget.h \
     airports/importairportswidget.h \
     airports/aptdatparser.h \
@@ -34,14 +34,15 @@ HEADERS += xobjects/xsettings.h \
     utilities/statusbar.h \
     xwidgets/xtreewidgetitem.h \
     airports/airportsimport.h \
-    utilities/utilities.h
+    utilities/utilities.h \
+    utilities/messagebox.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
     network/networkwidget.cpp \
     network/mptelnet.cpp \
     aircraft/aircraftwidget.cpp \
-	aircraft/aircraftimport.cpp \
+    aircraft/aircraftimport.cpp \
     airports/airportswidget.cpp \
     airports/aptdatparser.cpp \
     airports/importairportswidget.cpp \
@@ -58,7 +59,8 @@ SOURCES += main.cpp \
     settings/dbsettingswidget.cpp \
     utilities/statusbar.cpp \
     airports/airportsimport.cpp \
-    utilities/utilities.cpp
+    utilities/utilities.cpp \
+    utilities/messagebox.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
 CONFIG += console

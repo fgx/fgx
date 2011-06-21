@@ -329,19 +329,28 @@ void LauncherWindow::on_start_fgfs_clicked() {
 //=======================================================================================================================
 void LauncherWindow::on_stop_fgfs_clicked() {
 	
-	if (exeFgfs->P != NULL && exeFgfs->P->state() != 0) {
-		exeFgfs->P->kill();
-		outLog("### FlightGear (fgfs) STOPPED ###");
+	if (exeFgfs->P){
+		QString PIDfgfs = QString::number(exeFgfs->get_pid());
+		if (PIDfgfs != "0") {
+			exeFgfs->killproc();
+			outLog("### FlightGear->fgfs PID: " + PIDfgfs + " STOPPED ###");
+		}
 	}
 	
-	if (exeTerraSync->P != NULL && exeTerraSync->P->state() != 0) {
-		exeTerraSync->P->kill();
-		outLog("### Scenery syncing (terrasync) STOPPED ###");
+	if (exeTerraSync->P){
+		QString PIDterra = QString::number(exeTerraSync->get_pid());
+		if (PIDterra != "0") {
+			exeTerraSync->killproc();
+			outLog("### FlightGear->terrasync PID: " + PIDterra + " STOPPED ###");
+		}
 	}
 	
-	if (exeFgCom->P != NULL && exeFgCom->P->state() != 0) {
-		exeFgCom->P->kill();
-		outLog("### Voice Communication (FGCom) STOPPED ###");
+	if (exeFgCom->P){
+		QString PIDfgcom = QString::number(exeFgCom->get_pid());
+		if (PIDfgcom != "0") {
+			exeFgCom->killproc();
+			outLog("### FlightGear->fgcom PID: " + PIDfgcom + " STOPPED ###");
+		}
 	}
 	
 }
@@ -534,23 +543,8 @@ void LauncherWindow::on_about_qt(){
 // quit
 void LauncherWindow::on_quit(){
 	
-	if (exeFgfs->P != NULL && exeFgfs->P->state() != 0) {
-		exeFgfs->P->kill();
-		outLog("### FlightGear (fgfs) STOPPED ###");
-	}
-	
-	if (exeTerraSync->P != NULL && exeTerraSync->P->state() != 0) {
-		exeTerraSync->P->kill();
-		outLog("### Scenery syncing (terrasync) STOPPED ###");
-	}
-	
-	if (exeFgCom->P != NULL && exeFgCom->P->state() != 0) {
-		exeFgCom->P->kill();
-		outLog("### Voice Communication (FGCom) STOPPED ###");
-	}
-	
 	QApplication::quit();
-	
+
 }
 
 
@@ -568,21 +562,6 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 	mainObject->settings->sync();
 	event->accept();
 	mainObject->launcher_flag = false;
-	
-	if (exeFgfs->P != NULL && exeFgfs->P->state() != 0) {
-		exeFgfs->P->kill();
-		outLog("### FlightGear (fgfs) STOPPED ###");
-	}
-	
-	if (exeTerraSync->P != NULL && exeTerraSync->P->state() != 0) {
-		exeTerraSync->P->kill();
-		outLog("### Scenery syncing (terrasync) STOPPED ###");
-	}
-	
-	if (exeFgCom->P != NULL && exeFgCom->P->state() != 0) {
-		exeFgCom->P->kill();
-		outLog("### Voice Communication (FGCom) STOPPED ###");
-	}
 	
 }
 
@@ -607,3 +586,5 @@ void LauncherWindow::on_action_open_url(QAction *action){
 	QUrl url(action->property("url").toString());
 	QDesktopServices::openUrl(url);
 }
+
+
