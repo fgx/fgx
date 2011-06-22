@@ -550,7 +550,7 @@ void LauncherWindow::on_about_qt(){
 // quit
 void LauncherWindow::on_quit(){
 	
-	//save_settings();
+	save_settings(); // message save needed
 	QApplication::quit();
 
 }
