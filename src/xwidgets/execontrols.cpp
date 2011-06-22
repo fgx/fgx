@@ -165,8 +165,11 @@ void ExeControls::start(QString command_line){
 // 
 //==========================================================================
 int ExeControls::get_pid() {
+#if !defined (Q_OS_WIN)
 	int PID = P->pid();
 	return PID;
+# endif
+	return 0;
 }
 
 //==========================================================================
