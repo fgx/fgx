@@ -165,7 +165,7 @@ void ExeControls::start(QString command_line){
 // 
 //==========================================================================
 int ExeControls::get_pid() {
-	quint16 PID = P->pid();
+	int PID = P->pid();
 	return PID;
 }
 
