@@ -27,6 +27,10 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 {
 
     mainObject = mainOb;
+	
+	fgfsflag = false;
+	terrasyncflag = false;
+	fgcomflag = false;
 
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	mainObject->settings->restoreWindow(this);
@@ -234,7 +238,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	// TODO  - disable widget till sane in initialize()
 	//centralWidget()->setDisabled(true);
-	QTimer::singleShot(500, this, SLOT(initialize()));
+	QTimer::singleShot(300, this, SLOT(initialize()));
 
 }
 
@@ -281,6 +285,7 @@ void LauncherWindow::on_start_fgfs_clicked() {
 		QDesktopServices::openUrl(mapUrl);
 	}
 	exeFgfs->start(command_line);
+	fgfsflag = true;
 
 	//* Start TerraSync
 	
@@ -295,6 +300,7 @@ void LauncherWindow::on_start_fgfs_clicked() {
 		terra_command_line.append(" ").append(terraargs.join(" "));
 		qDebug() << terra_command_line;
 		exeTerraSync->start(terra_command_line);
+		terrasyncflag = true;
 	}
 
 	//* Start FGCom
@@ -320,6 +326,7 @@ void LauncherWindow::on_start_fgfs_clicked() {
 		fgcom_command_line.append(fgcomargs.join(" ") );
 		qDebug() << command_line;
 		exeFgCom->start(fgcom_command_line);
+		fgcomflag = true;
 	}
 
 }
@@ -329,7 +336,7 @@ void LauncherWindow::on_start_fgfs_clicked() {
 //=======================================================================================================================
 void LauncherWindow::on_stop_fgfs_clicked() {
 	
-	if (exeFgfs->P){
+	if (fgfsflag == true){
 		QString PIDfgfs = QString::number(exeFgfs->get_pid());
 		if (PIDfgfs != "0") {
 			exeFgfs->killproc();
@@ -337,7 +344,7 @@ void LauncherWindow::on_stop_fgfs_clicked() {
 		}
 	}
 	
-	if (exeTerraSync->P){
+	if (terrasyncflag == true){
 		QString PIDterra = QString::number(exeTerraSync->get_pid());
 		if (PIDterra != "0") {
 			exeTerraSync->killproc();
@@ -345,7 +352,7 @@ void LauncherWindow::on_stop_fgfs_clicked() {
 		}
 	}
 	
-	if (exeFgCom->P){
+	if (fgcomflag == true){
 		QString PIDfgcom = QString::number(exeFgCom->get_pid());
 		if (PIDfgcom != "0") {
 			exeFgCom->killproc();
@@ -543,7 +550,7 @@ void LauncherWindow::on_about_qt(){
 // quit
 void LauncherWindow::on_quit(){
 	
-	save_settings();
+	//save_settings();
 	QApplication::quit();
 
 }

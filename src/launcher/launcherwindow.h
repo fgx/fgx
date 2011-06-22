@@ -57,6 +57,10 @@ public:
     void closeEvent(QCloseEvent *event);
 
 	QString fg_args();
+	
+	bool fgfsflag;
+	bool terrasyncflag;
+	bool fgcomflag;
 
 
 public slots:
