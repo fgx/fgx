@@ -52,50 +52,6 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 }
 
 
-// Read standard output
-// *TBD* 2011-06-12: Unfortunately this can results in quite 'broken' messages, especially since we are
-// adding the 'title' to the head of the output, so we get things like :-
-// FlightGear: Initializing Nasal Electrical System
-//
-// FlightGear: C
-// FlightGear: o
-// FlightGear: uld not find at least one of the following objects for animation:
-//
-// An enhancement would be to 'collect' the 'reads', and only output to the LOG
-// (and status line) perhaps on a "\n" - same for readError()...
-//
-// This would also require ensuring the last 'read' as the app ended, or
-// when the user pushed [Quit], to get this last to the LOG also...
-//
-// AND if this collection is done, especially on a "\n" basis, then this
-// outLog should NOT add an ADDITIONAL line ending!!!
-// ie use outLog(string,0);
-//
-// And perhaps even at this stage, the 'title' should NOT be added, and
-// just depend on line endings being in the stream. This would ONLY
-// become 'confusing' when running more than one app, like fgfs and fgcom...
-//
-void ExeControls::readOutput()
-
-{
-	QString fgxoutput = P->readAllStandardOutput();
-
-	// write output to fgxlog
-	outLog(ExeControls::title()+": "+fgxoutput);
-}
-
-
-// Read standard error
-void ExeControls::readError()
-
-{
-	QString fgxerror = P->readAllStandardError();
-	
-	// write errors to fgxlog
-	outLog(ExeControls::title()+": "+fgxerror);
-}
-
-
 //==========================================================================
 // Start Executable
 // and connecting console output/errors for log
@@ -104,8 +60,9 @@ void ExeControls::start(QString command_line){
 	
 	P = new QProcess();
 	
-	connect( P, SIGNAL(readyReadStandardOutput()),this, SLOT(readOutput()));
-	connect( P, SIGNAL(readyReadStandardError()),this, SLOT(readError()));
+	// NOT readyReadStandardOutput(), just readyRead ...
+	connect( P, SIGNAL(readyRead()),this, SLOT(readOutput()));
+	connect( P, SIGNAL(readyRead()),this, SLOT(readError()));
 
         // QStringList user_env = LauncherWindow->advancedOptionsWidget->get_env(); // hmm too difficult this way
         // so during QString LauncherWindow::fg_args() set  exeFgfs->user_env = advancedOptionsWidget->get_env();
@@ -177,6 +134,10 @@ int ExeControls::get_pid() {
 // 
 //==========================================================================
 void ExeControls::on_stop_clicked(){
+	// read output/error to log before killed (launcher window does the job)
+	readOutput();
+	readError();
+	// change button state
 	buttonStop->setEnabled(false);
 	buttonStart->setEnabled(true);
 }
@@ -188,6 +149,36 @@ void ExeControls::on_stop_clicked(){
 //==========================================================================
 void ExeControls::killproc() {
 	P->kill();
+}
+
+
+//==========================================================================
+// Reading output/errors
+// 
+//==========================================================================
+
+//* Read standard output
+
+void ExeControls::readOutput()
+
+{
+	QTextStream stream(P->readAllStandardOutput());
+	QString fgxoutput, line;
+	line = stream.readAll();
+	fgxoutput.append(line);
+	outLog(fgxoutput);
+}
+
+
+// Read standard error
+void ExeControls::readError()
+
+{
+	QTextStream stream(P->readAllStandardError());
+	QString fgxerror, line;
+	line = stream.readAll();
+	fgxerror.append(line);
+	outLog(fgxerror);
 }
 
 
