@@ -494,7 +494,7 @@ bool LauncherWindow::validate(){
 		messageBox->showWindowMessage("Validation failed:<BR> Please select an Aircraft or check [x] Use Default.");
 		return false;
 	}
-	qDebug() << "aircrafts ok";
+	outlog("*** FGx reports: Aircraft settings ok. ***");
 
 	v = airportsWidget->validate();
 	if(v != ""){
@@ -502,7 +502,7 @@ bool LauncherWindow::validate(){
 		messageBox->showWindowMessage("Validation failed:<BR> Please select an Airport.");
 		return false;
 	}
-	qDebug() << "airports ok";
+	outlog("*** FGx reports: Airport settings ok. ***");
 
 	v = networkWidget->validate();
 	if(v != ""){
@@ -510,7 +510,7 @@ bool LauncherWindow::validate(){
 		messageBox->showWindowMessage("Validation failed:<BR> Please check settings on Network Tab!");
 		return false;
 	}
-	qDebug() << "network ok";
+	outlog("*** FGx reports: Network settings ok. ***");
 
 	if(coreSettingsWidget->groupBoxTerraSync->isChecked() && coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget) );
@@ -518,7 +518,7 @@ bool LauncherWindow::validate(){
 		messageBox->showWindowMessage("Validation failed:<BR> Please set a path vor Terrasync Scenery!");
 		return false;
 	}
-	qDebug() << "ALL VALID";
+	outlog("*** FGx reports: ALL SETTINGS VALID. ***");
 	return true;
 }
 
