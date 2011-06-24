@@ -14,10 +14,10 @@ MessageBox::MessageBox(QWidget *parent) :
 
 
 //** Show Message **
-void MessageBox::showMessage(){
+void MessageBox::showWindowMessage(QString alertMessage){
 
 	QMessageBox msgBox;
-	msgBox.setText("The document has been modified.");
+	msgBox.setText(alertMessage);
 	msgBox.exec();
 	
 	

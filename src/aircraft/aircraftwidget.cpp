@@ -255,7 +255,7 @@ void AircraftWidget::on_tree_selection_changed(){
 	if(item->text(C_AERO).length() == 0){
                 outLog("on_tree_selection_changed: no C_AERO item");
                 aeroImageLabel->clear();
-		emit set_arg("remove", "--aircraft=", "");
+		emit set_arg("update", "--aircraft=", "");
 		return;
 	}
 
@@ -334,8 +334,8 @@ QString AircraftWidget::selected_aircraft(){
 //=============================================================
 // Validate
 QString AircraftWidget::validate(){
-	if(!treeWidget->currentItem()){
-		return QString("No Aircraft Selected");
+	if(!treeWidget->currentItem() && !checkBoxUseDefault->isChecked()){
+		return QString("Validation failed!");
 	}
 	return QString();
 }
@@ -459,10 +459,11 @@ QStringList AircraftWidget::get_args(){
 
 	QStringList args;
 
-	if(!checkBoxUseDefault->isChecked()){
-		if(selected_aircraft().length() > 0){
-			args << QString("--aircraft=%1").arg(selected_aircraft());
-		}
+	if(checkBoxUseDefault->isChecked()){
+			// this is default aricraft, also set by fgfs without --aircraft= command line option
+			// set hard here, to prepare FGx to have its own default in any case
+			// see also emit ("remove" ...) in case there is a list but no selection
+			args << QString("--aircraft=c172p");
 	}
 
 	if(txtNav1->text().length() > 0){

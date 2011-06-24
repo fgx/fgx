@@ -18,6 +18,7 @@
 
 #include "xwidgets/execontrols.h"
 #include "utilities/statusbar.h"
+#include "utilities/messagebox.h"
 
 #include "xobjects/mainobject.h"
 
@@ -53,6 +54,7 @@ public:
 	ExeControls *exeFgCom;
 
 	StatusBar *statusBar;
+	MessageBox *messageBox;
 
     void closeEvent(QCloseEvent *event);
 

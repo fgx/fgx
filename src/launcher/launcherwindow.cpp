@@ -20,6 +20,7 @@
 
 #include "launcher/launcherwindow.h"
 #include "utilities/utilities.h"
+#include "utilities/messagebox.h"
 
 
 LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
@@ -213,9 +214,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 			this, SLOT(on_stop_fgfs_clicked())
 			);
 	//bottomActionLayout->addStretch(10);
-
-	
-	
 	
 	// Bottom Statusbar 
 	/*statusBar = new StatusBar();
@@ -487,13 +485,13 @@ void LauncherWindow::on_command_help(){
 //* Validate
 //=======================================================================================================================
 bool LauncherWindow::validate(){
-	int TIMEOUT = 5000;
+	//int TIMEOUT = 5000;
 	QString v;
 
 	v = aircraftWidget->validate();
 	if(v != ""){
-		tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
-		//statusBar->showError(v, TIMEOUT);
+		//tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
+		messageBox->showWindowMessage("Validation failed:<BR> Please select an Aircraft or check [x] Use Default.");
 		return false;
 	}
 	qDebug() << "aircrafts ok";
@@ -501,7 +499,7 @@ bool LauncherWindow::validate(){
 	v = airportsWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(airportsWidget));
-		statusBar->showError(v, TIMEOUT);
+		messageBox->showWindowMessage("Validation failed:<BR> Please select an Airport.");
 		return false;
 	}
 	qDebug() << "airports ok";
@@ -509,7 +507,7 @@ bool LauncherWindow::validate(){
 	v = networkWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(networkWidget));
-		//statusBar->showError(v, TIMEOUT);
+		messageBox->showWindowMessage("Validation failed:<BR> Please check settings on Network Tab!");
 		return false;
 	}
 	qDebug() << "network ok";
@@ -517,7 +515,7 @@ bool LauncherWindow::validate(){
 	if(coreSettingsWidget->groupBoxTerraSync->isChecked() && coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget) );
 		coreSettingsWidget->txtTerraSyncPath->setFocus();
-		//statusBar->showError("Need a Terrasync directory", TIMEOUT);
+		messageBox->showWindowMessage("Validation failed:<BR> Please set a path vor Terrasync Scenery!");
 		return false;
 	}
 	qDebug() << "ALL VALID";

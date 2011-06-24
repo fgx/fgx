@@ -9,7 +9,7 @@ Q_OBJECT
 public:
     explicit MessageBox(QWidget *parent = 0);
 
-    void showMessage();
+    void showWindowMessage(QString alertMessage);
 
 
 signals:
