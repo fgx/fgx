@@ -13,6 +13,7 @@
 
 
 #include "dbsettingswidget.h"
+#include "utilities/utilities.h"
 
 
 DbSettingsWidget::DbSettingsWidget(MainObject *mOb, QWidget *parent) :
@@ -36,8 +37,8 @@ DbSettingsWidget::DbSettingsWidget(MainObject *mOb, QWidget *parent) :
 	layoutServer->addWidget(new QLabel(tr("Database Engine")), row, 0, 1, 1, Qt::AlignRight);
 
 	comboDbType = new QComboBox();
-	comboDbType->addItem("Sqlite", "QSQLITE");
-	comboDbType->addItem("mySql", "QMYSQL");
+	comboDbType->addItem("QSQLITE", "QSQLITE");
+	comboDbType->addItem("QMYSQL", "QMYSQL");
 	layoutServer->addWidget(comboDbType, row, 1);
 	connect(comboDbType, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_engine()));
 
@@ -93,7 +94,8 @@ DbSettingsWidget::DbSettingsWidget(MainObject *mOb, QWidget *parent) :
 //=======================================================
 //* Save Settings
 void DbSettingsWidget::save_settings(){
-	mainObject->settings->setValue("db_engine", comboDbType->itemData(comboDbType->currentIndex()));
+	mainObject->settings->setValue("db_engine", comboDbType->currentText());
+	outLog("DB Engine saved: " + comboDbType->currentText());
 	mainObject->settings->setValue("db_host", txtHost->text());
 	mainObject->settings->setValue("db_user", txtUser->text());
 	mainObject->settings->setValue("db_pass", txtPass->text());
@@ -105,7 +107,8 @@ void DbSettingsWidget::save_settings(){
 //* Load Settings
 void DbSettingsWidget::load_settings(){
 	qDebug() << mainObject->settings->value("db_engine").toString();
-	comboDbType->setCurrentIndex( comboDbType->findData(mainObject->settings->value("db_engine").toString(), Qt::UserRole, Qt::MatchExactly));
+	outLog("String empty means: There are NO settings at all! Maybe your first start of FGx ?");
+	comboDbType->setCurrentIndex( comboDbType->findData(mainObject->settings->value("db_engine").toString()));
 	txtHost->setText(mainObject->settings->value("db_host").toString());
 	txtUser->setText(mainObject->settings->value("db_user").toString());
 	txtPass->setText(mainObject->settings->value("db_pass").toString());
@@ -131,7 +134,7 @@ void DbSettingsWidget::on_combo_engine(){
 void DbSettingsWidget::on_test_connection(){
 
 	buttonTest->setDisabled(true);
-	statusBar->showMessage("Connecting: plese wait");
+	//statusBar->showMessage("Connecting: please wait");
 	QCoreApplication::processEvents();
 
 	//********************************************************************

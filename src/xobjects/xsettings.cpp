@@ -8,6 +8,7 @@
 #include <QtGui/QWidget>
 
 #include "xsettings.h"
+#include "utilities/utilities.h"
 
 
 XSettings::XSettings(QObject *parent) :
@@ -32,13 +33,14 @@ QString XSettings::fgfs_path(){
 }
 
 QString XSettings::default_fgfs_path(){
-	// TODO = return the default windows path
+
 	if(runningOS() == MAC){
 		return QDir::currentPath().append("/fgx.app/Contents/MacOS/fgfs");
 
 	}else if(runningOS() == LINUX){
                 return QString("fgfs");
-        }else if(runningOS() == WINDOWS){
+        }
+	else if(runningOS() == WINDOWS){
                 return QString("C:/Program Files/FlightGear/bin/win32/fgfs.exe");
         }
 
@@ -62,7 +64,9 @@ QString XSettings::default_fg_root(){
 
 	}else if(runningOS() == LINUX){
 		return QString("/usr/share/games/FlightGear");
-        }else if(runningOS() == WINDOWS){
+        }
+	
+	else if(runningOS() == WINDOWS){
                 return QString("C:/Program Files/FlightGear/data");
         }
 
@@ -91,10 +95,12 @@ bool XSettings::paths_sane(){
 //===========================================================================
 QString XSettings::aircraft_path(){
 	return fg_root().append("/Aircraft");
+	outLog("*** FGx settings: Aircraft path: " + fg_root().append("/Aircraft") + " ***");
 }
 
 QString XSettings::aircraft_path(QString dir){
 	return fg_root().append("/Aircraft/").append(dir);
+	outLog("*** FGx settings: Aircraft path: " + fg_root().append("/Aircraft/").append(dir) + " ***");
 }
 
 
@@ -109,13 +115,16 @@ QString XSettings::airports_path(){
 			QString terrascenehome(QDir::homePath());
 			terrascenehome.append("/Documents/TerrasyncScenery");
 			return terrascenehome;
+			outLog("*** FGx settings: Airports path: " + terrascenehome + " ***");
 		}else{
 			//* Use the terra sync path
 			return terrasync_sync_path().append("/Airports");
+			outLog("*** FGx settings: Airports path: " + terrasync_sync_path().append("/Airports") + " ***");
 		}
 	}
 	//* Otherwise return the FG_ROOT airports/
 	return fg_root().append("/Scenery/Airports");
+	outLog("*** FGx settings: Airports path: " + fg_root().append("/Scenery/Airports") + " ***");
 }
 
 //** Apt Dat
@@ -230,7 +239,7 @@ QString XSettings::fgcom_exe_path(){
 
 
 //===========================================================================
-//** Database
+//** SQLite Database
 //===========================================================================
 QString XSettings::db_file(){
 	QString storedir = QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath();

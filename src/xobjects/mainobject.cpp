@@ -34,7 +34,6 @@ MainObject::MainObject(QObject *parent) :
 
 	mpMapWidget = 0;
 
-
     //***********************************
     //** Tray Icon
 	trayIcon = new QSystemTrayIcon(QIcon(":/icon/favicon"), this);
@@ -167,9 +166,12 @@ void MainObject::on_properties_browser(){
 void MainObject::db_connect(){
 
 	trayIcon->showMessage("DB", "Opening DB");
+	
+	QSqlDatabase db;
+	QSqlQuery query;
 
 	if (settings->value("db_engine").toString() == "QMYSQL"){
-		//** Setup MySql
+		outLog("*** FGX reports: we are using QMYSQL engine ***");
 		db = QSqlDatabase::addDatabase("QMYSQL");
 		db.setHostName(settings->value("db_host").toString());
 		db.setUserName(settings->value("db_user").toString());
@@ -177,11 +179,12 @@ void MainObject::db_connect(){
 		db.setDatabaseName(settings->value("db_database").toString());
 
 	}else if(settings->value("db_engine").toString() == "QSQLITE"){
+		outLog("*** FGX reports: we are using QSQLITE engine ***");
 		db = QSqlDatabase::addDatabase("QSQLITE");
 		db.setDatabaseName(settings->db_file());
 		qDebug() << "dbfile settings: " << settings->db_file();
 
-	}else{
+	}else {
 		trayIcon->showMessage("DB Error", "Could not open DB", QSystemTrayIcon::Critical, 5000);
 		emit(show_settings(1));
 		qDebug() << "NO ENGINE";

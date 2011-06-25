@@ -19,6 +19,7 @@
 #include <QtGui/QMessageBox>
 
 #include "settingsdialog.h"
+#include "launcher/launcherwindow.h"
 
 /* Presents the settings "dialog" for the fgfs paths
 
@@ -115,6 +116,7 @@ void SettingsDialog::on_save_clicked(){
 	}
 	pathsSettingsWidget->save_settings();
 	dbSettingsWidget->save_settings();
+	mainObject->db_connect();
 	accept();
 }
 

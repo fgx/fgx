@@ -215,7 +215,7 @@ void PathsSettingsWidget::on_fgfs_autodetect(){
 
 
 //=================================================================================
-//* Selct FGFS  Dialog
+//* Select FGFS  Dialog
 void PathsSettingsWidget::on_select_fgfs_path(){
 	QString filePath = QFileDialog::getOpenFileName(this, tr("Select FGFS binary"),
 														 txtFgfs->text());
