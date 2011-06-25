@@ -465,6 +465,8 @@ QStringList AircraftWidget::get_args(){
 			// set hard here, to prepare FGx to have its own default in any case
 			// see also emit ("remove" ...) in case there is a list but no selection
 			args << QString("--aircraft=c172p");
+	} else {
+		args << QString("--aircraft=%1").arg(selected_aircraft());
 	}
 
 	if(txtNav1->text().length() > 0){

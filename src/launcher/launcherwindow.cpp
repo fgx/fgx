@@ -491,7 +491,7 @@ bool LauncherWindow::validate(){
 
 	v = aircraftWidget->validate();
 	if(v != ""){
-		//tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
+		tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
 		messageBox->showWindowMessage("Validation failed:<BR> Please select an Aircraft or check [x] Use Default.");
 		return false;
 	}
