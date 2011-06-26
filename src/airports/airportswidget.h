@@ -48,6 +48,7 @@ public:
 
 	MainObject *mainObject;
 
+	bool first_load;
 	QButtonGroup *buttonGroupUse;
 
 	QGroupBox *groupBoxAirport;
@@ -71,6 +72,7 @@ public:
 	void show_progress(bool state);
 
 	void load_airports_tree();
+	void import_airports();
 
 	void load_info_tree(QString airport_dir, QString airport_code);
 	int load_runways_node(QString airport_dir, QString airport_code);

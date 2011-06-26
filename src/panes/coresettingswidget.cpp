@@ -204,8 +204,8 @@ void CoreSettingsWidget::load_settings(){
 
 
 	groupBoxTerraSync->setChecked(mainObject->settings->value("use_terrasync").toBool());
-	if (mainObject->settings->value("terrasync_sync_path").toBool()) {
-		txtTerraSyncPath->setText( mainObject->settings->value("terrasync_sync_path").toString() );
+	if (mainObject->settings->value("terrasync_path").toBool()) {
+		txtTerraSyncPath->setText( mainObject->settings->value("terrasync_path").toString() );
 	} else {
 		txtTerraSyncPath->setText("Please set path!");
 	}
@@ -240,7 +240,7 @@ void CoreSettingsWidget::save_settings(){
 	mainObject->settings->setValue("USE_DEFAULT_PATHS", radioFgUseDefault->isChecked());
 
 	mainObject->settings->setValue("use_terrasync", groupBoxTerraSync->isChecked());
-	mainObject->settings->setValue("terrasync_sync_path", txtTerraSyncPath->text());
+	mainObject->settings->setValue("terrasync_path", txtTerraSyncPath->text());
 
 }
 

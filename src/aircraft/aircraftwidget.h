@@ -39,6 +39,7 @@ public:
 
 	MainObject *mainObject;
 
+
 	QLabel *aeroImageLabel;
 	QTabBar *tabsView;
 	QCheckBox *checkBoxUseDefault;

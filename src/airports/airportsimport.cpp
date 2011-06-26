@@ -97,19 +97,22 @@ void AirportsImport::import_airports(QWidget *parent){
 	int found = 0;
 	
 	Q_UNUSED(parent);
+
+
+
+	//= Cache File
+	QFile cacheFile( mainObject->settings->data_file("airports.txt") );
+	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
+		//qDebug() << "TODO Open error cachce file=";
+		return;
+	}
+	QTextStream out(&cacheFile);
+
 	//=================================
 	//** Show Progress as this takes time
 	QProgressDialog progressDialog(tr("Scanning Airports to Database"), tr("Cancel"), 0, 20000);
 	progressDialog.setWindowModality(Qt::WindowModal);
 	progressDialog.show();
-
-	//* Drop and recreate database tables
-	progressDialog.setLabelText(tr("Creating database tables"));
-	//create_db_tables();
-
-	//* Insert Airport query
-	//QSqlQuery sqlAirportInsert(mainObject->db);
-	//sqlAirportInsert.prepare("INSERT INTO airports(code, dir)VALUES(?,?);");
 
 	//================================================
 	//* Lets Loop the directories
@@ -117,6 +120,7 @@ void AirportsImport::import_airports(QWidget *parent){
 	QDirIterator loopAirportsFiles( mainObject->settings->airports_path(), QDirIterator::Subdirectories );
 	QString xFileName;
 	progressDialog.setLabelText(tr("Scanning XML files"));
+
 	while (loopAirportsFiles.hasNext()) {
 
 		//* Get file handle if there is one
@@ -146,6 +150,8 @@ void AirportsImport::import_airports(QWidget *parent){
 				//qDebug() << airport_code << " = " << fileInfoThreshold.absoluteDir().absolutePath();
 			}
 			*/
+			qDebug() << airport_code;
+			out << airport_code << fileInfoThreshold.absoluteDir().absolutePath();
 
 			//* Parse the XML files
 			//parse_runways_xml(fileInfoThreshold.absoluteDir(), airport_code);
@@ -158,17 +164,12 @@ void AirportsImport::import_airports(QWidget *parent){
 		}
 
 		if(progressDialog.wasCanceled()){
+			progressDialog.hide();
 			return;
 		}
 	}
 
-	//* Create the database indexes
-	progressDialog.setLabelText(tr("Creating database indexes"));
-	//create_db_indexes();
-
-	//* Import APTDAT
-	//parse_aptdat();
-
+	cacheFile.close();
 	progressDialog.hide();
 }
 

@@ -158,7 +158,7 @@ QString XSettings::terrasync_exe_path(){
 }
 
 QString XSettings::terrasync_sync_path(){
-	return value("hier der pfad").toString();
+	return value("terrasync_path").toString();
 }	
 	
 

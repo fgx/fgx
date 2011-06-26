@@ -32,12 +32,12 @@
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QHeaderView>
 
+#include <QtGui/QProgressDialog>
 
 
 
 #include "airports/airportswidget.h"
-#include "airports/importairportswidget.h"
-#include "airports/airportsimport.h"
+
 
 
 AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
@@ -45,6 +45,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 {
 
 	mainObject = mOb;
+	first_load = false;
 
     //* Main Layout
 	QGridLayout *mainLayout = new QGridLayout();
@@ -301,7 +302,6 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	layoutCoordinates->addStretch(20);
 
-	//on_buttonGroupUse();
 
 	connect(buttonGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
 			this, SLOT(on_update_airports_filter())
@@ -309,7 +309,12 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 }
 
 void AirportsWidget::initialize(){
+	static bool first_load_done = false;
+	if(first_load_done){
+		return;
+	}
 	load_airports_tree();
+	first_load_done = true;
 }
 
 
@@ -324,25 +329,31 @@ void AirportsWidget::load_airports_tree(){
 	model->removeRows(0, model->rowCount());
 	treeViewAirports->setUpdatesEnabled(false);
 
-	//* Get Airports from database
-	//QSqlQuery query("SELECT code, name, dir FROM airports order by code ASC", mainObject->db);
+	//* Airports Cache File
+	QFile dataFile(mainObject->settings->data_file(("airports.txt")));
+	if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+		   return;
+	}
+	QTextStream in(&dataFile);
+	QString line = in.readLine();
+	line = in.readLine();
+	while(!line.isNull()){
 
-	//* Loop results  and appendRows
-	while(1 ==0){ //query.next()){
-
+		QStringList cols = line.split("\t");
 		QStandardItem *itemAirportCode = new QStandardItem();
-		//itemAirportCode->setText(query.value(0).toString());
+		itemAirportCode->setText(cols.at(0));
 
 		QStandardItem *itemAirportName = new QStandardItem();
-		//itemAirportName->setText(query.value(1).toString());
+		itemAirportName->setText(cols.at(1));
 
 		QStandardItem *itemAirportDir = new QStandardItem();
-		//itemAirportDir->setText(query.value(2).toString());
+		itemAirportDir->setText(cols.at(2));
 
 		QList<QStandardItem *> items;
 		items << itemAirportCode << itemAirportName << itemAirportDir;
 
 		model->appendRow(items);
+		line = in.readLine();
 	}
 
 	//* Update the status bar with the count
@@ -622,8 +633,7 @@ void AirportsWidget::on_reload_cache(){
 		return;
 	}
 
-	AirportsImport *airportsImport = new AirportsImport(this, mainObject);
-	airportsImport->import_airports(this);
+	import_airports();
 	load_airports_tree();
 }
 
@@ -749,3 +759,165 @@ QString AirportsWidget::validate(){
 	return QString();
 
 }
+
+
+
+
+void AirportsWidget::import_airports(){
+
+	int c = 0;
+	int found = 0;
+
+	//= Cache File
+	QFile cacheFile( mainObject->settings->data_file("airports.txt") );
+	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
+		//qDebug() << "TODO Open error cachce file=";
+		return;
+	}
+	QTextStream out(&cacheFile);
+
+	//=================================
+	//** Show Progress as this takes time
+	QProgressDialog progressDialog(tr("Scanning Airports to Database"), tr("Cancel"), 0, 20000);
+	//progressDialog.setWindowModality(Qt::WindowModal);
+	progressDialog.show();
+
+	//================================================
+	//* Lets Loop the directories
+	//* Get out aiports path from setings and get the the subdir also
+	QDirIterator loopAirportsFiles( mainObject->settings->airports_path(), QDirIterator::Subdirectories );
+	QString xFileName;
+	progressDialog.setLabelText(tr("Scanning XML files"));
+
+	while (loopAirportsFiles.hasNext()) {
+
+		//* Get file handle if there is one
+		c++;
+		xFileName = loopAirportsFiles.next();
+		//qDebug() << xFileName;
+		//* Check if file entry is a *.threshold.xml - cos this is what we want
+		if(xFileName.endsWith(".threshold.xml") ){
+			//qDebug() << xFileName << "PROCESS";
+			//* Split out "CODE.threshold.xml" with a "."
+			QFileInfo fileInfoThreshold(xFileName);
+			QString airport_code = fileInfoThreshold.fileName().split(".").at(0);
+
+			//* Update progress
+			progressDialog.setValue(progressDialog.value() + 1);
+			progressDialog.setLabelText(airport_code);
+
+			//* Insert airport_code to airports table == primary key
+			/*
+			sqlAirportInsert.bindValue(0, airport_code);
+			sqlAirportInsert.bindValue(1, fileInfoThreshold.absoluteDir().absolutePath());
+			if(!sqlAirportInsert.exec()){
+				qDebug() << "CRASH" << mainObject->db.lastError() << "=" << c;
+				// TODO catch error log
+			}else{
+				//listAirportCodes.append(airport_code);
+				//qDebug() << airport_code << " = " << fileInfoThreshold.absoluteDir().absolutePath();
+			}
+			*/
+			//qDebug() << airport_code;
+			QStringList cols; // missing in middle is description ??
+			cols << airport_code << "" << fileInfoThreshold.absoluteDir().absolutePath();
+			out << cols.join("\t").append("\n");
+
+			//* Parse the XML files
+			//parse_runways_xml(fileInfoThreshold.absoluteDir(), airport_code);
+			//parse_ils_xml(fileInfoThreshold.absoluteDir(), airport_code);
+			//parse_parking_xml(fileInfoThreshold.absoluteDir(), airport_code);
+
+
+
+			found++;
+		}
+
+		if(progressDialog.wasCanceled()){
+			progressDialog.hide();
+			return;
+		}
+	}
+
+	cacheFile.close();
+	progressDialog.hide();
+}
+
+
+
+//==============================================================
+// Parse the <CODE>.threshold.xml file to get runways
+//==============================================================
+/*
+<?xml version="1.0"?>
+<PropertyList>
+  <runway>
+	<threshold>
+	  <lon>0.044298885776989</lon>
+	  <lat>51.505569223906</lat>
+	  <rwy>10</rwy>
+	  <hdg-deg>92.88</hdg-deg>
+	  <displ-m>95</displ-m>
+	  <stopw-m>55</stopw-m>
+	</threshold>
+	<threshold>
+	  <lon>0.065996952433288</lon>
+	  <lat>51.5048897753222</lat>
+	  <rwy>28</rwy>
+	  <hdg-deg>272.88</hdg-deg>
+	  <displ-m>71</displ-m>
+	  <stopw-m>90</stopw-m>
+	</threshold>
+  </runway>
+</PropertyList>
+*/
+/*
+void AirportsWidget::parse_runways_xml(QDir dir, QString airport_code){
+
+	// Prepare the Insert Runway Query
+
+	//QSqlQuery sqlRunwayInsert(mainObject->db);
+	//sqlRunwayInsert.prepare("INSERT INTO runways(airport_code, runway, heading, lat, lon)VALUES(?,?,?,?,?);");
+	QStringList attribs;
+	attribs << "rwy" << "hdg-deg" << "lat" << "lon";
+
+	// Get the contents of the file whcile is path and code..
+	QFile fileXmlThrehsold(dir.absolutePath().append("/").append(airport_code).append(".threshold.xml"));
+	fileXmlThrehsold.open(QIODevice::ReadOnly);
+
+	// Make file contents into a string from bytearray
+	QString xmlThresholdString = fileXmlThrehsold.readAll();
+
+	// Create domDocument - important dont pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
+	QDomDocument dom;
+	dom.setContent(xmlThresholdString); // AFTER dom has been created, then set the content from a string from the file
+
+	// Get threhold nodes and loop for values to database
+	QDomNodeList nodesThreshold = dom.elementsByTagName("threshold");
+
+
+
+	if (nodesThreshold.count() > 0){
+		for(int idxd =0; idxd < nodesThreshold.count(); idxd++){
+			 QDomNode thresholdNode = nodesThreshold.at(idxd);
+			 QHash<QString, QString> hash;
+			 for(int i=0; i < attribs.size(); i++){
+				 hash[attribs.at(i)] = thresholdNode.firstChildElement(attribs.at(i)).text();
+			 }
+
+			 /
+			 sqlRunwayInsert.bindValue(0, airport_code);
+			 sqlRunwayInsert.bindValue(1, thresholdNode.firstChildElement("rwy").text());
+			 sqlRunwayInsert.bindValue(2, thresholdNode.firstChildElement("hdg-deg").text());
+			 sqlRunwayInsert.bindValue(3, thresholdNode.firstChildElement("lat").text());
+			 sqlRunwayInsert.bindValue(4, thresholdNode.firstChildElement("lon").text());
+			 if(!sqlRunwayInsert.exec()){
+				// TODO - ignore error for now
+			 }
+			 *
+
+			// emit(SIGNAL("runway"), hash);
+		}
+	}
+}
+*/

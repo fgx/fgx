@@ -231,7 +231,6 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	splitter->setStretchFactor(0, 50);
 	splitter->setStretchFactor(1, 1);
 
-	initialize();
 }
 
 
@@ -345,10 +344,8 @@ QString AircraftWidget::validate(){
 void AircraftWidget::on_reload_db_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 
-	//* scan Airaft dirs and save in db
-	// AeroTools * aeroTool = new AeroTools(this, mainObject);
+	//* scan Airaft dirs and save in file
 	scan_xml_sets();
-
 	load_tree();
 }
 
@@ -366,7 +363,7 @@ void AircraftWidget::load_tree(){
 	treeWidget->setColumnHidden(C_DIR, view == LIST_VIEW);
 	treeWidget->setRootIsDecorated(view == FOLDER_VIEW);
 
-	QFile dataFile(mainObject->settings->data_file(("airports.txt")));
+	QFile dataFile(mainObject->settings->data_file(("aircraft.txt")));
 	if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
 		   return;
 	}
@@ -417,13 +414,15 @@ void AircraftWidget::load_tree(){
 //=============================================================
 // Initialize
 void AircraftWidget::initialize(){
-	if(1 == 0){
-		//TODO assume its never been initialised
-		//scan_xml_sets();
+
+	static bool first_load_done = false;
+	if(first_load_done){
+		return;
 	}
 
 	load_tree();
 	select_node(mainObject->settings->value("aircraft").toString());
+	first_load_done = true;
 }
 
 //=============================================================
@@ -476,7 +475,8 @@ void AircraftWidget::on_use_default_clicked(){
 
 /* This function walks the /Aircraft/ directory
  its find files in a directory maching "-set.xml"
-   and therby engquires the xml fo
+   and then quires the xml for vars
+   TODO find keys, include ETC
 */
 
 void AircraftWidget::scan_xml_sets(){
@@ -487,10 +487,9 @@ void AircraftWidget::scan_xml_sets(){
 
 
 	//= Cache File
-	QString cache_file_name = mainObject->settings->data_file("airports.txt");
-	QFile cacheFile( mainObject->settings->data_file("airports.txt") );
+	QFile cacheFile( mainObject->settings->data_file("aircraft.txt") );
 	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
-		//qDebug() << "TODO Open error cachce file=" << cache_file_name;
+		//qDebug() << "TODO Open error cachce file=";
 		return;
 	}
 

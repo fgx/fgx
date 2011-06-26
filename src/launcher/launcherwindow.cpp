@@ -127,6 +127,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
     tabWidget = new QTabWidget(this);
 	mainLayout->addWidget(tabWidget);
+	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed(int)));
 
 
 	//* Core Settings
@@ -229,7 +230,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//=================================================
 	//** Restore Last tab
 	tabWidget->setCurrentIndex( mainObject->settings->value("launcher_last_tab", 0).toInt() );
-	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed(int)));
 
 	//====================================================================================
 	//* Problem:  Qt Has no "Show event" for a "widget", so we need to present Widgets first
@@ -259,8 +259,8 @@ void LauncherWindow::initialize(){
 
 	//* Paths are sane so we can initialize;
 	//TODO setup wizard to import data first time
-	aircraftWidget->initialize();
-	airportsWidget->initialize();
+	//aircraftWidget->initialize();
+	//airportsWidget->initialize();
 	coreSettingsWidget->initialize();
 }
 
@@ -577,14 +577,22 @@ void LauncherWindow::on_action_style(QAction *action){
 	QApplication::setStyle(QStyleFactory::create(action->text()));
 }
 
-void LauncherWindow::on_tab_changed(int idx){
+void LauncherWindow::on_tab_changed(int tab_idx){
 	mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
 	QStringList tablist;
 	// put "last used tab" to log, but more human now. To Pete: do we need it at all, or not ?
 	tablist << "Coresettings" << "Time and Weather" << "Aircraft" << "Airports" << "Network" << "Advanced Options" << "Output / Preview";
 	outLog("*** FGx reports: last tab used = " + tablist[tabWidget->currentIndex()] + " (" + QString::number(tabWidget->currentIndex()) + ") ***");
-	if(idx == tabWidget->indexOf(outputPreviewWidget)){
+	//qDebug() << "\n" << "on-tab=" << tab_idx;
+	if(tab_idx == tabWidget->indexOf(outputPreviewWidget)){
 		on_command_preview();
+
+	}else if(tab_idx == tabWidget->indexOf(aircraftWidget)){
+		aircraftWidget->initialize();
+
+	}else if(tab_idx == tabWidget->indexOf(airportsWidget)){
+		airportsWidget->initialize();
+
 	}
 }
 
