@@ -593,7 +593,11 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 					 if(attribs.namedItem("type").nodeValue() == "gate"){
 
 						//* Append position to eliminate dupes
-						listParkingPositions.append(gate);
+						if(!gate.contains(" ")){
+							listParkingPositions.append(gate);
+						}else{
+							//qDebug() << gate;
+						}
 					}
 				}
 			}
