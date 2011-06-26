@@ -15,6 +15,7 @@
 #include <QtGui/QProgressDialog>
 
 #include "airportsimport.h"
+#include "utilities.h"
 
 AirportsImport::AirportsImport(QObject *parent, MainObject *mOb) :
     QObject(parent)
@@ -69,8 +70,7 @@ void AirportsImport::execute_sql_commands_list(QStringList sql_commands){
 	QSqlQuery query(mainObject->db);
 	for(int i = 0; i < sql_commands.size(); ++i){
 		if(!query.exec(sql_commands.at(i))){
-			//TODO ignored for now - mysql is safe .. maybe said pete
-			//qDebug() << "OOps=" << mainObject->db.lastError(); //TODO
+			qDebug() << mainObject->db.lastError() << query.lastError();
 		}
 	}
 }
@@ -92,7 +92,8 @@ void AirportsImport::import_airports(QWidget *parent){
 
 	int c = 0;
 	int found = 0;
-        Q_UNUSED(parent);
+	
+	Q_UNUSED(parent);
 	//=================================
 	//** Show Progress as this takes time
 	QProgressDialog progressDialog(tr("Scanning Airports to Database"), tr("Cancel"), 0, 20000);

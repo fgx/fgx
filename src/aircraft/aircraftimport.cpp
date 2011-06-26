@@ -65,6 +65,7 @@ void AircraftImport::scan_xml_sets(){
 
 	int c = 0;
 	int found = 0;
+	
 	QProgressDialog progress(tr("Scanning aircraft directory ..."), tr("Cancel"), 0, 0);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.show();

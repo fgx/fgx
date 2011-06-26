@@ -106,7 +106,7 @@ void AptDatParser::import_aptdat(QString tarball_fullpath, QWidget *parentWidget
     //queryRunwayInsert.prepare("insert into runways(  airport, runways, width, lat1, lng1, lat2, lng2)values(?, ?, ?, ?, ?, ?, ?)");
 
 
-    bool is_icao;
+    bool is_icao(false);
 
 	QProgressDialog progress("Importing Airports", "Cancel", 0, estimated_lines, parentWidget);
     progress.setWindowTitle("Importing Airports");

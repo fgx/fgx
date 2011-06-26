@@ -358,11 +358,12 @@ void AircraftWidget::on_reload_db_cache(){
 void AircraftWidget::load_tree(){
 	int c =0;
 
+		
 	QString currAero = selected_aircraft();
 	treeWidget->setUpdatesEnabled(false);
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 	QString last_dir("");
-	QTreeWidgetItem *parentItem;
+	QTreeWidgetItem *parentItem = new QTreeWidgetItem();
 
 	int view = tabsView->currentIndex();
 	treeWidget->setColumnHidden(C_DIR, view == V_LIST);
