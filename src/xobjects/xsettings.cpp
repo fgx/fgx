@@ -129,7 +129,6 @@ QString XSettings::airports_path(){
 
 //** Apt Dat
 QString XSettings::apt_dat_file(){
-	qDebug() << fg_root("/Airports/apt.dat");
 	if( QFile::exists(fg_root("/Airports/apt.dat")) == false){
 		// unpack oringal ??? TODO
 		return QString("");

@@ -16,7 +16,7 @@ HEADERS += xobjects/xsettings.h \
     network/mptelnet.h \
     aircraft/aircraftwidget.h \
     airports/airportswidget.h \
-    airports/importairportswidget.h \
+	airports/importairportsdialog.h \
     airports/aptdatparser.h \
     xwidgets/execontrols.h \
     panes/timeweatherwidget.h \
@@ -40,7 +40,7 @@ SOURCES += main.cpp \
     aircraft/aircraftwidget.cpp \
     airports/airportswidget.cpp \
     airports/aptdatparser.cpp \
-    airports/importairportswidget.cpp \
+	airports/importairportsdialog.cpp \
     xwidgets/execontrols.cpp \
     panes/timeweatherwidget.cpp \
     panes/advancedoptionswidget.cpp \

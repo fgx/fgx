@@ -37,7 +37,7 @@
 
 
 #include "airports/airportswidget.h"
-#include "airports/importairportswidget.h"
+#include "airports/importairportsdialog.h"
 
 
 AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
@@ -45,7 +45,6 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 {
 
 	mainObject = mOb;
-	first_load = false;
 
     //* Main Layout
 	QGridLayout *mainLayout = new QGridLayout();
@@ -626,18 +625,15 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 
 void AirportsWidget::on_reload_cache(){
 
-	ImportAirportsWidget *widget = new ImportAirportsWidget();
-	widget->show();
-	return;
-	int resp = QMessageBox::information(this, tr("Import Airports Cache"),
-										tr("Importing airports can take some time. Click Ok to continue."),
-										QMessageBox::Cancel | QMessageBox::Ok);
-	if(resp == QMessageBox::Cancel){
+	ImportAirportsDialog *widget = new ImportAirportsDialog();
+	int resp = widget->exec();
+	if(resp == QDialog::Rejected){
 		return;
 	}
 
-	//load_aptdat();
-	import_airports();
+	bool icao_only = widget->buttIcaoOnly->isChecked();
+
+	import_airports(icao_only);
 	load_airports_tree();
 }
 
@@ -767,7 +763,7 @@ QString AirportsWidget::validate(){
 
 
 
-void AirportsWidget::import_airports(){
+void AirportsWidget::import_airports(bool import_icao_only){
 
 	//====================================
 	// Step 1: Get a hash map of aircraft descriptions from aptdat
@@ -783,7 +779,6 @@ void AirportsWidget::import_airports(){
 	int estimated_lines = 1510000;
 	QRegExp rxICAOAirport("[A-Z]{4}");
 
-	bool is_icao = false;
 
 	QProgressDialog progress("Importing Airports", "Cancel", 0, estimated_lines, this);
 	progress.setWindowTitle("Importing Airports");
@@ -807,7 +802,6 @@ void AirportsWidget::import_airports(){
 	 QString elevation;
 	 QString tower;
 
-
 	while( !file.atEnd() ){
 
 		QByteArray lineBytes = file.readLine();
@@ -836,10 +830,12 @@ void AirportsWidget::import_airports(){
 			for(int p = 5; p < parts.size(); p++){ //** TODO WTF ?
 				airport_name.append(parts[p]).append(" ");
 			}
-			is_icao = rxICAOAirport.exactMatch(airport_code);
-
-			if(is_icao){
-				airports[airport_code] = airport_name;
+			if(import_icao_only){
+				if( rxICAOAirport.exactMatch(airport_code) ){
+						airports[airport_code] = airport_name;
+					}
+			}else{
+					airports[airport_code] = airport_name;
 			} /* if(is_icao) */
 
 		} /* if(row_code == "1") airport */
@@ -853,20 +849,15 @@ void AirportsWidget::import_airports(){
 		}
 		line_counter++;
 		if(line_counter % 1000 == 0){
-			//qDebug() <<  line_counter;
 			progress.setValue(line_counter);
 			QString prog_text = QString("%1 of approx %2").arg(line_counter).arg(estimated_lines);
 			progress.setLabelText(prog_text);
 			progress.repaint();
 		}
 
-		//if(line_counter == 20000){
-		//	qDebug() << "had enough";
-		//	break;
-		//}
 
 
-		} /* end while readline */
+	} /* end while readline */
 
 	//===================================================
 	// Step Two - walk the xml sets
@@ -881,29 +872,26 @@ void AirportsWidget::import_airports(){
 	}
 	QTextStream out(&cacheFile);
 
-	//=================================
-	//** Show Progress as this takes time
-	//QProgressDialog progressDialog(tr("Scanning Airports to Database"), tr("Cancel"), 0, 20000);
-	//progressDialog.setWindowModality(Qt::WindowModal);
-	//progressDialog.show();
 
 	//================================================
 	//* Lets Loop the directories
 	//* Get out aiports path from setings and get the the subdir also
 	QDirIterator loopAirportsFiles( mainObject->settings->airports_path(), QDirIterator::Subdirectories );
 	QString xFileName;
+
 	progress.setWindowTitle(tr("Scanning XML files"));
+	progress.setRange(0, 20000);
 
 	while (loopAirportsFiles.hasNext()) {
 
-		//* Get file handle if there is one
+		//= Get file handle if there is one
 		c++;
 		xFileName = loopAirportsFiles.next();
-		//qDebug() << xFileName;
-		//* Check if file entry is a *.threshold.xml - cos this is what we want
+
+		//= Check if file entry is a *.threshold.xml - cos this is what we want
 		if(xFileName.endsWith(".threshold.xml") ){
-			//qDebug() << xFileName << "PROCESS";
-			//* Split out "CODE.threshold.xml" with a "."
+
+			//= Split out "CODE.threshold.xml" with a "."
 			QFileInfo fileInfoThreshold(xFileName);
 			QString airport_code = fileInfoThreshold.fileName().split(".").at(0);
 
@@ -918,7 +906,14 @@ void AirportsWidget::import_airports(){
 
 			QStringList cols; // missing in middle is description ??
 			cols << airport_code << airport_name << fileInfoThreshold.absoluteDir().absolutePath();
-			out << cols.join("\t").append("\n");
+
+			if( import_icao_only){
+				if( rxICAOAirport.exactMatch(airport_code) ){
+					out << cols.join("\t").append("\n");
+				}
+			}else{
+				out << cols.join("\t").append("\n");
+			}
 
 			found++;
 		}
@@ -934,137 +929,3 @@ void AirportsWidget::import_airports(){
 }
 
 
-
-QHash<QString, QString> AirportsWidget::load_aptdat(){
-
-	qDebug() << mainObject->settings->apt_dat_file();
-
-	QHash<QString, QString> airports;
-
-	QFile file( mainObject->settings->apt_dat_file() );
-	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-		qDebug("OOPS: file problem");
-		return airports;
-	 }
-
-
-
-	int line_counter = 0;
-	int estimated_lines = 1510000;
-	QRegExp rxICAOAirport("[A-Z]{4}");
-
-
-	bool is_icao(false);
-
-	QProgressDialog progress("Importing Airports", "Cancel", 0, estimated_lines, this);
-	progress.setWindowTitle("Importing Airports");
-	//progress.setWindowModality(Qt::WindowModal);
-	progress.setFixedWidth(400);
-	progress.setWindowIcon(QIcon(":/icons/import"));
-	progress.setMinimumDuration(0);
-	//progress.show();
-	//progress.repaint();
-
-	//* ignore first line
-	file.readLine();
-
-	//** second line contains the version string
-	QString credits = file.readLine();
-	int version = 999;
-	if(credits.startsWith("810 Version")){
-		version = 810;
-	}
-	if(version == 0){
-		return airports;
-	}
-	//qDebug() << "version=" << version;
-	//qDebug() << "1" << file.readLine();
-	//qDebug() << "2" << file.readLine();
-   // qDebug() << "3" << file.readLine();
-	//qDebug() << "4" << file.readLine();
-	//return;
-	 QString airport_code;
-	 QString airport_name;
-	 QString elevation;
-	 QString tower;
-
-
-	while( !file.atEnd() ){
-
-		QByteArray lineBytes = file.readLine();
-		QString line = QString(lineBytes).trimmed();
-		//qDebug() << line;
-		QString row_code = line.section(' ',0, 0);
-		//qDebug() << row_code;
-		QStringList parts = line.split(" ", QString::SkipEmptyParts);
-
-		//**********************************************************************
-		//*** Airport
-		if(row_code == "1"){
-
-			// http://data.x-plane.com/file_specs/Apt715.htm
-			// 0 = airport code
-			//  1 = elevation
-			// 2 = has tower
-			// 3 = not approp
-			// 4 = code
-			// 5+ description
-
-			airport_code = parts[4];
-			elevation = parts[1];
-			tower =  parts[2] == "1" ? "1" : "";
-			airport_name.clear();
-			for(int p = 5; p < parts.size(); p++){ //** TODO WTF ?
-				airport_name.append(parts[p]).append(" ");
-			}
-			is_icao = rxICAOAirport.exactMatch(airport_code);
-
-			if(is_icao){
-				//qDebug() << "##" << airport_code << "=" << airport_name << " @ " << elevation << tower;
-				//queryAirportInsert.addBindValue( airport_code );
-				//queryAirportInsert.addBindValue( airport_name.trimmed() );
-				//queryAirportInsert.addBindValue( elevation );
-			   // queryAirportInsert.addBindValue( parts[2] == "1" ? "1" : NULL );
-			   // success = queryAirportInsert.exec();
-				//if(!success){
-					//qDebug() << queryAirportInsert.lastError();
-				   // qDebug() << "DIE queryApt";
-					//return;
-				//}
-				airports[airport_code] = airport_name;
-				//QStringList cols;
-				//cols << airport_code << airport_name << elevation << tower;
-				//out << cols.join("\t").append("\n");
-			} /* if(is_icao) */
-
-		} /* if(row_code == "1") airport */
-
-
-
-		if (progress.wasCanceled()){
-			progress.hide();
-			return airports;
-
-		}
-		line_counter++;
-		if(line_counter % 100 == 0){
-			//qDebug() <<  line_counter;
-			progress.setValue(line_counter);
-			QString prog_text = QString("%1 of approx %2").arg(line_counter).arg(estimated_lines);
-			progress.setLabelText(prog_text);
-			progress.repaint();
-		}
-
-		if(line_counter == 20000){
-			qDebug() << "had enough";
-			return airports;
-		}
-
-
-		} /* end while readline */
-	progress.hide();
-
-	return airports;
-	//queryCreate.exec("CREATE INDEX idx_airport_name on airports(name)");
-	//queryCreate.exec("CREATE INDEX idx_airport_icao on runways(airport)");
-}

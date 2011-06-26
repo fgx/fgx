@@ -7,17 +7,15 @@
 #include <QtGui/QCheckBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QProgressDialog>
-#include <QtGui/QStatusBar>
 
 #include "xobjects/xsettings.h"
 
-class ImportAirportsWidget : public QWidget
+class ImportAirportsDialog : public QDialog
 {
 Q_OBJECT
 public:
-	explicit ImportAirportsWidget(QWidget *parent = 0);
+	explicit ImportAirportsDialog(QWidget *parent = 0);
 
-	XSettings settings;
 
     QRadioButton *buttAllAiports;
     QRadioButton *buttIcaoOnly;
@@ -27,16 +25,14 @@ public:
     QPushButton *buttImport;
     QPushButton *buttCancelImport;
 
-    QProgressDialog *progress;
+	//QProgressDialog *progress;
 
-	QStatusBar *statusBar;
 
-	void closeEvent(QCloseEvent *event);
+
 signals:
 
 public slots:
-    void on_import_button_clicked();
-    void update_progress(int);
+
 };
 
 #endif // IMPORTAIRPORTSWIDGET_H
