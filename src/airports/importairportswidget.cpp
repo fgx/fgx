@@ -33,6 +33,7 @@ ImportAirportsWidget::ImportAirportsWidget(QWidget *parent) :
 
     setWindowTitle("Import Airports");
 	setWindowIcon(QIcon(":/icon/import"));
+	setWindowModality(Qt::WindowModal);
     //setWindowFlags(  Qt::WindowStaysOnTopHint);
 
     setFixedWidth(400);
@@ -49,7 +50,7 @@ ImportAirportsWidget::ImportAirportsWidget(QWidget *parent) :
     mainVBox->setSpacing(10);
 
 
-    QLabel *lblHelp = new QLabel("<ul><li>Select the airports to import</li><li>You can run this more than once</li></ul>");
+	QLabel *lblHelp = new QLabel("<ul><li>Select the airport type to import</li><li>Importing can take a few minutes</li></ul>");
     mainVBox->addWidget(lblHelp, 1);
     lblHelp->setStyleSheet("background-color: #efefef; padding: 5px; border: 1px solid #000099;");
 
@@ -63,19 +64,20 @@ ImportAirportsWidget::ImportAirportsWidget(QWidget *parent) :
     buttAllAiports = new QRadioButton();
     mainVBox->addWidget(buttAllAiports, 1);
     buttAllAiports->setText("Import all airports.");
-    buttAllAiports->setDisabled(true);
 
-    //** Seaports
+	//** Seaports - hidden for now
     chkImportSeaports = new QCheckBox();
     chkImportSeaports->setText(tr("Import Seaports"));
     mainVBox->addWidget(chkImportSeaports, 1);
     chkImportSeaports->setDisabled(true);
+	chkImportSeaports->hide();
 
-    //** Heliports
+	//** Heliports - hidden for now
     chkImportHeliports = new QCheckBox();
     chkImportHeliports->setText(tr("Import Heliports"));
     mainVBox->addWidget(chkImportHeliports, 1);
     chkImportHeliports->setDisabled(true);
+	chkImportHeliports->hide()
 
     //*****************************************************************
     //** Bottom Button Box

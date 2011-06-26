@@ -70,6 +70,14 @@ void AptDatParser::import_aptdat(QString tarball_fullpath, QWidget *parentWidget
      }
 
     bool success;
+	//= Cache File
+	QFile cacheFile("apt_dat.txt" );
+	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
+		//qDebug() << "TODO Open error cachce file=";
+		return;
+	}
+	QTextStream out(&cacheFile);
+
 	/*
     QSqlQuery queryCreate;
 
@@ -181,7 +189,11 @@ void AptDatParser::import_aptdat(QString tarball_fullpath, QWidget *parentWidget
 				   // qDebug() << "DIE queryApt";
 					//return;
 				//}
+				QStringList cols;
+				cols << airport_code << airport_name <<  tower;
+				out << cols.join("\t").append("\n");
             } /* if(is_icao) */
+
         } /* if(row_code == "1") airport */
 
         //**********************************************************************8
@@ -189,7 +201,7 @@ void AptDatParser::import_aptdat(QString tarball_fullpath, QWidget *parentWidget
         //      width surface/shou/sm/   No   lat           lng          disp_len  blast_len light  f f f
         //100   49.99   1   0 0.25 1 2 0 09L  51.47747035 -000.48962591  306.02    0.00 5  4 1 1 27R  51.47767520 -000.43326100    0.00   21.03 5  4 1 1
         //100   49.99   1   0 0.25 1 2 0 09R  51.46477398 -000.48694615  306.93    0.00 5  4 1 1 27L  51.46495200 -000.43407800    0.00   21.03 5  4 1 1
-
+		/*
         if(row_code == "10" ){
             QString lat;
             QString lng;
@@ -202,7 +214,7 @@ void AptDatParser::import_aptdat(QString tarball_fullpath, QWidget *parentWidget
 
             if(is_icao){
                 if(version > 0){
-                    /*
+					/
                       0 = 10 = runway code
                       1= lat
                       2=lon
@@ -210,7 +222,7 @@ void AptDatParser::import_aptdat(QString tarball_fullpath, QWidget *parentWidget
                       4 = true heading
                       5 = length
                       6 = len of displaced
-                      */
+					  /
                       lat = parts[1];
                       lng = parts[2];
                       runway = parts[3];
@@ -249,7 +261,7 @@ void AptDatParser::import_aptdat(QString tarball_fullpath, QWidget *parentWidget
                     //QString runways = parts[8];
                     //runways.append("-").append(parts[17]);
                     //qDebug() << runways;
-                } /* version */
+				} / version /
 
 
 
@@ -262,12 +274,14 @@ void AptDatParser::import_aptdat(QString tarball_fullpath, QWidget *parentWidget
 //                    qDebug() << "DIE queryRwyIns";
 //                    return;
 //                }
-            } /* is_icao */
-        } /* if(row_code == "100") Runway */
+			} / is_icao /
+		}*/     /* if(row_code == "100") Runway */
 
 
         if (progress.wasCanceled()){
-            return;
+			progress.hide();
+			return;
+
         }
         line_counter++;
 		if(line_counter % 100 == 0){

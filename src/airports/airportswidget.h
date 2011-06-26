@@ -3,7 +3,7 @@
 
 #include <QtCore/QDirIterator>
 #include <QtCore/QStringList>
-
+#include <QtCore/QHash>
 
 #include <QtGui/QWidget>
 #include <QtGui/QButtonGroup>
@@ -73,6 +73,7 @@ public:
 
 	void load_airports_tree();
 	void import_airports();
+	QHash<QString, QString> load_aptdat();
 
 	void load_info_tree(QString airport_dir, QString airport_code);
 	int load_runways_node(QString airport_dir, QString airport_code);
@@ -106,7 +107,9 @@ public slots:
 
 	void on_reload_cache();
 
+
 	void on_buttonGroupUse();
+
 };
 
 #endif // AIRPORTSWIDGET_H

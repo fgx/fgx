@@ -37,7 +37,7 @@
 
 
 #include "airports/airportswidget.h"
-
+#include "airports/importairportswidget.h"
 
 
 AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
@@ -626,6 +626,9 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 
 void AirportsWidget::on_reload_cache(){
 
+	ImportAirportsWidget *widget = new ImportAirportsWidget();
+	widget->show();
+	return;
 	int resp = QMessageBox::information(this, tr("Import Airports Cache"),
 										tr("Importing airports can take some time. Click Ok to continue."),
 										QMessageBox::Cancel | QMessageBox::Ok);
@@ -633,6 +636,7 @@ void AirportsWidget::on_reload_cache(){
 		return;
 	}
 
+	//load_aptdat();
 	import_airports();
 	load_airports_tree();
 }
@@ -765,6 +769,107 @@ QString AirportsWidget::validate(){
 
 void AirportsWidget::import_airports(){
 
+	//====================================
+	// Step 1: Get a hash map of aircraft descriptions from aptdat
+	QHash<QString, QString> airports;
+
+	QFile file( mainObject->settings->apt_dat_file() );
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+		qDebug("OOPS: file problem");
+		return;
+	 }
+
+	int line_counter = 0;
+	int estimated_lines = 1510000;
+	QRegExp rxICAOAirport("[A-Z]{4}");
+
+	bool is_icao = false;
+
+	QProgressDialog progress("Importing Airports", "Cancel", 0, estimated_lines, this);
+	progress.setWindowTitle("Importing Airports");
+	progress.setWindowModality(Qt::WindowModal);
+	progress.setFixedWidth(400);
+	progress.setWindowIcon(QIcon(":/icons/import"));
+	progress.setMinimumDuration(0);
+
+	//* ignore first line
+	file.readLine();
+
+	//** second line contains the version string
+	QString credits = file.readLine();
+	int version = 999;
+	if(credits.startsWith("810 Version")){
+		version = 810;
+	}
+
+	 QString airport_code;
+	 QString airport_name;
+	 QString elevation;
+	 QString tower;
+
+
+	while( !file.atEnd() ){
+
+		QByteArray lineBytes = file.readLine();
+		QString line = QString(lineBytes).trimmed();
+		//qDebug() << line;
+		QString row_code = line.section(' ',0, 0);
+		//qDebug() << row_code;
+		QStringList parts = line.split(" ", QString::SkipEmptyParts);
+
+		//**********************************************************************
+		//*** Airport
+		if(row_code == "1"){
+
+			// http://data.x-plane.com/file_specs/Apt715.htm
+			// 0 = airport code
+			//  1 = elevation
+			// 2 = has tower
+			// 3 = not approp
+			// 4 = code
+			// 5+ description
+
+			airport_code = parts[4];
+			elevation = parts[1];
+			tower =  parts[2] == "1" ? "1" : "";
+			airport_name.clear();
+			for(int p = 5; p < parts.size(); p++){ //** TODO WTF ?
+				airport_name.append(parts[p]).append(" ");
+			}
+			is_icao = rxICAOAirport.exactMatch(airport_code);
+
+			if(is_icao){
+				airports[airport_code] = airport_name;
+			} /* if(is_icao) */
+
+		} /* if(row_code == "1") airport */
+
+
+
+		if (progress.wasCanceled()){
+			progress.hide();
+			return;
+
+		}
+		line_counter++;
+		if(line_counter % 1000 == 0){
+			//qDebug() <<  line_counter;
+			progress.setValue(line_counter);
+			QString prog_text = QString("%1 of approx %2").arg(line_counter).arg(estimated_lines);
+			progress.setLabelText(prog_text);
+			progress.repaint();
+		}
+
+		//if(line_counter == 20000){
+		//	qDebug() << "had enough";
+		//	break;
+		//}
+
+
+		} /* end while readline */
+
+	//===================================================
+	// Step Two - walk the xml sets
 	int c = 0;
 	int found = 0;
 
@@ -778,16 +883,16 @@ void AirportsWidget::import_airports(){
 
 	//=================================
 	//** Show Progress as this takes time
-	QProgressDialog progressDialog(tr("Scanning Airports to Database"), tr("Cancel"), 0, 20000);
+	//QProgressDialog progressDialog(tr("Scanning Airports to Database"), tr("Cancel"), 0, 20000);
 	//progressDialog.setWindowModality(Qt::WindowModal);
-	progressDialog.show();
+	//progressDialog.show();
 
 	//================================================
 	//* Lets Loop the directories
 	//* Get out aiports path from setings and get the the subdir also
 	QDirIterator loopAirportsFiles( mainObject->settings->airports_path(), QDirIterator::Subdirectories );
 	QString xFileName;
-	progressDialog.setLabelText(tr("Scanning XML files"));
+	progress.setWindowTitle(tr("Scanning XML files"));
 
 	while (loopAirportsFiles.hasNext()) {
 
@@ -803,121 +908,163 @@ void AirportsWidget::import_airports(){
 			QString airport_code = fileInfoThreshold.fileName().split(".").at(0);
 
 			//* Update progress
-			progressDialog.setValue(progressDialog.value() + 1);
-			progressDialog.setLabelText(airport_code);
+			progress.setValue(progress.value() + 1);
+			progress.setLabelText(airport_code);
 
-			//* Insert airport_code to airports table == primary key
-			/*
-			sqlAirportInsert.bindValue(0, airport_code);
-			sqlAirportInsert.bindValue(1, fileInfoThreshold.absoluteDir().absolutePath());
-			if(!sqlAirportInsert.exec()){
-				qDebug() << "CRASH" << mainObject->db.lastError() << "=" << c;
-				// TODO catch error log
-			}else{
-				//listAirportCodes.append(airport_code);
-				//qDebug() << airport_code << " = " << fileInfoThreshold.absoluteDir().absolutePath();
+			QString airport_name("");
+			if(airports.contains(airport_code)){
+				airport_name = airports.value(airport_code);
 			}
-			*/
-			//qDebug() << airport_code;
+
 			QStringList cols; // missing in middle is description ??
-			cols << airport_code << "" << fileInfoThreshold.absoluteDir().absolutePath();
+			cols << airport_code << airport_name << fileInfoThreshold.absoluteDir().absolutePath();
 			out << cols.join("\t").append("\n");
-
-			//* Parse the XML files
-			//parse_runways_xml(fileInfoThreshold.absoluteDir(), airport_code);
-			//parse_ils_xml(fileInfoThreshold.absoluteDir(), airport_code);
-			//parse_parking_xml(fileInfoThreshold.absoluteDir(), airport_code);
-
-
 
 			found++;
 		}
 
-		if(progressDialog.wasCanceled()){
-			progressDialog.hide();
+		if(progress.wasCanceled()){
+			progress.hide();
 			return;
 		}
 	}
 
 	cacheFile.close();
-	progressDialog.hide();
+	progress.hide();
 }
 
 
 
-//==============================================================
-// Parse the <CODE>.threshold.xml file to get runways
-//==============================================================
-/*
-<?xml version="1.0"?>
-<PropertyList>
-  <runway>
-	<threshold>
-	  <lon>0.044298885776989</lon>
-	  <lat>51.505569223906</lat>
-	  <rwy>10</rwy>
-	  <hdg-deg>92.88</hdg-deg>
-	  <displ-m>95</displ-m>
-	  <stopw-m>55</stopw-m>
-	</threshold>
-	<threshold>
-	  <lon>0.065996952433288</lon>
-	  <lat>51.5048897753222</lat>
-	  <rwy>28</rwy>
-	  <hdg-deg>272.88</hdg-deg>
-	  <displ-m>71</displ-m>
-	  <stopw-m>90</stopw-m>
-	</threshold>
-  </runway>
-</PropertyList>
-*/
-/*
-void AirportsWidget::parse_runways_xml(QDir dir, QString airport_code){
+QHash<QString, QString> AirportsWidget::load_aptdat(){
 
-	// Prepare the Insert Runway Query
+	qDebug() << mainObject->settings->apt_dat_file();
 
-	//QSqlQuery sqlRunwayInsert(mainObject->db);
-	//sqlRunwayInsert.prepare("INSERT INTO runways(airport_code, runway, heading, lat, lon)VALUES(?,?,?,?,?);");
-	QStringList attribs;
-	attribs << "rwy" << "hdg-deg" << "lat" << "lon";
+	QHash<QString, QString> airports;
 
-	// Get the contents of the file whcile is path and code..
-	QFile fileXmlThrehsold(dir.absolutePath().append("/").append(airport_code).append(".threshold.xml"));
-	fileXmlThrehsold.open(QIODevice::ReadOnly);
-
-	// Make file contents into a string from bytearray
-	QString xmlThresholdString = fileXmlThrehsold.readAll();
-
-	// Create domDocument - important dont pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
-	QDomDocument dom;
-	dom.setContent(xmlThresholdString); // AFTER dom has been created, then set the content from a string from the file
-
-	// Get threhold nodes and loop for values to database
-	QDomNodeList nodesThreshold = dom.elementsByTagName("threshold");
+	QFile file( mainObject->settings->apt_dat_file() );
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+		qDebug("OOPS: file problem");
+		return airports;
+	 }
 
 
 
-	if (nodesThreshold.count() > 0){
-		for(int idxd =0; idxd < nodesThreshold.count(); idxd++){
-			 QDomNode thresholdNode = nodesThreshold.at(idxd);
-			 QHash<QString, QString> hash;
-			 for(int i=0; i < attribs.size(); i++){
-				 hash[attribs.at(i)] = thresholdNode.firstChildElement(attribs.at(i)).text();
-			 }
+	int line_counter = 0;
+	int estimated_lines = 1510000;
+	QRegExp rxICAOAirport("[A-Z]{4}");
 
-			 /
-			 sqlRunwayInsert.bindValue(0, airport_code);
-			 sqlRunwayInsert.bindValue(1, thresholdNode.firstChildElement("rwy").text());
-			 sqlRunwayInsert.bindValue(2, thresholdNode.firstChildElement("hdg-deg").text());
-			 sqlRunwayInsert.bindValue(3, thresholdNode.firstChildElement("lat").text());
-			 sqlRunwayInsert.bindValue(4, thresholdNode.firstChildElement("lon").text());
-			 if(!sqlRunwayInsert.exec()){
-				// TODO - ignore error for now
-			 }
-			 *
 
-			// emit(SIGNAL("runway"), hash);
-		}
+	bool is_icao(false);
+
+	QProgressDialog progress("Importing Airports", "Cancel", 0, estimated_lines, this);
+	progress.setWindowTitle("Importing Airports");
+	//progress.setWindowModality(Qt::WindowModal);
+	progress.setFixedWidth(400);
+	progress.setWindowIcon(QIcon(":/icons/import"));
+	progress.setMinimumDuration(0);
+	//progress.show();
+	//progress.repaint();
+
+	//* ignore first line
+	file.readLine();
+
+	//** second line contains the version string
+	QString credits = file.readLine();
+	int version = 999;
+	if(credits.startsWith("810 Version")){
+		version = 810;
 	}
+	if(version == 0){
+		return airports;
+	}
+	//qDebug() << "version=" << version;
+	//qDebug() << "1" << file.readLine();
+	//qDebug() << "2" << file.readLine();
+   // qDebug() << "3" << file.readLine();
+	//qDebug() << "4" << file.readLine();
+	//return;
+	 QString airport_code;
+	 QString airport_name;
+	 QString elevation;
+	 QString tower;
+
+
+	while( !file.atEnd() ){
+
+		QByteArray lineBytes = file.readLine();
+		QString line = QString(lineBytes).trimmed();
+		//qDebug() << line;
+		QString row_code = line.section(' ',0, 0);
+		//qDebug() << row_code;
+		QStringList parts = line.split(" ", QString::SkipEmptyParts);
+
+		//**********************************************************************
+		//*** Airport
+		if(row_code == "1"){
+
+			// http://data.x-plane.com/file_specs/Apt715.htm
+			// 0 = airport code
+			//  1 = elevation
+			// 2 = has tower
+			// 3 = not approp
+			// 4 = code
+			// 5+ description
+
+			airport_code = parts[4];
+			elevation = parts[1];
+			tower =  parts[2] == "1" ? "1" : "";
+			airport_name.clear();
+			for(int p = 5; p < parts.size(); p++){ //** TODO WTF ?
+				airport_name.append(parts[p]).append(" ");
+			}
+			is_icao = rxICAOAirport.exactMatch(airport_code);
+
+			if(is_icao){
+				//qDebug() << "##" << airport_code << "=" << airport_name << " @ " << elevation << tower;
+				//queryAirportInsert.addBindValue( airport_code );
+				//queryAirportInsert.addBindValue( airport_name.trimmed() );
+				//queryAirportInsert.addBindValue( elevation );
+			   // queryAirportInsert.addBindValue( parts[2] == "1" ? "1" : NULL );
+			   // success = queryAirportInsert.exec();
+				//if(!success){
+					//qDebug() << queryAirportInsert.lastError();
+				   // qDebug() << "DIE queryApt";
+					//return;
+				//}
+				airports[airport_code] = airport_name;
+				//QStringList cols;
+				//cols << airport_code << airport_name << elevation << tower;
+				//out << cols.join("\t").append("\n");
+			} /* if(is_icao) */
+
+		} /* if(row_code == "1") airport */
+
+
+
+		if (progress.wasCanceled()){
+			progress.hide();
+			return airports;
+
+		}
+		line_counter++;
+		if(line_counter % 100 == 0){
+			//qDebug() <<  line_counter;
+			progress.setValue(line_counter);
+			QString prog_text = QString("%1 of approx %2").arg(line_counter).arg(estimated_lines);
+			progress.setLabelText(prog_text);
+			progress.repaint();
+		}
+
+		if(line_counter == 20000){
+			qDebug() << "had enough";
+			return airports;
+		}
+
+
+		} /* end while readline */
+	progress.hide();
+
+	return airports;
+	//queryCreate.exec("CREATE INDEX idx_airport_name on airports(name)");
+	//queryCreate.exec("CREATE INDEX idx_airport_icao on runways(airport)");
 }
-*/
