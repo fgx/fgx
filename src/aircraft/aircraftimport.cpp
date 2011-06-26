@@ -45,8 +45,7 @@ void AircraftImport::execute_sql_commands_list(QStringList sql_commands){
 	QSqlQuery query(mainObject->db);
 	for(int i = 0; i < sql_commands.size(); ++i){
 		if(!query.exec(sql_commands.at(i))){
-			//TODO ignored for now - mysql is safe .. maybe said pete
-			//qDebug() << "OOps=" << mainObject->db.lastError(); //TODO
+			qDebug() << mainObject->db.lastError() << query.lastError();
 		}
 	}
 }
