@@ -3,7 +3,7 @@
 
 #include <QtCore/QObject>
 
-#include <QtSql/QSqlDatabase>
+//#include <QtSql/QSqlDatabase>
 
 #include <QtGui/QSystemTrayIcon>
 #include <QtGui/QAction>
@@ -26,7 +26,7 @@ public:
 	
     //** Objects
    // TelnetSlave *telnet;
-	QSqlDatabase db;
+	//QSqlDatabase db;
     XSettings *settings;
 
 	int launcher_flag;

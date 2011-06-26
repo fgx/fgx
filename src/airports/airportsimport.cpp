@@ -4,8 +4,8 @@
 #include <QtCore/QDirIterator>
 #include <QtCore/QFile>
 
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
+//#include <QtSql/QSqlQuery>
+//#include <QtSql/QSqlError>
 
 #include <QtXml/QXmlStreamReader>
 #include <QtXml/QDomDocument>
@@ -15,7 +15,7 @@
 #include <QtGui/QProgressDialog>
 
 #include "airportsimport.h"
-#include "utilities.h"
+#include "utilities/utilities.h"
 
 AirportsImport::AirportsImport(QObject *parent, MainObject *mOb) :
     QObject(parent)
@@ -29,10 +29,11 @@ AirportsImport::AirportsImport(QObject *parent, MainObject *mOb) :
 //============================================================================
 //== DataBase De/Re-construction
 //============================================================================
+/*
 void AirportsImport::create_db_tables(){
 
 
-	//* Drop and recreate the tables - then index after index later for speed..
+	// Drop and recreate the tables - then index after index later for speed..
 	QStringList sql_commands;
 	sql_commands.append("DROP TABLE IF EXISTS airports;");
 	sql_commands.append("DROP TABLE IF EXISTS runways;");
@@ -45,15 +46,16 @@ void AirportsImport::create_db_tables(){
 
 	execute_sql_commands_list(sql_commands);
 }
-
+*/
 
 //============================================================================
 //== Database Indexes - Indexing is done after import of raw data
 //============================================================================
+/*
 void AirportsImport::create_db_indexes(){
 
 
-	//* Create the indexes.. we only really nees the airport_code,, runways an parking are done in GUI atmo
+	// Create the indexes.. we only really nees the airport_code,, runways an parking are done in GUI atmo
 	QStringList sql_commands;
 	sql_commands.append("CREATE INDEX airport_code_idx ON runways (airport_code);");
 	sql_commands.append("CREATE INDEX airport_runway_idx ON ils (airport_code, runway);");
@@ -61,11 +63,12 @@ void AirportsImport::create_db_indexes(){
 
 	execute_sql_commands_list(sql_commands);
 }
-
+*/
 
 //============================================================================
 //== Execute Commands From List
 //============================================================================
+/*
 void AirportsImport::execute_sql_commands_list(QStringList sql_commands){
 	QSqlQuery query(mainObject->db);
 	for(int i = 0; i < sql_commands.size(); ++i){
@@ -74,7 +77,7 @@ void AirportsImport::execute_sql_commands_list(QStringList sql_commands){
 		}
 	}
 }
-
+*/
 
 
 
@@ -102,11 +105,11 @@ void AirportsImport::import_airports(QWidget *parent){
 
 	//* Drop and recreate database tables
 	progressDialog.setLabelText(tr("Creating database tables"));
-	create_db_tables();
+	//create_db_tables();
 
 	//* Insert Airport query
-	QSqlQuery sqlAirportInsert(mainObject->db);
-	sqlAirportInsert.prepare("INSERT INTO airports(code, dir)VALUES(?,?);");
+	//QSqlQuery sqlAirportInsert(mainObject->db);
+	//sqlAirportInsert.prepare("INSERT INTO airports(code, dir)VALUES(?,?);");
 
 	//================================================
 	//* Lets Loop the directories
@@ -132,6 +135,7 @@ void AirportsImport::import_airports(QWidget *parent){
 			progressDialog.setLabelText(airport_code);
 
 			//* Insert airport_code to airports table == primary key
+			/*
 			sqlAirportInsert.bindValue(0, airport_code);
 			sqlAirportInsert.bindValue(1, fileInfoThreshold.absoluteDir().absolutePath());
 			if(!sqlAirportInsert.exec()){
@@ -141,6 +145,7 @@ void AirportsImport::import_airports(QWidget *parent){
 				//listAirportCodes.append(airport_code);
 				//qDebug() << airport_code << " = " << fileInfoThreshold.absoluteDir().absolutePath();
 			}
+			*/
 
 			//* Parse the XML files
 			//parse_runways_xml(fileInfoThreshold.absoluteDir(), airport_code);
@@ -159,7 +164,7 @@ void AirportsImport::import_airports(QWidget *parent){
 
 	//* Create the database indexes
 	progressDialog.setLabelText(tr("Creating database indexes"));
-	create_db_indexes();
+	//create_db_indexes();
 
 	//* Import APTDAT
 	//parse_aptdat();
@@ -269,8 +274,8 @@ void AirportsImport::parse_runways_xml(QDir dir, QString airport_code){
 void AirportsImport::parse_ils_xml(QDir dir, QString airport_code){
 
 	//* Prepare the Insert ILS Query
-	QSqlQuery sqlILSInsert(mainObject->db);
-	sqlILSInsert.prepare("INSERT INTO ils(airport_code, runway, ident, heading, lat, lon)VALUES(?,?,?,?,?,?);");
+	//QSqlQuery sqlILSInsert(mainObject->db);
+	//sqlILSInsert.prepare("INSERT INTO ils(airport_code, runway, ident, heading, lat, lon)VALUES(?,?,?,?,?,?);");
 
 	QString fileName(dir.absolutePath().append("/").append(airport_code).append(".ils.xml"));
 
@@ -293,17 +298,18 @@ void AirportsImport::parse_ils_xml(QDir dir, QString airport_code){
 
 				 QDomNode ilsNode = ilsNodes.at(idxd);
 				//* insert = airport_code, runway, ident, heading, lat, lon
+				/*
 				sqlILSInsert.bindValue(0, airport_code);
 				sqlILSInsert.bindValue(1, ilsNode.firstChildElement("rwy").text());
 				sqlILSInsert.bindValue(2, ilsNode.firstChildElement("nav-id").text());
 				sqlILSInsert.bindValue(3, ilsNode.firstChildElement("hdg-deg").text());
 				sqlILSInsert.bindValue(4, ilsNode.firstChildElement("lat").text());
 				sqlILSInsert.bindValue(5, ilsNode.firstChildElement("lon").text());
-
-				if(!sqlILSInsert.exec()){
+				*/
+				//if(!sqlILSInsert.exec()){
 					//TODO - ignore error
 					//qDebug() << mainObject->db.lastError() << "=" << ilsNode.firstChildElement("rwy").text();
-				}
+				//}
 
 			}
 
@@ -343,8 +349,8 @@ void AirportsImport::parse_ils_xml(QDir dir, QString airport_code){
 void AirportsImport::parse_parking_xml(QDir dir, QString airport_code){
 
 	//* Prepare the Insert Parking Query
-	QSqlQuery sqlParkingInsert(mainObject->db);
-	sqlParkingInsert.prepare("INSERT INTO stands(airport_code, stand, heading, lat, lon)VALUES(?,?,?,?,?);");
+	//QSqlQuery sqlParkingInsert(mainObject->db);
+	//sqlParkingInsert.prepare("INSERT INTO stands(airport_code, stand, heading, lat, lon)VALUES(?,?,?,?,?);");
 
 	//* Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
 	QString fileName(dir.absolutePath().append("/").append(airport_code));
@@ -374,15 +380,15 @@ void AirportsImport::parse_parking_xml(QDir dir, QString airport_code){
 				 if(!listParkingPositions.contains(attribs.namedItem("name").nodeValue())){
 
 					//* insert = airport_code, parking, heading, lat, lon
-					sqlParkingInsert.bindValue(0, airport_code);
-					sqlParkingInsert.bindValue(1, attribs.namedItem("name").nodeValue());
-					sqlParkingInsert.bindValue(2, attribs.namedItem("heading").nodeValue());
-					sqlParkingInsert.bindValue(3, attribs.namedItem("lat").nodeValue());
-					sqlParkingInsert.bindValue(4, attribs.namedItem("lon").nodeValue());
+					//sqlParkingInsert.bindValue(0, airport_code);
+					//sqlParkingInsert.bindValue(1, attribs.namedItem("name").nodeValue());
+					//sqlParkingInsert.bindValue(2, attribs.namedItem("heading").nodeValue());
+					//sqlParkingInsert.bindValue(3, attribs.namedItem("lat").nodeValue());
+					//sqlParkingInsert.bindValue(4, attribs.namedItem("lon").nodeValue());
 
-					if(!sqlParkingInsert.exec()){
+					//if(!sqlParkingInsert.exec()){
 						//TODO - ignore error qDebug() << mainObject->db.lastError();
-					}
+					//}
 					//* Append position to eliminate dupes
 					listParkingPositions.append(attribs.namedItem("name").nodeValue());
 				}
@@ -412,8 +418,8 @@ void AirportsImport::parse_aptdat(QProgressDialog progressDialog){
 
 	//* Update DB queries
 
-	QSqlQuery queryRunwayUpdate;
-	queryRunwayUpdate.prepare("TODO");
+	//QSqlQuery queryRunwayUpdate;
+	//queryRunwayUpdate.prepare("TODO");
 
 	//====================================================
 	//* start File read >>
@@ -486,8 +492,8 @@ void AirportsImport::update_aptdat_airport(QStringList parts){
 	int elevation;
 	QString tower;
 
-	QSqlQuery queryAirportUpdate;
-	queryAirportUpdate.prepare("UPDATE airports SET name=? WHERE code=?;");
+	//QSqlQuery queryAirportUpdate;
+	//queryAirportUpdate.prepare("UPDATE airports SET name=? WHERE code=?;");
 
 	//* Airport code
 	airport_code = parts[4];
@@ -502,10 +508,10 @@ void AirportsImport::update_aptdat_airport(QStringList parts){
 		for(int p = 5; p < parts.size(); p++){ //** loop to the end to get description (spit on spaces..) - TODO neater way
 			airport_name.append(parts[p]).append(" ");
 		}
-		queryAirportUpdate.bindValue(0, airport_name.trimmed() );
-		queryAirportUpdate.bindValue(1, airport_code  );
-		if(!queryAirportUpdate.exec()){
-			qDebug() << queryAirportUpdate.lastError();
-		}
+		//queryAirportUpdate.bindValue(0, airport_name.trimmed() );
+		//queryAirportUpdate.bindValue(1, airport_code  );
+		//if(!queryAirportUpdate.exec()){
+		//	qDebug() << queryAirportUpdate.lastError();
+		//}
 	}
 }

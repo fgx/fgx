@@ -19,9 +19,9 @@ signals:
 
 public slots:
 	
-	void create_db_tables();
+	//void create_db_tables();
 	void scan_xml_sets();
-	void execute_sql_commands_list(QStringList sql_commands);
+	//void execute_sql_commands_list(QStringList sql_commands);
 
 };
 

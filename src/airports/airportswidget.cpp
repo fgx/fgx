@@ -325,19 +325,19 @@ void AirportsWidget::load_airports_tree(){
 	treeViewAirports->setUpdatesEnabled(false);
 
 	//* Get Airports from database
-	QSqlQuery query("SELECT code, name, dir FROM airports order by code ASC", mainObject->db);
+	//QSqlQuery query("SELECT code, name, dir FROM airports order by code ASC", mainObject->db);
 
 	//* Loop results  and appendRows
-	while(query.next()){
+	while(1 ==0){ //query.next()){
 
 		QStandardItem *itemAirportCode = new QStandardItem();
-		itemAirportCode->setText(query.value(0).toString());
+		//itemAirportCode->setText(query.value(0).toString());
 
 		QStandardItem *itemAirportName = new QStandardItem();
-		itemAirportName->setText(query.value(1).toString());
+		//itemAirportName->setText(query.value(1).toString());
 
 		QStandardItem *itemAirportDir = new QStandardItem();
-		itemAirportDir->setText(query.value(2).toString());
+		//itemAirportDir->setText(query.value(2).toString());
 
 		QList<QStandardItem *> items;
 		items << itemAirportCode << itemAirportName << itemAirportDir;

@@ -250,3 +250,14 @@ QString XSettings::db_file(){
 	}
 	return storedir.append("/fgx.sqlite.db");
 }
+
+QString XSettings::data_file(QString file_name){
+	QString storedir = QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath();
+
+	// create path is not exist
+	if(!QFile::exists(storedir)){
+		QDir *dir = new QDir("");
+		dir->mkpath(storedir);
+	}
+	return storedir.append("/").append(file_name);
+}

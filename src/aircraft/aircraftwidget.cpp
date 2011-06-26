@@ -9,8 +9,8 @@
 
 
 
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
+//#include <QtSql/QSqlQuery>
+//#include <QtSql/QSqlError>
 
 #include <QtCore/QDebug>
 
@@ -91,7 +91,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	treeTopBar->addSpacing(10);
 
 	//==========================
-	//** Filter tabs
+	//= Filter tabs
 	tabsView = new QTabBar();
 	tabsView->addTab(tr("View List"));
 	tabsView->addTab(tr("View Nested"));
@@ -110,7 +110,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_db_cache()) );
 
 	//===============================================================
-    //** Aircraft Tree
+	//= Aircraft Tree
 	treeWidget = new QTreeWidget(this);
 	treeLayout->addWidget(treeWidget);
 	treeWidget->setAlternatingRowColors(true);
@@ -141,9 +141,9 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	treeLayout->addWidget(statusBarAero);
 
 
-    //*************************************************************************************************
-    //** Right
-    //*************************************************************************************************
+	//================================================================================================
+	//= Right
+	//================================================================================================
 
 
     QGroupBox *grpAero = new QGroupBox();
@@ -251,7 +251,7 @@ void AircraftWidget::on_tree_selection_changed(){
 		return;
 	}
 
-	//** Check there is item and its a model
+	//= Check there is item and its a model
 	if(item->text(C_AERO).length() == 0){
                 outLog("on_tree_selection_changed: no C_AERO item");
                 aeroImageLabel->clear();
@@ -259,7 +259,7 @@ void AircraftWidget::on_tree_selection_changed(){
 		return;
 	}
 
-
+	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->settings->aircraft_path(),
                                                                     item->text(C_DIR),
                                                                     item->text(C_AERO));
@@ -369,31 +369,32 @@ void AircraftWidget::load_tree(){
 	treeWidget->setColumnHidden(C_DIR, view == V_LIST);
 	treeWidget->setRootIsDecorated(view == V_NESTED);
 
-	QSqlQuery query("SELECT directory, xml_file, aero, description, fdm, author from aircraft ORDER BY directory, aero ASC", mainObject->db);
+	//QSqlQuery query("SELECT directory, xml_file, aero, description, fdm, author from aircraft ORDER BY directory, aero ASC", mainObject->db);
 
 		c = 0;
-		while(query.next()){
-
+		//while(query.next()){
+		while(1 == 0){
+			
 				if(view == V_LIST){
 						parentItem = treeWidget->invisibleRootItem();
-				}else if(last_dir != query.value(0).toString()){
+					}else if(last_dir != "F))"){ //query.value(0).toString()){
 						parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
-						parentItem->setText( C_DIR, query.value(0).toString());
+						//parentItem->setText( C_DIR, query.value(0).toString());
 						parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
 						treeWidget->addTopLevelItem(parentItem);
 						treeWidget->setFirstItemColumnSpanned(parentItem, true);
-						last_dir = query.value(0).toString();
+						//last_dir = query.value(0).toString();
 				}
 
 				//directory, xml_file, aero, fdm, description, author
 				XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
-				QString xml_path = QString("%1/%2").arg(query.value(0).toString(), query.value(1).toString());
+				QString xml_path = QString("%1/%2").arg("FOO").arg("BAR") ;//query.value(0).toString(), query.value(1).toString());
 				aeroItem->setText(C_XML, xml_path);
-				aeroItem->setText(C_AERO, query.value(2).toString());
+				//aeroItem->setText(C_AERO, query.value(2).toString());
 				aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
-				aeroItem->setText(C_DESCRIPTION, query.value(3).toString());
-				aeroItem->setText(C_FDM, query.value(4).toString());
-				aeroItem->setText(C_AUTHOR, query.value(5).toString());
+				//aeroItem->setText(C_DESCRIPTION, query.value(3).toString());
+				//aeroItem->setText(C_FDM, query.value(4).toString());
+				//aeroItem->setText(C_AUTHOR, query.value(5).toString());
 				c++;
 		}
 			

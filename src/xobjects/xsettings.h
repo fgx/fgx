@@ -19,6 +19,7 @@ public:
 	bool _dev_mode(); //* pete's hack - ../DEV.txt exists for local dev
 
 	QString db_file();
+	QString data_file(QString file_name);
 	QString apt_dat_file();
 
 	QString temp_dir();

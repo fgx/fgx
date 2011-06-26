@@ -116,7 +116,7 @@ void SettingsDialog::on_save_clicked(){
 	}
 	pathsSettingsWidget->save_settings();
 	dbSettingsWidget->save_settings();
-	mainObject->db_connect();
+	//mainObject->db_connect();
 	accept();
 }
 

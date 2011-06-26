@@ -27,20 +27,22 @@ AircraftImport::AircraftImport(QObject *parent, MainObject *mOb) :
 //============================================================================
 //== DataBase De/Re-construction
 //============================================================================
+/*
 void AircraftImport::create_db_tables(){
 	
 	
-	//* Drop and recreate the tables - then index after index later for speed..
+	// Drop and recreate the tables - then index after index later for speed..
 	QStringList sql_commands;
 	sql_commands.append("DROP TABLE IF EXISTS aircraft;");
 	sql_commands.append("CREATE TABLE aircraft(id INT IDENTITY (1,1) PRIMARY KEY, aero varchar(10) NOT NULL, directory varchar(64) NULL, xml_file varchar(64) NULL, description varchar(255) NULL, fdm varchar(255) NULL, author varchar(255) NULL);");
 	
 	execute_sql_commands_list(sql_commands);
 }
-
+*/
 //============================================================================
 //== Execute Commands From List
 //============================================================================
+/*
 void AircraftImport::execute_sql_commands_list(QStringList sql_commands){
 	QSqlQuery query(mainObject->db);
 	for(int i = 0; i < sql_commands.size(); ++i){
@@ -49,7 +51,7 @@ void AircraftImport::execute_sql_commands_list(QStringList sql_commands){
 		}
 	}
 }
-
+*/
 
 //========================================================
 //*** Walk XML - sets
@@ -70,14 +72,15 @@ void AircraftImport::scan_xml_sets(){
 	progress.show();
 	
 	// clear and create db tables
-	create_db_tables();
-
-        rows.clear(); // remove all current rows
-        QStringList list;
+	//create_db_tables();
+	QString cache_file = mainObject->settings->data_file("airports.txt");
+	qDebug() << "Cahce file=" << cache_file;
+	rows.clear(); // remove all current rows
+	QStringList list;
 
 	//* Insert Aircraft query			
-	QSqlQuery sqlAero(mainObject->db);
-	sqlAero.prepare("INSERT INTO aircraft(aero, directory, xml_file, description, fdm, author)VALUES(?,?,?,?,?,?);");
+	//QSqlQuery sqlAero(mainObject->db);
+	//sqlAero.prepare("INSERT INTO aircraft(aero, directory, xml_file, description, fdm, author)VALUES(?,?,?,?,?,?);");
 	qDebug() << "sql: insert prepared";
 
 	//* Get Entries from Aircaft/ directory
@@ -156,13 +159,15 @@ void AircraftImport::scan_xml_sets(){
 					//#1 This version saves to settings and an embedded dam dirty delimiter string stuff..
 
 					//aero,path, description, fdm, author
+
+					/*
 					sqlAero.bindValue(0, aero);
 					sqlAero.bindValue(1, directory);
 					sqlAero.bindValue(2, xml_file);
 					sqlAero.bindValue(3, description);
 					sqlAero.bindValue(4, fdm);
 					sqlAero.bindValue(5, author);
-					
+					*/
 #ifdef AircraftImport_DEBUG1                 // if on, very noisy debug output
 					qDebug() << "aero: " << aero
 					<< " directory: " << directory
@@ -172,9 +177,9 @@ void AircraftImport::scan_xml_sets(){
 					<< " author: " << author;
 #endif
 
-					if(!sqlAero.exec()){
-						qDebug() << mainObject->db.lastError() << sqlAero.lastError();
-					}
+					//if(!sqlAero.exec()){
+					//	qDebug() << mainObject->db.lastError() << sqlAero.lastError();
+					//}
 
 					found++;
 					list.clear();

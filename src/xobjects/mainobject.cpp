@@ -3,8 +3,8 @@
 #include <QCoreApplication>
 #include <QTimer>
 
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
+//#include <QtSql/QSqlQuery>
+//#include <QtSql/QSqlError>
 
 
 #include <QtGui/QDesktopServices>
@@ -102,7 +102,7 @@ MainObject::~MainObject()
 //============================================================================
 //** Shows the Launcher window
 void MainObject::initialize(){
-	db_connect();
+	//db_connect();
 	on_launcher();
 }
 
@@ -163,6 +163,7 @@ void MainObject::on_properties_browser(){
 
 //======================================
 //** DB Connect
+/*
 void MainObject::db_connect(){
 
 	trayIcon->showMessage("DB", "Opening DB");
@@ -191,7 +192,7 @@ void MainObject::db_connect(){
 		return;
 	}
 
-	//* Catch DB Open error
+	// Catch DB Open error
 	if(!db.open()){
 		qDebug() << db.lastError().text();
 		trayIcon->showMessage("DB Error", "Could not open DB", QSystemTrayIcon::Critical, 5000);
@@ -200,10 +201,11 @@ void MainObject::db_connect(){
 		return;
 	}
 
-	//* Database connected
+	// Database connected
 	trayIcon->showMessage("DB", "Connected", QSystemTrayIcon::Information, 3000);
 
 }
+*/
 
 
 //****************************************************************************
