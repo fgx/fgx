@@ -9,17 +9,17 @@
 
 
 
-//#include <QtSql/QSqlQuery>
-//#include <QtSql/QSqlError>
-
 #include <QtCore/QDebug>
 
 #include <QtCore/QProcess>
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-
 #include <QtCore/QFile>
+
+
+#include <QtXmlPatterns/QXmlQuery>
+#include <QtXml/QDomDocument>
 
 
 #include <QtGui/QVBoxLayout>
@@ -45,7 +45,6 @@
 
 
 #include "aircraft/aircraftwidget.h"
-#include "aircraft/aircraftimport.h"
 #include "xwidgets/xtreewidgetitem.h"
 #include "utilities/utilities.h"
 
@@ -55,8 +54,6 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 {
 
 	mainObject = mOb;
-	aircraftImport = new AircraftImport(this, mainObject);
-	aircraftImport->rows.clear();
 
     //* Main Layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -121,13 +118,13 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	treeWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 
 	treeWidget->headerItem()->setText(C_DIR, "Dir");
-	treeWidget->headerItem()->setText(C_XML, "xml");
+	treeWidget->headerItem()->setText(C_XML_SET, "xml");
 	treeWidget->headerItem()->setText(C_AERO, "Aircraft");
 	treeWidget->headerItem()->setText(C_DESCRIPTION, "Description");
 	treeWidget->headerItem()->setText(C_FDM, "FDM");
 	treeWidget->headerItem()->setText(C_AUTHOR, "Author");
 	treeWidget->header()->setStretchLastSection(true);
-	treeWidget->setColumnHidden(C_XML, true);
+	treeWidget->setColumnHidden(C_XML_SET, true);
 	treeWidget->setColumnWidth(C_DIR, 60);
 	treeWidget->setColumnWidth(C_FDM, 60);
 	treeWidget->setColumnWidth(C_DESCRIPTION, 200);
@@ -343,14 +340,14 @@ QString AircraftWidget::validate(){
 
 
 //=============================================================
-// Load Airraft To Tree
+// Load Airaft To Tree
 
 void AircraftWidget::on_reload_db_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 
 	//* scan Airaft dirs and save in db
-        // AeroTools * aeroTool = new AeroTools(this, mainObject);
-	aircraftImport->scan_xml_sets();
+	// AeroTools * aeroTool = new AeroTools(this, mainObject);
+	scan_xml_sets();
 
 	load_tree();
 }
@@ -362,86 +359,59 @@ void AircraftWidget::load_tree(){
 	QString currAero = selected_aircraft();
 	treeWidget->setUpdatesEnabled(false);
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
-	QString last_dir("");
+
 	QTreeWidgetItem *parentItem = new QTreeWidgetItem();
 
 	int view = tabsView->currentIndex();
-	treeWidget->setColumnHidden(C_DIR, view == V_LIST);
-	treeWidget->setRootIsDecorated(view == V_NESTED);
+	treeWidget->setColumnHidden(C_DIR, view == LIST_VIEW);
+	treeWidget->setRootIsDecorated(view == FOLDER_VIEW);
 
-	//QSqlQuery query("SELECT directory, xml_file, aero, description, fdm, author from aircraft ORDER BY directory, aero ASC", mainObject->db);
+	QFile dataFile(mainObject->settings->data_file(("airports.txt")));
+	if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+		   return;
+	}
+	QTextStream in(&dataFile);
+	QString line = in.readLine();
+	QString last_dir("");
+	line = in.readLine();
+	c = 0;
+	while(!line.isNull()){
 
-		c = 0;
-		//while(query.next()){
-		while(1 == 0){
-			
-				if(view == V_LIST){
-						parentItem = treeWidget->invisibleRootItem();
-					}else if(last_dir != "F))"){ //query.value(0).toString()){
-						parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
-						//parentItem->setText( C_DIR, query.value(0).toString());
-						parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
-						treeWidget->addTopLevelItem(parentItem);
-						treeWidget->setFirstItemColumnSpanned(parentItem, true);
-						//last_dir = query.value(0).toString();
-				}
-
-				//directory, xml_file, aero, fdm, description, author
-				XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
-				QString xml_path = QString("%1/%2").arg("FOO").arg("BAR") ;//query.value(0).toString(), query.value(1).toString());
-				aeroItem->setText(C_XML, xml_path);
-				//aeroItem->setText(C_AERO, query.value(2).toString());
-				aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
-				//aeroItem->setText(C_DESCRIPTION, query.value(3).toString());
-				//aeroItem->setText(C_FDM, query.value(4).toString());
-				//aeroItem->setText(C_AUTHOR, query.value(5).toString());
-				c++;
+		QStringList cols = line.split("\t");
+		//qDebug() << cols;
+		/* The parent is invisible root if a list,
+			otherwise folder nodes are created
+		*/
+		if(view == LIST_VIEW){
+				parentItem = treeWidget->invisibleRootItem();
+		}else if(last_dir != cols.at(C_DIR)){
+				parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
+				parentItem->setText( C_DIR,cols.at(C_DIR));
+				parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
+				treeWidget->addTopLevelItem(parentItem);
+				treeWidget->setFirstItemColumnSpanned(parentItem, true);
+				last_dir = cols.at(C_DIR);
 		}
-			
-		if ( c == 0 ) {
-				// try using the backup code
-			if (aircraftImport->rows.size())
-				outLog("Appears SQL database capability FAILED on your system! Check its installation.");
-			else
-				outLog("Aircraft database not initialized! Use Aircraft->Import button.");
-			
-			for (int i = 0; i < aircraftImport->rows.size(); i++) {
-				QStringList list = aircraftImport->rows.at(i);
-                // list is -
-                // 0=aero, 1=directory, 2=xml_file, 3=description, 4=fdm, 5=author
-                QString ndir = list.at(1);
-                if(view == V_LIST){
-                        parentItem = treeWidget->invisibleRootItem();
-                }else if(last_dir != ndir){
-                        parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
-                        parentItem->setText( C_DIR, ndir);
-                        parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
-                        treeWidget->addTopLevelItem(parentItem);
-                        treeWidget->setFirstItemColumnSpanned(parentItem, true);
-                        last_dir = ndir;
-                }
 
-                //directory, xml_file, aero, fdm, description, author
-                XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
-                QString xml_path = QString("%1/%2").arg(ndir, list.at(2));
-                aeroItem->setText(C_XML, xml_path);
-                aeroItem->setText(C_AERO, list.at(0));
-                aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
-                aeroItem->setText(C_DESCRIPTION, list.at(3));
-                aeroItem->setText(C_FDM, list.at(4));
-                aeroItem->setText(C_AUTHOR, list.at(5));
-                c++;
-            }
-		}
-        
+		XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
+		QString xml_path = QString("%1/%2").arg(cols.at(C_DIR)).arg(C_XML_SET);
+		aeroItem->setText(C_XML_SET, xml_path);
+		aeroItem->setText(C_AERO, cols.at(C_AERO));
+		aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
+		aeroItem->setText(C_DESCRIPTION, cols.at(C_DESCRIPTION));
+		aeroItem->setText(C_FDM, cols.at(C_FDM));
+		aeroItem->setText(C_AUTHOR, cols.at(C_AUTHOR));
+		c++;
+		line = in.readLine();
+	}
 
-	 treeWidget->sortByColumn(view == V_NESTED ? C_DIR : C_AERO, Qt::AscendingOrder);
-	 treeWidget->setUpdatesEnabled(true);
+	treeWidget->sortByColumn(view == FOLDER_VIEW ? C_DIR : C_AERO, Qt::AscendingOrder);
+	treeWidget->setUpdatesEnabled(true);
 
-	 select_node(currAero);
-	 QString str = QString("%1 aircraft").arg(c);
-	 statusBarAero->showMessage(str);
-         outLog("load_tree: with "+str);
+	select_node(currAero);
+	QString str = QString("%1 aircraft").arg(c);
+	statusBarAero->showMessage(str);
+	outLog("load_tree: with "+str);
 }
 
 //=============================================================
@@ -494,4 +464,133 @@ QStringList AircraftWidget::get_args(){
 
 void AircraftWidget::on_use_default_clicked(){
 	treeWidget->setEnabled( !checkBoxUseDefault->isChecked() );
+}
+
+
+
+
+
+//========================================================
+//*** Walk XML - sets
+//========================================================
+
+/* This function walks the /Aircraft/ directory
+ its find files in a directory maching "-set.xml"
+   and therby engquires the xml fo
+*/
+
+void AircraftWidget::scan_xml_sets(){
+
+	int c = 0;
+	int found = 0;
+
+
+
+	//= Cache File
+	QString cache_file_name = mainObject->settings->data_file("airports.txt");
+	QFile cacheFile( mainObject->settings->data_file("airports.txt") );
+	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
+		//qDebug() << "TODO Open error cachce file=" << cache_file_name;
+		return;
+	}
+
+	QProgressDialog progress(tr("Scanning aircraft directory ..."), tr("Cancel"), 0, 0);
+	progress.setWindowModality(Qt::WindowModal);
+	progress.show();
+
+
+	QTextStream out(&cacheFile);
+
+	//= Get files Entries from Aircaft/ directory
+	QDir aircraftDir( mainObject->settings->aircraft_path() );
+	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+	qDebug() << "aircraft directory path: " << mainObject->settings->aircraft_path();
+
+	QStringList entries = aircraftDir.entryList();
+	progress.setMaximum(entries.size());
+
+	for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry ){
+
+		// Filter out default dir names, should be a QDir name filter?
+		if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
+
+			progress.setValue(progress.value() + 1);
+
+			//** get the List of *-set.xml files in dir
+			QDir dir( mainObject->settings->aircraft_path(*entry) );
+			QStringList filters;
+			filters << "*-set.xml";
+			QStringList list_xml = dir.entryList(filters);
+
+			if(list_xml.count() > 0){ // << Scan MOdels
+				QString directory;
+				QString description;
+				QString author;
+				QString fdm;
+				QString xml_file;
+				QString aero;
+
+				//** Add Path Node
+				directory = QString(*entry);
+				//** Add Models
+				for (int i = 0; i < list_xml.size(); ++i){
+
+					xml_file = QString(list_xml.at(i));
+					aero = QString(xml_file);
+					aero.chop(8);
+
+					//*=parse the Xml file - f&*& long winded
+					QString file_path =  mainObject->settings->aircraft_path(*entry);
+					file_path.append("/");
+					file_path.append(list_xml.at(i));
+					QFile xmlFile( file_path);
+					if (xmlFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+
+						/* The file content is converted to UTF-8.
+							 Some files are Windows, encoding and throw error with QxmlQuery etc
+							 Its a hack and don't quite understand whats happening.. said pedro
+						*/
+						QString xmlString = QString(xmlFile.readAll()).toUtf8();
+
+						QXmlQuery query;
+						query.setFocus(xmlString);
+						//query.setFocus(&xmlFile); << Because file is not QTF8 using sting instead
+						query.setQuery("PropertyList/sim");
+						if (query.isValid()){
+
+							QString res;
+							query.evaluateTo(&res);
+							xmlFile.close();
+
+							QDomDocument dom;
+							dom.setContent("" + res + "");
+							QDomNodeList nodes = dom.elementsByTagName("sim");
+
+							QDomNode n = nodes.at(0);
+							description = n.firstChildElement("description").text();
+							author = n.firstChildElement("author").text().trimmed().replace(("\n"),"");
+							fdm = n.firstChildElement("flight-model").text();
+						} /* !query.isValid() */
+					} /*  xmlFile.open() */
+
+					QStringList lines;
+					lines  << directory << aero << xml_file << description << fdm << author << file_path;
+					out << lines.join("\t") << "\n";
+
+					found++;
+
+					if(progress.wasCanceled()){
+						qDebug() << "Progress cancelled!";
+						progress.hide();
+						break; // TODO ?? why..
+					}
+					c++;
+				}
+
+			} /* list_xml.count() > 0 */
+		} /* entry != INstruments etc */
+	} /* loop entries.() */
+
+	cacheFile.close();
+	progress.hide();
 }

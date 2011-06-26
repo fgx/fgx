@@ -15,43 +15,12 @@
 #include "aircraftimport.h"
 #include "utilities/utilities.h"
 
-#undef AircraftImport_DEBUG1 // to output a BIG list of aircraft read
-
 AircraftImport::AircraftImport(QObject *parent, MainObject *mOb) :
     QObject(parent)
 {
 	mainObject = mOb;
 }
 
-
-//============================================================================
-//== DataBase De/Re-construction
-//============================================================================
-/*
-void AircraftImport::create_db_tables(){
-	
-	
-	// Drop and recreate the tables - then index after index later for speed..
-	QStringList sql_commands;
-	sql_commands.append("DROP TABLE IF EXISTS aircraft;");
-	sql_commands.append("CREATE TABLE aircraft(id INT IDENTITY (1,1) PRIMARY KEY, aero varchar(10) NOT NULL, directory varchar(64) NULL, xml_file varchar(64) NULL, description varchar(255) NULL, fdm varchar(255) NULL, author varchar(255) NULL);");
-	
-	execute_sql_commands_list(sql_commands);
-}
-*/
-//============================================================================
-//== Execute Commands From List
-//============================================================================
-/*
-void AircraftImport::execute_sql_commands_list(QStringList sql_commands){
-	QSqlQuery query(mainObject->db);
-	for(int i = 0; i < sql_commands.size(); ++i){
-		if(!query.exec(sql_commands.at(i))){
-			qDebug() << mainObject->db.lastError() << query.lastError();
-		}
-	}
-}
-*/
 
 //========================================================
 //*** Walk XML - sets
@@ -67,23 +36,26 @@ void AircraftImport::scan_xml_sets(){
 	int c = 0;
 	int found = 0;
 	
+
+	
+	//= Cache File
+	QString cache_file_name = mainObject->settings->data_file("airports.txt");
+	QFile cacheFile( mainObject->settings->data_file("airports.txt") );
+	qDebug() << "Cahce file=" << cache_file_name;
+	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
+		qDebug() << "TODO Open error cachce file=" << cache_file_name;
+		return;
+	}
+
 	QProgressDialog progress(tr("Scanning aircraft directory ..."), tr("Cancel"), 0, 0);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.show();
-	
-	// clear and create db tables
-	//create_db_tables();
-	QString cache_file = mainObject->settings->data_file("airports.txt");
-	qDebug() << "Cahce file=" << cache_file;
-	rows.clear(); // remove all current rows
-	QStringList list;
 
-	//* Insert Aircraft query			
-	//QSqlQuery sqlAero(mainObject->db);
-	//sqlAero.prepare("INSERT INTO aircraft(aero, directory, xml_file, description, fdm, author)VALUES(?,?,?,?,?,?);");
-	qDebug() << "sql: insert prepared";
 
-	//* Get Entries from Aircaft/ directory
+	QTextStream out(&cacheFile);
+
+
+	//= Get files Entries from Aircaft/ directory
 	QDir aircraftDir( mainObject->settings->aircraft_path() );
 	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
 	qDebug() << "aircraft directory path: " << mainObject->settings->aircraft_path();
@@ -121,16 +93,16 @@ void AircraftImport::scan_xml_sets(){
 					aero = QString(xml_file);
 					aero.chop(8);
 
-					//** parse the Xml file - f&*& long winded
+					//*=parse the Xml file - f&*& long winded
 					QString file_path =  mainObject->settings->aircraft_path(*entry);
 					file_path.append("/");
 					file_path.append(list_xml.at(i));
 					QFile xmlFile( file_path);
 					if (xmlFile.open(QIODevice::ReadOnly | QIODevice::Text)){
 
-						/* The file content id converted to UTF-8.
+						/* The file content is converted to UTF-8.
 							 Some files are Windows, encoding and throw error with QxmlQuery etc
-							 Its a hack and dont quite understand whats happening.. said pedro
+							 Its a hack and don't quite understand whats happening.. said pedro
 						*/
 						QString xmlString = QString(xmlFile.readAll()).toUtf8();
 
@@ -155,41 +127,19 @@ void AircraftImport::scan_xml_sets(){
 						} /* !query.isValid() */
 					} /*  xmlFile.open() */
 
-					//## TODO Here we go with stuff to cache - Later DB
-					//#1 This version saves to settings and an embedded dam dirty delimiter string stuff..
-
-					//aero,path, description, fdm, author
-
-					/*
-					sqlAero.bindValue(0, aero);
-					sqlAero.bindValue(1, directory);
-					sqlAero.bindValue(2, xml_file);
-					sqlAero.bindValue(3, description);
-					sqlAero.bindValue(4, fdm);
-					sqlAero.bindValue(5, author);
-					*/
-#ifdef AircraftImport_DEBUG1                 // if on, very noisy debug output
-					qDebug() << "aero: " << aero
-					<< " directory: " << directory
-					<< " xml_file: " << xml_file
-					<< " description: " << description
-					<< " fdm: " << fdm
-					<< " author: " << author;
-#endif
-
-					//if(!sqlAero.exec()){
-					//	qDebug() << mainObject->db.lastError() << sqlAero.lastError();
-					//}
+					QStringList lines;
+					lines << aero << directory << xml_file << description << fdm << author << file_path;
+					out << lines.join("\t") << "\n";
 
 					found++;
-					list.clear();
-					list += aero;
-					list += directory;
-					list += xml_file;
-					list += description;
-					list += fdm;
-					list += author;
-					rows += list;
+//					list.clear();
+//					list += aero;
+//					list += directory;
+//					list += xml_file;
+//					list += description;
+//					list += fdm;
+//					list += author;
+//					rows += list;
 
 					if(progress.wasCanceled()){
 						qDebug() << "Progress cancelled!";
@@ -202,6 +152,8 @@ void AircraftImport::scan_xml_sets(){
 		} /* entry != INstruments etc */
 	} /* loop entries.() */	
 
+	cacheFile.close();
+	progress.hide();
 }
 
 

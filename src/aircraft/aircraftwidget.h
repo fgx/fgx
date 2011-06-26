@@ -15,23 +15,24 @@
 #include <QtGui/QStatusBar>
 
 #include "xobjects/mainobject.h"
-#include "aircraft/aircraftimport.h"
 
 class AircraftWidget : public QWidget
 {
 Q_OBJECT
 public:
+	//aero << directory << xml_file << description << fdm << author << file_path;
 	enum COLS{
 		C_DIR = 0,
-		C_XML = 1,
-		C_AERO = 2,
-		C_DESCRIPTION = 3,
-		C_FDM = 4,
-		C_AUTHOR = 5
+		C_AERO,
+		C_XML_SET,
+		C_DESCRIPTION,
+		C_FDM,
+		C_AUTHOR,
+		C_FILE_PATH
 	};
 	enum VIEWS{
-		V_LIST = 0,
-		V_NESTED = 1
+		LIST_VIEW = 0,
+		FOLDER_VIEW = 1
 	};
 
 	explicit AircraftWidget(MainObject *mOb, QWidget *parent = 0);
@@ -56,7 +57,6 @@ public:
 	QString selected_aircraft();
 
 	QStringList get_args();
-		AircraftImport *aircraftImport;
 
 private:
 	QTreeWidget *treeWidget;
@@ -76,6 +76,7 @@ public slots:
 	void on_use_default_clicked();
 	void on_tree_selection_changed();
 	void on_reload_db_cache();
+	void scan_xml_sets();
 };
 
 #endif // AIRCRAFTWIDGET_H
