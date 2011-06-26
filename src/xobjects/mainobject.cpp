@@ -161,51 +161,6 @@ void MainObject::on_properties_browser(){
 	//mpMapWidget->show();
 }
 
-//======================================
-//** DB Connect
-/*
-void MainObject::db_connect(){
-
-	trayIcon->showMessage("DB", "Opening DB");
-	
-	QSqlDatabase db;
-	QSqlQuery query;
-
-	if (settings->value("db_engine").toString() == "QMYSQL"){
-		outLog("*** FGX reports: we are using QMYSQL engine ***");
-		db = QSqlDatabase::addDatabase("QMYSQL");
-		db.setHostName(settings->value("db_host").toString());
-		db.setUserName(settings->value("db_user").toString());
-		db.setPassword(settings->value("db_pass").toString());
-		db.setDatabaseName(settings->value("db_database").toString());
-
-	}else if(settings->value("db_engine").toString() == "QSQLITE"){
-		outLog("*** FGX reports: we are using QSQLITE engine ***");
-		db = QSqlDatabase::addDatabase("QSQLITE");
-		db.setDatabaseName(settings->db_file());
-		qDebug() << "dbfile settings: " << settings->db_file();
-
-	}else {
-		trayIcon->showMessage("DB Error", "Could not open DB", QSystemTrayIcon::Critical, 5000);
-		emit(show_settings(1));
-		qDebug() << "NO ENGINE";
-		return;
-	}
-
-	// Catch DB Open error
-	if(!db.open()){
-		qDebug() << db.lastError().text();
-		trayIcon->showMessage("DB Error", "Could not open DB", QSystemTrayIcon::Critical, 5000);
-		db.close();
-		emit(show_settings(1));
-		return;
-	}
-
-	// Database connected
-	trayIcon->showMessage("DB", "Connected", QSystemTrayIcon::Information, 3000);
-
-}
-*/
 
 
 //****************************************************************************

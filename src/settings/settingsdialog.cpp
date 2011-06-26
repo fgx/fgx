@@ -55,8 +55,6 @@ SettingsDialog::SettingsDialog(MainObject *mOb, QWidget *parent) :
 	pathsSettingsWidget = new PathsSettingsWidget(mainObject);
 	tabWidget->addTab(pathsSettingsWidget, tr("Paths"));
 
-	dbSettingsWidget = new DbSettingsWidget(mainObject);
-	tabWidget->addTab(dbSettingsWidget, tr("Database"));
 
 
 	//================================================================
@@ -89,7 +87,6 @@ SettingsDialog::SettingsDialog(MainObject *mOb, QWidget *parent) :
 //** Settings
 void SettingsDialog::load_settings(){
 	pathsSettingsWidget->load_settings();
-	dbSettingsWidget->load_settings();
 }
 
 
@@ -115,8 +112,6 @@ void SettingsDialog::on_save_clicked(){
 		}
 	}
 	pathsSettingsWidget->save_settings();
-	dbSettingsWidget->save_settings();
-	//mainObject->db_connect();
 	accept();
 }
 

@@ -48,8 +48,6 @@ public:
 
     QAction *actionQuit;
 
-	void db_connect();
-    bool db_sanity_check();
 
 	QString runningOS();
 

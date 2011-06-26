@@ -8,7 +8,6 @@ INCLUDEPATH += .
 QT += network \
     xml \
     xmlpatterns \
-    sql \
     webkit
 # Input
 HEADERS += xobjects/xsettings.h \
@@ -16,7 +15,6 @@ HEADERS += xobjects/xsettings.h \
     network/networkwidget.h \
     network/mptelnet.h \
     aircraft/aircraftwidget.h \
-    aircraft/aircraftimport.h \
     airports/airportswidget.h \
     airports/importairportswidget.h \
     airports/aptdatparser.h \
@@ -30,10 +28,8 @@ HEADERS += xobjects/xsettings.h \
     launcher/launcherwindow.h \
     mpmap/mpmapwidget.h \
     settings/pathssettingswidget.h \
-    settings/dbsettingswidget.h \
     utilities/statusbar.h \
     xwidgets/xtreewidgetitem.h \
-    airports/airportsimport.h \
     utilities/utilities.h \
     utilities/messagebox.h
 SOURCES += main.cpp \
@@ -42,7 +38,6 @@ SOURCES += main.cpp \
     network/networkwidget.cpp \
     network/mptelnet.cpp \
     aircraft/aircraftwidget.cpp \
-    aircraft/aircraftimport.cpp \
     airports/airportswidget.cpp \
     airports/aptdatparser.cpp \
     airports/importairportswidget.cpp \
@@ -56,9 +51,7 @@ SOURCES += main.cpp \
     launcher/launcherwindow.cpp \
     mpmap/mpmapwidget.cpp \
     settings/pathssettingswidget.cpp \
-    settings/dbsettingswidget.cpp \
     utilities/statusbar.cpp \
-    airports/airportsimport.cpp \
     utilities/utilities.cpp \
     utilities/messagebox.cpp
 RESOURCES += resources/icons.qrc \

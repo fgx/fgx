@@ -13,7 +13,6 @@
 
 #include "xobjects/mainobject.h"
 #include "settings/pathssettingswidget.h"
-#include "settings/dbsettingswidget.h"
 
 class SettingsDialog : public QDialog
 {
@@ -29,7 +28,6 @@ private:
 
 
 	PathsSettingsWidget *pathsSettingsWidget;
-	DbSettingsWidget *dbSettingsWidget;
 
 
 	QString get_frame_style(bool is_valid);
