@@ -807,7 +807,7 @@ void AirportsWidget::import_airports(bool import_icao_only){
 	 QString tower;
 
 	while( !file.atEnd() ){
-
+		
 		QByteArray lineBytes = file.readLine();
 		QString line = QString(lineBytes).trimmed();
 		//qDebug() << line;

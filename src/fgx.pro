@@ -16,7 +16,7 @@ HEADERS += xobjects/xsettings.h \
     network/mptelnet.h \
     aircraft/aircraftwidget.h \
     airports/airportswidget.h \
-	airports/importairportsdialog.h \
+    airports/importairportsdialog.h \
     xwidgets/execontrols.h \
     panes/timeweatherwidget.h \
     panes/advancedoptionswidget.h \
@@ -29,8 +29,20 @@ HEADERS += xobjects/xsettings.h \
     settings/pathssettingswidget.h \
     utilities/statusbar.h \
     xwidgets/xtreewidgetitem.h \
-    utilities/utilities.h \
-    utilities/messagebox.h
+    utilities/messagebox.h \
+    utilities/quazip/quazip.h \
+    utilities/quazip/zip.h \
+    utilities/quazip/unzip.h \
+    utilities/quazip/quazipnewinfo.h \
+    utilities/quazip/quazipfileinfo.h \
+    utilities/quazip/quazipfile.h \
+    utilities/quazip/quacrc32.h \
+    utilities/quazip/quachecksum32.h \
+    utilities/quazip/quaadler32.h \
+    utilities/quazip/JlCompress.h \
+    utilities/quazip/ioapi.h \
+    utilities/quazip/crypt.h
+	
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -51,7 +63,20 @@ SOURCES += main.cpp \
     settings/pathssettingswidget.cpp \
     utilities/statusbar.cpp \
     utilities/utilities.cpp \
-    utilities/messagebox.cpp
+    utilities/messagebox.cpp \
+    utilities/quazip/quazip.cpp \
+    utilities/quazip/zip.c \
+    utilities/quazip/unzip.c \
+    utilities/quazip/quazipnewinfo.cpp \
+    utilities/quazip/quazipfile.cpp \
+    utilities/quazip/quacrc32.cpp \
+    utilities/quazip/quaadler32.cpp \
+    utilities/quazip/qioapi.cpp \
+    utilities/quazip/JlCompress.cpp
+
+	
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
+	
 CONFIG += console
+
