@@ -33,7 +33,7 @@ bool JlCompress::compressFile(QuaZip* zip, QString fileName, QString fileDest) {
 
     // Copio i dati
     char c;
-    while(inFile.getChar(&c)&&outFile.putChar(c));
+    while (inFile.getChar(&c)&&outFile.putChar(c))
     if(outFile.getZipError()!=UNZ_OK) return false;
 
     // Chiudo i file
