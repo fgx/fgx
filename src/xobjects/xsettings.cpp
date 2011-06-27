@@ -9,6 +9,8 @@
 
 #include "xsettings.h"
 #include "utilities/utilities.h"
+#include "quazip.h"
+#include "quazipfile.h"
 
 
 XSettings::XSettings(QObject *parent) :
@@ -130,8 +132,8 @@ QString XSettings::airports_path(){
 //** Apt Dat
 QString XSettings::apt_dat_file(){
 	if( QFile::exists(fg_root("/Airports/apt.dat")) == false){
-		// unpack original ??? TODO
-		return QString("");
+		so nicht!
+		system("gunzip /Users/raoulquittarco/Desktop/fg/fgdata/Airports/apt.dat.gz");
 	}
 	return fg_root("/Airports/apt.dat");
 }
@@ -265,3 +267,8 @@ QString XSettings::data_file(QString file_name){
 	}
 	return storedir.append("/").append(file_name);
 }
+
+
+
+
+
