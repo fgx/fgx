@@ -9,8 +9,8 @@
 
 #include "xsettings.h"
 #include "utilities/utilities.h"
-#include "quazip.h"
-#include "quazipfile.h"
+#include "utilities/quazip/quazip.h"
+#include "utilities/quazip/quazipfile.h"
 
 
 XSettings::XSettings(QObject *parent) :
