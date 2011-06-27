@@ -288,7 +288,7 @@ void XSettings::uncompress()
 	
 	ba.remove(0, 10);
 	
-    const int buffer_size = 300000;
+    const int buffer_size = 16384;
     quint8 buffer[buffer_size];
 	
     z_stream cmpr_stream;
@@ -310,7 +310,8 @@ void XSettings::uncompress()
     }
 	
 	QByteArray uncompressed;
-    do {
+			
+	do {
 		
         cmpr_stream.next_out = buffer;
         cmpr_stream.avail_out = buffer_size;
