@@ -132,8 +132,7 @@ QString XSettings::airports_path(){
 //** Apt Dat
 QString XSettings::apt_dat_file(){
 	if( QFile::exists(fg_root("/Airports/apt.dat")) == false){
-		so nicht!
-		system("gunzip /Users/raoulquittarco/Desktop/fg/fgdata/Airports/apt.dat.gz");
+		uncompress();
 	}
 	return fg_root("/Airports/apt.dat");
 }
@@ -266,6 +265,81 @@ QString XSettings::data_file(QString file_name){
 		dir->mkpath(storedir);
 	}
 	return storedir.append("/").append(file_name);
+}
+
+
+
+
+
+void XSettings::uncompress()
+{
+	
+	QFile sourceFile(fg_root("/Airports/apt.dat.gz"));
+	
+	if (!sourceFile.open(QIODevice::ReadOnly))
+		return;
+	
+	QFile destinationFile(fg_root("/Airports/apt.dat"));
+	
+	if (!destinationFile.open(QIODevice::WriteOnly))
+		return;
+	
+	QByteArray ba = sourceFile.readAll();
+	
+	ba.remove(0, 10);
+	
+    const int buffer_size = 300000;
+    quint8 buffer[buffer_size];
+	
+    z_stream cmpr_stream;
+    cmpr_stream.next_in = (unsigned char *)ba.data();
+    cmpr_stream.avail_in = ba.size();
+    cmpr_stream.total_in = 0;
+	
+    cmpr_stream.next_out = buffer;
+    cmpr_stream.avail_out = buffer_size;
+    cmpr_stream.total_out = 0;
+	
+    cmpr_stream.zalloc = Z_NULL;
+    cmpr_stream.zfree = Z_NULL;
+    cmpr_stream.opaque = Z_NULL;
+	
+    int status = inflateInit2( &cmpr_stream, -8 );
+    if (status != Z_OK) {
+        qDebug() << "cmpr_stream error!";
+    }
+	
+	QByteArray uncompressed;
+    do {
+		
+        cmpr_stream.next_out = buffer;
+        cmpr_stream.avail_out = buffer_size;
+		
+        status = inflate( &cmpr_stream, Z_NO_FLUSH );
+		
+        if (status == Z_OK || status == Z_STREAM_END)
+        {
+		QByteArray chunk = QByteArray::fromRawData((char *)buffer, buffer_size - cmpr_stream.avail_out);
+            uncompressed.append( chunk );
+			outLog("Z_OK and Z_STREAM_END");
+        }
+        else
+        {
+            inflateEnd(&cmpr_stream);
+            break;
+        }
+		
+        if (status == Z_STREAM_END)
+        {
+            inflateEnd(&cmpr_stream);
+            break;
+        }
+		
+    }
+    while (cmpr_stream.avail_out == 0); 
+	
+	destinationFile.write(uncompressed);
+
 }
 
 

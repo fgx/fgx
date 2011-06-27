@@ -57,6 +57,8 @@ public:
 
 	int runningOS();
 	bool paths_sane();
+	
+	void uncompress();
 
 signals:
 
