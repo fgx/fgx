@@ -9,8 +9,12 @@
 
 #include "xsettings.h"
 #include "utilities/utilities.h"
-#include "utilities/quazip/quazip.h"
-#include "utilities/quazip/quazipfile.h"
+#include "utilities/osdab/zip_p.h"
+#include "utilities/osdab/zip.h"
+#include "utilities/osdab/unzip.h"
+#include "/usr/include/zlib.h"
+
+#define UNZIP_READ_BUFFER (256*1024)
 
 
 XSettings::XSettings(QObject *parent) :
@@ -268,82 +272,141 @@ QString XSettings::data_file(QString file_name){
 }
 
 
-
-
+// using methods of osdab
 
 void XSettings::uncompress()
 {
 	
-	QFile sourceFile(fg_root("/Airports/apt.dat.gz"));
+	QString decompressedFileName;
+	bool inflate(const QString& s);
 	
-	if (!sourceFile.open(QIODevice::ReadOnly))
+	QString s(fg_root("/Airports/apt.dat.gz"));
+	
+	QFile file(s);
+	if (!file.open(QIODevice::ReadOnly)) {
+		qDebug("Failed to open input file: %s", qPrintable(s));
 		return;
+	}
 	
-	QFile destinationFile(fg_root("/Airports/apt.dat"));
-	
-	if (!destinationFile.open(QIODevice::WriteOnly))
+	// Output to a QByteArray....
+	//
+	// QByteArray decompressedData;
+	// QDataStream dev(&decompressedData, QIODevice::WriteOnly);
+	//
+	// ...or to a QFile
+	//
+	QFileInfo info(s);
+	QString outFileName;
+	if (info.suffix() == "gz") {
+		outFileName = info.absoluteFilePath().left( info.absoluteFilePath().length() - 3 );
+	} else if (info.suffix() == "svgz") {
+		outFileName = info.absoluteFilePath().left( info.absoluteFilePath().length() - 1 );
+	} else {
+		outFileName = info.absoluteFilePath().append(".decompressed");
+	}
+	// Quick and dirty :D
+	int magik = 0;
+	while (QFile::exists(outFileName)) {
+		outFileName.append(QString(".%1").arg(++magik));
+	}
+	QFile out(outFileName);
+	if (!out.open(QIODevice::WriteOnly)) {
+		qDebug("Failed to open output file: %s", qPrintable(outFileName));
 		return;
+	}
+	decompressedFileName = outFileName;
+	QDataStream dev(&out);
 	
-	QByteArray ba = sourceFile.readAll();
+	quint64 compressedSize = file.size();
 	
-	ba.remove(0, 10);
+	uInt rep = compressedSize / UNZIP_READ_BUFFER;
+	uInt rem = compressedSize % UNZIP_READ_BUFFER;
+	uInt cur = 0;
 	
-    const int buffer_size = 16384;
-    quint8 buffer[buffer_size];
+	// extract data
+	qint64 read;
+	quint64 tot = 0;
 	
-    z_stream cmpr_stream;
-    cmpr_stream.next_in = (unsigned char *)ba.data();
-    cmpr_stream.avail_in = ba.size();
-    cmpr_stream.total_in = 0;
+	char buffer1[UNZIP_READ_BUFFER];
+	char buffer2[UNZIP_READ_BUFFER];
 	
-    cmpr_stream.next_out = buffer;
-    cmpr_stream.avail_out = buffer_size;
-    cmpr_stream.total_out = 0;
+	/* Allocate inflate state */
+	z_stream zstr;
+	zstr.zalloc = Z_NULL;
+	zstr.zfree = Z_NULL;
+	zstr.opaque = Z_NULL;
+	zstr.next_in = Z_NULL;
+	zstr.avail_in = 0;
 	
-    cmpr_stream.zalloc = Z_NULL;
-    cmpr_stream.zfree = Z_NULL;
-    cmpr_stream.opaque = Z_NULL;
+	int zret;
 	
-    int status = inflateInit2( &cmpr_stream, -8 );
-    if (status != Z_OK) {
-        qDebug() << "cmpr_stream error!";
-    }
+	/*
+	 windowBits can also be greater than 15 for optional gzip decoding. Add
+	 32 to windowBits to enable zlib and gzip decoding with automatic header
+	 detection, or add 16 to decode only the gzip format (the zlib format will
+	 return a Z_DATA_ERROR.  If a gzip stream is being decoded, strm->adler is
+	 a crc32 instead of an adler32.
+	 */
+	if ( (zret = inflateInit2_(&zstr, MAX_WBITS + 16, ZLIB_VERSION, sizeof(z_stream))) != Z_OK ) {
+		qDebug("Failed to initialize zlib");
+		return;
+	}
 	
-	QByteArray uncompressed;
+	int szDecomp;
+	
+	// Decompress until deflate stream ends or end of file
+	do
+	{
+		read = file.read(buffer1, cur < rep ? UNZIP_READ_BUFFER : rem);
+		if (read == 0)
+			break;
+		if (read < 0)
+		{
+			(void)inflateEnd(&zstr);
+			qDebug("Read error");
+			return;
+		}
+		
+		cur++;
+		tot += read;
+		
+		zstr.avail_in = (uInt) read;
+		zstr.next_in = (Bytef*) buffer1;
+		
+		
+		// Run inflate() on input until output buffer not full
+		do {
+			zstr.avail_out = UNZIP_READ_BUFFER;
+			zstr.next_out = (Bytef*) buffer2;;
 			
-	do {
+			zret = inflate(&zstr, Z_NO_FLUSH);
+			
+			switch (zret) {
+				case Z_NEED_DICT:
+				case Z_DATA_ERROR:
+				case Z_MEM_ERROR:
+					inflateEnd(&zstr);
+					qDebug("zlib failed to decode file");
+					return;
+				default:
+					;
+			}
+			
+			szDecomp = UNZIP_READ_BUFFER - zstr.avail_out;
+			if (dev.writeRawData(buffer2, szDecomp) != szDecomp)
+			{
+				inflateEnd(&zstr);
+				qDebug("Write error");
+				return;
+			}
+			
+		} while (zstr.avail_out == 0);
 		
-        cmpr_stream.next_out = buffer;
-        cmpr_stream.avail_out = buffer_size;
-		
-        status = inflate( &cmpr_stream, Z_NO_FLUSH );
-		
-        if (status == Z_OK || status == Z_STREAM_END)
-        {
-		QByteArray chunk = QByteArray::fromRawData((char *)buffer, buffer_size - cmpr_stream.avail_out);
-            uncompressed.append( chunk );
-			outLog("Z_OK and Z_STREAM_END");
-        }
-        else
-        {
-            inflateEnd(&cmpr_stream);
-            break;
-        }
-		
-        if (status == Z_STREAM_END)
-        {
-            inflateEnd(&cmpr_stream);
-            break;
-        }
-		
-    }
-    while (cmpr_stream.avail_out == 0); 
+	}
+	while (zret != Z_STREAM_END);
 	
-	destinationFile.write(uncompressed);
-
+	inflateEnd(&zstr);
+	
+	return;
+	
 }
-
-
-
-
-

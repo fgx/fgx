@@ -29,19 +29,8 @@ HEADERS += xobjects/xsettings.h \
     settings/pathssettingswidget.h \
     utilities/statusbar.h \
     xwidgets/xtreewidgetitem.h \
-    utilities/messagebox.h \
-    utilities/quazip/quazip.h \
-    utilities/quazip/zip.h \
-    utilities/quazip/unzip.h \
-    utilities/quazip/quazipnewinfo.h \
-    utilities/quazip/quazipfileinfo.h \
-    utilities/quazip/quazipfile.h \
-    utilities/quazip/quacrc32.h \
-    utilities/quazip/quachecksum32.h \
-    utilities/quazip/quaadler32.h \
-    utilities/quazip/JlCompress.h \
-    utilities/quazip/ioapi.h \
-    utilities/quazip/crypt.h
+    utilities/osdab/zip_p.h
+    utilities/osdab/unzip_p.h
 	
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
@@ -50,7 +39,7 @@ SOURCES += main.cpp \
     network/mptelnet.cpp \
     aircraft/aircraftwidget.cpp \
     airports/airportswidget.cpp \
-	airports/importairportsdialog.cpp \
+    airports/importairportsdialog.cpp \
     xwidgets/execontrols.cpp \
     panes/timeweatherwidget.cpp \
     panes/advancedoptionswidget.cpp \
