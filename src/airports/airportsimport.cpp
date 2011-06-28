@@ -15,7 +15,7 @@
 #include <QtGui/QProgressDialog>
 
 #include "airportsimport.h"
-#include "utilities.h"
+#include "utilities/utilities.h"
 
 AirportsImport::AirportsImport(QObject *parent, MainObject *mOb) :
     QObject(parent)
