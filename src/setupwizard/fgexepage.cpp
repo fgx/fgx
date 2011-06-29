@@ -170,6 +170,7 @@ void FgExePage::initializePage()
 {
 	radioDefault->setChecked( mainObject->settings->value("use_default_fgfs", "1").toBool() );
 	lblDefault->setText( QString("Default: ").append(mainObject->settings->default_fgfs_path()) );
+	txtFgfs->setText(mainObject->settings->value("fgfs_custom_path"));
 	check_paths();
 }
 

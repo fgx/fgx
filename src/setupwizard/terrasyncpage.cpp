@@ -37,6 +37,7 @@ TerraSyncPage::TerraSyncPage(MainObject *mob, QWidget *parent) :
 	gridLayout->addWidget(buttSelectPath, row, 2);
 	buttSelectPath->setIcon(QIcon(":/icon/black"));
 	buttSelectPath->setDisabled(true);
+	connect(buttSelectPath, SIGNAL(clicked()), this, SLOT(on_select_path()));
 
 	//= help label
 	row++;
@@ -58,7 +59,7 @@ void TerraSyncPage::on_select_path()
 	if(dirPath.length() > 0){
 		txtTerraSyncPath->setText(dirPath);
 	}
-	//#chack_paths();
+	check_paths();
 }
 
 
@@ -101,8 +102,9 @@ void TerraSyncPage::check_paths()
 //= InitializePage
 void TerraSyncPage::initializePage()
 {
-	radioDefault->setChecked( mainObject->settings->value("USE_DEFAULT_FG_ROOT", "1").toBool() );
-	lblDefault->setText( QString("Default: ").append(mainObject->settings->default_fg_root()) );
+	checkBoxUseTerrasync->setChecked( mainObject->settings->value("use_terrasync", "1").toBool() );
+	txtTerraSyncPath->setText(mainObject->settings->value("terrasync_path", "").toString() );
+	on_checkbox_clicked();
 }
 
 //====================================================
@@ -110,9 +112,9 @@ void TerraSyncPage::initializePage()
 bool TerraSyncPage::validatePage()
 {
 	check_paths();
-	if(checkBoxUseTerrasync->isChecked()){
 
-		if(QFile::exists(txtFgRoot->text())){
+	if(checkBoxUseTerrasync->isChecked()){
+		if(QFile::exists(txtTerraSyncPath->text())){
 			// TODO - check its writable
 			return true;
 		}else{
