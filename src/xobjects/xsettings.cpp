@@ -135,11 +135,12 @@ QString XSettings::airports_path(){
 
 //** Apt Dat
 QString XSettings::apt_dat_file(){
-	if( QFile::exists(fg_root("/Airports/apt.dat")) == false){
+	QString aptdatloc(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat"));
+	if( QFile::exists(aptdatloc) == false){
 		uncompress(fg_root("/Airports/apt.dat.gz"), QString(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat")));
 		outLog(QString(temp_dir().append("apt.dat")));
 	}
-	return fg_root("/Airports/apt.dat");
+	return aptdatloc;
 }
 
 //===========================================================================
