@@ -20,10 +20,6 @@ FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
 	setTitle("Select FlightGear exectable");
 	setSubTitle("Select the default or a custom path");
 
-	//===============================================================
-	//*** FGFS Group
-	//grpFgfs = new QGroupBox(tr("Path to FlightGear executable"));
-	//mainLayout->addWidget(grpFgfs);
 
 	QGridLayout *layoutExe = new QGridLayout();
 	setLayout(layoutExe);
@@ -33,6 +29,7 @@ FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
 	radioDefault = new QRadioButton();
 	radioDefault->setText("Use default path");
 	layoutExe->addWidget(radioDefault, row, 0, 1, 3);
+	connect(radioDefault, SIGNAL(toggled(bool)), this, SLOT(on_default_toggled(bool)));
 
 	//= default help label
 	row++;
@@ -52,7 +49,7 @@ FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
 	layoutExe->addWidget(txtFgfs, row, 1, 1, 1);
 
 	//= Dropdown button for path
-	QToolButton *buttExecutable = new QToolButton();
+	buttExecutable = new QToolButton();
 	layoutExe->addWidget(buttExecutable, row, 2);
 	buttExecutable->setIcon(QIcon(":/icon/black"));
 	buttExecutable->setPopupMode(QToolButton::InstantPopup);
@@ -166,8 +163,8 @@ void FgExePage::check_paths()
 //= initializePage
 void FgExePage::initializePage()
 {
-	bool use_defaults = mainObject->settings->value("USE_DEFAULT_PATHS", "1").toBool();
-	radioCustom->setChecked(use_defaults == false);
+	radioDefault->setChecked( mainObject->settings->value("USE_DEFAULT_FGFS", "1").toBool() );
+	lblDefault->setText( QString("Default: ").append(mainObject->settings->default_fgfs_path()) );
 }
 
 
@@ -176,5 +173,30 @@ void FgExePage::initializePage()
 //= ValidatePage
 bool FgExePage::validatePage()
 {
+	if(radioDefault->isChecked()){
+		//TODO vaidate default path
+		return true;
+	}
+
+	if(QFile::exists(txtFgfs->text())){
+		// TODO - check its executable
+		return true;
+	}else{
+		txtFgfs->setFocus();
+		lblCustom->setText("File does not exist");
+	}
+
 	return false;
+}
+
+
+void FgExePage::on_default_toggled(bool state){
+	Q_UNUSED(state);
+	bool def = radioDefault->isChecked();
+
+	txtFgfs->setDisabled(def);
+	buttExecutable->setDisabled( def);
+	if(def == false){
+		txtFgfs->setFocus();
+	}
 }

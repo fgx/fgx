@@ -41,7 +41,8 @@ HEADERS += xobjects/xsettings.h \
     utilities/osdab/zipglobal.h \
     setupwizard/fgrootpage.h \
     setupwizard/fgexepage.h \
-    setupwizard/setupwizard.h
+    setupwizard/setupwizard.h \
+    setupwizard/terrasyncpage.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -68,7 +69,8 @@ SOURCES += main.cpp \
     utilities/osdab/zipglobal.cpp \
     setupwizard/setupwizard.cpp \
     setupwizard/fgrootpage.cpp \
-    setupwizard/fgexepage.cpp
+    setupwizard/fgexepage.cpp \
+    setupwizard/terrasyncpage.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
 CONFIG += console

@@ -5,6 +5,7 @@
 #include <QtGui/QRadioButton>
 #include <QtGui/QLineEdit>
 #include <QtGui/QLabel>
+#include <QtGui/QToolButton>
 
 #include "xobjects/mainobject.h"
 
@@ -17,6 +18,7 @@ public:
 
 	QRadioButton *radioDefault;
 	QRadioButton *radioCustom;
+	QToolButton *buttExecutable;
 
 	QLabel *lblDefault;
 	QLabel *lblCustom;
@@ -28,6 +30,7 @@ public:
 signals:
 
 public slots:
+	void on_default_toggled(bool);
 	void on_fgfs_autodetect();
 	void on_select_fgfs_path();
 	void check_paths();
