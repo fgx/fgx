@@ -136,7 +136,7 @@ QString XSettings::airports_path(){
 //** Apt Dat
 QString XSettings::apt_dat_file(){
 	if( QFile::exists(fg_root("/Airports/apt.dat")) == false){
-		uncompress();
+		uncompress(fg_root("/Airports/apt.dat.gz"));
 	}
 	return fg_root("/Airports/apt.dat");
 }
@@ -274,13 +274,13 @@ QString XSettings::data_file(QString file_name){
 
 // using methods of osdab
 
-void XSettings::uncompress()
+void XSettings::uncompress(QString filename)
 {
 	
 	QString decompressedFileName;
 	bool inflate(const QString& s);
 	
-	QString s(fg_root("/Airports/apt.dat.gz"));
+	QString s(filename);
 	
 	QFile file(s);
 	if (!file.open(QIODevice::ReadOnly)) {
