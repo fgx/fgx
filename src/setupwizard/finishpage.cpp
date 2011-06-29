@@ -9,6 +9,11 @@
 #include "xwidgets/xgroupboxes.h"
 
 
+#include "airports/airportsdata.h"
+#include "aircraft/aircraftdata.h"
+
+
+
 FinishPage::FinishPage(MainObject *mob, QWidget *parent) :
     QWizardPage(parent)
 {
@@ -66,25 +71,25 @@ void FinishPage::initializePage()
 {
 	//radioDefault->setChecked( mainObject->settings->value("USE_DEFAULT_FG_ROOT", "1").toBool() );
 	//lblDefault->setText( QString("Default: ").append(mainObject->settings->default_fg_root()) );
-	qDebug() << field("fgfs_use_default");
+	qDebug() << field("use_default");
 	qDebug() << field("fgfs_path");
 	qDebug() << field("fgroot_use_default");
 	qDebug() << field("fgroot_path");
 
-	if(field("fgfs_use_default").toBool()){
+	if(field("use_default_fgfs").toBool()){
 		lblFgExeUsingDefault->setText("Using Default Path");
 		lblFgExePath->setText(mainObject->settings->default_fgfs_path());
 	}else{
 		lblFgExeUsingDefault->setText("Using Custom Path");
-		lblFgExePath->setText(field("fgfs_path").toString());
+		lblFgExePath->setText(field("fgfs_custom_path").toString());
 	}
 
-	if(field("fgroot_use_default").toBool()){
+	if(field("use_default_fgroot").toBool()){
 		lblFgRootUsingDefault->setText("Using Default Data Path");
 		lblFgRootPath->setText(mainObject->settings->default_fg_root());
 	}else{
 		lblFgRootUsingDefault->setText("Using Custom Data Path");
-		lblFgRootPath->setText(field("fgroot_path").toString());
+		lblFgRootPath->setText(field("fgroot_custom_path").toString());
 	}
 
 	if(field("use_terrasync").toBool()){
@@ -94,10 +99,46 @@ void FinishPage::initializePage()
 		lblUsingTerraSync->setText("No Terrasync");
 		lblTerraSyncPath->setText("");
 	}
+	return;
+	//** chack whether we need to import airports
+	/*
+	if(!QFile::exists(mainObject->settings->data_file("aiports.txt"))){
+		lblImportAirports->setText("Importing airports");
+	}else{
+		if(mainObject->settings->value("use_default_fgroot").toBool() != field("use_default_fgroot").toBool()){
+			lblImportAirports->setText("Importing airports");
+		}else{
+			// TODO check if path changed
+		}
 
+		//}
+	}
 
-
-
+	lblImportAicraft->setText("Importing aircraft");
+	*/
 }
 
 
+//===================================================
+//= initializePage
+bool FinishPage::validatePage()
+{
+
+	qDebug() << "Accept" << field("use_terrasync");
+
+	mainObject->settings->setValue("use_default_fgfs", field("use_default_fgfs"));
+	mainObject->settings->setValue("fgfs_custom_path", field("fgfs_custom_path"));
+
+	mainObject->settings->setValue("use_default_fgroot", field("use_default_fgroot"));
+	mainObject->settings->setValue("fgroot_custom_path", field("fgroot_custom_path"));
+
+
+	mainObject->settings->setValue("use_terrasync", field("use_terrasync"));
+	mainObject->settings->setValue("terrasync_path", field("terrasync_path"));
+
+	mainObject->settings->sync();
+
+	AirportsData::import(this, mainObject, true);
+	AircraftData::import(this, mainObject);
+	return true;
+}

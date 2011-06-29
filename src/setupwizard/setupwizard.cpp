@@ -1,6 +1,7 @@
 
 #include<QtDebug>
-#include "setupwizard.h"
+
+#include "setupwizard/setupwizard.h"
 
 
 SetupWizard::SetupWizard(MainObject *mOb, QWidget *parent) :
@@ -22,11 +23,14 @@ SetupWizard::SetupWizard(MainObject *mOb, QWidget *parent) :
 	finishPage = new FinishPage(mainObject);
 	addPage(finishPage);
 
+	completedPage = new CompletedPage(mainObject);
+	addPage(completedPage);
+
 }
 
 
 void SetupWizard::accept(){
-	qDebug() << "Accept";
+
 }
 
 

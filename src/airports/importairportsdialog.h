@@ -10,6 +10,7 @@
 
 #include "xobjects/xsettings.h"
 
+
 class ImportAirportsDialog : public QDialog
 {
 Q_OBJECT

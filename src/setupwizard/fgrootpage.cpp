@@ -59,8 +59,8 @@ FgRootPage::FgRootPage(MainObject *mob, QWidget *parent) :
 	gridLayout->setColumnStretch(2,0);
 
 
-	registerField("fgroot_use_default", radioDefault);
-	registerField("fgroot_path", txtFgRoot);
+	registerField("use_default_fgroot", radioDefault);
+	registerField("fgroot_custom_path", txtFgRoot);
 
 }
 
@@ -80,7 +80,7 @@ void FgRootPage::initializePage()
 {
 	radioDefault->setChecked( mainObject->settings->value("use_default_fgroot", "1").toBool() );
 	lblDefault->setText( QString("Default: ").append(mainObject->settings->default_fg_root()) );
-	txtFgRoot->setText( mainObject->settings->value("fgroot_custom_path") );
+	txtFgRoot->setText( mainObject->settings->value("fgroot_custom_path").toString() );
 }
 
 

@@ -35,7 +35,10 @@ QString XSettings::fgx_path(){
 //** fgfs Executable Full Path
 //===========================================================================
 QString XSettings::fgfs_path(){
-	return this->value("FGFS", default_fgfs_path()).toString();
+	if(value("use_default_fgfs", '1').toBool()){
+		return default_fgfs_path();
+	}
+	return value("fgfs_custom_path", "").toString();
 }
 
 QString XSettings::default_fgfs_path(){
@@ -58,7 +61,10 @@ QString XSettings::default_fgfs_path(){
 //** fg_root()
 //===========================================================================
 QString XSettings::fg_root(){
-	return this->value("FG_ROOT", default_fg_root()).toString();
+	if(value("use_default_fgroot", '1').toBool()){
+		return this->default_fg_root();
+	}
+	return value("fgroot_custom_path", "").toString();
 }
 
 QString XSettings::fg_root(QString append_path){
@@ -85,9 +91,6 @@ QString XSettings::default_fg_root(){
 //** Paths Sane
 //===========================================================================
 bool XSettings::paths_sane(){
-	if(value("USE_DEFAULT_PATHS").toBool()){
-		return true;
-	}
 	if(!QFile::exists(fgfs_path())){
 		return false;
 	}
@@ -252,17 +255,8 @@ QString XSettings::fgcom_exe_path(){
 
 
 //===========================================================================
-//** SQLite Database
+//** Data File eg airports.txt
 //===========================================================================
-QString XSettings::db_file(){
-	QString storedir = QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath();
-
-	if(!QFile::exists(storedir)){
-		QDir *dir = new QDir("");
-		dir->mkpath(storedir);
-	}
-	return storedir.append("/fgx.sqlite.db");
-}
 
 QString XSettings::data_file(QString file_name){
 	QString storedir = QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath();

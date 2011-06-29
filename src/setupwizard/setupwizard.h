@@ -8,6 +8,7 @@
 #include "setupwizard/fgrootpage.h"
 #include "setupwizard/terrasyncpage.h"
 #include "setupwizard/finishpage.h"
+#include "setupwizard/completedpage.h"
 
 #include "xobjects/mainobject.h"
 
@@ -22,6 +23,7 @@ public:
 	QWizardPage *fgRootPage;
 	QWizardPage *terraSyncPage;
 	QWizardPage *finishPage;
+	QWizardPage *completedPage;
 
 
 	void accept();

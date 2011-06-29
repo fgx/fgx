@@ -34,6 +34,7 @@ public:
 	QLabel *lblImportAicraft;
 
 	void initializePage();
+	bool validatePage();
 signals:
 
 public slots:
