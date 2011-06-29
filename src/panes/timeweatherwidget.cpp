@@ -136,6 +136,11 @@ QStringList TimeWeatherWidget::get_args(){
 	}else{
 		args << QString("--disable-real-weather-fetch");
 	}
+    QString time = buttonGroupTime->checkedButton()->property("value").toString();
+    if (time != "real") {
+        args << QString("--timeofday="+time);
+    }
+
 	return args;
 }
 

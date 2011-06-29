@@ -22,6 +22,8 @@
 #include "utilities/utilities.h"
 #include "utilities/messagebox.h"
 
+#include "setupwizard/setupwizard.h"
+
 
 LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	: QWidget(parent)
@@ -217,6 +219,10 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 			);
 	//bottomActionLayout->addStretch(10);
 	
+	QPushButton *buttWizz = new QPushButton();
+	buttWizz->setText("Wizard");
+	bottomActionLayout->addWidget(buttWizz);
+	connect(buttWizz, SIGNAL(clicked()),this, SLOT(on_setup_wizard()));
 	// Bottom Statusbar 
 	/*statusBar = new StatusBar();
 	statusBar->setMinimumHeight(30);
@@ -603,3 +609,9 @@ void LauncherWindow::on_action_open_url(QAction *action){
 }
 
 
+void LauncherWindow::on_setup_wizard(){
+
+	SetupWizard *setupWizz = new SetupWizard(mainObject);
+	setupWizz->exec();
+
+}

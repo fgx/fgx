@@ -38,7 +38,10 @@ HEADERS += xobjects/xsettings.h \
     utilities/osdab/zip_p.h \
     utilities/osdab/zip.h \
     utilities/osdab/zipentry_p.h \
-    utilities/osdab/zipglobal.h
+    utilities/osdab/zipglobal.h \
+    setupwizard/fgrootpage.h \
+    setupwizard/fgexepage.h \
+    setupwizard/setupwizard.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -62,7 +65,10 @@ SOURCES += main.cpp \
     airports/importairportsdialog.cpp \
     utilities/osdab/unzip.cpp \
     utilities/osdab/zip.cpp \
-    utilities/osdab/zipglobal.cpp
+    utilities/osdab/zipglobal.cpp \
+    setupwizard/setupwizard.cpp \
+    setupwizard/fgrootpage.cpp \
+    setupwizard/fgexepage.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
 CONFIG += console
