@@ -4,7 +4,7 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QFileDialog>
 
-#include "fgrootpage.h"
+#include "setupwizard/fgrootpage.h"
 
 FgRootPage::FgRootPage(MainObject *mob, QWidget *parent) :
     QWizardPage(parent)

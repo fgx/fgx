@@ -7,6 +7,8 @@
 #include "setupwizard/fgexepage.h"
 #include "setupwizard/fgrootpage.h"
 #include "setupwizard/terrasyncpage.h"
+#include "setupwizard/finishpage.h"
+
 #include "xobjects/mainobject.h"
 
 class SetupWizard : public QWizard
@@ -19,6 +21,7 @@ public:
 	QWizardPage *fgExePage;
 	QWizardPage *fgRootPage;
 	QWizardPage *terraSyncPage;
+	QWizardPage *finishPage;
 
 signals:
 

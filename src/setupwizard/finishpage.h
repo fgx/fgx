@@ -1,5 +1,5 @@
-#ifndef TERRASYNCPAGE_H
-#define TERRASYNCPAGE_H
+#ifndef FINISHPAGE_H
+#define FINISHPAGE_H
 
 #include <QWizardPage>
 #include <QCheckBox>
@@ -37,4 +37,4 @@ public slots:
 
 };
 
-#endif // TERRASYNCPAGE_H
+#endif // FINISHPAGE_H
