@@ -136,7 +136,8 @@ QString XSettings::airports_path(){
 //** Apt Dat
 QString XSettings::apt_dat_file(){
 	if( QFile::exists(fg_root("/Airports/apt.dat")) == false){
-		uncompress(fg_root("/Airports/apt.dat.gz"));
+		uncompress(fg_root("/Airports/apt.dat.gz"), QString(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat")));
+		outLog(QString(temp_dir().append("apt.dat")));
 	}
 	return fg_root("/Airports/apt.dat");
 }
@@ -274,7 +275,7 @@ QString XSettings::data_file(QString file_name){
 
 // using methods of osdab
 
-void XSettings::uncompress(QString filename)
+void XSettings::uncompress(QString filename, QString destination)
 {
 	
 	QString decompressedFileName;
@@ -295,15 +296,15 @@ void XSettings::uncompress(QString filename)
 	//
 	// ...or to a QFile
 	//
-	QFileInfo info(s);
+	//QFileInfo info(s);
 	QString outFileName;
-	if (info.suffix() == "gz") {
-		outFileName = info.absoluteFilePath().left( info.absoluteFilePath().length() - 3 );
-	} else if (info.suffix() == "svgz") {
+	//if (info.suffix() == "gz") {
+	outFileName = destination;
+	/*} else if (info.suffix() == "svgz") {
 		outFileName = info.absoluteFilePath().left( info.absoluteFilePath().length() - 1 );
 	} else {
 		outFileName = info.absoluteFilePath().append(".decompressed");
-	}
+	}*/
 	// Quick and dirty :D
 	int magik = 0;
 	while (QFile::exists(outFileName)) {

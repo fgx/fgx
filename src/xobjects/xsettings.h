@@ -58,7 +58,7 @@ public:
 	int runningOS();
 	bool paths_sane();
 	
-	void uncompress(QString filename);
+	void uncompress(QString filename, QString destination);
 
 signals:
 
