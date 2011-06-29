@@ -45,7 +45,8 @@ TerraSyncPage::TerraSyncPage(MainObject *mob, QWidget *parent) :
 
 
 
-
+	registerField("use_terrasync", checkBoxUseTerrasync);
+	registerField("terrasync_path", txtTerraSyncPath);
 
 }
 

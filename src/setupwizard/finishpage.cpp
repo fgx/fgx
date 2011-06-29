@@ -53,3 +53,18 @@ FinishPage::FinishPage(MainObject *mob, QWidget *parent) :
 
 }
 
+
+
+//===================================================
+//= initializePage
+void FinishPage::initializePage()
+{
+	//radioDefault->setChecked( mainObject->settings->value("USE_DEFAULT_FG_ROOT", "1").toBool() );
+	//lblDefault->setText( QString("Default: ").append(mainObject->settings->default_fg_root()) );
+	qDebug() << field("fgfs_use_default");
+	qDebug() << field("fgfs_path");
+	qDebug() << field("fgroot_use_default");
+	qDebug() << field("fgroot_path");
+}
+
+

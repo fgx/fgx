@@ -59,6 +59,9 @@ FgRootPage::FgRootPage(MainObject *mob, QWidget *parent) :
 	gridLayout->setColumnStretch(2,0);
 
 
+	registerField("fgroot_use_default", radioDefault);
+	registerField("fgroot_path", txtFgRoot);
+
 }
 
 void FgRootPage::on_select_path()

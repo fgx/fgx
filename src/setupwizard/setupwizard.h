@@ -23,6 +23,8 @@ public:
 	QWizardPage *terraSyncPage;
 	QWizardPage *finishPage;
 
+
+	void nextId();
 signals:
 
 public slots:

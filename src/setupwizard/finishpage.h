@@ -1,6 +1,9 @@
 #ifndef FINISHPAGE_H
 #define FINISHPAGE_H
 
+#include<QtDebug>
+
+
 #include <QWizardPage>
 #include <QCheckBox>
 #include <QLineEdit>
@@ -30,7 +33,7 @@ public:
 	QLabel *lblImportAirports;
 	QLabel *lblImportAicraft;
 
-
+	void initializePage();
 signals:
 
 public slots:

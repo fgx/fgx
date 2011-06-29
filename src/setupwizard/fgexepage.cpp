@@ -81,7 +81,8 @@ FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
 	layoutExe->setColumnStretch(1,6);
 	layoutExe->setColumnStretch(2,0);
 
-
+	registerField("fgfs_use_default", radioDefault);
+	registerField("fgfs_path", txtFgfs);
 
 }
 
