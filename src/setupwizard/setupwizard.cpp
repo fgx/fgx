@@ -29,9 +29,6 @@ SetupWizard::SetupWizard(MainObject *mOb, QWidget *parent) :
 }
 
 
-void SetupWizard::accept(){
-
-}
 
 
 

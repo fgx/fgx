@@ -84,7 +84,7 @@ public slots:
 	void save_settings();
 	void initialize();
 	bool validate();
-	void on_setup_wizard();
+
 
 	//* Ouput Buttons
 	void on_command_preview();
@@ -93,7 +93,7 @@ public slots:
 
 	//* Widget Events
 	void on_tab_changed(int);
-	void on_group_box_terrasync_clicked();
+	//void on_group_box_terrasync_clicked();
 
 
 };

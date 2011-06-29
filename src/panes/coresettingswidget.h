@@ -45,21 +45,24 @@ public:
 	XGroupHBox *groupBoxFgFs;
 	XGroupHBox *groupBoxFgRoot;
 
-	QRadioButton *radioFgUseDefault;
-	QRadioButton *radioFgUseCustom;
-	QLineEdit *txtFgFs;
-	QLineEdit *txtFgRoot;
-	QLabel *FgRootPathLabel;
-	QLabel *FgFsPathLabel;
+	//QRadioButton *radioFgUseDefault;
+	//QRadioButton *radioFgUseCustom;
+	QLabel *labelFgFsPath;
+	QLabel *labelFgRootPath;
+	QLabel *labelFgFsInfo;
+	QLabel *labelFgRootInfo;
 
-	XGroupHBox *groupBoxTerraSync;
-	QLineEdit *txtTerraSyncPath;
+	QLabel *labelTerraSyncInfo;
+	QLabel *labelTerraSyncPath;
+
+	//XGroupHBox *groupBoxTerraSync;
+	//QLineEdit *txtTerraSyncPath;
 
 
 	//* Functions
 	void initialize();
 	QStringList get_args();
-	void load_settings();
+
 	void save_settings();
 
 
@@ -74,12 +77,13 @@ public slots:
 
 	void on_radio_fg_path();
 
-	void on_button_fgfs_path();
-	void on_button_fgroot_path();
-	void on_button_terrasync_path();
+	//void on_button_fgfs_path();
+	//void on_button_fgroot_path();
+	//void on_button_terrasync_path();
 
-	void show_settings_dialog();
-
+	//void show_settings_dialog();
+	void show_setup_wizard();
+	void load_settings();
 };
 
 #endif // CORESETTINGSWIDGET_H

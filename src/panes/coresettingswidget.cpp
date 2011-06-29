@@ -1,4 +1,7 @@
 
+
+#include <QtDebug>
+
 #include <QtCore/QProcess>
 
 #include <QtGui/QVBoxLayout>
@@ -9,7 +12,9 @@
 #include <QtGui/QFileDialog>
 
 #include "panes/coresettingswidget.h"
-#include "settings/settingsdialog.h"
+//#include "settings/settingsdialog.h"
+#include "xwidgets/xgroupboxes.h"
+
 
 CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
@@ -97,6 +102,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
 	layoutPaths->addWidget(grpFgPaths);
 
+	/*
 	buttonGroupPaths = new QButtonGroup(this);
 	buttonGroupPaths->setExclusive(true);
 	connect(buttonGroupPaths, SIGNAL(buttonClicked(int)), this, SLOT(on_radio_fg_path()));
@@ -104,48 +110,79 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	radioFgUseDefault = new QRadioButton(tr("Use Default"));
 	grpFgPaths->addWidget(radioFgUseDefault);
 	buttonGroupPaths->addButton(radioFgUseDefault, 0);
+	radioFgUseDefault->hide() ; // ### TODO ###
 
 	radioFgUseCustom = new QRadioButton(tr("Use Custom"));
 	grpFgPaths->addWidget(radioFgUseCustom);
 	buttonGroupPaths->addButton(radioFgUseCustom, 1);
-
+	radioFgUseCustom->hide() ; // ### TODO ###
+	*/
 
 	//----------------------------------------------
 	//** FlightGear executable
-	
-	QLabel *FgFsPathLabel = new QLabel(tr("Custom FlightGear Executable:"));
-	FgFsPathLabel->setStyleSheet("width: 200px; font-size: 11px; text-transform: uppercase; margin-top: 15px;");
-	grpFgPaths->addWidget(FgFsPathLabel, 1);
-	txtFgFs = new QLineEdit();
+	XGroupVBox *grpFgFs = new XGroupVBox("FlightGear Executable");
+	grpFgPaths->addWidget(grpFgFs);
+
+	labelFgFsInfo = new QLabel(tr("Custom FlightGear Executable:"));
+	labelFgFsInfo->setStyleSheet("width: 200px; font-size: 11px;  ");
+	grpFgFs->addWidget(labelFgFsInfo, 1);
+
+	labelFgFsPath = new QLabel(" ");
 	//txtFgFs->setMargin(4);
-	txtFgFs->setStyleSheet("background-image: url(:images/background_yellow); font-size: 10px;");
-	grpFgPaths->addWidget(txtFgFs);
+	labelFgFsPath->setStyleSheet("background-image: url(:images/background_yellow);  padding: 3px;");
+	grpFgFs->addWidget(labelFgFsPath);
 
 
 	//----------------------------------------------
 	//** Data Directory
-	
-	QLabel *FgRootPathLabel = new QLabel(tr("Custom Data Directory:"));
-	FgRootPathLabel->setStyleSheet("font-size: 11px; text-transform: uppercase; margin-top: 15px;");
-	grpFgPaths->addWidget(FgRootPathLabel, 1);
-	txtFgRoot = new QLineEdit();
+	XGroupVBox *grpFgRoot = new XGroupVBox("FlightGear Data");
+	grpFgPaths->addWidget(grpFgRoot);
+
+	labelFgRootInfo = new QLabel(tr("Custom Data Directory:"));
+	labelFgRootInfo->setStyleSheet("font-size: 11px;");
+	grpFgRoot->addWidget(labelFgRootInfo, 1);
+
+	labelFgRootPath = new QLabel(" ");
 	//txtFgRoot->setMargin(4);
-	txtFgRoot->setStyleSheet("background-image: url(:images/background_yellow); font-size: 10px;");
-	grpFgPaths->addWidget(txtFgRoot);
+	labelFgRootPath->setStyleSheet("background-image: url(:images/background_yellow);  padding: 3px;");
+	grpFgRoot->addWidget(labelFgRootPath);
 
 	layoutPaths->addStretch(20);
 	
 	
 	//----------------------------------------------
+	//** Terrasync Directory
+	XGroupVBox *grpTerraSync = new XGroupVBox("TerraSync ");
+	grpFgPaths->addWidget(grpTerraSync);
+
+
+	labelTerraSyncInfo = new QLabel(tr(""));
+	labelTerraSyncInfo->setStyleSheet("font-size: 11px;");
+	grpTerraSync->addWidget(labelTerraSyncInfo, 1);
+
+	labelTerraSyncPath = new QLabel(" ");
+	//txtFgRoot->setMargin(4);
+	labelTerraSyncPath->setStyleSheet("background-image: url(:images/background_yellow);  padding: 3px;");
+	grpTerraSync->addWidget(labelTerraSyncPath);
+
+	//----------------------------------------------
 	//** Set Path Button
+	/*
 	QPushButton *buttonSetPaths = new QPushButton();
 	buttonSetPaths->setText(tr("Set Paths"));
 	grpFgPaths->addWidget(buttonSetPaths, 1);
 	connect(buttonSetPaths, SIGNAL(clicked()), this, SLOT(show_settings_dialog()));
-
+	buttonSetPaths->hide() ; // ### TODO ###
+	*/
+	QPushButton *buttonShowWizard = new QPushButton();
+	buttonShowWizard->setText("Setup Wizard");
+	buttonShowWizard->setIcon(QIcon(":/icon/wizard"));
+	grpFgPaths->addWidget(buttonShowWizard, 1);
+	connect(buttonShowWizard, SIGNAL(clicked()), this, SLOT(show_setup_wizard()));
 
 	//===========================================================================
 	//* TerraSync
+	/*
 	QVBoxLayout *layoutTerraCol = new QVBoxLayout();
 	mainLayout->addLayout(layoutTerraCol, 2);
 
@@ -161,6 +198,8 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	groupBoxTerraSync->addWidget(buttonSetTerraPath, 1);
 	connect(buttonSetTerraPath, SIGNAL(clicked()), this, SLOT(on_button_terrasync_path()));
 	layoutTerraCol->addStretch(20);
+	*/
+	connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
 
 }
 
@@ -173,7 +212,7 @@ void CoreSettingsWidget::on_checkbox_show_mp_map(){
 //====================================================
 //* Load Settings
 void CoreSettingsWidget::load_settings(){
-
+	qDebug() << "LAOD SETTINGS";
 	//* Callsign
 	txtCallSign->setText( mainObject->settings->value("callsign").toString() );
 
@@ -193,21 +232,39 @@ void CoreSettingsWidget::load_settings(){
 	on_checkbox_show_mp_map();
 
 	//* Paths
+	/*
 	if(mainObject->settings->value("USE_DEFAULT_PATHS", 1).toBool()){
 		radioFgUseDefault->setChecked(true);
 	}else{
 		radioFgUseCustom->setChecked(true);
 	}
-	txtFgFs->setText(mainObject->settings->fgfs_path());
-	txtFgRoot->setText(mainObject->settings->fg_root());
+	*/
+	qDebug() << mainObject->settings->value("use_default_fgfs").toBool() << "=fgfs";
+	if(mainObject->settings->value("use_default_fgfs").toBool()){
+		labelFgFsInfo->setText("Using Default Executable Path");
+	}else{
+		labelFgFsInfo->setText("Using Custom Executable Path");
+	}
+	labelFgFsPath->setText(mainObject->settings->fgfs_path());
+
+	qDebug() << mainObject->settings->value("use_default_fgroot").toBool() << "=fgroot";
+	if(mainObject->settings->value("use_default_fgroot").toBool()){
+		labelFgRootInfo->setText("Using Default FG_ROOT");
+	}else{
+		labelFgRootInfo->setText("Using Custom FG_ROOT Path");
+	}
+	labelFgRootPath->setText(mainObject->settings->fg_root());
 
 
 
-	groupBoxTerraSync->setChecked(mainObject->settings->value("use_terrasync").toBool());
-	if (mainObject->settings->value("terrasync_path").toBool()) {
-		txtTerraSyncPath->setText( mainObject->settings->value("terrasync_path").toString() );
+	//groupBoxTerraSync->setChecked(mainObject->settings->value("use_terrasync").toBool());
+	labelTerraSyncInfo->setText( mainObject->settings->use_terrasync()
+								 ? "Using Terrasync" : "Using Default scenery"
+								 );
+	if (mainObject->settings->value("use_terrasync").toBool()) {
+		labelTerraSyncPath->setText( mainObject->settings->value("terrasync_path").toString() );
 	} else {
-		txtTerraSyncPath->setText("Please set path!");
+		labelTerraSyncPath->setText("--");
 	}
 
 
@@ -237,10 +294,10 @@ void CoreSettingsWidget::save_settings(){
 	mainObject->settings->setValue("mpmap", comboMpMapServer->currentIndex());
 
 	//* Paths
-	mainObject->settings->setValue("USE_DEFAULT_PATHS", radioFgUseDefault->isChecked());
+	//mainObject->settings->setValue("USE_DEFAULT_PATHS", radioFgUseDefault->isChecked());
 
-	mainObject->settings->setValue("use_terrasync", groupBoxTerraSync->isChecked());
-	mainObject->settings->setValue("terrasync_path", txtTerraSyncPath->text());
+	//#mainObject->settings->setValue("use_terrasync", groupBoxTerraSync->isChecked());
+	//mainObject->settings->setValue("terrasync_path", txtTerraSyncPath->text());
 
 }
 
@@ -278,20 +335,16 @@ QStringList CoreSettingsWidget::get_args(){
 
 
 	//** Terrasync/Multiplayermap - send on socket
-	if (groupBoxTerraSync->isChecked()) {
-		args << QString("--fg-scenery=").append(txtTerraSyncPath->text()).append(":").append(mainObject->settings->scenery_path());
-	}
-	
-	if (groupBoxTerraSync->isChecked()) {
+	if (mainObject->settings->use_terrasync()) {
+		args << QString("--fg-scenery=").append(mainObject->settings->terrasync_sync_path()).append(":").append(mainObject->settings->scenery_path());
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
+	}else{
+
+		/* This is actually not needed because fgroot finds scenery path by default,
+		but it is needed in case terrasync scenery is active, then we need both paths with ":" separated, hmpf */
+		//args << QString("--fg-scenery=").append(mainObject->settings->scenery_path());
 	}
 	
-	
-	/* This is actually not needed because fgroot finds scenery path by default, 
-	but it is needed in case terrasync scenery is active, then we need both paths with ":" separated, hmpf */
-	else{
-		args << QString("--fg-scenery=").append(mainObject->settings->scenery_path());
-	}
 
 	return args;
 }
@@ -348,14 +401,15 @@ void CoreSettingsWidget::load_joysticks(){
 
 
 void CoreSettingsWidget::on_radio_fg_path(){
-	bool use_custom = buttonGroupPaths->checkedId() == 1;
-	txtFgFs->setEnabled(use_custom);
-	txtFgRoot->setEnabled(use_custom);
+	//bool use_custom = buttonGroupPaths->checkedId() == 1;
+	//txtFgFs->setEnabled(use_custom);
+	//txtFgRoot->setEnabled(use_custom);
 }
 
 
 //================================================================================
 //** Path buttons Clicked - Opens the path dialog
+/*
 void CoreSettingsWidget::on_button_terrasync_path(){
 
 	QString filePath = QFileDialog::getExistingDirectory(this,
@@ -366,14 +420,14 @@ void CoreSettingsWidget::on_button_terrasync_path(){
 		txtTerraSyncPath->setText(filePath);
 	}
 
-	//* Need to write out the terrasync dir as its used other places ;-(
+	// Need to write out the terrasync dir as its used other places ;-(
 	mainObject->settings->setValue("terrasync_path", txtTerraSyncPath->text());
 	mainObject->settings->sync();
 }
+*/
 
 
-
-
+/*
 void CoreSettingsWidget::on_button_fgfs_path(){
 	show_settings_dialog();
 }
@@ -382,16 +436,23 @@ void CoreSettingsWidget::on_button_fgfs_path(){
 void CoreSettingsWidget::on_button_fgroot_path(){
 	show_settings_dialog();
 }
-
+*/
 
 //===============================================================
 // Settings Dialog
+/*
 void CoreSettingsWidget::show_settings_dialog(){
 	SettingsDialog *settingsDialog = new SettingsDialog(mainObject);
 	if(settingsDialog->exec()){
 		txtFgFs->setText(mainObject->settings->fgfs_path());
 		txtFgRoot->setText(mainObject->settings->fg_root());
 	}
+}
+*/
+//===============================================================
+// Settings Wizard
+void CoreSettingsWidget::show_setup_wizard(){
+	mainObject->show_setup_wizard();
 }
 
 

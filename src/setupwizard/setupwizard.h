@@ -26,7 +26,7 @@ public:
 	QWizardPage *completedPage;
 
 
-	void accept();
+
 signals:
 
 public slots:

@@ -135,7 +135,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//* Core Settings
 	coreSettingsWidget = new CoreSettingsWidget(mainObject);
 	tabWidget->addTab(coreSettingsWidget, tr("Core Settings"));
-	connect(coreSettingsWidget->groupBoxTerraSync, SIGNAL(clicked()), this, SLOT(on_group_box_terrasync_clicked()));
+	//connect(coreSettingsWidget->groupBoxTerraSync, SIGNAL(clicked()), this, SLOT(on_group_box_terrasync_clicked()));
 
 	//* Time / Weather Widget
 	timeWeatherWidget = new TimeWeatherWidget(mainObject);
@@ -219,10 +219,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 			);
 	//bottomActionLayout->addStretch(10);
 	
-	QPushButton *buttWizz = new QPushButton();
-	buttWizz->setText("Wizard");
-	bottomActionLayout->addWidget(buttWizz);
-	connect(buttWizz, SIGNAL(clicked()),this, SLOT(on_setup_wizard()));
+
 	// Bottom Statusbar 
 	/*statusBar = new StatusBar();
 	statusBar->setMinimumHeight(30);
@@ -260,7 +257,7 @@ void LauncherWindow::initialize(){
 	//* First load the settings, and check the "paths" to fg_root and fg are sane
 	load_settings();
 	if(!mainObject->settings->paths_sane()){
-		coreSettingsWidget->show_settings_dialog();
+		mainObject->show_setup_wizard();
 	}
 
 	//* Paths are sane so we can initialize;
@@ -294,10 +291,10 @@ void LauncherWindow::on_start_fgfs_clicked() {
 
 	//* Start TerraSync
 	
-	if (coreSettingsWidget->groupBoxTerraSync->isChecked()) {
+	if (mainObject->settings->use_terrasync()) {
 		QStringList terraargs;
-		QString terra_sync_path = coreSettingsWidget->txtTerraSyncPath->text();
-		terraargs << "-p" << "5505" << "-S" << "-d" << terra_sync_path; 
+		//QString terra_sync_path = coreSettingsWidget->txtTerraSyncPath->text();
+		terraargs << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_path();
 		//for debugging only: terraargs << "-p" << "5505" << "-S" << "-d" << "/Documents/TerrasyncScenery";
 		QString terra_command_line = mainObject->settings->fgfs_path();
 		terra_command_line.chop(4);
@@ -519,12 +516,14 @@ bool LauncherWindow::validate(){
 	}
 	outLog("*** FGx reports: Network settings ok. ***");
 
+	/*
 	if(coreSettingsWidget->groupBoxTerraSync->isChecked() && coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget) );
 		coreSettingsWidget->txtTerraSyncPath->setFocus();
 		messageBox->showWindowMessage("Validation failed:<BR> Please set a path vor Terrasync Scenery!");
 		return false;
 	}
+	*/
 	outLog("*** FGx reports: ALL SETTINGS VALID. ***");
 	return true;
 }
@@ -560,12 +559,13 @@ void LauncherWindow::on_quit(){
 
 }
 
-
+/*
 void LauncherWindow::on_group_box_terrasync_clicked(){
 	mainObject->settings->setValue("use_terrasync", coreSettingsWidget->groupBoxTerraSync->isChecked());
 	mainObject->settings->sync();
 	exeTerraSync->setEnabled(coreSettingsWidget->groupBoxTerraSync->isChecked());
 }
+*/
 
 // window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
@@ -609,9 +609,3 @@ void LauncherWindow::on_action_open_url(QAction *action){
 }
 
 
-void LauncherWindow::on_setup_wizard(){
-
-	SetupWizard *setupWizz = new SetupWizard(mainObject);
-	setupWizz->exec();
-
-}

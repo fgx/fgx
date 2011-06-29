@@ -18,7 +18,7 @@
 
 #include "settings/settingsdialog.h"
 #include "utilities/utilities.h"
-
+#include "setupwizard/setupwizard.h"
 
 MainObject::MainObject(QObject *parent) :
     QObject(parent)
@@ -183,3 +183,11 @@ void MainObject::on_tray_icon(QSystemTrayIcon::ActivationReason reason){
 }
 
 
+
+void MainObject::show_setup_wizard(){
+	SetupWizard *setupWizard = new SetupWizard(this);
+	if(setupWizard->exec()){
+		qDebug() << "closed";
+		emit(reload_paths());
+	}
+}

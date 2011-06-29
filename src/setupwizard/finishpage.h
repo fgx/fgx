@@ -9,6 +9,7 @@
 #include <QLineEdit>
 #include <QToolButton>
 #include <QLabel>
+#include <QCheckBox>
 
 
 #include "xobjects/mainobject.h"
@@ -30,8 +31,8 @@ public:
 	QLabel *lblUsingTerraSync;
 	QLabel *lblTerraSyncPath;
 
-	QLabel *lblImportAirports;
-	QLabel *lblImportAicraft;
+	QCheckBox *checkBoxImportAirports;
+	QCheckBox *checkBoxImportAicraft;
 
 	void initializePage();
 	bool validatePage();

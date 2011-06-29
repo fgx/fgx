@@ -45,7 +45,7 @@ FinishPage::FinishPage(MainObject *mob, QWidget *parent) :
 	grpFgRoot->addWidget(lblFgRootPath);
 
 
-
+	//= Terrasync
 	XGroupVBox *grpTerrasync = new XGroupVBox("TerraSync");
 	mainLayout->addWidget(grpTerrasync);
 	lblUsingTerraSync = new QLabel();
@@ -53,13 +53,17 @@ FinishPage::FinishPage(MainObject *mob, QWidget *parent) :
 	lblTerraSyncPath = new QLabel();
 	grpTerrasync->addWidget(lblTerraSyncPath);
 
-
+	//= Import Cache Data
 	XGroupVBox *grpImports = new XGroupVBox("Import Cache Data");
 	mainLayout->addWidget(grpImports);
-	lblImportAicraft = new QLabel();
-	grpImports->addWidget(lblImportAicraft);
-	lblImportAicraft = new QLabel();
-	grpImports->addWidget(lblImportAicraft);
+
+	checkBoxImportAirports = new QCheckBox("Import Airports");
+	grpImports->addWidget(checkBoxImportAirports);
+	checkBoxImportAirports->setChecked(true);
+
+	checkBoxImportAicraft = new QCheckBox("Import Aircraft");
+	grpImports->addWidget(checkBoxImportAicraft);
+	checkBoxImportAicraft->setChecked(true);
 
 }
 
@@ -69,12 +73,6 @@ FinishPage::FinishPage(MainObject *mob, QWidget *parent) :
 //= initializePage
 void FinishPage::initializePage()
 {
-	//radioDefault->setChecked( mainObject->settings->value("USE_DEFAULT_FG_ROOT", "1").toBool() );
-	//lblDefault->setText( QString("Default: ").append(mainObject->settings->default_fg_root()) );
-	qDebug() << field("use_default");
-	qDebug() << field("fgfs_path");
-	qDebug() << field("fgroot_use_default");
-	qDebug() << field("fgroot_path");
 
 	if(field("use_default_fgfs").toBool()){
 		lblFgExeUsingDefault->setText("Using Default Path");
@@ -100,22 +98,6 @@ void FinishPage::initializePage()
 		lblTerraSyncPath->setText("");
 	}
 	return;
-	//** chack whether we need to import airports
-	/*
-	if(!QFile::exists(mainObject->settings->data_file("aiports.txt"))){
-		lblImportAirports->setText("Importing airports");
-	}else{
-		if(mainObject->settings->value("use_default_fgroot").toBool() != field("use_default_fgroot").toBool()){
-			lblImportAirports->setText("Importing airports");
-		}else{
-			// TODO check if path changed
-		}
-
-		//}
-	}
-
-	lblImportAicraft->setText("Importing aircraft");
-	*/
 }
 
 
@@ -124,7 +106,6 @@ void FinishPage::initializePage()
 bool FinishPage::validatePage()
 {
 
-	qDebug() << "Accept" << field("use_terrasync");
 
 	mainObject->settings->setValue("use_default_fgfs", field("use_default_fgfs"));
 	mainObject->settings->setValue("fgfs_custom_path", field("fgfs_custom_path"));
@@ -138,7 +119,11 @@ bool FinishPage::validatePage()
 
 	mainObject->settings->sync();
 
-	AirportsData::import(this, mainObject, true);
-	AircraftData::import(this, mainObject);
+	if(checkBoxImportAirports->isChecked()){
+		AirportsData::import(this, mainObject, true);
+	}
+	if(checkBoxImportAicraft->isChecked()){
+		AircraftData::import(this, mainObject);
+	}
 	return true;
 }

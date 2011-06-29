@@ -53,6 +53,7 @@ public:
 
 signals:
 	void show_settings(int);
+	void reload_paths();
 
 public slots:
 
@@ -67,7 +68,7 @@ public slots:
 	void on_settings(int);
 	void on_properties_browser();
     void on_quit();
-
+	void show_setup_wizard();
 };
 
 #endif // MAINOBJECT_H
