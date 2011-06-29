@@ -46,7 +46,8 @@ HEADERS += xobjects/xsettings.h \
     setupwizard/finishpage.h \
     airports/airportsdata.h \
     aircraft/aircraftdata.h \
-    setupwizard/completedpage.h
+    setupwizard/completedpage.h \
+    panes/viewlogwidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -78,7 +79,8 @@ SOURCES += main.cpp \
     setupwizard/finishpage.cpp \
     airports/airportsdata.cpp \
     aircraft/aircraftdata.cpp \
-    setupwizard/completedpage.cpp
+    setupwizard/completedpage.cpp \
+    panes/viewlogwidget.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
 CONFIG += console

@@ -14,8 +14,10 @@
 #include "xobjects/xsettings.h"
 //#include "launcher/launcherwindow.h" // << This included "mainobject.h" also !!
 #include "mpmap/mpmapwidget.h"
+#include "panes/viewlogwidget.h"
 
 class MpMapWidget;
+class ViewLogWidget;
 
 class MainObject : public QObject
 {
@@ -25,8 +27,7 @@ public:
     ~MainObject();
 	
     //** Objects
-   // TelnetSlave *telnet;
-	//QSqlDatabase db;
+
     XSettings *settings;
 
 	int launcher_flag;
@@ -34,7 +35,7 @@ public:
 	MpMapWidget *mpMapWidget;
 	//LauncherWindow *launcherWindow;
 	//PropsTreeWidget *propertiesTree;
-
+	ViewLogWidget *viewLogWidget;
 
     //* Widgets
     QSystemTrayIcon *trayIcon;
@@ -44,7 +45,8 @@ public:
 
     QAction *actionLauncher;
     QAction *actionMpMap;
-    QAction *actionSettings;
+	QAction *actionSetupWizard;
+	QAction *actionViewLog;
 
     QAction *actionQuit;
 
@@ -69,6 +71,7 @@ public slots:
 	void on_properties_browser();
     void on_quit();
 	void show_setup_wizard();
+	void on_view_log();
 };
 
 #endif // MAINOBJECT_H

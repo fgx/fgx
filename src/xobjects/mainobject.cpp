@@ -33,6 +33,7 @@ MainObject::MainObject(QObject *parent) :
 	launcher_flag = false;
 
 	mpMapWidget = 0;
+	viewLogWidget = 0;
 
     //***********************************
     //** Tray Icon
@@ -66,15 +67,25 @@ MainObject::MainObject(QObject *parent) :
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));
 
 
-    //*** Settings
-    QAction *actionSettings= new QAction(this);
-    actionSettings->setIcon(QIcon(":/icons/settings"));
-    actionSettings->setText(tr("Path and database settings"));
-	actionSettings->setIconVisibleInMenu(true);
-    popupMenu->addAction(actionSettings);
-    connect(actionSettings, SIGNAL(triggered()),
-            this, SLOT(on_settings())
+	//*** Settings
+	QAction *actionSetupWizard= new QAction(this);
+	actionSetupWizard->setIcon(QIcon(":/icons/wizard"));
+	actionSetupWizard->setText(tr("Setup Wizard..."));
+	actionSetupWizard->setIconVisibleInMenu(true);
+	popupMenu->addAction(actionSetupWizard);
+	connect(actionSetupWizard, SIGNAL(triggered()),
+			this, SLOT(show_setup_wizard())
     );
+
+	//*** Settings
+	QAction *actionViewLog= new QAction(this);
+	actionViewLog->setIcon(QIcon(":/icons/log"));
+	actionViewLog->setText(tr("View Log..."));
+	actionViewLog->setIconVisibleInMenu(true);
+	popupMenu->addAction(actionViewLog);
+	connect(actionViewLog, SIGNAL(triggered()),
+			this, SLOT(on_view_log())
+	);
 
     popupMenu->addSeparator();
 
@@ -190,4 +201,9 @@ void MainObject::show_setup_wizard(){
 		qDebug() << "closed";
 		emit(reload_paths());
 	}
+}
+
+void MainObject::on_view_log(){
+	viewLogWidget = new ViewLogWidget(this);
+	viewLogWidget->show();
 }

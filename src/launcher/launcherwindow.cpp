@@ -22,6 +22,7 @@
 #include "utilities/utilities.h"
 #include "utilities/messagebox.h"
 
+
 #include "setupwizard/setupwizard.h"
 
 
@@ -163,11 +164,15 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	tabWidget->addTab( advancedOptionsWidget, tr("Advanced Options"));
 
 
+
 	//* Output + Preview
 	outputPreviewWidget = new OutputPreviewWidget(mainObject);
 	tabWidget->addTab( outputPreviewWidget, tr("Output / Preview"));
 	connect(outputPreviewWidget->buttonCommandPreview, SIGNAL(clicked()), this, SLOT(on_command_preview()));
 	connect(outputPreviewWidget->buttonCommandHelp, SIGNAL(clicked()), this, SLOT(on_command_help()));
+
+
+
 
 	mainLayout->addSpacing(10);
 
