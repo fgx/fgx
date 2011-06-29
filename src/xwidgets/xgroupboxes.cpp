@@ -1,4 +1,4 @@
-#include "xgroupboxes.h"
+#include "xwidgets/xgroupboxes.h"
 
 //======================================================
 /* Extended groupBox with a Vertical Layout */

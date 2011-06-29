@@ -42,7 +42,8 @@ HEADERS += xobjects/xsettings.h \
     setupwizard/fgrootpage.h \
     setupwizard/fgexepage.h \
     setupwizard/setupwizard.h \
-    setupwizard/terrasyncpage.h
+    setupwizard/terrasyncpage.h \
+    setupwizard/finishpage.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -70,7 +71,8 @@ SOURCES += main.cpp \
     setupwizard/setupwizard.cpp \
     setupwizard/fgrootpage.cpp \
     setupwizard/fgexepage.cpp \
-    setupwizard/terrasyncpage.cpp
+    setupwizard/terrasyncpage.cpp \
+    setupwizard/finishpage.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
 CONFIG += console
