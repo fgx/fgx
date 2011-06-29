@@ -17,6 +17,15 @@
 #define UNZIP_READ_BUFFER (256*1024)
 
 
+/*! \class XSettings
+ * \brief The XSettings is an extended QSetttings, but also includes most to the FGx configuration.
+ *
+ * The general idea of the class is to  provide one central place to access settings. It is
+ * for this reason that methods are created to hide some of the completities, such as aircraft_path()
+ */
+
+
+
 XSettings::XSettings(QObject *parent) :
     QSettings(parent)
 {
@@ -34,6 +43,12 @@ QString XSettings::fgx_path(){
 //===========================================================================
 //** fgfs Executable Full Path
 //===========================================================================
+/** \brief Path to FlightGear Executable
+ *
+ * Returns the path to the fg executable. If the default path
+ * is selected, then that is returned; otherwise the custom selected executable
+ * \return The absolute path.
+ */
 QString XSettings::fgfs_path(){
 	if(value("use_default_fgfs", '1').toBool()){
 		return fgfs_path_default();
@@ -41,6 +56,9 @@ QString XSettings::fgfs_path(){
 	return value("fgfs_custom_path", "").toString();
 }
 
+/** \brief Platform specific default path for the fgfs executable
+ *
+ */
 QString XSettings::fgfs_path_default(){
 
 	if(runningOs() == MAC){
@@ -57,9 +75,13 @@ QString XSettings::fgfs_path_default(){
 	return QString("UNKNOW OS in default_fgfs_path()");
 }
 
-//===========================================================================
-//** fg_root()
-//===========================================================================
+
+/** \brief Path to FG_ROOT
+ *
+ * Returns the path to the FG_ROOT. If the default install
+ * is selected, then that is returned; otherwise the custom selected fg_data path.
+ * \return The absolute path.
+ */
 QString XSettings::fg_root(){
 	if(value("use_default_fgroot", '1').toBool()){
 		return this->fg_root_default();
@@ -67,11 +89,25 @@ QString XSettings::fg_root(){
 	return value("fgroot_custom_path", "").toString();
 }
 
+/** \brief Path to FG_ROOT with appended path
+ *
+ * Returns the path to the FG_ROOT. If the default install
+ * is selected, then that is returned, otherwise the custom selected fg_data path.
+ * The file is appended with the append_path
+ * \return The absolute path.
+ */
+
 QString XSettings::fg_root(QString append_path){
     return this->fg_root().append(append_path);
 }
 
+
+
 //= Return rhe default path to the FG_ROOT = fgdata directory
+/** \brief Platform specific default path for the FG_ROOT dir
+ *
+  * \return The absolute path to FG_ROOT
+ */
 QString XSettings::fg_root_default(){
 
 	if(runningOs() == MAC){
@@ -90,6 +126,10 @@ QString XSettings::fg_root_default(){
 //===========================================================================
 //** Paths Sane
 //===========================================================================
+/** \brief Checks whether the executablem FG_ROOT paths are sane.
+ *
+ * \return true if sane
+ */
 bool XSettings::paths_sane(){
 	if(!QFile::exists(fgfs_path())){
 		return false;
@@ -104,11 +144,18 @@ bool XSettings::paths_sane(){
 //===========================================================================
 //** Aircraft Path
 //===========================================================================
+/** \brief The path to the /Aircraft directory
+ *
+  * \return absolute path.
+ */
 QString XSettings::aircraft_path(){
 	return fg_root().append("/Aircraft");
 	outLog("*** FGx settings: Aircraft path: " + fg_root().append("/Aircraft") + " ***");
 }
-
+/** \brief Path to the /Aircraft directory with a dir appended.
+ *
+ * \return absolute path.
+ */
 QString XSettings::aircraft_path(QString dir){
 	return fg_root().append("/Aircraft/").append(dir);
 	outLog("*** FGx settings: Aircraft path: " + fg_root().append("/Aircraft/").append(dir) + " ***");
@@ -118,6 +165,10 @@ QString XSettings::aircraft_path(QString dir){
 //===========================================================================
 //** Airports path
 //===========================================================================
+/** \brief Return the absolute path to the /Airports directory
+ *
+ * \return If TerraSync is enabled, then returns a terrasync folder, otherwise the default.
+ */
 QString XSettings::airports_path(){
 
 	//* Using terrasync
@@ -139,6 +190,11 @@ QString XSettings::airports_path(){
 }
 
 //** Apt Dat
+/** \brief Return the absolute path to the /apt.dat.gz file
+ *
+ * The file is uncompress to the temp_dir()/apt.dat is a gz is found
+ * \return The absolute path to unpacked apt.dat
+ */
 QString XSettings::apt_dat_file(){
 	QString aptdatloc(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat"));
 	if( QFile::exists(aptdatloc) == false){
@@ -151,6 +207,10 @@ QString XSettings::apt_dat_file(){
 //===========================================================================
 //** Scenery Path - TODO x/win
 //===========================================================================
+/** \brief Returns the absolute path to the /Scenery file
+ *
+ * \return The absolute path.
+ */
 QString XSettings::scenery_path(){
 
 	return fg_root("/Scenery");
@@ -159,9 +219,17 @@ QString XSettings::scenery_path(){
 //===========================================================================
 //** TerraSync
 //===========================================================================
+/** \brief  Using terrasync for scenery
+ *
+ * \return true if using terrasync
+ */
 bool XSettings::use_terrasync(){
 	return value("use_terrasync").toBool();
 }
+/** \brief terrasync executable
+ *
+  * \return path to terrasync executable
+ */
 QString XSettings::terrasync_exe_path(){
 	if (runningOs() == MAC) {
 		//* points to terrasync binary in app bundle
@@ -172,7 +240,10 @@ QString XSettings::terrasync_exe_path(){
 	}
 	return QString("TODO - terrasync");
 }
-
+/** \brief terrasync data path
+ *
+  * \return path to where terrasync will store files downloaded.
+ */
 QString XSettings::terrasync_sync_data_path(){
 	return value("terrasync_path").toString();
 }	
@@ -182,9 +253,19 @@ QString XSettings::terrasync_sync_data_path(){
 //===========================================================================
 //** temp
 //===========================================================================
+/** \brief location if temp directoty , os specific
+ *
+ * Shortcut method for Qt's storageLocation()
+ * \return Absolute path
+ */
 QString XSettings::temp_dir(){
 	return QDir(QDesktopServices::storageLocation(QDesktopServices::TempLocation)).absolutePath();
 }
+/** \brief location if temp directoty , os specific with appended file/path
+ *
+ * Shortcut method for Qt's storageLocation()
+ * \return Absolute path with appended paths.
+ */
 QString XSettings::temp_dir(QString append_path){
 	return temp_dir().append(append_path);
 }
@@ -193,12 +274,19 @@ QString XSettings::temp_dir(QString append_path){
 //===========================================================================
 //** Save/Restore Window
 //===========================================================================
+/** \brief Saves a window position
+ *
+ */
 void XSettings::saveWindow(QWidget *widget){
 	setValue( _windowName(widget), QVariant(widget->saveGeometry()) );
 }
+/** \brief Restores a window position
+ *
+ */
 void XSettings::restoreWindow(QWidget *widget){
 	widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
 }
+
 QString XSettings::_windowName(QWidget *widget){
 	QString key_name = "window/";
 	key_name.append(widget->property("settings_namespace").toString());
@@ -209,6 +297,10 @@ QString XSettings::_windowName(QWidget *widget){
 //===========================================================================
 //** OS detection
 //===========================================================================
+/** \brief What OS is running
+ *
+ * \return a OS enum value
+ */
 int XSettings::runningOs() {
     #ifdef Q_WS_X11
 		return XSettings::LINUX;
@@ -257,7 +349,10 @@ QString XSettings::fgcom_exe_path(){
 //===========================================================================
 //** Data File eg airports.txt
 //===========================================================================
-
+/** \brief Path to a data file eg data_file("airports.txt")
+ *
+ * \return Absolute path to the file
+ */
 QString XSettings::data_file(QString file_name){
 	QString storedir = QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath();
 
@@ -409,7 +504,10 @@ void XSettings::uncompress(QString filename, QString destination)
 	
 }
 
-
+/** \brief Log File
+ *
+ * \return Absolute path to log file
+ */
 QString XSettings::log_file_path(){
 	if(runningOs() == WINDOWS){
 		return temp_dir("/fgx-log.txt");

@@ -46,7 +46,7 @@ public:
 
 	void saveWindow(QWidget *widget);
 	void restoreWindow(QWidget *widget);
-	QString _windowName(QWidget *widget);
+
 
 	QString fgcom_exe_path();
 	QString fgcom_port();
@@ -60,6 +60,10 @@ public:
 	void uncompress(QString filename, QString destination);
 
 	static QString log_file_path();
+
+
+private:
+	QString _windowName(QWidget *widget);
 
 signals:
 
