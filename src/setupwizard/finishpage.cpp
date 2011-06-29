@@ -49,8 +49,6 @@ FinishPage::FinishPage(MainObject *mob, QWidget *parent) :
 	grpTerrasync->addWidget(lblTerraSyncPath);
 
 
-
-
 }
 
 
@@ -65,6 +63,32 @@ void FinishPage::initializePage()
 	qDebug() << field("fgfs_path");
 	qDebug() << field("fgroot_use_default");
 	qDebug() << field("fgroot_path");
+
+	if(field("fgfs_use_default").toBool()){
+		lblFgExeUsingDefault->setText("Using Default Path");
+		lblFgExePath->setText(mainObject->settings->default_fgfs_path());
+	}else{
+		lblFgExeUsingDefault->setText("Using Custom Path");
+		lblFgExePath->setText(field("fgfs_path").toString());
+	}
+
+	if(field("fgroot_use_default").toBool()){
+		lblFgRootUsingDefault->setText("Using Default Data Path");
+		lblFgRootPath->setText(mainObject->settings->default_fg_root());
+	}else{
+		lblFgRootUsingDefault->setText("Using Custom Data Path");
+		lblFgRootPath->setText(field("fgroot_path").toString());
+	}
+
+	if(field("use_terrasync").toBool()){
+		lblUsingTerraSync->setText("Using Terrasync");
+		lblTerraSyncPath->setText(field("terrasync_path").toString());
+	}else{
+		lblUsingTerraSync->setText("No Terrasync");
+		lblTerraSyncPath->setText("");
+	}
+
+
 }
 
 
