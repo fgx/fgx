@@ -14,6 +14,8 @@
 #include <stdlib.h> // for getenv("TEMP")
 #endif
 
+#import "xobjects/xsettings.h"
+
 
 /*
     LOG FILE FUNCTIONS
@@ -49,6 +51,7 @@ bool util_createLogFile(QString file)
 
 bool util_setStdLogFile()
 {
+	/*
     QString dir;
     QString file;
     QString log;
@@ -67,7 +70,8 @@ bool util_setStdLogFile()
 #error Unknown OS - Add default log dir and file for this OS!
 #endif
    log = dir + "/" + file;
-   return util_createLogFile(log);
+   */
+	return util_createLogFile(XSettings::log_file_path());
 }
 
 // append to LOG file, after acquiring the mutext

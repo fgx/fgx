@@ -294,7 +294,7 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	if (mainObject->settings->use_terrasync()) {
 		QStringList terraargs;
 		//QString terra_sync_path = coreSettingsWidget->txtTerraSyncPath->text();
-		terraargs << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_path();
+		terraargs << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_data_path();
 		//for debugging only: terraargs << "-p" << "5505" << "-S" << "-d" << "/Documents/TerrasyncScenery";
 		QString terra_command_line = mainObject->settings->fgfs_path();
 		terra_command_line.chop(4);

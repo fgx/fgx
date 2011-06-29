@@ -21,8 +21,8 @@ public:
 	QString data_file(QString file_name);
 	QString apt_dat_file();
 
-	QString temp_dir();
-	QString temp_dir(QString append_path);
+	static QString temp_dir();
+	static QString temp_dir(QString append_path);
 
 	QString fgx_path();
 
@@ -54,10 +54,12 @@ public:
 	QString default_fgcom_no();
 	QString default_fgcom_port();
 
-	int runningOS();
+	static int runningOs();
 	bool paths_sane();
 	
 	void uncompress(QString filename, QString destination);
+
+	static QString log_file_path();
 
 signals:
 

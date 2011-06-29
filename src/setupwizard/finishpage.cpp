@@ -76,7 +76,7 @@ void FinishPage::initializePage()
 
 	if(field("use_default_fgfs").toBool()){
 		lblFgExeUsingDefault->setText("Using Default Path");
-		lblFgExePath->setText(mainObject->settings->default_fgfs_path());
+		lblFgExePath->setText(mainObject->settings->fgfs_path_default());
 	}else{
 		lblFgExeUsingDefault->setText("Using Custom Path");
 		lblFgExePath->setText(field("fgfs_custom_path").toString());
@@ -84,7 +84,7 @@ void FinishPage::initializePage()
 
 	if(field("use_default_fgroot").toBool()){
 		lblFgRootUsingDefault->setText("Using Default Data Path");
-		lblFgRootPath->setText(mainObject->settings->default_fg_root());
+		lblFgRootPath->setText(mainObject->settings->fg_root_default());
 	}else{
 		lblFgRootUsingDefault->setText("Using Custom Data Path");
 		lblFgRootPath->setText(field("fgroot_custom_path").toString());

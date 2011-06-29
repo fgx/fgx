@@ -336,7 +336,7 @@ QStringList CoreSettingsWidget::get_args(){
 
 	//** Terrasync/Multiplayermap - send on socket
 	if (mainObject->settings->use_terrasync()) {
-		args << QString("--fg-scenery=").append(mainObject->settings->terrasync_sync_path()).append(":").append(mainObject->settings->scenery_path());
+		args << QString("--fg-scenery=").append(mainObject->settings->terrasync_sync_data_path()).append(":").append(mainObject->settings->scenery_path());
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}else{
 

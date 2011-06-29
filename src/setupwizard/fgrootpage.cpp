@@ -79,14 +79,14 @@ void FgRootPage::on_select_path()
 void FgRootPage::initializePage()
 {
 	radioDefault->setChecked( mainObject->settings->value("use_default_fgroot", "1").toBool() );
-	lblDefault->setText( QString("Default: ").append(mainObject->settings->default_fg_root()) );
+	lblDefault->setText( QString("Default: ").append(mainObject->settings->fg_root_default()) );
 	txtFgRoot->setText( mainObject->settings->value("fgroot_custom_path").toString() );
 }
 
 
 void FgRootPage::check_paths()
 {
-	QString default_path = mainObject->settings->default_fg_root();
+	QString default_path = mainObject->settings->fg_root_default();
 	QString style("");
 	QString lbl_text(default_path);
 

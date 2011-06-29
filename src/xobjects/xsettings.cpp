@@ -43,14 +43,14 @@ QString XSettings::fgfs_path(){
 
 QString XSettings::fgfs_path_default(){
 
-	if(runningOS() == MAC){
+	if(runningOs() == MAC){
 		return QDir::currentPath().append("/fgx.app/Contents/MacOS/fgfs");
 
-	}else if(runningOS() == LINUX){
+	}else if(runningOs() == LINUX){
 		return QString("/usr/local/bin/fgfs");
 
 
-	}else if(runningOS() == WINDOWS){
+	}else if(runningOs() == WINDOWS){
 		return QString("C:/Program Files/FlightGear/bin/win32/fgfs.exe");
 	}
 
@@ -74,13 +74,13 @@ QString XSettings::fg_root(QString append_path){
 //= Return rhe default path to the FG_ROOT = fgdata directory
 QString XSettings::fg_root_default(){
 
-	if(runningOS() == MAC){
+	if(runningOs() == MAC){
 		return QDir::currentPath().append("/fgx.app/Contents/Resources/fgx-fgdata");
 
-	}else if(runningOS() == LINUX){
+	}else if(runningOs() == LINUX){
 		return QString("/usr/share/games/FlightGear");
 
-	}else if(runningOS() == WINDOWS){
+	}else if(runningOs() == WINDOWS){
 		return QString("C:/Program Files/FlightGear/data");
 	}
 
@@ -122,7 +122,7 @@ QString XSettings::airports_path(){
 
 	//* Using terrasync
 	if(use_terrasync()){
-		if(runningOS() == MAC){
+		if(runningOs() == MAC){
 			QString terrascenehome(QDir::homePath());
 			terrascenehome.append("/Documents/TerrasyncScenery");
 			return terrascenehome;
@@ -163,11 +163,11 @@ bool XSettings::use_terrasync(){
 	return value("use_terrasync").toBool();
 }
 QString XSettings::terrasync_exe_path(){
-	if (runningOS() == MAC) {
+	if (runningOs() == MAC) {
 		//* points to terrasync binary in app bundle
 		return QDir::currentPath().append("/fgx.app/Contents/MacOS/terrasync");
 	}
-	else if(runningOS() == LINUX){
+	else if(runningOs() == LINUX){
 		return QString("terrasync");
 	}
 	return QString("TODO - terrasync");
@@ -209,7 +209,7 @@ QString XSettings::_windowName(QWidget *widget){
 //===========================================================================
 //** OS detection
 //===========================================================================
-int XSettings::runningOS() {
+int XSettings::runningOs() {
     #ifdef Q_WS_X11
 		return XSettings::LINUX;
     #endif
@@ -237,16 +237,16 @@ QString XSettings::default_fgcom_port(){
 
 
 QString XSettings::fgcom_exe_path(){
-		if (runningOS() == MAC) {
+		if (runningOs() == MAC) {
 			// Default fgcomx installation with fgcom installer by gral
 			// Will change with fgcom coming in app bundle
 			return QString("/usr/local/bin/fgcom");
 		}
-		else if(runningOS() == LINUX){
+		else if(runningOs() == LINUX){
 			return QString("fgcom");
 		}
 	
-		else if(runningOS() == WINDOWS){
+		else if(runningOs() == WINDOWS){
 			return QString("fgcom"); // TODO!
 		}
 	
@@ -407,4 +407,17 @@ void XSettings::uncompress(QString filename, QString destination)
 	
 	return;
 	
+}
+
+
+QString XSettings::log_file_path(){
+	if(runningOs() == WINDOWS){
+		return temp_dir("fgx-log.txt");
+	}else if(runningOs() == MAC){
+		return QDir::homePath().append("/Library/Logs/fgx.log");
+	}else if(runningOs() == LINUX){
+		return temp_dir("fgx.log");
+	}else{
+		return "UNKNOWN log_file_path()";
+	}
 }

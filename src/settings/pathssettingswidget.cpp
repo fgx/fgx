@@ -64,7 +64,7 @@ PathsSettingsWidget::PathsSettingsWidget(MainObject *mOb, QWidget *parent) :
 	menuFgfs->addAction(actionFgfsAutoSelect);
 	actionFgfsAutoSelect->setText(tr("Autodetect"));
 	connect(actionFgfsAutoSelect, SIGNAL(triggered()), this, SLOT(on_fgfs_autodetect()));
-	actionFgfsAutoSelect->setVisible( mainObject->settings->runningOS() != XSettings::WINDOWS );
+	actionFgfsAutoSelect->setVisible( mainObject->settings->runningOs() != XSettings::WINDOWS );
 	#endif
 
 
@@ -159,8 +159,8 @@ void PathsSettingsWidget::load_settings(){
 	bool use_defaults = mainObject->settings->value("USE_DEFAULT_PATHS", "1").toBool();
 	checkBoxUseDefaults->setChecked(use_defaults);
 	if(use_defaults){
-		txtFgfs->setText(mainObject->settings->default_fgfs_path());
-		txtFgRoot->setText(mainObject->settings->default_fg_root());
+		txtFgfs->setText(mainObject->settings->fgfs_path_default());
+		txtFgRoot->setText(mainObject->settings->fg_root_default());
 
 	}else{
 		txtFgfs->setText(mainObject->settings->fgfs_path());
@@ -266,9 +266,9 @@ void PathsSettingsWidget::on_use_defaults(){
 	grpFgRoot->setDisabled(checkBoxUseDefaults->isChecked());
 	if(checkBoxUseDefaults->isChecked()){
 		mainObject->settings->setValue("custom_FGFS", txtFgfs->text());
-		txtFgfs->setText(mainObject->settings->default_fgfs_path());
+		txtFgfs->setText(mainObject->settings->fgfs_path_default());
 		mainObject->settings->setValue("custom_FG_ROOT", txtFgRoot->text());
-		txtFgRoot->setText(mainObject->settings->default_fg_root());
+		txtFgRoot->setText(mainObject->settings->fg_root_default());
 		mainObject->settings->sync();
 
 	}else{
