@@ -25,7 +25,7 @@ SetupWizard::SetupWizard(MainObject *mOb, QWidget *parent) :
 }
 
 
-void SetupWizard::nextId(){
+void SetupWizard::accept(){
 	qDebug() << "Accept";
 }
 

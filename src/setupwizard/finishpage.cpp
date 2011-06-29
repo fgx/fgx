@@ -49,6 +49,13 @@ FinishPage::FinishPage(MainObject *mob, QWidget *parent) :
 	grpTerrasync->addWidget(lblTerraSyncPath);
 
 
+	XGroupVBox *grpImports = new XGroupVBox("Import Cache Data");
+	mainLayout->addWidget(grpImports);
+	lblImportAicraft = new QLabel();
+	grpImports->addWidget(lblImportAicraft);
+	lblImportAicraft = new QLabel();
+	grpImports->addWidget(lblImportAicraft);
+
 }
 
 
@@ -87,6 +94,8 @@ void FinishPage::initializePage()
 		lblUsingTerraSync->setText("No Terrasync");
 		lblTerraSyncPath->setText("");
 	}
+
+
 
 
 }

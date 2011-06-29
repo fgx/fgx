@@ -30,16 +30,17 @@ TerraSyncPage::TerraSyncPage(MainObject *mob, QWidget *parent) :
 	row++;
 	txtTerraSyncPath = new QLineEdit("");
 	gridLayout->addWidget(txtTerraSyncPath, row, 1, 1, 1);
+	txtTerraSyncPath->setDisabled(true);
 
 	//= Select path button
 	buttSelectPath = new QToolButton();
 	gridLayout->addWidget(buttSelectPath, row, 2);
 	buttSelectPath->setIcon(QIcon(":/icon/black"));
-	buttSelectPath->setPopupMode(QToolButton::InstantPopup);
+	buttSelectPath->setDisabled(true);
 
 	//= help label
 	row++;
-	lblHelp = new QLabel("--");
+	lblHelp = new QLabel("");
 	gridLayout->addWidget(lblHelp, row, 1, 1, 2);
 
 
@@ -69,4 +70,55 @@ void TerraSyncPage::on_checkbox_clicked(){
 	if(ena){
 		txtTerraSyncPath->setFocus();
 	}
+}
+
+//===================================================
+//= check_paths() - does not return value but colours help labels
+void TerraSyncPage::check_paths()
+{
+	QString style("");
+	QString lbl_text("");
+
+	if(checkBoxUseTerrasync->isChecked()){
+		if(QFile::exists(txtTerraSyncPath->text())){
+			lbl_text.append("Ok");
+			style.append("color: green;");
+
+		}else{
+			lbl_text.append("Not found");
+			style.append("color:#990000;");
+		}
+	}else{
+		lbl_text.append("-");
+		style.append("color: #666666;");
+	}
+	lblHelp->setText(lbl_text);
+	lblHelp->setStyleSheet(style);
+
+}
+
+//===================================================
+//= InitializePage
+void TerraSyncPage::initializePage()
+{
+	radioDefault->setChecked( mainObject->settings->value("USE_DEFAULT_FG_ROOT", "1").toBool() );
+	lblDefault->setText( QString("Default: ").append(mainObject->settings->default_fg_root()) );
+}
+
+//====================================================
+//= ValidatePage
+bool TerraSyncPage::validatePage()
+{
+	check_paths();
+	if(checkBoxUseTerrasync->isChecked()){
+
+		if(QFile::exists(txtFgRoot->text())){
+			// TODO - check its writable
+			return true;
+		}else{
+			txtTerraSyncPath->setFocus();
+			return false;
+		}
+	}
+	return true;
 }

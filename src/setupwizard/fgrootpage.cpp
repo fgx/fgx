@@ -71,7 +71,7 @@ void FgRootPage::on_select_path()
 	if(dirPath.length() > 0){
 		txtFgRoot->setText(dirPath);
 	}
-	//#chack_paths();
+	check_paths();
 }
 
 //===================================================
@@ -83,16 +83,50 @@ void FgRootPage::initializePage()
 }
 
 
+void FgRootPage::check_paths()
+{
+	QString default_path = mainObject->settings->default_fg_root();
+	QString style("");
+	QString lbl_text(default_path);
+
+	if(QFile::exists(default_path)){
+		if(radioDefault->isChecked()){
+			lbl_text.append(" - Ok exists ");
+			style.append("color:green;");
+		}else{
+			style.append("color: #990000;");
+			lbl_text.append("Not exist ");
+		}
+	}else{
+		lbl_text.append("Not found ");
+		style.append("color:#990000;");
+	}
+	lblDefault->setText(lbl_text);
+	lblDefault->setStyleSheet(style);
+
+	QString style2("");
+	QString lbl_text2("");
+	if(QFile::exists(txtFgRoot->text())){
+		style2.append("color: #990000;");
+		lbl_text2.append("Not exist ");
+
+	}else{
+		lbl_text2.append("Not found ");
+		style2.append("color: #990000;");
+	}
+	lblCustom->setText(lbl_text2);
+	lblCustom->setStyleSheet(style2);
+}
 
 //====================================================
 //= ValidatePage
 bool FgRootPage::validatePage()
 {
+	check_paths();
 	if(radioDefault->isChecked()){
 		//TODO vaidate default path
 		return true;
 	}
-
 	if(QFile::exists(txtFgRoot->text())){
 		// TODO - check its executable
 		return true;
@@ -100,7 +134,6 @@ bool FgRootPage::validatePage()
 		txtFgRoot->setFocus();
 		lblCustom->setText("File does not exist");
 	}
-
 	return false;
 }
 

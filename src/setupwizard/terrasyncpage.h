@@ -22,11 +22,15 @@ public:
 	QLineEdit *txtTerraSyncPath;
 	QLabel *lblHelp;
 
+	void check_paths();
 signals:
 
 public slots:
 	void on_checkbox_clicked();
 	void on_select_path();
+
+	void initializePage();
+	bool validatePage();
 };
 
 #endif // TERRASYNCPAGE_H

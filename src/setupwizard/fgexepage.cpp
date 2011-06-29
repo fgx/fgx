@@ -90,9 +90,10 @@ FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
 //* Autodetect fgfs - this wont work on windows probably
 void FgExePage::on_fgfs_autodetect(){
 
-	//if(mainLayout->settings->runningOs() == )
+	// if(mainLayout->settings->runningOs() == )
+	// TODO implem,ent Geoffs patch
 	QString command = "which fgfs";
-	//qDebug() << "command=" << command;
+
 	QProcess *process = new QProcess(this);
 	process->start(command);
 
@@ -125,37 +126,40 @@ void FgExePage::on_select_fgfs_path(){
 
 void FgExePage::check_paths()
 {
-	QString default_path = mainObject->settings->default_fg_root();
+	QString default_path = mainObject->settings->default_fgfs_path();
 	QString style("");
 	QString lbl_text(default_path);
-	// color schema = red for problem, grey for diabled, and green for enabled
 	if(QFile::exists(default_path)){
 		if(radioDefault->isChecked()){
 			lbl_text.append(" - Ok exists ");
 			style.append("color:green;");
-		}else{
-			style.append("color:blue;");
-			lbl_text.append(" - Not exists ");
 		}
-
-
 	}else{
-		lbl_text.append(" - not found ");
-		style.append("color:pink;");
+		lbl_text.append("Not found ");
+		style.append("color:#990000;");
 	}
 	lblDefault->setText(lbl_text);
 	lblDefault->setStyleSheet(style);
 
-	//if(checkBoxUseDefaults->isChecked()){
-	//	return true;
-	//}
-	//bool fgfs_ok = QFile::exists( txtFgfs->text() );
-	//grpFgfs->setStyleSheet( get_frame_style(fgfs_ok) );
 
-	//bool fg_root_ok = QFile::exists( txtFgRoot->text() );
-	//grpFgRoot->setStyleSheet( get_frame_style(fg_root_ok) );
 
-	//return fgfs_ok && fg_root_ok;
+	QString style2("");
+	QString lbl_text2("");
+	if(txtFgfs->text().length() == 0){
+		style2.append("color: #000000;");
+		lbl_text2.append("Select path to executable");
+
+	}else{
+		if(QFile::exists(txtFgfs->text())){
+			style2.append("color: green;");
+			lbl_text2.append("Ok");
+		}else{
+			lbl_text2.append("Not found ");
+			style2.append("color:#990000;");
+		}
+	}
+	lblCustom->setText(lbl_text2);
+	lblCustom->setStyleSheet(style2);
 }
 
 
@@ -164,8 +168,9 @@ void FgExePage::check_paths()
 //= initializePage
 void FgExePage::initializePage()
 {
-	radioDefault->setChecked( mainObject->settings->value("USE_DEFAULT_FGFS", "1").toBool() );
+	radioDefault->setChecked( mainObject->settings->value("use_default_fgfs", "1").toBool() );
 	lblDefault->setText( QString("Default: ").append(mainObject->settings->default_fgfs_path()) );
+	check_paths();
 }
 
 
@@ -174,17 +179,26 @@ void FgExePage::initializePage()
 //= ValidatePage
 bool FgExePage::validatePage()
 {
+	check_paths();
 	if(radioDefault->isChecked()){
 		//TODO vaidate default path
-		return true;
+		QString exFile = mainObject->settings->default_fgfs_path();
+		if(QFile::exists(exFile)){
+			//TODO check its executable
+			return true;
+		}else{
+			return false;
+		}
+
 	}
 
 	if(QFile::exists(txtFgfs->text())){
 		// TODO - check its executable
+		//perms = QFile::permissions(txtFgfs->text())
 		return true;
 	}else{
 		txtFgfs->setFocus();
-		lblCustom->setText("File does not exist");
+		//lblCustom->setText("File does not exist");
 	}
 
 	return false;
@@ -198,6 +212,9 @@ void FgExePage::on_default_toggled(bool state){
 	txtFgfs->setDisabled(def);
 	buttExecutable->setDisabled( def);
 	if(def == false){
+		if(txtFgfs->text().length() == 0){
+			lblCustom->setText("Select path to exacutable");
+		}
 		txtFgfs->setFocus();
 	}
 }

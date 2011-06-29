@@ -24,7 +24,7 @@ public:
 	QWizardPage *finishPage;
 
 
-	void nextId();
+	void accept();
 signals:
 
 public slots:

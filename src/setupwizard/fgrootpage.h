@@ -27,7 +27,7 @@ public:
 
 	bool validatePage();
 	void initializePage();
-
+	void check_paths();
 
 signals:
 
