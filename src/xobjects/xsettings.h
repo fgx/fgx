@@ -27,11 +27,11 @@ public:
 	QString fgx_path();
 
 	QString fgfs_path();
-	QString default_fgfs_path();
+	QString fgfs_path_default();
 
     QString fg_root();
     QString fg_root(QString append_path);
-	QString default_fg_root();
+	QString fg_root_default();
 
 	QString aircraft_path();
 	QString aircraft_path(QString dir);
@@ -41,7 +41,7 @@ public:
 	QString scenery_path();
 	bool use_terrasync();
 	QString terrasync_exe_path();
-	QString terrasync_sync_path();
+	QString terrasync_sync_data_path();
 
 
 	void saveWindow(QWidget *widget);

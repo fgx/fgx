@@ -36,12 +36,12 @@ QString XSettings::fgx_path(){
 //===========================================================================
 QString XSettings::fgfs_path(){
 	if(value("use_default_fgfs", '1').toBool()){
-		return default_fgfs_path();
+		return fgfs_path_default();
 	}
 	return value("fgfs_custom_path", "").toString();
 }
 
-QString XSettings::default_fgfs_path(){
+QString XSettings::fgfs_path_default(){
 
 	if(runningOS() == MAC){
 		return QDir::currentPath().append("/fgx.app/Contents/MacOS/fgfs");
@@ -62,7 +62,7 @@ QString XSettings::default_fgfs_path(){
 //===========================================================================
 QString XSettings::fg_root(){
 	if(value("use_default_fgroot", '1').toBool()){
-		return this->default_fg_root();
+		return this->fg_root_default();
 	}
 	return value("fgroot_custom_path", "").toString();
 }
@@ -72,7 +72,7 @@ QString XSettings::fg_root(QString append_path){
 }
 
 //= Return rhe default path to the FG_ROOT = fgdata directory
-QString XSettings::default_fg_root(){
+QString XSettings::fg_root_default(){
 
 	if(runningOS() == MAC){
 		return QDir::currentPath().append("/fgx.app/Contents/Resources/fgx-fgdata");
@@ -129,8 +129,8 @@ QString XSettings::airports_path(){
 			outLog("*** FGx settings: Airports path: " + terrascenehome + " ***");
 		}else{
 			//* Use the terra sync path
-			return terrasync_sync_path().append("/Airports");
-			outLog("*** FGx settings: Airports path: " + terrasync_sync_path().append("/Airports") + " ***");
+			return terrasync_sync_data_path().append("/Airports");
+			outLog("*** FGx settings: Airports path: " + terrasync_sync_data_path().append("/Airports") + " ***");
 		}
 	}
 	//* Otherwise return the FG_ROOT airports/
@@ -173,7 +173,7 @@ QString XSettings::terrasync_exe_path(){
 	return QString("TODO - terrasync");
 }
 
-QString XSettings::terrasync_sync_path(){
+QString XSettings::terrasync_sync_data_path(){
 	return value("terrasync_path").toString();
 }	
 	
