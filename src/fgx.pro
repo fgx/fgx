@@ -9,6 +9,7 @@ QT += network \
     xml \
     xmlpatterns \
     webkit
+
 # Input
 HEADERS += xobjects/xsettings.h \
     settings/settingsdialog.h \
@@ -16,7 +17,6 @@ HEADERS += xobjects/xsettings.h \
     network/mptelnet.h \
     aircraft/aircraftwidget.h \
     airports/airportswidget.h \
-    airports/importairportsdialog.h \
     xwidgets/execontrols.h \
     panes/timeweatherwidget.h \
     panes/advancedoptionswidget.h \
@@ -29,9 +29,16 @@ HEADERS += xobjects/xsettings.h \
     settings/pathssettingswidget.h \
     utilities/statusbar.h \
     xwidgets/xtreewidgetitem.h \
-    utilities/osdab/zip_p.h
-    utilities/osdab/unzip_p.h
-	
+    utilities/utilities.h \
+    utilities/messagebox.h \
+    airports/importairportsdialog.h \
+    utilities/osdab/unzip.h \
+    utilities/osdab/zipentry_p.h \
+    utilities/osdab/unzip_p.h \
+    utilities/osdab/zip_p.h \
+    utilities/osdab/zip.h \
+    utilities/osdab/zipentry_p.h \
+    utilities/osdab/zipglobal.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -39,7 +46,6 @@ SOURCES += main.cpp \
     network/mptelnet.cpp \
     aircraft/aircraftwidget.cpp \
     airports/airportswidget.cpp \
-    airports/importairportsdialog.cpp \
     xwidgets/execontrols.cpp \
     panes/timeweatherwidget.cpp \
     panes/advancedoptionswidget.cpp \
@@ -53,19 +59,10 @@ SOURCES += main.cpp \
     utilities/statusbar.cpp \
     utilities/utilities.cpp \
     utilities/messagebox.cpp \
-    utilities/quazip/quazip.cpp \
-    utilities/quazip/zip.c \
-    utilities/quazip/unzip.c \
-    utilities/quazip/quazipnewinfo.cpp \
-    utilities/quazip/quazipfile.cpp \
-    utilities/quazip/quacrc32.cpp \
-    utilities/quazip/quaadler32.cpp \
-    utilities/quazip/qioapi.cpp \
-    utilities/quazip/JlCompress.cpp
-
-	
+    airports/importairportsdialog.cpp \
+    utilities/osdab/unzip.cpp \
+    utilities/osdab/zip.cpp \
+    utilities/osdab/zipglobal.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
-	
 CONFIG += console
-
