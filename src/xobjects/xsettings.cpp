@@ -412,11 +412,14 @@ void XSettings::uncompress(QString filename, QString destination)
 
 QString XSettings::log_file_path(){
 	if(runningOs() == WINDOWS){
-		return temp_dir("fgx-log.txt");
+		return temp_dir("/fgx-log.txt");
+
 	}else if(runningOs() == MAC){
 		return QDir::homePath().append("/Library/Logs/fgx.log");
+
 	}else if(runningOs() == LINUX){
-		return temp_dir("fgx.log");
+		return temp_dir("/fgx.log");
+
 	}else{
 		return "UNKNOWN log_file_path()";
 	}

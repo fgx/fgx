@@ -69,7 +69,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//*** Settings
 	QAction *actionSetupWizard= new QAction(this);
-	actionSetupWizard->setIcon(QIcon(":/icons/wizard"));
+	actionSetupWizard->setIcon(QIcon(":/icon/wizard"));
 	actionSetupWizard->setText(tr("Setup Wizard..."));
 	actionSetupWizard->setIconVisibleInMenu(true);
 	popupMenu->addAction(actionSetupWizard);
@@ -79,7 +79,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//*** Settings
 	QAction *actionViewLog= new QAction(this);
-	actionViewLog->setIcon(QIcon(":/icons/log"));
+	actionViewLog->setIcon(QIcon(":/icon/log"));
 	actionViewLog->setText(tr("View Log..."));
 	actionViewLog->setIconVisibleInMenu(true);
 	popupMenu->addAction(actionViewLog);

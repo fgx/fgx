@@ -19,5 +19,6 @@
         <file alias="favicon">fgx16.png</file>
         <file alias="mpmap">map.png</file>
         <file alias="wizard">wand.png</file>
+        <file alias="log">page_white_text.png</file>
     </qresource>
 </RCC>

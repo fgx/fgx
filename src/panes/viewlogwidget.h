@@ -25,7 +25,7 @@ public:
 signals:
 
 public slots:
-
+	void on_load_log_file();
 };
 
 #endif // VIEWLOGWIDGET_H
