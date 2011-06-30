@@ -1,5 +1,4 @@
 
-#include <QtDebug>
 #include <QtCore/QProcess>
 
 #include <QtGui/QToolButton>
@@ -134,7 +133,7 @@ void FgExePage::check_paths()
 	QString default_path = mainObject->settings->fgfs_path_default();
 	bool default_exists = QFile::exists(default_path);
 	QString lbl_default(default_path);
-	lbl_default.append( default_exists ? " - Ok" : "Not Found" );
+	lbl_default.append( default_exists ? " - Ok" : " - Not Found" );
 	QString style_default("");
 
 	if(radioDefault->isChecked()){
@@ -155,12 +154,17 @@ void FgExePage::check_paths()
 			bool custom_exists = QFile::exists(custom_path);
 			lblCustom->setText(custom_exists ? "Ok" : "Not found");
 			lblCustom->setStyleSheet(custom_exists ?  "color: green;" : "color:#990000;");
+			if(custom_exists){
+				QFileInfo fInfo(custom_path);
+				if(!fInfo.isExecutable()){
+					lblCustom->setText("Not executable");
+					lblCustom->setStyleSheet("color:#990000;");
+				}
+			}
 		}
 	}else{
 		lblCustom->setText("");
 	}
-
-
 }
 
 
@@ -204,8 +208,8 @@ bool FgExePage::validatePage()
 
 
 void FgExePage::on_default_toggled(bool state){
-	//Q_UNUSED(state);
-	qDebug() << state;
+	Q_UNUSED(state);
+
 	bool def = radioDefault->isChecked();
 
 	txtFgfs->setDisabled(def);

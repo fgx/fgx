@@ -27,13 +27,14 @@ public:
 
 	bool validatePage();
 	void initializePage();
-	void check_paths();
 
 signals:
 
 public slots:
 	void on_default_toggled(bool);
 	void on_select_path();
+	void check_paths();
+
 };
 
 #endif // FGROOTPAGE_H

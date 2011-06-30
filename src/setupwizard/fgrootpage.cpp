@@ -12,7 +12,7 @@ FgRootPage::FgRootPage(MainObject *mob, QWidget *parent) :
 	mainObject = mob;
 
 	setTitle("Select FlightGear Data directory ");
-	setSubTitle("Select the defajut or a custom path to FG_ROOT");
+	setSubTitle("Select the default or a custom path to FG_ROOT");
 
 
 	QGridLayout *gridLayout = new QGridLayout();
@@ -41,6 +41,7 @@ FgRootPage::FgRootPage(MainObject *mob, QWidget *parent) :
 	row++;
 	txtFgRoot = new QLineEdit("");
 	gridLayout->addWidget(txtFgRoot, row, 1, 1, 1);
+	connect(txtFgRoot, SIGNAL(textChanged(QString)), this, SLOT(check_paths()));
 
 	//= Dropdown button for path
 	buttSelect = new QToolButton();
@@ -79,44 +80,42 @@ void FgRootPage::on_select_path()
 void FgRootPage::initializePage()
 {
 	radioDefault->setChecked( mainObject->settings->value("use_default_fgroot", "1").toBool() );
-	lblDefault->setText( QString("Default: ").append(mainObject->settings->fg_root_default()) );
+	lblDefault->setText( mainObject->settings->fg_root_default() );
 	txtFgRoot->setText( mainObject->settings->value("fgroot_custom_path").toString() );
 }
 
 
 void FgRootPage::check_paths()
 {
+	//= Check the default path
 	QString default_path = mainObject->settings->fg_root_default();
-	QString style("");
-	QString lbl_text(default_path);
+	bool default_exists = QFile::exists(default_path);
+	QString lbl_default(default_path);
+	lbl_default.append( default_exists ? " - Ok" : " - Not Found" );
+	QString style_default("");
 
-	if(QFile::exists(default_path)){
-		if(radioDefault->isChecked()){
-			lbl_text.append(" - Ok exists ");
-			style.append("color:green;");
+	if(radioDefault->isChecked()){
+		style_default.append(default_exists ? "color:green;" : "color:#990000;");
+	}else{
+		style_default.append("color:#444444;");
+	}
+	lblDefault->setText(lbl_default);
+	lblDefault->setStyleSheet(style_default);
+
+	//= Check Custom Path
+	if(radioCustom->isChecked()){
+		QString custom_path = txtFgRoot->text().trimmed();
+		if(custom_path.size() == 0){
+			lblCustom->setText("Select a path");
+			lblCustom->setStyleSheet("color: #000099;");
 		}else{
-			style.append("color: #990000;");
-			lbl_text.append("Not exist ");
+			bool custom_exists = QFile::exists(custom_path);
+			lblCustom->setText(custom_exists ? "Ok" : "Not found");
+			lblCustom->setStyleSheet(custom_exists ?  "color: green;" : "color:#990000;");
 		}
 	}else{
-		lbl_text.append("Not found ");
-		style.append("color:#990000;");
+		lblCustom->setText("");
 	}
-	lblDefault->setText(lbl_text);
-	lblDefault->setStyleSheet(style);
-
-	QString style2("");
-	QString lbl_text2("");
-	if(QFile::exists(txtFgRoot->text())){
-		style2.append("color: #990000;");
-		lbl_text2.append("Not exist ");
-
-	}else{
-		lbl_text2.append("Not found ");
-		style2.append("color: #990000;");
-	}
-	lblCustom->setText(lbl_text2);
-	lblCustom->setStyleSheet(style2);
 }
 
 //====================================================
@@ -148,4 +147,5 @@ void FgRootPage::on_default_toggled(bool state){
 	if(def == false){
 		txtFgRoot->setFocus();
 	}
+	check_paths();
 }

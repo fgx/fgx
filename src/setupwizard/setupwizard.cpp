@@ -8,7 +8,10 @@ SetupWizard::SetupWizard(MainObject *mOb, QWidget *parent) :
     QWizard(parent)
 {
 	mainObject = mOb;
-	setWindowTitle(tr("Setup Wizard"));
+
+	setWizardStyle(QWizard::ModernStyle);
+
+	setWindowTitle(tr("Set Paths"));
 	setWindowIcon(QIcon(":icon/wizard"));
 
 	fgExePage = new FgExePage(mainObject);
