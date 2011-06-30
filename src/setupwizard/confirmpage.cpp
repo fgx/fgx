@@ -5,7 +5,7 @@
 #include <QFileDialog>
 #include <QVBoxLayout>
 
-#include "setupwizard/finishpage.h"
+#include "setupwizard/confirmpage.h"
 #include "xwidgets/xgroupboxes.h"
 
 
@@ -14,7 +14,7 @@
 
 
 
-FinishPage::FinishPage(MainObject *mob, QWidget *parent) :
+ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
     QWizardPage(parent)
 {
 
@@ -71,7 +71,7 @@ FinishPage::FinishPage(MainObject *mob, QWidget *parent) :
 
 //===================================================
 //= initializePage
-void FinishPage::initializePage()
+void ConfirmPage::initializePage()
 {
 
 	if(field("use_default_fgfs").toBool()){
@@ -102,10 +102,9 @@ void FinishPage::initializePage()
 
 
 //===================================================
-//= initializePage
-bool FinishPage::validatePage()
+//= validate - and Write out main settings
+bool ConfirmPage::validatePage()
 {
-
 
 	mainObject->settings->setValue("use_default_fgfs", field("use_default_fgfs"));
 	mainObject->settings->setValue("fgfs_custom_path", field("fgfs_custom_path"));
@@ -113,12 +112,12 @@ bool FinishPage::validatePage()
 	mainObject->settings->setValue("use_default_fgroot", field("use_default_fgroot"));
 	mainObject->settings->setValue("fgroot_custom_path", field("fgroot_custom_path"));
 
-
 	mainObject->settings->setValue("use_terrasync", field("use_terrasync"));
 	mainObject->settings->setValue("terrasync_path", field("terrasync_path"));
 
 	mainObject->settings->sync();
 
+	//= TODO ensite which bits needs checking
 	if(checkBoxImportAirports->isChecked()){
 		AirportsData::import(this, mainObject, true);
 	}

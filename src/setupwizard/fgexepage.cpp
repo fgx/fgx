@@ -1,4 +1,5 @@
 
+#include <QtDebug>
 #include <QtCore/QProcess>
 
 #include <QtGui/QToolButton>
@@ -47,6 +48,7 @@ FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
 	row++;
 	txtFgfs = new QLineEdit("");
 	layoutExe->addWidget(txtFgfs, row, 1, 1, 1);
+	connect(txtFgfs, SIGNAL(textChanged(QString)), this, SLOT(check_paths()) );
 
 	//= Dropdown button for path
 	buttExecutable = new QToolButton();
@@ -114,7 +116,7 @@ void FgExePage::on_fgfs_autodetect(){
 
 
 //=================================================================================
-//* Select FGFS  Dialog
+//= Select FGFS  Dialog
 void FgExePage::on_select_fgfs_path(){
 	QString filePath = QFileDialog::getOpenFileName(this, tr("Select FGFS binary"),
 														 txtFgfs->text());
@@ -124,42 +126,41 @@ void FgExePage::on_select_fgfs_path(){
 	check_paths();
 }
 
+//=================================================================================
+//= Check paths and color labels
 void FgExePage::check_paths()
 {
+	//= Check the default path
 	QString default_path = mainObject->settings->fgfs_path_default();
-	QString style("");
-	QString lbl_text(default_path);
-	if(QFile::exists(default_path)){
-		if(radioDefault->isChecked()){
-			lbl_text.append(" - Ok exists ");
-			style.append("color:green;");
-		}
+	bool default_exists = QFile::exists(default_path);
+	QString lbl_default(default_path);
+	lbl_default.append( default_exists ? " - Ok" : "Not Found" );
+	QString style_default("");
+
+	if(radioDefault->isChecked()){
+		style_default.append(default_exists ? "color:green;" : "color:#990000;");
 	}else{
-		lbl_text.append("Not found ");
-		style.append("color:#990000;");
+		style_default.append("color:#444444;");
 	}
-	lblDefault->setText(lbl_text);
-	lblDefault->setStyleSheet(style);
+	lblDefault->setText(lbl_default);
+	lblDefault->setStyleSheet(style_default);
 
-
-
-	QString style2("");
-	QString lbl_text2("");
-	if(txtFgfs->text().length() == 0){
-		style2.append("color: #000000;");
-		lbl_text2.append("Select path to executable");
-
-	}else{
-		if(QFile::exists(txtFgfs->text())){
-			style2.append("color: green;");
-			lbl_text2.append("Ok");
+	//= Check Custom Path
+	if(radioCustom->isChecked()){
+		QString custom_path = txtFgfs->text().trimmed();
+		if(custom_path.size() == 0){
+			lblCustom->setText("Select a path");
+			lblCustom->setStyleSheet("color: #000099;");
 		}else{
-			lbl_text2.append("Not found ");
-			style2.append("color:#990000;");
+			bool custom_exists = QFile::exists(custom_path);
+			lblCustom->setText(custom_exists ? "Ok" : "Not found");
+			lblCustom->setStyleSheet(custom_exists ?  "color: green;" : "color:#990000;");
 		}
+	}else{
+		lblCustom->setText("");
 	}
-	lblCustom->setText(lbl_text2);
-	lblCustom->setStyleSheet(style2);
+
+
 }
 
 
@@ -182,7 +183,6 @@ bool FgExePage::validatePage()
 {
 	check_paths();
 	if(radioDefault->isChecked()){
-		//TODO vaidate default path
 		QString exFile = mainObject->settings->fgfs_path_default();
 		if(QFile::exists(exFile)){
 			//TODO check its executable
@@ -190,7 +190,6 @@ bool FgExePage::validatePage()
 		}else{
 			return false;
 		}
-
 	}
 
 	if(QFile::exists(txtFgfs->text())){
@@ -199,15 +198,14 @@ bool FgExePage::validatePage()
 		return true;
 	}else{
 		txtFgfs->setFocus();
-		//lblCustom->setText("File does not exist");
 	}
-
 	return false;
 }
 
 
 void FgExePage::on_default_toggled(bool state){
-	Q_UNUSED(state);
+	//Q_UNUSED(state);
+	qDebug() << state;
 	bool def = radioDefault->isChecked();
 
 	txtFgfs->setDisabled(def);
@@ -218,4 +216,6 @@ void FgExePage::on_default_toggled(bool state){
 		}
 		txtFgfs->setFocus();
 	}
+
+	check_paths();
 }

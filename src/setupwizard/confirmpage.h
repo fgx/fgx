@@ -1,5 +1,5 @@
-#ifndef FINISHPAGE_H
-#define FINISHPAGE_H
+#ifndef CONFIRMPAGE_H
+#define CONFIRMPAGE_H
 
 #include<QtDebug>
 
@@ -14,11 +14,11 @@
 
 #include "xobjects/mainobject.h"
 
-class FinishPage : public QWizardPage
+class ConfirmPage : public QWizardPage
 {
 Q_OBJECT
 public:
-	explicit FinishPage(MainObject *mob, QWidget *parent = 0);
+	explicit ConfirmPage(MainObject *mob, QWidget *parent = 0);
 
 	MainObject *mainObject;
 
@@ -42,4 +42,4 @@ public slots:
 
 };
 
-#endif // FINISHPAGE_H
+#endif // CONFIRMPAGE_H

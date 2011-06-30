@@ -20,8 +20,8 @@ SetupWizard::SetupWizard(MainObject *mOb, QWidget *parent) :
 	terraSyncPage = new TerraSyncPage(mainObject);
 	addPage(terraSyncPage);
 
-	finishPage = new FinishPage(mainObject);
-	addPage(finishPage);
+	confirmPage = new ConfirmPage(mainObject);
+	addPage(confirmPage);
 
 	completedPage = new CompletedPage(mainObject);
 	addPage(completedPage);
