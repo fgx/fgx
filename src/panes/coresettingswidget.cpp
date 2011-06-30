@@ -31,7 +31,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 
 	//==================================================================
-	//* Callsign
+	//= Callsign
 	XGroupVBox *grpCallsign = new XGroupVBox(tr("Callsign"));
 	layoutLeft->addWidget(grpCallsign);
 
@@ -42,10 +42,11 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 
 	//==================================================================
-	//* Screen Options
+	//= Screen Options
 	XGroupVBox *grpBoxScreen = new XGroupVBox(tr("Screen Options"));
 	layoutLeft->addWidget(grpBoxScreen);
 
+	//= Initial Size
 	grpBoxScreen->addWidget(new QLabel("Initial Screen Size"));
 	comboScreenSize = new QComboBox();
 	comboScreenSize->addItem("-- Default --");
@@ -55,29 +56,31 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	comboScreenSize->addItem("1600x900");
 	grpBoxScreen->addWidget(comboScreenSize);
 	
-
+	//= Full Screen
 	checkBoxFullScreenStartup = new QCheckBox(tr("Full screen at startup"));
 	grpBoxScreen->addWidget(checkBoxFullScreenStartup);
 
+	//= Disable Splash
 	checkBoxDisableSplashScreen = new QCheckBox(tr("Disable Splash Screen"));
-
 	grpBoxScreen->addWidget(checkBoxDisableSplashScreen);
 
 
 	//==================================================================
-	//* Controls
+	//= Controls
 	XGroupVBox *grpBoxControls = new XGroupVBox(tr("Controls"));
 	layoutLeft->addWidget(grpBoxControls);
 
+	//= Enable Autocordination
 	checkBoxEnableAutoCoordination = new QCheckBox("Enable Auto Coordination");
 	grpBoxControls->addWidget(checkBoxEnableAutoCoordination);
 
+	//= Joystick
 	grpBoxControls->addWidget(new QLabel("Joystick"));
 	comboJoystick = new QComboBox();
 	grpBoxControls->addWidget(comboJoystick);
 
 	//==================================================================
-	//* Map Features
+	//= Map Features
 	XGroupVBox *grpMapFeatures = new XGroupVBox("Map Features");
 	layoutLeft->addWidget(grpMapFeatures);
 
@@ -95,31 +98,15 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 
 	//===========================================================================
-	//* Paths
+	//= Paths
 	QVBoxLayout *layoutPaths = new QVBoxLayout();
 	mainLayout->addLayout(layoutPaths, 2);
 
 	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
 	layoutPaths->addWidget(grpFgPaths);
 
-	/*
-	buttonGroupPaths = new QButtonGroup(this);
-	buttonGroupPaths->setExclusive(true);
-	connect(buttonGroupPaths, SIGNAL(buttonClicked(int)), this, SLOT(on_radio_fg_path()));
-
-	radioFgUseDefault = new QRadioButton(tr("Use Default"));
-	grpFgPaths->addWidget(radioFgUseDefault);
-	buttonGroupPaths->addButton(radioFgUseDefault, 0);
-	radioFgUseDefault->hide() ; // ### TODO ###
-
-	radioFgUseCustom = new QRadioButton(tr("Use Custom"));
-	grpFgPaths->addWidget(radioFgUseCustom);
-	buttonGroupPaths->addButton(radioFgUseCustom, 1);
-	radioFgUseCustom->hide() ; // ### TODO ###
-	*/
-
 	//----------------------------------------------
-	//** FlightGear executable
+	//= FlightGear executable
 	XGroupVBox *grpFgFs = new XGroupVBox("FlightGear Executable");
 	grpFgPaths->addWidget(grpFgFs);
 
@@ -128,13 +115,12 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpFgFs->addWidget(labelFgFsInfo, 1);
 
 	labelFgFsPath = new QLabel(" ");
-	//txtFgFs->setMargin(4);
 	labelFgFsPath->setStyleSheet("background-image: url(:images/background_yellow);  padding: 3px;");
 	grpFgFs->addWidget(labelFgFsPath);
 
 
 	//----------------------------------------------
-	//** Data Directory
+	//= FG ROOT Data Directory
 	XGroupVBox *grpFgRoot = new XGroupVBox("FlightGear Data");
 	grpFgPaths->addWidget(grpFgRoot);
 
@@ -143,7 +129,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpFgRoot->addWidget(labelFgRootInfo, 1);
 
 	labelFgRootPath = new QLabel(" ");
-	//txtFgRoot->setMargin(4);
 	labelFgRootPath->setStyleSheet("background-image: url(:images/background_yellow);  padding: 3px;");
 	grpFgRoot->addWidget(labelFgRootPath);
 
@@ -151,54 +136,31 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	
 	//----------------------------------------------
-	//** Terrasync Directory
+	//= Terrasync Directory
 	XGroupVBox *grpTerraSync = new XGroupVBox("TerraSync ");
 	grpFgPaths->addWidget(grpTerraSync);
-
 
 	labelTerraSyncInfo = new QLabel(tr(""));
 	labelTerraSyncInfo->setStyleSheet("font-size: 11px;");
 	grpTerraSync->addWidget(labelTerraSyncInfo, 1);
 
 	labelTerraSyncPath = new QLabel(" ");
-	//txtFgRoot->setMargin(4);
 	labelTerraSyncPath->setStyleSheet("background-image: url(:images/background_yellow);  padding: 3px;");
 	grpTerraSync->addWidget(labelTerraSyncPath);
 
-	//----------------------------------------------
-	//** Set Path Button
-	/*
-	QPushButton *buttonSetPaths = new QPushButton();
-	buttonSetPaths->setText(tr("Set Paths"));
-	grpFgPaths->addWidget(buttonSetPaths, 1);
-	connect(buttonSetPaths, SIGNAL(clicked()), this, SLOT(show_settings_dialog()));
-	buttonSetPaths->hide() ; // ### TODO ###
-	*/
+
+	//= Set Paths Wizard Buttons
+	QHBoxLayout *boxSetPaths = new QHBoxLayout();
+	grpFgPaths->addLayout(boxSetPaths);
+	boxSetPaths->addStretch(5);
 	QPushButton *buttonShowWizard = new QPushButton();
-	buttonShowWizard->setText("Setup Wizard");
+	buttonShowWizard->setText("Set Paths");
 	buttonShowWizard->setIcon(QIcon(":/icon/wizard"));
-	grpFgPaths->addWidget(buttonShowWizard, 1);
+	boxSetPaths->addWidget(buttonShowWizard, 1);
 	connect(buttonShowWizard, SIGNAL(clicked()), this, SLOT(show_setup_wizard()));
 
-	//===========================================================================
-	//* TerraSync
-	/*
-	QVBoxLayout *layoutTerraCol = new QVBoxLayout();
-	mainLayout->addLayout(layoutTerraCol, 2);
 
-	groupBoxTerraSync = new XGroupHBox(tr("Download Scenery via Terrasync"));
-	groupBoxTerraSync->setCheckable(true);
-	layoutTerraCol->addWidget(groupBoxTerraSync);
-
-	txtTerraSyncPath = new QLineEdit();
-	groupBoxTerraSync->addWidget(txtTerraSyncPath, 4);
-
-	QPushButton *buttonSetTerraPath = new QPushButton();
-	buttonSetTerraPath->setText(tr("Set Path"));
-	groupBoxTerraSync->addWidget(buttonSetTerraPath, 1);
-	connect(buttonSetTerraPath, SIGNAL(clicked()), this, SLOT(on_button_terrasync_path()));
-	layoutTerraCol->addStretch(20);
-	*/
+	//= Connect Mainobject (after paths wizard)
 	connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
 
 }
@@ -212,7 +174,7 @@ void CoreSettingsWidget::on_checkbox_show_mp_map(){
 //====================================================
 //* Load Settings
 void CoreSettingsWidget::load_settings(){
-	qDebug() << "LAOD SETTINGS";
+
 	//* Callsign
 	txtCallSign->setText( mainObject->settings->value("callsign").toString() );
 
@@ -231,15 +193,7 @@ void CoreSettingsWidget::load_settings(){
 	comboMpMapServer->setCurrentIndex(mainObject->settings->value("mpmap", 0).toInt());
 	on_checkbox_show_mp_map();
 
-	//* Paths
-	/*
-	if(mainObject->settings->value("USE_DEFAULT_PATHS", 1).toBool()){
-		radioFgUseDefault->setChecked(true);
-	}else{
-		radioFgUseCustom->setChecked(true);
-	}
-	*/
-	qDebug() << mainObject->settings->value("use_default_fgfs").toBool() << "=fgfs";
+
 	if(mainObject->settings->value("use_default_fgfs").toBool()){
 		labelFgFsInfo->setText("Using Default Executable Path");
 	}else{
@@ -256,8 +210,6 @@ void CoreSettingsWidget::load_settings(){
 	labelFgRootPath->setText(mainObject->settings->fg_root());
 
 
-
-	//groupBoxTerraSync->setChecked(mainObject->settings->value("use_terrasync").toBool());
 	labelTerraSyncInfo->setText( mainObject->settings->use_terrasync()
 								 ? "Using Terrasync" : "Using Default scenery"
 								 );
@@ -266,8 +218,6 @@ void CoreSettingsWidget::load_settings(){
 	} else {
 		labelTerraSyncPath->setText("--");
 	}
-
-
 
 }
 
@@ -287,17 +237,10 @@ void CoreSettingsWidget::save_settings(){
 
 	//* Controls
 	mainObject->settings->setValue("enable_auto_coordination", checkBoxEnableAutoCoordination->isChecked());
-	//TODO joystick
 
 	//* Map
 	mainObject->settings->setValue("show_map_map", checkBoxShowMpMap->isChecked());
 	mainObject->settings->setValue("mpmap", comboMpMapServer->currentIndex());
-
-	//* Paths
-	//mainObject->settings->setValue("USE_DEFAULT_PATHS", radioFgUseDefault->isChecked());
-
-	//#mainObject->settings->setValue("use_terrasync", groupBoxTerraSync->isChecked());
-	//mainObject->settings->setValue("terrasync_path", txtTerraSyncPath->text());
 
 }
 

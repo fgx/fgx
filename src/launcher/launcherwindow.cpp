@@ -45,20 +45,20 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 
 	//====================================================
-	//** Main Central Widget and Layout
+	//** Outer Layout
 	//====================================================
+	QVBoxLayout *outerContainer = new QVBoxLayout();
+	outerContainer->setContentsMargins(0, 0, 0, 0);
+	outerContainer->setSpacing(0);
+	setLayout(outerContainer);
 
-	QVBoxLayout *mainLayout = new QVBoxLayout();
-	mainLayout->setContentsMargins(10, 10, 10, 10);
-	mainLayout->setSpacing(0);
-	setLayout(mainLayout);
 
 
 	//====================================================
 	//** Setup Menus
 	//====================================================
 	QMenuBar *menuBar = new QMenuBar();
-	mainLayout->addWidget(menuBar);
+	outerContainer->addWidget(menuBar);
 
 	//** File Menu
 	QMenu *menuFile = new QMenu(tr("File"));
@@ -120,9 +120,15 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
     headerLabel = new QLabel(this);
 	headerLabel->setFixedHeight(80);
 	headerLabel->setStyleSheet(header_style);
-	mainLayout->addWidget(headerLabel, 0);
+	outerContainer->addWidget(headerLabel, 0);
 
-	mainLayout->addSpacing(10);
+	outerContainer->addSpacing(10);
+
+
+	QVBoxLayout *mainLayout = new QVBoxLayout();
+	mainLayout->setContentsMargins(10, 10, 10, 10);
+	mainLayout->setSpacing(0);
+	outerContainer->addLayout(mainLayout);
 
 
 	//====================================================

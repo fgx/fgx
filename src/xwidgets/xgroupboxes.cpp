@@ -16,7 +16,9 @@ void XGroupVBox::addWidget(QWidget *widget){
 void XGroupVBox::addWidget(QWidget *widget, int stretch){
 	xLayout->addWidget(widget, stretch);
 }
-
+void XGroupVBox::addLayout( QBoxLayout *lay){
+	xLayout->addLayout(lay);
+}
 
 //======================================================
 /* Extended groupBox with a Horizontal Layout */
@@ -35,5 +37,7 @@ void XGroupHBox::addWidget(QWidget *widget){
 void XGroupHBox::addWidget(QWidget *widget, int stretch){
 	xLayout->addWidget(widget, stretch);
 }
-
+void XGroupHBox::addLayout( QBoxLayout *lay){
+	xLayout->addLayout(lay);
+}
 

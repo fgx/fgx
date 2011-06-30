@@ -4,6 +4,7 @@
 #include <QGroupBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QBoxLayout>
 
 //=====================================================
 //** Vertical Box
@@ -16,7 +17,7 @@ public:
 	QVBoxLayout *xLayout;
 	void addWidget(QWidget *w);
 	void addWidget(QWidget *w, int stretch);
-
+	void addLayout(QBoxLayout *lay);
 signals:
 
 public slots:
@@ -34,7 +35,7 @@ public:
 	QHBoxLayout *xLayout;
 	void addWidget(QWidget *w);
 	void addWidget(QWidget *w, int stretch);
-
+	void addLayout(QBoxLayout *lay);
 signals:
 
 public slots:
