@@ -14,7 +14,7 @@
 #include <stdlib.h> // for getenv("TEMP")
 #endif
 
-#import "xobjects/xsettings.h"
+#include "xobjects/xsettings.h"
 
 
 /*

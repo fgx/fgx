@@ -77,7 +77,7 @@ public slots:
 	void on_use_default_clicked();
 	void on_tree_selection_changed();
 	void on_reload_db_cache();
-	void scan_xml_sets();
+
 };
 
 #endif // AIRCRAFTWIDGET_H
