@@ -1,5 +1,6 @@
 
-#include <QtDebug>
+//#include <QtDebug>
+
 #include <QFile>
 #include <QTextStream>
 #include <QProgressDialog>
@@ -8,9 +9,6 @@
 #include <QXmlQuery>
 #include <QDomDocument>
 #include <QDomNode>
-
-
-
 
 #include "aircraft/aircraftdata.h"
 
@@ -23,13 +21,15 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 	int c = 0;
 	int found = 0;
 
-	progress.setValue(0);
+	progress.setRange(0, 2000);
 	progress.setWindowTitle("Scanning Aircraft Directories");
+	progress.show();
 	progress.repaint();
+
 	//= Cache File
 	QFile cacheFile( mainObject->settings->data_file("aircraft.txt") );
 	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
-		qDebug() << "TODO Open error cachce file=";
+		//qDebug() << "TODO Open error cachce file=";
 		return true;
 	}
 
@@ -40,7 +40,6 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 	//= Get files Entries from Aircaft/ directory
 	QDir aircraftDir( mainObject->settings->aircraft_path() );
 	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
-	//qDebug() << "aircraft directory path: " << mainObject->settings->aircraft_path();
 
 	QStringList entries = aircraftDir.entryList();
 	progress.setRange(0, entries.size() + 20);
@@ -50,7 +49,9 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 		// Filter out default dir names, should be a QDir name filter?
 		if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
 
-			progress.setValue(progress.value() + 1);
+			progress.setValue(c);
+			progress.setLabelText(*entry);
+			progress.repaint();
 
 			//** get the List of *-set.xml files in dir
 			QDir dir( mainObject->settings->aircraft_path(*entry) );
@@ -112,8 +113,6 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 					QStringList lines;
 					lines  << directory << aero << xml_file << description << fdm << author << file_path;
 					out << lines.join("\t") << "\n";
-					progress.setValue(c);
-					progress.setLabelText(aero);
 
 					found++;
 

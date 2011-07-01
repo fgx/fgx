@@ -313,7 +313,12 @@ void AirportsWidget::initialize(){
 	if(first_load_done){
 		return;
 	}
-	load_airports_tree();
+
+	if (!QFile::exists(mainObject->settings->data_file("airports.txt"))){
+		statusBarAirports->showMessage("No cached data. Click Import");
+	}else{
+		load_airports_tree();
+	}
 	first_load_done = true;
 }
 

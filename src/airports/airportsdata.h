@@ -11,7 +11,6 @@ class AirportsData
 {
 public:
 	//AirportsData();
-
 	static bool import(QProgressDialog &progress, MainObject *mainObject, bool inc_icao);
 };
 

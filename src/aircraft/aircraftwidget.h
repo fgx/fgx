@@ -76,7 +76,7 @@ public slots:
 	void load_tree();
 	void on_use_default_clicked();
 	void on_tree_selection_changed();
-	void on_reload_db_cache();
+	void on_reload_cache();
 
 };
 

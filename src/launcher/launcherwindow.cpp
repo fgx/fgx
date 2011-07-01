@@ -234,10 +234,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	mainLayout->addWidget(statusBar);*/
 
 
-	//=================================================
-	//** Restore Last tab
-	tabWidget->setCurrentIndex( mainObject->settings->value("launcher_last_tab", 0).toInt() );
-
 	//====================================================================================
 	//* Problem:  Qt Has no "Show event" for a "widget", so we need to present Widgets first
 	//** and then initialise. This is achieved with a timer that triggers in a moment
@@ -259,9 +255,13 @@ LauncherWindow::~LauncherWindow()
 //=======================================================================================================================
 void LauncherWindow::initialize(){
 
-	//* First load the settings, and check the "paths" to fg_root and fg are sane
+	//= retorelast tab
+	tabWidget->setCurrentIndex( mainObject->settings->value("launcher_last_tab", 0).toInt() );
 
+	//= First load the settings
 	load_settings();
+
+	//= chack paths are same
 	if(!mainObject->settings->paths_sane()){
 		mainObject->show_setup_wizard();
 	}

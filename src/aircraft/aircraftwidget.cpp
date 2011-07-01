@@ -105,7 +105,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	actionReloadCacheDb->setAutoRaise(true);
 	treeTopBar->addWidget(actionReloadCacheDb);
-	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_db_cache()) );
+	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
 	//===============================================================
 	//= Aircraft Tree
@@ -224,8 +224,8 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 	layoutAeroPane->setRowStretch(row + 1, 20); // stretch end
 
-    //***********************************
-    //** Setup
+	//==================
+	//== Setup
 
 	splitter->setCollapsible(0, false);
 	splitter->setCollapsible(1, false);
@@ -340,18 +340,18 @@ QString AircraftWidget::validate(){
 
 
 //=============================================================
-// Load Airaft To Tree
-
-void AircraftWidget::on_reload_db_cache(){
+// Recan airpcarft cache
+void AircraftWidget::on_reload_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
-
-	//* scan Airaft dirs and save in file
+	statusBarAero->showMessage("Relaoding cache");
 	QProgressDialog progress(this);
 	progress.setWindowIcon(QIcon(":/icon/import"));
 	AircraftData::import(progress, mainObject);
 	load_tree();
 }
 
+//=============================================================
+// Load Aircaft To Tree
 void AircraftWidget::load_tree(){
 	int c =0;
 
@@ -422,8 +422,11 @@ void AircraftWidget::initialize(){
 	if(first_load_done){
 		return;
 	}
-
-	load_tree();
+	if (!QFile::exists(mainObject->settings->data_file("aircraft.txt"))){
+		statusBarAero->showMessage("No cached data. Click Import");
+	}else{
+		load_tree();
+	}
 	select_node(mainObject->settings->value("aircraft").toString());
 	first_load_done = true;
 }
