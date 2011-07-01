@@ -32,7 +32,7 @@ public:
 	QStringList get_args();
 	void load_settings();
 	void save_settings();
-	void validate();
+	QString validate();
 
 signals:
 

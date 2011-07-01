@@ -208,10 +208,12 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	//* FgCom
 	exeFgCom = new ExeControls("FgCom", "fgcom");
-	
+	bottomActionLayout->addWidget(exeFgCom);
+
 	//* TerraSync
 	exeTerraSync = new ExeControls("TerraSync", "terrasync");
-	
+	bottomActionLayout->addWidget(exeTerraSync);
+
 	//* FlightGear
 	exeFgfs = new ExeControls("FlightGear", "fgfs");
 	bottomActionLayout->addWidget(exeFgfs);
@@ -240,6 +242,10 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	// TODO  - disable widget till sane in initialize()
 	//centralWidget()->setDisabled(true);
+
+	connect(mainObject->processFgFs, SIGNAL(running(bool)), exeFgfs, SLOT(set_running(bool)));
+	connect(exeFgfs, SIGNAL(stop), mainObject->processFgFs, SLOT(stop()));
+
 	initializing = false;
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
@@ -268,8 +274,8 @@ void LauncherWindow::initialize(){
 
 	//* Paths are sane so we can initialize;
 	//TODO setup wizard to import data first time
-	//aircraftWidget->initialize();
-	//airportsWidget->initialize();
+	aircraftWidget->initialize();
+	airportsWidget->initialize();
 	coreSettingsWidget->initialize();
 }
 
@@ -349,7 +355,8 @@ void LauncherWindow::on_start_fgfs_clicked() {
 // Stop FlightGear, TerraSync, FGCom
 //=======================================================================================================================
 void LauncherWindow::on_stop_fgfs_clicked() {
-	
+	mainObject->processFgFs->stop();
+	/*
 	if (fgfsflag == true){
 		QString PIDfgfs = QString::number(exeFgfs->get_pid());
 		if (PIDfgfs != "0") {
@@ -373,7 +380,7 @@ void LauncherWindow::on_stop_fgfs_clicked() {
 			outLog("### FlightGear->fgcom PID: " + PIDfgcom + " STOPPED ###");
 		}
 	}
-	
+	*/
 }
 
 //=======================================================================================================================
@@ -404,8 +411,8 @@ QString LauncherWindow::fg_args(){
 
 	//**Advanced Options
 	args << advancedOptionsWidget->get_args();
-        exeFgfs->user_env = advancedOptionsWidget->get_env();
-        exeFgfs->runtime = advancedOptionsWidget->get_runtime();
+		//exeFgfs->user_env = advancedOptionsWidget->get_env();
+	   // exeFgfs->runtime = advancedOptionsWidget->get_runtime();
 
 	//* Ai Traffic TODO
 	/*
@@ -518,6 +525,12 @@ bool LauncherWindow::validate(){
 		messageBox->showWindowMessage("Validation failed:<BR> Please check settings on Network Tab!");
 		return false;
 	}
+	v = timeWeatherWidget->validate();
+	if(v != ""){
+		tabWidget->setCurrentIndex( tabWidget->indexOf(timeWeatherWidget));
+		messageBox->showWindowMessage("Validation failed:<BR> Please check settings on Time Weather tab");
+		return false;
+	}
 	outLog("*** FGx reports: Network settings ok. ***");
 
 	outLog("*** FGx reports: ALL SETTINGS VALID. ***");
@@ -575,18 +588,12 @@ void LauncherWindow::on_tab_changed(int tab_idx){
 	}
 	mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
 	QStringList tablist;
-	// put "last used tab" to log, but more human now. To Pete: do we need it at all, or not ?
+
 	tablist << "Coresettings" << "Time and Weather" << "Aircraft" << "Airports" << "Network" << "Advanced Options" << "Output / Preview";
 	outLog("*** FGx reports: last tab used = " + tablist[tabWidget->currentIndex()] + " (" + QString::number(tabWidget->currentIndex()) + ") ***");
-	//qDebug() << "\n" << "on-tab=" << tab_idx;
+
 	if(tab_idx == tabWidget->indexOf(outputPreviewWidget)){
 		on_command_preview();
-
-	}else if(tab_idx == tabWidget->indexOf(aircraftWidget)){
-		aircraftWidget->initialize();
-
-	}else if(tab_idx == tabWidget->indexOf(airportsWidget)){
-		airportsWidget->initialize();
 
 	}
 }

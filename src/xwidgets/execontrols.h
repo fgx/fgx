@@ -17,30 +17,21 @@ Q_OBJECT
 public:
 	explicit ExeControls(QString title, QString exeNam, QWidget *parent = 0);
 	
-	QProcess *P;
-
-
-	QString exe_name;
-	QStatusBar *statusBar;
 	QPushButton *buttonStart;
 	QPushButton *buttonStop;
-	//QPushButton *buttonRefresh;
-        QStringList user_env;
-        QString runtime;
-	//** Start is called from fgx
+
 	void start(QString command_line);
-	int get_pid();
-	void killproc();
+
 
 
 signals:
+	void stop();
 
 public slots:
-	//* on_start() is connected in fgx, stop too, but state of buttons changed here
 	void on_stop_clicked();
 
-	void readError();
-	void readOutput();
+
+	void set_running(bool running);
 };
 
 #endif // EXECONTROLS_H
