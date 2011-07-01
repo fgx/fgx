@@ -21,9 +21,24 @@
  * \brief The XSettings is an extended QSetttings, but also includes most to the FGx configuration.
  *
  * The general idea of the class is to  provide one central place to access settings. It is
- * for this reason that methods are created to hide some of the completities, such as aircraft_path()
+ * for this reason that methods are created to hide some of the completities, such as aircraft_path().
+ *
+ *
+ * === Path Settings ===
+ *
+ * The essential path settings stored in the ini are:
+ * - "use_default_fgfs" - whether to use the default installed fgfs binary
+ * - "fgfs_custom_path" - the custom path to the fgfs executable
+ * - "use_default_fgroot" - whether to use the default FG_ROOT path
+ * - "fgroot_custom_path" - the custom path to fgdata/ eg a git checkout
+ * - "terrasync_enabled" - whether terrasync is enabled
+ * - "terrasync_path" - the path to the terrasync data directory
+ *
  */
-
+/*!
+  * @author: Peter Morgan
+  * @author: Yves Sablonier
+ */
 
 
 XSettings::XSettings(QObject *parent) :
@@ -172,7 +187,7 @@ QString XSettings::aircraft_path(QString dir){
 QString XSettings::airports_path(){
 
 	//* Using terrasync
-	if(use_terrasync()){
+	if(terrasync_enabled()){
 		if(runningOs() == MAC){
 			QString terrascenehome(QDir::homePath());
 			terrascenehome.append("/Documents/TerrasyncScenery");
@@ -223,20 +238,24 @@ QString XSettings::scenery_path(){
  *
  * \return true if using terrasync
  */
-bool XSettings::use_terrasync(){
-	return value("use_terrasync").toBool();
+bool XSettings::terrasync_enabled(){
+	return value("terrasync_enabled").toBool();
 }
 /** \brief terrasync executable
  *
   * \return path to terrasync executable
+  * \todo Windows path
  */
 QString XSettings::terrasync_exe_path(){
 	if (runningOs() == MAC) {
 		//* points to terrasync binary in app bundle
 		return QDir::currentPath().append("/fgx.app/Contents/MacOS/terrasync");
-	}
-	else if(runningOs() == LINUX){
+
+	}else if(runningOs() == LINUX){
 		return QString("terrasync");
+
+	}else if(runningOs() == WINDOWS){
+		return QString("TODO/path to terrasync.exe");
 	}
 	return QString("TODO - terrasync");
 }

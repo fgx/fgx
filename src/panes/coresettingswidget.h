@@ -53,7 +53,7 @@ public:
 	QLabel *labelFgRootInfo;
 
 	QLabel *labelTerraSyncInfo;
-	QLabel *labelTerraSyncPath;
+	QLabel *labelTerraSyncDataPath;
 
 	//XGroupHBox *groupBoxTerraSync;
 	//QLineEdit *txtTerraSyncPath;

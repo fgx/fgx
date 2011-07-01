@@ -7,6 +7,7 @@ class XSettings : public QSettings
 {
 Q_OBJECT
 public:
+
 	enum OS{
 		BSD = 1,
 		MAC = 2,
@@ -39,7 +40,7 @@ public:
 	QString airports_path();
 
 	QString scenery_path();
-	bool use_terrasync();
+	bool terrasync_enabled();
 	QString terrasync_exe_path();
 	QString terrasync_sync_data_path();
 

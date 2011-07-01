@@ -302,7 +302,7 @@ void LauncherWindow::on_start_fgfs_clicked() {
 
 	//* Start TerraSync
 	
-	if (mainObject->settings->use_terrasync()) {
+	if (mainObject->settings->terrasync_enabled()) {
 		QStringList terraargs;
 		//QString terra_sync_path = coreSettingsWidget->txtTerraSyncPath->text();
 		terraargs << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_data_path();
@@ -311,7 +311,7 @@ void LauncherWindow::on_start_fgfs_clicked() {
 		terra_command_line.chop(4);
 		terra_command_line.append("terrasync");
 		terra_command_line.append(" ").append(terraargs.join(" "));
-		qDebug() << terra_command_line;
+		//qDebug() << terra_command_line;
 		exeTerraSync->start(terra_command_line);
 		terrasyncflag = true;
 	}

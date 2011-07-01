@@ -45,8 +45,6 @@ TerraSyncPage::TerraSyncPage(MainObject *mob, QWidget *parent) :
 	gridLayout->addWidget(lblHelp, row, 1, 1, 2);
 
 
-
-
 	registerField("use_terrasync", checkBoxUseTerrasync);
 	registerField("terrasync_path", txtTerraSyncPath);
 
@@ -77,24 +75,20 @@ void TerraSyncPage::on_checkbox_clicked(){
 //= check_paths() - does not return value but colours help labels
 void TerraSyncPage::check_paths()
 {
-	QString style("");
-	QString lbl_text("");
 
 	if(checkBoxUseTerrasync->isChecked()){
 		if(QFile::exists(txtTerraSyncPath->text())){
-			lbl_text.append("Ok");
-			style.append("color: green;");
+			lblHelp->setText("Ok");
+			lblHelp->setStyleSheet("color: green;");
 
 		}else{
-			lbl_text.append("Not found");
-			style.append("color:#990000;");
+			lblHelp->setText("Not found");
+			lblHelp->setStyleSheet("color:#990000;");
 		}
 	}else{
-		lbl_text.append("-");
-		style.append("color: #666666;");
+		lblHelp->setText("");
+		lblHelp->setStyleSheet("color: #000000;");
 	}
-	lblHelp->setText(lbl_text);
-	lblHelp->setStyleSheet(style);
 
 }
 
@@ -102,8 +96,8 @@ void TerraSyncPage::check_paths()
 //= InitializePage
 void TerraSyncPage::initializePage()
 {
-	checkBoxUseTerrasync->setChecked( mainObject->settings->value("use_terrasync", "1").toBool() );
-	txtTerraSyncPath->setText(mainObject->settings->value("terrasync_path", "").toString() );
+	checkBoxUseTerrasync->setChecked( mainObject->settings->value("terrasync_enabled", "1").toBool() );
+	txtTerraSyncPath->setText( mainObject->settings->value("terrasync_path", "").toString() );
 	on_checkbox_clicked();
 }
 

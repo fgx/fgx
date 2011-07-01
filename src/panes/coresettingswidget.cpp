@@ -105,6 +105,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
 	layoutPaths->addWidget(grpFgPaths);
 
+	QString style_paths("background-color: #efefef; padding: 3px; color: #444444; border: 1px solid #cccccc;");
 	//----------------------------------------------
 	//= FlightGear executable
 	XGroupVBox *grpFgFs = new XGroupVBox("FlightGear Executable");
@@ -115,7 +116,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpFgFs->addWidget(labelFgFsInfo, 1);
 
 	labelFgFsPath = new QLabel(" ");
-	labelFgFsPath->setStyleSheet("background-image: url(:images/background_yellow);  padding: 3px;");
+	labelFgFsPath->setStyleSheet(style_paths);
 	grpFgFs->addWidget(labelFgFsPath);
 
 
@@ -129,7 +130,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpFgRoot->addWidget(labelFgRootInfo, 1);
 
 	labelFgRootPath = new QLabel(" ");
-	labelFgRootPath->setStyleSheet("background-image: url(:images/background_yellow);  padding: 3px;");
+	labelFgRootPath->setStyleSheet(style_paths);
 	grpFgRoot->addWidget(labelFgRootPath);
 
 	layoutPaths->addStretch(20);
@@ -144,9 +145,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelTerraSyncInfo->setStyleSheet("font-size: 11px;");
 	grpTerraSync->addWidget(labelTerraSyncInfo, 1);
 
-	labelTerraSyncPath = new QLabel(" ");
-	labelTerraSyncPath->setStyleSheet("background-image: url(:images/background_yellow);  padding: 3px;");
-	grpTerraSync->addWidget(labelTerraSyncPath);
+	labelTerraSyncDataPath = new QLabel("");
+	labelTerraSyncDataPath->setStyleSheet(style_paths);
+	grpTerraSync->addWidget(labelTerraSyncDataPath);
 
 
 	//= Set Paths Wizard Buttons
@@ -210,13 +211,13 @@ void CoreSettingsWidget::load_settings(){
 	labelFgRootPath->setText(mainObject->settings->fg_root());
 
 
-	labelTerraSyncInfo->setText( mainObject->settings->use_terrasync()
+	labelTerraSyncInfo->setText( mainObject->settings->terrasync_enabled()
 								 ? "Using Terrasync" : "Using Default scenery"
 								 );
 	if (mainObject->settings->value("use_terrasync").toBool()) {
-		labelTerraSyncPath->setText( mainObject->settings->value("terrasync_path").toString() );
+		labelTerraSyncDataPath->setText( mainObject->settings->terrasync_sync_data_path());
 	} else {
-		labelTerraSyncPath->setText("--");
+		labelTerraSyncDataPath->setText("");
 	}
 
 }
@@ -278,7 +279,7 @@ QStringList CoreSettingsWidget::get_args(){
 
 
 	//** Terrasync/Multiplayermap - send on socket
-	if (mainObject->settings->use_terrasync()) {
+	if (mainObject->settings->terrasync_enabled()) {
 		args << QString("--fg-scenery=").append(mainObject->settings->terrasync_sync_data_path()).append(":").append(mainObject->settings->scenery_path());
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}else{
