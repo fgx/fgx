@@ -308,6 +308,52 @@ QString MainObject::get_fgfs_command(){
 	}
 
 
+	//== Multiplayer
+	if(settings->value("enable_mp").toBool()){
+
+
+
+		if(settings->value("in").toBool()){
+			args << QString("--multiplay=in,%1,%2,%3"
+								).arg(	settings->value("in_hz").toString()
+								).arg(	settings->value("in_address").toString()
+								).arg(	settings->value("in_port").toString()
+							);
+		}
+		if(settings->value("out").toBool()){
+			args << QString("--multiplay=out,%1,%2,%3"
+							).arg(	settings->value("out_hz").toString()
+							).arg( 	settings->value("mpserver").toString()
+							).arg( settings->value("out_port").toString()
+						);
+		}
+	}
+
+	//== Servers
+	//= Http
+	if(settings->value("http").toBool()){
+		args << QString("--http=%1").arg( settings->value("http_port").toString() );
+	}
+	//= Telnet
+	if(settings->value("telnet").toBool()){
+		args << QString("--telnet=%1").arg( settings->value("telnet_port").toString() );
+	}
+	//= ScreenShot
+	if(settings->value("screenshot").toBool()){
+		args << QString("--jpg-httpd=%1").arg( settings->value("screenshot_port").toString() );
+	}
+
+
+	//=== FgCom
+	if(settings->value("fgcom").toBool()){
+		args << QString("--generic=socket,out,10,localhost,%1,udp,fgcom"
+						).arg( settings->value("fgcom_port").toString()
+						);
+	}
+
+
+
+	//=============================================================
 	//=== Extra Args
 	QString extra = settings->value("extra_args").toString().trimmed();
 	if (extra.length() > 0) {

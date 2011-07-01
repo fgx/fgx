@@ -249,13 +249,10 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 
 	QToolButton *buttTelnet = new QToolButton();
 	layoutNetTelnet->addWidget(buttTelnet);
-	buttTelnet->setDisabled(true); // TODO
 	buttTelnet->setIcon(QIcon(":/icon/terminal"));
 	buttTelnet->setToolButtonStyle(Qt::ToolButtonIconOnly);
 	connect(buttTelnet, SIGNAL(clicked()), this, SLOT(on_open_telnet()));
-	
-	// disable Telnet for alpha
-	grpTelnet->setEnabled(false);
+	buttTelnet->setDisabled(true);
 
 	//===========================================================
 	//** Screenshot
