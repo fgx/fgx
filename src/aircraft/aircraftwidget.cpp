@@ -173,6 +173,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	aeroImageLabel =  new QLabel(this);
 	aeroImageLabel->setFixedWidth(171);
 	aeroImageLabel->setFixedHeight(128);
+	aeroImageLabel->setStyleSheet("color: #999999;");
 	imgBox->addWidget(aeroImageLabel);
 	aeroImageLabel->setAlignment(Qt::AlignHCenter);
 	imgBox->addStretch(2);
@@ -263,14 +264,17 @@ void AircraftWidget::on_tree_selection_changed(){
 	if(QFile::exists(thumb_file)){
 		QPixmap aeroImage(thumb_file);
 		if(!aeroImage.isNull()){
-                    outLog("on_tree_selection_changed: Loaded thumb "+thumb_file);
-                        aeroImageLabel->setPixmap(aeroImage);
-                } else
-                    outLog("on_tree_selection_changed: NO thumb load "+thumb_file);
+			outLog("on_tree_selection_changed: Loaded thumb "+thumb_file);
+			aeroImageLabel->setText("");
+			aeroImageLabel->setPixmap(aeroImage);
 
+		} else{
+			outLog("on_tree_selection_changed: NO thumb load "+thumb_file);
+			aeroImageLabel->clear();
+			aeroImageLabel->setText("No Image");
+		}
 	}else{
-            outLog("on_tree_selection_changed: NO thumb "+thumb_file);
-                aeroImageLabel->clear();
+		aeroImageLabel->setText("No Image");
 	}
 }
 
