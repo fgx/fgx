@@ -9,6 +9,9 @@
 
 #include "xobjects/mainobject.h"
 
+class MainObject;
+
+
 class AdvancedOptionsWidget : public QWidget
 {
 Q_OBJECT

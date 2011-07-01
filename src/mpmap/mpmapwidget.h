@@ -10,7 +10,9 @@
 
 #include <QtGui/QCloseEvent>
 
-#include <QWebView>
+#include <QtWebKit/QWebView>
+#include <QtNetwork/QNetworkDiskCache>
+#include <QtNetwork/QNetworkCookieJar>
 
 #include "xobjects/mainobject.h"
 
@@ -26,12 +28,15 @@ public:
 	QString *mpmapFollowCallsign;
 	
 private:
-    QWebView *browser;
-    QProgressBar *progressBar;
-    QStatusBar *statusBar;
-    QComboBox *comboServer;
+
+	QProgressBar *progressBar;
+	QStatusBar *statusBar;
+	QComboBox *comboServer;
 	
-    //QString *server_url;
+
+	QWebView *browser;
+	QNetworkDiskCache *networkDiskCache;
+	QNetworkCookieJar *networkCookieJar;
 
 signals:
 
@@ -43,5 +48,6 @@ public slots:
     void on_combo_server(int index);
     void closeEvent(QCloseEvent *event);
 };
+
 
 #endif // MPMAPWIDGET_H

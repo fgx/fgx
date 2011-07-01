@@ -23,6 +23,22 @@
 
 #include "xobjects/mainobject.h"
 
+
+
+//= Foward Declaratins
+class MainObject;
+class NetworkWidget;
+class CoreSettingsWidget;
+class TimeWeatherWidget;
+class AircraftWidget;
+class AirportsWidget;
+class NetworkWidget;
+class AdvancedOptionsWidget;
+class OutputPreviewWidget;
+
+
+
+
 class LauncherWindow : public QWidget
 {
     Q_OBJECT

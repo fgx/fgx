@@ -1,6 +1,7 @@
 
-#include "mpmapwidget.h"
+#include <QtDebug>
 
+#include <QDesktopServices>
 
 #include <QtCore/QString>
 #include <QtCore/QVariant>
@@ -11,6 +12,9 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QLabel>
 #include <QtGui/QComboBox>
+
+#include "mpmapwidget.h"
+
 
 MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
         QWidget(parent)
@@ -52,10 +56,20 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
     comboServer->addItem("MpMap-02", QVariant(mapURL2));
     connect(comboServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_server(int)));
 
+	//=============================================================
+	//== Cache
+	qDebug() << QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
 
-    //** Browser
+	networkDiskCache = new QNetworkDiskCache(this);
+	networkDiskCache->setCacheDirectory(QDesktopServices::storageLocation(QDesktopServices::CacheLocation));
+
+	networkCookieJar = new QNetworkCookieJar(this);
+
+	//== Browser
     browser = new QWebView(this);
     mainLayout->addWidget(browser, 100);
+	browser->page()->networkAccessManager()->setCache(networkDiskCache);
+	browser->page()->networkAccessManager()->setCookieJar(networkCookieJar);
     connect(browser, SIGNAL(loadStarted()), this, SLOT(start_progress()));
     connect(browser, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
     connect(browser, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));

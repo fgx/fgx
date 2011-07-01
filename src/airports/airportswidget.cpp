@@ -1,5 +1,5 @@
 
-#include <QtCore/QDebug>
+#include <QtDebug>
 #include <QtCore/QString>
 
 
@@ -131,10 +131,19 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	layoutAptTopBar->addStretch(20);
 
+	buttonViewMap = new QToolButton(this);
+	layoutAptTopBar->addWidget(buttonViewMap);
+	buttonViewMap->setText("View Map");
+	buttonViewMap->setToolTip("View airport in map");
+	buttonViewMap->setIcon(QIcon(":/icon/mpmap"));
+	buttonViewMap->setAutoRaise(true);
+	buttonViewMap->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	connect(buttonViewMap, SIGNAL(clicked()), this, SLOT(on_view_map()) );
+
 
 	QToolButton *buttonReloadCache = new QToolButton(this);
 	layoutAptTopBar->addWidget(buttonReloadCache);
-	buttonReloadCache->setText("Import");
+	buttonReloadCache->setText("Reload");
 	buttonReloadCache->setToolTip("Scan directories and reload cache");
 	buttonReloadCache->setIcon(QIcon(":/icon/import"));
 	buttonReloadCache->setAutoRaise(true);
@@ -749,3 +758,6 @@ QString AirportsWidget::validate(){
 }
 
 
+void AirportsWidget::on_view_map(){
+	qDebug() << "on_map";
+}

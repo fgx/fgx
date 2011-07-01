@@ -13,6 +13,8 @@
 
 #include "xobjects/mainobject.h"
 
+class MainObject;
+
 class TimeWeatherWidget : public QWidget
 {
 Q_OBJECT

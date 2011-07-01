@@ -12,7 +12,7 @@
 #include <QtGui/QWidgetAction>
 
 #include "xobjects/xsettings.h"
-//#include "launcher/launcherwindow.h" // << This included "mainobject.h" also !!
+#include "launcher/launcherwindow.h"
 #include "mpmap/mpmapwidget.h"
 #include "logs/viewlogswidget.h"
 
@@ -23,14 +23,17 @@
 class MpMapWidget;
 class ViewLogsWidget;
 class XProcess;
-
+class LauncherWindow;
 
 
 /*! \class MainObject
  * \brief The MainObject is an extended QObject, and the main "controller" for FGx
  *
- * This is the main thing called when the app starts in the backgound
+ * This is the main object created and called when the app starts in the backgound
  * It manifest itself and is made visible via an icon in the QSystemTrayIcon ie TaskBar
+ * All widgets are children to this object and are hidden (at the moment)
+ *
+ * MainObject also controls the starting and stopping of processes// TBC
  *
  * @author: Peter Morgan
  * @author: Yves Sablonier
@@ -49,7 +52,7 @@ public:
 	int launcher_flag;
 
 	MpMapWidget *mpMapWidget;
-	//LauncherWindow *launcherWindow;
+	LauncherWindow *launcherWindow;
 	//PropsTreeWidget *propertiesTree;
 	ViewLogsWidget *viewLogsWidget;
 

@@ -14,6 +14,9 @@
 
 #include "xobjects/mainobject.h"
 
+
+class MainObject;
+
 class NetworkWidget : public QWidget
 {
 Q_OBJECT

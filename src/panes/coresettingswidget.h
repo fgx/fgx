@@ -12,6 +12,8 @@
 #include "xobjects/mainobject.h"
 #include "xwidgets/xgroupboxes.h"
 
+class MainObject;
+
 class CoreSettingsWidget : public QWidget
 {
 Q_OBJECT

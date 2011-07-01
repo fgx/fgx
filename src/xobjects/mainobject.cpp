@@ -38,11 +38,7 @@ MainObject::MainObject(QObject *parent) :
 
 	launcher_flag = false;
 
-	mpMapWidget = 0;
 
-	//= Log Viewer is hidden
-	viewLogsWidget = new ViewLogsWidget(this);
-	viewLogsWidget->hide();
 
 	//= Processes
 	processFgFs  = new XProcess(this, "fgfs");
@@ -116,6 +112,19 @@ MainObject::MainObject(QObject *parent) :
 
 	connect(this, SIGNAL(show_settings(int)), this, SLOT(on_settings(int)));
 
+
+
+
+	//= MP Map Widget
+	mpMapWidget = new MpMapWidget(this);
+	mpMapWidget->hide();
+
+	//= Log Viewer is hidden
+	viewLogsWidget = new ViewLogsWidget(this);
+	viewLogsWidget->hide();
+
+	launcherWindow = new LauncherWindow(this);
+
 	//== initialise after initial show so UI dont look frozen while cache loading etc
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
@@ -127,22 +136,17 @@ MainObject::~MainObject()
 }
 
 //============================================================================
-//** Shows the Launcher window
+//= Initialize
 void MainObject::initialize(){
-
 	on_launcher();
 }
 
 //============================================================================
-//**  Launcher window
+//=  Launcher window
 void MainObject::on_launcher(){
-	//TODO there HAS to be a better was than using a flag
-	if(launcher_flag == true){
-		return;
-	}
-	LauncherWindow *launcherWindow = new LauncherWindow(this);
-    launcherWindow->show();
-	launcher_flag = true;
+	launcherWindow->show();
+	launcherWindow->raise();
+
 }
 
 
@@ -168,16 +172,8 @@ void MainObject::on_map(){
 //============================================================================
 //** MpMap
 void MainObject::on_mpmap(){
-	if(mpMapWidget == 0){
-		//qDebug() << "NO mpmap";
-		mpMapWidget = new MpMapWidget(this);
-
-	}else{
-		//qDebug() << "exists";
-	}
 	mpMapWidget->show();
 	mpMapWidget->setFocus();
-	//TODO need to set focus here.
 }
 
 //======================================

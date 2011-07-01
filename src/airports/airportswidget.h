@@ -13,6 +13,7 @@
 #include <QtGui/QStatusBar>
 #include <QtGui/QGroupBox>
 #include <QtGui/QRadioButton>
+#include <QtGui/QToolButton>
 
 
 #include <QtGui/QStandardItemModel>
@@ -66,12 +67,13 @@ public:
 	QTreeWidget *treeWidgetAirportInfo;
 	QStatusBar *statusBarAirportInfo;
 
+	QToolButton *buttonViewMap;
 
 	void scan_airports_xml();
 	void show_progress(bool state);
 
 	void load_airports_tree();
-	QHash<QString, QString> load_aptdat();
+	//QHash<QString, QString> load_aptdat();
 
 	void load_info_tree(QString airport_dir, QString airport_code);
 	int load_runways_node(QString airport_dir, QString airport_code);
@@ -107,6 +109,9 @@ public slots:
 
 
 	void on_buttonGroupUse();
+
+	void on_view_map();
+
 
 };
 

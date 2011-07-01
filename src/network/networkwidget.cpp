@@ -31,9 +31,6 @@
 #include "network/networkwidget.h"
 #include "network/mptelnet.h"
 
-/* list the Mp Servers which are gotten from a DNS lookup
-
-*/
 
 
 NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
