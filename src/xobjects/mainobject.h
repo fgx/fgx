@@ -104,8 +104,9 @@ public slots:
 	void start_terrasync();
 	void stop_all();
 
-
+	void quit();
 
 };
+
 
 #endif // MAINOBJECT_H

@@ -464,12 +464,11 @@ void LauncherWindow::on_about_qt(){
 //= quit
 void LauncherWindow::on_quit(){
 	save_settings(); // message save needed
-	QApplication::quit();
+	mainObject->quit();
 }
 
 //= window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
-	Q_UNUSED(event);
 	save_settings();
 	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
@@ -488,19 +487,12 @@ void LauncherWindow::on_tab_changed(int tab_idx){
 		return;
 	}
 	mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
-	QStringList tablist;
-
-	tablist << "Coresettings" << "Time and Weather" << "Aircraft" << "Airports" << "Network" << "Advanced Options" << "Output / Preview";
-	outLog("*** FGx reports: last tab used = " + tablist[tabWidget->currentIndex()] + " (" + QString::number(tabWidget->currentIndex()) + ") ***");
-
 	if(tab_idx == tabWidget->indexOf(outputPreviewWidget)){
 		on_command_preview();
-
 	}
 }
 
 void LauncherWindow::on_action_open_url(QAction *action){
-	qDebug() << "URL";
 	QUrl url(action->property("url").toString());
 	QDesktopServices::openUrl(url);
 }

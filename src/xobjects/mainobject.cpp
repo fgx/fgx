@@ -34,6 +34,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//= Set GLobal style
 	QApplication::setStyle( QStyleFactory::create(settings->style_current()) );
+	QApplication::setQuitOnLastWindowClosed(false);
 
 	launcher_flag = false;
 
@@ -65,17 +66,18 @@ MainObject::MainObject(QObject *parent) :
     actionCallsign = new QWidgetAction(this);
     lblCallsign = new QLabel();
     lblCallsign->setText("(your callsign)");
-	lblCallsign->setStyleSheet("color: #0000ff; padding: 0px; font-weight: bold;");
+	lblCallsign->setStyleSheet("color: #000099; padding: 4px; font-weight: bold; background-color: white; border: 1px outset #cccccc;");
     actionCallsign->setDefaultWidget(lblCallsign);
 	popupMenu->addAction(actionCallsign);
 
 	//= Launcher Action
-	actionLauncher = popupMenu->addAction(tr("Launcher"));
+	actionLauncher = popupMenu->addAction(QIcon(":icon/favicon"), tr("Launcher"));
 	actionLauncher->setIconVisibleInMenu(true);
 	connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
 
+
 	//= MpMap action
-	actionMpMap = popupMenu->addAction(tr("Start Map Widget"));
+	actionMpMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Start Map Widget"));
 	actionMpMap->setIconVisibleInMenu(true);
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));
 
@@ -489,3 +491,11 @@ void MainObject::start_fgcom(){
 	//qDebug() << command_line;
 	processFgCom->start(command_line, QStringList() );
 }
+
+
+void MainObject::quit(){
+	QApplication::quit();
+}
+
+
+
