@@ -60,7 +60,6 @@ public:
 
     void closeEvent(QCloseEvent *event);
 
-
 public slots:
 
 
@@ -92,6 +91,7 @@ public slots:
 
 	//* Widget Events
 	void on_tab_changed(int);
+
 
 };
 

@@ -77,12 +77,6 @@ public slots:
 
 	void on_radio_fg_path();
 
-	//void on_button_fgfs_path();
-	//void on_button_fgroot_path();
-	//void on_button_terrasync_path();
-
-	//void show_settings_dialog();
-	void show_setup_wizard();
 	void load_settings();
 };
 

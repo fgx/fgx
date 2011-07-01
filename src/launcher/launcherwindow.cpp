@@ -6,6 +6,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QProcess>
 
+
 #include <QtGui/QApplication>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHeaderView>
@@ -15,6 +16,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QStyleFactory>
 #include <QtGui/QMessageBox>
+#include <QtGui/QToolBar>
 
 #include "xwidgets/xgroupboxes.h"
 
@@ -119,10 +121,40 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	headerLabel->setStyleSheet(header_style);
 	outerContainer->addWidget(headerLabel, 0);
 
-	outerContainer->addSpacing(10);
+
+
+
+	//=== Top toolbar
+	QHBoxLayout *toolbarLayout =  new QHBoxLayout();
+	toolbarLayout->setContentsMargins(0, 0, 10, 0);
+	outerContainer->addLayout(toolbarLayout);
+	toolbarLayout->addStretch(100);
+
+	//= Show Log
+	QToolButton *buttonShowLogs = new QToolButton(this);
+	buttonShowLogs->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttonShowLogs->setText("View Logs");
+	buttonShowLogs->setAutoRaise(true);
+	buttonShowLogs->setIcon(QIcon(":/icon/log"));
+	buttonShowLogs->setStyleSheet("padding: 0px;");
+	toolbarLayout->addWidget(buttonShowLogs);
+	connect(buttonShowLogs, SIGNAL(clicked()),
+			mainObject, SLOT(on_view_logs())
+	);
+
+	//== Shjow setup wizard
+	QToolButton *buttonShowWizard = new QToolButton();
+	buttonShowWizard->setText("Set Paths");
+	buttonShowWizard->setAutoRaise(true);
+	buttonShowWizard->setIcon(QIcon(":/icon/wizard"));
+	buttonShowWizard->setStyleSheet("padding: 0px;");
+	buttonShowWizard->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	toolbarLayout->addWidget(buttonShowWizard);
+	connect(buttonShowWizard, SIGNAL(clicked()), mainObject, SLOT(show_setup_wizard()));
+
 
 	QVBoxLayout *mainLayout = new QVBoxLayout();
-	mainLayout->setContentsMargins(10, 10, 10, 10);
+	mainLayout->setContentsMargins(10, 0, 10, 10);
 	mainLayout->setSpacing(0);
 	outerContainer->addLayout(mainLayout);
 
@@ -261,7 +293,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	// TODO  - disable widget till sane in initialize()
 	//centralWidget()->setDisabled(true);
-
 
 	initializing = false;
 	QTimer::singleShot(300, this, SLOT(initialize()));

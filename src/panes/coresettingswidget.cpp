@@ -150,25 +150,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelTerraSyncDataPath->setStyleSheet(style_paths);
 	grpTerraSync->addWidget(labelTerraSyncDataPath);
 
-	//-------------------------------------
-	//= Set Paths Wizard Buttons
-	QHBoxLayout *boxSetPaths = new QHBoxLayout();
-	grpFgPaths->addLayout(boxSetPaths);
-	boxSetPaths->addStretch(5);
-
-	QPushButton *buttonShowLogs = new QPushButton();
-	buttonShowLogs->setText("View Logs");
-	buttonShowLogs->setIcon(QIcon(":/icon/log"));
-	boxSetPaths->addWidget(buttonShowLogs, 1);
-	connect(buttonShowLogs, SIGNAL(clicked()), mainObject, SLOT(on_view_logs()) );
-
-	QPushButton *buttonShowWizard = new QPushButton();
-	buttonShowWizard->setText("Set Paths");
-	buttonShowWizard->setIcon(QIcon(":/icon/wizard"));
-	boxSetPaths->addWidget(buttonShowWizard, 1);
-	connect(buttonShowWizard, SIGNAL(clicked()), this, SLOT(show_setup_wizard()));
-
-
 	//= Connect Mainobject (after paths wizard)
 	connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
 
@@ -332,12 +313,6 @@ void CoreSettingsWidget::on_radio_fg_path(){
 }
 
 
-
-//===============================================================
-// Settings Wizard
-void CoreSettingsWidget::show_setup_wizard(){
-	mainObject->show_setup_wizard();
-}
 
 
 //=====================================
