@@ -121,6 +121,18 @@ void TimeWeatherWidget::on_metar_clicked(int idx){
 
 }
 
+void TimeWeatherWidget::validate(){
+	if(	buttonGroupMetar->checkedButton()->property("value").toString() == "custom"
+		&& txtMetar->toPlainText().length() == 0){
+
+			return false;
+	}
+	return true;
+
+
+
+}
+
 QStringList TimeWeatherWidget::get_args(){
 	QStringList args;
 	//* Weather/Metar fetch

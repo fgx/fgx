@@ -149,11 +149,18 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelTerraSyncDataPath->setStyleSheet(style_paths);
 	grpTerraSync->addWidget(labelTerraSyncDataPath);
 
-
+	//-------------------------------------
 	//= Set Paths Wizard Buttons
 	QHBoxLayout *boxSetPaths = new QHBoxLayout();
 	grpFgPaths->addLayout(boxSetPaths);
 	boxSetPaths->addStretch(5);
+
+	QPushButton *buttonShowLogs = new QPushButton();
+	buttonShowLogs->setText("View Logs");
+	buttonShowLogs->setIcon(QIcon(":/icon/log"));
+	boxSetPaths->addWidget(buttonShowLogs, 1);
+	connect(buttonShowLogs, SIGNAL(clicked()), mainObject, SLOT(on_view_logs()) );
+
 	QPushButton *buttonShowWizard = new QPushButton();
 	buttonShowWizard->setText("Set Paths");
 	buttonShowWizard->setIcon(QIcon(":/icon/wizard"));
@@ -339,7 +346,6 @@ void CoreSettingsWidget::load_joysticks(){
 		//* take result and split into parts
 		QStringList entries = ok_result.trimmed().split("\n");
 		for(int i=2; i < entries.count(); i++){ //First 2 lines are crap
-			// comboJoystick->addItem(entries.at(i));
 			QString line = entries.at(i).trimmed();
 			if (line.indexOf(find) == 0) {
 				line = line.mid(find.size()+2).trimmed();

@@ -281,7 +281,10 @@ void LauncherWindow::initialize(){
 void LauncherWindow::on_start_fgfs_clicked() {
 
 	//* Start FlightGear (fgfs)
-	
+	if(!validate()){
+		return;
+	}
+
 	QString command = mainObject->settings->fgfs_path();
 
 	QString command_line = QString(command).append(" ").append(fg_args());
@@ -296,6 +299,8 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	//#exeFgfs->start(command_line);
 	fgfsflag = true;
 
+	mainObject->processFgFs->start(command_line, QStringList());
+	return;
 	//* Start TerraSync
 	
 	if (mainObject->settings->terrasync_enabled()) {
