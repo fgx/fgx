@@ -287,12 +287,13 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	QString command_line = QString(command).append(" ").append(fg_args());
 	outputPreviewWidget->txtPreviewOutput->setPlainText(command_line);
 
+
 	if(coreSettingsWidget->checkBoxShowMpMap->isChecked()){
 		QUrl mapUrl(coreSettingsWidget->comboMpMapServer->itemData(coreSettingsWidget->comboMpMapServer->currentIndex()).toString());
 		mapUrl.addQueryItem("follow", coreSettingsWidget->txtCallSign->text());
 		QDesktopServices::openUrl(mapUrl);
 	}
-	exeFgfs->start(command_line);
+	//#exeFgfs->start(command_line);
 	fgfsflag = true;
 
 	//* Start TerraSync

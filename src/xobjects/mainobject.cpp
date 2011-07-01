@@ -20,6 +20,8 @@
 #include "utilities/utilities.h"
 #include "setupwizard/setupwizard.h"
 
+
+
 MainObject::MainObject(QObject *parent) :
     QObject(parent)
 {
@@ -36,7 +38,13 @@ MainObject::MainObject(QObject *parent) :
 	launcher_flag = false;
 
 	mpMapWidget = 0;
-	viewLogWidget = 0;
+
+	//= Log Viewer is hidden
+	viewLogsWidget = new ViewLogsWidget(this);
+	viewLogsWidget->hide();
+
+	//= Processes
+	processFgFs  = new XProcess(this, "fgfs");
 
 	//============================
 	//== Tray Icon
@@ -81,13 +89,13 @@ MainObject::MainObject(QObject *parent) :
     );
 
 	//== View Logs
-	QAction *actionViewLog= new QAction(this);
-	actionViewLog->setIcon(QIcon(":/icon/log"));
-	actionViewLog->setText(tr("View Log..."));
-	actionViewLog->setIconVisibleInMenu(true);
-	popupMenu->addAction(actionViewLog);
-	connect(actionViewLog, SIGNAL(triggered()),
-			this, SLOT(on_view_log())
+	QAction *actionViewLogs = new QAction(this);
+	actionViewLogs->setIcon(QIcon(":/icon/log"));
+	actionViewLogs->setText(tr("View Log..."));
+	actionViewLogs->setIconVisibleInMenu(true);
+	popupMenu->addAction(actionViewLogs);
+	connect(actionViewLogs, SIGNAL(triggered()),
+			this, SLOT(on_view_logs())
 	);
 
     popupMenu->addSeparator();
@@ -207,7 +215,17 @@ void MainObject::show_setup_wizard(){
 	}
 }
 
-void MainObject::on_view_log(){
-	viewLogWidget = new ViewLogWidget(this);
-	viewLogWidget->show();
+//=============================================================================
+//== Logs
+//=============================================================================
+void MainObject::on_view_logs(){
+	viewLogsWidget->show();
+}
+
+void MainObject::clear_log(QString log_name){
+	viewLogsWidget->clear_log(log_name);
+}
+
+void MainObject::add_log(QString log_name, QString data){
+	viewLogsWidget->add_log(log_name, data);
 }

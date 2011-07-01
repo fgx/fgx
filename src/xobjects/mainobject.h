@@ -14,10 +14,27 @@
 #include "xobjects/xsettings.h"
 //#include "launcher/launcherwindow.h" // << This included "mainobject.h" also !!
 #include "mpmap/mpmapwidget.h"
-#include "panes/viewlogwidget.h"
+#include "logs/viewlogswidget.h"
 
+#include "xobjects/xprocess.h"
+
+
+//= Forward Declarations
 class MpMapWidget;
-class ViewLogWidget;
+class ViewLogsWidget;
+class XProcess;
+
+
+
+/*! \class MainObject
+ * \brief The MainObject is an extended QObject, and the main "controller" for FGx
+ *
+ * This is the main thing called when the app starts in the backgound
+ * It manifest itself and is made visible via an icon in the QSystemTrayIcon ie TaskBar
+ *
+ * @author: Peter Morgan
+ * @author: Yves Sablonier
+ */
 
 class MainObject : public QObject
 {
@@ -26,7 +43,6 @@ public:
     explicit MainObject(QObject *parent = 0);
     ~MainObject();
 	
-    //** Objects
 
     XSettings *settings;
 
@@ -35,7 +51,7 @@ public:
 	MpMapWidget *mpMapWidget;
 	//LauncherWindow *launcherWindow;
 	//PropsTreeWidget *propertiesTree;
-	ViewLogWidget *viewLogWidget;
+	ViewLogsWidget *viewLogsWidget;
 
     //* Widgets
     QSystemTrayIcon *trayIcon;
@@ -50,8 +66,7 @@ public:
 
     QAction *actionQuit;
 
-
-	QString runningOS();
+	XProcess *processFgFs;
 
 signals:
 	void show_settings(int);
@@ -71,7 +86,10 @@ public slots:
 	void on_properties_browser();
     void on_quit();
 	void show_setup_wizard();
-	void on_view_log();
+
+	void on_view_logs();
+	void clear_log(QString log_name);
+	void add_log(QString log_name, QString data);
 };
 
 #endif // MAINOBJECT_H

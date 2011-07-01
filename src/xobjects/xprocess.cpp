@@ -2,11 +2,12 @@
 
 #include "xprocess.h"
 
-XProcess::XProcess(MainObject *mob, QObject *parent) :
+XProcess::XProcess(MainObject *mob, QString logger_name, QObject *parent) :
     QObject(parent)
 {
 
 	mainObject = mob;
+	log_name = logger_name;
 
 	process = new QProcess(this);
 	process->setProcessChannelMode(QProcess::MergedChannels);
@@ -14,65 +15,74 @@ XProcess::XProcess(MainObject *mob, QObject *parent) :
 
 	connect(process, SIGNAL(stateChanged(QProcess::ProcessState)),
 			this, SLOT(on_process_state_change(QProcess::ProcessState)));
+
 	connect(process, SIGNAL(readyRead()),
 			this, SLOT(on_process_output()));
+
 	connect(process, SIGNAL(finished(int, QProcess::ExitStatus)),
 			this, SLOT(on_process_finished(int, QProcess::ExitStatus)));
+
 	connect(process, SIGNAL(error(QProcess::ProcessError)),
 			this, SLOT(on_process_error(QProcess::ProcessError)));
 }
 
 //===============================================================================
 //== fgProcess
-void XProcess::start(QString command_line)
+void XProcess::start(QString command_line, QStringList extra_env)
 {
-	viewLogsWidget->clear_fgfs_log();
+	mainObject->clear_log(log_name);
+
+	if (extra_env.size()) {
+		//= append new env vars
+		QStringList env = QProcess::systemEnvironment();
+		env << extra_env;
+		process->setEnvironment(env);
+	}
 	process->start(command_line);
 	process->closeWriteChannel();
 }
 
-void XProcess::fgfs_stop_request()
+void XProcess::stop()
 {
 	process->kill();
 	process->waitForFinished();
-	//#terrasync_stop_request();
 }
 
 
 
-void XProcess::fgfs_handle_process_state_change(QProcess::ProcessState state)
+void XProcess::on_process_state_change(QProcess::ProcessState state)
 {
 	switch (state) {
 		case QProcess::Starting:
-			emit fgfs_running(true);
+			emit running(true);
 			break;
 		case QProcess::Running:
-			emit fgfs_running(true);
+			emit running(true);
 			break;
 		case QProcess::NotRunning:
-			emit fgfs_running(false);
+			emit running(false);
 			break;
 	}
 }
 
-void XProcess::on_handle_process_output()
+void XProcess::on_process_output()
 {
-	QString line = fgProcess->readLine();
+	QString line = process->readLine();
 	while (!line.isEmpty()) {
-		viewLogsWidget->add_fgfs_log(line);
-		line = fgProcess->readLine();
+		mainObject->add_log(log_name, line);
+		line = process->readLine();
 	}
 }
 
-void XProcess::on_handle_process_finished(int code, QProcess::ExitStatus status)
+void XProcess::on_process_finished(int code, QProcess::ExitStatus status)
 {
 	QString message = QString("process exited with code: %1, status: %2\n")
 		.arg(code)
 		.arg(status == QProcess::NormalExit ? "QProcess::NormalExit" : "QProcess::CrashExit");
-	viewLogsWidget->add_fgfs_log(message);
+	mainObject->add_log(log_name, message);
 }
 
-void XProcess::on_handle_process_error(QProcess::ProcessError error)
+void XProcess::on_process_error(QProcess::ProcessError error)
 {
 	QString message("$ error: ");
 
@@ -89,5 +99,13 @@ void XProcess::on_handle_process_error(QProcess::ProcessError error)
 		default:
 			return;
 	}
-	viewLogsWidget->add_fgfs_log(message);
+	mainObject->add_log(log_name, message);
+}
+
+
+int XProcess::get_pid() {
+	if(mainObject->settings->runningOs() == XSettings::WINDOWS){
+		return 0;
+	}
+	return process->pid();
 }
