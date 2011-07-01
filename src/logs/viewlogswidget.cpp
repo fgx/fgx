@@ -18,6 +18,8 @@ ViewLogsWidget::ViewLogsWidget(MainObject *mOb, QWidget *parent) :
 	setWindowTitle(tr("Log"));
 	setMinimumWidth(600);
 	setMinimumHeight(600);
+	setProperty("settings_namespace", QVariant("view_logs_widget"));
+	mainObject->settings->restoreWindow(this);
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 
@@ -130,4 +132,12 @@ void ViewLogsWidget::add_log(QString log_name, QString line)
 		txtTerraSyncLog->insertPlainText(line);
 		txtTerraSyncLog->moveCursor(QTextCursor::End);
 	}
+}
+
+//=========================================================
+//==  CloseEvent
+void ViewLogsWidget::closeEvent(QCloseEvent *event){
+	mainObject->settings->saveWindow(this);
+	mainObject->settings->sync();
+	event->accept();
 }

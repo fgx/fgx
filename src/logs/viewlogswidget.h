@@ -34,6 +34,7 @@ public:
 	void add_log(QString log_name, QString log);
 	void clear_log(QString log_name );
 
+	void closeEvent(QCloseEvent *event);
 
 signals:
 

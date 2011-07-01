@@ -13,17 +13,20 @@
 
 #include "xobjects/xsettings.h"
 #include "launcher/launcherwindow.h"
-#include "mpmap/mpmapwidget.h"
+#include "maps/mpmapwidget.h"
+#include "maps/googlemapwidget.h"
 #include "logs/viewlogswidget.h"
 
 #include "xobjects/xprocess.h"
 
 
 //= Forward Declarations
+class LauncherWindow;
 class MpMapWidget;
+class GoogleMapWidget;
 class ViewLogsWidget;
 class XProcess;
-class LauncherWindow;
+
 
 
 /*! \class MainObject
@@ -49,14 +52,13 @@ public:
 
     XSettings *settings;
 
-	int launcher_flag;
-
-	MpMapWidget *mpMapWidget;
 	LauncherWindow *launcherWindow;
-	//PropsTreeWidget *propertiesTree;
+	MpMapWidget *mpMapWidget;
+	GoogleMapWidget *googleMapWidget;
+
 	ViewLogsWidget *viewLogsWidget;
 
-    //* Widgets
+
     QSystemTrayIcon *trayIcon;
     QMenu *popupMenu;
     QWidgetAction *actionCallsign;

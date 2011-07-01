@@ -17,7 +17,7 @@ public:
 	};
     explicit XSettings(QObject *parent = 0);
 
-	bool _dev_mode(); //* pete's hack - ../DEV.txt exists for local dev
+	static bool dev_mode();
 
 	QString data_file(QString file_name);
 	QString apt_dat_file();

@@ -25,7 +25,6 @@ HEADERS += xobjects/xsettings.h \
     xwidgets/xgroupboxes.h \
     xobjects/mainobject.h \
     launcher/launcherwindow.h \
-    mpmap/mpmapwidget.h \
     utilities/statusbar.h \
     xwidgets/xtreewidgetitem.h \
     utilities/utilities.h \
@@ -49,7 +48,10 @@ HEADERS += xobjects/xsettings.h \
     panes/viewlogwidget.h \
     xobjects/xprocess.h \
     logs/viewlogswidget.h \
-    utilities/helpers.h
+    utilities/helpers.h \
+    maps/googlemapwidget.h \
+    maps/mpmapwidget.h \
+    xobjects/latlng.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -65,7 +67,6 @@ SOURCES += main.cpp \
     xwidgets/xgroupboxes.cpp \
     xobjects/mainobject.cpp \
     launcher/launcherwindow.cpp \
-    mpmap/mpmapwidget.cpp \
     utilities/statusbar.cpp \
     utilities/utilities.cpp \
     utilities/messagebox.cpp \
@@ -84,7 +85,10 @@ SOURCES += main.cpp \
     panes/viewlogwidget.cpp \
     xobjects/xprocess.cpp \
     logs/viewlogswidget.cpp \
-    utilities/helpers.cpp
+    utilities/helpers.cpp \
+    maps/googlemapwidget.cpp \
+    maps/mpmapwidget.cpp \
+    xobjects/latlng.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
 CONFIG += console

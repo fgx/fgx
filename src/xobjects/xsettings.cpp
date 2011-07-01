@@ -563,3 +563,18 @@ QString XSettings::log_file_path(){
 		return "UNKNOWN log_file_path()";
 	}
 }
+
+/** \brief The "Special Developer Flag"
+ *
+ * This is one of those magic workaround functions to detect if in development mode.
+ * The functions detects if the file "DEV_MODE.txt" exists in the current directory.
+ * eg in fgx/src/DEV_MODE.txt
+ * The precense of this file make a few things happen.. such as redirecting login to shell
+ * Reading stuff from files in stead of resources etc..
+ * \return  developer mode enabled
+ */
+bool XSettings::dev_mode(){
+	QString curr = QDir::current().absolutePath().append("/DEV_MODE.txt");
+	qDebug() << "DEV" << curr << QFile::exists(curr);
+	return QFile::exists(curr);
+}

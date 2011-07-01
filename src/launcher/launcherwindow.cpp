@@ -502,7 +502,6 @@ void LauncherWindow::on_quit(){
 
 //= window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
-	qDebug() << "closesss" << mainObject->settings->value("first_launcher_close");
 	if(mainObject->settings->value("first_launcher_close", "").toBool() == false){
 		QMessageBox::information(this, "Minimize Notice",
 								 "Fgx does not quit when this window closes, instead minimize to taskbar. You can open this window again.",
@@ -514,8 +513,6 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	event->accept();
-	// TODO got to be a better way
-	mainObject->launcher_flag = false;
 }
 
 void LauncherWindow::on_action_style(QAction *action){

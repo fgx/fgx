@@ -36,9 +36,6 @@ MainObject::MainObject(QObject *parent) :
 	QApplication::setStyle( QStyleFactory::create(settings->style_current()) );
 	QApplication::setQuitOnLastWindowClosed(false);
 
-	launcher_flag = false;
-
-
 
 	//= Processes
 	processFgFs  = new XProcess(this, "fgfs");
@@ -118,6 +115,11 @@ MainObject::MainObject(QObject *parent) :
 	//= MP Map Widget
 	mpMapWidget = new MpMapWidget(this);
 	mpMapWidget->hide();
+
+	//= MP Map Widget
+	googleMapWidget = new GoogleMapWidget(this);
+	googleMapWidget->show();
+
 
 	//= Log Viewer is hidden
 	viewLogsWidget = new ViewLogsWidget(this);

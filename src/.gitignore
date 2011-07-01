@@ -10,3 +10,5 @@ Info.plist
 fgx.app/*
 fgx.app
 PkgInfo
+DEV_MODE.txt
+

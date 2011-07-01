@@ -16,6 +16,7 @@
 
 #include "xobjects/mainobject.h"
 #include "utilities/utilities.h"
+#include "xobjects/xsettings.h"
 
 //* message handler
 void fgxErrorMessage(QtMsgType type, const char *msg)
@@ -42,16 +43,17 @@ void fgxErrorMessage(QtMsgType type, const char *msg)
 int main( int argc, char* argv[])
 {
 	
-	//* versioning
 	QApplication app(argc, argv);
 	QApplication::setOrganizationName("FGx");
 	QApplication::setOrganizationDomain("googlecode.com");
 	QApplication::setApplicationName("FGx");
 	QApplication::setApplicationVersion("2.3.0rc3");
 
+	//== Start the App here
 	MainObject mainObject;
 	
-	//* global styles, should go to a qss once
+	//=====================================================
+	//== global styles, should go to a qss once
 	QString styles;
 	styles.append("QLineEdit { background-color: white }");
 	styles.append("QGroupBox { font-size: 11px; }"); // text-transform: uppercase
@@ -59,11 +61,10 @@ int main( int argc, char* argv[])
 	//styles.append("QStatusBar { font-family: Andale mono, monospace; font-size: 12px; font-weight: normal; color: #FF0000; background-image: url(:images/background_yellow); }");
 	styles.append("LauncherWindow { background: #eeeeee }");
 	
-	//* apply styles
-	qApp->setStyleSheet(styles);
+	app.setStyleSheet(styles);
 
 	//* install message handler - with Pete's TEMP hack to be removed later
-	if( !QFile::exists("/home/ffs/fgx/LOCAL") ){
+	if( XSettings::dev_mode() == false ){
 		qInstallMsgHandler(fgxErrorMessage);
 	}
 
