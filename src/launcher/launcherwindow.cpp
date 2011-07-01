@@ -291,7 +291,10 @@ void LauncherWindow::on_start_fgfs_clicked() {
 		return;
 	}
 	save_settings();
-	qDebug() << mainObject->get_fgfs_command();
+
+	mainObject->start_fgfs();
+
+	//qDebug() << mainObject->get_fgfs_command();
 	//qDebug() << timeWeatherWidget->get_args();
 	return;
 
@@ -309,7 +312,7 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	//#exeFgfs->start(command_line);
 	fgfsflag = true;
 
-	mainObject->processFgFs->start(command_line, QStringList());
+
 	return;
 	//* Start TerraSync
 	
@@ -395,26 +398,7 @@ QString LauncherWindow::fg_args(){
 
 	QStringList args;
 
-	//* fg_root
-	args << QString("--fg-root=").append(mainObject->settings->fgroot());
 
-	//* Core Settings
-	args << coreSettingsWidget->get_args();
-
-	//* Time and Weather
-	args << timeWeatherWidget->get_args();
-
-	//* Aircraft
-	args << aircraftWidget->get_args();
-
-	//* Airport, Runway Start pos
-	args << airportsWidget->get_args();
-
-	//* Network
-	args << networkWidget->get_args();
-
-	//**Advanced Options
-	args << advancedOptionsWidget->get_args();
 		//exeFgfs->user_env = advancedOptionsWidget->get_env();
 	   // exeFgfs->runtime = advancedOptionsWidget->get_runtime();
 

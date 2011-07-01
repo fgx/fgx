@@ -61,7 +61,7 @@ public:
 
 	//* Functions
 	void initialize();
-	QStringList get_args();
+
 
 	void save_settings();
 

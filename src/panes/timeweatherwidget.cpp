@@ -124,6 +124,8 @@ void TimeWeatherWidget::on_metar_clicked(){
 	}
 }
 
+
+//== Validate
 QString TimeWeatherWidget::validate(){
 	if(	buttonGroupMetar->checkedButton()->property("value").toString() == "custom"
 		&& txtMetar->toPlainText().length() == 0){
@@ -131,46 +133,10 @@ QString TimeWeatherWidget::validate(){
 			return QString("No metar text");
 	}
 	return QString("");
-
-
-
-}
-
-QStringList TimeWeatherWidget::get_args(){
-
-	save_settings();
-	QStringList args;
-
-	//=== Weather
-	QString weather_method = mainObject->settings->value("weather").toString();
-	if(weather_method == "live") {
-		//= real weather
-		args << QString("--enable-real-weather-fetch");
-
-	}else if(weather_method == "custom"){
-		//= custom metar
-		args << QString("--metar=").append("\"").append(mainObject->settings->value("metar").toString()).append("\"");
-
-	}else{
-		//= no weather
-		args << QString("--disable-real-weather-fetch");
-	}
-
-
-	//=== Time of Day
-	QString timeofday = mainObject->settings->value("timeofday").toString();
-	if (timeofday != "real") {
-		args << QString("--timeofday=").append(timeofday);
-    }
-
-	//=== Season	
-	//args << QString("--season=").append(mainObject->settings->value("season").toString());
-
-
-	return args;
 }
 
 
+//== Load Settings
 void TimeWeatherWidget::load_settings(){
 
 
@@ -184,6 +150,7 @@ void TimeWeatherWidget::load_settings(){
 }
 
 
+//== Save Settings
 void TimeWeatherWidget::save_settings(){
 
 	//* Time
@@ -193,5 +160,4 @@ void TimeWeatherWidget::save_settings(){
 	//* Weather
 	mainObject->settings->setValue("weather", buttonGroupMetar->checkedButton()->property("value").toString());
 	mainObject->settings->setValue("metar", txtMetar->toPlainText());
-
 }

@@ -254,63 +254,16 @@ void CoreSettingsWidget::save_settings(){
 
 
 
-//====================================================
-//* Get Args
-QStringList CoreSettingsWidget::get_args(){
-	QStringList args;
-
-
-	if (txtCallSign->text().size()) {
-		//  only add a callsign IFF there is an argument
-		QString argCallsign;
-		argCallsign.append("--callsign=");
-		argCallsign.append(txtCallSign->text());
-		args << argCallsign;
-	}
-
-
-	//** Startup , Splash, Geometry
-	if(comboScreenSize->currentIndex() > 0){ /* zero is "--detault--" */
-		args << QString("--geometry=").append( comboScreenSize->currentText() );
-		}
-	if (checkBoxDisableSplashScreen->isChecked()) {
-		args << QString("--disable-splash-screen");
-	}
-	if (checkBoxFullScreenStartup->isChecked()) {
-		args << QString("--enable-fullscreen");
-	}
-
-	//** Autocordination with Mouse - is this the same for joysticks ??
-	args << QString(checkBoxEnableAutoCoordination->isChecked() ? "--enable-auto-coordination" : "--disable-auto-coordination");
-
-
-
-	//** Terrasync/Multiplayermap - send on socket
-	if (mainObject->settings->terrasync_enabled()) {
-		args << QString("--fg-scenery=").append(mainObject->settings->terrasync_sync_data_path()).append(":").append(mainObject->settings->scenery_path());
-		args << QString("--atlas=socket,out,5,localhost,5505,udp");
-	}else{
-
-		/* This is actually not needed because fgroot finds scenery path by default,
-		but it is needed in case terrasync scenery is active, then we need both paths with ":" separated, hmpf */
-		//args << QString("--fg-scenery=").append(mainObject->settings->scenery_path());
-	}
-	
-
-	return args;
-}
-
-
 
 //==============================================
-//** Initialize
+//== Initialize
 void CoreSettingsWidget::initialize(){
 	load_joysticks();
 }
 
 
 //==============================================
-// Joysticks
+//== Joysticks
 //==============================================
 //** Check js_demo exists
 bool CoreSettingsWidget::check_js_demo_exists(){
@@ -328,7 +281,7 @@ bool CoreSettingsWidget::check_js_demo_exists(){
 
 
 //==============================================
-//** Load Joysticks
+//== Load Joysticks
 void CoreSettingsWidget::load_joysticks(){
 	comboJoystick->clear();
 	comboJoystick->addItem("-- None--");
@@ -379,48 +332,7 @@ void CoreSettingsWidget::on_radio_fg_path(){
 }
 
 
-//================================================================================
-//** Path buttons Clicked - Opens the path dialog
-/*
-void CoreSettingsWidget::on_button_terrasync_path(){
 
-	QString filePath = QFileDialog::getExistingDirectory(this,
-														 tr("Select TerraSync Directory"),
-														 txtTerraSyncPath->text(),
-														 QFileDialog::ShowDirsOnly);
-	if(filePath.length() > 0){
-		txtTerraSyncPath->setText(filePath);
-	}
-
-	// Need to write out the terrasync dir as its used other places ;-(
-	mainObject->settings->setValue("terrasync_path", txtTerraSyncPath->text());
-	mainObject->settings->sync();
-}
-*/
-
-
-/*
-void CoreSettingsWidget::on_button_fgfs_path(){
-	show_settings_dialog();
-}
-
-
-void CoreSettingsWidget::on_button_fgroot_path(){
-	show_settings_dialog();
-}
-*/
-
-//===============================================================
-// Settings Dialog
-/*
-void CoreSettingsWidget::show_settings_dialog(){
-	SettingsDialog *settingsDialog = new SettingsDialog(mainObject);
-	if(settingsDialog->exec()){
-		txtFgFs->setText(mainObject->settings->fgfs_path());
-		txtFgRoot->setText(mainObject->settings->fg_root());
-	}
-}
-*/
 //===============================================================
 // Settings Wizard
 void CoreSettingsWidget::show_setup_wizard(){

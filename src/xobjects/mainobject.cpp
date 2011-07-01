@@ -233,25 +233,25 @@ void MainObject::add_log(QString log_name, QString data){
 
 
 QString MainObject::get_fgfs_command(){
+
 	QStringList args;
 
 	args << QString("--fg-root=").append(settings->fgroot());
 
-	//* Core Settings
-	//args << coreSettingsWidget->get_args();
-
 	//=== Callsign
 	args << QString ("--callsign=").append(settings->value("callsign").toString());
 
+
 	//=== Screen
-	if(settings->value("screen_size").toString().length())
+	if(settings->value("screen_size").toString() != "default"){
 		args << QString ("--geometry=").append(settings->value("screen_size").toString());
-
-	if(settings->value("screen_size").toBool())
-		args << QString ("-disable-splash-screen");
-
-	if( settings->value("screen_size").toBool())
+	}
+	if(settings->value("screen_splash").toBool()){
+		args << QString ("--disable-splash-screen");
+	}
+	if( settings->value("screen_full").toBool()){
 		args << QString ("--enable-fullscreen");
+	}
 
 
 
@@ -283,22 +283,13 @@ QString MainObject::get_fgfs_command(){
 
 
 
-	//== Startup , Splash, Geometry
-	if(settings->value("screen_size").toString() != "default"){
-		args << QString("--geometry=").append( settings->value("screen_size").toString() );
-	}
-	if (settings->value("screen_splash").toBool()){
-		args << QString("--disable-splash-screen");
-	}
-	if (settings->value("screen_full").toBool()){
-		args << QString("--enable-fullscreen");
-	}
 
 	//== AutoCordination
 	if(settings->value("enable_auto_coordination").toBool()){
 		args << QString("--enable-auto-coordination");
 	}
 	//+ TODO joystick
+
 
 
 	//== Terrasync
@@ -310,9 +301,7 @@ QString MainObject::get_fgfs_command(){
 
 	//== Multiplayer
 	if(settings->value("enable_mp").toBool()){
-
-
-
+		//= In
 		if(settings->value("in").toBool()){
 			args << QString("--multiplay=in,%1,%2,%3"
 								).arg(	settings->value("in_hz").toString()
@@ -320,6 +309,7 @@ QString MainObject::get_fgfs_command(){
 								).arg(	settings->value("in_port").toString()
 							);
 		}
+		//= Out
 		if(settings->value("out").toBool()){
 			args << QString("--multiplay=out,%1,%2,%3"
 							).arg(	settings->value("out_hz").toString()
@@ -332,7 +322,7 @@ QString MainObject::get_fgfs_command(){
 	//== Servers
 	//= Http
 	if(settings->value("http").toBool()){
-		args << QString("--http=%1").arg( settings->value("http_port").toString() );
+		args << QString("--httpd=%1").arg( settings->value("http_port").toString() );
 	}
 	//= Telnet
 	if(settings->value("telnet").toBool()){
@@ -340,7 +330,8 @@ QString MainObject::get_fgfs_command(){
 	}
 	//= ScreenShot
 	if(settings->value("screenshot").toBool()){
-		args << QString("--jpg-httpd=%1").arg( settings->value("screenshot_port").toString() );
+		// BUG - this reports unknow option ??
+		//args << QString("--jpg-httpd=%1").arg( settings->value("screenshot_port").toString() );
 	}
 
 
@@ -380,9 +371,8 @@ QString MainObject::get_fgfs_command(){
 
 	//== Navigation Radio
 	QStringList navkeys;
-	navkeys << "nav1" << "nav2" << "comm1" << "comm2" << "adf";
+	navkeys << "nav1" << "nav2" << "com1" << "com2" << "adf";
 	for(int nidx=0; nidx < navkeys.size(); nidx++){
-		qDebug() << navkeys.at(nidx) << settings->value(navkeys.at(nidx));
 		if(settings->value(navkeys.at(nidx)).toString().length() > 0){
 			args << QString("--%1=%2").arg(navkeys.at(nidx)).arg(settings->value(navkeys.at(nidx)).toString());
 		}
@@ -402,13 +392,6 @@ QString MainObject::get_fgfs_command(){
 			}
 		}
 	}
-	//* Network
-	//args << networkWidget->get_args();
-
-	//**Advanced Options
-	//args << advancedOptionsWidget->get_args();
-		//exeFgfs->user_env = advancedOptionsWidget->get_env();
-	   // exeFgfs->runtime = advancedOptionsWidget->get_runtime();
 
 	//* Ai Traffic TODO
 	/*
@@ -420,9 +403,11 @@ QString MainObject::get_fgfs_command(){
 	*/
 	//** Enable AI models ???
 	//args << QString("--enable-ai-models");
-	qDebug() << args;
+	//qDebug() << args;
 
-	return QString("");
+	QString command = settings->fgfs_path();
+	command.append(" ").append(args.join(" "));
+	return command;
 }
 
 
@@ -447,3 +432,22 @@ QStringList MainObject::get_env(){
 	return args;
 }
 
+
+
+//========================================================
+//== Start FGFS
+void MainObject::start_fgfs(){
+	qDebug() << "Staart";
+	qDebug() << get_fgfs_command();
+	processFgFs->start(get_fgfs_command(), get_env() );
+}
+
+
+
+//========================================================
+//== Stars FGFS
+void MainObject::start_terrasync(){
+	qDebug() << "Staart";
+	//qDebug() << get_terrasync_command();
+	//processFgFs->start(get_fgfs_command(), get_env() );
+}

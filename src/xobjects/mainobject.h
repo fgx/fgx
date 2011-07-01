@@ -71,6 +71,10 @@ public:
 	QString get_fgfs_command();
 	QStringList get_env();
 
+	void start_fgfs();
+	void start_fgcom();
+	void start_terrasync();
+
 signals:
 	void show_settings(int);
 	void reload_paths();

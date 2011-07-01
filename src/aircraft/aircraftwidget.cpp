@@ -290,8 +290,8 @@ void AircraftWidget::save_settings(){
 	mainObject->settings->setValue("nav1", txtNav1->text());
 	mainObject->settings->setValue("nav2", txtNav2->text());
 	mainObject->settings->setValue("adf", txtAdf->text());
-	mainObject->settings->setValue("comm1", txtComm1->text());
-	mainObject->settings->setValue("comm2", txtComm2->text());
+	mainObject->settings->setValue("com1", txtComm1->text());
+	mainObject->settings->setValue("com2", txtComm2->text());
 	mainObject->settings->setValue("aircraft_use_default", checkBoxUseDefault->isChecked());
 	mainObject->settings->sync();
 }
@@ -306,8 +306,8 @@ void AircraftWidget::load_settings(){
 	txtNav1->setText(mainObject->settings->value("nav1").toString());
 	txtNav2->setText(mainObject->settings->value("nav2").toString());
 	txtAdf->setText(mainObject->settings->value("adf").toString());
-	txtComm1->setText(mainObject->settings->value("comm1").toString());
-	txtComm2->setText(mainObject->settings->value("comm2").toString());
+	txtComm1->setText(mainObject->settings->value("com1").toString());
+	txtComm2->setText(mainObject->settings->value("com2").toString());
 	checkBoxUseDefault->setChecked(mainObject->settings->value("aircraft_use_default", false).toBool());
 	on_use_default_clicked();
 }
@@ -431,40 +431,7 @@ void AircraftWidget::initialize(){
 	first_load_done = true;
 }
 
-//=============================================================
-// Get Args
-QStringList AircraftWidget::get_args(){
 
-	QStringList args;
-
-	if(checkBoxUseDefault->isChecked()){
-			// this is default aricraft, also set by fgfs without --aircraft= command line option
-			// set hard here, to prepare FGx to have its own default in any case
-			// see also emit ("remove" ...) in case there is a list but no selection
-			args << QString("--aircraft=c172p");
-	} else {
-		args << QString("--aircraft=%1").arg(selected_aircraft());
-	}
-
-	if(txtNav1->text().length() > 0){
-		args << QString("--nav1=%1").arg(txtNav1->text());
-	}
-	if(txtNav2->text().length() > 0){
-		args << QString("--nav2=%1").arg(txtNav2->text());
-	}
-	if(txtAdf->text().length() > 0){
-		args << QString("--adf=%1").arg(txtAdf->text());
-	}
-	if(txtComm1->text().length() > 0){
-		args << QString("--com1=%1").arg(txtComm1->text());
-	}
-	if(txtComm2->text().length() > 0){
-		args << QString("--com2=%1").arg(txtComm2->text());
-	}
-
-	return args;
-
-}
 
 
 void AircraftWidget::on_use_default_clicked(){

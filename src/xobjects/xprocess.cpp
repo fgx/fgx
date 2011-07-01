@@ -27,7 +27,7 @@ XProcess::XProcess(MainObject *mob, QString logger_name, QObject *parent) :
 }
 
 //===============================================================================
-//== fgProcess
+//== Start
 void XProcess::start(QString command_line, QStringList extra_env)
 {
 	mainObject->clear_log(log_name);
@@ -42,6 +42,8 @@ void XProcess::start(QString command_line, QStringList extra_env)
 	process->closeWriteChannel();
 }
 
+//===============================================================================
+//== Stop
 void XProcess::stop()
 {
 	process->kill();

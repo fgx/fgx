@@ -667,32 +667,7 @@ QString AirportsWidget::current_airport(){
 	return item->text();
 }
 
-//================================================================
-// Get Args
-QStringList AirportsWidget::get_args(){
-	QStringList args;
 
-	if(buttonGroupUse->checkedId() == USE_AIRPORT){
-		if(current_airport().length() > 0){
-
-			args << QString("--airport=").append(current_airport());
-
-			if(treeWidgetAirportInfo->selectionModel()->hasSelection()){
-				QTreeWidgetItem *cItem = treeWidgetAirportInfo->currentItem();				
-				if(cItem->text(CI_TYPE) == "runway"){
-					args << QString("--runway=").append(cItem->text(CI_NODE));
-
-				}else if(cItem->text(CI_TYPE) == "stand"){
-					args << QString("--parkpos=").append(cItem->text(CI_NODE));
-				}
-
-			}
-		}
-	}else{
-		//TODO Startup COORDINATES
-	}
-	return args;
-}
 
 //=============================================================
 // Save Settings

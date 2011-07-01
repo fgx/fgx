@@ -57,7 +57,7 @@ public:
 	void select_node(QString aero);
 	QString selected_aircraft();
 
-	QStringList get_args();
+
 
 private:
 	QTreeWidget *treeWidget;
