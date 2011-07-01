@@ -467,8 +467,18 @@ void LauncherWindow::on_quit(){
 	mainObject->quit();
 }
 
+
+
 //= window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
+	qDebug() << "closesss" << mainObject->settings->value("first_launcher_close");
+	if(mainObject->settings->value("first_launcher_close", "").toBool() == false){
+		QMessageBox::information(this, "Minimize Notice",
+								 "Fgx does not quit when this window closes, instead minimize to taskbar. You can open this window again.",
+								 QMessageBox::Ok);
+		mainObject->settings->setValue("first_launcher_close", true);
+	}
+
 	save_settings();
 	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();

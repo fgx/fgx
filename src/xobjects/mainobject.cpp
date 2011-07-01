@@ -71,13 +71,13 @@ MainObject::MainObject(QObject *parent) :
 	popupMenu->addAction(actionCallsign);
 
 	//= Launcher Action
-	actionLauncher = popupMenu->addAction(QIcon(":icon/favicon"), tr("Launcher"));
+	actionLauncher = popupMenu->addAction(QIcon(":icon/favicon"), tr("Open Launcher..."));
 	actionLauncher->setIconVisibleInMenu(true);
 	connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
 
 
 	//= MpMap action
-	actionMpMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Start Map Widget"));
+	actionMpMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Map..."));
 	actionMpMap->setIconVisibleInMenu(true);
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));
 
@@ -85,7 +85,7 @@ MainObject::MainObject(QObject *parent) :
 	//= Settings Action
 	QAction *actionSetupWizard= new QAction(this);
 	actionSetupWizard->setIcon(QIcon(":/icon/wizard"));
-	actionSetupWizard->setText(tr("Setup Wizard..."));
+	actionSetupWizard->setText(tr("Setup..."));
 	actionSetupWizard->setIconVisibleInMenu(true);
 	popupMenu->addAction(actionSetupWizard);
 	connect(actionSetupWizard, SIGNAL(triggered()),
@@ -95,7 +95,7 @@ MainObject::MainObject(QObject *parent) :
 	//== View Logs
 	QAction *actionViewLogs = new QAction(this);
 	actionViewLogs->setIcon(QIcon(":/icon/log"));
-	actionViewLogs->setText(tr("View Log..."));
+	actionViewLogs->setText(tr("View Logs..."));
 	actionViewLogs->setIconVisibleInMenu(true);
 	popupMenu->addAction(actionViewLogs);
 	connect(actionViewLogs, SIGNAL(triggered()),
