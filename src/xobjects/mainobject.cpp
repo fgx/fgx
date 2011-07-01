@@ -328,9 +328,21 @@ QString MainObject::get_fgfs_command(){
 	}
 
 	//* Aircraft
-	//args << aircraftWidget->get_args();
+	if(settings->value("aircraft").toString().length() > 0){
+		args << QString("--aircraft=").append(settings->value("aircraft").toString());
+	}
 
+	//== Navigation Radio
+	QStringList navkeys;
+	navkeys << "nav1" << "nav2" << "comm1" << "comm2" << "adf";
+	for(int nidx=0; nidx < navkeys.size(); nidx++){
+		qDebug() << navkeys.at(nidx) << settings->value(navkeys.at(nidx));
+		if(settings->value(navkeys.at(nidx)).toString().length() > 0){
+			args << QString("--%1=%2").arg(navkeys.at(nidx)).arg(settings->value(navkeys.at(nidx)).toString());
+		}
+	}
 
+	//=== Airports and Startup Position
 	if(settings->value("airport").toString().length() > 0){
 		args << QString("--airport=").append(settings->value("airport").toString());
 
