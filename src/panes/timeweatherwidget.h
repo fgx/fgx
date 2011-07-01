@@ -37,7 +37,7 @@ public:
 signals:
 
 public slots:
-	void on_metar_clicked(int idx);
+	void on_metar_clicked();
 };
 
 #endif // TIMEWEATHERWIDGET_H

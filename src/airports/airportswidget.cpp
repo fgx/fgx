@@ -643,7 +643,7 @@ void AirportsWidget::on_reload_cache(){
 
 	bool icao_only = widget->buttIcaoOnly->isChecked();
 
-	QProgressDialog progress;
+	QProgressDialog progress(this);
 	AirportsData::import(progress, mainObject, icao_only);
 	load_airports_tree();
 }
@@ -715,10 +715,12 @@ void AirportsWidget::save_settings(){
 
 		//** save runway or parking
 		if(treeWidgetAirportInfo->currentItem()){
-				mainObject->settings->setValue("runway_stand", treeWidgetAirportInfo->currentItem()->text(CI_SETTING_KEY));
-
+			mainObject->settings->setValue("runway_or_stand", treeWidgetAirportInfo->currentItem()->text(CI_TYPE));
+			mainObject->settings->setValue("runway_stand", treeWidgetAirportInfo->currentItem()->text(CI_SETTING_KEY));
+			mainObject->settings->setValue("startup_position", treeWidgetAirportInfo->currentItem()->text(CI_NODE));
 		}else{
-			mainObject->settings->setValue("runway_stand", "");
+			mainObject->settings->setValue("runway_or_stand", "");
+			mainObject->settings->setValue("startup_position", "");
 		}
 	}
 

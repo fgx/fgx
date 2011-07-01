@@ -68,6 +68,9 @@ public:
 
 	XProcess *processFgFs;
 
+	QString get_fgfs_command();
+	QStringList get_env();
+
 signals:
 	void show_settings(int);
 	void reload_paths();
@@ -90,6 +93,8 @@ public slots:
 	void on_view_logs();
 	void clear_log(QString log_name);
 	void add_log(QString log_name, QString data);
+
+
 };
 
 #endif // MAINOBJECT_H

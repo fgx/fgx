@@ -14,6 +14,7 @@
 #include "panes/coresettingswidget.h"
 //#include "settings/settingsdialog.h"
 #include "xwidgets/xgroupboxes.h"
+#include "utilities/helpers.h"
 
 
 CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
@@ -49,11 +50,11 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Initial Size
 	grpBoxScreen->addWidget(new QLabel("Initial Screen Size"));
 	comboScreenSize = new QComboBox();
-	comboScreenSize->addItem("-- Default --");
-	comboScreenSize->addItem("800x600");
-	comboScreenSize->addItem("1024x768");
-	comboScreenSize->addItem("1280x1024");
-	comboScreenSize->addItem("1600x900");
+	comboScreenSize->addItem("-- Default --", "default");
+	comboScreenSize->addItem("800 x 600", "800x600");
+	comboScreenSize->addItem("1024 x 768", "1024x768");
+	comboScreenSize->addItem("1280 x 1024", "1280x1024");
+	comboScreenSize->addItem("1600 x 900", "1600x900");
 	grpBoxScreen->addWidget(comboScreenSize);
 	
 	//= Full Screen
@@ -183,16 +184,15 @@ void CoreSettingsWidget::on_checkbox_show_mp_map(){
 //* Load Settings
 void CoreSettingsWidget::load_settings(){
 
-	//* Callsign
+	//= Callsign
 	txtCallSign->setText( mainObject->settings->value("callsign").toString() );
 
-	//* Sartup screens
-	int idx = comboScreenSize->findText(mainObject->settings->value("screen_size").toString());
-	comboScreenSize->setCurrentIndex( idx == -1 ? 0 : idx );
+	//= Sartup screen
+	Helpers::select_combo(comboScreenSize, mainObject->settings->value("screen_size").toString());
 	checkBoxFullScreenStartup->setChecked(mainObject->settings->value("screen_full").toBool());
 	checkBoxDisableSplashScreen->setChecked(mainObject->settings->value("screen_splash").toBool());
 
-	//* controls
+	//= controls
 	checkBoxEnableAutoCoordination->setChecked(mainObject->settings->value("enable_auto_coordination", false).toBool());
 	// TODO - joystick
 
@@ -239,7 +239,7 @@ void CoreSettingsWidget::save_settings(){
 	mainObject->settings->setValue("callsign", txtCallSign->text());
 
 	//* screen
-	mainObject->settings->setValue("screen_size", comboScreenSize->currentText());
+	mainObject->settings->setValue("screen_size", comboScreenSize->itemData(comboScreenSize->currentIndex()));
 	mainObject->settings->setValue("screen_full", checkBoxFullScreenStartup->isChecked());
 	mainObject->settings->setValue("screen_splash", checkBoxDisableSplashScreen->isChecked());
 

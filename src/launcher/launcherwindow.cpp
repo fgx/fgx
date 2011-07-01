@@ -290,6 +290,10 @@ void LauncherWindow::on_start_fgfs_clicked() {
 	if(!validate()){
 		return;
 	}
+	save_settings();
+	qDebug() << mainObject->get_fgfs_command();
+	//qDebug() << timeWeatherWidget->get_args();
+	return;
 
 	QString command = mainObject->settings->fgfs_path();
 

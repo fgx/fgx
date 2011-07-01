@@ -48,7 +48,8 @@ HEADERS += xobjects/xsettings.h \
     setupwizard/completedpage.h \
     panes/viewlogwidget.h \
     xobjects/xprocess.h \
-    logs/viewlogswidget.h
+    logs/viewlogswidget.h \
+    utilities/helpers.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -82,7 +83,8 @@ SOURCES += main.cpp \
     setupwizard/completedpage.cpp \
     panes/viewlogwidget.cpp \
     xobjects/xprocess.cpp \
-    logs/viewlogswidget.cpp
+    logs/viewlogswidget.cpp \
+    utilities/helpers.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
 CONFIG += console

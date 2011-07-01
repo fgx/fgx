@@ -177,7 +177,7 @@ void MainObject::on_mpmap(){
 }
 
 //======================================
-//** Propertes Browser
+//== Propertes Browser
 void MainObject::on_properties_browser(){
 	//propertiesTree = new PropsTreeWidget(this);
 	//propertiesTree->show()
@@ -186,16 +186,15 @@ void MainObject::on_properties_browser(){
 
 
 
-//****************************************************************************
-//** Quit
+//=====================================
+//== Quit
 void MainObject::on_quit(){
-	
     QCoreApplication::instance()->quit();
 }
 
 
-//****************************************************************************
-//** Tray Icon
+//=================================================
+//== Tray Icon Clicked
 void MainObject::on_tray_icon(QSystemTrayIcon::ActivationReason reason){   
     //* Right click will show the context Menu above system tray
     //* Following will popup menu with single click on Top LEFT ??
@@ -207,6 +206,8 @@ void MainObject::on_tray_icon(QSystemTrayIcon::ActivationReason reason){
 
 
 
+//=================================================
+//== Show Setup Wizard
 void MainObject::show_setup_wizard(){
 	SetupWizard *setupWizard = new SetupWizard(this);
 	if(setupWizard->exec()){
@@ -229,3 +230,162 @@ void MainObject::clear_log(QString log_name){
 void MainObject::add_log(QString log_name, QString data){
 	viewLogsWidget->add_log(log_name, data);
 }
+
+
+QString MainObject::get_fgfs_command(){
+	QStringList args;
+
+	args << QString("--fg-root=").append(settings->fgroot());
+
+	//* Core Settings
+	//args << coreSettingsWidget->get_args();
+
+	//=== Callsign
+	args << QString ("--callsign=").append(settings->value("callsign").toString());
+
+	//=== Screen
+	if(settings->value("screen_size").toString().length())
+		args << QString ("--geometry=").append(settings->value("screen_size").toString());
+
+	if(settings->value("screen_size").toBool())
+		args << QString ("-disable-splash-screen");
+
+	if( settings->value("screen_size").toBool())
+		args << QString ("--enable-fullscreen");
+
+
+
+	//=== Weather
+	QString weather_method = settings->value("weather").toString();
+	if(weather_method == "live") {
+		//= real weather
+		args << QString("--enable-real-weather-fetch");
+
+	}else if(weather_method == "custom"){
+		//= custom metar
+		args << QString("--metar=").append("\"").append(settings->value("metar").toString()).append("\"");
+
+	}else{
+		//= no weather
+		args << QString("--disable-real-weather-fetch");
+	}
+
+
+	//=== Time of Day
+	QString timeofday = settings->value("timeofday").toString();
+	if (timeofday != "real") {
+		args << QString("--timeofday=").append(timeofday);
+	}
+
+	//=== Season
+	//args << QString("--season=").append(mainObject->settings->value("season").toString());
+
+
+
+
+	//== Startup , Splash, Geometry
+	if(settings->value("screen_size").toString() != "default"){
+		args << QString("--geometry=").append( settings->value("screen_size").toString() );
+	}
+	if (settings->value("screen_splash").toBool()){
+		args << QString("--disable-splash-screen");
+	}
+	if (settings->value("screen_full").toBool()){
+		args << QString("--enable-fullscreen");
+	}
+
+	//== AutoCordination
+	if(settings->value("enable_auto_coordination").toBool()){
+		args << QString("--enable-auto-coordination");
+	}
+	//+ TODO joystick
+
+
+	//== Terrasync
+	if (settings->terrasync_enabled()) {
+		args << QString("--fg-scenery=").append(settings->terrasync_sync_data_path()).append(":").append(settings->scenery_path());
+		args << QString("--atlas=socket,out,5,localhost,5505,udp");
+	}
+
+
+	//=== Extra Args
+	QString extra = settings->value("extra_args").toString().trimmed();
+	if (extra.length() > 0) {
+		QStringList parts = extra.split("\n");
+		if(parts.count() > 0){
+			for(int i=0; i < parts.count(); i++){
+				QString part = parts.at(i).trimmed();
+				if(part.length() > 0){
+					args << part;
+				}
+			}
+		}
+	}
+
+	//= Log Level
+	if(settings->value("log_level").toString() != "none"){
+		args << QString("--log-level=").append(settings->value("log_level").toString());
+	}
+
+	//* Aircraft
+	//args << aircraftWidget->get_args();
+
+
+	if(settings->value("airport").toString().length() > 0){
+		args << QString("--airport=").append(settings->value("airport").toString());
+
+		QString runway_or_stand = settings->value("runway_or_stand").toString().trimmed();
+		if(runway_or_stand.length() > 0){
+			if(runway_or_stand == "runway"){
+				args << QString("--runway=").append(settings->value("startup_position").toString());
+
+			}else if(runway_or_stand == "stand"){
+				args << QString("--parkpos=").append(settings->value("startup_position").toString());
+			}
+		}
+	}
+	//* Network
+	//args << networkWidget->get_args();
+
+	//**Advanced Options
+	//args << advancedOptionsWidget->get_args();
+		//exeFgfs->user_env = advancedOptionsWidget->get_env();
+	   // exeFgfs->runtime = advancedOptionsWidget->get_runtime();
+
+	//* Ai Traffic TODO
+	/*
+	if (enableAITraffic->isChecked()) {
+		args << QString("--enable-ai-traffic");
+	}else{
+		args << QString("--disable-ai-traffic");
+	}
+	*/
+	//** Enable AI models ???
+	//args << QString("--enable-ai-models");
+	qDebug() << args;
+
+	return QString("");
+}
+
+
+//========================================================
+//** Get Engiroment
+QStringList MainObject::get_env(){
+
+	QStringList args;
+
+	QString extra = settings->value("extra_env").toString().trimmed();
+	if (extra.length() > 0) {
+		QStringList parts = extra.split("\n");
+		if(parts.count() > 0){
+			for(int i=0; i < parts.count(); i++){
+				QString part = parts.at(i).trimmed();
+				if(part.length() > 0){
+					args << part;
+				}
+			}
+		}
+	}
+	return args;
+}
+

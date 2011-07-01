@@ -12,6 +12,7 @@
 
 #include "advancedoptionswidget.h"
 #include "xwidgets/xgroupboxes.h"
+#include "utilities/helpers.h"
 
 AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
@@ -69,9 +70,9 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
 	buttonGroupLogOptions->setExclusive(true);
 
 	QStringList values;
-	values << "warn" << "info" << "debug" << "bulk" << "alert";
+	values << "none" << "warn" << "info" << "debug" << "bulk" << "alert";
 	QStringList labels;
-	labels << tr("Warn") << tr("Info") << tr("Debug") << tr("Bulk") << tr("Alert");
+	labels << tr("None") << tr("Warn") << tr("Info") << tr("Debug") << tr("Bulk") << tr("Alert");
 
 	for(int i = 0; i < values.length(); i++){
 		QRadioButton *butt = new QRadioButton();
@@ -79,7 +80,6 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
 		butt->setProperty("value", values.at(i));
 		layoutBoxLog->addWidget(butt);
 		buttonGroupLogOptions->addButton(butt, i);
-		buttonGroupLogOptions->setId(butt, i);
 	}
 
 }
@@ -154,7 +154,7 @@ void AdvancedOptionsWidget::load_settings(){
 	txtExtraArgs->setPlainText(mainObject->settings->value("extra_args").toString());
 	txtExtraEnv->setPlainText(mainObject->settings->value("extra_env").toString());
 	txtRuntime->setText(mainObject->settings->value("runtime_dir").toString());
-	buttonGroupLogOptions->button( mainObject->settings->value("log_level", 0).toInt() )->setChecked(true);
+	Helpers::select_radio(buttonGroupLogOptions, mainObject->settings->value("log_level","none").toString() );
 }
 
 
@@ -165,5 +165,5 @@ void AdvancedOptionsWidget::save_settings(){
 	mainObject->settings->setValue("extra_args", txtExtraArgs->toPlainText());
 	mainObject->settings->setValue("extra_env", txtExtraEnv->toPlainText());
 	mainObject->settings->setValue("runtime_dir", txtRuntime->text());
-	mainObject->settings->setValue("log_level", buttonGroupLogOptions->checkedId());
+	mainObject->settings->setValue("log_level", buttonGroupLogOptions->checkedButton()->property("value").toString());
 }
