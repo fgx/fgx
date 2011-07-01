@@ -34,6 +34,7 @@ public:
     ~LauncherWindow();
 
     MainObject *mainObject;
+	bool initializing;
 
 	QActionGroup *actionGroupStyle;
     QLabel *headerLabel;

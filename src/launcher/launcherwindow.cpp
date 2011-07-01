@@ -28,7 +28,7 @@
 LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	: QWidget(parent)
 {
-
+	initializing = true;
     mainObject = mainOb;
 	
 	fgfsflag = false;
@@ -244,6 +244,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	// TODO  - disable widget till sane in initialize()
 	//centralWidget()->setDisabled(true);
+	initializing = false;
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
 }
@@ -259,6 +260,7 @@ LauncherWindow::~LauncherWindow()
 void LauncherWindow::initialize(){
 
 	//* First load the settings, and check the "paths" to fg_root and fg are sane
+
 	load_settings();
 	if(!mainObject->settings->paths_sane()){
 		mainObject->show_setup_wizard();
@@ -562,6 +564,9 @@ void LauncherWindow::on_action_style(QAction *action){
 }
 
 void LauncherWindow::on_tab_changed(int tab_idx){
+	if(initializing){
+		return;
+	}
 	mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
 	QStringList tablist;
 	// put "last used tab" to log, but more human now. To Pete: do we need it at all, or not ?
