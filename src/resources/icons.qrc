@@ -1,24 +1,24 @@
 <RCC>
     <qresource prefix="/icon">
-        <file alias="save">accept.png</file>
-        <file alias="settings">cog.png</file>
-        <file alias="cancel">bullet_black.png</file>
-        <file alias="start_enabled">control_play_blue.png</file>
-        <file alias="refresh">arrow_refresh.png</file>
-        <file alias="quit">book_previous.png</file>
-        <file alias="aircraft">bullet_green.png</file>
-        <file alias="folder">folder.png</file>
-        <file alias="pink">bullet_pink.png</file>
-        <file alias="purple">bullet_purple.png</file>
-        <file alias="start_disabled">control_play.png</file>
-        <file alias="stop_enabled">control_stop_blue.png</file>
-        <file alias="stop_disabled">control_stop.png</file>
-        <file alias="browse">browse.png</file>
-        <file alias="terminal">application_osx_terminal.png</file>
-        <file alias="import">database_go.png</file>
-        <file alias="favicon">fgx16.png</file>
-        <file alias="mpmap">map.png</file>
-        <file alias="wizard">wand.png</file>
-        <file alias="log">page_white_text.png</file>
+        <file alias="save">icons/accept.png</file>
+        <file alias="settings">icons/cog.png</file>
+        <file alias="cancel">icons/bullet_black.png</file>
+        <file alias="start_enabled">icons/control_play_blue.png</file>
+        <file alias="refresh">icons/arrow_refresh.png</file>
+        <file alias="quit">icons/book_previous.png</file>
+        <file alias="aircraft">icons/bullet_green.png</file>
+        <file alias="folder">icons/folder.png</file>
+        <file alias="pink">icons/bullet_pink.png</file>
+        <file alias="purple">icons/bullet_purple.png</file>
+        <file alias="start_disabled">icons/control_play.png</file>
+        <file alias="stop_enabled">icons/control_stop_blue.png</file>
+        <file alias="stop_disabled">icons/control_stop.png</file>
+        <file alias="browse">icons/browse.png</file>
+        <file alias="terminal">icons/application_osx_terminal.png</file>
+        <file alias="import">icons/database_go.png</file>
+        <file alias="favicon">icons/fgx16.png</file>
+        <file alias="mpmap">icons/map.png</file>
+        <file alias="wizard">icons/wand.png</file>
+        <file alias="log">icons/page_white_text.png</file>
     </qresource>
 </RCC>

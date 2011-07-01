@@ -90,5 +90,6 @@ SOURCES += main.cpp \
     maps/mpmapwidget.cpp \
     xobjects/latlng.cpp
 RESOURCES += resources/icons.qrc \
-    resources/artwork.qrc
+    resources/artwork.qrc \
+    resources/google_map.qrc
 CONFIG += console

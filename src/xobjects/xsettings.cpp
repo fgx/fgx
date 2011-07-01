@@ -1,6 +1,7 @@
 
 
-#include <QtCore/QDebug>
+//#include <QtDebug>
+
 #include <QtCore/QDir>
 #include <QtCore/QVariant>
 
@@ -35,10 +36,9 @@
  * - "terrasync_path" - the path to the terrasync data directory
  *
  * The essential path settings abovar are written out on ConfirmPage of the SetupWizard
- */
-/*!
-  * @author: Peter Morgan
-  * @author: Yves Sablonier
+ *
+ * @author: Peter Morgan
+ * @author: Yves Sablonier
  */
 
 
@@ -50,12 +50,14 @@ XSettings::XSettings(QObject *parent) :
 //===========================================================================
 // Style
 //===========================================================================
-/** \return The currently selected style or default */
+/** \brief return the currently selected style or the default
+ */
 QString XSettings::style_current(){
 	return value("gui_style", style_default()).toString();
 }
 
-/** \return The default style for platform */
+/** \brief The default style for platform
+*/
 QString XSettings::style_default(){
 	if(runningOs() == MAC){
 		return QString("Macintosh (aqua)");
@@ -80,11 +82,7 @@ QString XSettings::fgx_path(){
 //===========================================================================
 //== fgfs Executable
 //===========================================================================
-/** \brief Path to FlightGear Executable
- *
- * Returns the path to the fg executable. If the default path
- * is selected, then that is returned; otherwise the custom selected executable
- * \return The absolute path.
+/** \brief Path to fgfs executable
  */
 QString XSettings::fgfs_path(){
 	if(fgfs_use_default()){
@@ -92,12 +90,15 @@ QString XSettings::fgfs_path(){
 	}
 	return value("fgfs_custom_path", "").toString();
 }
+
+/** \brief true is the default path is being used
+ */
+
 bool XSettings::fgfs_use_default(){
 	return value("fgfs_use_default", '1').toBool();
 }
 
-/** \brief Platform specific default path for the fgfs executable
- *
+/** \brief absolute default path for the fgfs executable
  */
 QString XSettings::fgfs_default_path(){
 
@@ -574,7 +575,10 @@ QString XSettings::log_file_path(){
  * \return  developer mode enabled
  */
 bool XSettings::dev_mode(){
-	QString curr = QDir::current().absolutePath().append("/DEV_MODE.txt");
-	qDebug() << "DEV" << curr << QFile::exists(curr);
+	QString curr = XSettings::fgx_current_dir().append("/DEV_MODE.txt");
 	return QFile::exists(curr);
+}
+
+QString XSettings::fgx_current_dir(){
+	return QDir::current().absolutePath();
 }

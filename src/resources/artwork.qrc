@@ -1,10 +1,10 @@
 <RCC>
     <qresource prefix="/images">
-        <file alias="fgx-logo">fgx-logo.png</file>
-	<file alias="boxtop-black">boxtop-black.gif</file>
-	<file alias="boxtop-gray">boxtop-gray.gif</file>
-	<file alias="background_yellow">background_yellow.gif</file>
-	<file alias="background_yellow_dark">background_yellow_dark.gif</file>
-	<file alias="background_blue">background_blue.gif</file>
+        <file alias="fgx-logo">artwork/fgx-logo.png</file>
+        <file alias="boxtop-black">artwork/boxtop-black.gif</file>
+        <file alias="boxtop-gray">artwork/boxtop-gray.gif</file>
+        <file alias="background_yellow">artwork/background_yellow.gif</file>
+        <file alias="background_yellow_dark">artwork/background_yellow_dark.gif</file>
+        <file alias="background_blue">artwork/background_blue.gif</file>
     </qresource>
 </RCC>

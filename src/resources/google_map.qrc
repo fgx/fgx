@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/gmap">
+        <file alias="gmap.html">google_map_html/gmap.html</file>
+    </qresource>
+</RCC>

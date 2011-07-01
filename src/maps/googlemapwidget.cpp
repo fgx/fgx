@@ -159,11 +159,11 @@ GoogleMapWidget::GoogleMapWidget(MainObject *mob, QWidget *parent) :
 
 	//= Read file if in dev_mode() - no need to "recompile" the resource file
 	QFile file(	mainObject->settings->dev_mode()
-				? "/home/mash/ffs-desktop/ffs-desktop/map/html/gmap.html"
+				? XSettings::fgx_current_dir().append("/map/html/gmap.html")
 				: ":/gmap/gmap.html"
-			);
+				);
 
-	qDebug() << file.fileName();
+	qDebug() << "GOOGLEFILE" << file.fileName();
     //QFile *file = new QFile(":/gmap/gmap.html");
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
             qDebug("not open file");
