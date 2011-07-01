@@ -28,6 +28,12 @@
 LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	: QWidget(parent)
 {
+
+
+	//#####= Set to true to show all exec controls
+	bool show_all_exe_controls = false;
+
+
 	initializing = true;
     mainObject = mainOb;
 	
@@ -207,8 +213,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//== Start Stop ==
 	//=============================================================
 
-	//= Set to true to show all exec controls
-	bool show_indiv_buttons = false;
 
 	//= FgCom
 	exeFgCom = new ExeControls("FgCom");
@@ -219,7 +223,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	connect(mainObject->processFgCom, SIGNAL(running(bool)), exeFgCom, SLOT(set_running(bool)));
 	connect(exeFgCom, SIGNAL(stop()), mainObject->processFgCom, SLOT(stop()));
-	exeFgCom->setVisible(show_indiv_buttons);
+	exeFgCom->setVisible(show_all_exe_controls);
 
 	//= TerraSync
 	exeTerraSync = new ExeControls("TerraSync");
@@ -230,7 +234,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	connect(mainObject->processTerraSync, SIGNAL(running(bool)), exeTerraSync, SLOT(set_running(bool)));
 	connect(exeTerraSync, SIGNAL(stop()), mainObject->processTerraSync, SLOT(stop()));
-	exeTerraSync->setVisible(show_indiv_buttons);
+	exeTerraSync->setVisible(show_all_exe_controls);
 
 	//= FlightGear
 	exeFgfs = new ExeControls("FgFs");
@@ -240,7 +244,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 			);
 	connect(mainObject->processFgFs, SIGNAL(running(bool)), exeFgfs, SLOT(set_running(bool)));
 	connect(exeFgfs, SIGNAL(stop()), mainObject->processFgFs, SLOT(stop()));
-	exeFgfs->setVisible(show_indiv_buttons);
+	exeFgfs->setVisible(show_all_exe_controls);
 
 	//= All
 	exeAll = new ExeControls("FlightGear");
