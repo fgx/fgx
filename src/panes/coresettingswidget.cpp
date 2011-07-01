@@ -358,7 +358,7 @@ void CoreSettingsWidget::load_joysticks(){
 	} else {
 		results = "Unable to run 'js_demo' to get Joystick list!\n";
 	}
-	outLog("Joystick detection results\n"+results,0); // show results in LOG
+	//outLog("Joystick detection results\n"+results,0); // show results in LOG
 	// *TBD* Maybe if count == 0, disable or hide the comboJoystick
 	if (count == 0) {
 		// comboJoystick->hide(); // *TBD* Choice to be made

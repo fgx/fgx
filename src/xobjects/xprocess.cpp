@@ -13,13 +13,13 @@ XProcess::XProcess(MainObject *mob, QObject *parent) :
 	process->setReadChannel(QProcess::StandardOutput);
 
 	connect(process, SIGNAL(stateChanged(QProcess::ProcessState)),
-			this, SLOT(fgfs_handle_process_state_change(QProcess::ProcessState)));
+			this, SLOT(on_process_state_change(QProcess::ProcessState)));
 	connect(process, SIGNAL(readyRead()),
-			this, SLOT(fgfs_handle_process_output()));
+			this, SLOT(on_process_output()));
 	connect(process, SIGNAL(finished(int, QProcess::ExitStatus)),
-			this, SLOT(fgfs_handle_process_finished(int, QProcess::ExitStatus)));
+			this, SLOT(on_process_finished(int, QProcess::ExitStatus)));
 	connect(process, SIGNAL(error(QProcess::ProcessError)),
-			this, SLOT(fgfs_handle_process_error(QProcess::ProcessError)));
+			this, SLOT(on_process_error(QProcess::ProcessError)));
 }
 
 //===============================================================================
@@ -55,7 +55,7 @@ void XProcess::fgfs_handle_process_state_change(QProcess::ProcessState state)
 	}
 }
 
-void XProcess::fgfs_handle_process_output()
+void XProcess::on_handle_process_output()
 {
 	QString line = fgProcess->readLine();
 	while (!line.isEmpty()) {
@@ -64,7 +64,7 @@ void XProcess::fgfs_handle_process_output()
 	}
 }
 
-void XProcess::fgfs_handle_process_finished(int code, QProcess::ExitStatus status)
+void XProcess::on_handle_process_finished(int code, QProcess::ExitStatus status)
 {
 	QString message = QString("process exited with code: %1, status: %2\n")
 		.arg(code)
@@ -72,7 +72,7 @@ void XProcess::fgfs_handle_process_finished(int code, QProcess::ExitStatus statu
 	viewLogsWidget->add_fgfs_log(message);
 }
 
-void XProcess::fgfs_handle_process_error(QProcess::ProcessError error)
+void XProcess::on_handle_process_error(QProcess::ProcessError error)
 {
 	QString message("$ error: ");
 

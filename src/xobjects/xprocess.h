@@ -19,6 +19,13 @@ signals:
 
 public slots:
 
+	void start(QString command_line);
+	void stop();
+	void on_process_state_change(QProcess::ProcessState state);
+	void on_handle_process_output();
+	void on_handle_process_finished(int code, QProcess::ExitStatus status);
+	void on_handle_process_error(QProcess::ProcessError error);
+
 };
 
 #endif // XPROCESS_H
