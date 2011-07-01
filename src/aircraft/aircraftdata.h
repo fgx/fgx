@@ -2,6 +2,7 @@
 #define AIRCRAFTDATA_H
 
 #include <QWidget>
+#include <QProgressDialog>
 
 #include "xobjects/mainobject.h"
 
@@ -11,7 +12,7 @@ class AircraftData
 public:
 	//AircraftData();
 
-	static void import(QWidget *parent, MainObject *mainObject);
+	static bool import(QProgressDialog &progress, MainObject *mainObject);
 
 };
 

@@ -15,29 +15,30 @@
 //{
 //}
 
-void AirportsData::import(QWidget *parent, MainObject *mainObject, bool import_icao_only){
+bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, bool import_icao_only){
 
 	//====================================
 	// Step 1: Get a hash map of aircraft descriptions from aptdat
+	int estimated_lines = 1510000;
+
+	progress.setValue(0);
+	progress.setWindowTitle("Importing Apt Dat");
+	progress.setRange(0, estimated_lines);
+	progress.repaint();
+
 	QHash<QString, QString> airports;
 
 	QFile file( mainObject->settings->apt_dat_file() );
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
 		qDebug("OOPS: file problem");
-		return;
+		return true;
 	 }
 
 	int line_counter = 0;
-	int estimated_lines = 1510000;
+
 	QRegExp rxICAOAirport("[A-Z]{4}");
 
 
-	QProgressDialog progress("Importing Airports", "Cancel", 0, estimated_lines, parent);
-	progress.setWindowTitle("Importing Airports");
-	progress.setWindowModality(Qt::WindowModal);
-	progress.setFixedWidth(400);
-	progress.setWindowIcon(QIcon(":/icons/import"));
-	progress.setMinimumDuration(0);
 
 	//* ignore first line
 	file.readLine();
@@ -96,7 +97,7 @@ void AirportsData::import(QWidget *parent, MainObject *mainObject, bool import_i
 
 		if (progress.wasCanceled()){
 			progress.hide();
-			return;
+			return true;
 
 		}
 		line_counter++;
@@ -104,6 +105,7 @@ void AirportsData::import(QWidget *parent, MainObject *mainObject, bool import_i
 			progress.setValue(line_counter);
 			QString prog_text = QString("%1 of approx %2").arg(line_counter).arg(estimated_lines);
 			progress.setLabelText(prog_text);
+
 			progress.repaint();
 		}
 
@@ -111,8 +113,15 @@ void AirportsData::import(QWidget *parent, MainObject *mainObject, bool import_i
 
 	} /* end while readline */
 
-	//===================================================
+
+	//====================================================================================
 	// Step Two - walk the xml sets
+
+	progress.setValue(0);
+	progress.setWindowTitle("Scanning Airport Directories");
+	progress.setRange(0, 20000);
+
+
 	int c = 0;
 	int found = 0;
 
@@ -120,7 +129,7 @@ void AirportsData::import(QWidget *parent, MainObject *mainObject, bool import_i
 	QFile cacheFile( mainObject->settings->data_file("airports.txt") );
 	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
 		//qDebug() << "TODO Open error cachce file=";
-		return;
+		return true;
 	}
 	QTextStream out(&cacheFile);
 
@@ -131,13 +140,10 @@ void AirportsData::import(QWidget *parent, MainObject *mainObject, bool import_i
 	QDirIterator loopAirportsFiles( mainObject->settings->airports_path(), QDirIterator::Subdirectories );
 	QString xFileName;
 
-	progress.setWindowTitle("Scanning XML files");
-	progress.setRange(0, 20000);
 
 	while (loopAirportsFiles.hasNext()) {
 
 		//= Get file handle if there is one
-		c++;
 		xFileName = loopAirportsFiles.next();
 
 		//= Check if file entry is a *.threshold.xml - cos this is what we want
@@ -148,8 +154,11 @@ void AirportsData::import(QWidget *parent, MainObject *mainObject, bool import_i
 			QString airport_code = fileInfoThreshold.fileName().split(".").at(0);
 
 			//* Update progress
-			progress.setValue(progress.value() + 1);
-			progress.setLabelText(airport_code);
+			if(c % 100 == 0){
+				progress.setValue(c);
+				progress.setLabelText(xFileName);
+				progress.repaint();
+			}
 
 			QString airport_name("");
 			if(airports.contains(airport_code)){
@@ -172,10 +181,11 @@ void AirportsData::import(QWidget *parent, MainObject *mainObject, bool import_i
 
 		if(progress.wasCanceled()){
 			progress.hide();
-			return;
+			return true;
 		}
+		c++;
 	}
 
 	cacheFile.close();
-	progress.hide();
+	return false;
 }

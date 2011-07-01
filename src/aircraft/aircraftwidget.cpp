@@ -346,7 +346,9 @@ void AircraftWidget::on_reload_db_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 
 	//* scan Airaft dirs and save in file
-	AircraftData::import(this, mainObject);
+	QProgressDialog progress(this);
+	progress.setWindowIcon(QIcon(":/icon/import"));
+	AircraftData::import(progress, mainObject);
 	load_tree();
 }
 

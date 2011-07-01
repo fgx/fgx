@@ -116,7 +116,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
 	//** Header Banner
 	//====================================================
-	QString header_style("padding: 10px 0px 0px 370px; vertical-align: top;	 background-image: url(':/images/fgx-logo'); background-repeat: no-repeat; background-color: white;");
+	QString header_style("padding: 10px 0px 0px 370px; vertical-align: top;	 background-image: url(':/images/fgx-logo'); background-repeat: no-repeat; background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #A2A2E5, stop: 0.1 #BEBEFD, stop: 0.49 #D6D6FF, stop: 0.5 #D6D6FF, stop: 1 #eeeeee);");
     headerLabel = new QLabel(this);
 	headerLabel->setFixedHeight(80);
 	headerLabel->setStyleSheet(header_style);

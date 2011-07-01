@@ -3,6 +3,7 @@
 
 
 #include <QWidget>
+#include <QProgressDialog>
 
 #include "xobjects/mainobject.h"
 
@@ -11,7 +12,7 @@ class AirportsData
 public:
 	//AirportsData();
 
-	static void import(QWidget *parent, MainObject *mainObject, bool inc_icao);
+	static bool import(QProgressDialog &progress, MainObject *mainObject, bool inc_icao);
 };
 
 #endif // AIRPORTSDATA_H

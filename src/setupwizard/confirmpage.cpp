@@ -184,13 +184,19 @@ bool ConfirmPage::validatePage()
 
 	mainObject->settings->sync();
 
-	QProgressDialog progress;
+	QProgressDialog progress(this);
+	progress.setFixedWidth(400);
+	progress.setWindowIcon(QIcon(":/icon/import"));
 
+	bool cancelled = false;
 	if(checkBoxImportAirports->isChecked()){
-		AirportsData::import(this, mainObject, true);
+		cancelled = AirportsData::import(progress, mainObject, radioIcaoOnly->isChecked());
 	}
-	if(checkBoxImportAircaft->isChecked()){
-		AircraftData::import(this, mainObject);
+	if(cancelled){
+		return false;
+	}
+	if(cancelled == false && checkBoxImportAircaft->isChecked()){
+		AircraftData::import(progress, mainObject);
 	}
 	return true;
 }

@@ -17,23 +17,24 @@
 //{
 //}
 
-void AircraftData::import(QWidget *parent, MainObject *mainObject){
+bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 
 	int c = 0;
 	int found = 0;
 
-
-
+	progress.setValue(0);
+	progress.setWindowTitle("Scanning aircraft directory");
+	progress.repaint();
 	//= Cache File
 	QFile cacheFile( mainObject->settings->data_file("aircraft.txt") );
 	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
 		//qDebug() << "TODO Open error cachce file=";
-		return;
+		return true;
 	}
 
-	QProgressDialog progress("Scanning aircraft directory ...", "Cancel", 0, 0, parent);
-	progress.setWindowModality(Qt::WindowModal);
-	progress.show();
+	//QProgressDialog progress("Scanning aircraft directory ...", "Cancel", 0, 0, parent);
+	//progress.setWindowModality(Qt::WindowModal);
+	//progress.show();
 
 
 	QTextStream out(&cacheFile);
@@ -44,7 +45,7 @@ void AircraftData::import(QWidget *parent, MainObject *mainObject){
 	//qDebug() << "aircraft directory path: " << mainObject->settings->aircraft_path();
 
 	QStringList entries = aircraftDir.entryList();
-	progress.setMaximum(entries.size());
+	progress.setRange(0, entries.size() + 20);
 
 	for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry ){
 
@@ -113,13 +114,15 @@ void AircraftData::import(QWidget *parent, MainObject *mainObject){
 					QStringList lines;
 					lines  << directory << aero << xml_file << description << fdm << author << file_path;
 					out << lines.join("\t") << "\n";
+					progress.setValue(c);
+					progress.setLabelText(aero);
 
 					found++;
 
 					if(progress.wasCanceled()){
 						//qDebug() << "Progress cancelled!";
 						progress.hide();
-						break; // TODO ?? why..
+						return true;
 					}
 					c++;
 				}
@@ -129,5 +132,5 @@ void AircraftData::import(QWidget *parent, MainObject *mainObject){
 	} /* loop entries.() */
 
 	cacheFile.close();
-	progress.hide();
+	return false;
 }
