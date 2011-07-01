@@ -320,26 +320,48 @@ bool CoreSettingsWidget::check_js_demo_exists(){
 }
 
 
+//==============================================
 //** Load Joysticks
 void CoreSettingsWidget::load_joysticks(){
 	comboJoystick->clear();
 	comboJoystick->addItem("-- None--");
-	if(check_js_demo_exists() == false){
-		comboJoystick->setDisabled(true);
-		return;
-	}
+	QString find = "Joystick ";
+	QString none = "not detected";
+	QString results;
 	QProcess process;
+	int count = 0;
 	process.start("js_demo", QStringList(), QIODevice::ReadOnly);
 	if(process.waitForStarted()){
-		process.waitForFinished();
+		process.waitForFinished(3000);
 		QString ok_result = process.readAllStandardOutput();
 		QString error_result = process.readAllStandardError();
 		Q_UNUSED(error_result);
 		//* take result and split into parts
 		QStringList entries = ok_result.trimmed().split("\n");
 		for(int i=2; i < entries.count(); i++){ //First 2 lines are crap
-			comboJoystick->addItem(entries.at(i));
+			// comboJoystick->addItem(entries.at(i));
+			QString line = entries.at(i).trimmed();
+			if (line.indexOf(find) == 0) {
+				line = line.mid(find.size()+2).trimmed();
+				if (line.at(0) == QChar('"'))
+					line = line.mid(1);
+				if (line.at(line.size()-1) == QChar('"'))
+					line = line.mid(0,line.size()-1);
+				if (line != none) {
+					results += "Found \""+line+"\"\n";
+					count++;
+				}
+				// *TBD* Maybe NOT add 'not detected' entries???
+				comboJoystick->addItem(line);
+			}
 		}
+	} else {
+		results = "Unable to run 'js_demo' to get Joystick list!\n";
+	}
+	outLog("Joystick detection results\n"+results,0); // show results in LOG
+	// *TBD* Maybe if count == 0, disable or hide the comboJoystick
+	if (count == 0) {
+		// comboJoystick->hide(); // *TBD* Choice to be made
 	}
 }
 
