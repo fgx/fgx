@@ -41,3 +41,21 @@ void XGroupHBox::addLayout( QBoxLayout *lay){
 	xLayout->addLayout(lay);
 }
 
+
+
+
+//======================================================
+/* Extended groupBox with a Grid Layout */
+XGroupGBox::XGroupGBox(QString title, QWidget *parent) :
+	QGroupBox(parent)
+{
+	setTitle(title);
+	gridLayout = new QGridLayout();
+	setLayout(gridLayout);
+
+
+}
+
+void XGroupGBox::addWidget(QWidget *widget, int row, int col, int row_span,  int col_span){
+	gridLayout->addWidget(widget, row, col, row_span, col_span);
+}

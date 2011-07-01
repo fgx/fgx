@@ -10,7 +10,7 @@
 #include <QToolButton>
 #include <QLabel>
 #include <QCheckBox>
-
+#include <QRadioButton>
 
 #include "xobjects/mainobject.h"
 
@@ -32,6 +32,9 @@ public:
 	QLabel *lblTerraSyncPath;
 
 	QCheckBox *checkBoxImportAirports;
+	QRadioButton *radioIcaoOnly;
+	QRadioButton *radioAllAirports;
+
 	QCheckBox *checkBoxImportAircaft;
 
 	void initializePage();
@@ -39,7 +42,7 @@ public:
 signals:
 
 public slots:
-
+	void on_import_airports();
 };
 
 #endif // CONFIRMPAGE_H

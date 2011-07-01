@@ -4,6 +4,7 @@
 #include <QGridLayout>
 #include <QFileDialog>
 #include <QVBoxLayout>
+#include <QProgressDialog>
 
 #include "setupwizard/confirmpage.h"
 #include "xwidgets/xgroupboxes.h"
@@ -59,21 +60,48 @@ ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
 	lblTerraSyncPath = new QLabel();
 	grpTerrasync->addWidget(lblTerraSyncPath);
 
-	//= Import Cache Data
-	XGroupVBox *grpImports = new XGroupVBox("Import Cache Data");
+
+
+	//= Import Cache Data ============
+	XGroupGBox *grpImports = new XGroupGBox("Reload Cached Data");
 	mainLayout->addWidget(grpImports);
 
-	checkBoxImportAirports = new QCheckBox("Import Airports");
-	grpImports->addWidget(checkBoxImportAirports);
-	checkBoxImportAirports->setChecked(true);
-
+	//== Aircraft ==
+	int row = 0;
 	checkBoxImportAircaft = new QCheckBox("Import Aircraft");
-	grpImports->addWidget(checkBoxImportAircaft);
+	grpImports->addWidget(checkBoxImportAircaft, row, 0, 1, 2);
 	checkBoxImportAircaft->setChecked(true);
 
+
+	//== Airports ==
+	row++;
+	checkBoxImportAirports = new QCheckBox("Import Airports");
+	grpImports->addWidget(checkBoxImportAirports, row, 0, 1, 2);
+	checkBoxImportAirports->setChecked(true);
+	connect(checkBoxImportAirports, SIGNAL(clicked()), this, SLOT(on_import_airports()));
+
+	//= IACO Only
+	row++;
+	radioIcaoOnly = new QRadioButton();
+	grpImports->addWidget(radioIcaoOnly, row, 1, 1, 1);
+	radioIcaoOnly->setText("Import major airports only");
+	radioIcaoOnly->setChecked(true);
+
+	//= All Airports
+	row++;
+	radioAllAirports = new QRadioButton();
+	grpImports->addWidget(radioAllAirports, row, 1, 1, 1);
+	radioAllAirports->setText("Import all airports, seaports, heliports");
+
+	grpImports->gridLayout->setColumnStretch(0, 1);
+	grpImports->gridLayout->setColumnStretch(1, 10);
 }
 
 
+void ConfirmPage::on_import_airports(){
+	radioIcaoOnly->setEnabled(checkBoxImportAirports->isChecked());
+	radioAllAirports->setEnabled(checkBoxImportAirports->isChecked());
+}
 
 //===================================================
 //= initializePage
@@ -132,6 +160,8 @@ void ConfirmPage::initializePage()
 	checkBoxImportAircaft->setText(aircraft_update ? "Import Aircraft - recommended" : "Import Aircraft");
 	checkBoxImportAircaft->setChecked(aircraft_update);
 
+	radioIcaoOnly->setChecked(mainObject->settings->value("last_import_icao_checked", "1").toBool());
+	on_import_airports();
 	return;
 }
 
@@ -150,8 +180,11 @@ bool ConfirmPage::validatePage()
 	mainObject->settings->setValue("terrasync_enabled", field("terrasync_enabled"));
 	mainObject->settings->setValue("terrasync_path", field("terrasync_path"));
 
+	mainObject->settings->setValue("last_import_icao_checked", radioIcaoOnly->isChecked());
+
 	mainObject->settings->sync();
 
+	QProgressDialog progress;
 
 	if(checkBoxImportAirports->isChecked()){
 		AirportsData::import(this, mainObject, true);
@@ -161,3 +194,6 @@ bool ConfirmPage::validatePage()
 	}
 	return true;
 }
+
+
+

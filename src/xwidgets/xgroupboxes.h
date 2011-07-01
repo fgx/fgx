@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QBoxLayout>
+#include <QGridLayout>
 
 //=====================================================
 //** Vertical Box
@@ -42,5 +43,21 @@ public slots:
 
 };
 
+
+//=====================================================
+//** Grid Box
+class XGroupGBox : public QGroupBox
+{
+Q_OBJECT
+public:
+	explicit XGroupGBox(QString title, QWidget *parent = 0);
+
+	QGridLayout *gridLayout;
+	void addWidget(QWidget *w, int row, int col, int row_span, int col_span);
+signals:
+
+public slots:
+
+};
 
 #endif // XGROUPBOX_H
