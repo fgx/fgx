@@ -28,11 +28,13 @@ public:
 	QString fgx_path();
 
 	QString fgfs_path();
-	QString fgfs_path_default();
+	bool fgfs_use_default();
+	QString fgfs_default_path();
 
-    QString fg_root();
-    QString fg_root(QString append_path);
-	QString fg_root_default();
+	QString fgroot();
+	QString fgroot(QString append_path);
+	bool fgroot_use_default();
+	QString fgroot_default_path();
 
 	QString aircraft_path();
 	QString aircraft_path(QString dir);
@@ -40,6 +42,7 @@ public:
 	QString airports_path();
 
 	QString scenery_path();
+
 	bool terrasync_enabled();
 	QString terrasync_exe_path();
 	QString terrasync_sync_data_path();

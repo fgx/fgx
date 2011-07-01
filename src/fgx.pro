@@ -26,7 +26,6 @@ HEADERS += xobjects/xsettings.h \
     xobjects/mainobject.h \
     launcher/launcherwindow.h \
     mpmap/mpmapwidget.h \
-    settings/pathssettingswidget.h \
     utilities/statusbar.h \
     xwidgets/xtreewidgetitem.h \
     utilities/utilities.h \
@@ -64,7 +63,6 @@ SOURCES += main.cpp \
     xobjects/mainobject.cpp \
     launcher/launcherwindow.cpp \
     mpmap/mpmapwidget.cpp \
-    settings/pathssettingswidget.cpp \
     utilities/statusbar.cpp \
     utilities/utilities.cpp \
     utilities/messagebox.cpp \

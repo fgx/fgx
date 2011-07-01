@@ -208,7 +208,7 @@ void CoreSettingsWidget::load_settings(){
 	}else{
 		labelFgRootInfo->setText("Using Custom FG_ROOT Path");
 	}
-	labelFgRootPath->setText(mainObject->settings->fg_root());
+	labelFgRootPath->setText(mainObject->settings->fgroot());
 
 
 	labelTerraSyncInfo->setText( mainObject->settings->terrasync_enabled()

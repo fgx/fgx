@@ -82,7 +82,7 @@ FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
 	layoutExe->setColumnStretch(1,6);
 	layoutExe->setColumnStretch(2,0);
 
-	registerField("use_default_fgfs", radioDefault);
+	registerField("fgfs_use_default", radioDefault);
 	registerField("fgfs_custom_path", txtFgfs);
 
 }
@@ -130,7 +130,7 @@ void FgExePage::on_select_fgfs_path(){
 void FgExePage::check_paths()
 {
 	//= Check the default path
-	QString default_path = mainObject->settings->fgfs_path_default();
+	QString default_path = mainObject->settings->fgfs_default_path();
 	bool default_exists = QFile::exists(default_path);
 	QString lbl_default(default_path);
 	lbl_default.append( default_exists ? " - Ok" : " - Not Found" );
@@ -173,9 +173,9 @@ void FgExePage::check_paths()
 //= initializePage
 void FgExePage::initializePage()
 {
-	radioDefault->setChecked( mainObject->settings->value("use_default_fgfs", "1").toBool() );
-	lblDefault->setText( QString("Default: ").append(mainObject->settings->fgfs_path_default()) );
-	txtFgfs->setText(mainObject->settings->value("fgfs_custom_path").toString());
+	radioDefault->setChecked( mainObject->settings->fgfs_use_default() );
+	lblDefault->setText( QString("Default: ").append(mainObject->settings->fgfs_default_path()) );
+	txtFgfs->setText( mainObject->settings->value("fgfs_custom_path").toString() );
 	check_paths();
 }
 
@@ -187,7 +187,7 @@ bool FgExePage::validatePage()
 {
 	check_paths();
 	if(radioDefault->isChecked()){
-		QString exFile = mainObject->settings->fgfs_path_default();
+		QString exFile = mainObject->settings->fgfs_default_path();
 		if(QFile::exists(exFile)){
 			//TODO check its executable
 			return true;

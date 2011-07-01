@@ -384,7 +384,7 @@ QString LauncherWindow::fg_args(){
 	QStringList args;
 
 	//* fg_root
-	args << QString("--fg-root=").append(mainObject->settings->fg_root());
+	args << QString("--fg-root=").append(mainObject->settings->fgroot());
 
 
 	//* Core Settings
@@ -487,7 +487,7 @@ void LauncherWindow::on_command_preview(){
 void LauncherWindow::on_command_help(){
 	QProcess process;
 	QStringList args;
-	args << "-h" << "-v" << QString("--fg-root=").append(mainObject->settings->fg_root());
+	args << "-h" << "-v" << QString("--fg-root=").append(mainObject->settings->fgroot());
 	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
 	if(process.waitForStarted()){
 		QString ok_result = process.readAllStandardOutput();

@@ -32,7 +32,7 @@ public:
 	QLabel *lblTerraSyncPath;
 
 	QCheckBox *checkBoxImportAirports;
-	QCheckBox *checkBoxImportAicraft;
+	QCheckBox *checkBoxImportAircaft;
 
 	void initializePage();
 	bool validatePage();

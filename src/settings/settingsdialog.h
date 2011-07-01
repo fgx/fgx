@@ -12,7 +12,7 @@
 #include <QtGui/QTabWidget>
 
 #include "xobjects/mainobject.h"
-#include "settings/pathssettingswidget.h"
+
 
 class SettingsDialog : public QDialog
 {
@@ -27,7 +27,7 @@ private:
 
 
 
-	PathsSettingsWidget *pathsSettingsWidget;
+
 
 
 	QString get_frame_style(bool is_valid);

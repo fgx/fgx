@@ -27,13 +27,14 @@
  * === Path Settings ===
  *
  * The essential path settings stored in the ini are:
- * - "use_default_fgfs" - whether to use the default installed fgfs binary
+ * - "fgfs_use_default" - whether to use the default installed fgfs binary
  * - "fgfs_custom_path" - the custom path to the fgfs executable
- * - "use_default_fgroot" - whether to use the default FG_ROOT path
+ * - "fgroot_use_default" - whether to use the default FG_ROOT path
  * - "fgroot_custom_path" - the custom path to fgdata/ eg a git checkout
  * - "terrasync_enabled" - whether terrasync is enabled
  * - "terrasync_path" - the path to the terrasync data directory
  *
+ * The essential path settings abovar are written out on ConfirmPage of the SetupWizard
  */
 /*!
   * @author: Peter Morgan
@@ -65,16 +66,19 @@ QString XSettings::fgx_path(){
  * \return The absolute path.
  */
 QString XSettings::fgfs_path(){
-	if(value("use_default_fgfs", '1').toBool()){
-		return fgfs_path_default();
+	if(fgfs_use_default()){
+		return fgfs_default_path();
 	}
 	return value("fgfs_custom_path", "").toString();
+}
+bool XSettings::fgfs_use_default(){
+	return value("fgfs_use_default", '1').toBool();
 }
 
 /** \brief Platform specific default path for the fgfs executable
  *
  */
-QString XSettings::fgfs_path_default(){
+QString XSettings::fgfs_default_path(){
 
 	if(runningOs() == MAC){
 		return QDir::currentPath().append("/fgx.app/Contents/MacOS/fgfs");
@@ -91,17 +95,17 @@ QString XSettings::fgfs_path_default(){
 }
 
 
-/** \brief Path to FG_ROOT
- *
- * Returns the path to the FG_ROOT. If the default install
- * is selected, then that is returned; otherwise the custom selected fg_data path.
- * \return The absolute path.
+/**
+ * \return The absolute path to FG_ROOT ie /fgdata directory
  */
-QString XSettings::fg_root(){
-	if(value("use_default_fgroot", '1').toBool()){
-		return this->fg_root_default();
+QString XSettings::fgroot(){
+	if(fgroot_use_default()){
+		return fgroot_default_path();
 	}
 	return value("fgroot_custom_path", "").toString();
+}
+bool XSettings::fgroot_use_default(){
+	return value("fgroot_use_default", '1').toBool();
 }
 
 /** \brief Path to FG_ROOT with appended path
@@ -112,8 +116,8 @@ QString XSettings::fg_root(){
  * \return The absolute path.
  */
 
-QString XSettings::fg_root(QString append_path){
-    return this->fg_root().append(append_path);
+QString XSettings::fgroot(QString append_path){
+	return this->fgroot().append(append_path);
 }
 
 
@@ -123,7 +127,7 @@ QString XSettings::fg_root(QString append_path){
  *
   * \return The absolute path to FG_ROOT
  */
-QString XSettings::fg_root_default(){
+QString XSettings::fgroot_default_path(){
 
 	if(runningOs() == MAC){
 		return QDir::currentPath().append("/fgx.app/Contents/Resources/fgx-fgdata");
@@ -149,7 +153,7 @@ bool XSettings::paths_sane(){
 	if(!QFile::exists(fgfs_path())){
 		return false;
 	}
-	if(!QFile::exists(fg_root())){
+	if(!QFile::exists(fgroot())){
 		return false;
 	}
 	return true;
@@ -164,16 +168,16 @@ bool XSettings::paths_sane(){
   * \return absolute path.
  */
 QString XSettings::aircraft_path(){
-	return fg_root().append("/Aircraft");
-	outLog("*** FGx settings: Aircraft path: " + fg_root().append("/Aircraft") + " ***");
+	return fgroot().append("/Aircraft");
+	outLog("*** FGx settings: Aircraft path: " + fgroot().append("/Aircraft") + " ***");
 }
 /** \brief Path to the /Aircraft directory with a dir appended.
  *
  * \return absolute path.
  */
 QString XSettings::aircraft_path(QString dir){
-	return fg_root().append("/Aircraft/").append(dir);
-	outLog("*** FGx settings: Aircraft path: " + fg_root().append("/Aircraft/").append(dir) + " ***");
+	return fgroot().append("/Aircraft/").append(dir);
+	outLog("*** FGx settings: Aircraft path: " + fgroot().append("/Aircraft/").append(dir) + " ***");
 }
 
 
@@ -200,8 +204,8 @@ QString XSettings::airports_path(){
 		}
 	}
 	//* Otherwise return the FG_ROOT airports/
-	return fg_root().append("/Scenery/Airports");
-	outLog("*** FGx settings: Airports path: " + fg_root().append("/Scenery/Airports") + " ***");
+	return fgroot().append("/Scenery/Airports");
+	outLog("*** FGx settings: Airports path: " + fgroot().append("/Scenery/Airports") + " ***");
 }
 
 //** Apt Dat
@@ -213,7 +217,7 @@ QString XSettings::airports_path(){
 QString XSettings::apt_dat_file(){
 	QString aptdatloc(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat"));
 	if( QFile::exists(aptdatloc) == false){
-		uncompress(fg_root("/Airports/apt.dat.gz"), QString(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat")));
+		uncompress(fgroot("/Airports/apt.dat.gz"), QString(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat")));
 		outLog(QString(temp_dir().append("apt.dat")));
 	}
 	return aptdatloc;
@@ -228,7 +232,7 @@ QString XSettings::apt_dat_file(){
  */
 QString XSettings::scenery_path(){
 
-	return fg_root("/Scenery");
+	return fgroot("/Scenery");
 }
 
 //===========================================================================

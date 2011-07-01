@@ -52,8 +52,6 @@ SettingsDialog::SettingsDialog(MainObject *mOb, QWidget *parent) :
 	tabWidget = new QTabWidget();
 	mainLayout->addWidget(tabWidget);
 
-	pathsSettingsWidget = new PathsSettingsWidget(mainObject);
-	tabWidget->addTab(pathsSettingsWidget, tr("Paths"));
 
 
 
@@ -86,7 +84,7 @@ SettingsDialog::SettingsDialog(MainObject *mOb, QWidget *parent) :
 //=================================================================================
 //** Settings
 void SettingsDialog::load_settings(){
-	pathsSettingsWidget->load_settings();
+
 }
 
 
@@ -104,14 +102,7 @@ void SettingsDialog::closeEvent(QCloseEvent *event){
 //=================================================================================
 // Save Clicked
 void SettingsDialog::on_save_clicked(){
-	if( !pathsSettingsWidget->validate_paths() ){
-		if(QMessageBox::question(this, "Path Error",
-								"There are errors in path, Save Anyway?",
-								QMessageBox::No | QMessageBox::Yes) == QMessageBox::No){
-			return;
-		}
-	}
-	pathsSettingsWidget->save_settings();
+
 	accept();
 }
 

@@ -12,6 +12,12 @@
 #include "airports/airportsdata.h"
 #include "aircraft/aircraftdata.h"
 
+/*! \class ConfirmPage
+ * @author: Peter Morgan
+ * \brief The page that actually writes paths out, and reloads the cache.
+ *
+ * The validatePage() function is where the write is actually done.
+ */
 
 
 ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
@@ -61,9 +67,9 @@ ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
 	grpImports->addWidget(checkBoxImportAirports);
 	checkBoxImportAirports->setChecked(true);
 
-	checkBoxImportAicraft = new QCheckBox("Import Aircraft");
-	grpImports->addWidget(checkBoxImportAicraft);
-	checkBoxImportAicraft->setChecked(true);
+	checkBoxImportAircaft = new QCheckBox("Import Aircraft");
+	grpImports->addWidget(checkBoxImportAircaft);
+	checkBoxImportAircaft->setChecked(true);
 
 }
 
@@ -74,29 +80,58 @@ ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
 void ConfirmPage::initializePage()
 {
 
-	if(field("use_default_fgfs").toBool()){
+	if(field("fgfs_use_default").toBool()){
 		lblFgExeUsingDefault->setText("Using Default Path");
-		lblFgExePath->setText(mainObject->settings->fgfs_path_default());
+		lblFgExePath->setText(mainObject->settings->fgfs_default_path());
 	}else{
 		lblFgExeUsingDefault->setText("Using Custom Path");
 		lblFgExePath->setText(field("fgfs_custom_path").toString());
 	}
 
-	if(field("use_default_fgroot").toBool()){
+	if(field("fgroot_use_default").toBool()){
 		lblFgRootUsingDefault->setText("Using Default Data Path");
-		lblFgRootPath->setText(mainObject->settings->fg_root_default());
+		lblFgRootPath->setText(mainObject->settings->fgroot_default_path());
 	}else{
 		lblFgRootUsingDefault->setText("Using Custom Data Path");
 		lblFgRootPath->setText(field("fgroot_custom_path").toString());
 	}
 
-	if(field("use_terrasync").toBool()){
+	if(field("terrasync_enabled").toBool()){
 		lblUsingTerraSync->setText("Using Terrasync");
 		lblTerraSyncPath->setText(field("terrasync_path").toString());
 	}else{
 		lblUsingTerraSync->setText("No Terrasync");
 		lblTerraSyncPath->setText("");
 	}
+
+	//= Check is an airport update is required ie fg root has changed
+	bool airports_update = false;
+	if(field("fgroot_use_default").toBool() != mainObject->settings->fgroot_use_default()){
+		// not the same as last time
+		airports_update = true;
+
+	}else if(field("fgfs_use_default").toBool() &&
+			 field("fgroot_custom_path").toString() != mainObject->settings->value("fgroot_custom_path")){
+		// custom path has changed
+		airports_update = true;
+	}
+	checkBoxImportAirports->setText(airports_update ? "Import Airports - recommended" : "Import Airports");
+	checkBoxImportAirports->setChecked(airports_update);
+
+	//= Check is an aircraft update is required ie fgdata changed
+	bool aircraft_update = false;
+	if(field("terrasync_enabled").toBool() != mainObject->settings->terrasync_enabled()){
+		// not the same as last time
+		aircraft_update = true;
+
+	}else if(field("terrasync_enabled").toBool() &&
+			 field("terrasync_path").toString() != mainObject->settings->value("terrasync_path")){
+		// terrasync path changed
+		aircraft_update = true;
+	}
+	checkBoxImportAircaft->setText(aircraft_update ? "Import Aircraft - recommended" : "Import Aircraft");
+	checkBoxImportAircaft->setChecked(aircraft_update);
+
 	return;
 }
 
@@ -106,22 +141,22 @@ void ConfirmPage::initializePage()
 bool ConfirmPage::validatePage()
 {
 
-	mainObject->settings->setValue("use_default_fgfs", field("use_default_fgfs"));
+	mainObject->settings->setValue("fgfs_use_default", field("fgfs_use_default"));
 	mainObject->settings->setValue("fgfs_custom_path", field("fgfs_custom_path"));
 
-	mainObject->settings->setValue("use_default_fgroot", field("use_default_fgroot"));
+	mainObject->settings->setValue("fgroot_use_default", field("fgroot_use_default"));
 	mainObject->settings->setValue("fgroot_custom_path", field("fgroot_custom_path"));
 
-	mainObject->settings->setValue("use_terrasync", field("use_terrasync"));
+	mainObject->settings->setValue("terrasync_enabled", field("terrasync_enabled"));
 	mainObject->settings->setValue("terrasync_path", field("terrasync_path"));
 
 	mainObject->settings->sync();
 
-	//= TODO ensite which bits needs checking
+
 	if(checkBoxImportAirports->isChecked()){
 		AirportsData::import(this, mainObject, true);
 	}
-	if(checkBoxImportAicraft->isChecked()){
+	if(checkBoxImportAircaft->isChecked()){
 		AircraftData::import(this, mainObject);
 	}
 	return true;

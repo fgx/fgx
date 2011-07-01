@@ -31,6 +31,7 @@ TerraSyncPage::TerraSyncPage(MainObject *mob, QWidget *parent) :
 	txtTerraSyncPath = new QLineEdit("");
 	gridLayout->addWidget(txtTerraSyncPath, row, 1, 1, 1);
 	txtTerraSyncPath->setDisabled(true);
+	connect(txtTerraSyncPath, SIGNAL(textChanged(QString)), this, SLOT(check_paths()));
 
 	//= Select path button
 	buttSelectPath = new QToolButton();
@@ -45,7 +46,7 @@ TerraSyncPage::TerraSyncPage(MainObject *mob, QWidget *parent) :
 	gridLayout->addWidget(lblHelp, row, 1, 1, 2);
 
 
-	registerField("use_terrasync", checkBoxUseTerrasync);
+	registerField("terrasync_enabled", checkBoxUseTerrasync);
 	registerField("terrasync_path", txtTerraSyncPath);
 
 }
@@ -69,9 +70,10 @@ void TerraSyncPage::on_checkbox_clicked(){
 	if(ena){
 		txtTerraSyncPath->setFocus();
 	}
+	check_paths();
 }
 
-//===================================================
+//===============================================================
 //= check_paths() - does not return value but colours help labels
 void TerraSyncPage::check_paths()
 {

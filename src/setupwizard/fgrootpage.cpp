@@ -60,7 +60,7 @@ FgRootPage::FgRootPage(MainObject *mob, QWidget *parent) :
 	gridLayout->setColumnStretch(2,0);
 
 
-	registerField("use_default_fgroot", radioDefault);
+	registerField("fgroot_use_default", radioDefault);
 	registerField("fgroot_custom_path", txtFgRoot);
 
 }
@@ -79,8 +79,8 @@ void FgRootPage::on_select_path()
 //= initializePage
 void FgRootPage::initializePage()
 {
-	radioDefault->setChecked( mainObject->settings->value("use_default_fgroot", "1").toBool() );
-	lblDefault->setText( mainObject->settings->fg_root_default() );
+	radioDefault->setChecked( mainObject->settings->fgroot_use_default() );
+	lblDefault->setText( mainObject->settings->fgroot_default_path() );
 	txtFgRoot->setText( mainObject->settings->value("fgroot_custom_path").toString() );
 }
 
@@ -88,7 +88,7 @@ void FgRootPage::initializePage()
 void FgRootPage::check_paths()
 {
 	//= Check the default path
-	QString default_path = mainObject->settings->fg_root_default();
+	QString default_path = mainObject->settings->fgroot_default_path();
 	bool default_exists = QFile::exists(default_path);
 	QString lbl_default(default_path);
 	lbl_default.append( default_exists ? " - Ok" : " - Not Found" );

@@ -54,7 +54,7 @@ int main( int argc, char* argv[])
 	//* global styles, should go to a qss once
 	QString styles;
 	styles.append("QLineEdit { background-color: white }");
-	styles.append("QGroupBox { font-size: 11px; text-transform: uppercase }");
+	styles.append("QGroupBox { font-size: 11px; }"); // text-transform: uppercase
 	styles.append("QPushButton { padding: 5px; }");
 	//styles.append("QStatusBar { font-family: Andale mono, monospace; font-size: 12px; font-weight: normal; color: #FF0000; background-image: url(:images/background_yellow); }");
 	styles.append("LauncherWindow { background: #eeeeee }");
