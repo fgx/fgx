@@ -67,13 +67,13 @@ public:
     QAction *actionQuit;
 
 	XProcess *processFgFs;
+	XProcess *processTerraSync;
+	XProcess *processFgCom;
 
 	QString get_fgfs_command();
 	QStringList get_env();
 
-	void start_fgfs();
-	void start_fgcom();
-	void start_terrasync();
+
 
 signals:
 	void show_settings(int);
@@ -97,6 +97,13 @@ public slots:
 	void on_view_logs();
 	void clear_log(QString log_name);
 	void add_log(QString log_name, QString data);
+
+	void start_all();
+	void start_fgfs();
+	void start_fgcom();
+	void start_terrasync();
+	void stop_all();
+
 
 
 };

@@ -12,7 +12,7 @@
 #include "launcher/launcherwindow.h"
 #include "utilities/utilities.h"
 
-ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
+ExeControls::ExeControls(QString title, QWidget *parent) :
     QGroupBox(parent)
 {
 	//exe_name = exeCmd;
@@ -42,21 +42,25 @@ ExeControls::ExeControls(QString title, QString exeCmd, QWidget *parent) :
 	buttonStart->setText(tr(" Start "));
 	buttonStart->setMinimumSize(QSize( 100, 20)); 
 	buttlay->addWidget(buttonStart);
-	//* connection is done in fgx not here..
+	connect(buttonStart, SIGNAL(clicked()), this, SLOT(on_start_clicked()));
 	
 
 }
 
 
+//== Start
+void ExeControls::on_start_clicked(){
+	emit start();
+}
 
-//==========================================================================
-// Stop Executable
-// 
-//==========================================================================
+
+//== Stop
 void ExeControls::on_stop_clicked(){
 	emit stop();
 }
 
+
+//== set_running
 void ExeControls::set_running(bool running){
 	buttonStart->setEnabled(running == false);
 	buttonStop->setEnabled(running == true);

@@ -29,7 +29,6 @@ class LauncherWindow : public QWidget
 
 public:
 
-
     LauncherWindow(MainObject *mainOb, QWidget *parent = 0);
     ~LauncherWindow();
 
@@ -51,6 +50,7 @@ public:
 	QPushButton *buttonLoadSettings;
 	QPushButton *buttonSaveSettings;
 
+	ExeControls *exeAll;
 	ExeControls *exeFgfs;
 	ExeControls *exeTerraSync;
 	ExeControls *exeFgCom;
@@ -60,19 +60,16 @@ public:
 
     void closeEvent(QCloseEvent *event);
 
-	QString fg_args();
-	
-	bool fgfsflag;
-	bool terrasyncflag;
-	bool fgcomflag;
-
 
 public slots:
 
 
-	//* Start/Stop FlightGear
+	//= Start/Stop
+	void on_start_all_clicked();
 	void on_start_fgfs_clicked();
-	void on_stop_fgfs_clicked();
+	void on_start_terrasync_clicked();
+	void on_start_fgcom_clicked();
+
 
 	//* Actions
 	void on_about_fgx();
@@ -95,8 +92,6 @@ public slots:
 
 	//* Widget Events
 	void on_tab_changed(int);
-	//void on_group_box_terrasync_clicked();
-
 
 };
 

@@ -45,6 +45,8 @@ MainObject::MainObject(QObject *parent) :
 
 	//= Processes
 	processFgFs  = new XProcess(this, "fgfs");
+	processTerraSync  = new XProcess(this, "terrasync");
+	processFgCom  = new XProcess(this, "fgcom");
 
 	//============================
 	//== Tray Icon
@@ -410,13 +412,11 @@ QString MainObject::get_fgfs_command(){
 	return command;
 }
 
-
 //========================================================
-//** Get Engiroment
+//** Get Enviroment
 QStringList MainObject::get_env(){
 
 	QStringList args;
-
 	QString extra = settings->value("extra_env").toString().trimmed();
 	if (extra.length() > 0) {
 		QStringList parts = extra.split("\n");
@@ -433,21 +433,59 @@ QStringList MainObject::get_env(){
 }
 
 
+//========================================================
+//== Start All
+void MainObject::start_all(){
+	start_fgfs();
+	start_terrasync();
+	start_fgcom();
+}
 
 //========================================================
-//== Start FGFS
-void MainObject::start_fgfs(){
-	qDebug() << "Staart";
-	qDebug() << get_fgfs_command();
-	processFgFs->start(get_fgfs_command(), get_env() );
+//== Stop All
+void MainObject::stop_all(){
+	processFgFs->stop();
+	processFgCom->stop();
+	processTerraSync->stop();
 }
 
 
 
 //========================================================
+//== Start FGFS
+void MainObject::start_fgfs(){
+	//qDebug() << get_fgfs_command();
+	processFgFs->start(get_fgfs_command(), get_env() );
+}
+
+//========================================================
 //== Stars FGFS
 void MainObject::start_terrasync(){
-	qDebug() << "Staart";
-	//qDebug() << get_terrasync_command();
-	//processFgFs->start(get_fgfs_command(), get_env() );
+	qDebug() << "Start";
+	QStringList terraargs;
+	terraargs << "-p" << "5505" << "-S" << "-d" << settings->terrasync_sync_data_path();
+
+	QString terra_command_line = settings->terrasync_exe_path();
+	terra_command_line.append(" ").append( terraargs.join(" ") );
+
+	//qDebug() << terra_command_line;
+	processTerraSync->start(terra_command_line, QStringList());
+}
+
+//========================================================
+//== Start FgCom
+void MainObject::start_fgcom(){
+
+	QStringList args;
+
+	args << QString("-p");
+	args << settings->value("fgcom_port").toString();
+
+	args << QString("-S");
+	args << settings->value("fgcom_no").toString();
+
+	QString command_line = settings->fgcom_exe_path();
+	command_line.append(" ").append( args.join(" ") );
+	//qDebug() << command_line;
+	processFgCom->start(command_line, QStringList() );
 }

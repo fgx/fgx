@@ -31,9 +31,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	initializing = true;
     mainObject = mainOb;
 	
-	fgfsflag = false;
-	terrasyncflag = false;
-	fgcomflag = false;
 
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	mainObject->settings->restoreWindow(this);
@@ -206,35 +203,53 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	grpSettings->addWidget(buttonSaveSettings);
 	
 
-	//* FgCom
-	exeFgCom = new ExeControls("FgCom", "fgcom");
+	//=============================================================
+	//== Start Stop ==
+	//=============================================================
+
+	//= Set to true to show all exec controls
+	bool show_indiv_buttons = false;
+
+	//= FgCom
+	exeFgCom = new ExeControls("FgCom");
 	bottomActionLayout->addWidget(exeFgCom);
+	connect(exeFgCom->buttonStart, SIGNAL(clicked()),
+			this, SLOT(on_start_fgcom_clicked())
+			);
 
-	//* TerraSync
-	exeTerraSync = new ExeControls("TerraSync", "terrasync");
+	connect(mainObject->processFgCom, SIGNAL(running(bool)), exeFgCom, SLOT(set_running(bool)));
+	connect(exeFgCom, SIGNAL(stop()), mainObject->processFgCom, SLOT(stop()));
+	exeFgCom->setVisible(show_indiv_buttons);
+
+	//= TerraSync
+	exeTerraSync = new ExeControls("TerraSync");
 	bottomActionLayout->addWidget(exeTerraSync);
+	connect(exeTerraSync->buttonStart, SIGNAL(clicked()),
+			this, SLOT(on_start_terrasync_clicked())
+			);
 
-	//* FlightGear
-	exeFgfs = new ExeControls("FlightGear", "fgfs");
+	connect(mainObject->processTerraSync, SIGNAL(running(bool)), exeTerraSync, SLOT(set_running(bool)));
+	connect(exeTerraSync, SIGNAL(stop()), mainObject->processTerraSync, SLOT(stop()));
+	exeTerraSync->setVisible(show_indiv_buttons);
+
+	//= FlightGear
+	exeFgfs = new ExeControls("FgFs");
 	bottomActionLayout->addWidget(exeFgfs);
 	connect(	exeFgfs->buttonStart, SIGNAL(clicked()),
 			this, SLOT(on_start_fgfs_clicked())
 			);
-	connect(	exeFgfs->buttonStop, SIGNAL(clicked()),
-			this, SLOT(on_stop_fgfs_clicked())
+	connect(mainObject->processFgFs, SIGNAL(running(bool)), exeFgfs, SLOT(set_running(bool)));
+	connect(exeFgfs, SIGNAL(stop()), mainObject->processFgFs, SLOT(stop()));
+	exeFgfs->setVisible(show_indiv_buttons);
+
+	//= All
+	exeAll = new ExeControls("FlightGear");
+	bottomActionLayout->addWidget(exeAll);
+	connect(	exeAll->buttonStart, SIGNAL(clicked()),
+			this, SLOT(on_start_all_clicked())
 			);
-	//bottomActionLayout->addStretch(10);
-	
-
-	// Bottom Statusbar 
-	/*statusBar = new StatusBar();
-	statusBar->setMinimumHeight(30);
-	statusBar->setContentsMargins(10,0,0,0);
-	
-	mainLayout->addSpacing(10);
-	
-	mainLayout->addWidget(statusBar);*/
-
+	connect(mainObject->processFgFs, SIGNAL(running(bool)), exeAll, SLOT(set_running(bool)));
+	connect(exeAll, SIGNAL(stop()), mainObject, SLOT(stop_all()) );
 
 	//====================================================================================
 	//* Problem:  Qt Has no "Show event" for a "widget", so we need to present Widgets first
@@ -243,8 +258,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	// TODO  - disable widget till sane in initialize()
 	//centralWidget()->setDisabled(true);
 
-	connect(mainObject->processFgFs, SIGNAL(running(bool)), exeFgfs, SLOT(set_running(bool)));
-	connect(exeFgfs, SIGNAL(stop), mainObject->processFgFs, SLOT(stop()));
 
 	initializing = false;
 	QTimer::singleShot(300, this, SLOT(initialize()));
@@ -267,7 +280,7 @@ void LauncherWindow::initialize(){
 	//= First load the settings
 	load_settings();
 
-	//= chack paths are same
+	//= check paths are same
 	if(!mainObject->settings->paths_sane()){
 		mainObject->show_setup_wizard();
 	}
@@ -279,147 +292,44 @@ void LauncherWindow::initialize(){
 	coreSettingsWidget->initialize();
 }
 
-
-
 //=======================================================================================================================
-// Start FlightGear, TerraSync, FGCom
+// Start Commands
 //=======================================================================================================================
-void LauncherWindow::on_start_fgfs_clicked() {
 
-	//* Start FlightGear (fgfs)
+//= Start All
+void LauncherWindow::on_start_all_clicked() {
 	if(!validate()){
 		return;
 	}
 	save_settings();
+	mainObject->start_all();
+}
 
+//= Start FgFs
+void LauncherWindow::on_start_fgfs_clicked() {
+	if(!validate()){
+		return;
+	}
+	save_settings();
 	mainObject->start_fgfs();
-
-	//qDebug() << mainObject->get_fgfs_command();
-	//qDebug() << timeWeatherWidget->get_args();
-	return;
-
-	QString command = mainObject->settings->fgfs_path();
-
-	QString command_line = QString(command).append(" ").append(fg_args());
-	outputPreviewWidget->txtPreviewOutput->setPlainText(command_line);
-
-
-	if(coreSettingsWidget->checkBoxShowMpMap->isChecked()){
-		QUrl mapUrl(coreSettingsWidget->comboMpMapServer->itemData(coreSettingsWidget->comboMpMapServer->currentIndex()).toString());
-		mapUrl.addQueryItem("follow", coreSettingsWidget->txtCallSign->text());
-		QDesktopServices::openUrl(mapUrl);
-	}
-	//#exeFgfs->start(command_line);
-	fgfsflag = true;
-
-
-	return;
-	//* Start TerraSync
-	
-	if (mainObject->settings->terrasync_enabled()) {
-		QStringList terraargs;
-		//QString terra_sync_path = coreSettingsWidget->txtTerraSyncPath->text();
-		terraargs << "-p" << "5505" << "-S" << "-d" << mainObject->settings->terrasync_sync_data_path();
-		//for debugging only: terraargs << "-p" << "5505" << "-S" << "-d" << "/Documents/TerrasyncScenery";
-		QString terra_command_line = mainObject->settings->fgfs_path();
-		terra_command_line.chop(4);
-		terra_command_line.append("terrasync");
-		terra_command_line.append(" ").append(terraargs.join(" "));
-		//qDebug() << terra_command_line;
-		exeTerraSync->start(terra_command_line);
-		terrasyncflag = true;
-	}
-
-	//* Start FGCom
-
-	if (networkWidget->grpFgCom->isChecked()) {
-		QStringList fgcomargs;
-		QString fgcom_command_line = mainObject->settings->fgcom_exe_path();
-		fgcom_command_line.append(" ");
-	
-	
-		QString argPort("-p");
-		argPort.append(mainObject->settings->value("fgcom_port").toString());
-	
-		QString argServer("-S");
-		argServer.append(mainObject->settings->value("fgcom_no").toString());
-	
-		//FGCom default
-		fgcomargs << argServer << argPort;
-	
-		//Echoing for live debugging purposes
-		//fgcomargs << argServer << "-f910";
-	
-		fgcom_command_line.append(fgcomargs.join(" ") );
-		qDebug() << command_line;
-		exeFgCom->start(fgcom_command_line);
-		fgcomflag = true;
-	}
-
 }
 
-//=======================================================================================================================
-// Stop FlightGear, TerraSync, FGCom
-//=======================================================================================================================
-void LauncherWindow::on_stop_fgfs_clicked() {
-	mainObject->processFgFs->stop();
-	/*
-	if (fgfsflag == true){
-		QString PIDfgfs = QString::number(exeFgfs->get_pid());
-		if (PIDfgfs != "0") {
-			exeFgfs->killproc();
-			outLog("### FlightGear->fgfs PID: " + PIDfgfs + " STOPPED ###");
-		}
+//= Start Terrasync
+void LauncherWindow::on_start_terrasync_clicked() {
+	if(!validate()){
+		return;
 	}
-	
-	if (terrasyncflag == true){
-		QString PIDterra = QString::number(exeTerraSync->get_pid());
-		if (PIDterra != "0") {
-			exeTerraSync->killproc();
-			outLog("### FlightGear->terrasync PID: " + PIDterra + " STOPPED ###");
-		}
-	}
-	
-	if (fgcomflag == true){
-		QString PIDfgcom = QString::number(exeFgCom->get_pid());
-		if (PIDfgcom != "0") {
-			exeFgCom->killproc();
-			outLog("### FlightGear->fgcom PID: " + PIDfgcom + " STOPPED ###");
-		}
-	}
-	*/
+	save_settings();
+	mainObject->start_terrasync();
 }
 
-//=======================================================================================================================
-// Command Arguments
-//=======================================================================================================================
-QString LauncherWindow::fg_args(){
-
-
-	QStringList args;
-
-
-		//exeFgfs->user_env = advancedOptionsWidget->get_env();
-	   // exeFgfs->runtime = advancedOptionsWidget->get_runtime();
-
-	//* Ai Traffic TODO
-	/*
-	if (enableAITraffic->isChecked()) {
-		args << QString("--enable-ai-traffic");
-	}else{
-		args << QString("--disable-ai-traffic");
+void LauncherWindow::on_start_fgcom_clicked() {
+	if(!validate()){
+		return;
 	}
-	*/
-	//** Enable AI models ???
-	args << QString("--enable-ai-models");
-
-	args.sort();
-
-	//** Create the return string
-	QString args_string = args.join(" ");
-	return args_string;
+	save_settings();
+	mainObject->start_fgcom();
 }
-
 
 
 //================================================================================
@@ -463,13 +373,12 @@ void LauncherWindow::load_settings()
 
 
 //==============================================
-//** View Buttons
+//== View Buttons
 void LauncherWindow::on_command_preview(){
 	if(!validate()){
 		return;
 	}
-	QString str = QString(mainObject->settings->fgfs_path()).append(" ").append( fg_args());
-	outputPreviewWidget->txtPreviewOutput->setPlainText(str);
+	outputPreviewWidget->txtPreviewOutput->setPlainText(mainObject->get_fgfs_command());
 }
 
 void LauncherWindow::on_command_help(){

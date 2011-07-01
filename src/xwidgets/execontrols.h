@@ -15,21 +15,19 @@ class ExeControls : public QGroupBox
 {
 Q_OBJECT
 public:
-	explicit ExeControls(QString title, QString exeNam, QWidget *parent = 0);
+	explicit ExeControls(QString title, QWidget *parent = 0);
 	
 	QPushButton *buttonStart;
 	QPushButton *buttonStop;
 
-	void start(QString command_line);
-
-
-
 signals:
+	void start();
 	void stop();
 
-public slots:
-	void on_stop_clicked();
 
+public slots:
+	void on_start_clicked();
+	void on_stop_clicked();
 
 	void set_running(bool running);
 };

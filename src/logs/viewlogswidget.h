@@ -25,6 +25,7 @@ public:
 
 	QPlainTextEdit *txtFgFsLog;
 	QPlainTextEdit *txtTerraSyncLog;
+	QPlainTextEdit *txtFgComLog;
 
 	QPlainTextEdit *txtFgxLog;
 	QPushButton *buttonFgxRefresh;

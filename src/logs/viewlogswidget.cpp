@@ -28,17 +28,20 @@ ViewLogsWidget::ViewLogsWidget(MainObject *mOb, QWidget *parent) :
 	mainLayout->addWidget(tabWidget);
 
 	//================================================
-	//== Fg Process Log
-
+	//== FgFs Log
 	txtFgFsLog = new QPlainTextEdit();
 	tabWidget->addTab(txtFgFsLog, QIcon(":/icon/log"), "FlightGear log");
 
 
 	//================================================
 	//== Terrasync Log
-
 	txtTerraSyncLog = new QPlainTextEdit();
 	tabWidget->addTab(txtTerraSyncLog, QIcon(":/icon/log"), "TerraSync log");
+
+	//================================================
+	//== FgCom Log
+	txtFgComLog = new QPlainTextEdit();
+	tabWidget->addTab(txtFgComLog, QIcon(":/icon/log"), "Fgcom log");
 
 
 	//==============================================
@@ -99,6 +102,9 @@ void ViewLogsWidget::clear_log(QString log_name)
 	}else if(log_name == "fgx"){
 		txtFgxLog->clear();
 
+	}else if(log_name == "fgcom"){
+		txtFgComLog->clear();
+
 	}else if(log_name == "terrasync"){
 		txtTerraSyncLog->clear();
 	}
@@ -115,6 +121,10 @@ void ViewLogsWidget::add_log(QString log_name, QString line)
 	}else if(log_name == "fgx"){
 		txtFgxLog->insertPlainText(line);
 		txtFgxLog->moveCursor(QTextCursor::End);
+
+	}else if(log_name == "fgcom"){
+		txtFgComLog->insertPlainText(line);
+		txtFgComLog->moveCursor(QTextCursor::End);
 
 	}else if(log_name == "terrasync"){
 		txtTerraSyncLog->insertPlainText(line);
