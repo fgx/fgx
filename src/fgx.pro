@@ -42,11 +42,12 @@ HEADERS += xobjects/xsettings.h \
     setupwizard/fgexepage.h \
     setupwizard/setupwizard.h \
     setupwizard/terrasyncpage.h \
-	setupwizard/confirmpage.h \
+    setupwizard/confirmpage.h \
     airports/airportsdata.h \
     aircraft/aircraftdata.h \
     setupwizard/completedpage.h \
-	panes/viewlogwidget.h
+    panes/viewlogwidget.h \
+    xobjects/xprocess.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -74,11 +75,12 @@ SOURCES += main.cpp \
     setupwizard/fgrootpage.cpp \
     setupwizard/fgexepage.cpp \
     setupwizard/terrasyncpage.cpp \
-	setupwizard/confirmpage.cpp \
+    setupwizard/confirmpage.cpp \
     airports/airportsdata.cpp \
     aircraft/aircraftdata.cpp \
     setupwizard/completedpage.cpp \
-	panes/viewlogwidget.cpp
+    panes/viewlogwidget.cpp \
+    xobjects/xprocess.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc
 CONFIG += console
