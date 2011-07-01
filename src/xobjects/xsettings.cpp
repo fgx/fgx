@@ -47,6 +47,27 @@ XSettings::XSettings(QObject *parent) :
 {
 }
 
+//===========================================================================
+// Style
+//===========================================================================
+/** \return The currently selected style or default */
+QString XSettings::style_current(){
+	return value("gui_style", style_default()).toString();
+}
+
+/** \return The default style for platform */
+QString XSettings::style_default(){
+	if(runningOs() == MAC){
+		return QString("Macintosh (aqua)");
+	}
+	if(runningOs() == WINDOWS){
+		return QString("cleanlooks");
+	}
+	if(runningOs() == LINUX){
+		return QString("cleanlooks");
+	}
+	return QString("cleanlooks");
+}
 
 //===========================================================================
 //** fgx Install path
@@ -57,7 +78,7 @@ QString XSettings::fgx_path(){
 
 
 //===========================================================================
-//** fgfs Executable Full Path
+//== fgfs Executable
 //===========================================================================
 /** \brief Path to FlightGear Executable
  *
@@ -94,10 +115,10 @@ QString XSettings::fgfs_default_path(){
 	return QString("UNKNOW OS in default_fgfs_path()");
 }
 
-
-/**
- * \return The absolute path to FG_ROOT ie /fgdata directory
- */
+//===========================================================================
+//== fgroot  path
+//===========================================================================
+/** \return The absolute path to FG_ROOT ie /fgdata directory */
 QString XSettings::fgroot(){
 	if(fgroot_use_default()){
 		return fgroot_default_path();
@@ -120,9 +141,6 @@ QString XSettings::fgroot(QString append_path){
 	return this->fgroot().append(append_path);
 }
 
-
-
-//= Return rhe default path to the FG_ROOT = fgdata directory
 /** \brief Platform specific default path for the FG_ROOT dir
  *
   * \return The absolute path to FG_ROOT

@@ -1,5 +1,6 @@
 
-#include <QDebug>
+//#include <QDebug>
+
 #include <QtCore/QUrl>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
@@ -17,11 +18,9 @@
 
 #include "xwidgets/xgroupboxes.h"
 
-
 #include "launcher/launcherwindow.h"
 #include "utilities/utilities.h"
 #include "utilities/messagebox.h"
-
 
 #include "setupwizard/setupwizard.h"
 
@@ -38,14 +37,13 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	mainObject->settings->restoreWindow(this);
-	
 
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	setWindowIcon(QIcon(":/icon/favicon"));
 
 
 	//====================================================
-	//** Outer Layout
+	//== Outer Layout
 	//====================================================
 	QVBoxLayout *outerContainer = new QVBoxLayout();
 	outerContainer->setContentsMargins(0, 0, 0, 0);
@@ -55,41 +53,37 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 
 	//====================================================
-	//** Setup Menus
+	//== Setup Menus
 	//====================================================
 	QMenuBar *menuBar = new QMenuBar();
 	outerContainer->addWidget(menuBar);
 
-	//** File Menu
+	//== File Menu
 	QMenu *menuFile = new QMenu(tr("File"));
 	menuBar->addMenu(menuFile);
 	QAction *actionQuit = menuFile->addAction(QIcon(":/icon/quit"), tr("Quit"), this, SLOT(on_quit()));
 	actionQuit->setIconVisibleInMenu(true);
 
-	//** Style Menu
+	//=== Style Menu
 	QMenu *menuStyle = new QMenu(tr("Style"));
-	menuBar->addMenu(menuStyle);
-	// TODO make defult style from xplatform.. in mainObject->settings-> (pedro)
-	#if defined(Q_OS_MAC)
-		QApplication::setStyle( QStyleFactory::create(mainObject->settings->value("gui_style","Macintosh (aqua)").toString()) );
-	#else
-		QApplication::setStyle( QStyleFactory::create(mainObject->settings->value("gui_style","Cleanlooks").toString()) );
-	#endif
+	menuBar->addMenu(menuStyle);	
+
 	actionGroupStyle = new QActionGroup(this);
 	actionGroupStyle->setExclusive(true);
 	connect(actionGroupStyle, SIGNAL(triggered(QAction*)), this, SLOT(on_action_style(QAction*)));
 	QStringList styles =  QStyleFactory::keys();
+
 	for(int idx=0; idx < styles.count(); idx++){
 		QString sty = QString(styles.at(idx));
 		QAction *act = menuStyle->addAction( sty );
 		actionGroupStyle->addAction( act );
 		act->setCheckable(true);
-		if(QApplication::style()->objectName() == sty.toLower()){
+		if(mainObject->settings->style_current() == sty){
 			act->setChecked(true);
 		}
 	}
 
-	//** Help Menu
+	//==== Help Menu
 	QMenu *menuHelp = new QMenu(tr("Help"));
 	menuBar->addMenu(menuHelp);
 
@@ -123,7 +117,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	outerContainer->addWidget(headerLabel, 0);
 
 	outerContainer->addSpacing(10);
-
 
 	QVBoxLayout *mainLayout = new QVBoxLayout();
 	mainLayout->setContentsMargins(10, 10, 10, 10);
@@ -386,7 +379,6 @@ QString LauncherWindow::fg_args(){
 	//* fg_root
 	args << QString("--fg-root=").append(mainObject->settings->fgroot());
 
-
 	//* Core Settings
 	args << coreSettingsWidget->get_args();
 
@@ -457,14 +449,7 @@ void LauncherWindow::load_settings()
 	networkWidget->load_settings();
 	advancedOptionsWidget->load_settings();
 
-	exeTerraSync->setEnabled( mainObject->settings->value("use_terrasync").toBool() );
-
-	//** Weather
-	//int weather = mainObject->settings->value("weather").toInt();
-	//timeWeatherWidget->buttonGroupMetar->button(weather)->setChecked(true);
-
-	//timeWeatherWidget->txtMetar->setPlainText(mainObject->settings->value("metar").toString());
-	//timeWeatherWidget->txtMetar->setEnabled(weather == 2);
+	exeTerraSync->setEnabled( mainObject->settings->terrasync_enabled() );
 
 	outLog("*** FGx reports: Settings loaded ***");
 
@@ -527,14 +512,6 @@ bool LauncherWindow::validate(){
 	}
 	outLog("*** FGx reports: Network settings ok. ***");
 
-	/*
-	if(coreSettingsWidget->groupBoxTerraSync->isChecked() && coreSettingsWidget->txtTerraSyncPath->text().length() == 0){
-		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget) );
-		coreSettingsWidget->txtTerraSyncPath->setFocus();
-		messageBox->showWindowMessage("Validation failed:<BR> Please set a path vor Terrasync Scenery!");
-		return false;
-	}
-	*/
 	outLog("*** FGx reports: ALL SETTINGS VALID. ***");
 	return true;
 }
@@ -562,31 +539,21 @@ void LauncherWindow::on_about_qt(){
 //* Misc Events
 //=======================================================================================================================
 	
-// quit
+//= quit
 void LauncherWindow::on_quit(){
-	
 	save_settings(); // message save needed
 	QApplication::quit();
-
 }
 
-/*
-void LauncherWindow::on_group_box_terrasync_clicked(){
-	mainObject->settings->setValue("use_terrasync", coreSettingsWidget->groupBoxTerraSync->isChecked());
-	mainObject->settings->sync();
-	exeTerraSync->setEnabled(coreSettingsWidget->groupBoxTerraSync->isChecked());
-}
-*/
-
-// window close
+//= window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
 	Q_UNUSED(event);
 	save_settings();
 	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	event->accept();
+	// TODO got to be a better way
 	mainObject->launcher_flag = false;
-	
 }
 
 void LauncherWindow::on_action_style(QAction *action){

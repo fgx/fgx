@@ -1,11 +1,11 @@
 
-#include <QDebug>
+//#include <QDebug>
+
 #include <QCoreApplication>
+#include <QApplication>
 #include <QTimer>
 
-//#include <QtSql/QSqlQuery>
-//#include <QtSql/QSqlError>
-
+#include <QStyleFactory>
 
 #include <QtGui/QDesktopServices>
 #include <QtGui/QAction>
@@ -23,20 +23,23 @@
 MainObject::MainObject(QObject *parent) :
     QObject(parent)
 {
-	
-    util_setStdLogFile(); // init the LOG file
 
-    //**********************************************************************
-    //** Settings connection
+	//= init the LOG file
+	util_setStdLogFile();
+
+	//= XSettings Object
     settings = new XSettings();
+
+	//= Set GLobal style
+	QApplication::setStyle( QStyleFactory::create(settings->style_current()) );
 
 	launcher_flag = false;
 
 	mpMapWidget = 0;
 	viewLogWidget = 0;
 
-    //***********************************
-    //** Tray Icon
+	//============================
+	//== Tray Icon
 	trayIcon = new QSystemTrayIcon(QIcon(":/icon/favicon"), this);
     trayIcon->setToolTip("FlightGear Launcher");
     trayIcon->setVisible(true);
@@ -44,30 +47,30 @@ MainObject::MainObject(QObject *parent) :
             this, SLOT(on_tray_icon(QSystemTrayIcon::ActivationReason)));
 
 
-    //***********************************
-    //** Menu and actions
+	//== Tray Menu and actions
     popupMenu = new QMenu();
     trayIcon->setContextMenu(popupMenu);
 
+	//== Callsign - label in a widget..
     actionCallsign = new QWidgetAction(this);
     lblCallsign = new QLabel();
     lblCallsign->setText("(your callsign)");
 	lblCallsign->setStyleSheet("color: #0000ff; padding: 0px; font-weight: bold;");
     actionCallsign->setDefaultWidget(lblCallsign);
-
 	popupMenu->addAction(actionCallsign);
 
-
+	//= Launcher Action
 	actionLauncher = popupMenu->addAction(tr("Launcher"));
 	actionLauncher->setIconVisibleInMenu(true);
 	connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
 
+	//= MpMap action
 	actionMpMap = popupMenu->addAction(tr("Start Map Widget"));
 	actionMpMap->setIconVisibleInMenu(true);
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));
 
 
-	//*** Settings
+	//= Settings Action
 	QAction *actionSetupWizard= new QAction(this);
 	actionSetupWizard->setIcon(QIcon(":/icon/wizard"));
 	actionSetupWizard->setText(tr("Setup Wizard..."));
@@ -77,7 +80,7 @@ MainObject::MainObject(QObject *parent) :
 			this, SLOT(show_setup_wizard())
     );
 
-	//*** Settings
+	//== View Logs
 	QAction *actionViewLog= new QAction(this);
 	actionViewLog->setIcon(QIcon(":/icon/log"));
 	actionViewLog->setText(tr("View Log..."));
@@ -91,16 +94,17 @@ MainObject::MainObject(QObject *parent) :
 
 
 
-    //*** Quit
+	//== Quit
 	actionQuit = popupMenu->addAction(QIcon(":/icon/quit"), tr("Quit"));
 	actionQuit->setIconVisibleInMenu(true);
     connect(actionQuit, SIGNAL(triggered()), this, SLOT(on_quit()));
 
-    //** Setup
+	//==================
     trayIcon->show();
 
 	connect(this, SIGNAL(show_settings(int)), this, SLOT(on_settings(int)));
 
+	//== initialise after initial show so UI dont look frozen while cache loading etc
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
 }
@@ -113,7 +117,7 @@ MainObject::~MainObject()
 //============================================================================
 //** Shows the Launcher window
 void MainObject::initialize(){
-	//db_connect();
+
 	on_launcher();
 }
 

@@ -65,6 +65,8 @@ public:
 
 	static QString log_file_path();
 
+	QString style_current();
+	QString style_default();
 
 private:
 	QString _windowName(QWidget *widget);

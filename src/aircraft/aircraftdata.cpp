@@ -1,4 +1,5 @@
 
+#include <QtDebug>
 #include <QFile>
 #include <QTextStream>
 #include <QProgressDialog>
@@ -23,18 +24,15 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 	int found = 0;
 
 	progress.setValue(0);
-	progress.setWindowTitle("Scanning aircraft directory");
+	progress.setWindowTitle("Scanning Aircraft Directories");
 	progress.repaint();
 	//= Cache File
 	QFile cacheFile( mainObject->settings->data_file("aircraft.txt") );
 	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
-		//qDebug() << "TODO Open error cachce file=";
+		qDebug() << "TODO Open error cachce file=";
 		return true;
 	}
 
-	//QProgressDialog progress("Scanning aircraft directory ...", "Cancel", 0, 0, parent);
-	//progress.setWindowModality(Qt::WindowModal);
-	//progress.show();
 
 
 	QTextStream out(&cacheFile);
