@@ -68,6 +68,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//==================================================================
 	//= Controls
 	XGroupVBox *grpBoxControls = new XGroupVBox(tr("Controls"));
+	grpBoxControls->set_major(true);
 	layoutLeft->addWidget(grpBoxControls);
 
 	//= Enable Autocordination
@@ -103,6 +104,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	mainLayout->addLayout(layoutPaths, 2);
 
 	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
+	grpFgPaths->set_major(true);
 	layoutPaths->addWidget(grpFgPaths);
 
 	QString style_paths("background-color: #efefef; padding: 3px; color: #444444; border: 1px solid #cccccc;");

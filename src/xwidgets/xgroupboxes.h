@@ -7,26 +7,27 @@
 #include <QBoxLayout>
 #include <QGridLayout>
 
-//=====================================================
-//** Vertical Box
+/** \brief A QGroupBox with a QVertical box */
 class XGroupVBox : public QGroupBox
 {
 Q_OBJECT
 public:
 	explicit XGroupVBox(QString title, QWidget *parent = 0);
 
+
 	QVBoxLayout *xLayout;
 	void addWidget(QWidget *w);
 	void addWidget(QWidget *w, int stretch);
 	void addLayout(QBoxLayout *lay);
+
+	void set_major(bool state);
 signals:
 
 public slots:
 
 };
 
-//=====================================================
-//** Horizontal Box
+/** \brief A QGroupBox with a QHorizontal box */
 class XGroupHBox : public QGroupBox
 {
 Q_OBJECT
@@ -37,6 +38,8 @@ public:
 	void addWidget(QWidget *w);
 	void addWidget(QWidget *w, int stretch);
 	void addLayout(QBoxLayout *lay);
+
+	void set_major(bool state);
 signals:
 
 public slots:
@@ -54,6 +57,8 @@ public:
 
 	QGridLayout *gridLayout;
 	void addWidget(QWidget *w, int row, int col, int row_span, int col_span);
+
+	void set_major(int state);
 signals:
 
 public slots:
