@@ -60,7 +60,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 		comboBoxHz->addItem("5 seconds", QString::number(sex));
 	}
 	comboBoxHz->setCurrentIndex(3);
-	connect(comboBoxHz, SIGNAL(currentIndexChanged(int)),, this, SLOT(on_combo_changed(int)));
+	connect(comboBoxHz, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_changed(int)));
 
 
 	//=========================================================
