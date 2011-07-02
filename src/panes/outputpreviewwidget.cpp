@@ -2,7 +2,6 @@
 
 //#include <QDebug>
 
-
 #include <QtCore/QProcess>
 
 #include <QtGui/QHBoxLayout>
@@ -36,9 +35,36 @@ OutputPreviewWidget::OutputPreviewWidget(MainObject *mOb, QWidget *parent) :
 	QVBoxLayout *layoutButtons = new QVBoxLayout();
 	layoutBox->addLayout(layoutButtons);
 
+
+	//=============================================================
+	buttonGroup = new QButtonGroup(this);
+	buttonGroup->setExclusive(true);
+	connect(buttonGroup, SIGNAL(buttonClicked(int)) , this, SLOT(preview()));
+
+	QRadioButton *radioString = new QRadioButton();
+	radioString->setText("Single Line");
+	radioString->setProperty("value", "string");
+	layoutButtons->addWidget(radioString);
+	buttonGroup->addButton(radioString, 0);
+
+	QRadioButton *radioLines = new QRadioButton();
+	radioLines->setText("Seperate Lines");
+	radioLines->setProperty("value", "lines");
+	layoutButtons->addWidget(radioLines);
+	buttonGroup->addButton(radioLines, 1);
+
+	QRadioButton *radioShell = new QRadioButton();
+	radioShell->setText("Shell Lines");
+	radioShell->setProperty("value", "shell");
+	layoutButtons->addWidget(radioShell);
+	buttonGroup->addButton(radioShell, 2);
+
+
+	//=============================================================
 	buttonCommandPreview = new QPushButton();
 	buttonCommandPreview->setText(tr("Preview Command"));
 	layoutButtons->addWidget(buttonCommandPreview);
+	connect(buttonCommandPreview, SIGNAL(clicked()), this, SLOT(preview()));
 
 	buttonCommandHelp = new QPushButton();
 	buttonCommandHelp->setText(tr("Options Help"));
@@ -46,6 +72,8 @@ OutputPreviewWidget::OutputPreviewWidget(MainObject *mOb, QWidget *parent) :
 	connect(buttonCommandHelp, SIGNAL(clicked()), this, SLOT(on_command_help()));
 
 	layoutButtons->addStretch(20);
+
+	buttonGroup->button(mainObject->settings->value("preview_type", "1").toInt())->setChecked(true);
 }
 
 
@@ -54,7 +82,6 @@ void OutputPreviewWidget::on_command_help(){
 	QProcess process;
 	QStringList args;
 	args << "-h" << "-v" << QString("--fg-root=").append(mainObject->settings->fgroot());
-	qDebug() << mainObject->settings->fgfs_path() <<  args;
 	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
 	if(process.waitForStarted()){
 		process.waitForFinished(10000);
@@ -63,3 +90,19 @@ void OutputPreviewWidget::on_command_help(){
 	}
 }
 
+
+void OutputPreviewWidget::preview(){
+	mainObject->settings->setValue("preview_type", buttonGroup->checkedId());
+	QString delim("");
+	QString type = buttonGroup->checkedButton()->property("value").toString();
+	if(type == "lines"){
+		delim.append("\n");
+	}else if(type == "shell"){
+		delim.append(" \\\n");
+	}else{
+		delim.append(" ");
+	}
+	QString cmd = mainObject->settings->fgfs_path().append(delim);
+	cmd.append( mainObject->get_fgfs_args().join(delim));
+	txtPreviewOutput->setPlainText(cmd);
+}

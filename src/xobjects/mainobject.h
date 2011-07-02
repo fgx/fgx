@@ -90,6 +90,7 @@ public:
 
 
 	QString get_fgfs_command();
+	QStringList get_fgfs_args();
 	QStringList get_env();
 
 

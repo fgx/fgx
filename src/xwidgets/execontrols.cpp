@@ -1,5 +1,6 @@
 
-#include <QDebug>
+//#include <QDebug>
+
 #include <QFile>
 #include <QFileInfo>
 #include <QtCore/QProcess>

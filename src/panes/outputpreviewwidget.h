@@ -4,6 +4,7 @@
 #include <QtGui/QPlainTextEdit>
 #include <QtGui/QPushButton>
 #include <QtGui/QWidget>
+#include <QtGui/QButtonGroup>
 
 #include "xobjects/mainobject.h"
 
@@ -18,11 +19,15 @@ public:
 	QPlainTextEdit *txtPreviewOutput;
 	QPushButton *buttonCommandPreview;
 	QPushButton *buttonCommandHelp;
+	QButtonGroup *buttonGroup;
+
+
 signals:
 
 public slots:
 
 	void on_command_help();
+	void preview();
 };
 
 #endif // OUTPUTPREVIEWWIDGET_H

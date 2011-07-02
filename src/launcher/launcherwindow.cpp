@@ -410,7 +410,7 @@ void LauncherWindow::on_command_preview(){
 	if(!validate()){
 		return;
 	}
-	outputPreviewWidget->txtPreviewOutput->setPlainText(mainObject->get_fgfs_command());
+	outputPreviewWidget->preview();
 }
 
 
@@ -501,18 +501,24 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 	event->accept();
 }
 
+//=== Style Selected
 void LauncherWindow::on_action_style(QAction *action){
 	mainObject->settings->setValue("gui_style", action->text());
 	QApplication::setStyle(QStyleFactory::create(action->text()));
 }
 
+//=== Tab Changes
 void LauncherWindow::on_tab_changed(int tab_idx){
 	if(initializing){
 		return;
 	}
-	mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
+
+
 	if(tab_idx == tabWidget->indexOf(outputPreviewWidget)){
 		on_command_preview();
+	}else{
+		//= we dont want to restore to output preview cos it validates and will throw popup
+		mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
 	}
 }
 

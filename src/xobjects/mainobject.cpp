@@ -244,7 +244,10 @@ void MainObject::add_log(QString log_name, QString data){
 }
 
 
-QString MainObject::get_fgfs_command(){
+//=========================================================================
+//== FgFs Start args = command
+//=========================================================================
+QStringList MainObject::get_fgfs_args(){
 
 	QStringList args;
 
@@ -416,9 +419,13 @@ QString MainObject::get_fgfs_command(){
 	//** Enable AI models ???
 	//args << QString("--enable-ai-models");
 	//qDebug() << args;
+	args.sort();
+	return args;
+}
 
+QString MainObject::get_fgfs_command(){
 	QString command = settings->fgfs_path();
-	command.append(" ").append(args.join(" "));
+	command.append(" ").append(get_fgfs_args().join(" "));
 	return command;
 }
 
