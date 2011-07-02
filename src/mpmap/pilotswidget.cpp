@@ -37,9 +37,11 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 
 
 
-
+	//========================================
+	//= Toolbar
 	QToolBar *toolbar = new QToolBar();
 	mainLayout->addWidget(toolbar);
+	toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
 	QAction *actionRefresh = new QAction(this);
 	actionRefresh->setText("Refresh");
@@ -47,6 +49,22 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	toolbar->addAction(actionRefresh);
 	connect(actionRefresh, SIGNAL(triggered()), this, SLOT(fetch_pilots()));
 
+	checkBoxAutoRefresh = new QCheckBox("Auto Refresh");
+	toolbar->addWidget(checkBoxAutoRefresh);
+	checkBoxAutoRefresh->setChecked(true);
+	connect(checkBoxAutoRefresh, SIGNAL(stateChanged(int)), this, SLOT(on_check_autorefresh(int)));
+
+	comboBoxHz = new QComboBox();
+	toolbar->addWidget(comboBoxHz);
+	for(int sex=1; sex < 10; sex++){
+		comboBoxHz->addItem("5 seconds", QString::number(sex));
+	}
+	comboBoxHz->setCurrentIndex(3);
+	connect(comboBoxHz, SIGNAL(currentIndexChanged(int)),, this, SLOT(on_combo_changed(int)));
+
+
+	//=========================================================
+	//== Tree ( Coeden )
 	tree = new QTreeWidget();
 	mainLayout->addWidget(tree);
 
@@ -54,8 +72,12 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	tree->setUniformRowHeights(true);
 
 	tree->headerItem()->setText(C_CALLSIGN, "Callsign");
-	tree->headerItem()->setText(C_AERO, "Aircraft");
+	tree->headerItem()->setText(C_AIRCRAFT, "Aircraft");
 	tree->headerItem()->setText(C_ALTITUDE, "Altitude");
+	tree->headerItem()->setText(C_HEADING, "Heading");
+	tree->headerItem()->setText(C_PITCH, "Pitch");
+	tree->headerItem()->setText(C_LAT, "Lat");
+	tree->headerItem()->setText(C_LNG, "Lng");
 
 
 
@@ -71,7 +93,7 @@ void PilotsWidget::fetch_pilots()
 	QUrl url("http://mpmap01.flightgear.org/fg_server_xml.cgi?mpserver01.flightgear.org:5001");
 	QNetworkRequest request;
 	request.setUrl(url );
-	qDebug() << url.toString();
+	//qDebug() << url.toString();
 
 	reply = netMan->get(request);
 	connect(reply, SIGNAL( error(QNetworkReply::NetworkError)),
@@ -92,6 +114,7 @@ void PilotsWidget::fetch_pilots()
 //==========================================================
 void PilotsWidget::on_server_error(QNetworkReply::NetworkError error){
 	qDebug() << "error" << error;
+	// TODO
 }
 
 void PilotsWidget::on_server_ready_read(){
@@ -100,7 +123,10 @@ void PilotsWidget::on_server_ready_read(){
 }
 
 void PilotsWidget::on_server_read_finished(){
-	qDebug() << "done"; // << server_string;
+	//qDebug() << "done"; // << server_string;
+
+	// first mark the existing as flagged
+
 
 	//= Create Dom Document
 	QDomDocument dom;
@@ -120,15 +146,26 @@ void PilotsWidget::on_server_read_finished(){
 			list << node.firstChildElement("marker").text();
 			QDomNamedNodeMap attribs =  node.attributes();
 			item->setText(C_CALLSIGN, attribs.namedItem("callsign").nodeValue());
-			item->setText(C_AERO, attribs.namedItem("model").nodeValue());
+			item->setText(C_AIRCRAFT, attribs.namedItem("model").nodeValue());
 			item->setText(C_ALTITUDE, attribs.namedItem("alt").nodeValue());
+			item->setText(C_HEADING, attribs.namedItem("heading").nodeValue());
+			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
+			item->setText(C_LAT, attribs.namedItem("lat").nodeValue());
+			item->setText(C_LNG, attribs.namedItem("lng").nodeValue());
+
 		}
 	}
 
 }
 
 
+void PilotsWidget::on_check_autorefresh(int x){
 
+}
+
+void PilotsWidget::on_combo_changed(int idx){
+
+}
 
 
 
