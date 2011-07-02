@@ -94,7 +94,7 @@ MainObject::MainObject(QObject *parent) :
 			this, SLOT(on_view_logs())
 	);
 
-
+	//== Properties browseer
 	actionPropsBrowser = new QAction(this);
 	actionPropsBrowser->setIcon(QIcon(":/icon/props"));
 	actionPropsBrowser->setText(tr("Properties Browser..."));

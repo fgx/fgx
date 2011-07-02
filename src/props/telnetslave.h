@@ -28,7 +28,7 @@ public:
     QString current_node_path;
     bool in_request;
 
-	void telnet_connect();
+	void telnet_connect(QString address, int port);
 	void telnet_disconnect();
 	void get_node(QString path);
 	void set_property(QString path, QString value);

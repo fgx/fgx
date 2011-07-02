@@ -21,9 +21,6 @@ TelnetSlave::TelnetSlave(QObject *parent) :
     current_node_path = "";
     in_request = false;
 
-	hostAddress = QString("127.0.0.1");
-	//hostAddress = QString("192.168.5.23");
-	port = 5500;
 
     socket = new QTcpSocket(this);
 
@@ -42,9 +39,14 @@ TelnetSlave::TelnetSlave(QObject *parent) :
 //*********************************************************************************************
  //** Connect / Disconnect
 //********************************************************************************************
-void TelnetSlave::telnet_connect(){
-	//socket->connectToHost(hostAddress, port);
+void TelnetSlave::telnet_connect(QString address, int portt){
+	hostAddress = address;
+	port = portt;
+	socket->connectToHost(hostAddress, port);
+	qDebug() << "open" << hostAddress << port;
 }
+
+
 
 void TelnetSlave::telnet_disconnect(){
     socket->close();
@@ -144,15 +146,16 @@ void TelnetSlave::on_ready_read(){
 //*********************************************************************************************
 
 void TelnetSlave::on_host_found(){
+		qDebug("on_host_found");
 }
 
 void TelnetSlave::on_connected(){
-    //qDebug("on_telnet_connected");
+	qDebug("on_telnet_connected");
     emit telnet_connected(true);
 }
 
 void TelnetSlave::on_disconnected(){
-    //qDebug("on_telnet_disconnected"); // << "DONE" << telnet_reply;
+	qDebug("on_telnet_disconnected"); // << "DONE" << telnet_reply;
     emit telnet_connected(false);
 }
 

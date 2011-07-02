@@ -20,5 +20,9 @@
         <file alias="mpmap">icons/map.png</file>
         <file alias="wizard">icons/wand.png</file>
         <file alias="log">icons/page_white_text.png</file>
+        <file alias="props">icons/chart_organisation.png</file>
+        <file alias="connect">icons/connect.png</file>
+        <file alias="disconnect">icons/disconnect.png</file>
+        <file alias="prop_node">icons/shape_square.png</file>
     </qresource>
 </RCC>

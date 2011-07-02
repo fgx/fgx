@@ -30,14 +30,19 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
 
     mainObject = mOb;
 
-	/*
-	connect(mainObject->telnet, SIGNAL(props_path(QString, QString)),
+	telnet = new TelnetSlave(this);
+	telnet->telnet_connect("127.0.0.1", 7777);
+
+
+	connect(telnet, SIGNAL(props_path(QString, QString)),
              this, SLOT(on_props_path(QString, QString))
     );
-    connect(mainObject->telnet, SIGNAL(props_node(QString, QString, QString, QString)),
+	connect(telnet, SIGNAL(props_node(QString, QString, QString, QString)),
             this, SLOT(on_props_node(QString, QString, QString, QString))
     );
-	*/
+
+	setWindowTitle("Property Tree Browser");
+	setWindowIcon(QIcon(":/icon/props"));
 
 
 	setProperty("settings_namespace", QVariant("properties_window"));
@@ -72,7 +77,7 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
     QAction *actionRefreshTree = new QAction(this);
     treeToolbar->addAction(actionRefreshTree);
     actionRefreshTree->setText("Refresh");
-    actionRefreshTree->setIcon(QIcon(":/icons/refresh"));
+	actionRefreshTree->setIcon(QIcon(":/icon/refresh"));
     connect(actionRefreshTree, SIGNAL(triggered()), this, SLOT(load_nodes()) );
 
     treeToolbar->addSeparator();
@@ -155,12 +160,14 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
     statusBarTree->showMessage("Idle");
 }
 
-//************************************************************************
+//=============================================
 void PropsTreeWidget::load_nodes(){
     //mainObject->telnet->fg_connect();
 	telnet->get_node("/");
-    //qDebug() << reply;
+	qDebug() << "get_node /";
 }
+
+
 //*************************************************************************
 //** On props Node
 //*************************************************************************
@@ -188,7 +195,7 @@ void PropsTreeWidget::on_props_node(QString parent_path, QString node_name,
 		newTopItem->setText(C_VALUE, node_value);
 		newTopItem->setText(C_TYPE, node_type);
 		newTopItem->setText(C_PATH, end_path );
-        newTopItem->setIcon(0, QIcon(":/icons/node_val"));
+		newTopItem->setIcon(0, QIcon(":/icon/prop_node"));
        treeWidget->addTopLevelItem(newTopItem);
     }else{
         QList<QTreeWidgetItem *> items = treeWidget->findItems(parent_path,
@@ -200,7 +207,7 @@ void PropsTreeWidget::on_props_node(QString parent_path, QString node_name,
 		newNodeItem->setText(C_VALUE, node_value);
 		newNodeItem->setText(C_TYPE, node_type);
 		newNodeItem->setText(C_PATH, end_path );
-        newNodeItem->setIcon(0, QIcon(":/icons/node_val"));
+		newNodeItem->setIcon(0, QIcon(":/icon/prop_node"));
     }
 }
 //*************************************************************************
@@ -223,7 +230,7 @@ void PropsTreeWidget::on_props_path(QString parent_path, QString path){
         QTreeWidgetItem *newTopItem = new QTreeWidgetItem();
 		newTopItem->setText(C_NODE, path.left(path.length() - 1));
         newTopItem->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
-		newTopItem->setIcon(C_NODE, QIcon(":/icons/folder_closed"));
+		newTopItem->setIcon(C_NODE, QIcon(":/icon/folder")); // folder_closed
 		newTopItem->setText(C_PATH, end_path );
         treeWidget->addTopLevelItem(newTopItem);
     }else{
@@ -233,7 +240,7 @@ void PropsTreeWidget::on_props_path(QString parent_path, QString path){
         QTreeWidgetItem *newNodeItem = new QTreeWidgetItem(items[0]);
 		newNodeItem->setText(C_NODE, path.left(path.length() - 1));
         newNodeItem->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
-		newNodeItem->setIcon(C_NODE, QIcon(":/icons/folder_closed"));
+		newNodeItem->setIcon(C_NODE, QIcon(":/icon/folder")); // folder_closed
 		newNodeItem->setText(C_PATH, end_path );
     }
 }
@@ -241,7 +248,7 @@ void PropsTreeWidget::on_props_path(QString parent_path, QString path){
 void PropsTreeWidget::on_item_expanded(QTreeWidgetItem *item){
     qDebug() << "ON Expand=" << item->text(3);
    // qDebug() << item->text(3);
-    item->setIcon(0, QIcon(":/icons/folder_expanded"));
+	item->setIcon(0, QIcon(":/icon/folder")); // folder_open
     item->setText(1, tr("Refresh"));
     QFont font = item->font(1);
     font.setPointSize(7);

@@ -74,6 +74,8 @@ public:
 
     QSystemTrayIcon *trayIcon;
     QMenu *popupMenu;
+
+
     QWidgetAction *actionCallsign;
     QLabel *lblCallsign;
 
