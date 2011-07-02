@@ -203,9 +203,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	outputPreviewWidget = new OutputPreviewWidget(mainObject);
 	tabWidget->addTab( outputPreviewWidget, tr("Output / Preview"));
 	connect(outputPreviewWidget->buttonCommandPreview, SIGNAL(clicked()), this, SLOT(on_command_preview()));
-	connect(outputPreviewWidget->buttonCommandHelp, SIGNAL(clicked()), this, SLOT(on_command_help()));
-
-
 
 
 	mainLayout->addSpacing(10);
@@ -414,17 +411,6 @@ void LauncherWindow::on_command_preview(){
 		return;
 	}
 	outputPreviewWidget->txtPreviewOutput->setPlainText(mainObject->get_fgfs_command());
-}
-
-void LauncherWindow::on_command_help(){
-	QProcess process;
-	QStringList args;
-	args << "-h" << "-v" << QString("--fg-root=").append(mainObject->settings->fgroot());
-	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
-	if(process.waitForStarted()){
-		QString ok_result = process.readAllStandardOutput();
-		outputPreviewWidget->txtPreviewOutput->setPlainText(ok_result);
-	}
 }
 
 

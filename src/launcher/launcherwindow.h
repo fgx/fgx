@@ -102,7 +102,6 @@ public slots:
 
 	//* Ouput Buttons
 	void on_command_preview();
-	void on_command_help();
 
 
 	//* Widget Events

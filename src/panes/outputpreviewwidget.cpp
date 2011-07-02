@@ -3,6 +3,8 @@
 //#include <QDebug>
 
 
+#include <QtCore/QProcess>
+
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QGroupBox>
@@ -41,6 +43,23 @@ OutputPreviewWidget::OutputPreviewWidget(MainObject *mOb, QWidget *parent) :
 	buttonCommandHelp = new QPushButton();
 	buttonCommandHelp->setText(tr("Options Help"));
 	layoutButtons->addWidget(buttonCommandHelp);
+	connect(buttonCommandHelp, SIGNAL(clicked()), this, SLOT(on_command_help()));
 
 	layoutButtons->addStretch(20);
 }
+
+
+
+void OutputPreviewWidget::on_command_help(){
+	QProcess process;
+	QStringList args;
+	args << "-h" << "-v" << QString("--fg-root=").append(mainObject->settings->fgroot());
+	qDebug() << mainObject->settings->fgfs_path() <<  args;
+	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
+	if(process.waitForStarted()){
+		process.waitForFinished(10000);
+		QString ok_result = process.readAllStandardOutput();
+		txtPreviewOutput->setPlainText(ok_result);
+	}
+}
+
