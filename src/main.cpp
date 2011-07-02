@@ -58,7 +58,7 @@ int main( int argc, char* argv[])
 	styles.append("QLineEdit { background-color: white }");
 	styles.append("QGroupBox { font-size: 11px; }"); // text-transform: uppercase
 	styles.append("QPushButton { padding: 5px; }");
-	styles.append("QStatusBar { font-family: Andale mono, monospace; font-size: 12px; font-weight: normal; color: #FF0000; background-image: url(:images/background_yellow); }");
+	styles.append("QStatusBar { font-family: Andale mono, monospace; font-size: 12px; font-weight: normal }");
 	styles.append("LauncherWindow { background-color: #eeeeee }");
 	styles.append("QMenuBar { color: #eeeeee; background-color: #333333 }");
 	styles.append("QMenu::item { color: #333333; background-color: #eeeeee }");

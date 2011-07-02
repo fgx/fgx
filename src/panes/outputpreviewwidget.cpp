@@ -42,19 +42,19 @@ OutputPreviewWidget::OutputPreviewWidget(MainObject *mOb, QWidget *parent) :
 	connect(buttonGroup, SIGNAL(buttonClicked(int)) , this, SLOT(preview()));
 
 	QRadioButton *radioString = new QRadioButton();
-	radioString->setText("Single Line");
+	radioString->setText("Single line");
 	radioString->setProperty("value", "string");
 	layoutButtons->addWidget(radioString);
 	buttonGroup->addButton(radioString, 0);
 
 	QRadioButton *radioLines = new QRadioButton();
-	radioLines->setText("Seperate Lines");
+	radioLines->setText("Separate lines");
 	radioLines->setProperty("value", "lines");
 	layoutButtons->addWidget(radioLines);
 	buttonGroup->addButton(radioLines, 1);
 
 	QRadioButton *radioShell = new QRadioButton();
-	radioShell->setText("Shell Lines");
+	radioShell->setText("Shell lines");
 	radioShell->setProperty("value", "shell");
 	layoutButtons->addWidget(radioShell);
 	buttonGroup->addButton(radioShell, 2);
@@ -62,7 +62,7 @@ OutputPreviewWidget::OutputPreviewWidget(MainObject *mOb, QWidget *parent) :
 
 	//=============================================================
 	buttonCommandPreview = new QPushButton();
-	buttonCommandPreview->setText(tr("Preview Command"));
+	buttonCommandPreview->setText(tr("Show Command"));
 	layoutButtons->addWidget(buttonCommandPreview);
 	connect(buttonCommandPreview, SIGNAL(clicked()), this, SLOT(preview()));
 
