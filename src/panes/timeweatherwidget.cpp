@@ -132,7 +132,13 @@ QString TimeWeatherWidget::validate(){
 
 			return QString("No metar text");
 	}
-	return QString("");
+
+    QString time = buttonGroupTime->checkedButton()->property("value").toString();
+    if (time != "real") {
+        args << QString("--timeofday="+time);
+    }
+
+	return args;
 }
 
 
