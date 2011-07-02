@@ -11,13 +11,15 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 
 	mainObject = mob;
 
-	setMinimumWidth(200);
+	setMinimumWidth(300);
 
 
 	QVBoxLayout *mainLayout = new QVBoxLayout();
 	mainLayout->setContentsMargins(0,0,0,0);
 	mainLayout->setSpacing(0);
 	setLayout(mainLayout);
+
+
 
 
 	QToolBar *toolbar = new QToolBar();

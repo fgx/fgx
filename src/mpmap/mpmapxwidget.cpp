@@ -14,6 +14,7 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QMenu>
 #include <QtGui/QLabel>
+#include <QtGui/QSplitter>
 
 #include <QtWebKit/QWebFrame>
 #include <QtGui/QDesktopServices>
@@ -51,22 +52,33 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	setWindowIcon(QIcon(":/icon/mpmap"));
 
 
-
+	//======================================================
+	//= Main Layout and Splitter
 	QHBoxLayout *mainLayout = new QHBoxLayout(this);
     mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(0);
 
 
+	QSplitter *splitter = new QSplitter();
+	mainLayout->addWidget(splitter);
+
+
+	//======================================================
+	//= Map
+	QWidget *mapWidget = new QWidget();
+	splitter->addWidget(mapWidget);
+
 	QVBoxLayout *mapLayout = new QVBoxLayout();
 	mapLayout->setContentsMargins(0,0,0,0);
 	mapLayout->setSpacing(0);
-	mainLayout->addLayout(mapLayout,2);
+	mapWidget->setLayout(mapLayout);
 
+	//=============================
+	//= Toolbar
     QToolBar *toolbar = new QToolBar();
 	mapLayout->addWidget(toolbar, 0);
 
-
-    //* Map Type
+	//= Map Type
     QActionGroup *groupMapType = new QActionGroup(this);
     groupMapType->setExclusive(true);
     //connect(groupMapType, QtCore.SIGNAL("triggered(QAction *)"), this, self.on_map_type)
@@ -91,9 +103,6 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	//            self.groupMapType.addAction(act)
 
     toolbar->addSeparator();
-
-    //style = "" #background-color: #efefef;"
-
 
 
 	//=================================================================
@@ -168,12 +177,17 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	//= Pilots widget
 	//================================================================================
 	pilotsWidget = new PilotsWidget(mainObject);
-	mainLayout->addWidget(pilotsWidget, 1);
+	splitter->addWidget(pilotsWidget);
 
 
 
 
 	//====================================================================
+
+	splitter->setStretchFactor(0, 5);
+	splitter->setStretchFactor(1, 1);
+
+
 	//= Read file if in dev_mode() - no need to "recompile" the resource file
 	QFile file(	mainObject->settings->dev_mode()
 				? XSettings::fgx_current_dir().append("/resources/google_map/gmap.html")
