@@ -50,13 +50,20 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
     setWindowTitle(tr("Google Map"));
 	setWindowIcon(QIcon(":/icon/mpmap"));
 
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+
+
+	QHBoxLayout *mainLayout = new QHBoxLayout(this);
     mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(0);
 
 
+	QVBoxLayout *mapLayout = new QVBoxLayout();
+	mapLayout->setContentsMargins(0,0,0,0);
+	mapLayout->setSpacing(0);
+	mainLayout->addLayout(mapLayout,2);
+
     QToolBar *toolbar = new QToolBar();
-    mainLayout->addWidget(toolbar, 0);
+	mapLayout->addWidget(toolbar, 0);
 
 
     //* Map Type
@@ -72,62 +79,62 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
     QMenu *popTypeMenu = new QMenu(buttMapType);
     buttMapType->setMenu(popTypeMenu);
 
-//    for b in ['RoadMap', 'Satellite','Hybrid','Terrain']:
-//            act = QtGui.QAction(popTypeMenu)
-//            act->setText(b)
-//            act->setCheckable(True)
-//            if b == "Hybrid": #self.main.settings.value("map_mode", "Hybrid"):
-//                    act.setChecked(True)
-//                    self.buttMapType.setText(b)
-//
-//            popTypeMenu.addAction(act)
-//            self.groupMapType.addAction(act)
+	//    for b in ['RoadMap', 'Satellite','Hybrid','Terrain']:
+	//            act = QtGui.QAction(popTypeMenu)
+	//            act->setText(b)
+	//            act->setCheckable(True)
+	//            if b == "Hybrid": #self.main.settings.value("map_mode", "Hybrid"):
+	//                    act.setChecked(True)
+	//                    self.buttMapType.setText(b)
+	//
+	//            popTypeMenu.addAction(act)
+	//            self.groupMapType.addAction(act)
 
     toolbar->addSeparator();
 
     //style = "" #background-color: #efefef;"
 
 
+
+	//=================================================================
+	// WebView
+    webView = new QWebView();
+	mapLayout->addWidget(webView, 100);
+
+	//=== Register Qt Widget
+    webView->page()->mainFrame()->addToJavaScriptWindowObject("QtWidget", this);
+
+	//=============
+	//== Network cache /cookies
 	networkDiskCache = new QNetworkDiskCache(this);
 	networkDiskCache->setCacheDirectory(QDesktopServices::storageLocation(QDesktopServices::CacheLocation));
 
 	networkCookieJar = new QNetworkCookieJar(this);
 
-    //** WebView
-    webView = new QWebView();
-    mainLayout->addWidget(webView);
 
-	//=== Register Qt Widget
-    webView->page()->mainFrame()->addToJavaScriptWindowObject("QtWidget", this);
-
+	//= Net connections
 	connect(webView, SIGNAL(loadStarted()), this, SLOT(start_progress()));
 	connect(webView, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
 	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));
 
-
-    //*********************************
-    //** Status Bar
+	//=====================
+	//==Status Bar
     statusBar = new QStatusBar();
-    mainLayout->addWidget(statusBar);
+	mapLayout->addWidget(statusBar);
 
-	//** Progress Bar
+	//= Progress Bar
 	progressBar = new QProgressBar();
 	progressBar->setVisible(false);
 	statusBar->addPermanentWidget(progressBar);
 
 
+	//== Zoooomm
     statusBar->addPermanentWidget(new QLabel("Zoom:"));
-    //lblZoom = new QLabel("-");
-   //statusBar->addPermanentWidget(lblZoom);
-
-
-
 	groupZoom = new QButtonGroup(this);
     groupZoom->setExclusive(true);
     connect(groupZoom, SIGNAL(triggered(QAction *)),
             this, SLOT(on_zoom_action(QAction *))
     );
-    //QAction *act;
     for(int z=1; z < 8; z++){
 		QToolButton *act = new QToolButton(this);
         act->setText(QString(" %1 ").arg(z));
@@ -139,7 +146,7 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
     }
 
 
-
+	//== Lat Lng Labels
     statusBar->addPermanentWidget(new QLabel("Lat:"));
     lblLat = new QLabel();
     //lblLat.setStyleSheet(style)
@@ -155,13 +162,18 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
     lblLng->setFixedWidth(140);
     statusBar->addPermanentWidget(lblLng);
 
-    //toolbar->addSeparator();
+
+
+	//================================================================================
+	//= Pilots widget
+	//================================================================================
+	pilotsWidget = new PilotsWidget(mainObject);
+	mainLayout->addWidget(pilotsWidget, 1);
 
 
 
-    resize(800, 400);
-    move(10,10);
 
+	//====================================================================
 	//= Read file if in dev_mode() - no need to "recompile" the resource file
 	QFile file(	mainObject->settings->dev_mode()
 				? XSettings::fgx_current_dir().append("/resources/google_map/gmap.html")

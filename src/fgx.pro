@@ -59,7 +59,8 @@ HEADERS += xobjects/xsettings.h \
     xobjects/latlng.h \
     props/propeditwidget.h \
     mpmap/mpmapwidget.h \
-    mpmap/mpmapxwidget.h
+    mpmap/mpmapxwidget.h \
+    mpmap/pilotswidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -112,7 +113,8 @@ SOURCES += main.cpp \
     xobjects/latlng.cpp \
     props/propeditwidget.cpp \
     mpmap/mpmapwidget.cpp \
-    mpmap/mpmapxwidget.cpp
+    mpmap/mpmapxwidget.cpp \
+    mpmap/pilotswidget.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc \
     resources/google_map.qrc

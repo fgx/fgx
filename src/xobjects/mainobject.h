@@ -107,7 +107,7 @@ public slots:
 
     void on_launcher();
     void on_mpmap();
-    void on_map();
+	void on_mpxmap();
     void on_settings();
 	void on_settings(int);
 	void on_properties_browser();

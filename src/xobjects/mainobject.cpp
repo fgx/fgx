@@ -73,6 +73,10 @@ MainObject::MainObject(QObject *parent) :
 	actionMpMap->setIconVisibleInMenu(true);
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));
 
+	//= MpMapX action
+	QAction *actionMpXMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Experimental Map..."));
+	actionMpXMap->setIconVisibleInMenu(true);
+	connect(actionMpXMap, SIGNAL(triggered()), this, SLOT(on_mpxmap()));
 
 	//= Settings Action
 	QAction *actionSetupWizard= new QAction(this);
@@ -176,16 +180,16 @@ void MainObject::on_settings(int idx){
 
 //****************************************************************************
 //** Map
-void MainObject::on_map(){
-	//GoogleMapWidget *gmapWidget = new GoogleMapWidget();
-   // gmapWidget->show();
+void MainObject::on_mpmap(){
+	mpMapWidget->show();
+	mpMapWidget->setFocus();
 }
 
 //============================================================================
 //** MpMap
-void MainObject::on_mpmap(){
-	mpMapWidget->show();
-	mpMapWidget->setFocus();
+void MainObject::on_mpxmap(){
+	mpMapXWidget->show();
+	mpMapXWidget->setFocus();
 }
 
 //======================================

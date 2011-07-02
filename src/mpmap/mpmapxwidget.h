@@ -1,5 +1,5 @@
-#ifndef GOOGLEMAPWIDGET_H
-#define GOOGLEMAPWIDGET_H
+#ifndef MPMAPXWIDGET_H
+#define MPMAPXWIDGET_H
 
 #include <QtCore/QVariant>
 #include <QtCore/QString>
@@ -16,11 +16,13 @@
 #include <QtGui/QActionGroup>
 #include <QtGui/QToolButton>
 
+#include "mpmap/pilotswidget.h"
 
 #include "xobjects/mainobject.h"
 #include "xobjects/latlng.h"
 
 class MainObject;
+class PilotsWidget;
 
 
 class MpMapXWidget : public QWidget
@@ -35,6 +37,7 @@ public:
 	QNetworkDiskCache *networkDiskCache;
 	QNetworkCookieJar *networkCookieJar;
 
+	PilotsWidget *pilotsWidget;
 
 	QProgressBar *progressBar;
     QStatusBar *statusBar;
@@ -77,4 +80,4 @@ public slots:
 
 };
 
-#endif // GOOGLEMAPWIDGET_H
+#endif // MPMAPXWIDGET_H
