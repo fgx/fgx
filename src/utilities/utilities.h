@@ -16,6 +16,10 @@
 #include <QDir>
 #include <QDateTime>
 
+// #include "zlib/fgx_zlib.h"
+/* ZIP FILE */
+// extern QString gzreadLine(gzFile file);
+
 /* LOG FILE FUNCTIONS */
 
 // out a QString to the current log

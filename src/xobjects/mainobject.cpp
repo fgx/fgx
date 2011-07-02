@@ -177,7 +177,6 @@ void MainObject::on_properties_browser(){
 //****************************************************************************
 //** Quit
 void MainObject::on_quit(){
-	
     QCoreApplication::instance()->quit();
 }
 

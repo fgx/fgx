@@ -9,10 +9,12 @@
 
 #include "xsettings.h"
 #include "utilities/utilities.h"
+#if 0
 #include "utilities/osdab/zip_p.h"
 #include "utilities/osdab/zip.h"
 #include "utilities/osdab/unzip.h"
 #include "/usr/include/zlib.h"
+#endif // 0
 
 #define UNZIP_READ_BUFFER (256*1024)
 
@@ -149,16 +151,18 @@ bool XSettings::paths_sane(){
   * \return absolute path.
  */
 QString XSettings::aircraft_path(){
-	return fg_root().append("/Aircraft");
-	outLog("*** FGx settings: Aircraft path: " + fg_root().append("/Aircraft") + " ***");
+    QString rpath = fg_root().append("/Aircraft");
+    // outLog("*** FGx settings: Aircraft path: " + rpath + " ***");
+    return rpath;
 }
 /** \brief Path to the /Aircraft directory with a dir appended.
  *
  * \return absolute path.
  */
 QString XSettings::aircraft_path(QString dir){
-	return fg_root().append("/Aircraft/").append(dir);
-	outLog("*** FGx settings: Aircraft path: " + fg_root().append("/Aircraft/").append(dir) + " ***");
+    QString rpath = fg_root().append("/Aircraft/").append(dir);
+    // outLog("*** FGx settings: Aircraft path: " + rpath + " ***");
+    return rpath;
 }
 
 
@@ -170,23 +174,20 @@ QString XSettings::aircraft_path(QString dir){
  * \return If TerraSync is enabled, then returns a terrasync folder, otherwise the default.
  */
 QString XSettings::airports_path(){
-
+    QString rpath;
 	//* Using terrasync
 	if(use_terrasync()){
 		if(runningOs() == MAC){
-			QString terrascenehome(QDir::homePath());
-			terrascenehome.append("/Documents/TerrasyncScenery");
-			return terrascenehome;
-			outLog("*** FGx settings: Airports path: " + terrascenehome + " ***");
+            rpath = QDir::homePath();
+            rpath.append("/Documents/TerrasyncScenery");
 		}else{
 			//* Use the terra sync path
-			return terrasync_sync_data_path().append("/Airports");
-			outLog("*** FGx settings: Airports path: " + terrasync_sync_data_path().append("/Airports") + " ***");
+            rpath = terrasync_sync_data_path().append("/Airports");
 		}
-	}
-	//* Otherwise return the FG_ROOT airports/
-	return fg_root().append("/Scenery/Airports");
-	outLog("*** FGx settings: Airports path: " + fg_root().append("/Scenery/Airports") + " ***");
+    } else //* Otherwise return the FG_ROOT airports/
+        rpath = fg_root().append("/Scenery/Airports");
+    outLog("*** FGx settings: Airports path: " + rpath + " ***");
+    return rpath;
 }
 
 //** Apt Dat
@@ -199,7 +200,7 @@ QString XSettings::apt_dat_file(){
 	QString aptdatloc(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat"));
 	if( QFile::exists(aptdatloc) == false){
 		uncompress(fg_root("/Airports/apt.dat.gz"), QString(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat")));
-		outLog(QString(temp_dir().append("apt.dat")));
+        outLog(QString(temp_dir().append("/apt.dat")));
 	}
 	return aptdatloc;
 }
@@ -278,13 +279,21 @@ QString XSettings::temp_dir(QString append_path){
  *
  */
 void XSettings::saveWindow(QWidget *widget){
-	setValue( _windowName(widget), QVariant(widget->saveGeometry()) );
+    //setValue( _windowName(widget), QVariant(widget->saveGeometry()) );
+    QString key = _windowName(widget);
+    QByteArray ba = widget->saveGeometry();
+    outLog("saveWindow: Key="+key+", values "+ba.toHex());
+    setValue( key, QVariant(ba) );
 }
 /** \brief Restores a window position
  *
  */
 void XSettings::restoreWindow(QWidget *widget){
-	widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
+    // widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
+    QString key = _windowName(widget);
+    QByteArray ba = value(_windowName(widget)).toByteArray();
+    outLog("restoreWindow: Key="+key+", values "+ba.toHex());
+    widget->restoreGeometry(ba);
 }
 
 QString XSettings::_windowName(QWidget *widget){
@@ -369,7 +378,7 @@ QString XSettings::data_file(QString file_name){
 
 void XSettings::uncompress(QString filename, QString destination)
 {
-	
+#if 0
 	QString decompressedFileName;
 	bool inflate(const QString& s);
 	
@@ -499,7 +508,7 @@ void XSettings::uncompress(QString filename, QString destination)
 	while (zret != Z_STREAM_END);
 	
 	inflateEnd(&zstr);
-	
+#endif // 0
 	return;
 	
 }

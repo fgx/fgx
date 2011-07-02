@@ -439,7 +439,7 @@ void LauncherWindow::save_settings()
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
 	advancedOptionsWidget->save_settings();
-
+    mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	outLog("*** FGx reports: Settings saved ***");
 }
@@ -581,6 +581,7 @@ void LauncherWindow::on_group_box_terrasync_clicked(){
 // window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
 	Q_UNUSED(event);
+    outLog("LauncherWindow::closeEvent called.");
 	save_settings();
 	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
