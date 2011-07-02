@@ -11,6 +11,7 @@
 #include <QtGui/QRadioButton>
 
 #include "timeweatherwidget.h"
+#include "xwidgets/xgroupboxes.h"
 #include "utilities/helpers.h"
 
 TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
@@ -34,10 +35,9 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	QStringList time_labels; //* The labels - subject ot transtation
 	time_labels << tr("Real time") << tr("Dawn") << tr("Morning") << tr("Noon") << tr("Afternoon") << tr("Dusk") << tr("Evening") << tr("Midnight");
 
-	QGroupBox *grpBoxTime = new QGroupBox(tr("Time"));
+	XGroupVBox *grpBoxTime = new XGroupVBox(tr("Time"));
 	layTimeSeason->addWidget(grpBoxTime);
-	QVBoxLayout *layBoxTime = new QVBoxLayout();
-	grpBoxTime->setLayout(layBoxTime);
+	grpBoxTime->set_major(true);
 	buttonGroupTime = new QButtonGroup(this);
 	buttonGroupTime->setExclusive(true);
 
@@ -45,7 +45,7 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 		QRadioButton *butt = new QRadioButton();
 		butt->setText(time_labels.at(i));
 		butt->setProperty("value", QVariant(time_vals.at(i)));
-		layBoxTime->addWidget(butt);
+		grpBoxTime->addWidget(butt);
 		buttonGroupTime->addButton(butt, i);
 	}
 	buttonGroupTime->button(0)->setChecked(true);
@@ -57,17 +57,16 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	QStringList season_labels; //* The labels - subject ot transtation
 	season_labels << tr("Winter") << tr("Summer");
 
-	QGroupBox *grpBoxSeason = new QGroupBox(tr("Season"));
+	XGroupVBox *grpBoxSeason = new XGroupVBox(tr("Season"));
+	grpBoxSeason->set_major(true);
 	layTimeSeason->addWidget(grpBoxSeason);
-	QVBoxLayout *layBoxSeason = new QVBoxLayout();
-	grpBoxSeason->setLayout(layBoxSeason);
 	buttonGroupSeason = new QButtonGroup(this);
 	buttonGroupSeason->setExclusive(true);
 	for(int i=0;  i < season_vals.size(); i++){
 		QRadioButton *buttS = new QRadioButton();
 		buttS->setText(season_labels.at(i));
 		buttS->setProperty("value", QVariant(season_vals.at(i).toLower()));
-		layBoxSeason->addWidget(buttS);
+		grpBoxSeason->addWidget(buttS);
 		buttonGroupSeason->addButton(buttS, i);
 	}
 	buttonGroupSeason->button(0)->setChecked(true);
@@ -92,10 +91,9 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	QStringList metar_labels; //* The labels - subject ot transtation
 	metar_labels << tr("None") << tr("Fetch METAR live") << tr("Use METAR below");
 
-	QGroupBox *grpBoxMetar = new QGroupBox(tr("METAR"));
+	XGroupVBox *grpBoxMetar = new XGroupVBox(tr("METAR"));
 	laymetar->addWidget(grpBoxMetar);
-	QVBoxLayout *layBoxMetar = new QVBoxLayout();
-	grpBoxMetar->setLayout(layBoxMetar);
+	grpBoxMetar->set_major(true);
 	buttonGroupMetar = new QButtonGroup(this);
 	buttonGroupMetar->setExclusive(true);
 	connect(buttonGroupMetar, SIGNAL(buttonClicked(int)), this, SLOT(on_metar_clicked()));
@@ -103,13 +101,13 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 		QRadioButton *buttM = new QRadioButton();
 		buttM->setText(metar_labels.at(i));
 		buttM->setProperty("value", QVariant(metar_vals.at(i)));
-		layBoxMetar->addWidget(buttM);
+		grpBoxMetar->addWidget(buttM);
 		buttonGroupMetar->addButton(buttM, i);
 	}
 	buttonGroupMetar->button(0)->setChecked(true);
 
 	txtMetar = new QPlainTextEdit();
-	layBoxMetar->addWidget(txtMetar);
+	grpBoxMetar->addWidget(txtMetar);
 
 
 }

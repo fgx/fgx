@@ -74,7 +74,7 @@ MainObject::MainObject(QObject *parent) :
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));
 
 	//= MpMapX action
-	QAction *actionMpXMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Experimental Map..."));
+	QAction *actionMpXMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open XMap (experimental)..."));
 	actionMpXMap->setIconVisibleInMenu(true);
 	connect(actionMpXMap, SIGNAL(triggered()), this, SLOT(on_mpxmap()));
 

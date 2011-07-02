@@ -33,6 +33,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//==================================================================
 	//= Callsign
 	XGroupVBox *grpCallsign = new XGroupVBox(tr("Callsign"));
+	grpCallsign->set_major(true);
 	layoutLeft->addWidget(grpCallsign);
 
 	txtCallSign = new QLineEdit(this);
@@ -44,6 +45,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//==================================================================
 	//= Screen Options
 	XGroupVBox *grpBoxScreen = new XGroupVBox(tr("Screen Options"));
+	grpBoxScreen->set_major(true);
 	layoutLeft->addWidget(grpBoxScreen);
 
 	//= Initial Size
@@ -83,6 +85,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//==================================================================
 	//= Map Features
 	XGroupVBox *grpMapFeatures = new XGroupVBox("Map Features");
+	grpMapFeatures->set_major(true);
 	layoutLeft->addWidget(grpMapFeatures);
 
 	checkBoxShowMpMap = new QCheckBox("Show Map in Browser");
