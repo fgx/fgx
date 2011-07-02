@@ -23,13 +23,13 @@ class LauncherWindow;
 
 
 
-#include "maps/mpmapwidget.h"
-#include "maps/googlemapwidget.h"
+#include "mpmap/mpmapwidget.h"
+#include "mpmap/mpmapxwidget.h"
 #include "logs/viewlogswidget.h"
 #include "props/propstreewidget.h"
 
 class MpMapWidget;
-class GoogleMapWidget;
+class MpMapXWidget;
 class ViewLogsWidget;
 class PropsTreeWidget;
 
@@ -63,7 +63,7 @@ public:
 
 	LauncherWindow *launcherWindow;
 	MpMapWidget *mpMapWidget;
-	GoogleMapWidget *googleMapWidget;
+	MpMapXWidget *mpMapXWidget;
 	ViewLogsWidget *viewLogsWidget;
 	PropsTreeWidget *propertiesBrowser;
 

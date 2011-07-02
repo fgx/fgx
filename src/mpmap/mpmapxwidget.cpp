@@ -18,7 +18,7 @@
 #include <QtWebKit/QWebFrame>
 #include <QtGui/QDesktopServices>
 
-#include "googlemapwidget.h"
+#include "mpmap/mpmapxwidget.h"
 
 
 /*
@@ -41,7 +41,7 @@ zoomLevelMap[100] = 13;
 zoomLevelMap[100] = 14;
 
 */
-GoogleMapWidget::GoogleMapWidget(MainObject *mob, QWidget *parent) :
+MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
     QWidget(parent)
 {
 
@@ -181,7 +181,7 @@ GoogleMapWidget::GoogleMapWidget(MainObject *mob, QWidget *parent) :
 
 
 
-void GoogleMapWidget::map_mouse_move(QVariant dLat, QVariant dLng){
+void MpMapXWidget::map_mouse_move(QVariant dLat, QVariant dLng){
     //qDebug("YES");
     //qDebug() << lat.toString();
     lblLat->setText(dLat.toString());
@@ -189,26 +189,26 @@ void GoogleMapWidget::map_mouse_move(QVariant dLat, QVariant dLng){
 }
 
 
-void GoogleMapWidget::map_error(QVariant err){
+void MpMapXWidget::map_error(QVariant err){
     qDebug("map_error()");
 }
 
-void GoogleMapWidget::marker_clicked(QVariant marker, QVariant mId){
+void MpMapXWidget::marker_clicked(QVariant marker, QVariant mId){
     qDebug("marker_clicked()");
 }
 
-void GoogleMapWidget::marker_unselected(QVariant curr_idx, QVariant mLocationId){
+void MpMapXWidget::marker_unselected(QVariant curr_idx, QVariant mLocationId){
     qDebug("marker_unselected()");
 }
 
 //** JS
-void GoogleMapWidget::map_right_click(QVariant lat, QVariant lng){
+void MpMapXWidget::map_right_click(QVariant lat, QVariant lng){
 
     qDebug("map_right_click()");
 }
 
 //** JS
-void GoogleMapWidget::map_zoom_changed(QVariant zoom){
+void MpMapXWidget::map_zoom_changed(QVariant zoom){
     buttZoom->setText(zoom.toString());
     int zoomInt = zoom.toInt();
 	QList<QAbstractButton *> buttons = groupZoom->buttons();
@@ -224,7 +224,7 @@ void GoogleMapWidget::map_zoom_changed(QVariant zoom){
       qDebug("map_zoom_changed()");
 }
 
-void GoogleMapWidget::on_zoom_action(QAction *act){
+void MpMapXWidget::on_zoom_action(QAction *act){
 
     QString js_str = QString("set_zoom(%1);").arg(act->property("zoom").toString());
      qDebug() << act->property("zoom").toString() << js_str;
@@ -239,7 +239,7 @@ Take the remaining decimal and multiply by 60. (i.e. .1 * 60 = 6).
 The resulting number becomes the seconds (6"). Seconds can remain as a decimal.
 Take your three sets of numbers and put them together, using the symbols for degrees (°), minutes (‘), and seconds (") (i.e. 121°8'6" longitude)
 */
-QString GoogleMapWidget::to_lat(QVariant lat){
+QString MpMapXWidget::to_lat(QVariant lat){
     QStringList latParts = lat.toString().split(".");
     int deci = latParts[1].toInt();
     //qDebug() << deci;
@@ -250,7 +250,7 @@ QString GoogleMapWidget::to_lat(QVariant lat){
 
 
 //*** Add Marker
-void GoogleMapWidget::add_marker(LatLng latLng, QString label){
+void MpMapXWidget::add_marker(LatLng latLng, QString label){
 
     QString js_str = QString("add_marker(%1, %2, '%3');")
                      .arg( latLng.lat() ).arg( latLng.lng() ).arg( label );
@@ -260,7 +260,7 @@ void GoogleMapWidget::add_marker(LatLng latLng, QString label){
 }
 //*************************************************************************************************
 //*** Add Runway
-void GoogleMapWidget::add_runway(float lat1, float lng1, float lat2, float lng2, QString label){
+void MpMapXWidget::add_runway(float lat1, float lng1, float lat2, float lng2, QString label){
 
     QString js_str = QString("add_runway(%1, %2, %3, %4, '%5');")
                      .arg( lat1 ).arg( lng1 )
@@ -269,21 +269,21 @@ void GoogleMapWidget::add_runway(float lat1, float lng1, float lat2, float lng2,
     qDebug() << js_str;
     this->execute_js(js_str);
 }
-void GoogleMapWidget::add_runway(QString lat1, QString lng1, QString lat2, QString lng2, QString label){
+void MpMapXWidget::add_runway(QString lat1, QString lng1, QString lat2, QString lng2, QString label){
     add_runway( lat1.toFloat(), lng1.toFloat(), lat2.toFloat(), lng2.toFloat(), label);
 }
-void GoogleMapWidget::add_runway(LatLng p1, LatLng p2, QString label){
+void MpMapXWidget::add_runway(LatLng p1, LatLng p2, QString label){
     this->add_runway(p1.lat(), p1.lng(), p2.lat(), p2.lng(), label);
 }
 
-void GoogleMapWidget::zoom_to(QString lat, QString lng, QString zoom){
+void MpMapXWidget::zoom_to(QString lat, QString lng, QString zoom){
     QString js_str = QString("zoom_to(%1, %2, %3);").arg( lat ).arg( lng ).arg( zoom );
     qDebug() << js_str;
     this->execute_js(js_str);
 
 }
 
-void GoogleMapWidget::execute_js(QString js_str){
+void MpMapXWidget::execute_js(QString js_str){
     webView->page()->mainFrame()->evaluateJavaScript(js_str);
 }
 
@@ -292,14 +292,14 @@ void GoogleMapWidget::execute_js(QString js_str){
 
 //======================================================
 //== Progress Slots
-void GoogleMapWidget::start_progress(){
+void MpMapXWidget::start_progress(){
 	progressBar->setVisible(true);
 }
 
-void GoogleMapWidget::update_progress(int v){
+void MpMapXWidget::update_progress(int v){
 	progressBar->setValue(v);
 }
-void GoogleMapWidget::end_progress(bool Ok){
+void MpMapXWidget::end_progress(bool Ok){
 	Q_UNUSED(Ok);
 	progressBar->setVisible(false);
 }

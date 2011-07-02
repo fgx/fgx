@@ -55,11 +55,11 @@ HEADERS += xobjects/xsettings.h \
     xobjects/xprocess.h \
     props/telnetslave.h \
     props/propstreewidget.h \
-    maps/mpmapwidget.h \
-    maps/googlemapwidget.h \
     logs/viewlogswidget.h \
     xobjects/latlng.h \
-    props/propeditwidget.h
+    props/propeditwidget.h \
+    mpmap/mpmapwidget.h \
+    mpmap/mpmapxwidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -108,11 +108,11 @@ SOURCES += main.cpp \
     xobjects/xprocess.cpp \
     props/telnetslave.cpp \
     props/propstreewidget.cpp \
-    maps/mpmapwidget.cpp \
-    maps/googlemapwidget.cpp \
     logs/viewlogswidget.cpp \
     xobjects/latlng.cpp \
-    props/propeditwidget.cpp
+    props/propeditwidget.cpp \
+    mpmap/mpmapwidget.cpp \
+    mpmap/mpmapxwidget.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc \
     resources/google_map.qrc

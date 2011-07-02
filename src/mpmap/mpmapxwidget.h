@@ -23,11 +23,11 @@
 class MainObject;
 
 
-class GoogleMapWidget : public QWidget
+class MpMapXWidget : public QWidget
 {
 Q_OBJECT
 public:
-	explicit GoogleMapWidget(MainObject *mob, QWidget *parent = 0);
+	explicit MpMapXWidget(MainObject *mob, QWidget *parent = 0);
 
 	MainObject *mainObject;
 
