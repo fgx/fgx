@@ -44,6 +44,11 @@ public:
 
     QTreeWidget *treeWidget;
 
+	QLineEdit *txtHost;
+	QLineEdit *txtPort;
+	QAction *actionConnect;
+	QAction *actionDisconnect;
+
     QCheckBox *chkAutoRefresh;
     QComboBox *comboAutoRefreshRate;
 
@@ -70,6 +75,11 @@ public slots:
 
 	void on_edit_property();
 	void on_test_();
+
+	void telnet_connect();
+	void telnet_disconnect();
+
+	void on_telnet_connected(bool);
 };
 
 #endif // PROPSTREEWIDGET_H

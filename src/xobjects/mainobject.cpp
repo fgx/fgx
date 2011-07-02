@@ -104,7 +104,6 @@ MainObject::MainObject(QObject *parent) :
 			this, SLOT(on_properties_browser())
 	);
 
-
     popupMenu->addSeparator();
 
 
@@ -121,7 +120,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//== Props tree
 	propertiesBrowser = new PropsTreeWidget(this);
-	propertiesBrowser->show();
+	propertiesBrowser->hide();
 
 	//= MP Map Widget
 	mpMapWidget = new MpMapWidget(this);
@@ -193,8 +192,8 @@ void MainObject::on_mpmap(){
 //== Propertes Browser
 void MainObject::on_properties_browser(){
 	propertiesBrowser->show();
+	propertiesBrowser->setFocus();
 	//propertiesBrowser->raise();
-
 }
 
 

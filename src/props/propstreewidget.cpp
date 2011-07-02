@@ -31,8 +31,6 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
     mainObject = mOb;
 
 	telnet = new TelnetSlave(this);
-	telnet->telnet_connect("127.0.0.1", 7777);
-
 
 	connect(telnet, SIGNAL(props_path(QString, QString)),
              this, SLOT(on_props_path(QString, QString))
@@ -40,6 +38,9 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
 	connect(telnet, SIGNAL(props_node(QString, QString, QString, QString)),
             this, SLOT(on_props_node(QString, QString, QString, QString))
     );
+	connect(telnet, SIGNAL(telnet_connected(bool)),
+			this, SLOT(on_telnet_connected(bool))
+	);
 
 	setWindowTitle("Property Tree Browser");
 	setWindowIcon(QIcon(":/icon/props"));
@@ -73,22 +74,57 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
     treeLayout->addWidget(treeToolbar);
     treeToolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-    //** Refresh Button
+	//===========================================================
+	// Telnet
+	//===========================================================
+
+	//= Host
+	txtHost = new QLineEdit();
+	txtHost->setMaximumWidth(100);
+	txtHost->setText("localhost");
+	treeToolbar->addWidget(txtHost);
+
+	//= Port
+	txtPort = new QLineEdit();
+	txtPort->setMaximumWidth(50);
+	txtPort->setText(mainObject->settings->value("telnet_port").toString());
+	treeToolbar->addWidget(txtPort);
+
+	//= Connect
+	actionConnect = new QAction(this);
+	actionConnect->setText("Connect");
+	actionConnect->setIcon(QIcon(":/icon/connect"));
+	actionConnect->setDisabled(false);
+	treeToolbar->addAction(actionConnect);
+	connect(actionConnect, SIGNAL(triggered()), this, SLOT(telnet_connect()) );
+
+	//= Disconnect
+	actionDisconnect = new QAction(this);
+	actionDisconnect->setText("DisConnect");
+	actionDisconnect->setIcon(QIcon(":/icon/disconnect"));
+	actionDisconnect->setDisabled(true);
+	treeToolbar->addAction(actionDisconnect);
+	connect(actionDisconnect, SIGNAL(triggered()), this, SLOT(telnet_disconnect()) );
+
+
+	treeToolbar->addSeparator();
+
+	//== Refresh Button
     QAction *actionRefreshTree = new QAction(this);
     treeToolbar->addAction(actionRefreshTree);
     actionRefreshTree->setText("Refresh");
 	actionRefreshTree->setIcon(QIcon(":/icon/refresh"));
     connect(actionRefreshTree, SIGNAL(triggered()), this, SLOT(load_nodes()) );
 
+
     treeToolbar->addSeparator();
 
-    //*****************************************
-    //** Autorefresh
-    //****************************************
+	//========================
+	//== Autorefresh
     timer = new QTimer(this);
     timer->setInterval(1000); //TODO default more
 
-    //** Check Autorefresh enabled
+	//== Check Autorefresh enabled
     chkAutoRefresh = new QCheckBox();
     treeToolbar->addWidget(chkAutoRefresh);
     chkAutoRefresh->setText("Autorefresh Enabled");
@@ -97,7 +133,7 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
             this, SLOT(on_auto_refresh_enabled())
     );
 
-    //** ComboBox sets refresh rate
+	//== ComboBox sets refresh rate
     comboAutoRefreshRate = new QComboBox();
     treeToolbar->addWidget(comboAutoRefreshRate);
     comboAutoRefreshRate->addItem("1");
@@ -118,14 +154,19 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
 	actionEditProperty->setIcon(QIcon(":/icons/node_val"));
 	treeToolbar->addAction(actionEditProperty);
 	connect(actionEditProperty, SIGNAL(triggered()), this, SLOT(on_edit_property()) );
+	actionEditProperty->setVisible(false);
 
 	QAction *actionTest = new QAction(this);
 	actionTest->setText("Test");
 	treeToolbar->addAction(actionTest);
 	connect(actionTest, SIGNAL(triggered()), this, SLOT(on_test_()) );
+	actionTest->setVisible(false);
 
-    //******************************************************
-    //** Tree Widgets
+
+
+
+	//======================================================
+	//=== Tree Widget
     treeWidget = new QTreeWidget(this);
     treeLayout->addWidget(treeWidget);
     treeWidget->setItemsExpandable(true);
@@ -246,17 +287,18 @@ void PropsTreeWidget::on_props_path(QString parent_path, QString path){
 }
 
 void PropsTreeWidget::on_item_expanded(QTreeWidgetItem *item){
-    qDebug() << "ON Expand=" << item->text(3);
+   // qDebug() << "ON Expand=" << item->text(3);
    // qDebug() << item->text(3);
 	item->setIcon(0, QIcon(":/icon/folder")); // folder_open
-    item->setText(1, tr("Refresh"));
+	/*
+	item->setText(1, tr("Refresh"));
     QFont font = item->font(1);
     font.setPointSize(7);
     item->setFont(1, font);
     QColor color(0, 0, 170);
     item->setForeground(1, color);
     item->setCheckState(1, Qt::Unchecked);
-
+	*/
 	telnet->get_node(item->text(3));
 }
 
@@ -317,4 +359,18 @@ void PropsTreeWidget::on_test_(){
 void PropsTreeWidget::closeEvent(QCloseEvent *event){
 	mainObject->settings->saveWindow(this);
 	event->accept();
+}
+
+
+void PropsTreeWidget::telnet_connect(){
+	telnet->telnet_connect(txtHost->text(), txtPort->text().toInt());
+}
+void PropsTreeWidget::telnet_disconnect(){
+	telnet->telnet_disconnect();
+}
+
+void PropsTreeWidget::on_telnet_connected(bool connected){
+	qDebug()<< "on_connect" << connected;
+	actionConnect->setEnabled(!connected);
+	actionDisconnect->setEnabled(connected);
 }
