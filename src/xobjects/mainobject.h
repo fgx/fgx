@@ -12,20 +12,29 @@
 #include <QtGui/QWidgetAction>
 
 #include "xobjects/xsettings.h"
+
+
+#include "xobjects/xprocess.h"
+class XProcess;
+
+
 #include "launcher/launcherwindow.h"
+class LauncherWindow;
+
+
+
 #include "maps/mpmapwidget.h"
 #include "maps/googlemapwidget.h"
 #include "logs/viewlogswidget.h"
+#include "props/propstreewidget.h"
 
-#include "xobjects/xprocess.h"
-
-
-//= Forward Declarations
-class LauncherWindow;
 class MpMapWidget;
 class GoogleMapWidget;
 class ViewLogsWidget;
-class XProcess;
+class PropsTreeWidget;
+
+
+
 
 
 
@@ -55,8 +64,12 @@ public:
 	LauncherWindow *launcherWindow;
 	MpMapWidget *mpMapWidget;
 	GoogleMapWidget *googleMapWidget;
-
 	ViewLogsWidget *viewLogsWidget;
+	PropsTreeWidget *propertiesBrowser;
+
+	XProcess *processFgFs;
+	XProcess *processTerraSync;
+	XProcess *processFgCom;
 
 
     QSystemTrayIcon *trayIcon;
@@ -68,12 +81,11 @@ public:
     QAction *actionMpMap;
 	QAction *actionSetupWizard;
 	QAction *actionViewLog;
+	QAction *actionPropsBrowser;
 
     QAction *actionQuit;
 
-	XProcess *processFgFs;
-	XProcess *processTerraSync;
-	XProcess *processFgCom;
+
 
 	QString get_fgfs_command();
 	QStringList get_env();

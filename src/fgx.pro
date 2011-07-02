@@ -52,7 +52,10 @@ HEADERS += xobjects/xsettings.h \
     maps/googlemapwidget.h \
     maps/mpmapwidget.h \
     xobjects/latlng.h \
-    xwidgets/xbrowser.h
+    xwidgets/xbrowser.h \
+    props/propeditwidget.h \
+    props/propstreewidget.h \
+    props/telnetslave.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -90,7 +93,10 @@ SOURCES += main.cpp \
     maps/googlemapwidget.cpp \
     maps/mpmapwidget.cpp \
     xobjects/latlng.cpp \
-    xwidgets/xbrowser.cpp
+    xwidgets/xbrowser.cpp \
+    props/propeditwidget.cpp \
+    props/propstreewidget.cpp \
+    props/telnetslave.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc \
     resources/google_map.qrc
