@@ -97,50 +97,47 @@ GoogleMapWidget::GoogleMapWidget(MainObject *mob, QWidget *parent) :
     webView = new QWebView();
     mainLayout->addWidget(webView);
 
+	//=== Register Qt Widget
     webView->page()->mainFrame()->addToJavaScriptWindowObject("QtWidget", this);
+
+	connect(webView, SIGNAL(loadStarted()), this, SLOT(start_progress()));
+	connect(webView, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
+	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));
+
 
     //*********************************
     //** Status Bar
     statusBar = new QStatusBar();
     mainLayout->addWidget(statusBar);
 
+	//** Progress Bar
+	progressBar = new QProgressBar();
+	progressBar->setVisible(false);
+	statusBar->addPermanentWidget(progressBar);
+
+
     statusBar->addPermanentWidget(new QLabel("Zoom:"));
     //lblZoom = new QLabel("-");
    //statusBar->addPermanentWidget(lblZoom);
 
-    buttZoom = new QToolButton();
-    statusBar->addPermanentWidget(buttZoom);
-    buttZoom->setText("Zoom");
-    //buttZoom->setIcon(QIcon(":/icons/refresh"));
-    buttZoom->setPopupMode(QToolButton::InstantPopup);
-    buttZoom->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    QMenu *menuZoom = new QMenu();
-    buttZoom->setMenu(menuZoom);
 
-    groupZoom = new QActionGroup(this);
+
+	groupZoom = new QButtonGroup(this);
     groupZoom->setExclusive(true);
     connect(groupZoom, SIGNAL(triggered(QAction *)),
             this, SLOT(on_zoom_action(QAction *))
     );
     //QAction *act;
     for(int z=1; z < 8; z++){
-        QAction *act = new QAction(this);
+		QToolButton *act = new QToolButton(this);
         act->setText(QString(" %1 ").arg(z));
         act->setProperty("zoom", QVariant(z));
         act->setCheckable(true);
         //act.setChecked(b[0] == 'Uk');
-        menuZoom->addAction(act);
-        groupZoom->addAction(act);
+		statusBar->addPermanentWidget(act);
+		groupZoom->addButton(act);
     }
-//    for b in self.Zoom.levels():
-//            act = QtGui.QAction(toolbar)
-//            act.setText(b[0])
-//            act.setProperty("zoom", QtCore.QVariant(b[1]))
-//            act.setCheckable(True)
-//            act.setChecked(b[0] == 'Uk')
-//            toolbar.addAction(act)
-//            self.groupZoom.addAction(act)
-    //#toolbar->addSeparator()
+
 
 
     statusBar->addPermanentWidget(new QLabel("Lat:"));
@@ -214,10 +211,10 @@ void GoogleMapWidget::map_right_click(QVariant lat, QVariant lng){
 void GoogleMapWidget::map_zoom_changed(QVariant zoom){
     buttZoom->setText(zoom.toString());
     int zoomInt = zoom.toInt();
-    QList<QAction *> actions = groupZoom->actions();
-    for (int i = 0; i < actions.size(); ++i) {
-        if (actions.at(i)->property("zoom").toInt() == zoomInt){
-             actions.at(i)->setChecked(true);
+	QList<QAbstractButton *> buttons = groupZoom->buttons();
+	for (int i = 0; i < buttons.size(); ++i) {
+		if (buttons.at(i)->property("zoom").toInt() == zoomInt){
+			 buttons.at(i)->setChecked(true);
              return;
         }
      }
@@ -288,4 +285,21 @@ void GoogleMapWidget::zoom_to(QString lat, QString lng, QString zoom){
 
 void GoogleMapWidget::execute_js(QString js_str){
     webView->page()->mainFrame()->evaluateJavaScript(js_str);
+}
+
+
+
+
+//======================================================
+//== Progress Slots
+void GoogleMapWidget::start_progress(){
+	progressBar->setVisible(true);
+}
+
+void GoogleMapWidget::update_progress(int v){
+	progressBar->setValue(v);
+}
+void GoogleMapWidget::end_progress(bool Ok){
+	Q_UNUSED(Ok);
+	progressBar->setVisible(false);
 }

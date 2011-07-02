@@ -128,7 +128,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//= MP Map Widget
 	googleMapWidget = new GoogleMapWidget(this);
-	googleMapWidget->hide();
+	googleMapWidget->show();
 
 
 	//= Log Viewer is hidden

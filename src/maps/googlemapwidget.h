@@ -4,15 +4,18 @@
 #include <QtCore/QVariant>
 #include <QtCore/QString>
 
+#include <QtWebKit/QWebView>
+#include <QtNetwork/QNetworkDiskCache>
+#include <QtNetwork/QNetworkCookieJar>
+
+
 #include <QtGui/QStatusBar>
+#include <QtGui/QProgressBar>
 #include <QtGui/QLabel>
 #include <QtGui/QWidget>
 #include <QtGui/QActionGroup>
 #include <QtGui/QToolButton>
 
-#include <QtWebKit/QWebView>
-#include <QtNetwork/QNetworkDiskCache>
-#include <QtNetwork/QNetworkCookieJar>
 
 #include "xobjects/mainobject.h"
 #include "xobjects/latlng.h"
@@ -32,11 +35,13 @@ public:
 	QNetworkDiskCache *networkDiskCache;
 	QNetworkCookieJar *networkCookieJar;
 
+
+	QProgressBar *progressBar;
     QStatusBar *statusBar;
     QLabel *lblLat;
 	QLabel *lblLng;
     QLabel *lblZoom;
-    QActionGroup *groupZoom;
+	QButtonGroup *groupZoom;
     QToolButton *buttZoom;
 
     QString to_lat(QVariant);
@@ -66,7 +71,9 @@ public slots:
       void marker_clicked(QVariant marker, QVariant mId);
       void marker_unselected(QVariant curr_idx, QVariant mLocationId);
 
-
+	  void start_progress();
+	  void update_progress(int progress);
+	  void end_progress(bool Ok);
 
 };
 

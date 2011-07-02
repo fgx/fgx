@@ -201,7 +201,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	//* Output + Preview
 	outputPreviewWidget = new OutputPreviewWidget(mainObject);
-	tabWidget->addTab( outputPreviewWidget, tr("Output / Preview"));
+	tabWidget->addTab( outputPreviewWidget, tr("Launch Command"));
 	connect(outputPreviewWidget->buttonCommandPreview, SIGNAL(clicked()), this, SLOT(on_command_preview()));
 
 
