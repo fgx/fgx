@@ -582,3 +582,8 @@ bool XSettings::dev_mode(){
 QString XSettings::fgx_current_dir(){
 	return QDir::current().absolutePath();
 }
+
+
+QString XSettings::cache_dir(){
+	return QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
+}

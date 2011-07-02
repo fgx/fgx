@@ -51,7 +51,8 @@ HEADERS += xobjects/xsettings.h \
     utilities/helpers.h \
     maps/googlemapwidget.h \
     maps/mpmapwidget.h \
-    xobjects/latlng.h
+    xobjects/latlng.h \
+    xwidgets/xbrowser.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -88,7 +89,8 @@ SOURCES += main.cpp \
     utilities/helpers.cpp \
     maps/googlemapwidget.cpp \
     maps/mpmapwidget.cpp \
-    xobjects/latlng.cpp
+    xobjects/latlng.cpp \
+    xwidgets/xbrowser.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc \
     resources/google_map.qrc

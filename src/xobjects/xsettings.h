@@ -25,6 +25,8 @@ public:
 	static QString temp_dir();
 	static QString temp_dir(QString append_path);
 
+	static QString cache_dir();
+
 	QString fgx_path();
 	static QString fgx_current_dir();
 

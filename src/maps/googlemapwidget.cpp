@@ -1,4 +1,4 @@
-#include "googlemapwidget.h"
+
 
 #include <QtCore/QDebug>
 
@@ -17,6 +17,9 @@
 
 #include <QtWebKit/QWebFrame>
 #include <QtGui/QDesktopServices>
+
+#include "googlemapwidget.h"
+
 
 /*
 QList<int, int> zoomLevelMap
