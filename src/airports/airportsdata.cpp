@@ -7,10 +7,14 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDirIterator>
+#include <QTime>
 
 #include "airports/airportsdata.h"
+#include "utilities/utilities.h"
+#include "utilities/fgx_gzlib.h" /* FGx interface to glib */
 
-
+#define USE_LOCAL_ZLIB
+#undef ADD_EXTRA_DEBUG
 
 //AirportsData::AirportsData()
 //{
@@ -28,13 +32,32 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 	progress.repaint();
 
 	QHash<QString, QString> airports;
+    QString msg;
+    QTime tm;
+    int   ms;
 
-	QFile file( mainObject->settings->apt_dat_file() );
-	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-		qDebug("OOPS: file problem");
+	QString zf = mainObject->settings->fgroot("/Airports/apt.dat.gz");
+    QString zfile = mainObject->settings->apt_dat_file(); // for test only
+    fgx_gzHandle gzf; // opaque file gz handle
+    QFile f;
+    // just to test the TEXT interface
+    //if (f.exists(zfile)) {
+    //} else
+    if (f.exists(zf)) {
+        zfile = zf;
+    } else {
+        outLog("ERROR: Failed to find ["+zf+"! NO AIRPORT FILE DATA!");
 		return true;
-	 }
+    }
+    tm.start();
+    gzf = fgx_gzOpen(zfile);
+    if (!gzf) {
+        outLog("ERROR: Failed to open ["+zfile+"]");
+		return true;
+    }
+    outLog("Processing file ["+zfile+"]");
 
+    int air_count = 0;
 	int line_counter = 0;
 
 	QRegExp rxICAOAirport("[A-Z]{4}");
@@ -42,11 +65,10 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 
 
 	//* ignore first line
-	file.readLine();
+    fgx_gzReadline(gzf);
+    QString credits = fgx_gzReadline(gzf);
 
-	//** second line contains the version string
-	QString credits = file.readLine();
-	int version = 999;
+    int version = 999;
 	if(credits.startsWith("810 Version")){
 		version = 810;
 	}
@@ -56,10 +78,10 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 	 QString elevation;
 	 QString tower;
 
-	while( !file.atEnd() ){
 
-		QByteArray lineBytes = file.readLine();
-		QString line = QString(lineBytes).trimmed();
+     while ( ! fgx_gzEof(gzf)) {
+         QString line = fgx_gzReadline(gzf);
+
 		//qDebug() << line;
 		QString row_code = line.section(' ',0, 0);
 		//qDebug() << row_code;
@@ -87,9 +109,11 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 			if(import_icao_only){
 				if( rxICAOAirport.exactMatch(airport_code) ){
 						airports[airport_code] = airport_name;
+                        air_count++;
 					}
 			}else{
 					airports[airport_code] = airport_name;
+                    air_count++;
 			} /* if(is_icao) */
 
 		} /* if(row_code == "1") airport */
@@ -115,7 +139,13 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 	} /* end while readline */
 
 
-	//====================================================================================
+    fgx_gzClose(gzf);
+
+    msg.sprintf("Done %d lines, found %d airport entries",line_counter,air_count);
+    outLog(msg+", in "+getElapTimeStg(tm.elapsed()));
+
+
+	//===================================================
 	// Step Two - walk the xml sets
 
 	progress.setValue(0);
@@ -125,6 +155,8 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 
 	int c = 0;
 	int found = 0;
+    int air_added = 0;
+    ms = tm.restart();
 
 	//= Cache File
 	QFile cacheFile( mainObject->settings->data_file("airports.txt") );
@@ -141,6 +173,10 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 	QDirIterator loopAirportsFiles( mainObject->settings->airports_path(), QDirIterator::Subdirectories );
 	QString xFileName;
 
+    msg = "Scanning XML files";
+    outLog(msg);
+    progress.setWindowTitle(msg);
+	progress.setRange(0, 20000);
 
 	while (loopAirportsFiles.hasNext()) {
 
@@ -172,9 +208,11 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 			if( import_icao_only){
 				if( rxICAOAirport.exactMatch(airport_code) ){
 					out << cols.join("\t").append("\n");
+                    air_added++;
 				}
 			}else{
 				out << cols.join("\t").append("\n");
+                air_added++;
 			}
 
 			found++;
@@ -188,5 +226,10 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 	}
 
 	cacheFile.close();
+
+    msg.sprintf("Walked %d files, found %d threshold.xml, appended %d to cache",
+                c, found, air_added);
+    outLog(msg+", in "+getElapTimeStg(tm.elapsed()));
+	progress.hide();
 	return false;
 }

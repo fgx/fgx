@@ -64,8 +64,6 @@ public:
 	static int runningOs();
 	bool paths_sane();
 	
-	void uncompress(QString filename, QString destination);
-
 	static QString log_file_path();
 
 	QString style_current();

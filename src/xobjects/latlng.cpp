@@ -23,6 +23,6 @@ void LatLng::setLat(float lat){
 }
 
 void LatLng::setLng(float lng){
-    _lng - lng;
+	_lng = lng;
 }
 

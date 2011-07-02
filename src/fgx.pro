@@ -30,13 +30,6 @@ HEADERS += xobjects/xsettings.h \
     utilities/utilities.h \
     utilities/messagebox.h \
     airports/importairportsdialog.h \
-    utilities/osdab/unzip.h \
-    utilities/osdab/zipentry_p.h \
-    utilities/osdab/unzip_p.h \
-    utilities/osdab/zip_p.h \
-    utilities/osdab/zip.h \
-    utilities/osdab/zipentry_p.h \
-    utilities/osdab/zipglobal.h \
     setupwizard/fgrootpage.h \
     setupwizard/fgexepage.h \
     setupwizard/setupwizard.h \
@@ -46,16 +39,27 @@ HEADERS += xobjects/xsettings.h \
     aircraft/aircraftdata.h \
     setupwizard/completedpage.h \
     panes/viewlogwidget.h \
-    xobjects/xprocess.h \
-    logs/viewlogswidget.h \
+    utilities/zlib/inftrees.h \
+    utilities/zlib/inflate.h \
+    utilities/zlib/inffixed.h \
+    utilities/zlib/inffast.h \
+    utilities/zlib/gzguts.h \
+    utilities/zlib/fgx_zutil.h \
+    utilities/zlib/fgx_zlib.h \
+    utilities/zlib/fgx_zconf.h \
+    utilities/zlib/deflate.h \
+    utilities/zlib/crc32.h \
+    utilities/zlib/trees.h \
+    utilities/fgx_gzlib.h \
     utilities/helpers.h \
-    maps/googlemapwidget.h \
-    maps/mpmapwidget.h \
-    xobjects/latlng.h \
-    xwidgets/xbrowser.h \
-    props/propeditwidget.h \
+    xobjects/xprocess.h \
+    props/telnetslave.h \
     props/propstreewidget.h \
-    props/telnetslave.h
+    maps/mpmapwidget.h \
+    maps/googlemapwidget.h \
+    logs/viewlogswidget.h \
+    xobjects/latlng.h \
+    props/propeditwidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -75,9 +79,6 @@ SOURCES += main.cpp \
     utilities/utilities.cpp \
     utilities/messagebox.cpp \
     airports/importairportsdialog.cpp \
-    utilities/osdab/unzip.cpp \
-    utilities/osdab/zip.cpp \
-    utilities/osdab/zipglobal.cpp \
     setupwizard/setupwizard.cpp \
     setupwizard/fgrootpage.cpp \
     setupwizard/fgexepage.cpp \
@@ -87,16 +88,31 @@ SOURCES += main.cpp \
     aircraft/aircraftdata.cpp \
     setupwizard/completedpage.cpp \
     panes/viewlogwidget.cpp \
-    xobjects/xprocess.cpp \
-    logs/viewlogswidget.cpp \
+    utilities/zlib/uncompr.c \
+    utilities/zlib/trees.c \
+    utilities/zlib/inftrees.c \
+    utilities/zlib/inflate.c \
+    utilities/zlib/inffast.c \
+    utilities/zlib/infback.c \
+    utilities/zlib/gzwrite.c \
+    utilities/zlib/gzread.c \
+    utilities/zlib/gzlib.c \
+    utilities/zlib/gzclose.c \
+    utilities/zlib/deflate.c \
+    utilities/zlib/crc32.c \
+    utilities/zlib/compress.c \
+    utilities/zlib/adler32.c \
+    utilities/zlib/zutil.c \
+    utilities/fgx_gzlib.cpp \
     utilities/helpers.cpp \
-    maps/googlemapwidget.cpp \
-    maps/mpmapwidget.cpp \
-    xobjects/latlng.cpp \
-    xwidgets/xbrowser.cpp \
-    props/propeditwidget.cpp \
+    xobjects/xprocess.cpp \
+    props/telnetslave.cpp \
     props/propstreewidget.cpp \
-    props/telnetslave.cpp
+    maps/mpmapwidget.cpp \
+    maps/googlemapwidget.cpp \
+    logs/viewlogswidget.cpp \
+    xobjects/latlng.cpp \
+    props/propeditwidget.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc \
     resources/google_map.qrc

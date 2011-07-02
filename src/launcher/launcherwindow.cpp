@@ -379,7 +379,7 @@ void LauncherWindow::save_settings()
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
 	advancedOptionsWidget->save_settings();
-
+    mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	outLog("*** FGx reports: Settings saved ***");
 }

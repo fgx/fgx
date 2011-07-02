@@ -10,10 +10,12 @@
 
 #include "xsettings.h"
 #include "utilities/utilities.h"
+#if 0
 #include "utilities/osdab/zip_p.h"
 #include "utilities/osdab/zip.h"
 #include "utilities/osdab/unzip.h"
 #include "/usr/include/zlib.h"
+#endif // 0
 
 #define UNZIP_READ_BUFFER (256*1024)
 
@@ -188,15 +190,14 @@ bool XSettings::paths_sane(){
  */
 QString XSettings::aircraft_path(){
 	return fgroot().append("/Aircraft");
-	outLog("*** FGx settings: Aircraft path: " + fgroot().append("/Aircraft") + " ***");
 }
+
 /** \brief Path to the /Aircraft directory with a dir appended.
  *
  * \return absolute path.
  */
 QString XSettings::aircraft_path(QString dir){
 	return fgroot().append("/Aircraft/").append(dir);
-	outLog("*** FGx settings: Aircraft path: " + fgroot().append("/Aircraft/").append(dir) + " ***");
 }
 
 
@@ -208,23 +209,21 @@ QString XSettings::aircraft_path(QString dir){
  * \return If TerraSync is enabled, then returns a terrasync folder, otherwise the default.
  */
 QString XSettings::airports_path(){
-
-	//* Using terrasync
+    QString rpath;
+	//= Using terrasync
 	if(terrasync_enabled()){
 		if(runningOs() == MAC){
-			QString terrascenehome(QDir::homePath());
-			terrascenehome.append("/Documents/TerrasyncScenery");
-			return terrascenehome;
-			outLog("*** FGx settings: Airports path: " + terrascenehome + " ***");
+			rpath = QDir::homePath();
+			rpath.append("/Documents/TerrasyncScenery");
 		}else{
-			//* Use the terra sync path
-			return terrasync_sync_data_path().append("/Airports");
-			outLog("*** FGx settings: Airports path: " + terrasync_sync_data_path().append("/Airports") + " ***");
+			// Use the terra sync path
+			rpath = terrasync_sync_data_path().append("/Airports");
 		}
+	} else{ // Otherwise return the FG_ROOT airports/
+		rpath = fgroot().append("/Scenery/Airports");
 	}
-	//* Otherwise return the FG_ROOT airports/
-	return fgroot().append("/Scenery/Airports");
-	outLog("*** FGx settings: Airports path: " + fgroot().append("/Scenery/Airports") + " ***");
+	//outLog("*** FGx settings: Airports path: " + rpath + " ***");
+	return rpath;
 }
 
 //** Apt Dat
@@ -236,8 +235,8 @@ QString XSettings::airports_path(){
 QString XSettings::apt_dat_file(){
 	QString aptdatloc(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat"));
 	if( QFile::exists(aptdatloc) == false){
-		uncompress(fgroot("/Airports/apt.dat.gz"), QString(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat")));
-		outLog(QString(temp_dir().append("apt.dat")));
+		//uncompress(fgroot("/Airports/apt.dat.gz"), QString(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat")));
+		//outLog(QString(temp_dir().append("/apt.dat")));
 	}
 	return aptdatloc;
 }
@@ -320,13 +319,21 @@ QString XSettings::temp_dir(QString append_path){
  *
  */
 void XSettings::saveWindow(QWidget *widget){
-	setValue( _windowName(widget), QVariant(widget->saveGeometry()) );
+    //setValue( _windowName(widget), QVariant(widget->saveGeometry()) );
+    QString key = _windowName(widget);
+    QByteArray ba = widget->saveGeometry();
+    outLog("saveWindow: Key="+key+", values "+ba.toHex());
+    setValue( key, QVariant(ba) );
 }
 /** \brief Restores a window position
  *
  */
 void XSettings::restoreWindow(QWidget *widget){
-	widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
+    // widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
+    QString key = _windowName(widget);
+    QByteArray ba = value(_windowName(widget)).toByteArray();
+    outLog("restoreWindow: Key="+key+", values "+ba.toHex());
+    widget->restoreGeometry(ba);
 }
 
 QString XSettings::_windowName(QWidget *widget){
@@ -407,144 +414,7 @@ QString XSettings::data_file(QString file_name){
 }
 
 
-// using methods of osdab
 
-void XSettings::uncompress(QString filename, QString destination)
-{
-	
-	QString decompressedFileName;
-	bool inflate(const QString& s);
-	
-	QString s(filename);
-	
-	QFile file(s);
-	if (!file.open(QIODevice::ReadOnly)) {
-		qDebug("Failed to open input file: %s", qPrintable(s));
-		return;
-	}
-	
-	// Output to a QByteArray....
-	//
-	// QByteArray decompressedData;
-	// QDataStream dev(&decompressedData, QIODevice::WriteOnly);
-	//
-	// ...or to a QFile
-	//
-	//QFileInfo info(s);
-	QString outFileName;
-	//if (info.suffix() == "gz") {
-	outFileName = destination;
-	/*} else if (info.suffix() == "svgz") {
-		outFileName = info.absoluteFilePath().left( info.absoluteFilePath().length() - 1 );
-	} else {
-		outFileName = info.absoluteFilePath().append(".decompressed");
-	}*/
-	// Quick and dirty :D
-	int magik = 0;
-	while (QFile::exists(outFileName)) {
-		outFileName.append(QString(".%1").arg(++magik));
-	}
-	QFile out(outFileName);
-	if (!out.open(QIODevice::WriteOnly)) {
-		qDebug("Failed to open output file: %s", qPrintable(outFileName));
-		return;
-	}
-	decompressedFileName = outFileName;
-	QDataStream dev(&out);
-	
-	quint64 compressedSize = file.size();
-	
-	uInt rep = compressedSize / UNZIP_READ_BUFFER;
-	uInt rem = compressedSize % UNZIP_READ_BUFFER;
-	uInt cur = 0;
-	
-	// extract data
-	qint64 read;
-	quint64 tot = 0;
-	
-	char buffer1[UNZIP_READ_BUFFER];
-	char buffer2[UNZIP_READ_BUFFER];
-	
-	/* Allocate inflate state */
-	z_stream zstr;
-	zstr.zalloc = Z_NULL;
-	zstr.zfree = Z_NULL;
-	zstr.opaque = Z_NULL;
-	zstr.next_in = Z_NULL;
-	zstr.avail_in = 0;
-	
-	int zret;
-	
-	/*
-	 windowBits can also be greater than 15 for optional gzip decoding. Add
-	 32 to windowBits to enable zlib and gzip decoding with automatic header
-	 detection, or add 16 to decode only the gzip format (the zlib format will
-	 return a Z_DATA_ERROR.  If a gzip stream is being decoded, strm->adler is
-	 a crc32 instead of an adler32.
-	 */
-	if ( (zret = inflateInit2_(&zstr, MAX_WBITS + 16, ZLIB_VERSION, sizeof(z_stream))) != Z_OK ) {
-		qDebug("Failed to initialize zlib");
-		return;
-	}
-	
-	int szDecomp;
-	
-	// Decompress until deflate stream ends or end of file
-	do
-	{
-		read = file.read(buffer1, cur < rep ? UNZIP_READ_BUFFER : rem);
-		if (read == 0)
-			break;
-		if (read < 0)
-		{
-			(void)inflateEnd(&zstr);
-			qDebug("Read error");
-			return;
-		}
-		
-		cur++;
-		tot += read;
-		
-		zstr.avail_in = (uInt) read;
-		zstr.next_in = (Bytef*) buffer1;
-		
-		
-		// Run inflate() on input until output buffer not full
-		do {
-			zstr.avail_out = UNZIP_READ_BUFFER;
-			zstr.next_out = (Bytef*) buffer2;;
-			
-			zret = inflate(&zstr, Z_NO_FLUSH);
-			
-			switch (zret) {
-				case Z_NEED_DICT:
-				case Z_DATA_ERROR:
-				case Z_MEM_ERROR:
-					inflateEnd(&zstr);
-					qDebug("zlib failed to decode file");
-					return;
-				default:
-					;
-			}
-			
-			szDecomp = UNZIP_READ_BUFFER - zstr.avail_out;
-			if (dev.writeRawData(buffer2, szDecomp) != szDecomp)
-			{
-				inflateEnd(&zstr);
-				qDebug("Write error");
-				return;
-			}
-			
-		} while (zstr.avail_out == 0);
-		
-	}
-	while (zret != Z_STREAM_END);
-	
-	inflateEnd(&zstr);
-	
-	return;
-	
-}
 
 /** \brief Log File
  *
