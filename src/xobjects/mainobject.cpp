@@ -68,7 +68,6 @@ MainObject::MainObject(QObject *parent) :
 	actionLauncher->setIconVisibleInMenu(true);
 	connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
 
-
 	//= MpMap action
 	actionMpMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Map..."));
 	actionMpMap->setIconVisibleInMenu(true);
@@ -95,6 +94,16 @@ MainObject::MainObject(QObject *parent) :
 			this, SLOT(on_view_logs())
 	);
 
+	//== Properties browseer
+	actionPropsBrowser = new QAction(this);
+	actionPropsBrowser->setIcon(QIcon(":/icon/props"));
+	actionPropsBrowser->setText(tr("Properties Browser..."));
+	actionPropsBrowser->setIconVisibleInMenu(true);
+	popupMenu->addAction(actionPropsBrowser);
+	connect(actionPropsBrowser, SIGNAL(triggered()),
+			this, SLOT(on_properties_browser())
+	);
+
     popupMenu->addSeparator();
 
 
@@ -109,8 +118,9 @@ MainObject::MainObject(QObject *parent) :
 
 	connect(this, SIGNAL(show_settings(int)), this, SLOT(on_settings(int)));
 
-
-
+	//== Props tree
+	propertiesBrowser = new PropsTreeWidget(this);
+	propertiesBrowser->hide();
 
 	//= MP Map Widget
 	mpMapWidget = new MpMapWidget(this);
@@ -118,7 +128,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//= MP Map Widget
 	googleMapWidget = new GoogleMapWidget(this);
-	googleMapWidget->show();
+	googleMapWidget->hide();
 
 
 	//= Log Viewer is hidden
@@ -153,7 +163,7 @@ void MainObject::on_launcher(){
 
 
 //============================================================================
-//** Settings Dialog
+//** Settings Dialog - THESE ARE DEAD FOR NOW
 void MainObject::on_settings(){
 	on_settings(0);
 }
@@ -181,9 +191,9 @@ void MainObject::on_mpmap(){
 //======================================
 //== Propertes Browser
 void MainObject::on_properties_browser(){
-	//propertiesTree = new PropsTreeWidget(this);
-	//propertiesTree->show()
-	//mpMapWidget->show();
+	propertiesBrowser->show();
+	propertiesBrowser->setFocus();
+	//propertiesBrowser->raise();
 }
 
 

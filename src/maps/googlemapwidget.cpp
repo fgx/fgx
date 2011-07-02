@@ -1,6 +1,6 @@
 
 
-#include <QtCore/QDebug>
+//#include <QtCore/QDebug>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QFile>
@@ -171,7 +171,7 @@ GoogleMapWidget::GoogleMapWidget(MainObject *mob, QWidget *parent) :
 				: ":/gmap/gmap.html"
 				);
 
-	qDebug() << "GOOGLEFILE" << file.fileName();
+	//qDebug() << "GOOGLEFILE" << file.fileName();
 	//QFile *file = new QFile(":/google_map/gmap.html");
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
             qDebug("not open file");

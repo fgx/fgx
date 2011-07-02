@@ -1,10 +1,6 @@
 //
 //#include <QDebug>
-//
-//#include <QtCore/QString>
-//#include <QtCore/QStringList>
-//#include <QtCore/QByteArray>
-//#include <QtCore/QProcess>
+
 
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
@@ -21,11 +17,6 @@
 #include "settingsdialog.h"
 #include "launcher/launcherwindow.h"
 
-/* Presents the settings "dialog" for the fgfs paths
-
-   TODO - scenery Paths and check paths, change color if path not found
-
-*/
 
 SettingsDialog::SettingsDialog(MainObject *mOb, QWidget *parent) :
 	QDialog(parent)

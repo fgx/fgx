@@ -7,6 +7,8 @@
 
 #include "xobjects/mainobject.h"
 
+class MainObject;
+
 class XProcess : public QObject
 {
 Q_OBJECT

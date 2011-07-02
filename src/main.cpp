@@ -63,6 +63,7 @@ int main( int argc, char* argv[])
 	styles.append("QMenuBar { color: #eeeeee; background-color: #333333 }");
 	styles.append("QMenu::item { color: #333333; background-color: #eeeeee }");
 	styles.append("QMenu::item::selected { color: #eeeeee; background-color: #999999 }");
+	styles.append("QTreeView::item{ padding: 2px;}");
 
 	
 	app.setStyleSheet(styles);

@@ -1,5 +1,5 @@
 
-#include<QtDebug>
+//#include<QtDebug>
 
 #include "setupwizard/setupwizard.h"
 

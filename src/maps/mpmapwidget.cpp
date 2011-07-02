@@ -1,5 +1,5 @@
 
-#include <QtDebug>
+//#include <QtDebug>
 
 #include <QDesktopServices>
 
@@ -58,7 +58,7 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
 
 	//=============================================================
 	//== Cache
-	qDebug() << QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
+	//qDebug() << QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
 
 	networkDiskCache = new QNetworkDiskCache(this);
 	networkDiskCache->setCacheDirectory(QDesktopServices::storageLocation(QDesktopServices::CacheLocation));

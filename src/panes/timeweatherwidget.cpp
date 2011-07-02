@@ -1,5 +1,5 @@
 
-#include <QDebug>
+//#include <QDebug>
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -133,12 +133,7 @@ QString TimeWeatherWidget::validate(){
 			return QString("No metar text");
 	}
 
-    QString time = buttonGroupTime->checkedButton()->property("value").toString();
-    if (time != "real") {
-        args << QString("--timeofday="+time);
-    }
-
-	return args;
+	return QString("");
 }
 
 
