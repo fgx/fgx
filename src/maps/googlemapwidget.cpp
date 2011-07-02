@@ -6,6 +6,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QStringList>
 
+
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QToolBar>
 #include <QtGui/QAction>
@@ -15,6 +16,7 @@
 #include <QtGui/QLabel>
 
 #include <QtWebKit/QWebFrame>
+#include <QtGui/QDesktopServices>
 
 /*
 QList<int, int> zoomLevelMap
@@ -83,7 +85,10 @@ GoogleMapWidget::GoogleMapWidget(MainObject *mob, QWidget *parent) :
     //style = "" #background-color: #efefef;"
 
 
+	networkDiskCache = new QNetworkDiskCache(this);
+	networkDiskCache->setCacheDirectory(QDesktopServices::storageLocation(QDesktopServices::CacheLocation));
 
+	networkCookieJar = new QNetworkCookieJar(this);
 
     //** WebView
     webView = new QWebView();

@@ -12,7 +12,6 @@
 #include <QtGui/QFileDialog>
 
 #include "panes/coresettingswidget.h"
-//#include "settings/settingsdialog.h"
 #include "xwidgets/xgroupboxes.h"
 #include "utilities/helpers.h"
 
@@ -107,6 +106,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	layoutPaths->addWidget(grpFgPaths);
 
 	QString style_paths("background-color: #efefef; padding: 3px; color: #444444; border: 1px solid #cccccc;");
+
 	//----------------------------------------------
 	//= FlightGear executable
 	XGroupVBox *grpFgFs = new XGroupVBox("FlightGear Executable");
@@ -139,11 +139,11 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	//----------------------------------------------
 	//= Terrasync Directory
-	XGroupVBox *grpTerraSync = new XGroupVBox("TerraSync ");
+	XGroupVBox *grpTerraSync = new XGroupVBox("Scenery Source with TerraSync");
 	grpFgPaths->addWidget(grpTerraSync);
 
 	labelTerraSyncInfo = new QLabel(tr(""));
-	labelTerraSyncInfo->setStyleSheet("font-size: 11px;");
+	//labelTerraSyncInfo->setStyleSheet("font-size: 11px;");
 	grpTerraSync->addWidget(labelTerraSyncInfo, 1);
 
 	labelTerraSyncDataPath = new QLabel("");
@@ -200,7 +200,7 @@ void CoreSettingsWidget::load_settings(){
 
 
 	labelTerraSyncInfo->setText( mainObject->settings->terrasync_enabled()
-								 ? "Using Terrasync" : "Using Default scenery"
+								 ? "Using Terrasync to directory below" : "Using default scenery at path below"
 								 );
 	if (mainObject->settings->value("use_terrasync").toBool()) {
 		labelTerraSyncDataPath->setText( mainObject->settings->terrasync_sync_data_path());

@@ -11,6 +11,8 @@
 #include <QtGui/QToolButton>
 
 #include <QtWebKit/QWebView>
+#include <QtNetwork/QNetworkDiskCache>
+#include <QtNetwork/QNetworkCookieJar>
 
 #include "xobjects/mainobject.h"
 #include "xobjects/latlng.h"
@@ -27,9 +29,12 @@ public:
 	MainObject *mainObject;
 
     QWebView *webView;
+	QNetworkDiskCache *networkDiskCache;
+	QNetworkCookieJar *networkCookieJar;
+
     QStatusBar *statusBar;
     QLabel *lblLat;
-    QLabel *lblLng;
+	QLabel *lblLng;
     QLabel *lblZoom;
     QActionGroup *groupZoom;
     QToolButton *buttZoom;

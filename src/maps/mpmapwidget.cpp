@@ -66,13 +66,13 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
 	networkCookieJar = new QNetworkCookieJar(this);
 
 	//== Browser
-    browser = new QWebView(this);
-    mainLayout->addWidget(browser, 100);
-	browser->page()->networkAccessManager()->setCache(networkDiskCache);
-	browser->page()->networkAccessManager()->setCookieJar(networkCookieJar);
-    connect(browser, SIGNAL(loadStarted()), this, SLOT(start_progress()));
-    connect(browser, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
-    connect(browser, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));
+	webView = new QWebView(this);
+	mainLayout->addWidget(webView, 100);
+	webView->page()->networkAccessManager()->setCache(networkDiskCache);
+	webView->page()->networkAccessManager()->setCookieJar(networkCookieJar);
+	connect(webView, SIGNAL(loadStarted()), this, SLOT(start_progress()));
+	connect(webView, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
+	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));
 
     //*** Status Bar
     statusBar = new QStatusBar(this);
@@ -106,7 +106,7 @@ void MpMapWidget::end_progress(bool Ok){
 void MpMapWidget::on_combo_server(int index){
 
     QString server_url = comboServer->itemData(index).toString();
-    browser->setUrl(  QUrl(server_url)  );
+	webView->setUrl(  QUrl(server_url)  );
     statusBar->showMessage(QString("Loading: ").append(server_url));
     //qDebug("on_combo");
 

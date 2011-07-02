@@ -34,7 +34,7 @@ private:
 	QComboBox *comboServer;
 	
 
-	QWebView *browser;
+	QWebView *webView;
 	QNetworkDiskCache *networkDiskCache;
 	QNetworkCookieJar *networkCookieJar;
 
