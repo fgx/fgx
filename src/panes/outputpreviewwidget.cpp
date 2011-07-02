@@ -1,4 +1,6 @@
-#include <QDebug>
+
+
+//#include <QDebug>
 
 
 #include <QtGui/QHBoxLayout>

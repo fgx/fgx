@@ -191,9 +191,9 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
 	connect(treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
 			this, SLOT(on_item_double_clicked(QTreeWidgetItem*,int))
     );
-	connect(treeWidget, SIGNAL(itemSelectionChanged()),
-			this, SLOT(on_on_aiport_selection_changedselection_changed())
-	);
+	//connect(treeWidget, SIGNAL(itemSelectionChanged()),
+	//		this, SLOT(on_on_aiport_selection_changedselection_changed())
+	//);
 
 
     statusBarTree = new QStatusBar();

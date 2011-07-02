@@ -1,9 +1,4 @@
 
-/*
-Note:
- */
-
-
 
 #include <QtCore/QByteArray>
 #include <QtCore/QStringList>

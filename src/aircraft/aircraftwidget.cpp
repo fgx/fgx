@@ -9,7 +9,7 @@
 
 
 
-#include <QtCore/QDebug>
+//#include <QtCore/QDebug>
 
 #include <QtCore/QProcess>
 #include <QtCore/QByteArray>

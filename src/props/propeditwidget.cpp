@@ -1,15 +1,11 @@
+
+
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QTreeWidgetItem>
 
 #include "propeditwidget.h"
-
-
-/* TODO
-
-   Set the data type, eg true/false as switches, int's floats validated etc
-   */
 
 
 PropEditWidget::PropEditWidget(MainObject *mOb, QDialog *parent):
