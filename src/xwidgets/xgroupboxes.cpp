@@ -1,9 +1,15 @@
 #include "xwidgets/xgroupboxes.h"
 
+//QString MAJOR_STYLE("QGroupBox{ font-weight: bold; color: #444444; }");
+//QString MINOR_STYLE("QGroupBox{ font-weight: normal; color: #666666; }");
+
+QString MAJOR_STYLE("QGroupBox{  border:1px solid gray; border-top: 2px solid gray; border-radius:5px;  margin-top: 1ex;} QGroupBox::title{subcontrol-origin: margin;subcontrol-position:top left;padding:0 3px; font-weight: bold;}");
+//MAJOR_STLYE.append("QGroupBox::title{subcontrol-origin: margin;subcontrol-position:top left;padding:0 3px;}");
+
+QString MINOR_STYLE("QGroupBox{  border:1px solid gray; border-top: 1px solid gray; border-radius:5px;  margin-top: 1ex;} QGroupBox::title{subcontrol-origin: margin;subcontrol-position:top left;padding:0 3px;}");
 
 
-QString MAJOR_STYLE("QGroupBox{ font-weight: bold; color: #444444; }");
-QString MINOR_STYLE("QGroupBox{ font-weight: normal; color: #666666; }");
+
 
 
 
