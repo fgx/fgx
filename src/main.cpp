@@ -25,16 +25,16 @@ void fgxErrorMessage(QtMsgType type, const char *msg)
     switch (type)
     {
     case QtDebugMsg:
-        outLog("*** FGx Message Handler: "+m+" ***\n",0);
+        outLog("*** FGx debug: "+m+" ***\n",0);
         break;
     case QtWarningMsg:
-        outLog("*** FGx Message Handler (warning): "+m+" ***\n",0);
+        outLog("*** FGx warning: "+m+" ***\n",0);
         break;
     case QtCriticalMsg:
-        outLog("*** FGx Message Handler (critical): "+m+" ***\n",0);
+        outLog("*** FGx critical: "+m+" ***\n",0);
         break;
     case QtFatalMsg:
-        outLog("*** FGx Message Handler (FATAL): "+m+" ***\n",0);
+        outLog("*** FGx fatal: "+m+" ***\n",0);
         abort();
         break;
     }
@@ -47,7 +47,7 @@ int main( int argc, char* argv[])
 	QApplication::setOrganizationName("FGx");
 	QApplication::setOrganizationDomain("googlecode.org");
 	QApplication::setApplicationName("FGx");
-	QApplication::setApplicationVersion("2.4.0");
+	QApplication::setApplicationVersion("2.4.0a1");
 
 	//== Start the application here
 	MainObject mainObject;
@@ -64,6 +64,7 @@ int main( int argc, char* argv[])
 	styles.append("QMenu::item { color: #333333; background-color: #eeeeee }");
 	styles.append("QMenu::item::selected { color: #eeeeee; background-color: #999999 }");
 	styles.append("QTreeView::item{ padding: 2px;}");
+	styles.append("QPlainTextEdit { font-family: Andale mono, monospace; font-size: 12px; font-weight: normal }");
 
 	
 	app.setStyleSheet(styles);
