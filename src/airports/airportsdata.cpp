@@ -37,25 +37,20 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
     int   ms;
 
 	QString zf = mainObject->settings->fgroot("/Airports/apt.dat.gz");
-    QString zfile = mainObject->settings->apt_dat_file(); // for test only
     fgx_gzHandle gzf; // opaque file gz handle
     QFile f;
-    // just to test the TEXT interface
-    //if (f.exists(zfile)) {
-    //} else
-    if (f.exists(zf)) {
-        zfile = zf;
-    } else {
+    if (!f.exists(zf)) {
+
         outLog("ERROR: Failed to find ["+zf+"! NO AIRPORT FILE DATA!");
 		return true;
     }
     tm.start();
-    gzf = fgx_gzOpen(zfile);
+    gzf = fgx_gzOpen(zf);
     if (!gzf) {
-        outLog("ERROR: Failed to open ["+zfile+"]");
+        outLog("ERROR: Failed to open ["+zf+"]");
 		return true;
     }
-    outLog("Processing file ["+zfile+"]");
+    outLog("Processing file ["+zf+"]");
 
     int air_count = 0;
 	int line_counter = 0;

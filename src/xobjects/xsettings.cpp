@@ -10,12 +10,6 @@
 
 #include "xsettings.h"
 #include "utilities/utilities.h"
-#if 0
-#include "utilities/osdab/zip_p.h"
-#include "utilities/osdab/zip.h"
-#include "utilities/osdab/unzip.h"
-#include "/usr/include/zlib.h"
-#endif // 0
 
 #define UNZIP_READ_BUFFER (256*1024)
 
@@ -160,7 +154,7 @@ QString XSettings::fgroot_default_path(){
 		return QString("C:/Program Files/FlightGear/data");
 	}
 
-	return QString("OS NOT HANDLED in default_fg_root");
+	return QString("Your system is not handled for default fgdata path");
 }
 
 //===========================================================================
@@ -224,21 +218,6 @@ QString XSettings::airports_path(){
 	}
 	//outLog("*** FGx settings: Airports path: " + rpath + " ***");
 	return rpath;
-}
-
-//** Apt Dat
-/** \brief Return the absolute path to the /apt.dat.gz file
- *
- * The file is uncompress to the temp_dir()/apt.dat is a gz is found
- * \return The absolute path to unpacked apt.dat
- */
-QString XSettings::apt_dat_file(){
-	QString aptdatloc(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat"));
-	if( QFile::exists(aptdatloc) == false){
-		//uncompress(fgroot("/Airports/apt.dat.gz"), QString(QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath().append("/apt.dat")));
-		//outLog(QString(temp_dir().append("/apt.dat")));
-	}
-	return aptdatloc;
 }
 
 //===========================================================================
