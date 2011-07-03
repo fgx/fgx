@@ -45,7 +45,7 @@ int main( int argc, char* argv[])
 	
 	QApplication app(argc, argv);
 	QApplication::setOrganizationName("FGx");
-	QApplication::setOrganizationDomain("googlecode.org");
+	QApplication::setOrganizationDomain("googlecode.com");
 	QApplication::setApplicationName("FGx");
 	QApplication::setApplicationVersion("2.4.0a1");
 
@@ -58,13 +58,13 @@ int main( int argc, char* argv[])
 	styles.append("QLineEdit { background-color: white }");
 	styles.append("QGroupBox { font-size: 11px; }"); // text-transform: uppercase
 	styles.append("QPushButton { padding: 5px; }");
-	styles.append("QStatusBar { font-family: Andale mono, monospace; font-size: 12px; font-weight: normal }");
+	styles.append("QStatusBar { font-family: Andale mono, Lucida Console, monospace; font-size: 12px; font-weight: normal }");
 	styles.append("LauncherWindow { background-color: #eeeeee }");
 	styles.append("QMenuBar { color: #eeeeee; background-color: #333333 }");
 	styles.append("QMenu::item { color: #333333; background-color: #eeeeee }");
 	styles.append("QMenu::item::selected { color: #eeeeee; background-color: #999999 }");
 	styles.append("QTreeView::item{ padding: 2px;}");
-	styles.append("QPlainTextEdit { font-family: Andale mono, monospace; font-size: 12px; font-weight: normal }");
+	styles.append("QPlainTextEdit { font-family: Andale mono, Lucida Console, monospace; font-size: 12px; font-weight: normal }");
 
 	
 	app.setStyleSheet(styles);
