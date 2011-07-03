@@ -410,6 +410,7 @@ void LauncherWindow::on_command_preview(){
 	if(!validate()){
 		return;
 	}
+	save_settings();
 	outputPreviewWidget->preview();
 }
 
