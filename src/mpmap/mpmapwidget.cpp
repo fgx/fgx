@@ -49,7 +49,7 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
 	
 	//**add callsign to url
 	QString mapURL1("http://mpmap01.flightgear.org/?follow=");
-	QString mapURL2("http://mpmap01.flightgear.org/?follow=");
+	QString mapURL2("http://mpmap02.flightgear.org/?follow=");
 	mapURL1.append(mpmapFollowCallsign);
 	mapURL2.append(mpmapFollowCallsign);
     comboServer->addItem("MpMap-01", QVariant(mapURL1));

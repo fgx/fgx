@@ -45,7 +45,7 @@ int main( int argc, char* argv[])
 	
 	QApplication app(argc, argv);
 	QApplication::setOrganizationName("FGx");
-	QApplication::setOrganizationDomain("googlecode.com");
+	QApplication::setOrganizationDomain("googlecode.org");
 	QApplication::setApplicationName("FGx");
 	QApplication::setApplicationVersion("2.4.0");
 
