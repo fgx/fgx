@@ -78,6 +78,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	tree->headerItem()->setText(C_PITCH, "Pitch");
 	tree->headerItem()->setText(C_LAT, "Lat");
 	tree->headerItem()->setText(C_LNG, "Lng");
+	tree->headerItem()->setText(C_FLAG, "Flag");
 
 
 

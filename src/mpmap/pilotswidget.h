@@ -33,7 +33,8 @@ public:
 		C_HEADING,
 		C_PITCH,
 		C_LAT,
-		C_LNG
+		C_LNG,
+		C_FLAG
 	};
 
 	MainObject *mainObject;
