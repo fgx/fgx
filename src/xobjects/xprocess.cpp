@@ -1,6 +1,9 @@
 
 
 #include "xprocess.h"
+#ifdef Q_OS_WIN
+#include <process.h>
+#endif
 
 XProcess::XProcess(MainObject *mob, QString logger_name, QObject *parent) :
     QObject(parent)
@@ -106,8 +109,9 @@ void XProcess::on_process_error(QProcess::ProcessError error)
 
 
 int XProcess::get_pid() {
-	if(mainObject->settings->runningOs() == XSettings::WINDOWS){
-		return 0;
-	}
+#ifdef Q_OS_WIN
+    return _getpid();
+#else
 	return process->pid();
+#endif
 }
