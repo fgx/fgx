@@ -102,3 +102,19 @@ void MpMapXWidget::closeEvent(QCloseEvent *event){
 	mainObject->settings->saveWindow(this);
 	event->accept();
 }
+
+
+
+
+void MpMapXWidget::add_airport(QString airport){
+	gMapWidget->add_airport(airport);
+}
+
+void MpMapXWidget::show_airport(QString airport){
+	gMapWidget->show_airport(airport);
+}
+void MpMapXWidget::add_airport_marker(QString airport, QString lat, QString lon){
+	gMapWidget->add_airport_marker(airport, lat, lon);
+}
+
+

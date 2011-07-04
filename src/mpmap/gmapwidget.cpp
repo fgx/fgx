@@ -94,6 +94,25 @@ GMapWidget::GMapWidget(MainObject *mob, QWidget *parent) :
     toolbar->addSeparator();
 
 
+
+	//== Lat Lng Labels
+	toolbar->addWidget(new QLabel("Lat:"));
+	lblLat = new QLabel();
+	//lblLat.setStyleSheet(style)
+	lblLat->setFixedWidth(80);
+	lblLat->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+	toolbar->addWidget(lblLat);
+
+	//QLabel *lblLng = QLabel();
+	//toolbar.addAction("Lng:")
+	toolbar->addWidget(new QLabel("Lng:"));
+	lblLng = new QLabel();
+	//lblLng->setStyleSheet(style);
+	lblLng->setFixedWidth(80);
+	toolbar->addWidget(lblLng);
+
+
+
 	//=================================================================
 	// WebView
     webView = new QWebView();
@@ -134,33 +153,20 @@ GMapWidget::GMapWidget(MainObject *mob, QWidget *parent) :
 	connect(groupZoom, SIGNAL(buttonClicked(QAbstractButton*)),
 			this, SLOT(on_zoom_action(QAbstractButton*))
     );
-    for(int z=1; z < 8; z++){
+	for(int z=1; z < 15; z++){
 		QToolButton *act = new QToolButton(this);
         act->setText(QString(" %1 ").arg(z));
         act->setProperty("zoom", QVariant(z));
         act->setCheckable(true);
-        //act.setChecked(b[0] == 'Uk');
+		act->setDown(z == 12);
 		statusBar->addPermanentWidget(act);
 		groupZoom->addButton(act);
     }
 
 
-	//== Lat Lng Labels
-    statusBar->addPermanentWidget(new QLabel("Lat:"));
-    lblLat = new QLabel();
-    //lblLat.setStyleSheet(style)
-    lblLat->setFixedWidth(140);
-    lblLat->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    statusBar->addPermanentWidget(lblLat);
 
-    //QLabel *lblLng = QLabel();
-    //toolbar.addAction("Lng:")
-    statusBar->addPermanentWidget(new QLabel("Lng:"));
-    lblLng = new QLabel();
-    //lblLng->setStyleSheet(style);
-    lblLng->setFixedWidth(140);
-    statusBar->addPermanentWidget(lblLng);
 
+	init_map();
 
 }
 
@@ -330,7 +336,7 @@ void GMapWidget::init_map(){
 		QFile file(
 						mainObject->settings->dev_mode()
 						? XSettings::fgx_current_dir().append("/resources/google_map/gmap.html")
-						: ":/gmap/gmap.html"
+						: ":/google_map/gmap.html"
 					);
 		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
 			qDebug("not open file");
@@ -339,7 +345,7 @@ void GMapWidget::init_map(){
 
 		webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 		QByteArray contents = file.readAll();
-
+		qDebug() << contents;
 		webView->setHtml(contents);
 	}
 	map_initialized = true;
@@ -349,4 +355,20 @@ void GMapWidget::init_map(){
 void GMapWidget::set_map_init(){
 	qDebug() << "JS map init";
 
+}
+
+//=======================================================
+void GMapWidget::add_airport(QString airport){
+
+}
+
+void GMapWidget::show_airport(QString airport){
+
+}
+
+void GMapWidget::add_airport_marker(QString airport, QString lat, QString lng){
+	QString js_str = QString("add_marker(%1, %2, '%3');")
+					 .arg( lat ).arg( lng ).arg( airport );
+	//qDebug() << js_str;
+	execute_js(js_str);
 }

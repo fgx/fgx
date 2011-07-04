@@ -36,7 +36,12 @@ public:
 		CI_NODE = 0,
 		CI_LABEL = 1,
 		CI_TYPE = 2,
-		CI_SETTING_KEY = 3
+		CI_SETTING_KEY = 3,
+		CI_WIDTH = 4,
+		CI_LENGTH  = 5,
+		CI_LAT = 6,
+		CI_LNG = 7,
+		CI_ALIGNMNET =8
 	};
 
 	enum STARTUP_POSTITION{

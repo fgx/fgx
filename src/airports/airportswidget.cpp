@@ -136,7 +136,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	buttonViewMap->setAutoRaise(true);
 	buttonViewMap->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	connect(buttonViewMap, SIGNAL(clicked()), this, SLOT(on_view_map()) );
-	buttonViewMap->setVisible(false); // NOt to confuse anyone
+	//buttonViewMap->setVisible(false); // NOt to confuse anyone
 
 
 	QToolButton *buttonReloadCache = new QToolButton(this);
@@ -237,16 +237,17 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	QTreeWidgetItem *headerItem = treeWidgetAirportInfo->headerItem();
 	headerItem->setText(CI_NODE, tr(""));
-    headerItem->setText(1, tr("Width"));
-    headerItem->setText(2, tr("Length"));
-    headerItem->setText(3, tr("Lat"));
-    headerItem->setText(4, tr("Lng"));
-    headerItem->setText(5, tr("Alignment"));
-	treeWidgetAirportInfo->setColumnHidden(1,true);
-	treeWidgetAirportInfo->setColumnHidden(2,true);
-	treeWidgetAirportInfo->setColumnHidden(3,true);
-	treeWidgetAirportInfo->setColumnHidden(4,true);
-	treeWidgetAirportInfo->setColumnHidden(5,true);
+	headerItem->setText(CI_WIDTH, tr("Width"));
+	headerItem->setText(CI_LENGTH, tr("Length"));
+	headerItem->setText(CI_LAT, tr("Lat"));
+	headerItem->setText(CI_LNG, tr("Lng"));
+	headerItem->setText(CI_ALIGNMNET, tr("Alignment"));
+	treeWidgetAirportInfo->setColumnHidden(CI_TYPE,true);
+	treeWidgetAirportInfo->setColumnHidden(CI_LABEL,true);
+	treeWidgetAirportInfo->setColumnHidden(CI_SETTING_KEY,true);
+	treeWidgetAirportInfo->setColumnHidden(CI_WIDTH,true);
+	treeWidgetAirportInfo->setColumnHidden(CI_LENGTH,true);
+	treeWidgetAirportInfo->setColumnHidden(CI_ALIGNMNET,true);
 
 
 	statusBarAirportInfo = new QStatusBar();
@@ -516,20 +517,28 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 		for(int idxd =0; idxd < nodesThreshold.count(); idxd++){
 			//* Nodes "rwy" << "hdg-deg" << "lat" << "lon";
 			QDomNode thresholdNode = nodesThreshold.at(idxd);
-			list << thresholdNode.firstChildElement("rwy").text();
+			//list << thresholdNode.firstChildElement("rwy").text();
+			//list << thresholdNode.firstChildElement("lat").text();
+			//list << thresholdNode.firstChildElement("lng").text();
+			QTreeWidgetItem *rItem = new QTreeWidgetItem(runwaysParent);
+			rItem->setText(CI_NODE,  thresholdNode.firstChildElement("rwy").text());
+			rItem->setText(CI_LAT,  thresholdNode.firstChildElement("lat").text());
+			rItem->setText(CI_LNG,  thresholdNode.firstChildElement("lon").text());
+			rItem->setText(CI_TYPE, "runway");
+			rItem->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(thresholdNode.firstChildElement("rwy").text()));
 		}
 	}
-
+	/*
 	if(list.size() > 0){
 		list.sort();
 		for(int i = 0; i  < list.size(); i++){
 			QTreeWidgetItem *rItem = new QTreeWidgetItem(runwaysParent);
 			rItem->setText(CI_NODE, list.at(i));
 			rItem->setText(CI_TYPE, "runway");
-			rItem->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(list.at(i))); //* settings to search for on restore
+			rItem->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(list.at(i))); // settings to search for on restore
 		}
 	}
-
+	*/
 	return runwaysParent->childCount();
 }
 
@@ -756,4 +765,15 @@ QString AirportsWidget::validate(){
 
 void AirportsWidget::on_view_map(){
 	qDebug() << "on_map";
+	QString cApt = current_airport();
+	QTreeWidgetItem *item = treeWidgetAirportInfo->findItems("Runways", Qt::MatchExactly | Qt::MatchRecursive, CI_NODE).at(0);
+	mainObject->mpMapXWidget->add_airport(cApt);
+	for(int idx =0; idx < item->childCount(); idx++){
+		//qDebug() << item->child(idx)->text(CI_LAT);
+		mainObject->mpMapXWidget->add_airport_marker(cApt, item->child(idx)->text(CI_LAT), item->child(idx)->text(CI_LNG));
+
+	}
+	mainObject->mpMapXWidget->show_airport(cApt);
+	mainObject->mpMapXWidget->show();
+
 }

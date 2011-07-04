@@ -162,6 +162,7 @@ function add_marker(lat, lng, label){
 	if(init_flag == false){
 		alert("never");
 	}
+
 	idx++;
 	//alert(widget_name);
 	//(markers[widget_name]);
@@ -171,7 +172,7 @@ function add_marker(lat, lng, label){
 	//alert(idx);
 	//var ico = icons.purple;
 	var latlng = new google.maps.LatLng(lat, lng);
-	markers["foo"][idx] = new google.maps.Marker({
+	markers[idx] = new google.maps.Marker({
 								position: latlng, 
 								map: map,
 								title: "ere"
@@ -179,11 +180,12 @@ function add_marker(lat, lng, label){
 	//sattach_marker(markers[widget_name][myId], myId, label);
 	//Qt.marker_added(widget_name, myId);
 	//alert("ere");
+	//alert("here");
 	//var zlatlng = new google.maps.LatLng(lat, lng);
-	//map.panTo(latlng);
-	//map.setZoom(15);
+	map.panTo(latlng);
+	map.setZoom(15);
 	//zoom_to(lat, lng, 15);
-	alert("here");
+	
 	return idx; // pretty pointless
 	
 }
@@ -249,7 +251,7 @@ function initialize_map(){
 	geocoder = new google.maps.Geocoder();
 	var latlng = new google.maps.LatLng(0.0,-0.0);
 	var mapOptions = {
-		zoom: 10,
+		zoom: 12,
 		center: latlng,
 		mapTypeId: google.maps.MapTypeId.HYBRID,
 		mapTypeControl: false,

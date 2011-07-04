@@ -83,6 +83,10 @@ public slots:
 	void end_progress(bool Ok);
 
 
+	void add_airport(QString airport);
+	void add_airport_marker(QString airport, QString lat, QString lng);
+	void show_airport(QString airport);
+
 };
 
 #endif // GMAPXWIDGET_H
