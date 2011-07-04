@@ -3,15 +3,13 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-//#include <QtCore/QVariant>
 
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
-#include <QtGui/QGroupBox>
+
 #include <QtGui/QRadioButton>
 
 #include "advancedoptionswidget.h"
-#include "xwidgets/xgroupboxes.h"
 #include "utilities/helpers.h"
 
 AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
@@ -24,24 +22,20 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
 	setLayout(mainLayout);
 
 	//================================================================
-	//** Additional Args
-	QGroupBox *groupBoxArgs = new QGroupBox(tr("Additional Command Arguments"));
+	//== Additional Args
+	XGroupVBox *groupBoxArgs = new XGroupVBox(tr("Additional Command Arguments"));
 	mainLayout->addWidget(groupBoxArgs);
 
-	QVBoxLayout *layoutBoxArgs = new QVBoxLayout();
-	groupBoxArgs->setLayout(layoutBoxArgs);
 	txtExtraArgs = new QPlainTextEdit();
-	layoutBoxArgs->addWidget(txtExtraArgs);
+	groupBoxArgs->addWidget(txtExtraArgs);
 
 	//================================================================
-	//** Environment Variables
-	QGroupBox *groupBoxEnv = new QGroupBox(tr("Additional Environment Variables"));
+	//== Environment Variables
+	XGroupVBox *groupBoxEnv = new XGroupVBox(tr("Additional Environment Variables"));
 	mainLayout->addWidget(groupBoxEnv);
 	
-	QHBoxLayout *layoutBoxEnv = new QHBoxLayout();
-	groupBoxEnv->setLayout(layoutBoxEnv);
 	txtExtraEnv = new QPlainTextEdit();
-	layoutBoxEnv->addWidget(txtExtraEnv);
+	groupBoxEnv->addWidget(txtExtraEnv);
 	
 
 	//================================================================
@@ -49,22 +43,17 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
 	
 	// *TBD* Would also be nice to have a button [...] to aid in setting this directory.
 	
-	QGroupBox *groupBoxRun = new QGroupBox(tr("Set a specific runtime directory"));
+	XGroupHBox *groupBoxRun = new XGroupHBox(tr("Set a specific runtime directory"));
 	mainLayout->addWidget(groupBoxRun);
 	
-	QHBoxLayout *layoutBoxRun = new QHBoxLayout();
-	groupBoxRun->setLayout(layoutBoxRun);
 	txtRuntime = new QLineEdit("");
-	layoutBoxRun->addWidget(txtRuntime);
+	groupBoxRun->addWidget(txtRuntime);
 
 
 	//================================================================
 	//** Write Log
-	groupBoxWriteLog = new QGroupBox(tr("FlightGear Loglevel"));
+	groupBoxWriteLog = new XGroupVBox(tr("FlightGear Loglevel"));
 	mainLayout->addWidget(groupBoxWriteLog);
-
-	QVBoxLayout *layoutBoxLog = new QVBoxLayout();
-	groupBoxWriteLog->setLayout(layoutBoxLog);
 
 	buttonGroupLogOptions = new QButtonGroup();
 	buttonGroupLogOptions->setExclusive(true);
@@ -78,7 +67,7 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
 		QRadioButton *butt = new QRadioButton();
 		butt->setText(labels.at(i));
 		butt->setProperty("value", values.at(i));
-		layoutBoxLog->addWidget(butt);
+		groupBoxWriteLog->addWidget(butt);
 		buttonGroupLogOptions->addButton(butt, i);
 	}
 

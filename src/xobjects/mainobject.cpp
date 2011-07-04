@@ -130,7 +130,7 @@ MainObject::MainObject(QObject *parent) :
 	mpMapWidget = new MpMapWidget(this);
 	mpMapWidget->hide();
 
-	//= MP Map Widget
+	//= FGx Map Widget
 	mpMapXWidget = new MpMapXWidget(this);
 	mpMapXWidget->hide();
 

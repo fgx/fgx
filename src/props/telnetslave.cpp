@@ -165,4 +165,5 @@ void TelnetSlave::on_error(QAbstractSocket::SocketError socketError){
 void TelnetSlave::on_state_changed(QAbstractSocket::SocketState socketState ){
       //qDebug("on_state_changed");
      // qDebug() << "state=" << socketState;
+	Q_UNUSED(socketState);
 }

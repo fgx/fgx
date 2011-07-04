@@ -11,7 +11,6 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QProgressBar>
 #include <QtGui/QStatusBar>
-#include <QtGui/QGroupBox>
 #include <QtGui/QRadioButton>
 #include <QtGui/QToolButton>
 
@@ -21,6 +20,7 @@
 #include <QtGui/QTreeView>
 #include <QtGui/QTreeWidget>
 
+#include "xwidgets/xgroupboxes.h"
 #include "xobjects/mainobject.h"
 
 class AirportsWidget : public QWidget
@@ -51,8 +51,8 @@ public:
 
 	QButtonGroup *buttonGroupUse;
 
-	QGroupBox *groupBoxAirport;
-	QGroupBox *groupBoxUseCoordinates;
+	XGroupVBox *groupBoxAirport;
+	XGroupVBox *groupBoxUseCoordinates;
 
 	QButtonGroup *buttonGroupFilter;
     QLineEdit *txtAirportsFilter;

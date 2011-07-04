@@ -257,6 +257,8 @@ void AircraftWidget::on_tree_selection_changed(){
 		return;
 	}
 
+	mainObject->settings->setValue("aircraft", item->text(C_AERO) );
+
 	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->settings->aircraft_path(),
                                                                     item->text(C_DIR),
@@ -291,12 +293,14 @@ void AircraftWidget::save_settings(){
 	if(item && item->text(C_AERO).length() > 0){
 		mainObject->settings->setValue("aircraft", item->text(C_AERO) );
 	}
+	mainObject->settings->setValue("aircraft_use_default", checkBoxUseDefault->isChecked());
+
 	mainObject->settings->setValue("nav1", txtNav1->text());
 	mainObject->settings->setValue("nav2", txtNav2->text());
 	mainObject->settings->setValue("adf", txtAdf->text());
 	mainObject->settings->setValue("com1", txtComm1->text());
 	mainObject->settings->setValue("com2", txtComm2->text());
-	mainObject->settings->setValue("aircraft_use_default", checkBoxUseDefault->isChecked());
+
 	mainObject->settings->sync();
 }
 
@@ -305,7 +309,7 @@ void AircraftWidget::save_settings(){
 // Load Settings
 void AircraftWidget::load_settings(){
 
-	select_node(mainObject->settings->value("aircraft").toString());
+	//select_node(mainObject->settings->value("aircraft").toString());
 
 	txtNav1->setText(mainObject->settings->value("nav1").toString());
 	txtNav2->setText(mainObject->settings->value("nav2").toString());
@@ -316,14 +320,21 @@ void AircraftWidget::load_settings(){
 	on_use_default_clicked();
 }
 
+//==============================
+//== Select an aircraft in tree
 void AircraftWidget::select_node(QString aero){
-
+	if(aero.length() == 0){
+		return;
+	}
 	QList<QTreeWidgetItem*> items = treeWidget->findItems(aero, Qt::MatchExactly | Qt::MatchRecursive, C_AERO);
 	if(items.length() > 0){
 		treeWidget->setCurrentItem(items[0]);
 		treeWidget->scrollToItem(items[0], QAbstractItemView::PositionAtCenter);
+
 	}
 }
+//==============================
+//== return selected Aircraft
 QString AircraftWidget::selected_aircraft(){
 	QTreeWidgetItem *item = treeWidget->currentItem();
 	if(!item or item->text(C_AERO).length() == 0){
@@ -336,10 +347,10 @@ QString AircraftWidget::selected_aircraft(){
 // Validate
 QString AircraftWidget::validate(){
 	if(!treeWidget->currentItem() && !checkBoxUseDefault->isChecked()){
-		return QString("Validation failed!");
-		outLog("*** FGx reports: No aircraft selected (maybe no list), and [x] use default not selected. ***");
+		return QString("Aircraft: No aircraft selected or check [x] Use default");
+		outLog("FGx reports: AircraftWidget::validate() No aircraft selected (maybe no list), and [x] use default not selected. ***");
 	}
-	return QString();
+	return QString("");
 }
 
 
@@ -359,8 +370,6 @@ void AircraftWidget::on_reload_cache(){
 void AircraftWidget::load_tree(){
 	int c =0;
 
-		
-	QString currAero = selected_aircraft();
 	treeWidget->setUpdatesEnabled(false);
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 
@@ -412,10 +421,10 @@ void AircraftWidget::load_tree(){
 	treeWidget->sortByColumn(view == FOLDER_VIEW ? C_DIR : C_AERO, Qt::AscendingOrder);
 	treeWidget->setUpdatesEnabled(true);
 
-	select_node(currAero);
+	select_node(mainObject->settings->value("aircraft").toString());
 	QString str = QString("%1 aircraft").arg(c);
 	statusBarAero->showMessage(str);
-	outLog("load_tree: with "+str);
+	outLog("FGx: AircraftWidget::load_tree: with " + str);
 }
 
 //=============================================================
@@ -431,7 +440,6 @@ void AircraftWidget::initialize(){
 	}else{
 		load_tree();
 	}
-	select_node(mainObject->settings->value("aircraft").toString());
 	first_load_done = true;
 }
 

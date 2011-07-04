@@ -188,15 +188,14 @@ void CoreSettingsWidget::load_settings(){
 	on_checkbox_show_mp_map();
 
 
-	if(mainObject->settings->value("use_default_fgfs").toBool()){
+	if(mainObject->settings->value("fgfs_use_default").toBool()){
 		labelFgFsInfo->setText("Using Default Executable Path");
 	}else{
 		labelFgFsInfo->setText("Using Custom Executable Path");
 	}
 	labelFgFsPath->setText(mainObject->settings->fgfs_path());
 
-	qDebug() << mainObject->settings->value("use_default_fgroot").toBool() << "=fgroot";
-	if(mainObject->settings->value("use_default_fgroot").toBool()){
+	if(mainObject->settings->value("fgroot_use_default").toBool()){
 		labelFgRootInfo->setText("Using Default FG_ROOT");
 	}else{
 		labelFgRootInfo->setText("Using Custom FG_ROOT Path");
@@ -217,22 +216,30 @@ void CoreSettingsWidget::load_settings(){
 
 
 
+QString CoreSettingsWidget::validate(){
+	if(txtCallSign->text().trimmed().length() == 0){
+		txtCallSign->setFocus();
+		return QString("Callsign is empty");
+	}
+	return QString("");
+}
+
 //====================================================
-//* Save Settings
+//= Save Settings
 void CoreSettingsWidget::save_settings(){
 
-	//* Callsign
+	//= Callsign
 	mainObject->settings->setValue("callsign", txtCallSign->text());
 
-	//* screen
+	//= screen
 	mainObject->settings->setValue("screen_size", comboScreenSize->itemData(comboScreenSize->currentIndex()));
 	mainObject->settings->setValue("screen_full", checkBoxFullScreenStartup->isChecked());
 	mainObject->settings->setValue("screen_splash", checkBoxDisableSplashScreen->isChecked());
 
-	//* Controls
+	//= Controls
 	mainObject->settings->setValue("enable_auto_coordination", checkBoxEnableAutoCoordination->isChecked());
 
-	//* Map
+	//= Map
 	mainObject->settings->setValue("show_map_map", checkBoxShowMpMap->isChecked());
 	mainObject->settings->setValue("mpmap", comboMpMapServer->currentIndex());
 

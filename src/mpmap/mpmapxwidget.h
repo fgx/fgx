@@ -62,10 +62,11 @@ public:
 signals:
 
 public slots:
+	void initialize();
 
-     void on_zoom_action(QAction *);
+	 void on_zoom_action(int idx);
 
-      //** Map Events
+	  //== Map Events
       void map_mouse_move(QVariant lat, QVariant lng);
       void map_right_click(QVariant lat, QVariant lng);
       void map_zoom_changed(QVariant zoom);
@@ -77,6 +78,7 @@ public slots:
 	  void start_progress();
 	  void update_progress(int progress);
 	  void end_progress(bool Ok);
+
 
 };
 

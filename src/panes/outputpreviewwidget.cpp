@@ -6,10 +6,9 @@
 
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
-#include <QtGui/QGroupBox>
 #include <QtGui/QPushButton>
 
-
+#include "xwidgets/xgroupboxes.h"
 #include "panes/outputpreviewwidget.h"
 
 OutputPreviewWidget::OutputPreviewWidget(MainObject *mOb, QWidget *parent) :
@@ -21,19 +20,16 @@ OutputPreviewWidget::OutputPreviewWidget(MainObject *mOb, QWidget *parent) :
 	setLayout(mainLayout);
 
 
-	QGroupBox *groupBox = new QGroupBox(tr("Debug Output"));
+	XGroupHBox *groupBox = new XGroupHBox(tr("Debug Output"));
 	mainLayout->addWidget(groupBox);
-
-	QHBoxLayout *layoutBox = new QHBoxLayout();
-	groupBox->setLayout(layoutBox);
 
 
 	txtPreviewOutput = new QPlainTextEdit();
-	layoutBox->addWidget(txtPreviewOutput);
+	groupBox->addWidget(txtPreviewOutput);
 
 
 	QVBoxLayout *layoutButtons = new QVBoxLayout();
-	layoutBox->addLayout(layoutButtons);
+	groupBox->addLayout(layoutButtons);
 
 
 	//=============================================================

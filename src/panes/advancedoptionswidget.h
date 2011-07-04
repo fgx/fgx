@@ -3,10 +3,10 @@
 
 #include <QtGui/QWidget>
 #include <QtGui/QPlainTextEdit>
-#include <QtGui/QGroupBox>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QLineEdit>
 
+#include "xwidgets/xgroupboxes.h"
 #include "xobjects/mainobject.h"
 
 class MainObject;
@@ -21,15 +21,15 @@ public:
 	MainObject *mainObject;
 
 	QPlainTextEdit *txtExtraArgs;
-        QPlainTextEdit *txtExtraEnv;
-        QLineEdit *txtRuntime;
+	QPlainTextEdit *txtExtraEnv;
+	QLineEdit *txtRuntime;
 
-	QGroupBox *groupBoxWriteLog;
+	XGroupVBox *groupBoxWriteLog;
 	QButtonGroup *buttonGroupLogOptions;
 
 	QStringList get_args();
-        QStringList get_env();
-        QString     get_runtime();
+	QStringList get_env();
+	QString     get_runtime();
 
 	void load_settings();
 	void save_settings();
