@@ -61,7 +61,8 @@ HEADERS += xobjects/xsettings.h \
     mpmap/mpmapwidget.h \
     mpmap/mpmapxwidget.h \
     mpmap/pilotswidget.h \
-    xwidgets/xmessagelabel.h
+    xwidgets/xmessagelabel.h \
+    mpmap/gmapwidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -116,7 +117,8 @@ SOURCES += main.cpp \
     mpmap/mpmapwidget.cpp \
     mpmap/mpmapxwidget.cpp \
     mpmap/pilotswidget.cpp \
-    xwidgets/xmessagelabel.cpp
+    xwidgets/xmessagelabel.cpp \
+    mpmap/gmapwidget.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc \
     resources/google_map.qrc

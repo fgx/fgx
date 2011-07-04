@@ -125,7 +125,7 @@ void PilotsWidget::fetch_pilots()
 	QUrl url("http://mpmap01.flightgear.org/fg_server_xml.cgi?mpserver01.flightgear.org:5001");
 	QNetworkRequest request;
 	request.setUrl(url );
-	return;
+
 	//TODO we need to check if already in a request.. ?
 	//if(reply && reply->isRunning()){
 	//	qDebug() << "request already running???";

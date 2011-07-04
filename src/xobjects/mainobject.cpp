@@ -190,6 +190,7 @@ void MainObject::on_mpmap(){
 void MainObject::on_mpxmap(){
 	mpMapXWidget->show();
 	mpMapXWidget->setFocus();
+	mpMapXWidget->initialize();
 }
 
 //======================================
