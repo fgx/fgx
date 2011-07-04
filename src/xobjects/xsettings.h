@@ -20,7 +20,6 @@ public:
 	static bool dev_mode();
 
 	QString data_file(QString file_name);
-	QString apt_dat_file();
 
 	static QString temp_dir();
 	static QString temp_dir(QString append_path);

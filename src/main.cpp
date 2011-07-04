@@ -1,6 +1,6 @@
 /*
  *  main.cpp
- *  fgx
+ *  FGx
  *
  *  Created by Yves Sablonier, Zurich
  *  © 2011 --- GPL2
@@ -25,16 +25,16 @@ void fgxErrorMessage(QtMsgType type, const char *msg)
     switch (type)
     {
     case QtDebugMsg:
-        outLog("*** FGx says: "+m+" ***\n",0);
+        outLog("*** FGx Message Handler: "+m+" ***\n",0);
         break;
     case QtWarningMsg:
-        outLog("*** FGx warning: "+m+" ***\n",0);
+        outLog("*** FGx Message Handler (warning): "+m+" ***\n",0);
         break;
     case QtCriticalMsg:
-        outLog("*** FGx critical: "+m+" ***\n",0);
+        outLog("*** FGx Message Handler (critical): "+m+" ***\n",0);
         break;
     case QtFatalMsg:
-        outLog("*** FGx fatal: "+m+" ***\n",0);
+        outLog("*** FGx Message Handler (FATAL): "+m+" ***\n",0);
         abort();
         break;
     }
@@ -45,15 +45,15 @@ int main( int argc, char* argv[])
 	
 	QApplication app(argc, argv);
 	QApplication::setOrganizationName("FGx");
-	QApplication::setOrganizationDomain("googlecode.com");
+	QApplication::setOrganizationDomain("googlecode.org");
 	QApplication::setApplicationName("FGx");
 	QApplication::setApplicationVersion("2.4.0");
 
-	//== Start the App here
+	//== Start the application here
 	MainObject mainObject;
 	
 	//=====================================================
-	//== global styles, should go to a qss once
+	//== some global styles
 	QString styles;
 	styles.append("QLineEdit { background-color: white }");
 	styles.append("QGroupBox { font-size: 11px; }"); // text-transform: uppercase
@@ -68,7 +68,7 @@ int main( int argc, char* argv[])
 	
 	app.setStyleSheet(styles);
 
-	//* install message handler - with Pete's TEMP hack to be removed later
+	//* check for dev_mode, install message handler
 	if( XSettings::dev_mode() == false ){
 		qInstallMsgHandler(fgxErrorMessage);
 	}

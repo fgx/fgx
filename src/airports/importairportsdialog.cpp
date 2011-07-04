@@ -15,7 +15,6 @@
 
 
 #include "airports/importairportsdialog.h"
-//#include "aptdatparser.h"
 
 /* Shows the import airports widget
 

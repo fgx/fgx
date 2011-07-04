@@ -48,7 +48,7 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 
 	mainObject  = mob,
 
-    setWindowTitle(tr("Google Map"));
+    setWindowTitle(tr("FGx Map"));
 	setWindowIcon(QIcon(":/icon/mpmap"));
 
 
