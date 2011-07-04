@@ -248,7 +248,7 @@ void AircraftWidget::on_tree_selection_changed(){
             outLog("on_tree_selection_changed: no selected item");
 		return;
 	}
-	qDebug() << "on_tree" << item->text(C_AERO);
+
 	//= Check there is item and its a model
 	if(item->text(C_AERO).length() == 0){
                 outLog("on_tree_selection_changed: no C_AERO item");

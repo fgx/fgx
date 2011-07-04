@@ -63,7 +63,7 @@ public:
 
 	//* Functions
 	void initialize();
-
+	QString validate();
 
 	void save_settings();
 

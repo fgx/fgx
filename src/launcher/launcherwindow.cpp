@@ -424,8 +424,15 @@ void LauncherWindow::on_command_preview(){
 //* Validate
 //=======================================================================================================================
 bool LauncherWindow::validate(){
-	//int TIMEOUT = 5000;
+
 	QString v;
+
+	v = coreSettingsWidget->validate();
+	if(v != ""){
+		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget));
+		messageLabel->showMessage(v);
+		return false;
+	}
 
 	v = aircraftWidget->validate();
 	if(v != ""){
