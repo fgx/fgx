@@ -30,7 +30,7 @@ ViewLogWidget::ViewLogWidget(MainObject *mOb, QWidget *parent) :
 	QHBoxLayout *layoutBox = new QHBoxLayout();
 	groupBox->setLayout(layoutBox);
 
-
+	
 	txtLog = new QPlainTextEdit();
 	layoutBox->addWidget(txtLog);
 

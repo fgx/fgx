@@ -25,16 +25,16 @@ void fgxErrorMessage(QtMsgType type, const char *msg)
     switch (type)
     {
     case QtDebugMsg:
-        outLog("*** FGx Message Handler: "+m+" ***\n",0);
+        outLog("*** FGx debug: "+m+" ***\n",0);
         break;
     case QtWarningMsg:
-        outLog("*** FGx Message Handler (warning): "+m+" ***\n",0);
+        outLog("*** FGx warning: "+m+" ***\n",0);
         break;
     case QtCriticalMsg:
-        outLog("*** FGx Message Handler (critical): "+m+" ***\n",0);
+        outLog("*** FGx critical: "+m+" ***\n",0);
         break;
     case QtFatalMsg:
-        outLog("*** FGx Message Handler (FATAL): "+m+" ***\n",0);
+        outLog("*** FGx fatal: "+m+" ***\n",0);
         abort();
         break;
     }
@@ -45,9 +45,9 @@ int main( int argc, char* argv[])
 	
 	QApplication app(argc, argv);
 	QApplication::setOrganizationName("FGx");
-	QApplication::setOrganizationDomain("googlecode.org");
+	QApplication::setOrganizationDomain("googlecode.com");
 	QApplication::setApplicationName("FGx");
-	QApplication::setApplicationVersion("2.4.0");
+	QApplication::setApplicationVersion("2.4.0a1");
 
 	//== Start the application here
 	MainObject mainObject;
@@ -58,12 +58,13 @@ int main( int argc, char* argv[])
 	styles.append("QLineEdit { background-color: white }");
 	styles.append("QGroupBox { font-size: 11px; }"); // text-transform: uppercase
 	styles.append("QPushButton { padding: 5px; }");
-	styles.append("QStatusBar { font-family: Andale mono, monospace; font-size: 12px; font-weight: normal }");
+	styles.append("QStatusBar { font-family: Andale mono, Lucida Console, monospace; font-size: 12px; font-weight: normal }");
 	styles.append("LauncherWindow { background-color: #eeeeee }");
 	styles.append("QMenuBar { color: #eeeeee; background-color: #333333 }");
 	styles.append("QMenu::item { color: #333333; background-color: #eeeeee }");
 	styles.append("QMenu::item::selected { color: #eeeeee; background-color: #999999 }");
 	styles.append("QTreeView::item{ padding: 2px;}");
+	styles.append("QPlainTextEdit { font-family: Andale mono, Lucida Console, monospace; font-size: 12px; font-weight: normal }");
 
 	
 	app.setStyleSheet(styles);
