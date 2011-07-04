@@ -518,4 +518,7 @@ void MainObject::quit(){
 }
 
 
-
+void MainObject::set_callsign(){
+	lblCallsign->setText(settings->value("callsign").toString());
+	mpMapWidget->on_combo_server();
+}

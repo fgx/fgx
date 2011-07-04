@@ -45,7 +45,7 @@ public slots:
     void update_progress(int progress);
     void end_progress(bool Ok);
 
-    void on_combo_server(int index);
+	void on_combo_server();
     void closeEvent(QCloseEvent *event);
 };
 

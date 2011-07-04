@@ -95,6 +95,7 @@ public:
 
 
 
+
 signals:
 	void show_settings(int);
 	void reload_paths();
@@ -126,6 +127,7 @@ public slots:
 
 	void quit();
 
+	void set_callsign();
 };
 
 

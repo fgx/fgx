@@ -330,5 +330,6 @@ void CoreSettingsWidget::on_radio_fg_path(){
 //=====================================
 // Callsign Changed
 void CoreSettingsWidget::on_callsign_changed(QString txt){
-	mainObject->lblCallsign->setText(txt);
+	save_settings();
+	mainObject->set_callsign();
 }
