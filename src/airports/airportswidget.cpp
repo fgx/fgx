@@ -139,6 +139,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	buttonViewMap->setAutoRaise(true);
 	buttonViewMap->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	connect(buttonViewMap, SIGNAL(clicked()), this, SLOT(on_view_map()) );
+	buttonViewMap->setVisible(false); // NOt to confuse anyone
 
 
 	QToolButton *buttonReloadCache = new QToolButton(this);

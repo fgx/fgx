@@ -248,7 +248,7 @@ void AircraftWidget::on_tree_selection_changed(){
             outLog("on_tree_selection_changed: no selected item");
 		return;
 	}
-
+	qDebug() << "on_tree" << item->text(C_AERO);
 	//= Check there is item and its a model
 	if(item->text(C_AERO).length() == 0){
                 outLog("on_tree_selection_changed: no C_AERO item");
@@ -316,14 +316,21 @@ void AircraftWidget::load_settings(){
 	on_use_default_clicked();
 }
 
+//==============================
+//== Select an aircraft in tree
 void AircraftWidget::select_node(QString aero){
-
+	if(aero.length() == 0){
+		return;
+	}
 	QList<QTreeWidgetItem*> items = treeWidget->findItems(aero, Qt::MatchExactly | Qt::MatchRecursive, C_AERO);
 	if(items.length() > 0){
 		treeWidget->setCurrentItem(items[0]);
 		treeWidget->scrollToItem(items[0], QAbstractItemView::PositionAtCenter);
+
 	}
 }
+//==============================
+//== return selected Aircraft
 QString AircraftWidget::selected_aircraft(){
 	QTreeWidgetItem *item = treeWidget->currentItem();
 	if(!item or item->text(C_AERO).length() == 0){
@@ -337,9 +344,9 @@ QString AircraftWidget::selected_aircraft(){
 QString AircraftWidget::validate(){
 	if(!treeWidget->currentItem() && !checkBoxUseDefault->isChecked()){
 		return QString("Validation failed!");
-		outLog("*** FGx reports: No aircraft selected (maybe no list), and [x] use default not selected. ***");
+		outLog("FGx reports: AircraftWidget::validate() No aircraft selected (maybe no list), and [x] use default not selected. ***");
 	}
-	return QString();
+	return QString("");
 }
 
 
@@ -359,7 +366,6 @@ void AircraftWidget::on_reload_cache(){
 void AircraftWidget::load_tree(){
 	int c =0;
 
-		
 	QString currAero = selected_aircraft();
 	treeWidget->setUpdatesEnabled(false);
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
@@ -415,7 +421,7 @@ void AircraftWidget::load_tree(){
 	select_node(currAero);
 	QString str = QString("%1 aircraft").arg(c);
 	statusBarAero->showMessage(str);
-	outLog("load_tree: with "+str);
+	outLog("FGx: AircraftWidget::load_tree: with " + str);
 }
 
 //=============================================================
@@ -431,7 +437,6 @@ void AircraftWidget::initialize(){
 	}else{
 		load_tree();
 	}
-	select_node(mainObject->settings->value("aircraft").toString());
 	first_load_done = true;
 }
 

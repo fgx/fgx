@@ -18,11 +18,11 @@
 
 
 #include "xwidgets/execontrols.h"
+//#include "xwidgets/xmessagelabel.h"
 #include "utilities/statusbar.h"
 #include "utilities/messagebox.h"
 
 #include "xobjects/mainobject.h"
-
 
 
 //= Foward Declaratins
@@ -50,6 +50,8 @@ public:
 
     MainObject *mainObject;
 	bool initializing;
+
+	//XMessageLabel *messageLabel;
 
 	QActionGroup *actionGroupStyle;
     QLabel *headerLabel;

@@ -192,6 +192,11 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	splitter->setStretchFactor(1, 1);
 
 
+
+}
+
+
+void MpMapXWidget::initialize(){
 	//= Read file if in dev_mode() - no need to "recompile" the resource file
 	QFile file(	mainObject->settings->dev_mode()
 				? XSettings::fgx_current_dir().append("/resources/google_map/gmap.html")
@@ -201,15 +206,13 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	//qDebug() << "GOOGLEFILE" << file.fileName();
 	//QFile *file = new QFile(":/google_map/gmap.html");
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-            qDebug("not open file");
-            return;
-       }
+			qDebug("not open file");
+			return;
+	   }
 	QByteArray contents = file.readAll();
-    webView->setHtml(contents);
-//        qDebug("OKKK");
+	webView->setHtml(contents);
+	//        qDebug("OKKK");
 }
-
-
 
 void MpMapXWidget::map_mouse_move(QVariant dLat, QVariant dLng){
     //qDebug("YES");
@@ -221,19 +224,25 @@ void MpMapXWidget::map_mouse_move(QVariant dLat, QVariant dLng){
 
 void MpMapXWidget::map_error(QVariant err){
     qDebug("map_error()");
+	Q_UNUSED(err);
 }
 
 void MpMapXWidget::marker_clicked(QVariant marker, QVariant mId){
     qDebug("marker_clicked()");
+		Q_UNUSED(marker);
+			Q_UNUSED(mId);
 }
 
 void MpMapXWidget::marker_unselected(QVariant curr_idx, QVariant mLocationId){
     qDebug("marker_unselected()");
+		Q_UNUSED(curr_idx);
+			Q_UNUSED(mLocationId);
 }
 
 //** JS
 void MpMapXWidget::map_right_click(QVariant lat, QVariant lng){
-
+	Q_UNUSED(lat);
+		Q_UNUSED(lng);
     qDebug("map_right_click()");
 }
 
@@ -254,11 +263,11 @@ void MpMapXWidget::map_zoom_changed(QVariant zoom){
       qDebug("map_zoom_changed()");
 }
 
-void MpMapXWidget::on_zoom_action(QAction *act){
+void MpMapXWidget::on_zoom_action(int idx){
 
-    QString js_str = QString("set_zoom(%1);").arg(act->property("zoom").toString());
-     qDebug() << act->property("zoom").toString() << js_str;
-    this->execute_js(js_str);
+	//QString js_str = QString("set_zoom(%1);").arg(act->property("zoom").toString());
+	// qDebug() << act->property("zoom").toString() << js_str;
+	//this->execute_js(js_str);
 }
 
 /*
@@ -271,9 +280,9 @@ Take your three sets of numbers and put them together, using the symbols for deg
 */
 QString MpMapXWidget::to_lat(QVariant lat){
     QStringList latParts = lat.toString().split(".");
-    int deci = latParts[1].toInt();
+	//int deci = latParts[1].toInt();
     //qDebug() << deci;
-    float f = deci * 60;
+	//float f = deci * 60;
     //qDebug() << deci << f;
     return latParts[1];
 }

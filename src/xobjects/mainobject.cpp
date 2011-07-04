@@ -132,7 +132,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//= FGx Map Widget
 	mpMapXWidget = new MpMapXWidget(this);
-	mpMapXWidget->show();
+	mpMapXWidget->hide();
 
 
 	//= Log Viewer is hidden

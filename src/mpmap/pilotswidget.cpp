@@ -16,6 +16,7 @@
 #include <QVBoxLayout>
 #include <QTreeWidgetItem>
 
+#include "utilities/utilities.h"
 
 #include "pilotswidget.h"
 
@@ -112,9 +113,9 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	timer = new QTimer(this);
 	timer->setInterval(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt());
 	connect(timer, SIGNAL(timeout()), this, SLOT(fetch_pilots()));
-	fetch_pilots();
+	//fetch_pilots();
 	if(checkBoxAutoRefresh->isChecked()){
-		timer->start();
+		//timer->start();
 	}
 }
 
@@ -124,7 +125,7 @@ void PilotsWidget::fetch_pilots()
 	QUrl url("http://mpmap01.flightgear.org/fg_server_xml.cgi?mpserver01.flightgear.org:5001");
 	QNetworkRequest request;
 	request.setUrl(url );
-
+	return;
 	//TODO we need to check if already in a request.. ?
 	//if(reply && reply->isRunning()){
 	//	qDebug() << "request already running???";
@@ -149,7 +150,7 @@ void PilotsWidget::fetch_pilots()
 //==========================================================
 void PilotsWidget::on_server_error(QNetworkReply::NetworkError error){
 	qDebug() << "error" << error;
-	// TODO
+	outLog("FGx: PilotsWidget::on_server_error()");
 }
 
 void PilotsWidget::on_server_ready_read(){

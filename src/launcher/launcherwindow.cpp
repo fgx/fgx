@@ -20,6 +20,7 @@
 
 #include "xwidgets/xgroupboxes.h"
 
+
 #include "launcher/launcherwindow.h"
 #include "utilities/utilities.h"
 #include "utilities/messagebox.h"
@@ -113,7 +114,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	
 	
 	//====================================================
-	//** Header Banner
+	//== Header Banner
 	//====================================================
 	QString header_style("padding: 10px 0px 0px 370px; vertical-align: top;	 background-image: url(':/images/fgx-logo'); background-repeat: no-repeat; background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #86A0D8, stop: 0.01 #849DD8, stop: 0.49 #CED7EA, stop: 0.5 #CED7EA, stop: 1 #eeeeee);");
     headerLabel = new QLabel(this);
@@ -123,12 +124,17 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 
 
-
+	//=============================================
 	//=== Top toolbar
 	QHBoxLayout *toolbarLayout =  new QHBoxLayout();
 	toolbarLayout->setContentsMargins(0, 0, 10, 0);
 	outerContainer->addLayout(toolbarLayout);
 	toolbarLayout->addStretch(100);
+
+	//== Message Label
+	//messageLabel = new XMessageLabel(this);
+	//messageLabel->setText("Message goes here..");
+	//toolbarLayout->addWidget(messageLabel);
 
 	//= Show Log
 	QToolButton *buttonShowLogs = new QToolButton(this);
@@ -378,7 +384,7 @@ void LauncherWindow::save_settings()
 	advancedOptionsWidget->save_settings();
     mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
-	outLog("*** FGx reports: Settings saved ***");
+	outLog("FGx: LauncherWindow::save_settings() saved ***");
 }
 
 //================================================================================
@@ -396,8 +402,7 @@ void LauncherWindow::load_settings()
 
 	exeTerraSync->setEnabled( mainObject->settings->terrasync_enabled() );
 
-	outLog("*** FGx reports: Settings loaded ***");
-
+	outLog("FGx: Settings loaded in LauncherWIndow::load_settings()");
 
 }
 
