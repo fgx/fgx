@@ -54,10 +54,14 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 
 	//======================================================
 	//= Main Layout and Splitter
-	QHBoxLayout *mainLayout = new QHBoxLayout(this);
+	QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(0);
 
+	QLabel *label_notice = new QLabel();
+	label_notice->setText("This widget is currently work in progress under development");
+	label_notice->setStyleSheet("background-color: #eeeedd; color: #000099; padding: 5px;");
+	mainLayout->addWidget(label_notice);
 
 	QSplitter *splitter = new QSplitter();
 	mainLayout->addWidget(splitter);
@@ -141,8 +145,8 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
     statusBar->addPermanentWidget(new QLabel("Zoom:"));
 	groupZoom = new QButtonGroup(this);
     groupZoom->setExclusive(true);
-    connect(groupZoom, SIGNAL(triggered(QAction *)),
-            this, SLOT(on_zoom_action(QAction *))
+	connect(groupZoom, SIGNAL(buttonClicked(int)),
+			this, SLOT(on_zoom_action(int))
     );
     for(int z=1; z < 8; z++){
 		QToolButton *act = new QToolButton(this);
@@ -184,7 +188,7 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 
 	//====================================================================
 
-	splitter->setStretchFactor(0, 5);
+	splitter->setStretchFactor(0, 2);
 	splitter->setStretchFactor(1, 1);
 
 

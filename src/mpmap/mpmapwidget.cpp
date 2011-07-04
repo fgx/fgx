@@ -13,9 +13,9 @@
 #include <QtGui/QLabel>
 #include <QtGui/QComboBox>
 
-#include "mpmapwidget.h"
-#include "coresettingswidget.h"
-#include "launcherwindow.h"
+#include "mpmap/mpmapwidget.h"
+#include "panes/coresettingswidget.h"
+#include "launcher/launcherwindow.h"
 
 
 MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :

@@ -25,9 +25,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 
 	mainObject = mob;
 
-	netMan = new QNetworkAccessManager(this);
-
-	setMinimumWidth(300);
+	setMinimumWidth(400);
 
 
 	QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -43,23 +41,27 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	mainLayout->addWidget(toolbar);
 	toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
+	//* Refresh
 	QAction *actionRefresh = new QAction(this);
 	actionRefresh->setText("Refresh");
 	actionRefresh->setIcon(QIcon(":/icon/refresh"));
 	toolbar->addAction(actionRefresh);
 	connect(actionRefresh, SIGNAL(triggered()), this, SLOT(fetch_pilots()));
 
+	//* CheckBox AutoRefresh
 	checkBoxAutoRefresh = new QCheckBox("Auto Refresh");
 	toolbar->addWidget(checkBoxAutoRefresh);
-	checkBoxAutoRefresh->setChecked(true);
+	checkBoxAutoRefresh->setChecked(mainObject->settings->value("mpxmap_autorefresh_enabled").toBool());
 	connect(checkBoxAutoRefresh, SIGNAL(stateChanged(int)), this, SLOT(on_check_autorefresh(int)));
 
+	//* ComboBox HZ
 	comboBoxHz = new QComboBox();
 	toolbar->addWidget(comboBoxHz);
 	for(int sex=1; sex < 10; sex++){
-		comboBoxHz->addItem("5 seconds", QString::number(sex));
+		comboBoxHz->addItem(QString("%1 sec").arg(QString::number(sex)), QString::number(sex * 1000));
 	}
-	comboBoxHz->setCurrentIndex(3);
+	int cidx = comboBoxHz->findData(mainObject->settings->value("mpxmap_autorefresh_hz").toString());
+	comboBoxHz->setCurrentIndex(cidx == -1 ? 0 : cidx);
 	connect(comboBoxHz, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_changed(int)));
 
 
@@ -82,11 +84,23 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	tree->headerItem()->setText(C_FLAG, "Flag");
 
 
-
+	//= Status Bar
 	statusBar = new QStatusBar();
 	mainLayout->addWidget(statusBar);
 	statusBar->showMessage("Click refresh to load");
 
+
+	//==========================================================
+	//= Initialize Objects
+	netMan = new QNetworkAccessManager(this);
+
+	timer = new QTimer(this);
+	timer->setInterval(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt());
+	connect(timer, SIGNAL(timeout()), this, SLOT(fetch_pilots()));
+	fetch_pilots();
+	if(checkBoxAutoRefresh->isChecked()){
+		timer->start();
+	}
 }
 
 void PilotsWidget::fetch_pilots()
@@ -95,8 +109,12 @@ void PilotsWidget::fetch_pilots()
 	QUrl url("http://mpmap01.flightgear.org/fg_server_xml.cgi?mpserver01.flightgear.org:5001");
 	QNetworkRequest request;
 	request.setUrl(url );
-	//qDebug() << url.toString();
 
+	//TODO we need to check if already in a request.. ?
+	//if(reply && reply->isRunning()){
+	//	qDebug() << "request already running???";
+	//	return;
+	//}
 	reply = netMan->get(request);
 	connect(reply, SIGNAL( error(QNetworkReply::NetworkError)),
 			this, SLOT(on_server_error(QNetworkReply::NetworkError))
@@ -137,9 +155,9 @@ void PilotsWidget::on_server_read_finished(){
 	//qDebug() << "done"; // << server_string;
 
 
-	//== Loop all ndes and set flags
-	for(int idxf=0; idxf << tree->invisibleRootItem()->childCount(); idxf++){
-		tree->invisibleRootItem()->child(idxf)->setText(C_FLAG, "1");
+	//== Loop all ndes and set flag to 1 - item remaining will b enuked
+	for(int idx=0; idx << tree->invisibleRootItem()->childCount(); idx++){
+		tree->invisibleRootItem()->child(idx)->setText(C_FLAG, "1");
 	}
 
 
@@ -151,35 +169,53 @@ void PilotsWidget::on_server_read_finished(){
 	QDomNodeList nodes = dom.elementsByTagName("marker");
 	QStringList list;
 	qDebug() << nodes.length();
+
+	QTreeWidgetItem *item;
 	if (nodes.count() > 0){
 		for(int idxd =0; idxd < nodes.count(); idxd++){
 
-			QTreeWidgetItem *item = new QTreeWidgetItem();
-			tree->addTopLevelItem(item);
-
 			QDomNode node = nodes.at(idxd);
-			list << node.firstChildElement("marker").text();
+			//list << node.firstChildElement("marker").text();
 			QDomNamedNodeMap attribs =  node.attributes();
-			item->setText(C_CALLSIGN, attribs.namedItem("callsign").nodeValue());
+
+			// = check if pilot in list or update
+			QList<QTreeWidgetItem *> fitems = tree->findItems(attribs.namedItem("callsign").nodeValue(), Qt::MatchExactly, C_CALLSIGN);
+			if(fitems.size() == 0){
+				item = new QTreeWidgetItem();
+				item->setText(C_CALLSIGN, attribs.namedItem("callsign").nodeValue());
+				tree->addTopLevelItem(item);
+			}else{
+				item = fitems.at(0);
+			}
+
 			item->setText(C_AIRCRAFT, attribs.namedItem("model").nodeValue());
 			item->setText(C_ALTITUDE, attribs.namedItem("alt").nodeValue());
 			item->setText(C_HEADING, attribs.namedItem("heading").nodeValue());
 			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
 			item->setText(C_LAT, attribs.namedItem("lat").nodeValue());
 			item->setText(C_LNG, attribs.namedItem("lng").nodeValue());
+			item->setText(C_FLAG, "");
 
 		}
+	}
+
+	//= remove the flagged items
+	QList<QTreeWidgetItem *> items = tree->findItems("1", Qt::MatchExactly, C_FLAG);
+	for(int idxr=0; idxr << items.count(); idxr++){
+		tree->invisibleRootItem()->removeChild(items.at(idxr));
 	}
 
 }
 
 
-void PilotsWidget::on_check_autorefresh(int x){
-
+void PilotsWidget::on_check_autorefresh(int checked){
+	mainObject->settings->setValue("mpxmap_autorefresh_enabled", checked);
 }
 
 void PilotsWidget::on_combo_changed(int idx){
-
+	Q_UNUSED(idx);
+	mainObject->settings->setValue("mpxmap_autorefresh_hz", comboBoxHz->itemData(comboBoxHz->currentIndex()).toString());
+	timer->setInterval(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt());
 }
 
 
