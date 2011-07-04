@@ -101,13 +101,10 @@ void MpMapWidget::end_progress(bool Ok){
 
 
 void MpMapWidget::on_combo_server(){
-	int index = comboServer->currentIndex();
-	QUrl server_url(comboServer->itemData(index).toString());
+	QUrl server_url( comboServer->itemData(comboServer->currentIndex()).toString() );
 	server_url.addQueryItem("follow", mainObject->settings->value("callsign").toString() );
 	webView->load( server_url );
-
-	statusBar->showMessage(QString("Loading: ").append(server_url.toString()));
-    //qDebug("on_combo");
+	statusBar->showMessage(QString("Loading: ").append( server_url.toString()) );
 }
 
 //** Overide the closeEvent

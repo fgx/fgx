@@ -399,18 +399,16 @@ void AirportsWidget::on_update_airports_filter(){
 //==============================================================
 //*** Airport Clicked 
 void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx){
-	qDebug() << "on tree";
 	Q_UNUSED(previousIdx);
 
-	//* Clear the Runways tree
+	//= Clear the Runways tree
 	treeWidgetAirportInfo->model()->removeRows(0, treeWidgetAirportInfo->model()->rowCount());
 
-	//* No selection -eg a filter removing a selected node
+	//= No selection -eg a filter removing a selected node
 	if(!currentIdx.isValid()){
 		return;
 	}
-	qDebug() << "on tree";
-	//* Get the airport code forn source model
+	//= Get the airport code forn source model
 	QModelIndex srcIndex = proxyModel->mapToSource(currentIdx);
 	QString airport_code = model->item(srcIndex.row(), CA_CODE)->text();
 	QString airport_dir = model->item(srcIndex.row(), CA_DIR)->text();
@@ -424,7 +422,6 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 	QString count_label;
-	qDebug() << "load_infO-tree" << airport_code;
 	int runways_count = load_runways_node(airport_dir, airport_code);
 	if(runways_count == 0){
 		count_label.append(tr("No runway"));
@@ -462,8 +459,8 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 // Load Runways
 //==============================================================
 int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code){
-	qDebug() << "load runways" << airport_dir << airport_code;
-	//* Create the Runways Node
+
+	//= Create the Runways Node
 	QTreeWidgetItem *runwaysParent = new QTreeWidgetItem();
 	runwaysParent->setText(0, "Runways" );
 	runwaysParent->setIcon(0, QIcon(":/icon/folder"));
@@ -504,27 +501,25 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 	QFile fileXmlThrehsold(threshold_file);
 	fileXmlThrehsold.open(QIODevice::ReadOnly);
 
-	//* Make file contents into a string from bytearray
+	//= Make file contents into a string from bytearray
 	QString xmlThresholdString = fileXmlThrehsold.readAll();
-	qDebug() << threshold_file;
-	//* Create domDocument - important dont pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
+
+	//= Create domDocument - important dont pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
 	QDomDocument dom;
 	dom.setContent(xmlThresholdString); //* AFTER dom has been created, then set the content from a string from the file
 
-	//* Get threhold nodes
+	//= Get <runway> nodes
 	QDomNodeList nodeRunways = dom.elementsByTagName("runway");
-	QStringList list;
-	qDebug() << "count" << nodeRunways.count();
+
 	if (nodeRunways.count() > 0){
 		for(int idxd =0; idxd < nodeRunways.count(); idxd++){
-			qDebug() << idxd;
-			//* Nodes "rwy" << "hdg-deg" << "lat" << "lon";
+
+			// loops the <runway> nodes
 			QDomNode nodeRunway = nodeRunways.at(idxd);
 
-			qDebug() << nodeRunway.childNodes().at(0).firstChildElement("rwy").text();
-
-			//== Add runway parent
+			//== Add runway parent ie X - Y both ends
 			QTreeWidgetItem *rItem = new QTreeWidgetItem(runwaysParent);
+			rItem->setIcon(0, QIcon(":/icon/runways"));
 			rItem->setText(CI_NODE, nodeRunway.childNodes().at(0).firstChildElement("rwy").text().append(
 									" - ").append(
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()
@@ -534,6 +529,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 
 			//= Runway threshold 0
 			QTreeWidgetItem *tItem0 = new QTreeWidgetItem(rItem);
+			tItem0->setIcon(0, QIcon(":/icon/runway"));
 			tItem0->setText(CI_NODE,  nodeRunway.childNodes().at(0).firstChildElement("rwy").text());
 			tItem0->setText(CI_LAT,  nodeRunway.childNodes().at(0).firstChildElement("lat").text());
 			tItem0->setText(CI_LNG,  nodeRunway.childNodes().at(0).firstChildElement("lon").text());
@@ -542,6 +538,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 											nodeRunway.childNodes().at(0).firstChildElement("rwy").text()));
 			//= Runway  threshold 1
 			QTreeWidgetItem *tItem1 = new QTreeWidgetItem(rItem);
+			tItem1->setIcon(0, QIcon(":/icon/runway"));
 			tItem1->setText(CI_NODE,  nodeRunway.childNodes().at(1).firstChildElement("rwy").text());
 			tItem1->setText(CI_LAT,  nodeRunway.childNodes().at(1).firstChildElement("lat").text());
 			tItem1->setText(CI_LNG,  nodeRunway.childNodes().at(1).firstChildElement("lon").text());
@@ -669,6 +666,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 			listParkingPositions.sort();
 			for(int i =0; i < listParkingPositions.size(); i++){
 				QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
+				pItem->setIcon(0, QIcon(":/icon/stand"));
 				pItem->setText(CI_NODE, listParkingPositions.at(i));
 				pItem->setText(CI_TYPE, "stand");
 				pItem->setText(CI_SETTING_KEY, QString(airport_code).append("stand").append(listParkingPositions.at(i)));

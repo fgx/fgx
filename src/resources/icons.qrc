@@ -24,5 +24,8 @@
         <file alias="connect">icons/connect.png</file>
         <file alias="disconnect">icons/disconnect.png</file>
         <file alias="prop_node">icons/shape_square.png</file>
+        <file alias="runway">icons/table_row_delete.png</file>
+        <file alias="runways">icons/shape_align_center.png</file>
+        <file alias="stand">icons/shape_rotate_clockwise.png</file>
     </qresource>
 </RCC>
