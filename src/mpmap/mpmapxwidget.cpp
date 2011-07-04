@@ -264,7 +264,7 @@ void MpMapXWidget::map_zoom_changed(QVariant zoom){
 }
 
 void MpMapXWidget::on_zoom_action(int idx){
-
+	Q_UNUSED(idx);
 	//QString js_str = QString("set_zoom(%1);").arg(act->property("zoom").toString());
 	// qDebug() << act->property("zoom").toString() << js_str;
 	//this->execute_js(js_str);

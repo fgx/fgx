@@ -116,7 +116,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
 	//== Header Banner
 	//====================================================
-	QString header_style("padding: 10px 0px 0px 370px; vertical-align: top;	 background-image: url(':/images/fgx-logo'); background-repeat: no-repeat; background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #86A0D8, stop: 0.01 #849DD8, stop: 0.49 #CED7EA, stop: 0.5 #CED7EA, stop: 1 #eeeeee);");
+	QString header_style("padding: 10px 0px 0px 370px; vertical-align: top;	 background-image: url(':/images/fgx-logo'); background-repeat: no-repeat; background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #86A0D8, stop: 0.01 #eeeeee, stop: 0.49 #CED7EA, stop: 0.5 #CED7EA, stop: 1 #eeeeee);");
     headerLabel = new QLabel(this);
 	headerLabel->setFixedHeight(80);
 	headerLabel->setStyleSheet(header_style);
@@ -127,14 +127,14 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//=============================================
 	//=== Top toolbar
 	QHBoxLayout *toolbarLayout =  new QHBoxLayout();
-	toolbarLayout->setContentsMargins(0, 0, 10, 0);
+	toolbarLayout->setContentsMargins(10, 0, 10, 0);
 	outerContainer->addLayout(toolbarLayout);
-	toolbarLayout->addStretch(100);
+	//toolbarLayout->addStretch(100);
 
 	//== Message Label
-	//messageLabel = new XMessageLabel(this);
-	//messageLabel->setText("Message goes here..");
-	//toolbarLayout->addWidget(messageLabel);
+	messageLabel = new XMessageLabel(this);
+	messageLabel->setText("Message goes here..");
+	toolbarLayout->addWidget(messageLabel,100);
 
 	//= Show Log
 	QToolButton *buttonShowLogs = new QToolButton(this);
@@ -430,7 +430,8 @@ bool LauncherWindow::validate(){
 	v = aircraftWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
-		messageBox->showWindowMessage("Validation failed:<BR> Please select an Aircraft or check [x] Use Default.");
+		//messageBox->showWindowMessage("Validation failed:<BR> Please select an Aircraft or check [x] Use Default.");
+		messageLabel->showMessage(v);
 		return false;
 	}
 	outLog("*** FGx reports: Aircraft settings ok. ***");
@@ -438,7 +439,8 @@ bool LauncherWindow::validate(){
 	v = airportsWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(airportsWidget));
-		messageBox->showWindowMessage("Validation failed:<BR> Please select an Airport.");
+		//messageBox->showWindowMessage("Validation failed:<BR> Please select an Airport.");
+		messageLabel->showMessage(v);
 		return false;
 	}
 	outLog("*** FGx reports: Airport settings ok. ***");
@@ -446,13 +448,15 @@ bool LauncherWindow::validate(){
 	v = networkWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(networkWidget));
-		messageBox->showWindowMessage("Validation failed:<BR> Please check settings on Network Tab!");
+		//messageBox->showWindowMessage("Validation failed:<BR> Please check settings on Network Tab!");
+		messageLabel->showMessage(v);
 		return false;
 	}
 	v = timeWeatherWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(timeWeatherWidget));
-		messageBox->showWindowMessage("Validation failed:<BR> Please check settings on Time Weather tab");
+		//messageBox->showWindowMessage("Validation failed:<BR> Please check settings on Time Weather tab");
+		messageLabel->showMessage(v);
 		return false;
 	}
 	outLog("*** FGx reports: Network settings ok. ***");

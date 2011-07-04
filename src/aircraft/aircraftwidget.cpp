@@ -343,7 +343,7 @@ QString AircraftWidget::selected_aircraft(){
 // Validate
 QString AircraftWidget::validate(){
 	if(!treeWidget->currentItem() && !checkBoxUseDefault->isChecked()){
-		return QString("Validation failed!");
+		return QString("Aircraft: No aircraft selected or check [x] Use default");
 		outLog("FGx reports: AircraftWidget::validate() No aircraft selected (maybe no list), and [x] use default not selected. ***");
 	}
 	return QString("");

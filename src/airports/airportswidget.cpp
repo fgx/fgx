@@ -750,11 +750,11 @@ QString AirportsWidget::validate(){
 	//* Validate Airport
 	}else if(buttonGroupUse->checkedId() == USE_AIRPORT){
 		if (!treeViewAirports->selectionModel()->hasSelection()){
-			return QString(tr("No Airport selected"));
+			return QString(tr("Airport: No Airport selected or check [x] Use Default;"));
 		}
 	}
 
-	return QString();
+	return QString("");
 
 }
 

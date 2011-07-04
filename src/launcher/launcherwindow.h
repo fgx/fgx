@@ -18,7 +18,7 @@
 
 
 #include "xwidgets/execontrols.h"
-//#include "xwidgets/xmessagelabel.h"
+#include "xwidgets/xmessagelabel.h"
 #include "utilities/statusbar.h"
 #include "utilities/messagebox.h"
 
@@ -51,7 +51,7 @@ public:
     MainObject *mainObject;
 	bool initializing;
 
-	//XMessageLabel *messageLabel;
+	XMessageLabel *messageLabel;
 
 	QActionGroup *actionGroupStyle;
     QLabel *headerLabel;
