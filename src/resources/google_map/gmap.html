@@ -10,10 +10,12 @@ margin: 0px;
 </style>
 
 
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.3&sensor=false"></script>
 
 
 <script type="text/javascript">
+
+
 
 var icons = {};
 icons.red 		= 'map/m_red.png';
@@ -24,17 +26,9 @@ icons.orange 	= 'map/m_orange.png';
 icons.blue 		= 'map/m_blue.png';
 
 var init_flag = false;
-var pending_markers = [];
-
-var curr_idx = -1;
-
-var bug = true;
-var edit_mode = false;
-
-var geocoder;
-var mapDiv;
+var mapDiv = "";
 var map;
-var debugTxt;
+
 var markers = {};
 var bounds = {};
 var runways = {};
@@ -42,101 +36,10 @@ var runways = {};
 var idx = 0;
 var z = 10000;
 
-//var Qt;
-
-function set_marker_icons(icon){
-	for(var m in markers){
-		markers[m].setIcon(icon);
-	}
-}
-
-//***************************************
-//** attach Message
-//***************************************
-function attach_marker(marker, mId, marker_title){
-	//var message = ["This","is","the","secret","message"];
-	//alert("no" + number);
-	//var infowindow = new google.maps.InfoWindow({
-	//				content: title,
-	//				size: new google.maps.Size(50,50)
-	//});
-	//alert("pre click");
-	//return
-	google.maps.event.addListener(marker, 'click', function() {
-		//if(curr_idx > 0){
-		//	markers[curr_idx].setIcon( markers[curr_idx].mIco);
-		//	Qt.marker_unselected(curr_idx, markers[curr_idx].mLocationId);
-		//}
-		//curr_idx = marker.mIdx;
-		//if(marker.mEditMode){
-		//	var pos = marker.getPosition();
-		//	Qt.marker_save(marker.mIdx, marker.mLocationId, pos.lat(), pos.lng());
-		//	marker.setDraggable(false);
-		//}
-		//var ico = edit_mode ? icons.red : icons.yellow;
-		//marker.setIcon( new google.maps.MarkerImage(ico) );
-		
-		if(Qt){
-			Qt.marker_clicked(marker.mWidget, marker.mId);
-		}
-	});
-
-	google.maps.event.addListener(marker, 'rightclick', function() {
-		if(curr_idx > 0){
-			markers[curr_idx].setIcon(markers[curr_idx].mIco);
-			if(Qt){
-				Qt.marker_unselected(curr_idx, markers[curr_idx].mLocationId);
-			}
-		}
-		curr_idx = marker.mIdx;
-		marker.setIcon(icons.yellow); 
-		Qt.marker_right_clicked(marker.mIdx, marker.mLocationId);
-	});
-
-	google.maps.event.addListener(marker, 'dblclick', function() {
-		Qt.marker_double_clicked(marker.mIdx, marker.mLocationId);
-	});
-
-}
-
-//*****************************************
-//** select_marker_by_mid()
-//*****************************************
-function select_marker_by_mid(widget_name, myId, to_edit_mode){
-	var emode = to_edit_mode > 0;
-	marker = markers[widget_name][myId]
-	curr_mid = myId;
-	var miy = new google.maps.MarkerImage(icons.yellow);
-	marker.setIcon(miy);
-	marker.setDraggable(emode);
-	marker.mEditMode = emode;
-	z++;
-	marker.setZIndex(z);
-}
-
-//*****************************************
-//** set_marker_icon()
-//*****************************************
-function set_marker_icon(widget_name, myId, icon_color){
-	marker = markers[widget_name][myId]
-	if(!marker){
-		return;
-	}	
-	var ico = icons[icon_color];
-	if(!ico){
-		Qt.map_error("No icon: " + icon_color);
-	}
-	var miy = new google.maps.MarkerImage(ico);
-	marker.setIcon(miy);
-	//marker.setDraggable(emode);
-	//marker.mEditMode = emode;
-	//z++;
-	//marker.setZIndex(z);
-}
 
 //==================================================================
 //= Add Airport
-function add_airport(apt){
+function add_airport (apt){
 	runways[apt] = {};
 	bounds[apt] = new google.maps.LatLngBounds();
 	Qt.map_debug("add_aiport() " + apt);
@@ -153,115 +56,28 @@ function show_airport(apt){
 //== Add Runway
 function add_runway(apt, rwy1, lat1, lng1, rwy2, lat2, lng2){
 
-	var ll1 = new google.maps.LatLng(lat1, lng1);
-	var ll2 = new google.maps.LatLng(lat2, lng2);
-	var coordinates = [ ll1, ll2 ];
-
+	var latLng1 = new google.maps.LatLng(lat1, lng1);
+	var latLng2 = new google.maps.LatLng(lat2, lng2);
+	var coordinates = [ latLng1, latLng2 ];
 
 
 	runways[apt] = new google.maps.Polyline({
 		path: coordinates,
-		strokeColor: "#FF0000",
+		strokeColor: "yellow",
 		strokeOpacity: 1.0,
 		strokeWeight: 2
 	});
 	runways[apt].setMap(map);
 	
-	bounds[apt].extend(ll1);
-	bounds[apt].extend(ll2);
+	bounds[apt].extend(latLng1);
+	bounds[apt].extend(latLng2);
 
-	Qt.map_debug("add_runway()" + apt);
-}
-
-
-
-
-//*****************************************
-//** add_marker()
-//*****************************************
-//function add_marker(widget_name, myId, lat, lng, icon_color, label){
-function add_marker(lat, lng, label){
-	if(init_flag == false){
-		alert("never");
-	}
-
-	idx++;
-	//alert(widget_name);
-	//(markers[widget_name]);
-	//if( !markers[widget_name]){
-	//	markers[widget_name] = {};
-	//}
-	//alert(idx);
-	//var ico = icons.purple;
-	var latlng = new google.maps.LatLng(lat, lng);
-	markers[idx] = new google.maps.Marker({
-								position: latlng, 
-								map: map,
-								title: "ere"
-	});
-	//sattach_marker(markers[widget_name][myId], myId, label);
-	//Qt.marker_added(widget_name, myId);
-	//alert("ere");
-	//alert("here");
-	//var zlatlng = new google.maps.LatLng(lat, lng);
-	map.panTo(latlng);
-	map.setZoom(15);
-	//zoom_to(lat, lng, 15);
+	Qt.map_debug("add_runwayXX()" + apt + " " + rwy1 + "-" + rwy2);
 	
-	return idx; // pretty pointless
-	
-}
-
-//** Clear Markers
-function clear_markers(widget_name){
-	if(!markers[widget_name]){
-		return;
-	}
-	for(var myId in markers[widget_name]){
-		markers[widget_name][myId].setMap(null);
-	}
-}
-
-//** Hide/Show Markers
-function hide_markers(widget_name, str_state){
-	if(!markers[widget_name]){
-		return;
-	}
-	var state = str_state == "1";
-	for(var myId in markers[widget_name]){
-		markers[widget_name][myId].setVisible(state)
-	}
-}
-
-//***************************************
-//** Place Marker
-//***************************************
-function placeMarker(location){
-	if(!edit_mode){
-		return;
-	}
-	var clickedLocation = new google.maps.LatLng(location);
-	markers[idx] = new google.maps.Marker({
-		position: location, 
-		map: map,
-		icon: icons.orange,
-		mIdx: idx
-	});
-	Qt.marker_added(idx, location.lat(), location.lng());
-	attach_marker(markers[idx], idx);
-	idx++;
-}
-
-function map_ready(){
-	return init_flag;
+	Qt.map_debug("add_runway()" + apt + " " + rwy1 + "-" + rwy2);
 }
 
 
-function send_position(latlng){
-	alert(latlng);
-	Qt.mouse_move(latlng.lat(), latlng.lng());
-	alert("pos");
-}
 
 //*************************************************
 //** Initialize Map
@@ -269,8 +85,7 @@ function send_position(latlng){
 function initialize_map(){
 
 	mapDiv = document.getElementById("map_canvas");
-	geocoder = new google.maps.Geocoder();
-	var latlng = new google.maps.LatLng(0.0,-0.0);
+	var latlng = new google.maps.LatLng(0.0, -0.0);
 	var mapOptions = {
 		zoom: 12,
 		center: latlng,
@@ -279,11 +94,11 @@ function initialize_map(){
 		scaleControl: true,
 		disableDefaultUI: true
 	};
+
 	map = new google.maps.Map(mapDiv, mapOptions);
 
 	//* MouseMove
 	google.maps.event.addListener(map, 'mousemove', function(ev){
-
 		if(Qt){
 			Qt.map_mouse_move(ev.latLng.lat(), ev.latLng.lng());
 		}
@@ -326,64 +141,13 @@ function initialize_map(){
 //## set_zoom
 function set_zoom(zoom_level){
 	map.setZoom(zoom_level);
-	//alert(zoom_level);
 }
 
 //## Zoom to
-function zoom_to(lat, lng, zoom_level){
+function zoom_to  (lat, lng, zoom_level){
 	var latlng = new google.maps.LatLng(lat, lng);
 	map.panTo(latlng);
 	map.setZoom(zoom_level);
-}
-//## Zoom to Marker
-function zoom_to_marker(widget_name, myId, zoom_level){
-	var marker = markers[widget_name][myId];
-	if(marker){
-		map.setZoom(zoom_level);
-		var latlng = marker.getPosition();
-		map.panTo(latlng);
-		
-	}else{
-		if(Qt){
-			Qt.map_error("Marker not found");
-		}
-	}
-}
-//## pan_to
-function pan_to(lat, lng){
-	var latlng = new google.maps.LatLng(lat, lng);
-	map.panTo(latlng);
-}
-
-//## set_map_type
-function set_map_type(map_type){
-	map.setMapTypeId(map_type);
-}
-
-//## set_edit_mode
-function set_edit_mode(em){
-	edit_mode = em == 1 ? true : false;
-	//alert(em)
-	if(edit_mode){
-		var newOptions = {draggableCursor: "crosshair"};
-	}else{
-		var newOptions = {draggableCursor: "default"};
-	}
-	map.setOptions(newOptions);
-	//alert(newOptions);
-}
-
-//## set_default_view
-function set_default_view(){
-	map.setZoom(1);
-	map.panTo(  new google.maps.LatLng(53.89, -3.01) );
-}
-
-function current_view(){
-	var dic = {	zoom: map.getZoom(), 
-				lat: map.getCenter().lat(), lng: map.genCenter().lng()
-	};
-	return dic;
 }
 
 </script>
@@ -392,7 +156,7 @@ function current_view(){
 
 </head>
 
-<body onload="initialize_map();">
+<body onload="initialize_map()">
 	<div id="map_canvas" style="width:100%; height:100%;"></div>
 </body>
 

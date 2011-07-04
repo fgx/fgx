@@ -20,6 +20,7 @@
 #include <QtGui/QDesktopServices>
 
 #include "mpmap/mpmapxwidget.h"
+#include "mpmap/xwebpage.h"
 
 
 /*
@@ -116,6 +117,8 @@ GMapWidget::GMapWidget(MainObject *mob, QWidget *parent) :
 	//=================================================================
 	// WebView
     webView = new QWebView();
+	//XWebPage *webPage = new XWebPage();
+	//webView->setPage(webPage);
 	mainLayout->addWidget(webView, 100);
 
 	//=== Register Qt Widget
@@ -295,7 +298,7 @@ void GMapWidget::zoom_to(QString lat, QString lng, QString zoom){
 
 void GMapWidget::execute_js(QString js_str){
 	qDebug() << "> js= " << js_str;
-    webView->page()->mainFrame()->evaluateJavaScript(js_str);
+	webView->page()->mainFrame()->evaluateJavaScript(js_str);
 }
 
 
@@ -338,6 +341,7 @@ void GMapWidget::init_map(){
 		QByteArray contents = file.readAll();
 		//qDebug() << contents;
 		webView->setHtml(contents);
+
 	}
 	map_initialized = true;
 }
