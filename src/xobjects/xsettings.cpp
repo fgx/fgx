@@ -301,7 +301,7 @@ void XSettings::saveWindow(QWidget *widget){
     //setValue( _windowName(widget), QVariant(widget->saveGeometry()) );
     QString key = _windowName(widget);
     QByteArray ba = widget->saveGeometry();
-    outLog("saveWindow: Key="+key+", values "+ba.toHex());
+    //outLog("saveWindow: Key="+key+", values "+ba.toHex());
     setValue( key, QVariant(ba) );
 }
 /** \brief Restores a window position
@@ -311,7 +311,7 @@ void XSettings::restoreWindow(QWidget *widget){
     // widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
     QString key = _windowName(widget);
     QByteArray ba = value(_windowName(widget)).toByteArray();
-    outLog("restoreWindow: Key="+key+", values "+ba.toHex());
+    //outLog("restoreWindow: Key="+key+", values "+ba.toHex());
     widget->restoreGeometry(ba);
 }
 
