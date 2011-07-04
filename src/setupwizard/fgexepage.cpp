@@ -156,9 +156,14 @@ void FgExePage::check_paths()
 			lblCustom->setStyleSheet(custom_exists ?  "color: green;" : "color:#990000;");
 			if(custom_exists){
 				QFileInfo fInfo(custom_path);
-				if(!fInfo.isExecutable()){
-					lblCustom->setText("Not executable");
+				if(fInfo.isDir()){
+					lblCustom->setText("Need a file path, not a directory");
 					lblCustom->setStyleSheet("color:#990000;");
+				}else{
+					if(!fInfo.isExecutable()){
+						lblCustom->setText("Not executable");
+						lblCustom->setStyleSheet("color:#990000;");
+					}
 				}
 			}
 		}
@@ -189,8 +194,12 @@ bool FgExePage::validatePage()
 	if(radioDefault->isChecked()){
 		QString exFile = mainObject->settings->fgfs_default_path();
 		if(QFile::exists(exFile)){
-			//TODO check its executable
-			return true;
+			QFileInfo fInfo(exFile);
+			if(fInfo.isFile() && fInfo.isExecutable()){
+				return true;
+			}else{
+				return false;
+			}
 		}else{
 			return false;
 		}
