@@ -76,13 +76,28 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 
 	tree->headerItem()->setText(C_CALLSIGN, "Callsign");
 	tree->headerItem()->setText(C_AIRCRAFT, "Aircraft");
-	tree->headerItem()->setText(C_ALTITUDE, "Altitude");
-	tree->headerItem()->setText(C_HEADING, "Heading");
+	tree->headerItem()->setText(C_ALTITUDE, "Alt");
+	tree->headerItem()->setText(C_HEADING, "Hdg");
 	tree->headerItem()->setText(C_PITCH, "Pitch");
 	tree->headerItem()->setText(C_LAT, "Lat");
 	tree->headerItem()->setText(C_LNG, "Lng");
 	tree->headerItem()->setText(C_FLAG, "Flag");
 
+	tree->headerItem()->setTextAlignment(C_ALTITUDE, Qt::AlignRight);
+	tree->headerItem()->setTextAlignment(C_HEADING, Qt::AlignRight);
+	tree->headerItem()->setTextAlignment(C_LAT, Qt::AlignRight);
+	tree->headerItem()->setTextAlignment(C_LNG, Qt::AlignRight);
+
+	tree->setColumnHidden(C_PITCH, true);
+	tree->setColumnHidden(C_FLAG, true);
+
+	tree->setColumnWidth(C_CALLSIGN, 80);
+	tree->setColumnWidth(C_AIRCRAFT, 80);
+	tree->setColumnWidth(C_ALTITUDE, 50);
+	tree->setColumnWidth(C_HEADING, 50);
+
+	tree->setSortingEnabled(true);
+	tree->sortByColumn(C_CALLSIGN, Qt::AscendingOrder);
 
 	//= Status Bar
 	statusBar = new QStatusBar();
@@ -168,14 +183,13 @@ void PilotsWidget::on_server_read_finished(){
 	//= get the <fg_server> node
 	QDomNodeList nodes = dom.elementsByTagName("marker");
 	QStringList list;
-	qDebug() << nodes.length();
 
 	QTreeWidgetItem *item;
+
 	if (nodes.count() > 0){
 		for(int idxd =0; idxd < nodes.count(); idxd++){
 
 			QDomNode node = nodes.at(idxd);
-			//list << node.firstChildElement("marker").text();
 			QDomNamedNodeMap attribs =  node.attributes();
 
 			// = check if pilot in list or update
@@ -189,11 +203,18 @@ void PilotsWidget::on_server_read_finished(){
 			}
 
 			item->setText(C_AIRCRAFT, attribs.namedItem("model").nodeValue());
-			item->setText(C_ALTITUDE, attribs.namedItem("alt").nodeValue());
-			item->setText(C_HEADING, attribs.namedItem("heading").nodeValue());
-			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
+			item->setText(C_ALTITUDE, QString::number(attribs.namedItem("alt").nodeValue().toFloat(), 'f', 0));
+			item->setTextAlignment(C_ALTITUDE, Qt::AlignRight);
+
+			item->setText(C_HEADING, QString::number(attribs.namedItem("heading").nodeValue().toFloat(), 'f', 0));
+			item->setTextAlignment(C_HEADING, Qt::AlignRight);
+
 			item->setText(C_LAT, attribs.namedItem("lat").nodeValue());
+			item->setTextAlignment(C_LAT, Qt::AlignRight);
 			item->setText(C_LNG, attribs.namedItem("lng").nodeValue());
+			item->setTextAlignment(C_LNG, Qt::AlignRight);
+
+			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
 			item->setText(C_FLAG, "");
 
 		}
@@ -205,11 +226,27 @@ void PilotsWidget::on_server_read_finished(){
 		tree->invisibleRootItem()->removeChild(items.at(idxr));
 	}
 
+	//= Resize columns the first time (python does not have infunction statics like this ;-( ))
+	/*
+	static bool first_time_resize = false;
+	if (first_time_resize == false){
+		for(int cidx =0; cidx < tree->columnCount(); cidx++){
+			tree->resizeColumnToContents(cidx);
+		}
+		first_time_resize = true;
+	}
+	*/
 }
 
 
 void PilotsWidget::on_check_autorefresh(int checked){
 	mainObject->settings->setValue("mpxmap_autorefresh_enabled", checked);
+	if(checked){
+		fetch_pilots();
+		timer->start();
+	}else{
+		timer->stop();
+	}
 }
 
 void PilotsWidget::on_combo_changed(int idx){
