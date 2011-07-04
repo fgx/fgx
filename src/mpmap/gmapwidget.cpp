@@ -161,6 +161,7 @@ GMapWidget::GMapWidget(MainObject *mob, QWidget *parent) :
         act->setText(QString(" %1 ").arg(z));
         act->setProperty("zoom", QVariant(z));
         act->setCheckable(true);
+		act->setAutoRaise(true);
 		act->setDown(z == 12);
 		statusBar->addPermanentWidget(act);
 		groupZoom->addButton(act);
@@ -339,7 +340,7 @@ void GMapWidget::init_map(){
 
 		webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 		QByteArray contents = file.readAll();
-		//qDebug() << contents;
+		qDebug() << contents;
 		webView->setHtml(contents);
 
 	}

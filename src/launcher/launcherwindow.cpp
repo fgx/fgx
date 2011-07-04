@@ -137,6 +137,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	toolbarLayout->addWidget(messageLabel,100);
 
 	//= Show Log
+	/*
 	QToolButton *buttonShowMpMap = new QToolButton(this);
 	buttonShowMpMap->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttonShowMpMap->setText("View Map");
@@ -147,6 +148,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	connect(buttonShowMpMap, SIGNAL(clicked()),
 			mainObject, SLOT(on_mpxmap())
 	);
+	*/
 
 	//= Show Log
 	QToolButton *buttonShowLogs = new QToolButton(this);

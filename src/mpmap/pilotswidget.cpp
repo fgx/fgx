@@ -17,7 +17,7 @@
 #include <QTreeWidgetItem>
 
 #include "utilities/utilities.h"
-
+#include "xwidgets/xtreewidgetitem.h"
 #include "pilotswidget.h"
 
 PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
@@ -196,7 +196,7 @@ void PilotsWidget::on_server_read_finished(){
 			// = check if pilot in list or update
 			QList<QTreeWidgetItem *> fitems = tree->findItems(attribs.namedItem("callsign").nodeValue(), Qt::MatchExactly, C_CALLSIGN);
 			if(fitems.size() == 0){
-				item = new QTreeWidgetItem();
+				item = new QTreeWidgetItem(tree);
 				item->setText(C_CALLSIGN, attribs.namedItem("callsign").nodeValue());
 				tree->addTopLevelItem(item);
 			}else{
