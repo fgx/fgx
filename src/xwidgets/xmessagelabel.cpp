@@ -13,7 +13,7 @@ XMessageLabel::XMessageLabel(QWidget *parent) :
 	timer->setInterval(60);
 
 	//setWindowOpacity(0.0);
-	setStyleSheet("  color: #000099; font-size: 10pt;");
+
 }
 
 void XMessageLabel::showMessage(QString message){
@@ -22,8 +22,9 @@ void XMessageLabel::showMessage(QString message){
 
 void XMessageLabel::showMessage(QString message, int timeout){
 
+	setStyleSheet("  color: #000099; font-size: 10pt; background-color: yellow; padding: 2px;");
 	setText(message);
-	setWindowOpacity(1.0);
+	//setWindowOpacity(1.0);
 	QTimer::singleShot(timeout, this, SLOT(start_fade()) );
 }
 
@@ -31,6 +32,7 @@ void XMessageLabel::start_fade(){
 	//qDebug() << "start_dade";
 	//timer->start();
 	setText("");
+	setStyleSheet("");
 }
 
 void XMessageLabel::on_timer(){
@@ -44,3 +46,5 @@ void XMessageLabel::on_timer(){
 	}
 	*/
 }
+
+
