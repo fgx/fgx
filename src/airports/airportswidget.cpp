@@ -81,14 +81,11 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	//=================================================================================
 	//* Airport Details
-	groupBoxAirport = new QGroupBox(this);
-	groupBoxAirport->setTitle("Airport Details");
+	groupBoxAirport = new XGroupVBox("Airport Details");
 	mainLayout->addWidget(groupBoxAirport, 1, 0);
 
-	QVBoxLayout *airportsContainerLayout = new QVBoxLayout();
-	groupBoxAirport->setLayout(airportsContainerLayout);
-	airportsContainerLayout->setContentsMargins(10,10,10,10);
-	airportsContainerLayout->setSpacing(0);
+	groupBoxAirport->xLayout->setContentsMargins(10,10,10,10);
+	groupBoxAirport->xLayout->setSpacing(0);
 
 
 	//==================================================================
@@ -96,7 +93,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	QHBoxLayout *layoutAptTopBar = new QHBoxLayout();
 	layoutAptTopBar->setContentsMargins(0,0,0,0);
 	layoutAptTopBar->setSpacing(10);
-	airportsContainerLayout->addLayout(layoutAptTopBar);
+	groupBoxAirport->addLayout(layoutAptTopBar);
 
     //** Filter Code
 	layoutAptTopBar->addWidget(new QLabel(tr("Filter").append(":")));
@@ -155,7 +152,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	//*==============================================================================
 	//** Airports/Runways Splitter
 	QSplitter *splitter = new QSplitter(this);
-	airportsContainerLayout->addWidget(splitter);
+	groupBoxAirport->addWidget(splitter);
 
 
 	//=== Airport Widget + Layout
@@ -267,50 +264,48 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	//** Use Coordinates
 	//====================================================================
 
-	groupBoxUseCoordinates = new QGroupBox(this);
-	groupBoxUseCoordinates->setTitle("Coordinates");
+	groupBoxUseCoordinates = new XGroupVBox("Coordinates", this);
 	groupBoxUseCoordinates->setMaximumWidth(300);
 	mainLayout->addWidget(groupBoxUseCoordinates, 1, 2);
-	QVBoxLayout *layoutCoordinates = new QVBoxLayout();
-	groupBoxUseCoordinates->setLayout(layoutCoordinates);
+
 	int space = 5;
 
-	layoutCoordinates->addWidget(new QLabel(tr("Latitude (negative is west)")));
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Latitude (negative is west)")));
 	txtLat = new QLineEdit();
-	layoutCoordinates->addWidget(txtLat);
+	groupBoxUseCoordinates->addWidget(txtLat);
 
-	layoutCoordinates->addSpacing(space);
-	layoutCoordinates->addWidget(new QLabel(tr("Longtitude (negative is south)")));
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Longtitude (negative is south)")));
 	txtLng = new QLineEdit();
-	layoutCoordinates->addWidget(txtLng);
+	groupBoxUseCoordinates->addWidget(txtLng);
 
-	layoutCoordinates->addSpacing(space);
-	layoutCoordinates->addWidget(new QLabel(tr("Altitude")));
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Altitude")));
 	txtAltitude = new QLineEdit();
-	layoutCoordinates->addWidget(txtAltitude);
+	groupBoxUseCoordinates->addWidget(txtAltitude);
 
-	layoutCoordinates->addSpacing(space);
-	layoutCoordinates->addWidget(new QLabel(tr("Heading")));
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Heading")));
 	txtHeading = new QLineEdit();
-	layoutCoordinates->addWidget(txtHeading);
+	groupBoxUseCoordinates->addWidget(txtHeading);
 
-	layoutCoordinates->addSpacing(space);
-	layoutCoordinates->addWidget(new QLabel(tr("Roll")));
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Roll")));
 	txtRoll = new QLineEdit();
-	layoutCoordinates->addWidget(txtRoll);
+	groupBoxUseCoordinates->addWidget(txtRoll);
 
-	layoutCoordinates->addSpacing(space);
-	layoutCoordinates->addWidget(new QLabel(tr("Pitch")));
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Pitch")));
 	txtPitch = new QLineEdit();
-	layoutCoordinates->addWidget(txtPitch);
+	groupBoxUseCoordinates->addWidget(txtPitch);
 
-	layoutCoordinates->addSpacing(space);
-	layoutCoordinates->addWidget(new QLabel(tr("Airspeed")));
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Airspeed")));
 	txtAirspeed = new QLineEdit();
-	layoutCoordinates->addWidget(txtAirspeed);
+	groupBoxUseCoordinates->addWidget(txtAirspeed);
 
 
-	layoutCoordinates->addStretch(20);
+	groupBoxUseCoordinates->xLayout->addStretch(20);
 
 
 	connect(buttonGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),

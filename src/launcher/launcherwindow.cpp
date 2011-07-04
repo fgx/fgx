@@ -133,7 +133,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	//== Message Label
 	messageLabel = new XMessageLabel(this);
-	messageLabel->setText("Message goes here..");
+	messageLabel->showMessage("Welcome pilot");
 	toolbarLayout->addWidget(messageLabel,100);
 
 	//= Show Log

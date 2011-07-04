@@ -257,6 +257,8 @@ void AircraftWidget::on_tree_selection_changed(){
 		return;
 	}
 
+	mainObject->settings->setValue("aircraft", item->text(C_AERO) );
+
 	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->settings->aircraft_path(),
                                                                     item->text(C_DIR),
@@ -291,12 +293,14 @@ void AircraftWidget::save_settings(){
 	if(item && item->text(C_AERO).length() > 0){
 		mainObject->settings->setValue("aircraft", item->text(C_AERO) );
 	}
+	mainObject->settings->setValue("aircraft_use_default", checkBoxUseDefault->isChecked());
+
 	mainObject->settings->setValue("nav1", txtNav1->text());
 	mainObject->settings->setValue("nav2", txtNav2->text());
 	mainObject->settings->setValue("adf", txtAdf->text());
 	mainObject->settings->setValue("com1", txtComm1->text());
 	mainObject->settings->setValue("com2", txtComm2->text());
-	mainObject->settings->setValue("aircraft_use_default", checkBoxUseDefault->isChecked());
+
 	mainObject->settings->sync();
 }
 
@@ -305,7 +309,7 @@ void AircraftWidget::save_settings(){
 // Load Settings
 void AircraftWidget::load_settings(){
 
-	select_node(mainObject->settings->value("aircraft").toString());
+	//select_node(mainObject->settings->value("aircraft").toString());
 
 	txtNav1->setText(mainObject->settings->value("nav1").toString());
 	txtNav2->setText(mainObject->settings->value("nav2").toString());
@@ -366,7 +370,6 @@ void AircraftWidget::on_reload_cache(){
 void AircraftWidget::load_tree(){
 	int c =0;
 
-	QString currAero = selected_aircraft();
 	treeWidget->setUpdatesEnabled(false);
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 
@@ -418,7 +421,7 @@ void AircraftWidget::load_tree(){
 	treeWidget->sortByColumn(view == FOLDER_VIEW ? C_DIR : C_AERO, Qt::AscendingOrder);
 	treeWidget->setUpdatesEnabled(true);
 
-	select_node(currAero);
+	select_node(mainObject->settings->value("aircraft").toString());
 	QString str = QString("%1 aircraft").arg(c);
 	statusBarAero->showMessage(str);
 	outLog("FGx: AircraftWidget::load_tree: with " + str);
