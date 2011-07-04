@@ -7,7 +7,7 @@
 #include <QBoxLayout>
 #include <QGridLayout>
 
-/** \brief A QGroupBox with a QVertical box */
+/** \brief A QGroupBox with a QVBoxLyout layout */
 class XGroupVBox : public QGroupBox
 {
 Q_OBJECT
@@ -19,6 +19,7 @@ public:
 	void addWidget(QWidget *w);
 	void addWidget(QWidget *w, int stretch);
 	void addLayout(QBoxLayout *lay);
+	void addLayout(QGridLayout *gridlayout);
 
 	void set_major(bool state);
 signals:
@@ -27,7 +28,7 @@ public slots:
 
 };
 
-/** \brief A QGroupBox with a QHorizontal box */
+/** \brief A QGroupBox with a QHBoxLyout layout */
 class XGroupHBox : public QGroupBox
 {
 Q_OBJECT
@@ -38,6 +39,7 @@ public:
 	void addWidget(QWidget *w);
 	void addWidget(QWidget *w, int stretch);
 	void addLayout(QBoxLayout *lay);
+	void addLayout(QGridLayout *gridlayout);
 
 	void set_major(bool state);
 signals:
@@ -47,8 +49,7 @@ public slots:
 };
 
 
-//=====================================================
-//** Grid Box
+/** \brief A QGroupBox with a QGridLayout layout */
 class XGroupGBox : public QGroupBox
 {
 Q_OBJECT
@@ -57,8 +58,9 @@ public:
 
 	QGridLayout *gridLayout;
 	void addWidget(QWidget *w, int row, int col, int row_span, int col_span);
+	void addWidget(QWidget *w, int row, int col, int row_span, int col_span, Qt::AlignmentFlag align);
 
-	void set_major(int state);
+	void set_major(bool state);
 signals:
 
 public slots:

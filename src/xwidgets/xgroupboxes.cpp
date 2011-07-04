@@ -35,6 +35,10 @@ void XGroupVBox::addWidget(QWidget *widget, int stretch){
 void XGroupVBox::addLayout( QBoxLayout *lay){
 	xLayout->addLayout(lay);
 }
+void XGroupVBox::addLayout( QGridLayout *lay){
+	xLayout->addLayout(lay);
+}
+
 
 //======================================================
 /* Extended groupBox with a Horizontal Layout */
@@ -60,7 +64,9 @@ void XGroupHBox::addWidget(QWidget *widget, int stretch){
 void XGroupHBox::addLayout( QBoxLayout *lay){
 	xLayout->addLayout(lay);
 }
-
+void XGroupHBox::addLayout( QGridLayout *lay){
+	xLayout->addLayout(lay);
+}
 
 
 
@@ -72,10 +78,16 @@ XGroupGBox::XGroupGBox(QString title, QWidget *parent) :
 	setTitle(title);
 	gridLayout = new QGridLayout();
 	setLayout(gridLayout);
-
+	set_major(false);
 
 }
 
 void XGroupGBox::addWidget(QWidget *widget, int row, int col, int row_span,  int col_span){
 	gridLayout->addWidget(widget, row, col, row_span, col_span);
+}
+void XGroupGBox::addWidget(QWidget *widget, int row, int col, int row_span,  int col_span, Qt::AlignmentFlag align){
+	gridLayout->addWidget(widget, row, col, row_span, col_span, align);
+}
+void XGroupGBox::set_major(bool maj){
+	setStyleSheet(maj ? MAJOR_STYLE : MINOR_STYLE);
 }

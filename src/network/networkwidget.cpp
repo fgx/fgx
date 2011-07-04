@@ -56,18 +56,14 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 
 	//========================================================================
 	// Mp Servers Box
-	grpMpServer  = new QGroupBox("Enable Multiplayer");
+	grpMpServer  = new XGroupVBox("Enable Multiplayer");
 	middleLayout->addWidget(grpMpServer, 3);
 	grpMpServer->setCheckable(true);
 	grpMpServer->setChecked(false);
 
-	QVBoxLayout *layoutMpServer = new QVBoxLayout();
-	grpMpServer->setLayout(layoutMpServer);
-
-
 	//**  Grid =========================================
 	QGridLayout *gridMP = new QGridLayout();
-	layoutMpServer->addLayout(gridMP);
+	grpMpServer->addLayout(gridMP);
 
 	int row = 0;
 
@@ -136,7 +132,7 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	//=======================================
 	//* TreeWidget
     treeWidget = new QTreeWidget();
-	layoutMpServer->addWidget(treeWidget, 100);
+	grpMpServer->addWidget(treeWidget, 100);
     treeWidget->setAlternatingRowColors(true);
     treeWidget->setRootIsDecorated(false);
 	treeWidget->setSortingEnabled(true);
@@ -161,7 +157,7 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 
 	//************* Bottom Layout
 	QHBoxLayout *layoutBottomTreeBar = new QHBoxLayout();
-	layoutMpServer->addLayout(layoutBottomTreeBar);
+	grpMpServer->addLayout(layoutBottomTreeBar);
 	layoutBottomTreeBar->addStretch(30);
 
 	//* refresh MP servers
@@ -173,79 +169,70 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 
 
 
-	//****************** RIGHT ********************************
+	//=================================================================================================
+	// RIGHT side >>>>
+	//=================================================================================================
 	QVBoxLayout *rightLayout = new QVBoxLayout();
 	rightLayout->setSpacing(20);
 	middleLayout->addLayout(rightLayout, 2);
 
 	//========================================================================
 	// FgCom Box
-	grpFgCom = new QGroupBox(tr("FGCom - Voice Communications"));
+	grpFgCom = new XGroupGBox(tr("FGCom - Voice Communications"));
 	rightLayout->addWidget(grpFgCom, 2);
 	grpFgCom->setCheckable(true);
 	grpFgCom->setChecked(false);
 	connect(grpFgCom, SIGNAL(clicked(bool)), this, SLOT(set_fgcom()));
 
-	QGridLayout *layoutFgCom = new QGridLayout();
-	grpFgCom->setLayout(layoutFgCom);
-
 	QString style("font-size: 8pt; color: #666666;");
 
 	// fgCom NO
 	row = 0;
-	layoutFgCom->addWidget(new QLabel("Server"), row, 0, 1, 1, Qt::AlignRight);
+	grpFgCom->addWidget(new QLabel("Server"), row, 0, 1, 1, Qt::AlignRight);
 	txtFgComNo = new QLineEdit();
-	layoutFgCom->addWidget(txtFgComNo, row, 1);
+	grpFgCom->addWidget(txtFgComNo, row, 1, 1, 1);
 	connect(txtFgComNo, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
 
 	row++;
 	QLabel *lblHelp1 = new QLabel("eg: fgcom.flightgear.org.uk");
 	lblHelp1->setStyleSheet(style);
-	layoutFgCom->addWidget(lblHelp1, row, 1, 1, 2);
+	grpFgCom->addWidget(lblHelp1, row, 1, 1, 2);
 
 	//* fgCom Port
 	row++;
-	layoutFgCom->addWidget(new QLabel("Port"), row, 0, 1, 1, Qt::AlignRight);
+	grpFgCom->addWidget(new QLabel("Port"), row, 0, 1, 1, Qt::AlignRight);
 	txtFgComPort = new QLineEdit();
 	txtFgComPort->setMaximumWidth(100);
-	layoutFgCom->addWidget(txtFgComPort);
+	grpFgCom->addWidget(txtFgComPort, row, 1, 1, 1);
 	connect(txtFgComPort, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
 
 	row++;
 	QLabel *lblHelp2 = new QLabel("eg: 16661");
 	lblHelp2->setStyleSheet(style);
-	layoutFgCom->addWidget(lblHelp2, row, 1, 1, 2);
+	grpFgCom->addWidget(lblHelp2, row, 1, 1, 2);
 
-	row++;
-	QHBoxLayout *hboxfgCom = new QHBoxLayout();
-	layoutFgCom->addLayout(hboxfgCom, row,0,1,2);
-	hboxfgCom->addStretch(20);
 
 
 	//===========================================================
 	//** Telnet
-	grpTelnet = new QGroupBox();
-	grpTelnet->setTitle(tr("Telnet Properties Server"));
+	grpTelnet = new XGroupHBox(tr("Telnet Properties Server"));
 	grpTelnet->setCheckable(true);
 	grpTelnet->setChecked(false);
 	rightLayout->addWidget(grpTelnet);
 
-	QHBoxLayout *layoutNetTelnet = new QHBoxLayout();
-	grpTelnet->setLayout(layoutNetTelnet);
-	layoutNetTelnet->setSpacing(10);
-	//int m = 5;
-	layoutNetTelnet->setContentsMargins(m,m,m,m);
+	grpTelnet->xLayout->setSpacing(10);
+	grpTelnet->xLayout->setContentsMargins(m,m,m,m);
 
 	QLabel *lblTelnet = new QLabel();
 	lblTelnet->setText(tr("Set Port No:"));
-	layoutNetTelnet->addWidget( lblTelnet);
+	grpTelnet->addWidget( lblTelnet);
 
 	txtTelnet = new QLineEdit("5500");
 	txtTelnet->setValidator(new QIntValidator(80, 32000, this));
-	layoutNetTelnet->addWidget(txtTelnet);
+	grpTelnet->addWidget(txtTelnet);
 
 	QToolButton *buttTelnet = new QToolButton();
-	layoutNetTelnet->addWidget(buttTelnet);
+	grpTelnet->addWidget(buttTelnet);
 	buttTelnet->setIcon(QIcon(":/icon/terminal"));
 	buttTelnet->setToolButtonStyle(Qt::ToolButtonIconOnly);
 	connect(buttTelnet, SIGNAL(clicked()), this, SLOT(on_open_telnet()));
@@ -253,50 +240,41 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 
 	//===========================================================
 	//** Screenshot
-	grpScreenShot = new QGroupBox();
-	grpScreenShot->setTitle(tr("Screen Shot Server"));
+	grpScreenShot = new XGroupHBox(tr("Screen Shot Server"));
 	grpScreenShot->setCheckable(true);
 	grpScreenShot->setChecked(false);
 	rightLayout->addWidget(grpScreenShot);
 
-	QHBoxLayout *layoutScreenShot = new QHBoxLayout();
-	grpScreenShot->setLayout(layoutScreenShot);
-	layoutScreenShot->setSpacing(10);
-	//int m = 5;
-	layoutScreenShot->setContentsMargins(m,m,m,m);
-
-	layoutScreenShot->addWidget( new QLabel(tr("Port No:")));
+	grpScreenShot->xLayout->setSpacing(10);
+	grpScreenShot->xLayout->setContentsMargins(m,m,m,m);
+	grpScreenShot->addWidget( new QLabel(tr("Port No:")));
 
 	txtScreenShot = new QLineEdit("8088");
 	txtScreenShot->setValidator(new QIntValidator(80, 32000, this));
-	layoutScreenShot->addWidget(txtScreenShot);
+	grpScreenShot->addWidget(txtScreenShot);
 
 	QToolButton *buttScreenshot = new QToolButton();
-	layoutScreenShot->addWidget(buttScreenshot);
+	grpScreenShot->addWidget(buttScreenshot);
 	buttScreenshot->setIcon(QIcon(":/icon/browse"));
 	buttScreenshot->setToolButtonStyle(Qt::ToolButtonIconOnly);
 	connect(buttScreenshot, SIGNAL(clicked()), this, SLOT(on_browse_screenshot()));
 
 	//==========================================================
 	//** HTTP
-	grpHttp = new QGroupBox();
-	grpHttp->setTitle(tr("HTTP Web Server"));
+	grpHttp = new XGroupHBox(tr("HTTP Web Server"));
 	grpHttp->setCheckable(true);
 	grpHttp->setChecked(false);
 	rightLayout->addWidget(grpHttp);
 
-	QHBoxLayout *layoutNetHttp = new QHBoxLayout();
-	grpHttp->setLayout(layoutNetHttp);
-	layoutNetHttp->setSpacing(10);
 
-	layoutNetHttp->addWidget( new QLabel(tr("Port No:")) );
+	grpHttp->addWidget( new QLabel(tr("Port No:")) );
 
 	txtHttp = new QLineEdit("8080");
 	txtHttp->setValidator(new QIntValidator(80, 32000, this));
-	layoutNetHttp->addWidget(txtHttp);
+	grpHttp->addWidget(txtHttp);
 
 	QToolButton *butHttp = new QToolButton();
-	layoutNetHttp->addWidget(butHttp);
+	grpHttp->addWidget(butHttp);
 	butHttp->setIcon(QIcon(":/icon/browse"));
 	butHttp->setToolButtonStyle(Qt::ToolButtonIconOnly);
 	connect(butHttp, SIGNAL(clicked()), this, SLOT(on_browse_http()));

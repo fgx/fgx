@@ -13,7 +13,7 @@
 #include <QtGui/QComboBox>
 
 #include "xobjects/mainobject.h"
-
+#include "xwidgets/xgroupboxes.h"
 
 class MainObject;
 
@@ -36,7 +36,7 @@ public:
 
 	MainObject *mainObject;
 
-	QGroupBox *grpMpServer;
+	XGroupVBox *grpMpServer;
 
 	QCheckBox *checkBoxIn;
 	QCheckBox *checkBoxOut;
@@ -49,17 +49,17 @@ public:
 	QTreeWidget *treeWidget;
 
 
-	QGroupBox *grpFgCom;
+	XGroupGBox *grpFgCom;
 	QLineEdit *txtFgComNo;
 	QLineEdit *txtFgComPort;
 
-	QGroupBox *grpTelnet;
+	XGroupHBox *grpTelnet;
 	QLineEdit *txtTelnet;
 
-	QGroupBox *grpHttp;
+	XGroupHBox *grpHttp;
 	QLineEdit *txtHttp;
 
-	QGroupBox *grpScreenShot;
+	XGroupHBox *grpScreenShot;
 	QLineEdit *txtScreenShot;
 
 
