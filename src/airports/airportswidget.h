@@ -41,7 +41,8 @@ public:
 		CI_LENGTH  = 5,
 		CI_LAT = 6,
 		CI_LNG = 7,
-		CI_ALIGNMNET =8
+		CI_ALIGNMNET =8,
+		CI_RUNWAYS = 9
 	};
 
 	enum STARTUP_POSTITION{
@@ -78,7 +79,6 @@ public:
 	void show_progress(bool state);
 
 	void load_airports_tree();
-	//QHash<QString, QString> load_aptdat();
 
 	void load_info_tree(QString airport_dir, QString airport_code);
 	int load_runways_node(QString airport_dir, QString airport_code);

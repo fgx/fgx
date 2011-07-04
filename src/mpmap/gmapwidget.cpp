@@ -175,7 +175,14 @@ GMapWidget::GMapWidget(MainObject *mob, QWidget *parent) :
 
 
 
-//=============================================================
+//===========================================================================
+// Called from JS
+//===========================================================================
+void GMapWidget::map_debug(QVariant mess){
+	qDebug() << "< " << mess.toString();
+}
+
+
 //= JS - map_mouse_move
 // - this is not firing ;-(
 void GMapWidget::map_mouse_move(QVariant dLat, QVariant dLng){
@@ -277,23 +284,7 @@ void GMapWidget::add_marker(LatLng latLng, QString label){
     this->execute_js(js_str);
 
 }
-//*************************************************************************************************
-//*** Add Runway
-void GMapWidget::add_runway(float lat1, float lng1, float lat2, float lng2, QString label){
 
-    QString js_str = QString("add_runway(%1, %2, %3, %4, '%5');")
-                     .arg( lat1 ).arg( lng1 )
-                     .arg( lat2 ).arg( lng2 )
-                     .arg( label );
-    qDebug() << js_str;
-    this->execute_js(js_str);
-}
-void GMapWidget::add_runway(QString lat1, QString lng1, QString lat2, QString lng2, QString label){
-    add_runway( lat1.toFloat(), lng1.toFloat(), lat2.toFloat(), lng2.toFloat(), label);
-}
-void GMapWidget::add_runway(LatLng p1, LatLng p2, QString label){
-    this->add_runway(p1.lat(), p1.lng(), p2.lat(), p2.lng(), label);
-}
 
 void GMapWidget::zoom_to(QString lat, QString lng, QString zoom){
     QString js_str = QString("zoom_to(%1, %2, %3);").arg( lat ).arg( lng ).arg( zoom );
@@ -303,7 +294,7 @@ void GMapWidget::zoom_to(QString lat, QString lng, QString zoom){
 }
 
 void GMapWidget::execute_js(QString js_str){
-	qDebug() << "JS= " << js_str;
+	qDebug() << "> js= " << js_str;
     webView->page()->mainFrame()->evaluateJavaScript(js_str);
 }
 
@@ -359,16 +350,18 @@ void GMapWidget::set_map_init(){
 
 //=======================================================
 void GMapWidget::add_airport(QString airport){
-
+	execute_js( QString("add_airport('%1')").arg(airport) );
 }
 
 void GMapWidget::show_airport(QString airport){
-
+	execute_js( QString("show_airport('%1')").arg(airport) );
 }
 
-void GMapWidget::add_airport_marker(QString airport, QString lat, QString lng){
-	QString js_str = QString("add_marker(%1, %2, '%3');")
-					 .arg( lat ).arg( lng ).arg( airport );
-	//qDebug() << js_str;
+void GMapWidget::add_runway(QString airport, QString rwy1, QString lat1, QString lng1, QString rwy2, QString lat2, QString lng2){
+   QString js_str = QString("add_runway('%1','%2', %3, %4, '%5', %6, %7);"
+							).arg( airport
+							).arg( rwy1 ).arg( lat1 ).arg( lng1
+							).arg( rwy2 ).arg( lat2 ).arg( lng2
+	);
 	execute_js(js_str);
 }

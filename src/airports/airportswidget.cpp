@@ -242,12 +242,14 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	headerItem->setText(CI_LAT, tr("Lat"));
 	headerItem->setText(CI_LNG, tr("Lng"));
 	headerItem->setText(CI_ALIGNMNET, tr("Alignment"));
+	headerItem->setText(CI_RUNWAYS, tr("R"));
 	treeWidgetAirportInfo->setColumnHidden(CI_TYPE,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_LABEL,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_SETTING_KEY,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_WIDTH,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_LENGTH,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_ALIGNMNET,true);
+
 
 	treeWidgetAirportInfo->setColumnWidth(CI_NODE, 120);
 	treeWidgetAirportInfo->header()->setStretchLastSection(true);
@@ -520,12 +522,13 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			//== Add runway parent ie X - Y both ends
 			QTreeWidgetItem *rItem = new QTreeWidgetItem(runwaysParent);
 			rItem->setIcon(0, QIcon(":/icon/runways"));
+			rItem->setText(CI_RUNWAYS, "1");
 			rItem->setText(CI_NODE, nodeRunway.childNodes().at(0).firstChildElement("rwy").text().append(
 									" - ").append(
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()
 									));
 			treeWidgetAirportInfo->setItemExpanded(rItem, true);
-			treeWidgetAirportInfo->setFirstItemColumnSpanned(rItem, true);
+			//treeWidgetAirportInfo->setFirstItemColumnSpanned(rItem, true);
 
 			//= Runway threshold 0
 			QTreeWidgetItem *tItem0 = new QTreeWidgetItem(rItem);
@@ -801,11 +804,19 @@ QString AirportsWidget::validate(){
 void AirportsWidget::on_view_map(){
 	qDebug() << "on_map";
 	QString cApt = current_airport();
-	QTreeWidgetItem *item = treeWidgetAirportInfo->findItems("Runways", Qt::MatchExactly | Qt::MatchRecursive, CI_NODE).at(0);
+	QList<QTreeWidgetItem *> runways = treeWidgetAirportInfo->findItems("1", Qt::MatchExactly | Qt::MatchRecursive, CI_RUNWAYS);
+	qDebug() << "runways" << runways.length();
 	mainObject->mpMapXWidget->add_airport(cApt);
-	for(int idx =0; idx < item->childCount(); idx++){
+	for(int idx =0; idx < runways.length(); idx++){
 		//qDebug() << item->child(idx)->text(CI_LAT);
-		mainObject->mpMapXWidget->add_airport_marker(cApt, item->child(idx)->text(CI_LAT), item->child(idx)->text(CI_LNG));
+		mainObject->mpMapXWidget->add_runway(cApt,
+										runways.at(idx)->child(0)->text(CI_NODE),
+										runways.at(idx)->child(0)->text(CI_LAT),
+										runways.at(idx)->child(0)->text(CI_LNG),
+										runways.at(idx)->child(1)->text(CI_NODE),
+										runways.at(idx)->child(1)->text(CI_LAT),
+										runways.at(idx)->child(1)->text(CI_LNG)
+										);
 
 	}
 	mainObject->mpMapXWidget->show_airport(cApt);

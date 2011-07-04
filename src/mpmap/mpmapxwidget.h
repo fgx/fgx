@@ -47,7 +47,7 @@ public slots:
 	void initialize();
 
 	void add_airport(QString airport);
-	void add_airport_marker(QString airport, QString lat, QString lng);
+	void add_runway(QString airport, QString rwy1, QString lat1, QString lng1, QString rwy2, QString lat2, QString lng2);
 	void show_airport(QString airport);
 };
 

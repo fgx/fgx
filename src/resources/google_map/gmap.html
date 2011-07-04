@@ -36,6 +36,8 @@ var mapDiv;
 var map;
 var debugTxt;
 var markers = {};
+var bounds = {};
+var runways = {};
 
 var idx = 0;
 var z = 10000;
@@ -132,26 +134,46 @@ function set_marker_icon(widget_name, myId, icon_color){
 	//marker.setZIndex(z);
 }
 
-//*****************************************
-//** add_runway()
-//*****************************************
-function add_runway(lat1, lng1, lat2, lng2, label){
-	var coordinates = [
-		new google.maps.LatLng(lat1, lng1),
-		new google.maps.LatLng(lat2, lng2)
-	];
-	var runwayPath = new google.maps.Polyline({
+//==================================================================
+//= Add Airport
+function add_airport(apt){
+	runways[apt] = {};
+	bounds[apt] = new google.maps.LatLngBounds();
+	Qt.map_debug("add_aiport() " + apt);
+}
+
+//==================================================================
+//= Show Airport
+function show_airport(apt){
+	map.fitBounds(bounds[apt]);
+	Qt.map_debug("show_airport()" + apt);
+}
+
+//==================================================================
+//== Add Runway
+function add_runway(apt, rwy1, lat1, lng1, rwy2, lat2, lng2){
+
+	var ll1 = new google.maps.LatLng(lat1, lng1);
+	var ll2 = new google.maps.LatLng(lat2, lng2);
+	var coordinates = [ ll1, ll2 ];
+
+
+
+	runways[apt] = new google.maps.Polyline({
 		path: coordinates,
 		strokeColor: "#FF0000",
 		strokeOpacity: 1.0,
 		strokeWeight: 2
 	});
-	//alert(coordinates);
-	runwayPath.setMap(map);
+	runways[apt].setMap(map);
 	
-	map.panTo(new google.maps.LatLng(lat1, lng1));
-	map.setZoom(13);
+	bounds[apt].extend(ll1);
+	bounds[apt].extend(ll2);
+
+	Qt.map_debug("add_runway()" + apt);
 }
+
+
 
 
 //*****************************************
@@ -245,9 +267,8 @@ function send_position(latlng){
 //** Initialize Map
 //*************************************************
 function initialize_map(){
-	//debugTxt = document.getElementById("debug");
+
 	mapDiv = document.getElementById("map_canvas");
-	//alert("init start");
 	geocoder = new google.maps.Geocoder();
 	var latlng = new google.maps.LatLng(0.0,-0.0);
 	var mapOptions = {
@@ -262,7 +283,7 @@ function initialize_map(){
 
 	//* MouseMove
 	google.maps.event.addListener(map, 'mousemove', function(ev){
-alert(ev);
+
 		if(Qt){
 			Qt.map_mouse_move(ev.latLng.lat(), ev.latLng.lng());
 		}
@@ -292,69 +313,9 @@ alert(ev);
 	google.maps.event.addListener(map, 'dblclick', function(event){
 		placeMarker(event.latLng);
 	});
-//alert("init end");
-/*
-var flightPlanCoordinates = [
-    new google.maps.LatLng(90.0, -0.0),
-    new google.maps.LatLng(-90.0, -0.0),
-    //new google.maps.LatLng(-18.142599, 178.431),
-    //new google.maps.LatLng(-27.46758, 153.027892)
-  ];
-  var flightPath = new google.maps.Polyline({
-    path: flightPlanCoordinates,
-    strokeColor: "#FF0000",
-    strokeOpacity: 1.0,
-    strokeWeight: 2
-  });
-
-  flightPath.setMap(map);
-*/
-
-/*
-  var triangleCoords = [
-    new google.maps.LatLng(10.0, 10.0),
-    new google.maps.LatLng(10.0, 0.0),
-    new google.maps.LatLng(0.0, 0.0),
-    new google.maps.LatLng(0.0, 10.0),
-	new google.maps.LatLng(10.0, 10.0)
-  ];
-*/
-/*
-for(var down=90; down > 0; down=down - 10 ){
-	var triangleCoords = [
-    new google.maps.LatLng(down, 10.0),
-    new google.maps.LatLng(down, 0.0),
-    new google.maps.LatLng(down -10 , 0.0),
-    new google.maps.LatLng(down -10, 10.0),
-	new google.maps.LatLng(down, 10.0)
-	];
-  var bermudaTriangle = new google.maps.Polygon({
-    paths: triangleCoords,
-    strokeColor: "#FF0000",
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: "#FF0000",
-    fillOpacity: 0.35
-  });
-
-  bermudaTriangle.setMap(map);
-}
-*/
-  // Construct the polygon
-  // Note that we don't specify an array or arrays, but instead just
-  // a simple array of LatLngs in the paths property
-
-
-	//* sets default view
-	//set_default_view();
-	//alert(Qt);
-
-
 	init_flag = true;
 	if(Qt){
-		Qt.set_map_init();
-		//alert("set_map_init()");
-	
+		Qt.set_map_init();	
 	}
 }
 

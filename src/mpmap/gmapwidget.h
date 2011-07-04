@@ -51,9 +51,9 @@ public:
 
     void add_marker(LatLng latlng, QString label);
 
-    void add_runway(float lat1, float lng1, float lat2, float lng2, QString label);
-    void add_runway(QString lat1, QString lng1, QString lat2, QString lng2, QString label);
-    void add_runway(LatLng p1, LatLng p2, QString label);
+	//#void add_runway(float lat1, float lng1, float lat2, float lng2, QString label);
+	//void add_runway(QString apt, QString lat1, QString lng1, QString lat2, QString lng2l);
+	//void add_runway(LatLng p1, LatLng p2, QString label);
 
 
 signals:
@@ -67,6 +67,7 @@ public slots:
 	void on_zoom_action(QAbstractButton*);
 
 	//== Map Events
+	void map_debug(QVariant);
 	void map_mouse_move(QVariant lat, QVariant lng);
 	void map_click(QVariant lat, QVariant lng);
 	void map_right_click(QVariant lat, QVariant lng);
@@ -84,7 +85,7 @@ public slots:
 
 
 	void add_airport(QString airport);
-	void add_airport_marker(QString airport, QString lat, QString lng);
+	void add_runway(QString airport, QString rwy1, QString lat1, QString lng1, QString rwy2, QString lat2, QString lng2);
 	void show_airport(QString airport);
 
 };
