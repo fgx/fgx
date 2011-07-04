@@ -70,6 +70,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 
 	tree->setRootIsDecorated(false);
 	tree->setUniformRowHeights(true);
+	tree->setAlternatingRowColors(true);
 
 	tree->headerItem()->setText(C_CALLSIGN, "Callsign");
 	tree->headerItem()->setText(C_AIRCRAFT, "Aircraft");
@@ -123,10 +124,23 @@ void PilotsWidget::on_server_ready_read(){
 	server_string.append(s);
 }
 
+//=============================================
+// Server call finished.. so parse to tree
+//=============================================
+/* we do not want to clear the tree and reload as user would loose focus..
+   Also the last "communicate tiem means a pilot does not clear of the list"
+   A net conection might drop and reappear later = crash or terrain terrain etc..
+   SO current plan is to make a time stamp when a new pilot is gr
+*/
+
 void PilotsWidget::on_server_read_finished(){
 	//qDebug() << "done"; // << server_string;
 
-	// first mark the existing as flagged
+
+	//== Loop all ndes and set flags
+	for(int idxf=0; idxf << tree->invisibleRootItem()->childCount(); idxf++){
+		tree->invisibleRootItem()->child(idxf)->setText(C_FLAG, "1");
+	}
 
 
 	//= Create Dom Document

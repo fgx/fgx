@@ -39,6 +39,8 @@ public:
 
 	MainObject *mainObject;
 
+	QTimer *timer;
+
 	QNetworkAccessManager *netMan;
 	QNetworkReply  *reply;
 	QString server_string;
