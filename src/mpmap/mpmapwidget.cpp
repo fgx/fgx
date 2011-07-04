@@ -46,16 +46,11 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
     toolbar->addWidget(comboServer);
 	
 	//**get callsign
-	QString mpmapFollowCallsign;
-	mpmapFollowCallsign.append(mainObject->settings->value("callsign").toString());
-	
+
 	//**add callsign to url
-	QString mapURL1("http://mpmap01.flightgear.org/?follow=");
-	QString mapURL2("http://mpmap02.flightgear.org/?follow=");
-	mapURL1.append(mpmapFollowCallsign);
-	mapURL2.append(mpmapFollowCallsign);
-    comboServer->addItem("MpMap-01", QVariant(mapURL1));
-    comboServer->addItem("MpMap-02", QVariant(mapURL2));
+	comboServer->addItem("MpMap-01", QVariant("http://mpmap01.flightgear.org/?follow="));
+	comboServer->addItem("MpMap-02", QVariant("http://mpmap02.flightgear.org/?follow="));
+	comboServer->setCurrentIndex(0);
     connect(comboServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_server(int)));
 
 	//=============================================================
@@ -101,16 +96,14 @@ void MpMapWidget::update_progress(int v){
 void MpMapWidget::end_progress(bool Ok){
 	Q_UNUSED(Ok);
     progressBar->setVisible(false);
-	QString statusURL = comboServer->itemData(comboServer->currentIndex()).toString();
-	statusURL.append(mpmapFollowCallsign);
-    statusBar->showMessage( statusURL );
+	statusBar->showMessage( webView->url().toString() );
 }
 
 
 void MpMapWidget::on_combo_server(int index){
 
     QString server_url = comboServer->itemData(index).toString();
-	webView->setUrl(  QUrl(server_url)  );
+	webView->setUrl(  comboServer->itemData(index).toString().append(mainObject->settings->value("callsign").toString())  );
     statusBar->showMessage(QString("Loading: ").append(server_url));
     //qDebug("on_combo");
 

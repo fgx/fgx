@@ -207,8 +207,8 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	treeViewAirports->setColumnHidden(CA_DIR, true);
 
 	connect( treeViewAirports->selectionModel(),
-			 SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ),
-			 this, SLOT( on_airport_tree_selected(QModelIndex,QModelIndex) )
+			 SIGNAL( currentChanged(QModelIndex,QModelIndex)),
+			 this, SLOT( on_airport_tree_selected(QModelIndex, QModelIndex) )
 	);
 
 	//* StatusBar for Airports
@@ -233,7 +233,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	airportInfoLayout->addWidget(treeWidgetAirportInfo, 3);
 	treeWidgetAirportInfo->setAlternatingRowColors(true);
 	treeWidgetAirportInfo->setRootIsDecorated(true);
-	//treeWidgetAirportInfo->setSortingEnabled(true);
+	treeWidgetAirportInfo->setUniformRowHeights(true);
 
 	QTreeWidgetItem *headerItem = treeWidgetAirportInfo->headerItem();
 	headerItem->setText(CI_NODE, tr(""));
@@ -249,6 +249,8 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	treeWidgetAirportInfo->setColumnHidden(CI_LENGTH,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_ALIGNMNET,true);
 
+	treeWidgetAirportInfo->setColumnWidth(CI_NODE, 120);
+	treeWidgetAirportInfo->header()->setStretchLastSection(true);
 
 	statusBarAirportInfo = new QStatusBar();
 	statusBarAirportInfo->setSizeGripEnabled(false);
@@ -397,7 +399,7 @@ void AirportsWidget::on_update_airports_filter(){
 //==============================================================
 //*** Airport Clicked 
 void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx){
-
+	qDebug() << "on tree";
 	Q_UNUSED(previousIdx);
 
 	//* Clear the Runways tree
@@ -407,7 +409,7 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 	if(!currentIdx.isValid()){
 		return;
 	}
-
+	qDebug() << "on tree";
 	//* Get the airport code forn source model
 	QModelIndex srcIndex = proxyModel->mapToSource(currentIdx);
 	QString airport_code = model->item(srcIndex.row(), CA_CODE)->text();
@@ -422,7 +424,7 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 	QString count_label;
-
+	qDebug() << "load_infO-tree" << airport_code;
 	int runways_count = load_runways_node(airport_dir, airport_code);
 	if(runways_count == 0){
 		count_label.append(tr("No runway"));
@@ -460,7 +462,7 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 // Load Runways
 //==============================================================
 int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code){
-
+	qDebug() << "load runways" << airport_dir << airport_code;
 	//* Create the Runways Node
 	QTreeWidgetItem *runwaysParent = new QTreeWidgetItem();
 	runwaysParent->setText(0, "Runways" );
@@ -504,28 +506,62 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 
 	//* Make file contents into a string from bytearray
 	QString xmlThresholdString = fileXmlThrehsold.readAll();
-
+	qDebug() << threshold_file;
 	//* Create domDocument - important dont pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
 	QDomDocument dom;
 	dom.setContent(xmlThresholdString); //* AFTER dom has been created, then set the content from a string from the file
 
 	//* Get threhold nodes
-	QDomNodeList nodesThreshold = dom.elementsByTagName("threshold");
+	QDomNodeList nodeRunways = dom.elementsByTagName("runway");
 	QStringList list;
-
-	if (nodesThreshold.count() > 0){
-		for(int idxd =0; idxd < nodesThreshold.count(); idxd++){
+	qDebug() << "count" << nodeRunways.count();
+	if (nodeRunways.count() > 0){
+		for(int idxd =0; idxd < nodeRunways.count(); idxd++){
+			qDebug() << idxd;
 			//* Nodes "rwy" << "hdg-deg" << "lat" << "lon";
-			QDomNode thresholdNode = nodesThreshold.at(idxd);
+			QDomNode nodeRunway = nodeRunways.at(idxd);
+
+			qDebug() << nodeRunway.childNodes().at(0).firstChildElement("rwy").text();
+
+			//== Add runway parent
+			QTreeWidgetItem *rItem = new QTreeWidgetItem(runwaysParent);
+			rItem->setText(CI_NODE, nodeRunway.childNodes().at(0).firstChildElement("rwy").text().append(
+									" - ").append(
+											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()
+									));
+			treeWidgetAirportInfo->setItemExpanded(rItem, true);
+			treeWidgetAirportInfo->setFirstItemColumnSpanned(rItem, true);
+
+			//= Runway threshold 0
+			QTreeWidgetItem *tItem0 = new QTreeWidgetItem(rItem);
+			tItem0->setText(CI_NODE,  nodeRunway.childNodes().at(0).firstChildElement("rwy").text());
+			tItem0->setText(CI_LAT,  nodeRunway.childNodes().at(0).firstChildElement("lat").text());
+			tItem0->setText(CI_LNG,  nodeRunway.childNodes().at(0).firstChildElement("lon").text());
+			tItem0->setText(CI_TYPE, "runway");
+			tItem0->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
+											nodeRunway.childNodes().at(0).firstChildElement("rwy").text()));
+			//= Runway  threshold 1
+			QTreeWidgetItem *tItem1 = new QTreeWidgetItem(rItem);
+			tItem1->setText(CI_NODE,  nodeRunway.childNodes().at(1).firstChildElement("rwy").text());
+			tItem1->setText(CI_LAT,  nodeRunway.childNodes().at(1).firstChildElement("lat").text());
+			tItem1->setText(CI_LNG,  nodeRunway.childNodes().at(1).firstChildElement("lon").text());
+			tItem1->setText(CI_TYPE, "runway");
+			tItem1->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
+											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()));
+			//nodeRunway.firstChildElement("threshold");
+
+			//qDebug() << nodeRunway.firstChildElement("rwy").text();
 			//list << thresholdNode.firstChildElement("rwy").text();
 			//list << thresholdNode.firstChildElement("lat").text();
 			//list << thresholdNode.firstChildElement("lng").text();
+			/*
 			QTreeWidgetItem *rItem = new QTreeWidgetItem(runwaysParent);
 			rItem->setText(CI_NODE,  thresholdNode.firstChildElement("rwy").text());
 			rItem->setText(CI_LAT,  thresholdNode.firstChildElement("lat").text());
 			rItem->setText(CI_LNG,  thresholdNode.firstChildElement("lon").text());
 			rItem->setText(CI_TYPE, "runway");
 			rItem->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(thresholdNode.firstChildElement("rwy").text()));
+			*/
 		}
 	}
 	/*
@@ -673,6 +709,7 @@ void AirportsWidget::on_buttonGroupUse(){
 //====================================================================
 
 QString AirportsWidget::current_airport(){
+	qDebug() << "curr_apt"; 
 	if(treeViewAirports->selectionModel()->selectedIndexes().size() == 0){
 		return "";
 	}

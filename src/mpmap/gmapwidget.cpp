@@ -345,7 +345,7 @@ void GMapWidget::init_map(){
 
 		webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 		QByteArray contents = file.readAll();
-		qDebug() << contents;
+		//qDebug() << contents;
 		webView->setHtml(contents);
 	}
 	map_initialized = true;
