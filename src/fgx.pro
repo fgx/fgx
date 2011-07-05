@@ -123,5 +123,6 @@ SOURCES += main.cpp \
     mpmap/xwebpage.cpp
 RESOURCES += resources/icons.qrc \
     resources/artwork.qrc \
+	resources/fonts.qrc \
     resources/google_map.qrc
 CONFIG += console

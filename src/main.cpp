@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <QFile>
 #include <QTextStream>
+#include <QFontDatabase>
 
 
 #include "xobjects/mainobject.h"
@@ -47,17 +48,27 @@ int main( int argc, char* argv[])
 	QApplication::setOrganizationName("FGx");
 	QApplication::setOrganizationDomain("googlecode.com");
 	QApplication::setApplicationName("FGx");
-	QApplication::setApplicationVersion("2.4.0a1");
-
-	//== Start the application here
-	MainObject mainObject;
+	QApplication::setApplicationVersion("2.4.0a2");
 	
 	//=====================================================
-	//== some global styles
+	//== Add fonts to database, set app fonts
+	QFontDatabase::addApplicationFont(":/font/logisoso");
+	QFontDatabase::addApplicationFont(":/font/freeuniversalregular");
+	QFontDatabase::addApplicationFont(":/font/freeuniversalbold");
+	
+	QFont universalregular("FreeUniversal", 12);
+	QFont universalbold("FreeUniversal", 12);
+	universalbold.setBold(false);
+	universalbold.setLetterSpacing(QFont::AbsoluteSpacing, 0.7);
+	app.setFont(universalbold);
+	
+	//=====================================================
+	//== global styles
 	QString styles;
+	styles.append("QWidget { font-family: FreeUniversal }");
 	styles.append("QLineEdit { background-color: white }");
-	styles.append("QGroupBox { font-size: 11px; }"); // text-transform: uppercase
-	styles.append("QPushButton { padding: 5px; }");
+	styles.append("QGroupBox { font-size: 12px }");
+	styles.append("QPushButton { font-family: FreeUniversal; font-size: 12px; padding: 5px; }");
 	styles.append("QStatusBar { font-family: Andale mono, Lucida Console, monospace; font-size: 12px; font-weight: normal }");
 	styles.append("LauncherWindow { background-color: #eeeeee }");
 	styles.append("QMenuBar { color: #eeeeee; background-color: #333333 }");
@@ -65,9 +76,11 @@ int main( int argc, char* argv[])
 	styles.append("QMenu::item::selected { color: #eeeeee; background-color: #999999 }");
 	styles.append("QTreeView::item{ padding: 2px;}");
 	styles.append("QPlainTextEdit { font-family: Andale mono, Lucida Console, monospace; font-size: 12px; font-weight: normal }");
-
-	
+				
 	app.setStyleSheet(styles);
+	
+	//== Start the application here
+	MainObject mainObject;
 
 	//* check for dev_mode, install message handler
 	if( XSettings::dev_mode() == false ){
@@ -75,7 +88,10 @@ int main( int argc, char* argv[])
 	}
 
 	return app.exec();
+	
+
 }
+
 
 
 
