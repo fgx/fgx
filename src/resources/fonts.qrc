@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/font" >
+	<file alias="logisoso">fonts/logisoso/logisoso.ttf</file>
+	<file alias="freeuniversalregular">fonts/freeuniversal/FreeUniversal-Regular.ttf</file>
+	<file alias="freeuniversalbold">fonts/freeuniversal/FreeUniversal-Bold.ttf</file>
+</qresource>
+</RCC>
