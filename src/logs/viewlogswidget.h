@@ -16,7 +16,7 @@ class ViewLogsWidget : public QWidget
 Q_OBJECT
 public:
 	explicit ViewLogsWidget(MainObject *mob, QWidget *parent = 0);
-
+    ~ViewLogsWidget();
 
 	MainObject *mainObject;
 
@@ -30,6 +30,10 @@ public:
 	QPlainTextEdit *txtFgxLog;
 	QPushButton *buttonFgxRefresh;
 
+    QString stgFgFsLog;
+    QString stgTerraSyncLog;
+    QString stgFgComLog;
+    QString stgFgxLog;
 
 	void add_log(QString log_name, QString log);
 	void clear_log(QString log_name );

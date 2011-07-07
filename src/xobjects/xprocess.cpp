@@ -4,6 +4,7 @@
 #ifdef Q_OS_WIN
 #include <process.h>
 #endif
+#include "utilities/utilities.h"
 
 XProcess::XProcess(MainObject *mob, QString logger_name, QObject *parent) :
     QObject(parent)
@@ -41,6 +42,7 @@ void XProcess::start(QString command_line, QStringList extra_env)
 		env << extra_env;
 		process->setEnvironment(env);
 	}
+    outLog("CMD:"+log_name+": ["+command_line+"]");
 	process->start(command_line);
 	process->closeWriteChannel();
 }
@@ -93,16 +95,26 @@ void XProcess::on_process_error(QProcess::ProcessError error)
 
 	switch (error) {
 		case QProcess::FailedToStart:
-			message += "fgfs failed to start; (incorrect path?)";
+            message += "failed to start; (incorrect path?)\n";
 			break;
-		case QProcess::ReadError:
-			message += "there was an error reading from the process";
+        case QProcess::Crashed:
+            message += "process crashed!\n";
+            break;
+        case QProcess::Timedout:
+            message += "process timedout!\n";
+            break;
+        case QProcess::WriteError:
+            message += "error writing to process\n";
+            break;
+        case QProcess::ReadError:
+            message += "error reading from process\n";
 			break;
 		case QProcess::UnknownError:
-			message += "unknown error";
+            message += "unknown error\n";
 			break;
 		default:
-			return;
+            message += "Uncased error!\n";
+            break;
 	}
 	mainObject->add_log(log_name, message);
 }

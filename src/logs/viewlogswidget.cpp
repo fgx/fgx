@@ -7,6 +7,7 @@
 
 
 #include "logs/viewlogswidget.h"
+#include "utilities/utilities.h"
 
 ViewLogsWidget::ViewLogsWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
@@ -100,44 +101,117 @@ void ViewLogsWidget::clear_log(QString log_name)
 {
 	if(log_name == "fgfs"){
 		txtFgFsLog->clear();
-
+        if (stgFgFsLog.length()) {
+            outLog("clear_log:"+log_name+":"+stgFgFsLog);
+            stgFgFsLog.clear();
+        }
 	}else if(log_name == "fgx"){
 		txtFgxLog->clear();
-
+        if (stgFgxLog.length()) {
+            outLog("clean_log:"+log_name+":"+stgFgxLog);
+            stgFgxLog.clear();
+        }
 	}else if(log_name == "fgcom"){
 		txtFgComLog->clear();
+        if (stgFgComLog.length()) {
+            outLog("clear_log:"+log_name+":"+stgFgComLog);
+            stgFgComLog.clear();
+        }
 
 	}else if(log_name == "terrasync"){
 		txtTerraSyncLog->clear();
-	}
+        if (stgTerraSyncLog.length()) {
+            outLog("clear_log:"+log_name+":"+stgTerraSyncLog);
+            stgTerraSyncLog.clear();
+        }
+    }
 }
 
 //=========================================================
 //==  add log
 void ViewLogsWidget::add_log(QString log_name, QString line)
 {
+    bool hasle = line.contains(QChar('\n'));
+    QString trim = line.trimmed();
+    int len = trim.length();
 	if(log_name == "fgfs"){
-		txtFgFsLog->insertPlainText(line);
-		txtFgFsLog->moveCursor(QTextCursor::End);
+        txtFgFsLog->insertPlainText(line);
+        txtFgFsLog->moveCursor(QTextCursor::End);
+        if (len) {
+            if (hasle)
+                stgFgFsLog.append(trim);
+            else
+                stgFgFsLog.append(line);
+        }
+        if (hasle && stgFgFsLog.length()) {
+            outLog("add_log:"+log_name+":"+stgFgFsLog);
+            stgFgFsLog.clear();
+        }
 
 	}else if(log_name == "fgx"){
 		txtFgxLog->insertPlainText(line);
 		txtFgxLog->moveCursor(QTextCursor::End);
+        if (len) {
+            if (hasle)
+                stgFgxLog.append(trim);
+            else
+                stgFgxLog.append(line);
+        }
+        if (hasle && stgFgxLog.length()) {
+            outLog("add_log:"+log_name+":"+stgFgxLog);
+            stgFgxLog.clear();
+        }
 
 	}else if(log_name == "fgcom"){
 		txtFgComLog->insertPlainText(line);
 		txtFgComLog->moveCursor(QTextCursor::End);
+        if (len) {
+            if (hasle)
+                stgFgComLog.append(trim);
+            else
+                stgFgComLog.append(line);
+        }
+        if (hasle && stgFgComLog.length()) {
+            outLog("add_log:"+log_name+":"+stgFgComLog);
+            stgFgComLog.clear();
+        }
 
 	}else if(log_name == "terrasync"){
 		txtTerraSyncLog->insertPlainText(line);
 		txtTerraSyncLog->moveCursor(QTextCursor::End);
-	}
+        if (len) {
+            if (hasle)
+                stgTerraSyncLog.append(trim);
+            else
+                stgTerraSyncLog.append(line);
+        }
+        if (hasle && stgTerraSyncLog.length()) {
+            outLog("add_log:"+log_name+":"+stgTerraSyncLog);
+            stgTerraSyncLog.clear();
+        }
+    } else {
+        if (len)
+            outLog("add_log:"+log_name+"????:"+trim);
+    }
 }
 
 //=========================================================
 //==  CloseEvent
 void ViewLogsWidget::closeEvent(QCloseEvent *event){
+    clear_log("fgfs");
+    clear_log("fgx");
+    clear_log("fgcom");
+    clear_log("terrasync");
 	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	event->accept();
 }
+
+ViewLogsWidget::~ViewLogsWidget()
+{
+    clear_log("fgfs");
+    clear_log("fgx");
+    clear_log("fgcom");
+    clear_log("terrasync");
+}
+
