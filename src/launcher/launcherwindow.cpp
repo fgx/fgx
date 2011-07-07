@@ -31,10 +31,6 @@
 LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	: QWidget(parent)
 {
-	//QPoint pos = mainsettings.value("pos", QPoint(200, 200)).toPoint();
-	//QSize size = settings.value("size", QSize(400, 400)).toSize();
-	//resize(size);
-	move(QPoint(0, 0));
 	
 	
 	//#####= Set to true to show all exec controls
@@ -355,6 +351,7 @@ void LauncherWindow::save_settings()
     mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	outLog("FGx: LauncherWindow::save_settings() saved ***");
+	
 }
 
 //================================================================================
@@ -369,11 +366,8 @@ void LauncherWindow::load_settings()
 	airportsWidget->load_settings();
 	networkWidget->load_settings();
 	advancedOptionsWidget->load_settings();
-
 	exeTerraSync->setEnabled( mainObject->settings->terrasync_enabled() );
-
 	outLog("FGx: Settings loaded in LauncherWIndow::load_settings()");
-
 }
 
 
@@ -407,7 +401,6 @@ bool LauncherWindow::validate(){
 	v = aircraftWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
-		//messageBox->showWindowMessage("Validation failed:<BR> Please select an Aircraft or check [x] Use Default.");
 		messageLabel->showMessage(v);
 		return false;
 	}
@@ -416,7 +409,6 @@ bool LauncherWindow::validate(){
 	v = airportsWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(airportsWidget));
-		//messageBox->showWindowMessage("Validation failed:<BR> Please select an Airport.");
 		messageLabel->showMessage(v);
 		return false;
 	}
@@ -425,14 +417,12 @@ bool LauncherWindow::validate(){
 	v = networkWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(networkWidget));
-		//messageBox->showWindowMessage("Validation failed:<BR> Please check settings on Network Tab!");
 		messageLabel->showMessage(v);
 		return false;
 	}
 	v = timeWeatherWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(timeWeatherWidget));
-		//messageBox->showWindowMessage("Validation failed:<BR> Please check settings on Time Weather tab");
 		messageLabel->showMessage(v);
 		return false;
 	}

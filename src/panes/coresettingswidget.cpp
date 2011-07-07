@@ -14,7 +14,6 @@
 #include "panes/coresettingswidget.h"
 #include "xwidgets/xgroupboxes.h"
 #include "utilities/helpers.h"
-#include "xwidgets/xmessagelabel.h"
 
 
 CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
@@ -107,50 +106,41 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
 	layoutPaths->addWidget(grpFgPaths);
 
-	QString style_paths("background-color: #efefef; padding: 3px; color: #444444; border: 1px solid #cccccc;");
+	QString style_paths("font-family: Andale mono, Lucida Console, monospace; font-size: 12px; padding: 3px; background-color: #eeeeee; border: 1px solid #dddddd ");
 
 	//----------------------------------------------
 	//= FlightGear executable
-	XGroupVBox *grpFgFs = new XGroupVBox("FlightGear Executable");
-	grpFgPaths->addWidget(grpFgFs);
 
-	labelFgFsInfo = new QLabel(tr("Custom FlightGear Executable:"));
-	labelFgFsInfo->setStyleSheet("width: 200px; font-size: 11px;  ");
-	grpFgFs->addWidget(labelFgFsInfo, 1);
+	labelFgFsInfo = new QLabel(tr("Custom FlightGear Executable (fgfs):"));
+	grpFgPaths->addWidget(labelFgFsInfo, 1);
 
 	labelFgFsPath = new QLabel(" ");
 	labelFgFsPath->setStyleSheet(style_paths);
-	grpFgFs->addWidget(labelFgFsPath);
+	grpFgPaths->addWidget(labelFgFsPath);
 
 
 	//----------------------------------------------
 	//= FG ROOT Data Directory
-	XGroupVBox *grpFgRoot = new XGroupVBox("FlightGear Data");
-	grpFgPaths->addWidget(grpFgRoot);
 
-	labelFgRootInfo = new QLabel(tr("Custom Data Directory:"));
-	labelFgRootInfo->setStyleSheet("font-size: 11px;");
-	grpFgRoot->addWidget(labelFgRootInfo, 1);
+	labelFgRootInfo = new QLabel(tr("Custom FlightGear Data Directory (fgdata):"));
+	grpFgPaths->addWidget(labelFgRootInfo, 1);
 
 	labelFgRootPath = new QLabel(" ");
 	labelFgRootPath->setStyleSheet(style_paths);
-	grpFgRoot->addWidget(labelFgRootPath);
+	grpFgPaths->addWidget(labelFgRootPath);
 
 	layoutPaths->addStretch(20);
 	
 	
 	//----------------------------------------------
 	//= Terrasync Directory
-	XGroupVBox *grpTerraSync = new XGroupVBox("Scenery Source with TerraSync");
-	grpFgPaths->addWidget(grpTerraSync);
 
 	labelTerraSyncInfo = new QLabel(tr(""));
-	//labelTerraSyncInfo->setStyleSheet("font-size: 11px;");
-	grpTerraSync->addWidget(labelTerraSyncInfo, 1);
+	grpFgPaths->addWidget(labelTerraSyncInfo, 1);
 
 	labelTerraSyncDataPath = new QLabel("");
 	labelTerraSyncDataPath->setStyleSheet(style_paths);
-	grpTerraSync->addWidget(labelTerraSyncDataPath);
+	grpFgPaths->addWidget(labelTerraSyncDataPath);
 
 	//= Connect Mainobject (after paths wizard)
 	connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
@@ -186,16 +176,16 @@ void CoreSettingsWidget::load_settings(){
 
 
 	if(mainObject->settings->value("fgfs_use_default").toBool()){
-		labelFgFsInfo->setText("Using Default Executable Path");
+		labelFgFsInfo->setText("Using Default Executable Path:");
 	}else{
-		labelFgFsInfo->setText("Using Custom Executable Path");
+		labelFgFsInfo->setText("Using Custom Executable Path:");
 	}
 	labelFgFsPath->setText(mainObject->settings->fgfs_path());
 
 	if(mainObject->settings->value("fgroot_use_default").toBool()){
-		labelFgRootInfo->setText("Using Default FG_ROOT");
+		labelFgRootInfo->setText("Using Default Data Path (FG_ROOT):");
 	}else{
-		labelFgRootInfo->setText("Using Custom FG_ROOT Path");
+		labelFgRootInfo->setText("Using Custom Data Path (FG_ROOT):");
 	}
 	labelFgRootPath->setText(mainObject->settings->fgroot());
 
