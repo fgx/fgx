@@ -16,7 +16,7 @@ XMessageLabel::XMessageLabel(QWidget *parent) :
 }
 
 void XMessageLabel::showMessage(QString message){
-	showMessage(message, 1200);
+	showMessage(message, 3000);
 }
 
 void XMessageLabel::showMessage(QString message, int timeout){
@@ -27,8 +27,7 @@ void XMessageLabel::showMessage(QString message, int timeout){
 }
 
 void XMessageLabel::start_fade(){
-	QString defaultmessage("[Callsign], Cessna 172p, San Francisco (KSFO), Runway 28L");
-	setText(defaultmessage);
+	setText("[Callsign], Cessna c172p, San Francisco (KSFO), Runway 28R");
 	setStyleSheet("font-family: freeuniversal; color: #666666; font-size: 16px; background-image: url(:/artwork/fgx-logo-flyer); background-repeat: none; padding-left: 40px; padding-top: 3px; padding-bottom: 5px; padding-right: 5px; margin-top: 10px; margin-bottom: 20px;");
 }
 

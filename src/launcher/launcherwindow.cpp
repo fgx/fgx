@@ -20,7 +20,6 @@
 
 #include "xwidgets/xgroupboxes.h"
 
-
 #include "launcher/launcherwindow.h"
 #include "utilities/utilities.h"
 #include "utilities/messagebox.h"
@@ -341,6 +340,8 @@ void LauncherWindow::on_start_fgcom_clicked() {
 //================================================================================
 void LauncherWindow::save_settings()
 {
+	QString message("Settings saved.");
+	messageLabel->showMessage(message);
 
 	coreSettingsWidget->save_settings();
 	timeWeatherWidget->save_settings();
@@ -352,6 +353,8 @@ void LauncherWindow::save_settings()
 	mainObject->settings->sync();
 	outLog("FGx: LauncherWindow::save_settings() saved ***");
 	
+	
+	
 }
 
 //================================================================================
@@ -359,7 +362,10 @@ void LauncherWindow::save_settings()
 //================================================================================
 void LauncherWindow::load_settings()
 {
-
+	
+	QString message("Settings loaded.");
+	messageLabel->showMessage(message);
+	
 	coreSettingsWidget->load_settings();
 	timeWeatherWidget->load_settings();
 	aircraftWidget->load_settings();
@@ -368,6 +374,8 @@ void LauncherWindow::load_settings()
 	advancedOptionsWidget->load_settings();
 	exeTerraSync->setEnabled( mainObject->settings->terrasync_enabled() );
 	outLog("FGx: Settings loaded in LauncherWIndow::load_settings()");
+	
+
 }
 
 
