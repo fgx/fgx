@@ -30,6 +30,8 @@
 		/* new resources for buttons */
 		<file alias="save">ycons/fgx-save.png</file>
 		<file alias="load">ycons/fgx-load.png</file>
+		<file alias="start">ycons/fgx-start.png</file>
+		<file alias="stop">ycons/fgx-stop.png</file>
 		
     </qresource>
 </RCC>

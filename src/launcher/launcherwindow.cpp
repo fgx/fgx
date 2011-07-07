@@ -63,11 +63,11 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
 	//== Header Banner
 	//====================================================
-	/*QString header_style("padding: 10px 0px 0px 0px; vertical-align: top");
+	QString header_style("padding: 10px 0px 0px 0px; vertical-align: top");
     headerLabel = new QLabel(this);
-	headerLabel->setFixedHeight(30);
+	headerLabel->setFixedHeight(10);
 	headerLabel->setStyleSheet(header_style);
-	outerContainer->addWidget(headerLabel, 0);*/
+	outerContainer->addWidget(headerLabel, 0);
 
 
 

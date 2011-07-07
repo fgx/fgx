@@ -57,17 +57,17 @@ int main( int argc, char* argv[])
 	QFontDatabase::addApplicationFont(":/font/freeuniversalbold");
 	
 	QFont universal("FreeUniversal", 14);
-	universal.setLetterSpacing(QFont::AbsoluteSpacing, 0.4);
+	universal.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
 	app.setFont(universal);
 	
 	//=====================================================
 	//== global styles
 	QString styles("");
-	styles.append("QWidget { font-family: FreeUniversal; font-size: 12px; }");
-	styles.append("QLineEdit { background-color: white }");
-	styles.append("QGroupBox { font-size: 12px; background-color: #ffffff; border-top: 24px solid #ffffff }");
-	styles.append("QGroupBox::title {subcontrol-origin: margin; subcontrol-position: top left; border: 0px; color: #00428d; background-color: #eeeeee; padding: 4px;}");
-	styles.append("QPushButton { font-family: FreeUniversal; font-size: 12px; padding: 5px; }");
+	styles.append("QWidget, QLabel { font-family: FreeUniversal; font-size: 12px; }");
+	styles.append("QLineEdit { background-color: #fffee0; border: 1px solid #dddddd }");
+	styles.append("QGroupBox { background-color: #ffffff; border-top: 24px solid #ffffff }");
+	styles.append("QGroupBox::title {subcontrol-origin: margin; subcontrol-position: top left; border: 0px; color: #ffffff; background-color: #999999; padding: 4px;}");
+	styles.append("QPushButton { font-family: FreeUniversal; padding: 5px; }");
 	
 	styles.append("QComboBox { background-color: #eeeeee; border: 4px; }");
 	styles.append("QComboBox::item { background-color: #eeeeee; }");
@@ -85,7 +85,7 @@ int main( int argc, char* argv[])
 	styles.append("QMenu::item { color: #333333; background-color: #eeeeee }");
 	styles.append("QMenu::item::selected { color: #eeeeee; background-color: #b0b0b0 }");
 	styles.append("QTreeView::item{ padding: 2px;}");
-	styles.append("QPlainTextEdit { font-family: Andale mono, Lucida Console, monospace; font-size: 12px; font-weight: normal }");
+	styles.append("QPlainTextEdit { font-family: Andale mono, Lucida Console, monospace; font-size: 12px; background-color: #fffee0; border: 1px solid #dddddd }");
 	
 	styles.append("ExeControls { background-color: #ffffff; border: 0px; margin-top: 22px; }");
 	styles.append("ExeControls::title { color: #000000; background-color: yellow; margin-top: 0px; margin-left: 0px; }");

@@ -26,6 +26,7 @@ OutputPreviewWidget::OutputPreviewWidget(MainObject *mOb, QWidget *parent) :
 
 	txtPreviewOutput = new QPlainTextEdit();
 	groupBox->addWidget(txtPreviewOutput);
+	txtPreviewOutput->setReadOnly(true);
 
 
 	QVBoxLayout *layoutButtons = new QVBoxLayout();

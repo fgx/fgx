@@ -34,7 +34,7 @@ ExeControls::ExeControls(QString title, QWidget *parent) :
 	buttonStop = new QToolButton();
 	buttonStop->setText("Stop");
 	buttonStop->setAutoRaise(true);
-	buttonStop->setIcon(QIcon(":/icon/wizard"));
+	buttonStop->setIcon(QIcon(":/icon/stop"));
 	buttonStop->setStyleSheet("padding: 0px;");
 	buttonStop->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttonStop->setEnabled(false);
@@ -43,9 +43,9 @@ ExeControls::ExeControls(QString title, QWidget *parent) :
 
 	//** Start Button
 	buttonStart = new QToolButton();
-	buttonStart->setText("Sart");
+	buttonStart->setText("Start");
 	buttonStart->setAutoRaise(true);
-	buttonStart->setIcon(QIcon(":/icon/wizard"));
+	buttonStart->setIcon(QIcon(":/icon/start"));
 	buttonStart->setStyleSheet("padding: 0px;");
 	buttonStart->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttlay->addWidget(buttonStart);
