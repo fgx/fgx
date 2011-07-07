@@ -21,7 +21,6 @@ public:
 	void addLayout(QBoxLayout *lay);
 	void addLayout(QGridLayout *gridlayout);
 
-	void set_major(bool state);
 signals:
 
 public slots:
@@ -41,7 +40,6 @@ public:
 	void addLayout(QBoxLayout *lay);
 	void addLayout(QGridLayout *gridlayout);
 
-	void set_major(bool state);
 signals:
 
 public slots:
@@ -60,7 +58,6 @@ public:
 	void addWidget(QWidget *w, int row, int col, int row_span, int col_span);
 	void addWidget(QWidget *w, int row, int col, int row_span, int col_span, Qt::AlignmentFlag align);
 
-	void set_major(bool state);
 signals:
 
 public slots:

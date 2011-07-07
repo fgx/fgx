@@ -8,6 +8,7 @@
 #include <QtGui/QSystemTrayIcon>
 #include <QtGui/QAction>
 #include <QtGui/QMenu>
+#include <QtGui/QMenuBar>
 #include <QtGui/QLabel>
 #include <QtGui/QWidgetAction>
 
@@ -74,6 +75,8 @@ public:
 
     QSystemTrayIcon *trayIcon;
     QMenu *popupMenu;
+	
+	QMenuBar *menuBar;
 
 
     QWidgetAction *actionCallsign;

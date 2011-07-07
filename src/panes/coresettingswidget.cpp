@@ -14,6 +14,7 @@
 #include "panes/coresettingswidget.h"
 #include "xwidgets/xgroupboxes.h"
 #include "utilities/helpers.h"
+#include "xwidgets/xmessagelabel.h"
 
 
 CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
@@ -21,19 +22,19 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 {
 
 	mainObject = mOb;
+	
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	setLayout(mainLayout);
 	
-
+	
 	QVBoxLayout *layoutLeft = new QVBoxLayout();
 	mainLayout->addLayout(layoutLeft, 1);
-
+	
 
 	//==================================================================
 	//= Callsign
 	XGroupVBox *grpCallsign = new XGroupVBox(tr("Callsign"));
-	grpCallsign->set_major(true);
 	layoutLeft->addWidget(grpCallsign);
 
 	txtCallSign = new QLineEdit(this);
@@ -45,7 +46,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//==================================================================
 	//= Screen Options
 	XGroupVBox *grpBoxScreen = new XGroupVBox(tr("Screen Options"));
-	grpBoxScreen->set_major(true);
 	layoutLeft->addWidget(grpBoxScreen);
 
 	//= Initial Size
@@ -70,7 +70,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//==================================================================
 	//= Controls
 	XGroupVBox *grpBoxControls = new XGroupVBox(tr("Controls"));
-	grpBoxControls->set_major(true);
 	layoutLeft->addWidget(grpBoxControls);
 
 	//= Enable Autocordination
@@ -85,7 +84,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//==================================================================
 	//= Map Features
 	XGroupVBox *grpMapFeatures = new XGroupVBox("Map Features");
-	grpMapFeatures->set_major(true);
 	layoutLeft->addWidget(grpMapFeatures);
 
 	checkBoxShowMpMap = new QCheckBox("Show Map in Browser");
@@ -107,7 +105,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	mainLayout->addLayout(layoutPaths, 2);
 
 	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
-	grpFgPaths->set_major(true);
 	layoutPaths->addWidget(grpFgPaths);
 
 	QString style_paths("background-color: #efefef; padding: 3px; color: #444444; border: 1px solid #cccccc;");

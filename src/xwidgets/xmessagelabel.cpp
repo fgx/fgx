@@ -3,6 +3,7 @@
 
 
 #include "xmessagelabel.h"
+#include "panes/coresettingswidget.h"
 
 XMessageLabel::XMessageLabel(QWidget *parent) :
     QLabel(parent)
@@ -12,39 +13,23 @@ XMessageLabel::XMessageLabel(QWidget *parent) :
 	connect(timer, SIGNAL(timeout()), this, SLOT(on_timer()));
 	timer->setInterval(60);
 
-	//setWindowOpacity(0.0);
-
 }
 
 void XMessageLabel::showMessage(QString message){
-	showMessage(message, 3000);
+	showMessage(message, 1200);
 }
 
 void XMessageLabel::showMessage(QString message, int timeout){
 
-	setStyleSheet("  color: #000099; font-size: 10pt; background-color: yellow; padding: 2px;");
+	setStyleSheet("  font-family: freeuniversal; color: #333333; font-size: 16px; background-image: url(:/artwork/fgx-logo-flyer-yellow); background-repeat: none; padding-left: 40px; padding-top: 3px; padding-bottom: 5px; padding-right: 5px; margin-top: 10px; margin-bottom: 20px; ");
 	setText(message);
-	//setWindowOpacity(1.0);
 	QTimer::singleShot(timeout, this, SLOT(start_fade()) );
 }
 
 void XMessageLabel::start_fade(){
-	//qDebug() << "start_dade";
-	//timer->start();
-	setText("");
-	setStyleSheet("");
-}
-
-void XMessageLabel::on_timer(){
-	//setText("")
-	/*
-	qDebug() << "on_timer" << windowOpacity();
-	if(windowOpacity() == 0.0){
-		timer->stop();
-	}else{
-		setWindowOpacity( windowOpacity() - 0.1 );
-	}
-	*/
+	QString defaultmessage("[Callsign], Cessna 172p, San Francisco (KSFO), Runway 28L");
+	setText(defaultmessage);
+	setStyleSheet("font-family: freeuniversal; color: #666666; font-size: 16px; background-image: url(:/artwork/fgx-logo-flyer); background-repeat: none; padding-left: 40px; padding-top: 3px; padding-bottom: 5px; padding-right: 5px; margin-top: 10px; margin-bottom: 20px;");
 }
 
 

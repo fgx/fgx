@@ -11,6 +11,7 @@
 
 #include "xobjects/mainobject.h"
 #include "xwidgets/xgroupboxes.h"
+#include "xwidgets/xmessagelabel.h"
 
 class MainObject;
 
@@ -21,6 +22,8 @@ public:
 	explicit CoreSettingsWidget(MainObject *mOb, QWidget *parent = 0);
 
 	MainObject *mainObject;
+	
+	XMessageLabel *messageLabel;
 
 
 	//* Callsign

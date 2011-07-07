@@ -19,8 +19,8 @@ public slots:
 
 	void showMessage(QString message, int timeout);
 	void showMessage(QString message);
+	
 
-	void on_timer();
 	void start_fade();
 
 };

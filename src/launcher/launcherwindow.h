@@ -23,6 +23,7 @@
 #include "utilities/messagebox.h"
 
 #include "xobjects/mainobject.h"
+#include "xwidgets/xgroupboxes.h"
 
 
 //= Foward Declaratins
@@ -46,12 +47,15 @@ class LauncherWindow : public QWidget
 public:
 
     LauncherWindow(MainObject *mainOb, QWidget *parent = 0);
+	
     ~LauncherWindow();
 
     MainObject *mainObject;
 	bool initializing;
 
 	XMessageLabel *messageLabel;
+	
+	XGroupHBox *toolBox;
 
 	QActionGroup *actionGroupStyle;
     QLabel *headerLabel;

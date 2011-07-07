@@ -37,7 +37,6 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 
 	XGroupVBox *grpBoxTime = new XGroupVBox(tr("Time"));
 	layTimeSeason->addWidget(grpBoxTime);
-	grpBoxTime->set_major(true);
 	buttonGroupTime = new QButtonGroup(this);
 	buttonGroupTime->setExclusive(true);
 
@@ -58,7 +57,6 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	season_labels << tr("Winter") << tr("Summer");
 
 	XGroupVBox *grpBoxSeason = new XGroupVBox(tr("Season"));
-	grpBoxSeason->set_major(true);
 	layTimeSeason->addWidget(grpBoxSeason);
 	buttonGroupSeason = new QButtonGroup(this);
 	buttonGroupSeason->setExclusive(true);
@@ -92,8 +90,8 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	metar_labels << tr("None") << tr("Fetch METAR live") << tr("Use METAR below");
 
 	XGroupVBox *grpBoxMetar = new XGroupVBox(tr("METAR"));
+	laymetar->setAlignment(Qt::AlignTop);
 	laymetar->addWidget(grpBoxMetar);
-	grpBoxMetar->set_major(true);
 	buttonGroupMetar = new QButtonGroup(this);
 	buttonGroupMetar->setExclusive(true);
 	connect(buttonGroupMetar, SIGNAL(buttonClicked(int)), this, SLOT(on_metar_clicked()));
@@ -107,7 +105,9 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	buttonGroupMetar->button(0)->setChecked(true);
 
 	txtMetar = new QPlainTextEdit();
+	txtMetar->setMaximumHeight(80);
 	grpBoxMetar->addWidget(txtMetar);
+	laymetar->addStretch(20);
 
 
 }

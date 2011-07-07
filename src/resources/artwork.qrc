@@ -1,10 +1,25 @@
 <RCC>
-    <qresource prefix="/images">
-        <file alias="fgx-logo">artwork/fgx-logo.png</file>
+    <qresource prefix="/artwork">
+        <file alias="fgx-logo-flyer">artwork/fgx-logo-flyer.png</file>
+		<file alias="fgx-logo-flyer-yellow">artwork/fgx-logo-flyer-yellow.png</file>
         <file alias="boxtop-black">artwork/boxtop-black.gif</file>
         <file alias="boxtop-gray">artwork/boxtop-gray.gif</file>
         <file alias="background_yellow">artwork/background_yellow.gif</file>
         <file alias="background_yellow_dark">artwork/background_yellow_dark.gif</file>
         <file alias="background_blue">artwork/background_blue.gif</file>
+		
+		/* tab bar widgets */
+		<file alias="background-gray-tabbar">artwork/background-gray-tabbar.gif</file>
+		<file alias="boxtop-black-tabbar">artwork/boxtop-black-tabbar.gif</file>
+		<file alias="boxtop-black-inactive">artwork/boxtop-black-inactive.gif</file>
+		
+		/* group boxes */
+		<file alias="background-gray-tabbar">artwork/background-gray-light.gif</file>
+		
+		
+		<file alias="fgx-back-click">artwork/fgx-back-click.png</file>
+		<file alias="fgx-back-normal">artwork/fgx-back-normal.png</file>
+		<file alias="fgx-back-over">artwork/fgx-back-over.png</file>
+		
     </qresource>
 </RCC>

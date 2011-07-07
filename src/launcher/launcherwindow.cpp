@@ -31,8 +31,12 @@
 LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	: QWidget(parent)
 {
-
-
+	//QPoint pos = mainsettings.value("pos", QPoint(200, 200)).toPoint();
+	//QSize size = settings.value("size", QSize(400, 400)).toSize();
+	//resize(size);
+	move(QPoint(0, 0));
+	
+	
 	//#####= Set to true to show all exec controls
 	bool show_all_exe_controls = false;
 
@@ -54,73 +58,16 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	QVBoxLayout *outerContainer = new QVBoxLayout();
 	outerContainer->setContentsMargins(0, 0, 0, 0);
 	outerContainer->setSpacing(0);
-	setLayout(outerContainer);
-
-
-
-	//====================================================
-	//== Setup Menus
-	//====================================================
-	QMenuBar *menuBar = new QMenuBar();
-	outerContainer->addWidget(menuBar);
-
-	//== File Menu
-	QMenu *menuFile = new QMenu(tr("File"));
-	menuBar->addMenu(menuFile);
-	QAction *actionQuit = menuFile->addAction(QIcon(":/icon/quit"), tr("Quit"), this, SLOT(on_quit()));
-	actionQuit->setIconVisibleInMenu(true);
-
-	//=== Style Menu
-	QMenu *menuStyle = new QMenu(tr("Style"));
-	menuBar->addMenu(menuStyle);	
-
-	actionGroupStyle = new QActionGroup(this);
-	actionGroupStyle->setExclusive(true);
-	connect(actionGroupStyle, SIGNAL(triggered(QAction*)), this, SLOT(on_action_style(QAction*)));
-	QStringList styles =  QStyleFactory::keys();
-
-	for(int idx=0; idx < styles.count(); idx++){
-		QString sty = QString(styles.at(idx));
-		QAction *act = menuStyle->addAction( sty );
-		actionGroupStyle->addAction( act );
-		act->setCheckable(true);
-		if(mainObject->settings->style_current() == sty){
-			act->setChecked(true);
-		}
-	}
-
-	//==== Help Menu
-	QMenu *menuHelp = new QMenu(tr("Help"));
-	menuBar->addMenu(menuHelp);
-
-	QActionGroup *actionGroupUrls = new QActionGroup(this);
-	connect(actionGroupUrls, SIGNAL(triggered(QAction*)), this, SLOT(on_action_open_url(QAction*)));
-
-	QAction *act = menuHelp->addAction(tr("Project Page"));
-	act->setProperty("url", "http://code.google.com/p/fgx");
-	actionGroupUrls->addAction(act);
-
-	act = menuHelp->addAction(tr("Bugs and Issues"));
-	act->setProperty("url", "http://code.google.com/p/fgx/issues/list");
-	actionGroupUrls->addAction(act);
-
-	act = menuHelp->addAction(tr("Source Code"));
-	act->setProperty("url", "https://gitorious.org/fgx/fgx/");
-	actionGroupUrls->addAction(act);
-
-	menuHelp->addSeparator();
-	menuHelp->addAction(tr("About FGx"), this, SLOT(on_about_fgx()));
-	menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
-	
+	setLayout(outerContainer);	
 	
 	//====================================================
 	//== Header Banner
 	//====================================================
-	QString header_style("padding: 10px 0px 0px 370px; vertical-align: top;	 background-image: url(':/images/fgx-logo'); background-repeat: no-repeat; background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #86A0D8, stop: 0.01 #eeeeee, stop: 0.49 #CED7EA, stop: 0.5 #CED7EA, stop: 1 #eeeeee);");
+	/*QString header_style("padding: 10px 0px 0px 0px; vertical-align: top");
     headerLabel = new QLabel(this);
-	headerLabel->setFixedHeight(80);
+	headerLabel->setFixedHeight(30);
 	headerLabel->setStyleSheet(header_style);
-	outerContainer->addWidget(headerLabel, 0);
+	outerContainer->addWidget(headerLabel, 0);*/
 
 
 
@@ -129,48 +76,13 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	QHBoxLayout *toolbarLayout =  new QHBoxLayout();
 	toolbarLayout->setContentsMargins(10, 0, 10, 0);
 	outerContainer->addLayout(toolbarLayout);
-	//toolbarLayout->addStretch(100);
-
+	
 	//== Message Label
+	
 	messageLabel = new XMessageLabel(this);
-	messageLabel->showMessage("Welcome pilot");
-	toolbarLayout->addWidget(messageLabel,100);
-
-	//= Show Log
-	/*
-	QToolButton *buttonShowMpMap = new QToolButton(this);
-	buttonShowMpMap->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttonShowMpMap->setText("View Map");
-	buttonShowMpMap->setAutoRaise(true);
-	buttonShowMpMap->setIcon(QIcon(":/icon/mpmap"));
-	buttonShowMpMap->setStyleSheet("padding: 0px;");
-	toolbarLayout->addWidget(buttonShowMpMap);
-	connect(buttonShowMpMap, SIGNAL(clicked()),
-			mainObject, SLOT(on_mpxmap())
-	);
-	*/
-
-	//= Show Log
-	QToolButton *buttonShowLogs = new QToolButton(this);
-	buttonShowLogs->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttonShowLogs->setText("View Logs");
-	buttonShowLogs->setAutoRaise(true);
-	buttonShowLogs->setIcon(QIcon(":/icon/log"));
-	buttonShowLogs->setStyleSheet("padding: 0px;");
-	toolbarLayout->addWidget(buttonShowLogs);
-	connect(buttonShowLogs, SIGNAL(clicked()),
-			mainObject, SLOT(on_view_logs())
-	);
-
-	//== Shjow setup wizard
-	QToolButton *buttonShowWizard = new QToolButton();
-	buttonShowWizard->setText("Set Paths");
-	buttonShowWizard->setAutoRaise(true);
-	buttonShowWizard->setIcon(QIcon(":/icon/wizard"));
-	buttonShowWizard->setStyleSheet("padding: 0px;");
-	buttonShowWizard->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	toolbarLayout->addWidget(buttonShowWizard);
-	connect(buttonShowWizard, SIGNAL(clicked()), mainObject, SLOT(show_setup_wizard()));
+	messageLabel->setStyleSheet("{ font-size: 16px; }");
+	messageLabel->showMessage("Welcome [Callsign]");
+	toolbarLayout->addWidget(messageLabel,1);
 
 
 	QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -218,7 +130,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	tabWidget->addTab( advancedOptionsWidget, tr("Advanced Options"));
 
 
-
 	//* Output + Preview
 	outputPreviewWidget = new OutputPreviewWidget(mainObject);
 	tabWidget->addTab( outputPreviewWidget, tr("Launch Command"));
@@ -226,7 +137,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 
 	mainLayout->addSpacing(10);
-
+	mainLayout->setAlignment( Qt::AlignTop );
 
 
 
@@ -236,27 +147,72 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	
 	//* Show bottom bar
 	QHBoxLayout *bottomActionLayout = new QHBoxLayout();
+	bottomActionLayout->setAlignment( Qt::AlignTop );
 	mainLayout->addLayout(bottomActionLayout);
 	
+	XGroupHBox *toolBox = new XGroupHBox(tr("Settings"));
+	bottomActionLayout->addWidget(toolBox);
 	
-	//* Settings: load/save
-	XGroupVBox *grpSettings = new XGroupVBox(tr("Settings"));
-	bottomActionLayout->addWidget(grpSettings);
+	toolBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: yellow }");
 	
-	buttonLoadSettings = new QPushButton();
-	buttonLoadSettings->setMinimumSize(QSize( 100, 30));
-	buttonLoadSettings->setText(tr(" Load "));
-	connect(buttonLoadSettings, SIGNAL(clicked()), this, SLOT(load_settings()));
-	grpSettings->addWidget(buttonLoadSettings);
+	//== Show setup wizard
+	QToolButton *buttonShowWizard = new QToolButton();
+	buttonShowWizard->setText("Set Paths");
+	buttonShowWizard->setAutoRaise(true);
+	buttonShowWizard->setIcon(QIcon(":/icon/wizard"));
+	buttonShowWizard->setStyleSheet("padding: 0px;");
+	buttonShowWizard->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	toolBox->addWidget(buttonShowWizard);
+	connect(buttonShowWizard, SIGNAL(clicked()), mainObject, SLOT(show_setup_wizard()));
 	
-	bottomActionLayout->addStretch(10);
+	//== Show Profiles
+	QToolButton *buttonShowProfiles = new QToolButton();
+	buttonShowProfiles->setText("Profiles");
+	buttonShowProfiles->setAutoRaise(true);
+	buttonShowProfiles->setIcon(QIcon(":/icon/wizard"));
+	buttonShowProfiles->setStyleSheet("padding: 0px;");
+	buttonShowProfiles->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttonShowProfiles->setEnabled(false);
+	toolBox->addWidget(buttonShowProfiles);
+	//connect(buttonShowProfiles, SIGNAL(clicked()), mainObject, SLOT(show_setup_profiles()));
 	
-	buttonSaveSettings = new QPushButton();
-	buttonSaveSettings->setMinimumSize(QSize( 100, 30));
-	buttonSaveSettings->setText(tr(" Save "));
-	connect(buttonSaveSettings, SIGNAL(clicked()), this, SLOT(save_settings()));
-	grpSettings->addWidget(buttonSaveSettings);
+	//= Show Log
+	/*QToolButton *buttonShowLogs = new QToolButton(this);
+	buttonShowLogs->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttonShowLogs->setText("View Logs");
+	buttonShowLogs->setAutoRaise(true);
+	buttonShowLogs->setIcon(QIcon(":/icon/log"));
+	buttonShowLogs->setStyleSheet("padding: 0px;");
+	toolBox->addWidget(buttonShowLogs);
+	connect(buttonShowLogs, SIGNAL(clicked()),
+			mainObject, SLOT(on_view_logs())
+			);*/
 	
+	//= Load Settings
+	QToolButton *buttonLoadSettings = new QToolButton(this);
+	buttonLoadSettings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttonLoadSettings->setText("Load Settings");
+	buttonLoadSettings->setAutoRaise(true);
+	buttonLoadSettings->setIcon(QIcon(":/icon/load"));
+	buttonLoadSettings->setStyleSheet("padding: 0px;");
+	toolBox->addWidget(buttonLoadSettings);
+	connect(buttonLoadSettings, SIGNAL(clicked()),
+			mainObject, SLOT(load_settings())
+			);
+	
+	//= Save Settings
+	QToolButton *buttonSaveSettings = new QToolButton(this);
+	buttonSaveSettings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttonSaveSettings->setText("Save Settings");
+	buttonSaveSettings->setAutoRaise(true);
+	buttonSaveSettings->setIcon(QIcon(":/icon/save"));
+	buttonSaveSettings->setStyleSheet("padding: 0px;");
+	toolBox->addWidget(buttonSaveSettings);
+	connect(buttonSaveSettings, SIGNAL(clicked()),
+			mainObject, SLOT(save_settings())
+			);
+	
+	bottomActionLayout->addStretch(20);
 
 	//=============================================================
 	//== Start Stop ==

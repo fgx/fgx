@@ -12,7 +12,6 @@
 #include <QtGui/QMenu>
 #include <QtGui/QCursor>
 
-
 #include "xobjects/mainobject.h"
 #include "launcher/launcherwindow.h"
 
@@ -31,6 +30,55 @@ MainObject::MainObject(QObject *parent) :
 
 	//= XSettings Object
     settings = new XSettings();
+	
+	//====================================================
+	//== Setup Menus
+	//====================================================
+	QMenuBar *menuBar = new QMenuBar();
+	//outerContainer->addWidget(menuBar);
+	
+	//== File Menu
+	QMenu *menuFile = new QMenu(tr("File"));
+	menuBar->addMenu(menuFile);
+	QAction *actionQuit = menuFile->addAction(QIcon(":/icon/quit"), tr("Quit"), this, SLOT(on_quit()));
+	actionQuit->setIconVisibleInMenu(true);
+	
+	//==== Window Menu
+	QMenu *menuWindow = new QMenu(tr("Window"));
+	menuBar->addMenu(menuWindow);
+	
+	QActionGroup *actionGroupWindow = new QActionGroup(this);
+	
+	QAction *winAct = menuWindow->addAction(tr("Show Launcher"));
+	//winAct->on_launcher();
+	actionGroupWindow->addAction(winAct);
+	
+	QAction *logAct = menuWindow->addAction(tr("Show Logs"));
+	//winAct->on_launcher();
+	actionGroupWindow->addAction(logAct);
+	
+	//==== Help Menu
+	QMenu *menuHelp = new QMenu(tr("Help"));
+	menuBar->addMenu(menuHelp);
+	
+	QActionGroup *actionGroupUrls = new QActionGroup(this);
+	connect(actionGroupUrls, SIGNAL(triggered(QAction*)), this, SLOT(on_action_open_url(QAction*)));
+	
+	QAction *act = menuHelp->addAction(tr("Project Page"));
+	act->setProperty("url", "http://code.google.com/p/fgx");
+	actionGroupUrls->addAction(act);
+	
+	act = menuHelp->addAction(tr("Bugs and Issues"));
+	act->setProperty("url", "http://code.google.com/p/fgx/issues/list");
+	actionGroupUrls->addAction(act);
+	
+	act = menuHelp->addAction(tr("Source Code"));
+	act->setProperty("url", "https://gitorious.org/fgx/fgx/");
+	actionGroupUrls->addAction(act);
+	
+	menuHelp->addSeparator();
+	menuHelp->addAction(tr("About FGx"), this, SLOT(on_about_fgx()));
+	menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
 
 	//= Set GLobal style
 	QApplication::setStyle( QStyleFactory::create(settings->style_current()) );
@@ -161,6 +209,12 @@ void MainObject::initialize(){
 //============================================================================
 //=  Launcher window
 void MainObject::on_launcher(){
+	
+	/* for layout checking purposes, to be removed
+	launcherWindow->move(QPoint(0,0));
+	launcherWindow->resize(QSize(800,600));
+	 */
+
 	launcherWindow->show();
 	launcherWindow->raise();
 

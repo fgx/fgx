@@ -11,8 +11,6 @@
 #include "xsettings.h"
 #include "utilities/utilities.h"
 
-#define UNZIP_READ_BUFFER (256*1024)
-
 
 /*! \class XSettings
  * \brief The XSettings is an extended QSetttings, but also includes most to the FGx configuration.
@@ -52,11 +50,11 @@ QString XSettings::style_current(){
 	return value("gui_style", style_default()).toString();
 }
 
-/** \brief The default style for platform
+/** \brief The default style for platform (currently the same style for ALL platforms).
 */
 QString XSettings::style_default(){
 	if(runningOs() == MAC){
-		return QString("Macintosh (aqua)");
+		return QString("cleanlooks");
 	}
 	if(runningOs() == WINDOWS){
 		return QString("cleanlooks");

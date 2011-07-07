@@ -17,8 +17,8 @@ Q_OBJECT
 public:
 	explicit ExeControls(QString title, QWidget *parent = 0);
 	
-	QPushButton *buttonStart;
-	QPushButton *buttonStop;
+	QToolButton *buttonStart;
+	QToolButton *buttonStop;
 
 signals:
 	void start();

@@ -121,7 +121,7 @@ SOURCES += main.cpp \
     xwidgets/xmessagelabel.cpp \
     mpmap/gmapwidget.cpp \
     mpmap/xwebpage.cpp
-RESOURCES += resources/icons.qrc \
+RESOURCES += resources/ycons.qrc \
     resources/artwork.qrc \
 	resources/fonts.qrc \
     resources/google_map.qrc
