@@ -69,6 +69,10 @@ int main( int argc, char* argv[])
 	styles.append("QGroupBox::title {subcontrol-origin: margin; subcontrol-position: top left; border: 0px; color: #00428d; background-color: #eeeeee; padding: 4px;}");
 	styles.append("QPushButton { font-family: FreeUniversal; font-size: 12px; padding: 5px; }");
 	
+	styles.append("QComboBox { background-color: #eeeeee; border: 4px; }");
+	styles.append("QComboBox::item { background-color: #eeeeee; }");
+	styles.append("QComboBox::item::selected { background-color: #cccccc; color: #000000 }");
+	
 	styles.append("LauncherWindow { background-color: #eeeeee }");
 	
 	styles.append("QTabWidget::pane { background-image: url(:/artwork/background-gray-tabbar); border: 0px; padding-top: 20px; }");
