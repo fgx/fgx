@@ -65,8 +65,8 @@ int main( int argc, char* argv[])
 	QString styles("");
 	styles.append("QWidget, QLabel { font-family: FreeUniversal; font-size: 12px; }");
 	styles.append("QLineEdit { background-color: #fffee0; border: 1px solid #dddddd }");
-	styles.append("QGroupBox { background-color: #ffffff; border-top: 24px solid #ffffff }");
-	styles.append("QGroupBox::title {subcontrol-origin: margin; subcontrol-position: top left; border: 0px; color: #ffffff; background-color: #999999; padding: 4px;}");
+	styles.append("QGroupBox { background-color: #ffffff; border-top: 24px solid #ffffff;}");
+	styles.append("QGroupBox::title {subcontrol-origin: margin; subcontrol-position: top left; border: 0px; color: #fffee0; background-color: #999999; padding: 4px;}");
 	styles.append("QPushButton { font-family: FreeUniversal; padding: 5px; }");
 	
 	styles.append("QComboBox { background-color: #eeeeee; border: 4px; }");
