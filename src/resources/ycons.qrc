@@ -32,6 +32,7 @@
 		<file alias="load">ycons/fgx-load.png</file>
 		<file alias="start">ycons/fgx-start.png</file>
 		<file alias="stop">ycons/fgx-stop.png</file>
+		<file alias="path">ycons/fgx-path.png</file>
 		
     </qresource>
 </RCC>
