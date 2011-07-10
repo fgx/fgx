@@ -42,10 +42,8 @@ public:
 
 
 	QLabel *aeroImageLabel;
-	QTabBar *tabsView;
+	QCheckBox *tabsView;
 	QCheckBox *checkBoxUseDefault;
-	QToolButton *actionViewList;
-	QToolButton *actionViewListNested;
 
 	QLineEdit *txtNav1;
 	QLineEdit *txtNav2;
@@ -60,19 +58,10 @@ public:
 	void select_node(QString aero);
 	QString selected_aircraft();
 
-
-
 private:
 	QTreeWidget *treeWidget;
-	
-
-
     QStatusBar *statusBarTree;
     QStatusBar *statusBarAero;
-
-
-
-
 
 signals:
 	void set_arg(QString action, QString arg, QString value);
