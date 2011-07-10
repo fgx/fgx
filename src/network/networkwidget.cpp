@@ -168,15 +168,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	refreshButton->setIcon(QIcon(":/icon/load"));
 	refreshButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	connect(refreshButton, SIGNAL(clicked()), this, SLOT(dns_lookup()) );
-	
-	QToolButton *buttonShowWizard = new QToolButton();
-	buttonShowWizard->setText("Set Paths");
-	buttonShowWizard->setAutoRaise(true);
-	buttonShowWizard->setIcon(QIcon(":/icon/path"));
-	buttonShowWizard->setStyleSheet("padding: 0px;");
-	buttonShowWizard->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	toolBox->addWidget(buttonShowWizard);
-	connect(buttonShowWizard, SIGNAL(clicked()), mainObject, SLOT(show_setup_wizard()));
 
 
 
