@@ -82,7 +82,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 	//** Use Default Aircraft
 	checkBoxUseDefault = new QCheckBox(this);
-	checkBoxUseDefault->setText("Use Default");
+	checkBoxUseDefault->setText("Use default aircraft");
 	treeTopBar->addWidget(checkBoxUseDefault);
 	connect(checkBoxUseDefault, SIGNAL(clicked()), this, SLOT(on_use_default_clicked()));
 
@@ -91,9 +91,19 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	//==========================
 	//= Filter tabs
 	tabsView = new QTabBar();
-	tabsView->addTab(tr("View List"));
-	tabsView->addTab(tr("View Nested"));
-	treeTopBar->addWidget(tabsView);
+	QToolButton *actionViewList = new QToolButton(this);
+	actionViewList->setText("View list");
+	actionViewList->setIcon(QIcon(":/icon/list"));
+	actionViewList->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	actionViewList->setAutoRaise(true);
+	QToolButton *actionViewListNested = new QToolButton(this);
+	actionViewListNested->setText("View nested");
+	actionViewListNested->setIcon(QIcon(":/icon/list-nested"));
+	actionViewListNested->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	actionViewListNested->setAutoRaise(true);
+	
+	treeTopBar->addWidget(actionViewList);
+	treeTopBar->addWidget(actionViewListNested);
 	connect(tabsView, SIGNAL(currentChanged(int)), this, SLOT(load_tree()));
 
 

@@ -35,5 +35,8 @@
 		<file alias="path">ycons/fgx-path.png</file>
 		<file alias="profile">ycons/fgx-profile.png</file>
 		
+		<file alias="list">ycons/fgx-list.png</file>
+		<file alias="list-nested">ycons/fgx-list-nested.png</file>
+		
     </qresource>
 </RCC>
