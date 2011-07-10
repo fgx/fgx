@@ -113,8 +113,8 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	treeTopBar->addStretch(20);
 
 	QToolButton *actionReloadCacheDb = new QToolButton(this);
-	actionReloadCacheDb->setText("Import");
-	actionReloadCacheDb->setIcon(QIcon(":/icon/import"));
+	actionReloadCacheDb->setText("Reload aircrafts");
+	actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
 	actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	actionReloadCacheDb->setAutoRaise(true);
 	treeTopBar->addWidget(actionReloadCacheDb);
@@ -368,12 +368,15 @@ QString AircraftWidget::validate(){
 
 
 //=============================================================
-// Recan airpcarft cache
+// Rescan airpcarft cache
 void AircraftWidget::on_reload_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
-	statusBarAero->showMessage("Relaoding cache");
+	statusBarAero->showMessage("Reloading cache");
 	QProgressDialog progress(this);
-	progress.setWindowIcon(QIcon(":/icon/import"));
+	QSize size(320,100);
+	progress.resize(size);
+	progress.setWindowIcon(QIcon(":/icon/load"));
+
 	AircraftData::import(progress, mainObject);
 	load_tree();
 }

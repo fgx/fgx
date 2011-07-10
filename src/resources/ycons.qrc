@@ -14,7 +14,6 @@
         <file alias="stop_disabled">icons/control_stop.png</file>
         <file alias="browse">icons/browse.png</file>
         <file alias="terminal">icons/application_osx_terminal.png</file>
-        <file alias="import">icons/database_go.png</file>
         <file alias="favicon">icons/fgx16.png</file>
         <file alias="mpmap">icons/map.png</file>
         <file alias="wizard">icons/wand.png</file>
@@ -30,11 +29,11 @@
 		/* new fgx icons */
 		<file alias="save">ycons/fgx-save.png</file>
 		<file alias="load">ycons/fgx-load.png</file>
+		<file alias="import">ycons/fgx-import.png</file>
 		<file alias="start">ycons/fgx-start.png</file>
 		<file alias="stop">ycons/fgx-stop.png</file>
 		<file alias="path">ycons/fgx-path.png</file>
 		<file alias="profile">ycons/fgx-profile.png</file>
-		
 		<file alias="list">ycons/fgx-list.png</file>
 		<file alias="list-nested">ycons/fgx-list-nested.png</file>
 		
