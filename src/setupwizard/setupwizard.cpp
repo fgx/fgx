@@ -12,7 +12,7 @@ SetupWizard::SetupWizard(MainObject *mOb, QWidget *parent) :
 	setWizardStyle(QWizard::ModernStyle);
 
 	setWindowTitle(tr("Set Paths"));
-	setWindowIcon(QIcon(":icon/wizard"));
+	setWindowIcon(QIcon(":icon/path"));
 
 	fgExePage = new FgExePage(mainObject);
 	addPage(fgExePage);

@@ -193,10 +193,10 @@ void CoreSettingsWidget::load_settings(){
 	labelTerraSyncInfo->setText( mainObject->settings->terrasync_enabled()
 								 ? "Using Terrasync to directory below" : "Using default scenery at path below"
 								 );
-	if (mainObject->settings->value("use_terrasync").toBool()) {
+	if (mainObject->settings->value("terrasync_enabled").toBool()) {
 		labelTerraSyncDataPath->setText( mainObject->settings->terrasync_sync_data_path());
 	} else {
-		labelTerraSyncDataPath->setText("");
+		labelTerraSyncDataPath->setText("kein true");
 	}
 
 }

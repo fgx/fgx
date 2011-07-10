@@ -129,8 +129,8 @@ MainObject::MainObject(QObject *parent) :
 
 	//= Settings Action
 	QAction *actionSetupWizard= new QAction(this);
-	actionSetupWizard->setIcon(QIcon(":/icon/wizard"));
-	actionSetupWizard->setText(tr("Setup..."));
+	actionSetupWizard->setIcon(QIcon(":/icon/path"));
+	actionSetupWizard->setText(tr("Set paths"));
 	actionSetupWizard->setIconVisibleInMenu(true);
 	popupMenu->addAction(actionSetupWizard);
 	connect(actionSetupWizard, SIGNAL(triggered()),
@@ -140,7 +140,7 @@ MainObject::MainObject(QObject *parent) :
 	//== View Logs
 	QAction *actionViewLogs = new QAction(this);
 	actionViewLogs->setIcon(QIcon(":/icon/log"));
-	actionViewLogs->setText(tr("View Logs..."));
+	actionViewLogs->setText(tr("View Logs"));
 	actionViewLogs->setIconVisibleInMenu(true);
 	popupMenu->addAction(actionViewLogs);
 	connect(actionViewLogs, SIGNAL(triggered()),
