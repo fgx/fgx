@@ -13,6 +13,7 @@
 #include <QtGui/QTabBar>
 #include <QtGui/QLabel>
 #include <QtGui/QStatusBar>
+#include <QtGui/QToolButton>
 
 #include "xobjects/mainobject.h"
 
@@ -43,6 +44,8 @@ public:
 	QLabel *aeroImageLabel;
 	QTabBar *tabsView;
 	QCheckBox *checkBoxUseDefault;
+	QToolButton *actionViewList;
+	QToolButton *actionViewListNested;
 
 	QLineEdit *txtNav1;
 	QLineEdit *txtNav2;
@@ -61,6 +64,8 @@ public:
 
 private:
 	QTreeWidget *treeWidget;
+	
+
 
     QStatusBar *statusBarTree;
     QStatusBar *statusBarAero;

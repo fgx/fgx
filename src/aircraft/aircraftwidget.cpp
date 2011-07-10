@@ -91,20 +91,23 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	//==========================
 	//= Filter tabs
 	tabsView = new QTabBar();
-	QToolButton *actionViewList = new QToolButton(this);
+	actionViewList = new QToolButton(this);
 	actionViewList->setText("View list");
 	actionViewList->setIcon(QIcon(":/icon/list"));
 	actionViewList->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	actionViewList->setAutoRaise(true);
-	QToolButton *actionViewListNested = new QToolButton(this);
+	connect(actionViewList, SIGNAL(clicked()), this, SLOT(load_tree()) );
+	
+	actionViewListNested = new QToolButton(this);
 	actionViewListNested->setText("View nested");
 	actionViewListNested->setIcon(QIcon(":/icon/list-nested"));
 	actionViewListNested->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	actionViewListNested->setAutoRaise(true);
+	connect(actionViewListNested, SIGNAL(clicked()), this, SLOT(load_tree()) );
 	
 	treeTopBar->addWidget(actionViewList);
 	treeTopBar->addWidget(actionViewListNested);
-	connect(tabsView, SIGNAL(currentChanged(int)), this, SLOT(load_tree()));
+	
 
 
 	treeTopBar->addStretch(20);
