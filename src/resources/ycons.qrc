@@ -27,12 +27,13 @@
         <file alias="runways">icons/shape_align_center.png</file>
         <file alias="stand">icons/shape_rotate_clockwise.png</file>
 		
-		/* new resources for buttons */
+		/* new fgx icons */
 		<file alias="save">ycons/fgx-save.png</file>
 		<file alias="load">ycons/fgx-load.png</file>
 		<file alias="start">ycons/fgx-start.png</file>
 		<file alias="stop">ycons/fgx-stop.png</file>
 		<file alias="path">ycons/fgx-path.png</file>
+		<file alias="profile">ycons/fgx-profile.png</file>
 		
     </qresource>
 </RCC>

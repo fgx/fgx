@@ -154,7 +154,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	QToolButton *buttonShowWizard = new QToolButton();
 	buttonShowWizard->setText("Set Paths");
 	buttonShowWizard->setAutoRaise(true);
-	buttonShowWizard->setIcon(QIcon(":/icon/wizard"));
+	buttonShowWizard->setIcon(QIcon(":/icon/path"));
 	buttonShowWizard->setStyleSheet("padding: 0px;");
 	buttonShowWizard->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	toolBox->addWidget(buttonShowWizard);
@@ -164,7 +164,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	QToolButton *buttonShowProfiles = new QToolButton();
 	buttonShowProfiles->setText("Profiles");
 	buttonShowProfiles->setAutoRaise(true);
-	buttonShowProfiles->setIcon(QIcon(":/icon/wizard"));
+	buttonShowProfiles->setIcon(QIcon(":/icon/profile"));
 	buttonShowProfiles->setStyleSheet("padding: 0px;");
 	buttonShowProfiles->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttonShowProfiles->setEnabled(false);
