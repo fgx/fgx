@@ -15,7 +15,6 @@
         <file alias="browse">icons/browse.png</file>
         <file alias="terminal">icons/application_osx_terminal.png</file>
         <file alias="favicon">icons/fgx16.png</file>
-        <file alias="mpmap">icons/map.png</file>
         <file alias="wizard">icons/wand.png</file>
         <file alias="log">icons/page_white_text.png</file>
         <file alias="props">icons/chart_organisation.png</file>
@@ -36,6 +35,8 @@
 		<file alias="profile">ycons/fgx-profile.png</file>
 		<file alias="list">ycons/fgx-list.png</file>
 		<file alias="list-nested">ycons/fgx-list-nested.png</file>
+		
+		<file alias="mpmap">ycons/fgx-map.png</file>
 		
     </qresource>
 </RCC>
