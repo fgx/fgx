@@ -302,9 +302,9 @@ void CoreSettingsWidget::load_joysticks(){
 			}
 		}
 	} else {
-		results = "Unable to run 'js_demo' to get Joystick list!\n";
+		results = "FGx Error: Unable to run 'js_demo' to get Joystick list!\n";
 	}
-	outLog("Joystick detection results\n"+results,0); // show results in LOG
+	outLog("*** FGx reports: Joystick detection results\n"+results+" ***",0); // show results in LOG
 	
 	// when no joystick is detected controls goes automatically to "--control=mouse"
 	if (count == 0) {
