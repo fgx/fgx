@@ -192,7 +192,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	buttonLoadSettings->setStyleSheet("padding: 0px;");
 	toolBox->addWidget(buttonLoadSettings);
 	connect(buttonLoadSettings, SIGNAL(clicked()),
-			mainObject, SLOT(load_settings())
+			this, SLOT(load_settings())
 			);
 	
 	//= Save Settings
@@ -204,7 +204,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	buttonSaveSettings->setStyleSheet("padding: 0px;");
 	toolBox->addWidget(buttonSaveSettings);
 	connect(buttonSaveSettings, SIGNAL(clicked()),
-			mainObject, SLOT(save_settings())
+			this, SLOT(save_settings())
 			);
 	
 	bottomActionLayout->addStretch(20);
