@@ -277,7 +277,14 @@ void CoreSettingsWidget::load_joysticks(){
 	QString results;
 	QProcess process;
 	int count = 0;
+	#ifdef Q_OS_MAC
+	QString startJSDemoPath(mainObject->settings->fgfs_path());
+	startJSDemoPath.chop(4);
+	startJSDemoPath.append("js_demo");
+    process.start(startJSDemoPath, QStringList(), QIODevice::ReadOnly);
+	#else
 	process.start("js_demo", QStringList(), QIODevice::ReadOnly);
+	#endif
 	if(process.waitForStarted()){
 		process.waitForFinished(3000);
 		QString ok_result = process.readAllStandardOutput();
