@@ -36,6 +36,7 @@ public:
 
 
 	//* Controls
+	QCheckBox *checkBoxMouseControl;
 	QCheckBox *checkBoxEnableAutoCoordination;
 	QComboBox *comboJoystick;
 

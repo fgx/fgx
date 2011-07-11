@@ -355,9 +355,10 @@ QStringList MainObject::get_fgfs_args(){
 	//=== Season
 	//args << QString("--season=").append(mainObject->settings->value("season").toString());
 
-
-
-
+	//=== Controls
+	if(settings->value("mouse_control").toBool()){
+		args << QString("--control=mouse");
+	}
 
 	//== AutoCordination
 	if(settings->value("enable_auto_coordination").toBool()){
