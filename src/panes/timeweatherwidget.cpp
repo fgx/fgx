@@ -87,7 +87,7 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	QStringList metar_vals; //* The command arg stored in property
 	metar_vals << "none" << "live" << "custom";
 	QStringList metar_labels; //* The labels - subject ot transtation
-	metar_labels << tr("None") << tr("Fetch METAR live") << tr("Use METAR below");
+	metar_labels << tr("None (default weather)") << tr("Fetch METAR data live") << tr("Set static METAR below");
 
 	XGroupVBox *grpBoxMetar = new XGroupVBox(tr("METAR"));
 	laymetar->setAlignment(Qt::AlignTop);

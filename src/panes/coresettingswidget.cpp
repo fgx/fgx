@@ -14,6 +14,7 @@
 #include "panes/coresettingswidget.h"
 #include "xwidgets/xgroupboxes.h"
 #include "utilities/helpers.h"
+#include "utilities/utilities.h"
 
 
 CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
@@ -58,7 +59,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpBoxScreen->addWidget(comboScreenSize);
 	
 	//= Full Screen
-	checkBoxFullScreenStartup = new QCheckBox(tr("Full screen at startup"));
+	checkBoxFullScreenStartup = new QCheckBox(tr("Fullscreen mode"));
 	grpBoxScreen->addWidget(checkBoxFullScreenStartup);
 
 	//= Disable Splash
@@ -70,16 +71,21 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Controls
 	XGroupVBox *grpBoxControls = new XGroupVBox(tr("Controls"));
 	layoutLeft->addWidget(grpBoxControls);
-
-	//= Enable Autocordination
-	checkBoxEnableAutoCoordination = new QCheckBox("Enable Auto Coordination");
-	grpBoxControls->addWidget(checkBoxEnableAutoCoordination);
+	
+	//= Mouse control
+	checkBoxMouseControl = new QCheckBox("Mouse Control");
+	grpBoxControls->addWidget(checkBoxMouseControl);
+	
 
 	//= Joystick
 	grpBoxControls->addWidget(new QLabel("Joystick"));
 	comboJoystick = new QComboBox();
 	grpBoxControls->addWidget(comboJoystick);
-
+	
+	//= Enable Autocordination
+	checkBoxEnableAutoCoordination = new QCheckBox("Enable Auto Coordination");
+	grpBoxControls->addWidget(checkBoxEnableAutoCoordination);
+	
 	//==================================================================
 	//= Map Features
 	XGroupVBox *grpMapFeatures = new XGroupVBox("Map Features");
@@ -166,7 +172,7 @@ void CoreSettingsWidget::load_settings(){
 	checkBoxDisableSplashScreen->setChecked(mainObject->settings->value("screen_splash").toBool());
 
 	//= controls
-	checkBoxEnableAutoCoordination->setChecked(mainObject->settings->value("enable_auto_coordination", false).toBool());
+	checkBoxMouseControl->setChecked(mainObject->settings->value("mouse_control", false).toBool());
 	// TODO - joystick
 
 	//* mpmap
@@ -193,10 +199,10 @@ void CoreSettingsWidget::load_settings(){
 	labelTerraSyncInfo->setText( mainObject->settings->terrasync_enabled()
 								 ? "Using Terrasync to directory below" : "Using default scenery at path below"
 								 );
-	if (mainObject->settings->value("use_terrasync").toBool()) {
+	if (mainObject->settings->value("terrasync_enabled").toBool()) {
 		labelTerraSyncDataPath->setText( mainObject->settings->terrasync_sync_data_path());
 	} else {
-		labelTerraSyncDataPath->setText("");
+		labelTerraSyncDataPath->setText("No path");
 	}
 
 }
@@ -225,6 +231,7 @@ void CoreSettingsWidget::save_settings(){
 
 	//= Controls
 	mainObject->settings->setValue("enable_auto_coordination", checkBoxEnableAutoCoordination->isChecked());
+	mainObject->settings->setValue("mouse_control", checkBoxMouseControl->isChecked());
 
 	//= Map
 	mainObject->settings->setValue("show_map_map", checkBoxShowMpMap->isChecked());
@@ -295,12 +302,16 @@ void CoreSettingsWidget::load_joysticks(){
 			}
 		}
 	} else {
-		results = "Unable to run 'js_demo' to get Joystick list!\n";
+		results = "FGx Error: Unable to run 'js_demo' to get Joystick list!\n";
 	}
-	//outLog("Joystick detection results\n"+results,0); // show results in LOG
-	// *TBD* Maybe if count == 0, disable or hide the comboJoystick
+	outLog("*** FGx reports: Joystick detection results\n"+results+" ***",0); // show results in LOG
+	
+	// when no joystick is detected controls goes automatically to "--control=mouse"
 	if (count == 0) {
-		// comboJoystick->hide(); // *TBD* Choice to be made
+		checkBoxMouseControl->setEnabled(false);
+		checkBoxMouseControl->setChecked(true);
+		checkBoxEnableAutoCoordination->setEnabled(false);
+		comboJoystick->setEnabled(false);
 	}
 }
 

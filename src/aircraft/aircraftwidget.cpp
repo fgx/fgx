@@ -90,31 +90,31 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 	//==========================
 	//= Filter tabs
-	tabsView = new QTabBar();
-	actionViewList = new QToolButton(this);
-	actionViewList->setText("View list");
-	actionViewList->setIcon(QIcon(":/icon/list"));
-	actionViewList->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	actionViewList->setAutoRaise(true);
-	connect(actionViewList, SIGNAL(clicked()), this, SLOT(load_tree()) );
+	/*tabsView = new QTabBar();
+	QSize size(22, 22);
+	tabsView->setIconSize(size);
+	QString substyle("");
 	
-	actionViewListNested = new QToolButton(this);
-	actionViewListNested->setText("View nested");
-	actionViewListNested->setIcon(QIcon(":/icon/list-nested"));
-	actionViewListNested->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	actionViewListNested->setAutoRaise(true);
-	connect(actionViewListNested, SIGNAL(clicked()), this, SLOT(load_tree()) );
+	tabsView->addTab(QIcon(":/icon/list"), "View List");
+	tabsView->addTab(QIcon(":/icon/list-nested"), "View Nested");	
+	treeTopBar->addWidget(tabsView);
+	connect(tabsView, SIGNAL(currentChanged(int)), this, SLOT(load_tree()));*/
 	
-	treeTopBar->addWidget(actionViewList);
-	treeTopBar->addWidget(actionViewListNested);
+	tabsView = new QCheckBox();
+	tabsView->setText("View nested");
+	treeTopBar->addWidget(tabsView);
+	connect(tabsView, SIGNAL(clicked()), this, SLOT(load_tree()));
+	
+	//treeTopBar->addWidget(actionViewList);
+	//treeTopBar->addWidget(actionViewListNested);
 	
 
 
 	treeTopBar->addStretch(20);
 
 	QToolButton *actionReloadCacheDb = new QToolButton(this);
-	actionReloadCacheDb->setText("Import");
-	actionReloadCacheDb->setIcon(QIcon(":/icon/import"));
+	actionReloadCacheDb->setText("Reload aircrafts");
+	actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
 	actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	actionReloadCacheDb->setAutoRaise(true);
 	treeTopBar->addWidget(actionReloadCacheDb);
@@ -368,12 +368,15 @@ QString AircraftWidget::validate(){
 
 
 //=============================================================
-// Recan airpcarft cache
+// Rescan airpcarft cache
 void AircraftWidget::on_reload_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
-	statusBarAero->showMessage("Relaoding cache");
+	statusBarAero->showMessage("Reloading cache");
 	QProgressDialog progress(this);
-	progress.setWindowIcon(QIcon(":/icon/import"));
+	QSize size(320,100);
+	progress.resize(size);
+	progress.setWindowIcon(QIcon(":/icon/load"));
+
 	AircraftData::import(progress, mainObject);
 	load_tree();
 }
@@ -387,8 +390,12 @@ void AircraftWidget::load_tree(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 
 	QTreeWidgetItem *parentItem = new QTreeWidgetItem();
-
-	int view = tabsView->currentIndex();
+	
+	int view = 0;
+	if (tabsView->isChecked()) {
+		view = 1;
+	}
+	
 	treeWidget->setColumnHidden(C_DIR, view == LIST_VIEW);
 	treeWidget->setRootIsDecorated(view == FOLDER_VIEW);
 

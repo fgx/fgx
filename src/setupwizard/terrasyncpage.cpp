@@ -12,8 +12,8 @@ TerraSyncPage::TerraSyncPage(MainObject *mob, QWidget *parent) :
 
 	mainObject = mob;
 
-	setTitle("Setup terrasync");
-	setSubTitle("Select the ??? for terrasync");
+	setTitle("Setup TerraSync");
+	setSubTitle("Select the directory for TerraSync");
 
 	QGridLayout *gridLayout = new QGridLayout();
 	setLayout(gridLayout);

@@ -63,7 +63,7 @@ ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
 
 
 	//= Import Cache Data ============
-	XGroupGBox *grpImports = new XGroupGBox("Reload Cached Data");
+	XGroupGBox *grpImports = new XGroupGBox("Reload cached data");
 	mainLayout->addWidget(grpImports);
 
 	//== Aircraft ==

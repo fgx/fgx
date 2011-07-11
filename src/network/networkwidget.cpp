@@ -163,8 +163,10 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	//* refresh MP servers
 	QToolButton *refreshButton = new QToolButton(this);
 	layoutBottomTreeBar->addWidget(refreshButton);
-	refreshButton->setIcon(QIcon(":/icon/refresh"));
-	refreshButton->setToolButtonStyle(Qt::ToolButtonIconOnly);
+	refreshButton->setText("Refresh Server List");
+	refreshButton->setAutoRaise(true);
+	refreshButton->setIcon(QIcon(":/icon/load"));
+	refreshButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	connect(refreshButton, SIGNAL(clicked()), this, SLOT(dns_lookup()) );
 
 
