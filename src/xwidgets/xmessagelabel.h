@@ -10,7 +10,7 @@ Q_OBJECT
 public:
     explicit XMessageLabel(QWidget *parent = 0);
 
-	QTimer *timer;
+	//QTimer *timer;
 
 signals:
 

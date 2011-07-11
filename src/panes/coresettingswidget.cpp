@@ -39,6 +39,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 	txtCallSign = new QLineEdit(this);
 	txtCallSign->setText("");
+	txtCallSign->setMaxLength(7);
 	grpCallsign->addWidget(txtCallSign);
 	connect(txtCallSign, SIGNAL(textChanged(QString)), this, SLOT(on_callsign_changed(QString)) );
 
@@ -61,6 +62,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Full Screen
 	checkBoxFullScreenStartup = new QCheckBox(tr("Fullscreen mode"));
 	grpBoxScreen->addWidget(checkBoxFullScreenStartup);
+	connect(checkBoxFullScreenStartup, SIGNAL(clicked()), this, SLOT(on_checkbox_fullscreen()));
 
 	//= Disable Splash
 	checkBoxDisableSplashScreen = new QCheckBox(tr("Disable Splash Screen"));
@@ -170,6 +172,7 @@ void CoreSettingsWidget::load_settings(){
 	Helpers::select_combo(comboScreenSize, mainObject->settings->value("screen_size").toString());
 	checkBoxFullScreenStartup->setChecked(mainObject->settings->value("screen_full").toBool());
 	checkBoxDisableSplashScreen->setChecked(mainObject->settings->value("screen_splash").toBool());
+	on_checkbox_fullscreen();
 
 	//= controls
 	checkBoxMouseControl->setChecked(mainObject->settings->value("mouse_control", false).toBool());
@@ -338,4 +341,9 @@ void CoreSettingsWidget::on_callsign_changed(QString txt){
 	Q_UNUSED(txt);
 	save_settings();
 	mainObject->set_callsign();
+}
+
+
+void CoreSettingsWidget::on_checkbox_fullscreen(){
+	comboScreenSize->setDisabled( checkBoxFullScreenStartup->isChecked() );
 }
