@@ -39,6 +39,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 	txtCallSign = new QLineEdit(this);
 	txtCallSign->setText("");
+	txtCallSign->setMaxLength(7);
 	grpCallsign->addWidget(txtCallSign);
 	connect(txtCallSign, SIGNAL(textChanged(QString)), this, SLOT(on_callsign_changed(QString)) );
 
