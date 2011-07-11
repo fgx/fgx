@@ -80,10 +80,7 @@ public slots:
 	void on_checkbox_show_mp_map();
 	void on_checkbox_fullscreen();
 	void load_joysticks();
-	bool check_js_demo_exists();
-
 	void on_radio_fg_path();
-
 	void load_settings();
 };
 

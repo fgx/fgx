@@ -256,19 +256,6 @@ void CoreSettingsWidget::initialize(){
 //==============================================
 //== Joysticks
 //==============================================
-//** Check js_demo exists
-bool CoreSettingsWidget::check_js_demo_exists(){
-	QProcess process;
-	process.start("which", QStringList() << "js_demo", QIODevice::ReadOnly);
-	if(process.waitForStarted()){
-		process.waitForFinished();
-		QString ok_result = process.readAllStandardOutput();
-		QString error_result = process.readAllStandardError();
-		Q_UNUSED(error_result);
-		return ok_result.trimmed().length() != 0;
-	}
-	return false;
-}
 
 
 //==============================================
