@@ -9,9 +9,9 @@ XMessageLabel::XMessageLabel(QWidget *parent) :
     QLabel(parent)
 {
 
-	timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(on_timer()));
-	timer->setInterval(60);
+	//timer = new QTimer(this);
+	//connect(timer, SIGNAL(timeout()), this, SLOT(on_timer()));
+	//timer->setInterval(60);
 
 }
 
