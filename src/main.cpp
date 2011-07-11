@@ -70,7 +70,7 @@ int main( int argc, char* argv[])
 	styles.append("QPushButton { font-family: FreeUniversal; padding: 5px; }");
 	
 	styles.append("QComboBox { background-color: #eeeeee; border: 4px; }");
-	styles.append("QComboBox::item { background-color: #eeeeee; }");
+	styles.append("QComboBox::item { background-color: #eeeeee;}");
 	styles.append("QComboBox::item::selected { background-color: #cccccc; color: #000000 }");
 	
 	styles.append("LauncherWindow { background-color: #eeeeee }");

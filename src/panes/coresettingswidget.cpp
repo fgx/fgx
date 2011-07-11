@@ -52,6 +52,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Initial Size
 	grpBoxScreen->addWidget(new QLabel("Initial Screen Size"));
 	comboScreenSize = new QComboBox();
+	comboScreenSize->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 	comboScreenSize->addItem("-- Default --", "default");
 	comboScreenSize->addItem("800 x 600", "800x600");
 	comboScreenSize->addItem("1024 x 768", "1024x768");
