@@ -328,7 +328,8 @@ void CoreSettingsWidget::on_radio_fg_path(){
 void CoreSettingsWidget::on_callsign_changed(QString txt){
 	Q_UNUSED(txt);
 	save_settings();
-	mainObject->set_callsign();
+	//mainObject->set_callsign();
+	emit( setx(QString("--callsign"), txt ));
 }
 
 

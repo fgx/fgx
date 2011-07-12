@@ -62,7 +62,7 @@ QString XSettings::style_default(){
 	if(runningOs() == LINUX){
 		return QString("cleanlooks");
 	}
-	return QString("cleanlooks");
+	return QString("dirtylook");
 }
 
 //===========================================================================

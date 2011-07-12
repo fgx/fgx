@@ -30,6 +30,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//= XSettings Object
     settings = new XSettings();
+
 	
 	//====================================================
 	//== Setup Menus
