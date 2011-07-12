@@ -63,7 +63,8 @@ HEADERS += xobjects/xsettings.h \
     mpmap/pilotswidget.h \
     xwidgets/xmessagelabel.h \
     mpmap/gmapwidget.h \
-    mpmap/xwebpage.h
+    mpmap/xwebpage.h \
+	panes/expertoptionswidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -120,9 +121,10 @@ SOURCES += main.cpp \
     mpmap/pilotswidget.cpp \
     xwidgets/xmessagelabel.cpp \
     mpmap/gmapwidget.cpp \
-    mpmap/xwebpage.cpp
+    mpmap/xwebpage.cpp \
+	panes/expertoptionswidget.cpp
 RESOURCES += resources/ycons.qrc \
     resources/artwork.qrc \
-	resources/fonts.qrc \
+    resources/fonts.qrc \
     resources/google_map.qrc
 CONFIG += console
