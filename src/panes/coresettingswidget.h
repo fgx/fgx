@@ -73,6 +73,9 @@ public:
 
 
 signals:
+	void setx(QString option_switch);
+	void setx(QString option, QString value);
+
 
 public slots:
 

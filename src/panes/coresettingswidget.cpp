@@ -52,6 +52,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Initial Size
 	grpBoxScreen->addWidget(new QLabel("Initial Screen Size"));
 	comboScreenSize = new QComboBox();
+	comboScreenSize->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 	comboScreenSize->addItem("-- Default --", "default");
 	comboScreenSize->addItem("800 x 600", "800x600");
 	comboScreenSize->addItem("1024 x 768", "1024x768");
@@ -327,7 +328,8 @@ void CoreSettingsWidget::on_radio_fg_path(){
 void CoreSettingsWidget::on_callsign_changed(QString txt){
 	Q_UNUSED(txt);
 	save_settings();
-	mainObject->set_callsign();
+	//mainObject->set_callsign();
+	emit( setx(QString("--callsign"), txt ));
 }
 
 

@@ -13,8 +13,7 @@
 #include "aircraft/aircraftwidget.h"
 #include "airports/airportswidget.h"
 #include "network/networkwidget.h"
-#include "panes/advancedoptionswidget.h"
-#include "panes/outputpreviewwidget.h"
+#include "panes/expertoptionswidget.h"
 
 
 #include "xwidgets/execontrols.h"
@@ -34,8 +33,8 @@ class TimeWeatherWidget;
 class AircraftWidget;
 class AirportsWidget;
 class NetworkWidget;
-class AdvancedOptionsWidget;
-class OutputPreviewWidget;
+class ExpertOptionsWidget;
+
 
 
 
@@ -66,8 +65,7 @@ public:
 	AircraftWidget *aircraftWidget;
 	AirportsWidget *airportsWidget;
 	NetworkWidget *networkWidget;
-	AdvancedOptionsWidget *advancedOptionsWidget;
-	OutputPreviewWidget *outputPreviewWidget;
+	ExpertOptionsWidget *expertOptionsWidget;
 
 	QPushButton *buttonLoadSettings;
 	QPushButton *buttonSaveSettings;

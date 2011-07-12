@@ -29,7 +29,7 @@ public:
 
 	QStringList get_args();
 	QStringList get_env();
-	QString     get_runtime();
+	QString		get_runtime();
 
 	void load_settings();
 	void save_settings();

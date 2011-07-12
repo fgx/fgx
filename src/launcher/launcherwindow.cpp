@@ -120,15 +120,10 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	tabWidget->addTab( networkWidget, tr("Network"));
 
 
-	//* Advanced Options
-	advancedOptionsWidget = new AdvancedOptionsWidget(mainObject);
-	tabWidget->addTab( advancedOptionsWidget, tr("Advanced Options"));
-
-
-	//* Output + Preview
-	outputPreviewWidget = new OutputPreviewWidget(mainObject);
-	tabWidget->addTab( outputPreviewWidget, tr("Launch Command"));
-	connect(outputPreviewWidget->buttonCommandPreview, SIGNAL(clicked()), this, SLOT(on_command_preview()));
+	//* Expert Options
+	expertOptionsWidget = new ExpertOptionsWidget(mainObject);
+	tabWidget->addTab( expertOptionsWidget, tr("Expert Options"));
+	//connect(outputPreviewWidget->buttonCommandPreview, SIGNAL(clicked()), this, SLOT(on_command_preview()));
 
 
 	mainLayout->addSpacing(10);
@@ -348,7 +343,7 @@ void LauncherWindow::save_settings()
 	aircraftWidget->save_settings();
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
-	advancedOptionsWidget->save_settings();
+	expertOptionsWidget->save_settings();
     mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	outLog("FGx: LauncherWindow::save_settings() saved ***");
@@ -371,7 +366,7 @@ void LauncherWindow::load_settings()
 	aircraftWidget->load_settings();
 	airportsWidget->load_settings();
 	networkWidget->load_settings();
-	advancedOptionsWidget->load_settings();
+	expertOptionsWidget->load_settings();
 	exeTerraSync->setEnabled( mainObject->settings->terrasync_enabled() );
 	outLog("FGx: Settings loaded in LauncherWIndow::load_settings()");
 	
@@ -388,7 +383,7 @@ void LauncherWindow::on_command_preview(){
 		return;
 	}
 	save_settings();
-	outputPreviewWidget->preview();
+	//outputPreviewWidget->preview();
 }
 
 
@@ -499,7 +494,7 @@ void LauncherWindow::on_tab_changed(int tab_idx){
 	}
 
 
-	if(tab_idx == tabWidget->indexOf(outputPreviewWidget)){
+	if(tab_idx == tabWidget->indexOf(expertOptionsWidget)){
 		on_command_preview();
 	}else{
 		//= we dont want to restore to output preview cos it validates and will throw popup
