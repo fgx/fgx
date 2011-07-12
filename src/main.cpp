@@ -69,8 +69,9 @@ int main( int argc, char* argv[])
 	styles.append("QGroupBox::title {subcontrol-origin: margin; subcontrol-position: top left; border: 0px; color: #fffee0; background-color: #999999; padding: 4px;}");
 	styles.append("QPushButton { font-family: FreeUniversal; padding: 5px; }");
 	
-	styles.append("QComboBox { background-color: #eeeeee; color: #000000; border: 0px; margin: 0px; padding-left: 3px }");
-	styles.append("QComboBox QListView { background-color: #eeeeee; border: 0px; margin: 0px; padding-left: 3px }");
+	styles.append("QComboBox, QLineEdit, QSpinBox, QTextEdit, QListView { border: 0px; margin: 0px; padding: 0px; background-color: #fffee0; selection-color: #000000;  selection-background-color: #ffffff; }");
+	styles.append("QListView {show-decoration-selected: 1;}");
+	styles.append("QListView::item:hover {background: #eeeeee; }");
 	
 	styles.append("LauncherWindow { background-color: #eeeeee }");
 	
