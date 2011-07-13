@@ -74,20 +74,12 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Controls
 	XGroupVBox *grpBoxControls = new XGroupVBox(tr("Controls"));
 	layoutLeft->addWidget(grpBoxControls);
-	
-	//= Mouse control
-	checkBoxMouseControl = new QCheckBox("Mouse Control");
-	grpBoxControls->addWidget(checkBoxMouseControl);
-	
 
 	//= Joystick
 	grpBoxControls->addWidget(new QLabel("Joystick"));
 	comboJoystick = new QComboBox();
 	grpBoxControls->addWidget(comboJoystick);
 	
-	//= Enable Autocordination
-	checkBoxEnableAutoCoordination = new QCheckBox("Enable Auto Coordination");
-	grpBoxControls->addWidget(checkBoxEnableAutoCoordination);
 	
 	//==================================================================
 	//= Map Features
@@ -175,10 +167,6 @@ void CoreSettingsWidget::load_settings(){
 	checkBoxDisableSplashScreen->setChecked(mainObject->settings->value("screen_splash").toBool());
 	on_checkbox_fullscreen();
 
-	//= controls
-	checkBoxMouseControl->setChecked(mainObject->settings->value("mouse_control", false).toBool());
-	// TODO - joystick
-
 	//* mpmap
 	checkBoxShowMpMap->setChecked(mainObject->settings->value("show_map_map", false).toBool());
 	comboMpMapServer->setCurrentIndex(mainObject->settings->value("mpmap", 0).toInt());
@@ -232,10 +220,6 @@ void CoreSettingsWidget::save_settings(){
 	mainObject->settings->setValue("screen_size", comboScreenSize->itemData(comboScreenSize->currentIndex()));
 	mainObject->settings->setValue("screen_full", checkBoxFullScreenStartup->isChecked());
 	mainObject->settings->setValue("screen_splash", checkBoxDisableSplashScreen->isChecked());
-
-	//= Controls
-	mainObject->settings->setValue("enable_auto_coordination", checkBoxEnableAutoCoordination->isChecked());
-	mainObject->settings->setValue("mouse_control", checkBoxMouseControl->isChecked());
 
 	//= Map
 	mainObject->settings->setValue("show_map_map", checkBoxShowMpMap->isChecked());
@@ -306,9 +290,6 @@ void CoreSettingsWidget::load_joysticks(){
 	
 	// when no joystick is detected controls goes automatically to "--control=mouse"
 	if (count == 0) {
-		checkBoxMouseControl->setEnabled(false);
-		checkBoxMouseControl->setChecked(true);
-		checkBoxEnableAutoCoordination->setEnabled(false);
 		comboJoystick->setEnabled(false);
 	}
 }
