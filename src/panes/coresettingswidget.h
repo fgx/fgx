@@ -35,10 +35,6 @@ public:
 	QCheckBox *checkBoxFullScreenStartup;
 
 
-	//* Controls
-	QComboBox *comboJoystick;
-
-
 	//* MpMap
 	QCheckBox *checkBoxShowMpMap;
 	QComboBox *comboMpMapServer;
@@ -58,6 +54,9 @@ public:
 
 	QLabel *labelTerraSyncInfo;
 	QLabel *labelTerraSyncDataPath;
+	
+	//* Controls
+	QLabel *labelInputs;
 
 	//XGroupHBox *groupBoxTerraSync;
 	//QLineEdit *txtTerraSyncPath;

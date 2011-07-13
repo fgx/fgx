@@ -22,11 +22,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 {
 
 	mainObject = mOb;
-	
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	setLayout(mainLayout);
-	
 	
 	QVBoxLayout *layoutLeft = new QVBoxLayout();
 	mainLayout->addLayout(layoutLeft, 1);
@@ -68,17 +66,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Disable Splash
 	checkBoxDisableSplashScreen = new QCheckBox(tr("Disable Splash Screen"));
 	grpBoxScreen->addWidget(checkBoxDisableSplashScreen);
-
-
-	//==================================================================
-	//= Controls
-	XGroupVBox *grpBoxControls = new XGroupVBox(tr("Controls"));
-	layoutLeft->addWidget(grpBoxControls);
-
-	//= Joystick
-	grpBoxControls->addWidget(new QLabel("Joystick"));
-	comboJoystick = new QComboBox();
-	grpBoxControls->addWidget(comboJoystick);
 	
 	
 	//==================================================================
@@ -105,6 +92,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	mainLayout->addLayout(layoutPaths, 2);
 
 	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
+	grpFgPaths->setStyleSheet("XGroupVBox::title { color: #000000; background-color: #eeeeee }");
 	layoutPaths->addWidget(grpFgPaths);
 
 	QString style_paths("font-family: Andale mono, Lucida Console, monospace; font-size: 12px; padding: 3px; background-color: #eeeeee; border: 1px solid #dddddd ");
@@ -129,8 +117,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelFgRootPath = new QLabel(" ");
 	labelFgRootPath->setStyleSheet(style_paths);
 	grpFgPaths->addWidget(labelFgRootPath);
-
-	layoutPaths->addStretch(20);
 	
 	
 	//----------------------------------------------
@@ -145,6 +131,21 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 	//= Connect Mainobject (after paths wizard)
 	connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
+	
+	
+	//==================================================================
+	//= Controls
+	
+	XGroupVBox *grpBoxControls = new XGroupVBox(tr("Controls"));
+	grpBoxControls->setStyleSheet("XGroupVBox::title { color: #000000; background-color: #eeeeee }");
+	layoutPaths->addWidget(grpBoxControls);
+	grpBoxControls->addWidget(new QLabel("Joystick:"));
+	
+	labelInputs = new QLabel("");
+	labelInputs->setStyleSheet(style_paths);
+	grpBoxControls->addWidget(labelInputs);
+	
+	layoutPaths->addStretch(20);
 
 }
 
@@ -238,15 +239,14 @@ void CoreSettingsWidget::initialize(){
 
 
 //==============================================
-//== Joysticks
+//== Input devices
 //==============================================
 
 
 //==============================================
 //== Load Joysticks
 void CoreSettingsWidget::load_joysticks(){
-	comboJoystick->clear();
-	comboJoystick->addItem("-- None--");
+	labelInputs->setText("none");
 	QString find = "Joystick ";
 	QString none = "not detected";
 	QString results;
@@ -280,7 +280,7 @@ void CoreSettingsWidget::load_joysticks(){
 					count++;
 				}
 				// *TBD* Maybe NOT add 'not detected' entries???
-				comboJoystick->addItem(line);
+				labelInputs->setText(line);
 			}
 		}
 	} else {
@@ -290,7 +290,7 @@ void CoreSettingsWidget::load_joysticks(){
 	
 	// when no joystick is detected controls goes automatically to "--control=mouse"
 	if (count == 0) {
-		comboJoystick->setEnabled(false);
+		labelInputs->setEnabled(false);
 	}
 }
 
