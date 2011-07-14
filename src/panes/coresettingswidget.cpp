@@ -46,7 +46,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Screen Options
 	XGroupVBox *grpBoxScreen = new XGroupVBox(tr("Screen Options"));
 	layoutLeft->addWidget(grpBoxScreen);
-	grpBoxScreen->setWhatsThis(tr("Set your prefered screen size of FlightGear window."));
+	grpBoxScreen->setWhatsThis(tr("<b>Screen Options</b><br><br>Set prefered size for the FlightGear window."));
 
 	//= Initial Size
 	grpBoxScreen->addWidget(new QLabel("Initial Screen Size"));
@@ -63,11 +63,12 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	checkBoxFullScreenStartup = new QCheckBox(tr("Fullscreen mode"));
 	grpBoxScreen->addWidget(checkBoxFullScreenStartup);
 	connect(checkBoxFullScreenStartup, SIGNAL(clicked()), this, SLOT(on_checkbox_fullscreen()));
+	checkBoxFullScreenStartup->setWhatsThis(tr("<b>Full Screen</b><br><br>Will start FlightGear in Full Screen Mode (ESC to cancel mode)."));
 
 	//= Disable Splash
 	checkBoxDisableSplashScreen = new QCheckBox(tr("Disable Splash Screen"));
 	grpBoxScreen->addWidget(checkBoxDisableSplashScreen);
-	checkBoxDisableSplashScreen->setWhatsThis(tr("Disable preview graphics during FligthGear startup."));
+	checkBoxDisableSplashScreen->setWhatsThis(tr("<b>Disable Splash Screen</b><br><br>Disables FlightGear startup screen."));
 	
 	
 	//==================================================================

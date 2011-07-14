@@ -88,7 +88,6 @@ int main( int argc, char* argv[])
 	
 	styles.append("ExeControls { background-color: #ffffff; border: 0px; margin-top: 22px; }");
 	styles.append("ExeControls::title { color: #000000; background-color: yellow; margin-top: 0px; margin-left: 0px; }");
-	
 				
 	app.setStyleSheet(styles);
 	
