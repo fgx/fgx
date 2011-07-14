@@ -64,7 +64,9 @@ HEADERS += xobjects/xsettings.h \
     xwidgets/xmessagelabel.h \
     mpmap/gmapwidget.h \
     mpmap/xwebpage.h \
-	panes/expertoptionswidget.h
+    panes/expertoptionswidget.h \
+    xobjects/xsettingsmodel.h \
+    xwidgets/fgxdebugwidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -122,7 +124,9 @@ SOURCES += main.cpp \
     xwidgets/xmessagelabel.cpp \
     mpmap/gmapwidget.cpp \
     mpmap/xwebpage.cpp \
-	panes/expertoptionswidget.cpp
+    panes/expertoptionswidget.cpp \
+    xobjects/xsettingsmodel.cpp \
+    xwidgets/fgxdebugwidget.cpp
 RESOURCES += resources/ycons.qrc \
     resources/artwork.qrc \
     resources/fonts.qrc \

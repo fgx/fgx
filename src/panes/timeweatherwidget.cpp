@@ -110,6 +110,8 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	laymetar->addStretch(20);
 
 
+	connect(this, SIGNAL(setx(bool,QString, QString)), mainObject->S, SLOT(set_option(bool,QString,QString)) );
+
 }
 
 void TimeWeatherWidget::on_metar_clicked(){

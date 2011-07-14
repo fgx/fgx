@@ -13,7 +13,7 @@
 #include <QtGui/QWidgetAction>
 
 #include "xobjects/xsettings.h"
-
+#include "xobjects/xsettingsmodel.h"
 
 #include "xobjects/xprocess.h"
 class XProcess;
@@ -28,12 +28,13 @@ class LauncherWindow;
 #include "mpmap/mpmapxwidget.h"
 #include "logs/viewlogswidget.h"
 #include "props/propstreewidget.h"
+#include "xwidgets/fgxdebugwidget.h"
 
 class MpMapWidget;
 class MpMapXWidget;
 class ViewLogsWidget;
 class PropsTreeWidget;
-
+class FgxDebugWidget;
 
 
 
@@ -61,12 +62,15 @@ public:
 	
 
     XSettings *settings;
+	XSettingsModel *S;
+
 
 	LauncherWindow *launcherWindow;
 	MpMapWidget *mpMapWidget;
 	MpMapXWidget *mpMapXWidget;
 	ViewLogsWidget *viewLogsWidget;
 	PropsTreeWidget *propertiesBrowser;
+	FgxDebugWidget *fgxDebugWidget;
 
 	XProcess *processFgFs;
 	XProcess *processTerraSync;

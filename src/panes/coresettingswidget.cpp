@@ -137,6 +137,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Connect Mainobject (after paths wizard)
 	connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
 	
+
 	
 	//==================================================================
 	//= Controls
@@ -152,6 +153,8 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpBoxControls->setWhatsThis("<b>Controls</b><br><br>FlightGear use auto-detection to detect your input devices. This is just a preview what FlightGear will see.");
 	
 	layoutPaths->addStretch(20);
+
+	connect(this, SIGNAL(setx(bool,QString, QString)), mainObject->S, SLOT(set_option(bool,QString,QString)) );
 
 }
 
@@ -316,7 +319,7 @@ void CoreSettingsWidget::on_callsign_changed(QString txt){
 	Q_UNUSED(txt);
 	save_settings();
 	//mainObject->set_callsign();
-	emit( setx(QString("--callsign"), txt ));
+	emit( setx(true, QString("--callsign="), txt ));
 }
 
 

@@ -31,6 +31,9 @@ MainObject::MainObject(QObject *parent) :
 	//= XSettings Object
     settings = new XSettings();
 
+	//= NEW Settings Model
+	S = new XSettingsModel(this);
+
 	
 	//====================================================
 	//== Setup Menus
@@ -189,7 +192,16 @@ MainObject::MainObject(QObject *parent) :
 	viewLogsWidget = new ViewLogsWidget(this);
 	viewLogsWidget->hide();
 
+
+	//= FGx Debug Widget
+	fgxDebugWidget = new FgxDebugWidget(this);
+	fgxDebugWidget->show();
+
+
 	launcherWindow = new LauncherWindow(this);
+
+
+
 
 	//== initialise after initial show so UI dont look frozen while cache loading etc
 	QTimer::singleShot(300, this, SLOT(initialize()));
