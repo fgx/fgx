@@ -46,6 +46,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Screen Options
 	XGroupVBox *grpBoxScreen = new XGroupVBox(tr("Screen Options"));
 	layoutLeft->addWidget(grpBoxScreen);
+	grpBoxScreen->setWhatsThis(tr("Set your prefered screen size of FlightGear window."));
 
 	//= Initial Size
 	grpBoxScreen->addWidget(new QLabel("Initial Screen Size"));
@@ -66,6 +67,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Disable Splash
 	checkBoxDisableSplashScreen = new QCheckBox(tr("Disable Splash Screen"));
 	grpBoxScreen->addWidget(checkBoxDisableSplashScreen);
+	checkBoxDisableSplashScreen->setWhatsThis(tr("Disable preview graphics during FligthGear startup."));
 	
 	
 	//==================================================================

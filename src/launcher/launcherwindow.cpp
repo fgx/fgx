@@ -5,6 +5,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
 #include <QtCore/QProcess>
+#include <QtGui/QWhatsThis>
 
 
 #include <QtGui/QApplication>
@@ -78,6 +79,17 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	messageLabel->setStyleSheet("{ font-size: 16px; }");
 	messageLabel->showMessage("Welcome [Callsign]");
 	toolbarLayout->addWidget(messageLabel,1);
+	
+	QToolButton *buttonWhatsThis = new QToolButton(this);
+	buttonWhatsThis->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttonWhatsThis->setText("Whats this ?");
+	buttonWhatsThis->setAutoRaise(true);
+	buttonWhatsThis->setIcon(QIcon(":/icon/load"));
+	buttonWhatsThis->setStyleSheet("padding: 0px;");
+	toolbarLayout->addWidget(buttonLoadSettings);
+	connect(buttonWhatsThis, SIGNAL(clicked()), this, SLOT(on_whats_this()));
+	
+	
 
 
 	QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -165,18 +177,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	buttonShowProfiles->setEnabled(false);
 	toolBox->addWidget(buttonShowProfiles);
 	//connect(buttonShowProfiles, SIGNAL(clicked()), mainObject, SLOT(show_setup_profiles()));
-	
-	//= Show Log
-	/*QToolButton *buttonShowLogs = new QToolButton(this);
-	buttonShowLogs->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttonShowLogs->setText("View Logs");
-	buttonShowLogs->setAutoRaise(true);
-	buttonShowLogs->setIcon(QIcon(":/icon/log"));
-	buttonShowLogs->setStyleSheet("padding: 0px;");
-	toolBox->addWidget(buttonShowLogs);
-	connect(buttonShowLogs, SIGNAL(clicked()),
-			mainObject, SLOT(on_view_logs())
-			);*/
 	
 	//= Load Settings
 	QToolButton *buttonLoadSettings = new QToolButton(this);
@@ -505,6 +505,10 @@ void LauncherWindow::on_tab_changed(int tab_idx){
 void LauncherWindow::on_action_open_url(QAction *action){
 	QUrl url(action->property("url").toString());
 	QDesktopServices::openUrl(url);
+}
+
+void LauncherWindow::on_whats_this(){
+	QWhatsThis::enterWhatsThisMode();
 }
 
 
