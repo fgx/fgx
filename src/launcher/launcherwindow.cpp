@@ -59,12 +59,13 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
 	//== Header Banner
 	//====================================================
-	QString header_style("padding: 10px 0px 0px 0px; vertical-align: top");
+	/*
+	QString header_style("padding: 10px 0px 0px 0px; vertical-align: top, background-color: red;");
     headerLabel = new QLabel(this);
 	headerLabel->setFixedHeight(10);
 	headerLabel->setStyleSheet(header_style);
 	outerContainer->addWidget(headerLabel, 0);
-
+	*/
 
 
 	//=============================================
@@ -267,6 +268,8 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	initializing = false;
 	QTimer::singleShot(300, this, SLOT(initialize()));
+
+	messageLabel->setText("Callsign - KSFO - AIRPORT");
 
 }
 

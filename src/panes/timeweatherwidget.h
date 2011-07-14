@@ -37,6 +37,7 @@ public:
 	QString validate();
 
 signals:
+	void setx(bool,QString, QString);
 
 public slots:
 	void on_metar_clicked();
