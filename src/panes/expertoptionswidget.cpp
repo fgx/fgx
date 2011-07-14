@@ -11,6 +11,7 @@
 #include "xwidgets/xgroupboxes.h"
 #include "panes/expertoptionswidget.h"
 #include "utilities/helpers.h"
+#include "utilities/utilities.h"
 
 ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
@@ -125,14 +126,19 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	//=============================================================
 	buttonCommandPreview = new QPushButton();
-	buttonCommandPreview->setText(tr("Preview Command"));
+	buttonCommandPreview->setText(tr("Preview"));
 	layoutButtons->addWidget(buttonCommandPreview);
 	connect(buttonCommandPreview, SIGNAL(clicked()), this, SLOT(preview()));
 
 	buttonCommandHelp = new QPushButton();
-	buttonCommandHelp->setText(tr("fgfs -h -v"));
+	buttonCommandHelp->setText(tr("Help"));
 	layoutButtons->addWidget(buttonCommandHelp);
 	connect(buttonCommandHelp, SIGNAL(clicked()), this, SLOT(on_command_help()));
+	
+	buttonCommandVersion = new QPushButton();
+	buttonCommandVersion->setText(tr("Version"));
+	layoutButtons->addWidget(buttonCommandVersion);
+	connect(buttonCommandVersion, SIGNAL(clicked()), this, SLOT(on_command_version()));
 
 	layoutButtons->addStretch(20);
 
@@ -220,6 +226,19 @@ void ExpertOptionsWidget::on_command_help(){
 	if(process.waitForStarted()){
 		process.waitForFinished(10000);
 		QString ok_result = process.readAllStandardOutput();
+		txtPreviewOutput->setPlainText(ok_result);
+	}
+}
+
+void ExpertOptionsWidget::on_command_version(){
+	QProcess process;
+	QStringList args;
+	args << "-h" << "--version" << QString("--fg-root=").append(mainObject->settings->fgroot());
+	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
+	if(process.waitForStarted()){
+		process.waitForFinished(10000);
+		QString ok_result = process.readAllStandardError();
+		outLog(process.readAllStandardError());
 		txtPreviewOutput->setPlainText(ok_result);
 	}
 }

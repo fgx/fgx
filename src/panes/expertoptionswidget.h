@@ -33,6 +33,7 @@ public:
 	QPlainTextEdit *txtPreviewOutput;
 	QPushButton *buttonCommandPreview;
 	QPushButton *buttonCommandHelp;
+	QPushButton *buttonCommandVersion;
 	QButtonGroup *buttonGroup;
 
 
@@ -41,6 +42,7 @@ signals:
 public slots:
 
 	void on_command_help();
+	void on_command_version();
 	void preview();
 
 	void save_settings();
