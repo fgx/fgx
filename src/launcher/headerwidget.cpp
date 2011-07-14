@@ -1,11 +1,12 @@
 
 #include <QtDebug>
 
+#include <QVBoxLayout>
 
-#include "xmessagelabel.h"
-#include "panes/coresettingswidget.h"
 
-XMessageLabel::XMessageLabel(QWidget *parent) :
+#include "launcher/headerwidget.h"
+
+HeaderWidget::HeaderWidget(QWidget *parent) :
     QLabel(parent)
 {
 
@@ -49,11 +50,11 @@ XMessageLabel::XMessageLabel(QWidget *parent) :
 
 }
 
-void XMessageLabel::showMessage(QString message){
+void HeaderWidget::showMessage(QString message){
 	showMessage(message, 3000);
 }
 
-void XMessageLabel::showMessage(QString message, int timeout){
+void HeaderWidget::showMessage(QString message, int timeout){
 	return;
 	//#if pos:
 	//	offPos = QtCore.QPoint( pos.x() - self.width(), pos.y() )
@@ -71,12 +72,12 @@ void XMessageLabel::showMessage(QString message, int timeout){
 
 
 
-void XMessageLabel::start_fade(){
+void HeaderWidget::start_fade(){
 	setStyleSheet("font-family: freeuniversal; color: #666666; font-size: 16px; background-image: url(:/artwork/fgx-logo-flyer); background-repeat: none; padding-left: 40px; padding-top: 3px; padding-bottom: 5px; padding-right: 5px; margin-top: 10px; margin-bottom: 20px;");
 }
 
 
-void XMessageLabel::on_fade_timer()
+void HeaderWidget::on_fade_timer()
 {
 	if(popWidget->windowOpacity() == 0.0){
 		fadeTimer->stop();

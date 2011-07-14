@@ -66,7 +66,8 @@ HEADERS += xobjects/xsettings.h \
     mpmap/xwebpage.h \
     panes/expertoptionswidget.h \
     xobjects/xsettingsmodel.h \
-    xwidgets/fgxdebugwidget.h
+    xwidgets/fgxdebugwidget.h \
+    launcher/headerwidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -126,7 +127,8 @@ SOURCES += main.cpp \
     mpmap/xwebpage.cpp \
     panes/expertoptionswidget.cpp \
     xobjects/xsettingsmodel.cpp \
-    xwidgets/fgxdebugwidget.cpp
+    xwidgets/fgxdebugwidget.cpp \
+    launcher/headerwidget.cpp
 RESOURCES += resources/ycons.qrc \
     resources/artwork.qrc \
     resources/fonts.qrc \
