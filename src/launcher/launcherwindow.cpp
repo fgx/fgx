@@ -85,16 +85,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	mainLayout->setContentsMargins(10, 0, 10, 10);
 	mainLayout->setSpacing(0);
 	outerContainer->addLayout(mainLayout);
-	
-	//== Whats this button
-	buttonWhatsThis = new QToolButton();
-	buttonWhatsThis->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttonWhatsThis->setText("Whats this ?");
-	buttonWhatsThis->setAutoRaise(true);
-	buttonWhatsThis->setIcon(QIcon(":/icon/load"));
-	buttonWhatsThis->setStyleSheet("padding: 0px;");
-	toolbarLayout->addWidget(buttonWhatsThis);
-	connect(buttonWhatsThis, SIGNAL(clicked()), this, SLOT(on_whats_this()));
 
 
 	//====================================================
@@ -202,6 +192,24 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 			);
 	
 	bottomActionLayout->addStretch(20);
+	
+	
+	//== Help Box
+	XGroupHBox *helpBox = new XGroupHBox(tr("Help"));
+	helpBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: yellow }");
+	bottomActionLayout->addWidget(helpBox);
+	
+	//= Whats this button
+	buttonWhatsThis = new QToolButton();
+	buttonWhatsThis->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttonWhatsThis->setText("Whats this ?");
+	buttonWhatsThis->setAutoRaise(true);
+	buttonWhatsThis->setIcon(QIcon(":/icon/help"));
+	buttonWhatsThis->setStyleSheet("padding: 0px;");
+	helpBox->addWidget(buttonWhatsThis);
+	connect(buttonWhatsThis, SIGNAL(clicked()), this, SLOT(on_whats_this()));
+	
+	bottomActionLayout->addStretch(20);
 
 	//=============================================================
 	//== Start Stop ==
@@ -242,6 +250,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	//= All
 	exeAll = new ExeControls("FlightGear");
+	exeAll->setStyleSheet("QGroupBox::title { color: #ffffff; background-color: #007eff }");
 	bottomActionLayout->addWidget(exeAll);
 	connect(	exeAll->buttonStart, SIGNAL(clicked()),
 			this, SLOT(on_start_all_clicked())
