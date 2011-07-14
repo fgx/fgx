@@ -10,6 +10,7 @@
 #include <QtGui/QRadioButton>
 #include <QtGui/QPushButton>
 #include <QtGui/QFileDialog>
+#include <QtGui/QWhatsThis>
 
 #include "panes/coresettingswidget.h"
 #include "xwidgets/xgroupboxes.h"
@@ -97,8 +98,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
 	grpFgPaths->setStyleSheet("XGroupVBox::title { color: #000000; background-color: #eeeeee }");
 	layoutPaths->addWidget(grpFgPaths);
+	grpFgPaths->setWhatsThis("<b>FlightGear Paths</b><br><br>Use \"Set Paths\" button to change this settings."); 
 
-	QString style_paths("font-family: Andale mono, Lucida Console, monospace; font-size: 12px; padding: 3px; background-color: #eeeeee; border: 1px solid #dddddd ");
+	QString style_paths("font-family: Andale mono, Lucida Console, monospace; font-size: 12px; padding: 3px; background-color: #ffffff; border: 1px solid #dddddd ");
 
 	//----------------------------------------------
 	//= FlightGear executable
@@ -147,6 +149,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelInputs = new QLabel("");
 	labelInputs->setStyleSheet(style_paths);
 	grpBoxControls->addWidget(labelInputs);
+	grpBoxControls->setWhatsThis("<b>Controls</b><br><br>FlightGear use auto-detection to detect your input devices. This is just a preview what FlightGear will see.");
 	
 	layoutPaths->addStretch(20);
 

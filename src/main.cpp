@@ -56,7 +56,7 @@ int main( int argc, char* argv[])
 	QFontDatabase::addApplicationFont(":/font/freeuniversalregular");
 	QFontDatabase::addApplicationFont(":/font/freeuniversalbold");
 	
-	QFont universal("FreeUniversal", 14);
+	QFont universal("FreeUniversal", 12);
 	universal.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
 	app.setFont(universal);
 	
