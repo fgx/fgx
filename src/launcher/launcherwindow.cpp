@@ -80,6 +80,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	messageLabel->setStyleSheet("{ font-size: 16px; }");
 	messageLabel->showMessage("Welcome [Callsign]");
 	toolbarLayout->addWidget(messageLabel,1);
+	//##connect(mainObject->S, SIGNAL(upx(bool,QString,QString)), messageLabel, SLOT()
 	
 	
 	QVBoxLayout *mainLayout = new QVBoxLayout();

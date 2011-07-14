@@ -25,7 +25,7 @@ XMessageLabel::XMessageLabel(QWidget *parent) :
 
 	//= Popup Widget/Window
 	popWidget = new QWidget();
-	popWidget->hide();
+	//#popWidget->hide();
 
 	popWidget->setWindowFlags(Qt::FramelessWindowHint);
 	popWidget->setFixedWidth(400);
@@ -40,7 +40,7 @@ XMessageLabel::XMessageLabel(QWidget *parent) :
 	popLay->addWidget(popLabel);
 	QString style_str("font-weight: italic; color: blue;  padding: 10px; border: 1px outset yellow;");
 	style_str.append("background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #F8FAC3, stop: 1 #F0DD17);");
-	popLabel->setStyleSheet(style_str);
+	//#popLabel->setStyleSheet(style_str);
 
 
 
