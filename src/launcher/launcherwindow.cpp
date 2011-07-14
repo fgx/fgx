@@ -80,22 +80,21 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	messageLabel->showMessage("Welcome [Callsign]");
 	toolbarLayout->addWidget(messageLabel,1);
 	
-	QToolButton *buttonWhatsThis = new QToolButton(this);
+	
+	QVBoxLayout *mainLayout = new QVBoxLayout();
+	mainLayout->setContentsMargins(10, 0, 10, 10);
+	mainLayout->setSpacing(0);
+	outerContainer->addLayout(mainLayout);
+	
+	//== Whats this button
+	buttonWhatsThis = new QToolButton();
 	buttonWhatsThis->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttonWhatsThis->setText("Whats this ?");
 	buttonWhatsThis->setAutoRaise(true);
 	buttonWhatsThis->setIcon(QIcon(":/icon/load"));
 	buttonWhatsThis->setStyleSheet("padding: 0px;");
-	toolbarLayout->addWidget(buttonLoadSettings);
+	toolbarLayout->addWidget(buttonWhatsThis);
 	connect(buttonWhatsThis, SIGNAL(clicked()), this, SLOT(on_whats_this()));
-	
-	
-
-
-	QVBoxLayout *mainLayout = new QVBoxLayout();
-	mainLayout->setContentsMargins(10, 0, 10, 10);
-	mainLayout->setSpacing(0);
-	outerContainer->addLayout(mainLayout);
 
 
 	//====================================================
@@ -481,11 +480,6 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 	event->accept();
 }
 
-//=== Style Selected
-void LauncherWindow::on_action_style(QAction *action){
-	mainObject->settings->setValue("gui_style", action->text());
-	QApplication::setStyle(QStyleFactory::create(action->text()));
-}
 
 //=== Tab Changes
 void LauncherWindow::on_tab_changed(int tab_idx){
@@ -502,12 +496,12 @@ void LauncherWindow::on_tab_changed(int tab_idx){
 	}
 }
 
-void LauncherWindow::on_action_open_url(QAction *action){
-	QUrl url(action->property("url").toString());
+void LauncherWindow::on_action_open_url(QAction *act){
+	QUrl url(act->property("url").toString());
 	QDesktopServices::openUrl(url);
 }
 
-void LauncherWindow::on_whats_this(){
+void LauncherWindow::on_whats_this() {
 	QWhatsThis::enterWhatsThisMode();
 }
 

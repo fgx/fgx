@@ -55,6 +55,8 @@ public:
 	XMessageLabel *messageLabel;
 	
 	XGroupHBox *toolBox;
+	
+	QToolButton *buttonWhatsThis;
 
 	QActionGroup *actionGroupStyle;
     QLabel *headerLabel;
@@ -94,7 +96,7 @@ public slots:
 	void on_about_fgx();
 	void on_about_qt();
 	void on_quit();
-	void on_action_style(QAction *act);
+	//void on_action_style(QAction *act);
 	void on_action_open_url(QAction *act);
 	void on_whats_this();
 
