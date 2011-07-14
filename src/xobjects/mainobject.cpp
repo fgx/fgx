@@ -141,16 +141,6 @@ MainObject::MainObject(QObject *parent) :
 			this, SLOT(show_setup_wizard())
     );
 
-	//== View Logs
-	QAction *actionViewLogs = new QAction(this);
-	actionViewLogs->setIcon(QIcon(":/icon/log"));
-	actionViewLogs->setText(tr("View Logs"));
-	actionViewLogs->setIconVisibleInMenu(true);
-	popupMenu->addAction(actionViewLogs);
-	connect(actionViewLogs, SIGNAL(triggered()),
-			this, SLOT(on_view_logs())
-	);
-
 	//== Properties browseer
 	actionPropsBrowser = new QAction(this);
 	actionPropsBrowser->setIcon(QIcon(":/icon/props"));
@@ -162,6 +152,44 @@ MainObject::MainObject(QObject *parent) :
 	);
 
     popupMenu->addSeparator();
+
+
+	//== View Logs
+	actionViewLogs = new QAction(this);
+	actionViewLogs->setIcon(QIcon(":/icon/log"));
+	actionViewLogs->setText(tr("View Logs"));
+	actionViewLogs->setIconVisibleInMenu(true);
+	popupMenu->addAction(actionViewLogs);
+	connect(actionViewLogs, SIGNAL(triggered()),
+			this, SLOT(on_view_logs())
+	);
+
+	//== Fgx Debug Logs
+	actionViewFgxDebug = new QAction(this);
+	actionViewFgxDebug->setIcon(QIcon(":/icon/log"));
+	actionViewFgxDebug->setText(tr("FGx Debug"));
+	actionViewFgxDebug->setIconVisibleInMenu(true);
+	popupMenu->addAction(actionViewFgxDebug);
+	connect(actionViewFgxDebug, SIGNAL(triggered()),
+			this, SLOT(on_view_fgx_debug())
+	);
+
+	//== Debug Enabled
+	actionDebugMode = new QAction(this);
+	actionDebugMode->setText(tr("Debug Mode"));
+	actionDebugMode->setCheckable(true);
+	actionDebugMode->setChecked(true);
+	popupMenu->addAction(actionDebugMode);
+	connect(actionDebugMode, SIGNAL(triggered()),
+			this, SLOT(on_debug_mode())
+	);
+
+
+
+
+	popupMenu->addSeparator();
+
+
 
 
 
@@ -590,4 +618,24 @@ void MainObject::quit(){
 void MainObject::set_callsign(){
 	lblCallsign->setText(settings->value("callsign").toString());
 	mpMapWidget->on_combo_server();
+}
+
+
+
+
+
+
+
+
+
+//==========================================================
+//== Deug Related
+//==========================================================
+void MainObject::on_view_fgx_debug(){
+	fgxDebugWidget->show();
+}
+
+void MainObject::on_debug_mode()
+{
+	emit debug_mode(actionDebugMode->isChecked());
 }

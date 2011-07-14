@@ -88,11 +88,17 @@ public:
 
     QAction *actionLauncher;
     QAction *actionMpMap;
-	QAction *actionSetupWizard;
-	QAction *actionViewLog;
 	QAction *actionPropsBrowser;
+	QAction *actionSetupWizard;
+
+	QAction *actionViewLogs;
+	QAction *actionViewFgxDebug;
+	QAction *actionDebugMode;
+
+
 
     QAction *actionQuit;
+
 
 
 
@@ -106,6 +112,7 @@ public:
 signals:
 	void show_settings(int);
 	void reload_paths();
+	void debug_mode(bool enabled);
 
 public slots:
 
@@ -135,6 +142,9 @@ public slots:
 	void quit();
 
 	void set_callsign();
+
+	void on_view_fgx_debug();
+	void on_debug_mode();
 };
 
 

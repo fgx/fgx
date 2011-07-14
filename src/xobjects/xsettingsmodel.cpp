@@ -55,8 +55,22 @@ void XSettingsModel::add_option(bool enabled, QString option, QString value, QSt
 // == Set An Option
 void XSettingsModel::set_option(bool enabled, QString option, QString value)
 {
-	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C.)
+	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
+	qDebug() << "opts" << items;
 
+	// Get the item in the same row in the enabled field
+	QStandardItem *eItem = item(items[0]->row(),C_ENABLED);
+	eItem->setText(enabled ? "1" : "0");
+
+
+	// Get the item in the same row in the value field
+	QStandardItem *vItem = item(items[0]->row(),C_VALUE);
+	vItem->setText(value);
+
+	emit upx(enabled, option, value);
+	//if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
+	//	emi
+	//}
 
 }
 
