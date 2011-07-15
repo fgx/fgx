@@ -258,15 +258,30 @@ void CoreSettingsWidget::load_joysticks(){
 	QString results;
 	QProcess process;
 	int count = 0;
-	#ifdef Q_OS_MAC
-	QString startJSDemoPath(mainObject->settings->fgfs_path());
+    QString startJSDemoPath;
+    QStringList args;
+    startJSDemoPath = "js_demo";
+#ifdef Q_OS_MAC
+    startJSDemoPath = mainObject->settings->fgfs_path();
 	startJSDemoPath.chop(4);
 	startJSDemoPath.append("js_demo");
     process.start(startJSDemoPath, QStringList(), QIODevice::ReadOnly);
-	#else
-	process.start("js_demo", QStringList(), QIODevice::ReadOnly);
-	#endif
-	if(process.waitForStarted()){
+#elif defined(Q_OS_UNIX)
+    if ( ! mainObject->settings->fgroot_use_default() ) {
+        startJSDemoPath = mainObject->settings->fgfs_path();
+        startJSDemoPath.chop(4);
+        startJSDemoPath.append("js_demo");
+    }
+    QStringList extra_env = mainObject->get_env();
+    if (extra_env.size()) {
+        //= append new env vars
+        QStringList env = QProcess::systemEnvironment();
+        env << extra_env;
+        process.setEnvironment(env);
+    }
+#endif
+    process.start(startJSDemoPath, args, QIODevice::ReadOnly);
+    if(process.waitForStarted()){
 		process.waitForFinished(3000);
 		QString ok_result = process.readAllStandardOutput();
 		QString error_result = process.readAllStandardError();
@@ -283,18 +298,16 @@ void CoreSettingsWidget::load_joysticks(){
 					line = line.mid(0,line.size()-1);
 				if (line != none) {
 					results += "Found \""+line+"\"\n";
-					count++;
+                    if (count == 0)
+                        labelInputs->setText(line);
+                    count++;
 				}
-				// *TBD* Maybe NOT add 'not detected' entries???
-				labelInputs->setText(line);
 			}
 		}
 	} else {
 		results = "FGx Error: Unable to run 'js_demo' to get Joystick list!\n";
 	}
 	outLog("*** FGx reports: Joystick detection results\n"+results+" ***",0); // show results in LOG
-	
-	// when no joystick is detected controls goes automatically to "--control=mouse"
 	if (count == 0) {
 		labelInputs->setEnabled(false);
 	}
