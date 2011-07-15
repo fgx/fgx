@@ -454,6 +454,15 @@ QStringList MainObject::get_fgfs_args(){
 			args << QString("--%1=%2").arg(navkeys.at(nidx)).arg(settings->value(navkeys.at(nidx)).toString());
 		}
 	}
+	
+	//== Fuel
+	QStringList fuelkeys;
+	fuelkeys << "prop:/consumables/fuels/tank[1]/level-gal" << "prop:/consumables/fuels/tank[2]/level-gal" << "prop:/consumables/fuels/tank[3]/level-gal";
+	for(int nidx=0; nidx < fuelkeys.size(); nidx++){
+		if(settings->value(fuelkeys.at(nidx)).toString().length() > 0){
+			args << QString("--%1=%2").arg(fuelkeys.at(nidx)).arg(settings->value(fuelkeys.at(nidx)).toString());
+		}
+	}
 
 	//=== Airports and Startup Position
 	if(settings->value("airport").toString().length() > 0){

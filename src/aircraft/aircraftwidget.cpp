@@ -88,30 +88,17 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 	treeTopBar->addSpacing(10);
 
-	//==========================
-	//= Filter tabs
-	/*tabsView = new QTabBar();
-	QSize size(22, 22);
-	tabsView->setIconSize(size);
-	QString substyle("");
 	
-	tabsView->addTab(QIcon(":/icon/list"), "View List");
-	tabsView->addTab(QIcon(":/icon/list-nested"), "View Nested");	
-	treeTopBar->addWidget(tabsView);
-	connect(tabsView, SIGNAL(currentChanged(int)), this, SLOT(load_tree()));*/
-	
+	//** View nested Checkbox
 	tabsView = new QCheckBox();
 	tabsView->setText("View nested");
 	treeTopBar->addWidget(tabsView);
 	connect(tabsView, SIGNAL(clicked()), this, SLOT(load_tree()));
-	
-	//treeTopBar->addWidget(actionViewList);
-	//treeTopBar->addWidget(actionViewListNested);
-	
 
 
 	treeTopBar->addStretch(20);
 
+	//** Reload aircrafts
 	QToolButton *actionReloadCacheDb = new QToolButton(this);
 	actionReloadCacheDb->setText("Reload aircrafts");
 	actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
@@ -160,19 +147,16 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     QGroupBox *grpAero = new QGroupBox();
     splitter->addWidget(grpAero);
     grpAero->setDisabled(false);
-    grpAero->setTitle(tr("Aircraft Details"));
+    grpAero->setTitle(tr("Preview, Radio"));
 
 
     QVBoxLayout *aeroLayout = new QVBoxLayout();
     grpAero->setLayout(aeroLayout);
-    int aM = 10;
-    aeroLayout->setContentsMargins(aM,aM,aM,aM);
-    aeroLayout->setSpacing(0);
 
     //**********************************************8
 	//** Aero Panel
 	QGroupBox *grpAeroPanel = new QGroupBox();
-	grpAeroPanel->setStyleSheet("background-color: black;");
+	grpAeroPanel->setStyleSheet("background-image: url(:/artwork/background-gray-tabbar); border-top: 0px;");
 	aeroLayout->addWidget(grpAeroPanel);
 
 
@@ -182,56 +166,83 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	QHBoxLayout *imgBox = new QHBoxLayout();
 	aeroPanelLayout->addLayout(imgBox);
 
-	imgBox->addStretch(2);
 	aeroImageLabel =  new QLabel(this);
 	aeroImageLabel->setFixedWidth(171);
 	aeroImageLabel->setFixedHeight(128);
-	aeroImageLabel->setStyleSheet("color: #999999;");
 	imgBox->addWidget(aeroImageLabel);
-	aeroImageLabel->setAlignment(Qt::AlignHCenter);
-	imgBox->addStretch(2);
 
 
     //******************************************************8
    //** Tab Widgets
     QTabWidget *aeroTabs = new QTabWidget();
-    aeroLayout->addWidget(aeroTabs, 20);
+    aeroLayout->addWidget(aeroTabs, 120);
 
     QWidget *aeroControlWidget = new QWidget();
-	aeroTabs->addTab(aeroControlWidget, tr("Nav"));
-
+	QWidget *fuelWidget = new QWidget();
+	aeroTabs->addTab(aeroControlWidget, tr("Radio"));
+	aeroTabs->addTab(fuelWidget, tr("Fuel"));
+	
+	//** Fuel Widget
+	QGridLayout *layoutFuelPane = new QGridLayout();
+	fuelWidget->setLayout(layoutFuelPane);
+	int rowFuel = 1;
+	
+	//* Tank 1
+	layoutFuelPane->addWidget(new QLabel(tr("Tank 1")), rowFuel, 0, 1, 1, Qt::AlignRight);
+	txtTank1 = new QLineEdit();
+	txtTank1->setValidator(new QDoubleValidator(0, 200, 1, this));
+	layoutFuelPane->addWidget(txtTank1,rowFuel, 1, 1, 1);
+	
+	//* Tank 2
+	rowFuel++;
+	layoutFuelPane->addWidget(new QLabel(tr("Tank 2")), rowFuel, 0, 1, 1, Qt::AlignRight);
+	txtTank2 = new QLineEdit();
+	txtTank2->setValidator(new QDoubleValidator(0, 200, 1, this));
+	layoutFuelPane->addWidget(txtTank2,rowFuel, 1, 1, 1);
+	
+	//* Tank 3
+	rowFuel++;
+	layoutFuelPane->addWidget(new QLabel(tr("Tank 3")), rowFuel, 0, 1, 1, Qt::AlignRight);
+	txtTank3 = new QLineEdit();
+	txtTank3->setValidator(new QDoubleValidator(0, 200, 1, this));
+	layoutFuelPane->addWidget(txtTank3, rowFuel, 1, 1, 1);
+	
+	layoutFuelPane->setRowStretch(rowFuel + 1, 20); // stretch end
+	
+	
+	//** Aero Control Widget
 	QGridLayout *layoutAeroPane = new QGridLayout();
 	aeroControlWidget->setLayout(layoutAeroPane);
 	int row = 1;
 
 	//* Navs
-	layoutAeroPane->addWidget(new QLabel(tr("Nav 1")), row, 0, 1, 1, Qt::AlignRight);
+	layoutAeroPane->addWidget(new QLabel(tr("NAV1")), row, 0, 1, 1, Qt::AlignRight);
 	txtNav1 = new QLineEdit();
 	txtNav1->setValidator(new QDoubleValidator(0, 200, 2, this));
 	layoutAeroPane->addWidget(txtNav1,row, 1, 1, 1);
 
 	row++;
-	layoutAeroPane->addWidget(new QLabel(tr("Nav 2")), row, 0, 1, 1, Qt::AlignRight);
+	layoutAeroPane->addWidget(new QLabel(tr("NAV2")), row, 0, 1, 1, Qt::AlignRight);
 	txtNav2 = new QLineEdit();
 	txtNav2->setValidator(new QDoubleValidator(0, 200, 2, this));
 	layoutAeroPane->addWidget(txtNav2,row, 1, 1, 1);
 
 	//* ADF
 	row++;
-	layoutAeroPane->addWidget(new QLabel(tr("Adf")), row, 0, 1, 1, Qt::AlignRight);
+	layoutAeroPane->addWidget(new QLabel(tr("ADF")), row, 0, 1, 1, Qt::AlignRight);
 	txtAdf = new QLineEdit();
 	txtAdf->setValidator(new QDoubleValidator(0, 200,0, this));
 	layoutAeroPane->addWidget(txtAdf, row, 1, 1, 1);
 
 	//* Comms
 	row++;
-	layoutAeroPane->addWidget(new QLabel(tr("Comm 1")), row, 0, 1, 1, Qt::AlignRight);
+	layoutAeroPane->addWidget(new QLabel(tr("COM1")), row, 0, 1, 1, Qt::AlignRight);
 	txtComm1 = new QLineEdit();
 	txtComm1->setValidator(new QDoubleValidator(0, 200, 2, this));
 	layoutAeroPane->addWidget(txtComm1,row, 1, 1, 1);
 
 	row++;
-	layoutAeroPane->addWidget(new QLabel(tr("Comm 2")), row, 0, 1, 1, Qt::AlignRight);
+	layoutAeroPane->addWidget(new QLabel(tr("COM2")), row, 0, 1, 1, Qt::AlignRight);
 	txtComm2 = new QLineEdit();
 	txtComm2->setValidator(new QDoubleValidator(0, 200, 2, this));
 	layoutAeroPane->addWidget(txtComm2,row, 1, 1, 1);
@@ -313,6 +324,10 @@ void AircraftWidget::save_settings(){
 	mainObject->settings->setValue("adf", txtAdf->text());
 	mainObject->settings->setValue("com1", txtComm1->text());
 	mainObject->settings->setValue("com2", txtComm2->text());
+	
+	mainObject->settings->setValue("prop:/consumables/fuels/tank[1]/level-gal", txtTank1->text());
+	mainObject->settings->setValue("prop:/consumables/fuels/tank[2]/level-gal", txtTank2->text());
+	mainObject->settings->setValue("prop:/consumables/fuels/tank[3]/level-gal", txtTank3->text());
 
 	mainObject->settings->sync();
 }
@@ -323,6 +338,10 @@ void AircraftWidget::save_settings(){
 void AircraftWidget::load_settings(){
 
 	//select_node(mainObject->settings->value("aircraft").toString());
+	
+	txtTank1->setText(mainObject->settings->value("prop:/consumables/fuels/tank[1]/level-gal").toString());
+	txtTank2->setText(mainObject->settings->value("prop:/consumables/fuels/tank[2]/level-gal").toString());
+	txtTank3->setText(mainObject->settings->value("prop:/consumables/fuels/tank[3]/level-gal").toString());
 
 	txtNav1->setText(mainObject->settings->value("nav1").toString());
 	txtNav2->setText(mainObject->settings->value("nav2").toString());

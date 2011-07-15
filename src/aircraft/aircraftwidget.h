@@ -50,6 +50,10 @@ public:
 	QLineEdit *txtAdf;
 	QLineEdit *txtComm1;
 	QLineEdit *txtComm2;
+	
+	QLineEdit *txtTank1;
+	QLineEdit *txtTank2;
+	QLineEdit *txtTank3;
 
 	void initialize();
 	void save_settings();
