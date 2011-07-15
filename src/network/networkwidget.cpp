@@ -60,6 +60,7 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	middleLayout->addWidget(grpMpServer, 3);
 	grpMpServer->setCheckable(true);
 	grpMpServer->setChecked(false);
+	connect(grpMpServer, SIGNAL(clicked(bool)), this, SLOT(on_enable_mp(bool)));
 
 	//**  Grid =========================================
 	QGridLayout *gridMP = new QGridLayout();
@@ -221,6 +222,7 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	grpTelnet->setCheckable(true);
 	grpTelnet->setChecked(false);
 	rightLayout->addWidget(grpTelnet);
+	connect(grpTelnet, SIGNAL(clicked()), this, SLOT(on_telnet()));
 
 	grpTelnet->xLayout->setSpacing(10);
 	grpTelnet->xLayout->setContentsMargins(m,m,m,m);
@@ -232,6 +234,7 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	txtTelnet = new QLineEdit("5500");
 	txtTelnet->setValidator(new QIntValidator(80, 32000, this));
 	grpTelnet->addWidget(txtTelnet);
+	connect(txtTelnet, SIGNAL(textChanged(QString)), this, SLOT(on_telnet()));
 
 	QToolButton *buttTelnet = new QToolButton();
 	grpTelnet->addWidget(buttTelnet);
@@ -246,6 +249,7 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	grpScreenShot->setCheckable(true);
 	grpScreenShot->setChecked(false);
 	rightLayout->addWidget(grpScreenShot);
+	connect(grpScreenShot, SIGNAL(clicked()), this, SLOT(on_screenshot()) );
 
 	grpScreenShot->xLayout->setSpacing(10);
 	grpScreenShot->xLayout->setContentsMargins(m,m,m,m);
@@ -254,6 +258,7 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	txtScreenShot = new QLineEdit("8088");
 	txtScreenShot->setValidator(new QIntValidator(80, 32000, this));
 	grpScreenShot->addWidget(txtScreenShot);
+	connect(txtScreenShot, SIGNAL(textChanged(QString)), this, SLOT(on_screenshot()));
 
 	QToolButton *buttScreenshot = new QToolButton();
 	grpScreenShot->addWidget(buttScreenshot);
@@ -267,6 +272,7 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	grpHttp->setCheckable(true);
 	grpHttp->setChecked(false);
 	rightLayout->addWidget(grpHttp);
+	connect(grpHttp, SIGNAL(clicked()), this, SLOT(on_http()));
 
 
 	grpHttp->addWidget( new QLabel(tr("Port No:")) );
@@ -274,6 +280,7 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	txtHttp = new QLineEdit("8080");
 	txtHttp->setValidator(new QIntValidator(80, 32000, this));
 	grpHttp->addWidget(txtHttp);
+	connect(txtHttp, SIGNAL(textChanged(QString)), this, SLOT(on_http()));
 
 	QToolButton *butHttp = new QToolButton();
 	grpHttp->addWidget(butHttp);
@@ -290,6 +297,10 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	load_local_addresses();
 	on_checkbox_in();
 	on_checkbox_out();
+
+
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->S, SLOT(set_option(QString,bool,QString)) );
+	connect(mainObject->S, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 
 }
@@ -648,10 +659,38 @@ QString NetworkWidget::validate(){
 }
 
 
+
+//================================================================
+
+void NetworkWidget::on_enable_mp(bool state)
+{
+	emit setx("enable_mp", state, "");
+}
+
+void NetworkWidget::on_telnet()
+{
+	emit setx("--telnet=", grpTelnet->isChecked(), txtTelnet->text());
+}
+
+void NetworkWidget::on_http()
+{
+	emit setx("--httpd=", grpHttp->isChecked(), txtHttp->text());
+}
+
+void NetworkWidget::on_screenshot()
+{
+	emit setx("--jpg-httpd=", grpScreenShot->isChecked(), txtScreenShot->text());
+}
+
+
+
 //=============================================================
 // Update Widgets
 void NetworkWidget::on_upx(QString option, bool enabled, QString value)
 {
+
+
+
 	if(option == "--telnet="){
 		grpTelnet->setChecked(enabled);
 		txtTelnet->setText(value);

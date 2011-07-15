@@ -48,11 +48,17 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 
 	//= MultiPlayer
+	add_option( "enable_mp", false, "","",1,"","");
 	add_option( "--multiplay=in",  false,"", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
 	add_option( "--multiplay=out", false, "", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
 
 	//= FGCom Related
 	add_option( "--fgcom=",false, "", "",3,"FgCom","FgCom");
+
+	//= Local Servers
+	add_option( "--telnet=",false, "", "",3,"Enable Telnet","servers");
+	add_option( "--httpd=",false, "", "",3,"Enable Httpd","servers");
+	add_option( "--jpg-httpd=",false, "", "",3,"Enable Screenshot","servers");
 
 
 

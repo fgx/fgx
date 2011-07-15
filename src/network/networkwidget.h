@@ -87,6 +87,11 @@ public slots:
 	void on_checkbox_in();
 	void on_checkbox_out();
 
+	void on_enable_mp(bool);
+	void on_http();
+	void on_telnet();
+	void on_screenshot();
+
 	void on_browse_http();
 	void on_browse_screenshot();
 	void on_open_telnet();
