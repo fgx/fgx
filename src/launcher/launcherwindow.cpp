@@ -296,6 +296,7 @@ void LauncherWindow::initialize(){
 
 	//= First load the settings
 	load_settings();
+	mainObject->S->read_ini();
 
 	//= check paths are same
 	if(!mainObject->settings->paths_sane()){

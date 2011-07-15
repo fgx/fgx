@@ -140,7 +140,7 @@ void XSettingsModel::write_ini()
 			settings.setValue( "value", item(row_idx, C_VALUE)->text());
 		settings.endGroup();
 	}
-
+	qDebug() << "Written ini";
 }
 
 
@@ -158,4 +158,5 @@ void XSettingsModel::read_ini()
 					 );
 		settings.endGroup();
 	}
+	qDebug() << "Read ini";
 }

@@ -101,7 +101,7 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	laymetar->addWidget(grpBoxMetar);
 	buttonGroupMetar = new QButtonGroup(this);
 	buttonGroupMetar->setExclusive(true);
-	connect(buttonGroupMetar, SIGNAL(buttonClicked(int)), this, SLOT(on_metar_clicked()));
+	connect(buttonGroupMetar, SIGNAL(buttonClicked(int)), this, SLOT(on_weather()));
 
 	for(int i=0;  i < metar_vals.size(); i++){
 		QRadioButton *buttM = new QRadioButton();
@@ -182,10 +182,10 @@ void TimeWeatherWidget::on_season_clicked(int idx)
 }
 
 //= Metar Clicked
-void TimeWeatherWidget::on_metar_clicked(){
-	//qDebug() << buttonGroupMetar->checkedButton()->property("weather").toString();
-	QString w = buttonGroupMetar->checkedButton()->property("weather").toString();
-	emit setx("weather", true, "");
+void TimeWeatherWidget::on_weather(){
+	qDebug() << buttonGroupMetar->checkedButton()->property("value").toString();
+	QString w = buttonGroupMetar->checkedButton()->property("value").toString();
+	emit setx("weather", true, w);
 	emit setx("--disable-real-weather-fetch", w == "none", "");
 	emit setx("--enable-real-weather-fetch", w == "live", "");
 	emit setx("--metar=", w == "metar", txtMetar->toPlainText());
@@ -212,23 +212,13 @@ void TimeWeatherWidget::on_upx(QString option, bool enabled, QString value)
 
 	}else if(option == "--season="){
 		Helpers::select_radio(buttonGroupSeason, value);
+
+	}else if(option == "weather"){
+		Helpers::select_radio(buttonGroupMetar, value);
+
+	}else if(option == "--metar="){
+		txtMetar->setPlainText(value);
 	}
 
 
-	//=== Weather
-	/*
-	QString weather_method = settings->value("weather").toString();
-	if(weather_method == "live") {
-		//= real weather
-		args << QString("--enable-real-weather-fetch");
-
-	}else if(weather_method == "custom"){
-		//= custom metar
-		args << QString("--metar=").append("\"").append(settings->value("metar").toString()).append("\"");
-
-	}else{
-		//= no weather
-		args << QString("--disable-real-weather-fetch");
-	}
-	*/
 }

@@ -40,7 +40,7 @@ signals:
 	void setx(QString option, bool enabled, QString value);
 
 public slots:
-	void on_metar_clicked();
+	void on_weather();
 	void on_time_clicked(int);
 	void on_season_clicked(int);
 
