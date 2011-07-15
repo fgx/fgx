@@ -30,6 +30,7 @@
 
 #include "network/networkwidget.h"
 #include "network/mptelnet.h"
+#include "utilities/helpers.h"
 
 
 
@@ -413,11 +414,28 @@ void NetworkWidget::on_callsign_changed(QString txt){
 // Mp Server Selected
 void NetworkWidget::set_mp_server(){
 
-	QTreeWidgetItem *item = treeWidget->currentItem();
+	QString in(",");
+	in.append(comboHzIn->currentText());
+	in.append(",");
+	in.append(comboLocalIpAddress->currentText());
+	in.append(",").append("5000");
+	//qDebug() << "in" << in;
+	emit setx("--multiplay=in", checkBoxIn->isChecked(), in);
 
-	if(!item or item->text(C_FLAG).length() == 0){
+
+	//if(!treeWidget->currentIndex()){
+		//treeWidget->setCu
+	//}
+	QTreeWidgetItem *item = treeWidget->currentItem();
+	//bool mp_out_valid = !item; //or item->text(C_FLAG).length() == 0;
+	if(!item){ // or item->text(C_FLAG).length() == 0){
 		return;
 	}
+
+
+
+
+
 
 	QString out(",");
 	out.append(comboHzOut->currentText());
@@ -427,28 +445,17 @@ void NetworkWidget::set_mp_server(){
 				: item->text(C_IP_ADDRESS));
 	out.append(",").append("5000");
 
-	QString in(",");
-	in.append(comboHzIn->currentText());
-	in.append(",");
-	in.append(comboLocalIpAddress->currentText());
-	in.append(",").append("5000");
+	//=out,10,server.ip.address,5000
+	emit setx("--multiplay=out", checkBoxOut->isChecked(), out);
+
+
 }
 
 
 //=====================================
 // Setup fgCom
 void NetworkWidget::set_fgcom(){
-	if(grpFgCom->isChecked()){
-		if(txtFgComNo->text().trimmed().length() == 0){
-			txtFgComNo->setText(mainObject->settings->default_fgcom_no());
-		}
-		if(txtFgComPort->text().trimmed().length() == 0){
-			txtFgComPort->setText(mainObject->settings->default_fgcom_port());
-		}
-		emit setx( "--fgcom=", true, txtFgComNo->text().append(":").append( txtFgComPort->text() ) );
-	}else{
-		emit setx("--fgcom=", false, "");
-	}
+	emit setx( "--fgcom=", grpFgCom->isChecked(), txtFgComNo->text().append(":").append( txtFgComPort->text() ) );
 }
 		
 		
@@ -464,19 +471,25 @@ void NetworkWidget::populate_combo_hz(QComboBox *combo){
 
 //=================================================
 // MP IN / Out Events
-void NetworkWidget::on_checkbox_in( ){
-	bool state = checkBoxIn->isChecked();
-	comboLocalIpAddress->setEnabled(state);
-	comboLocalPort->setEnabled(state);
-	comboHzIn->setEnabled(state);
+void NetworkWidget::on_checkbox_in(){
+	set_mpin_enabled(checkBoxIn->isChecked());
+	set_mp_server();
 }
-void NetworkWidget::on_checkbox_out(){
-	bool state = checkBoxOut->isChecked();
-	comboRemoteAddress->setEnabled(state);
-	comboRemotePort->setEnabled(state);
-	comboHzOut->setEnabled(state);
-	treeWidget->setEnabled(state);
+void NetworkWidget::set_mpin_enabled(bool enabled){
+	comboLocalIpAddress->setEnabled(enabled);
+	comboLocalPort->setEnabled(enabled);
+	comboHzIn->setEnabled(enabled);
+}
 
+void NetworkWidget::on_checkbox_out(){
+	set_mpout_enabled(checkBoxOut->isChecked());
+	set_mp_server();
+}
+void NetworkWidget::set_mpout_enabled(bool enabled){
+	comboRemoteAddress->setEnabled(enabled);
+	comboRemotePort->setEnabled(enabled);
+	comboHzOut->setEnabled(enabled);
+	treeWidget->setEnabled(enabled);
 }
 
 //=================================================
@@ -662,9 +675,9 @@ QString NetworkWidget::validate(){
 
 //================================================================
 
-void NetworkWidget::on_enable_mp(bool state)
+void NetworkWidget::on_enable_mp(bool enabled)
 {
-	emit setx("enable_mp", state, "");
+	emit setx("enable_mp", enabled, "");
 }
 
 void NetworkWidget::on_telnet()
@@ -688,16 +701,46 @@ void NetworkWidget::on_screenshot()
 // Update Widgets
 void NetworkWidget::on_upx(QString option, bool enabled, QString value)
 {
+	QStringList parts;
+
+	if(option == "enable_mp"){
+		grpMpServer->setChecked(enabled);
+
+
+	}else if(option == "--multiplay=in" || option == "--multiplay=out"){
+		//=out,10,server.ip.address,5000
+		parts = value.split(",",QString::SkipEmptyParts);
+		qDebug() << "on_upx" << value << parts;
+
+		if(option == "--multiplay=in"){
+			checkBoxIn->setChecked(enabled);
+			Helpers::select_combo(comboHzIn, parts.at(0));
+			set_mpin_enabled(enabled);
+
+		}else{
+			checkBoxOut->setChecked(enabled);
+			Helpers::select_combo(comboHzOut, parts.at(0));
+			set_mpout_enabled(enabled);
+		}
 
 
 
-	if(option == "--telnet="){
+	}else if(option == "--fgcom="){
+		grpFgCom->setChecked(enabled);
+		if(value.contains(":")){
+			txtFgComNo->setText( value.split(":").at(0));
+			txtFgComPort->setText( value.split(":").at(1));
+		}
+
+	}else if(option == "--telnet="){
 		grpTelnet->setChecked(enabled);
 		txtTelnet->setText(value);
+
 
 	}else if(option == "--httpd="){
 		grpHttp->setChecked(enabled);
 		txtHttp->setText(value);
+
 
 	}else if(option == "--jpg-httpd="){
 		grpScreenShot->setChecked(enabled);

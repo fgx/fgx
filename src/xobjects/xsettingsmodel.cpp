@@ -29,19 +29,19 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 	add_option( "--callsign=", true,"", "fgx001", 1 ,"Your Callsign","Core");
 
-	add_option( "--aircraft=", false,"", "?", 1 ,"Aircraft","Aircraft");
+	add_option( "--aircraft=", false,"", "", 1 ,"Aircraft","Aircraft");
 
-	add_option( "--airport=", false,"", "?", 1 ,"Airport","Airport");
+	add_option( "--airport=", false,"", "", 1 ,"Airport","Airport");
 
 
 	//=Season
-	add_option("--season=", false,"","",1,"Season", "time");
+	add_option("--season=", false,"","summer",1,"Season", "time");
 
 	//=Time
-	add_option("--timeofday=", false,"","",1,"Time of day", "time");
+	add_option("--timeofday=", false,"","realtime",1,"Time of day", "time");
 
 	//= Weather
-	add_option("weather",						true, "","Weather Flag",2,"","weather");
+	add_option("weather",						true, "","none",2,"Weather Flag","weather");
 	add_option("--enable-real-weather-fetch",	false, "","",1,"Enable Real Weather","weather");
 	add_option("--disable-real-weather-fetch",	false, "","",1,"Disable Real Weather","weather");
 	add_option("--metar=",						false,"","",1,"","weather");
@@ -53,7 +53,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--multiplay=out", false, "", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
 
 	//= FGCom Related
-	add_option( "--fgcom=",false, "", "",3,"FgCom","FgCom");
+	add_option( "--fgcom=",false, "", "fgcom.flightgear.org.uk:16661",3,"FgCom","FgCom");
 
 	//= Local Servers
 	add_option( "--telnet=",false, "", "",3,"Enable Telnet","servers");
@@ -74,7 +74,7 @@ void XSettingsModel::add_option( QString option, bool enabled, QString value, QS
 	QList<QStandardItem *>items;
 	items 	<< new QStandardItem(option)
 			<< new QStandardItem(enabled ? "1" : "0")
-			<< new QStandardItem(value)
+			<< new QStandardItem(preset)
 			<< new QStandardItem(preset)
 			<< new QStandardItem(QString::number(level))
 			<< new QStandardItem(description)
@@ -161,7 +161,11 @@ void XSettingsModel::read_ini()
 		//= loop rows and load each "option" as an [ini section] with enabled, value as values
 		settings.beginGroup(item(row_idx, C_OPTION)->text());
 			item(row_idx, C_ENABLED)->setText( settings.value("enabled").toBool() ? "1" : "0" );
-			item(row_idx, C_VALUE)->setText( settings.value("value").toString() );
+			QString val = settings.value("value").toString();
+			if(val == ""){
+				val = item(row_idx, C_DEFAULT)->text();
+			}
+			item(row_idx, C_VALUE)->setText(val );
 
 			//= Broadcast changes
 			emit upx(item(row_idx, C_OPTION)->text(),
