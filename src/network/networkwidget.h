@@ -71,8 +71,7 @@ public:
 	QStringList get_args();
 
 signals:
-	void set_arg(QString action, QString arg, QString value);
-
+	void setx(bool enabled, QString options, QString value);
 
 public slots:
 	void dns_lookup();
@@ -92,6 +91,8 @@ public slots:
 	void on_browse_screenshot();
 	void on_open_telnet();
 	
+	void on_upx(bool enabled, QString options, QString value);
+
 };
 
 #endif // NETWORKWIDGET_H

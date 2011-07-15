@@ -434,9 +434,9 @@ void NetworkWidget::set_fgcom(){
 		if(txtFgComPort->text().trimmed().length() == 0){
 			txtFgComPort->setText(mainObject->settings->default_fgcom_port());
 		}
-		emit set_arg("set", "--fgcom=", txtFgComNo->text().append(":").append( txtFgComPort->text() ) );
+		emit setx(true, "--fgcom=", txtFgComNo->text().append(":").append( txtFgComPort->text() ) );
 	}else{
-		emit set_arg("remove", "--fgcom=","");
+		emit setx(false, "--fgcom=","");
 	}
 }
 		
@@ -649,4 +649,7 @@ QString NetworkWidget::validate(){
 
 
 
-
+void NetworkWidget::on_upx(bool enabled, QString options, QString value)
+{
+	//
+}

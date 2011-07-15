@@ -3,7 +3,6 @@
 
 #include <QtCore/QObject>
 
-//#include <QtSql/QSqlDatabase>
 
 #include <QtGui/QSystemTrayIcon>
 #include <QtGui/QAction>
@@ -13,16 +12,17 @@
 #include <QtGui/QWidgetAction>
 
 #include "xobjects/xsettings.h"
+
 #include "xobjects/xsettingsmodel.h"
+class XSettingsModel;
 
 #include "xobjects/xprocess.h"
 class XProcess;
 
 
+
 #include "launcher/launcherwindow.h"
 class LauncherWindow;
-
-
 
 #include "mpmap/mpmapwidget.h"
 #include "mpmap/mpmapxwidget.h"

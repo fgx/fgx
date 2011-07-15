@@ -823,3 +823,9 @@ void AirportsWidget::on_view_map(){
 	mainObject->mpMapXWidget->show();
 
 }
+
+
+void AirportsWidget::on_upx(bool enabled, QString options, QString value)
+{
+
+}

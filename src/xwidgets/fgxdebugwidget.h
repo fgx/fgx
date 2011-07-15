@@ -19,6 +19,8 @@ signals:
 
 public slots:
 
+
+
 };
 
 #endif // FGXDEBUGWIDGET_H

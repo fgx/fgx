@@ -1,5 +1,6 @@
 
 #include <QTreeView>
+#include <QHeaderView>
 #include <QTabWidget>
 #include <QVBoxLayout>
 
@@ -24,12 +25,36 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 
 	//=============================================================
 	// TEMP DEBUG TREE
-	QTreeView *treeDebugModel = new QTreeView();
-	treeDebugModel->setRootIsDecorated(false);
-	treeDebugModel->setSortingEnabled(true);
-	tabWidget->addTab(treeDebugModel,QIcon(":/icon/debug"), "Settings Model");
-	treeDebugModel->setModel(mainObject->S);
+	QTreeView *tree = new QTreeView();
+	tree->setRootIsDecorated(false);
+	tabWidget->addTab(tree,QIcon(":/icon/debug"), "Settings Model");
 
-	treeDebugModel->sortByColumn(XSettingsModel::C_OPTION, Qt::AscendingOrder);
+	tree->setModel(mainObject->S);
+	tree->setSortingEnabled(true);
+	tree->sortByColumn(XSettingsModel::C_OPTION, Qt::AscendingOrder);
+	tree->setUniformRowHeights(true);
+	tree->header()->setStretchLastSection(true);
+
+	tree->setColumnHidden(XSettingsModel::C_LEVEL, true);
+	tree->setColumnHidden(XSettingsModel::C_AREA, true);
+
+	tree->setColumnWidth(XSettingsModel::C_ENABLED, 40);
+	tree->setColumnWidth(XSettingsModel::C_OPTION, 200);
+	tree->setColumnWidth(XSettingsModel::C_VALUE, 200);
+
+	QHBoxLayout *bottBox = new QHBoxLayout();
+	mainLayout->addLayout(bottBox);
+	bottBox->addStretch(10);
+
+	QPushButton *buttLoad = new QPushButton();
+	buttLoad->setText("Load Ini");
+	bottBox->addWidget(buttLoad);
+	connect(buttLoad, SIGNAL(clicked()), mainObject->S, SLOT(read_ini()));
+
+	QPushButton *buttSave = new QPushButton();
+	buttSave->setText("Write Ini");
+	bottBox->addWidget(buttSave);
+	connect(buttSave, SIGNAL(clicked()), mainObject->S, SLOT(write_ini()));
+
 
 }

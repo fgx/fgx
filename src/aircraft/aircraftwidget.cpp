@@ -266,11 +266,12 @@ void AircraftWidget::on_tree_selection_changed(){
 	if(item->text(C_AERO).length() == 0){
                 outLog("on_tree_selection_changed: no C_AERO item");
                 aeroImageLabel->clear();
-		emit set_arg("update", "--aircraft=", "");
+		emit setx(false, "--aircraft=", "");
 		return;
 	}
 
 	mainObject->settings->setValue("aircraft", item->text(C_AERO) );
+	emit setx(true, "--aircraft=", item->text(C_AERO));
 
 	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->settings->aircraft_path(),
@@ -468,4 +469,9 @@ void AircraftWidget::initialize(){
 
 void AircraftWidget::on_use_default_clicked(){
 	treeWidget->setEnabled( !checkBoxUseDefault->isChecked() );
+}
+
+void AircraftWidget::on_upx(bool enabled, QString options, QString value)
+{
+	//
 }

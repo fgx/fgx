@@ -78,11 +78,12 @@ public slots:
 	void on_callsign_changed(QString);
 	void on_checkbox_show_mp_map();
 	void on_checkbox_fullscreen();
+	void on_checkbox_splash_screen();
 	void load_joysticks();
 	void on_radio_fg_path();
 	void load_settings();
 
-	void upx(bool enabled, QString option, QString value);
+	void on_upx(bool enabled, QString option, QString value);
 };
 
 #endif // CORESETTINGSWIDGET_H

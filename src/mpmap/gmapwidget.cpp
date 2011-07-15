@@ -191,7 +191,7 @@ void GMapWidget::map_debug(QVariant mess){
 // - this is not firing ;-(
 void GMapWidget::map_mouse_move(QVariant dLat, QVariant dLng){
     //qDebug("YES");
-	qDebug() << "map_mouse_move" << dLat.toString();
+	//qDebug() << "map_mouse_move" << dLat.toString();
     lblLat->setText(dLat.toString());
     lblLng->setText(dLng.toString());
 }
@@ -201,14 +201,14 @@ void GMapWidget::map_mouse_move(QVariant dLat, QVariant dLng){
 void GMapWidget::map_click(QVariant lat, QVariant lng){
 	Q_UNUSED(lat);
 	Q_UNUSED(lng);
-	qDebug() << "map_click()" << lat << lng;
+	//qDebug() << "map_click()" << lat << lng;
 }
 
 //== JS - map_right_click()
 void GMapWidget::map_right_click(QVariant lat, QVariant lng){
 	Q_UNUSED(lat);
 	Q_UNUSED(lng);
-	qDebug() << "map_right_click()" << lat << lng;
+	//qDebug() << "map_right_click()" << lat << lng;
 }
 
 
@@ -217,18 +217,18 @@ void GMapWidget::map_right_click(QVariant lat, QVariant lng){
 
 
 void GMapWidget::map_error(QVariant err){
-    qDebug("map_error()");
+	//qDebug("map_error()");
 	Q_UNUSED(err);
 }
 
 void GMapWidget::marker_clicked(QVariant marker, QVariant mId){
-    qDebug("marker_clicked()");
+	//qDebug("marker_clicked()");
 		Q_UNUSED(marker);
 			Q_UNUSED(mId);
 }
 
 void GMapWidget::marker_unselected(QVariant curr_idx, QVariant mLocationId){
-    qDebug("marker_unselected()");
+	//qDebug("marker_unselected()");
 		Q_UNUSED(curr_idx);
 			Q_UNUSED(mLocationId);
 }
@@ -237,7 +237,7 @@ void GMapWidget::marker_unselected(QVariant curr_idx, QVariant mLocationId){
 
 //** JS
 void GMapWidget::map_zoom_changed(QVariant zoom){
-	qDebug() << "map_zoom_changed" << zoom;
+	//qDebug() << "map_zoom_changed" << zoom;
 	return;
     buttZoom->setText(zoom.toString());
     int zoomInt = zoom.toInt();
@@ -284,7 +284,7 @@ void GMapWidget::add_marker(LatLng latLng, QString label){
 
     QString js_str = QString("add_marker(%1, %2, '%3');")
                      .arg( latLng.lat() ).arg( latLng.lng() ).arg( label );
-    qDebug() << js_str;
+	//qDebug() << js_str;
     this->execute_js(js_str);
 
 }
@@ -292,13 +292,13 @@ void GMapWidget::add_marker(LatLng latLng, QString label){
 
 void GMapWidget::zoom_to(QString lat, QString lng, QString zoom){
     QString js_str = QString("zoom_to(%1, %2, %3);").arg( lat ).arg( lng ).arg( zoom );
-    qDebug() << js_str;
+	//qDebug() << js_str;
     this->execute_js(js_str);
 
 }
 
 void GMapWidget::execute_js(QString js_str){
-	qDebug() << "> js= " << js_str;
+	//qDebug() << "> js= " << js_str;
 	webView->page()->mainFrame()->evaluateJavaScript(js_str);
 }
 
@@ -340,7 +340,7 @@ void GMapWidget::init_map(){
 
 		webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 		QByteArray contents = file.readAll();
-		qDebug() << contents;
+		//qDebug() << contents;
 		webView->setHtml(contents);
 
 	}
@@ -349,7 +349,7 @@ void GMapWidget::init_map(){
 
 //= JS Callback
 void GMapWidget::set_map_init(){
-	qDebug() << "JS map init";
+	//qDebug() << "JS map init";
 
 }
 
