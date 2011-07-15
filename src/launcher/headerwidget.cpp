@@ -6,9 +6,11 @@
 
 #include "launcher/headerwidget.h"
 
-HeaderWidget::HeaderWidget(QWidget *parent) :
+HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
     QLabel(parent)
 {
+
+	mainObject = mob;
 
 	//= Fade Timer
 	fadeTimer = new QTimer(this);
@@ -76,6 +78,7 @@ void HeaderWidget::start_fade(){
 	setStyleSheet("font-family: freeuniversal; color: #666666; font-size: 16px; background-image: url(:/artwork/fgx-logo-flyer); background-repeat: none; padding-left: 40px; padding-top: 3px; padding-bottom: 5px; padding-right: 5px; margin-top: 10px; margin-bottom: 20px;");
 }
 
+//== The opacirty is stepped won with this timer until window siappears... dissipates.. like a cloud after a rought landing..
 
 void HeaderWidget::on_fade_timer()
 {

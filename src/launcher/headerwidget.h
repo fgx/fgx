@@ -4,12 +4,17 @@
 #include <QLabel>
 #include <QTimer>
 
+#include "xobjects/mainobject.h"
+class MainObject;
+
+
 class HeaderWidget : public QLabel
 {
 Q_OBJECT
 public:
-	explicit HeaderWidget(QWidget *parent = 0);
+	explicit HeaderWidget(MainObject *mob, QWidget *parent = 0);
 
+	MainObject *mainObject;
 	QTimer *fadeTimer;
 
 	QWidget *popWidget;

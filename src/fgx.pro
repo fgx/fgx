@@ -61,7 +61,6 @@ HEADERS += xobjects/xsettings.h \
     mpmap/mpmapwidget.h \
     mpmap/mpmapxwidget.h \
     mpmap/pilotswidget.h \
-    xwidgets/xmessagelabel.h \
     mpmap/gmapwidget.h \
     mpmap/xwebpage.h \
     panes/expertoptionswidget.h \
@@ -122,7 +121,6 @@ SOURCES += main.cpp \
     mpmap/mpmapwidget.cpp \
     mpmap/mpmapxwidget.cpp \
     mpmap/pilotswidget.cpp \
-    xwidgets/xmessagelabel.cpp \
     mpmap/gmapwidget.cpp \
     mpmap/xwebpage.cpp \
     panes/expertoptionswidget.cpp \

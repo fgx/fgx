@@ -76,10 +76,10 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	
 	//== Message Label
 	
-	messageLabel = new XMessageLabel(this);
-	messageLabel->setStyleSheet("{ font-size: 16px; }");
-	messageLabel->showMessage("Welcome [Callsign]");
-	toolbarLayout->addWidget(messageLabel,1);
+	headerWidget = new HeaderWidget(mainObject);
+	headerWidget->setStyleSheet("{ font-size: 16px; }");
+	headerWidget->showMessage("Welcome [Callsign]");
+	toolbarLayout->addWidget(headerWidget,1);
 	//##connect(mainObject->S, SIGNAL(upx(bool,QString,QString)), messageLabel, SLOT()
 	
 	
@@ -270,7 +270,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	initializing = false;
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
-	messageLabel->setText("Callsign - KSFO - AIRPORT");
+	headerWidget->setText("Callsign - KSFO - AIRPORT");
 
 }
 
@@ -348,7 +348,7 @@ void LauncherWindow::on_start_fgcom_clicked() {
 void LauncherWindow::save_settings()
 {
 	QString message("Settings saved.");
-	messageLabel->showMessage(message);
+	headerWidget->showMessage(message);
 
 	coreSettingsWidget->save_settings();
 	timeWeatherWidget->save_settings();
@@ -371,7 +371,7 @@ void LauncherWindow::load_settings()
 {
 	
 	QString message("Settings loaded.");
-	messageLabel->showMessage(message);
+	headerWidget->showMessage(message);
 	
 	coreSettingsWidget->load_settings();
 	timeWeatherWidget->load_settings();
@@ -409,14 +409,14 @@ bool LauncherWindow::validate(){
 	v = coreSettingsWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget));
-		messageLabel->showMessage(v);
+		headerWidget->showMessage(v);
 		return false;
 	}
 
 	v = aircraftWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
-		messageLabel->showMessage(v);
+		headerWidget->showMessage(v);
 		return false;
 	}
 	outLog("*** FGx reports: Aircraft settings ok. ***");
@@ -424,7 +424,7 @@ bool LauncherWindow::validate(){
 	v = airportsWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(airportsWidget));
-		messageLabel->showMessage(v);
+		headerWidget->showMessage(v);
 		return false;
 	}
 	outLog("*** FGx reports: Airport settings ok. ***");
@@ -432,13 +432,13 @@ bool LauncherWindow::validate(){
 	v = networkWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(networkWidget));
-		messageLabel->showMessage(v);
+		headerWidget->showMessage(v);
 		return false;
 	}
 	v = timeWeatherWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(timeWeatherWidget));
-		messageLabel->showMessage(v);
+		headerWidget->showMessage(v);
 		return false;
 	}
 	outLog("*** FGx reports: Network settings ok. ***");
