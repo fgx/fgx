@@ -82,7 +82,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 	//** Use Default Aircraft
 	checkBoxUseDefault = new QCheckBox(this);
-	checkBoxUseDefault->setText("Use default aircraft");
+	checkBoxUseDefault->setText("Use default fuel load");
 	treeTopBar->addWidget(checkBoxUseDefault);
 	connect(checkBoxUseDefault, SIGNAL(clicked()), this, SLOT(on_use_default_clicked()));
 
@@ -147,7 +147,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     QGroupBox *grpAero = new QGroupBox();
     splitter->addWidget(grpAero);
     grpAero->setDisabled(false);
-    grpAero->setTitle(tr("Preview, Radio"));
+    grpAero->setTitle(tr("Preview, Radio, Fuel"));
 
 
     QVBoxLayout *aeroLayout = new QVBoxLayout();
@@ -187,25 +187,39 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	fuelWidget->setLayout(layoutFuelPane);
 	int rowFuel = 1;
 	
+	//** Use Default Aircraft
+	checkBoxUseDefaultFuel = new QCheckBox(this);
+	checkBoxUseDefaultFuel->setText("Use default");
+	layoutFuelPane->addWidget(checkBoxUseDefaultFuel);
+	connect(checkBoxUseDefaultFuel, SIGNAL(clicked()), this, SLOT(on_use_default_fuel_clicked()));
+	
+	// Enable fuel freeze
+	rowFuel++;
+	checkBoxFuelFreeze = new QCheckBox(this);
+	checkBoxFuelFreeze->setText("Enable fuel freeze");
+	layoutFuelPane->addWidget(checkBoxFuelFreeze);
+	connect(checkBoxFuelFreeze, SIGNAL(clicked()), this, SLOT(on_fuel_freeze_clicked()));
+	
 	//* Tank 1
-	layoutFuelPane->addWidget(new QLabel(tr("Tank 1")), rowFuel, 0, 1, 1, Qt::AlignRight);
+	rowFuel++;
+	layoutFuelPane->addWidget(new QLabel(tr("Tank 1")), rowFuel, 0, 1, 1, Qt::AlignLeft);
 	txtTank1 = new QLineEdit();
 	txtTank1->setValidator(new QDoubleValidator(0, 200, 1, this));
-	layoutFuelPane->addWidget(txtTank1,rowFuel, 1, 1, 1);
+	layoutFuelPane->addWidget(txtTank1,rowFuel, 1, 1, 1, Qt::AlignLeft);
 	
 	//* Tank 2
 	rowFuel++;
-	layoutFuelPane->addWidget(new QLabel(tr("Tank 2")), rowFuel, 0, 1, 1, Qt::AlignRight);
+	layoutFuelPane->addWidget(new QLabel(tr("Tank 2")), rowFuel, 0, 1, 1, Qt::AlignLeft);
 	txtTank2 = new QLineEdit();
 	txtTank2->setValidator(new QDoubleValidator(0, 200, 1, this));
-	layoutFuelPane->addWidget(txtTank2,rowFuel, 1, 1, 1);
+	layoutFuelPane->addWidget(txtTank2,rowFuel, 1, 1, 1, Qt::AlignLeft);
 	
 	//* Tank 3
 	rowFuel++;
-	layoutFuelPane->addWidget(new QLabel(tr("Tank 3")), rowFuel, 0, 1, 1, Qt::AlignRight);
+	layoutFuelPane->addWidget(new QLabel(tr("Tank 3")), rowFuel, 0, 1, 1, Qt::AlignLeft);
 	txtTank3 = new QLineEdit();
 	txtTank3->setValidator(new QDoubleValidator(0, 200, 1, this));
-	layoutFuelPane->addWidget(txtTank3, rowFuel, 1, 1, 1);
+	layoutFuelPane->addWidget(txtTank3, rowFuel, 1, 1, 1, Qt::AlignLeft);
 	
 	layoutFuelPane->setRowStretch(rowFuel + 1, 20); // stretch end
 	
@@ -317,13 +331,16 @@ void AircraftWidget::save_settings(){
 	if(item && item->text(C_AERO).length() > 0){
 		mainObject->settings->setValue("aircraft", item->text(C_AERO) );
 	}
-	mainObject->settings->setValue("aircraft_use_default", checkBoxUseDefault->isChecked());
+	mainObject->settings->setValue("use_default_fuel", checkBoxUseDefaultFuel->isChecked());
+	mainObject->settings->setValue("enable_fuel_freeze", checkBoxFuelFreeze->isChecked());
 
 	mainObject->settings->setValue("nav1", txtNav1->text());
 	mainObject->settings->setValue("nav2", txtNav2->text());
 	mainObject->settings->setValue("adf", txtAdf->text());
 	mainObject->settings->setValue("com1", txtComm1->text());
 	mainObject->settings->setValue("com2", txtComm2->text());
+	
+	mainObject->settings->setValue("aircraft_use_default", checkBoxUseDefault->isChecked());
 	
 	mainObject->settings->setValue("prop:/consumables/fuels/tank[1]/level-gal", txtTank1->text());
 	mainObject->settings->setValue("prop:/consumables/fuels/tank[2]/level-gal", txtTank2->text());
@@ -339,6 +356,8 @@ void AircraftWidget::load_settings(){
 
 	//select_node(mainObject->settings->value("aircraft").toString());
 	
+	checkBoxUseDefaultFuel->setChecked(mainObject->settings->value("use_default_fuel", false).toBool());
+	checkBoxFuelFreeze->setChecked(mainObject->settings->value("enable_fuel_freeze", false).toBool());
 	txtTank1->setText(mainObject->settings->value("prop:/consumables/fuels/tank[1]/level-gal").toString());
 	txtTank2->setText(mainObject->settings->value("prop:/consumables/fuels/tank[2]/level-gal").toString());
 	txtTank3->setText(mainObject->settings->value("prop:/consumables/fuels/tank[3]/level-gal").toString());
@@ -487,4 +506,14 @@ void AircraftWidget::initialize(){
 
 void AircraftWidget::on_use_default_clicked(){
 	treeWidget->setEnabled( !checkBoxUseDefault->isChecked() );
+}
+
+void AircraftWidget::on_use_default_fuel_clicked(){
+	txtTank1->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
+	txtTank2->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
+	txtTank3->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
+}
+
+void AircraftWidget::on_enable_fuel_freeze_clicked(){
+	
 }

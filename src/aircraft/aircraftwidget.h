@@ -51,6 +51,8 @@ public:
 	QLineEdit *txtComm1;
 	QLineEdit *txtComm2;
 	
+	QCheckBox *checkBoxUseDefaultFuel;
+	QCheckBox *checkBoxFuelFreeze;
 	QLineEdit *txtTank1;
 	QLineEdit *txtTank2;
 	QLineEdit *txtTank3;
@@ -75,6 +77,8 @@ public slots:
 	void on_use_default_clicked();
 	void on_tree_selection_changed();
 	void on_reload_cache();
+	void on_use_default_fuel_clicked();
+	void on_enable_fuel_freeze_clicked();
 
 };
 
