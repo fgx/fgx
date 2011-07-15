@@ -70,7 +70,6 @@ public:
 
 
 signals:
-	void setx(bool enabled, QString option_switch);
 	void setx(bool enabled, QString option, QString value);
 
 
@@ -82,6 +81,8 @@ public slots:
 	void load_joysticks();
 	void on_radio_fg_path();
 	void load_settings();
+
+	void upx(bool enabled, QString option, QString value);
 };
 
 #endif // CORESETTINGSWIDGET_H

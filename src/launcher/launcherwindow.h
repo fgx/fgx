@@ -120,6 +120,7 @@ public slots:
 	//* Widget Events
 	void on_tab_changed(int);
 
+	void on_upx(bool enabled, QString option, QString value);
 
 };
 

@@ -70,16 +70,16 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	//=============================================
 	//=== Top toolbar
-	QHBoxLayout *toolbarLayout =  new QHBoxLayout();
-	toolbarLayout->setContentsMargins(10, 0, 10, 0);
-	outerContainer->addLayout(toolbarLayout);
+	//QHBoxLayout *toolbarLayout =  new QHBoxLayout();
+	//toolbarLayout->setContentsMargins(10, 0, 10, 0);
+	//outerContainer->addLayout(toolbarLayout);
 	
 	//== Message Label
 	
 	headerWidget = new HeaderWidget(mainObject);
 	headerWidget->setStyleSheet("{ font-size: 16px; }");
 	headerWidget->showMessage("Welcome [Callsign]");
-	toolbarLayout->addWidget(headerWidget,1);
+	outerContainer->addWidget(headerWidget,1);
 	//##connect(mainObject->S, SIGNAL(upx(bool,QString,QString)), messageLabel, SLOT()
 	
 	
@@ -271,6 +271,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
 	headerWidget->setText("Callsign - KSFO - AIRPORT");
+	connect(mainObject->S, SIGNAL(upx(bool,QString,QString)), this, SLOT(on_upx(bool,QString,QString)));
 
 }
 
@@ -518,4 +519,16 @@ void LauncherWindow::on_whats_this() {
 	QWhatsThis::enterWhatsThisMode();
 }
 
-
+void LauncherWindow::on_upx(bool enabled, QString option, QString value)
+{
+	Q_UNUSED(enabled);
+	Q_UNUSED(value);
+	//qDebug() << "opt=" << option << value;
+	//#return;
+	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
+		QString header = QString("[%1] %2 %3").arg( mainObject->S->getx("--callsign=")
+									).arg( mainObject->S->getx("--aircraft=")
+									).arg( mainObject->S->getx("--airport="));
+		headerWidget->setText( header );
+	}
+}

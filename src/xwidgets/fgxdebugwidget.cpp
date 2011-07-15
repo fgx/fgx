@@ -5,7 +5,7 @@
 
 #include "xwidgets/fgxdebugwidget.h"
 
-
+#include "xobjects/xsettingsmodel.h"
 
 FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
     QWidget(parent)
@@ -26,9 +26,10 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 	// TEMP DEBUG TREE
 	QTreeView *treeDebugModel = new QTreeView();
 	treeDebugModel->setRootIsDecorated(false);
+	treeDebugModel->setSortingEnabled(true);
 	tabWidget->addTab(treeDebugModel,QIcon(":/icon/debug"), "Settings Model");
 	treeDebugModel->setModel(mainObject->S);
 
-
+	treeDebugModel->sortByColumn(XSettingsModel::C_OPTION, Qt::AscendingOrder);
 
 }

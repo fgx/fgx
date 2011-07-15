@@ -21,7 +21,7 @@ public:
 
 	void add_option(bool enabled, QString option, QString value, QString preset, int level, QString description, QString area);
 
-
+	QString getx(QString option);
 
 
 signals:

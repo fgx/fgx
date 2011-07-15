@@ -315,7 +315,8 @@ void CoreSettingsWidget::on_radio_fg_path(){
 
 //=====================================
 // Callsign Changed
-void CoreSettingsWidget::on_callsign_changed(QString txt){
+void CoreSettingsWidget::on_callsign_changed(QString txt)
+{
 	Q_UNUSED(txt);
 	save_settings();
 	//#->showMessage(txt);
@@ -323,6 +324,14 @@ void CoreSettingsWidget::on_callsign_changed(QString txt){
 }
 
 
-void CoreSettingsWidget::on_checkbox_fullscreen(){
+void CoreSettingsWidget::on_checkbox_fullscreen()
+{
 	comboScreenSize->setDisabled( checkBoxFullScreenStartup->isChecked() );
+}
+
+
+void CoreSettingsWidget::upx(bool enabled, QString option, QString value)
+{
+
+
 }

@@ -26,7 +26,9 @@ XSettingsModel::XSettingsModel(QObject *parent) :
 
 	add_option(true, "--callsign=", "", "fgx001", 1 ,"Your Callsign","Core");
 
-	add_option(false, "--aircraft=", "", "?", 1 ,"Aeroplane","Aircraft");
+	add_option(false, "--aircraft=", "", "?", 1 ,"Aircraft","Aircraft");
+
+	add_option(false, "--airport=", "", "?", 1 ,"Airport","Airport");
 
 }
 
@@ -75,4 +77,14 @@ void XSettingsModel::set_option(bool enabled, QString option, QString value)
 }
 
 
+QString XSettingsModel::getx(QString option)
+{
+	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
+	//#qDebug() << "opts" << items;
+
+	// Get the item in the same row in the enabled field
+	QStandardItem *xItem = item(items[0]->row(),C_VALUE);
+	return xItem->text();
+
+}
 

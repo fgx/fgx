@@ -1,24 +1,34 @@
 #ifndef XHEADERWIDGET_H
 #define XHEADERWIDGET_H
 
-#include <QLabel>
 #include <QTimer>
+
+
+#include <QWidget>
+#include <QLabel>
+
 
 #include "xobjects/mainobject.h"
 class MainObject;
 
 
-class HeaderWidget : public QLabel
+class HeaderWidget : public QWidget
 {
 Q_OBJECT
 public:
 	explicit HeaderWidget(MainObject *mob, QWidget *parent = 0);
 
 	MainObject *mainObject;
+
 	QTimer *fadeTimer;
+
+	QLabel *headerLabel;
 
 	QWidget *popWidget;
 	QLabel *popLabel;
+
+	void setText(QString text);
+
 
 
 signals:

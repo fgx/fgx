@@ -7,7 +7,7 @@
 #include "launcher/headerwidget.h"
 
 HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
-    QLabel(parent)
+	QWidget(parent)
 {
 
 	mainObject = mob;
@@ -18,7 +18,13 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 	fadeTimer->setInterval(60);
 
 	//= Init Label
-	setText("Hello Message Label");
+	QVBoxLayout *mainLayout = new QVBoxLayout();
+	setLayout(mainLayout);
+
+
+	headerLabel = new QLabel("Hello Header Label");
+	mainLayout->addWidget(headerLabel);
+
 
 	//setStyleSheet("font-size: 20pt; background-color: #ffffff;");
 	//setStyleSheet("  font-family: freeuniversal; color: #333333; font-size: 16px; background-image: url(:/artwork/fgx-logo-flyer-yellow); background-repeat: none; padding-left: 40px; padding-top: 3px; padding-bottom: 5px; padding-right: 5px; margin-top: 10px; margin-bottom: 20px; ");
@@ -49,6 +55,7 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 
 	popWidget->show();
 
+	setStyleSheet("background-color: yellow;");
 
 }
 
@@ -88,4 +95,11 @@ void HeaderWidget::on_fade_timer()
 	}else{
 		popWidget->setWindowOpacity( popWidget->windowOpacity() - 0.1 );
 	}
+}
+
+
+
+void HeaderWidget::setText(QString text)
+{
+	headerLabel->setText(text);
 }
