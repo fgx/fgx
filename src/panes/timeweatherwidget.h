@@ -12,8 +12,8 @@
 
 
 #include "xobjects/mainobject.h"
-
 class MainObject;
+
 
 class TimeWeatherWidget : public QWidget
 {
@@ -37,10 +37,14 @@ public:
 	QString validate();
 
 signals:
-	void setx(bool,QString, QString);
+	void setx(QString option, bool enabled, QString value);
 
 public slots:
 	void on_metar_clicked();
+	void on_time_clicked(int);
+	void on_season_clicked(int);
+
+	void on_upx(QString option, bool enabled, QString value);
 };
 
 #endif // TIMEWEATHERWIDGET_H

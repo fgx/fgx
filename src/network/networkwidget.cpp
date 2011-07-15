@@ -651,5 +651,17 @@ QString NetworkWidget::validate(){
 
 void NetworkWidget::on_upx(QString option, bool enabled, QString value)
 {
-	//
+	if(option == "--telnet="){
+		grpTelnet->setChecked(enabled);
+		txtTelnet->setText(value);
+
+	}else if(option == "--httpd="){
+		grpHttp->setChecked(enabled);
+		txtHttp->setText(value);
+
+	}else if(option == "--jpg-httpd="){
+		grpScreenShot->setChecked(enabled);
+		txtScreenShot->setText(value);
+
+	}
 }

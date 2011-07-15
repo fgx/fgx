@@ -157,8 +157,8 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	layoutPaths->addStretch(20);
 
-	connect(this, SIGNAL(setx(bool,QString, QString)), mainObject->S, SLOT(set_option(bool,QString,QString)) );
-	connect(mainObject->S, SIGNAL(upx(bool,QString,QString)), this, SLOT(on_upx(bool,QString,QString)));
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->S, SLOT(set_option(QString,bool,QString)) );
+	connect(mainObject->S, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 }
 
@@ -347,10 +347,10 @@ void CoreSettingsWidget::on_show_mp_map(){
 	//qDebug() << comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString()
 	qDebug() << comboMpMapServer->currentIndex();
 	qDebug() << comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString();
-	return;
+	//return;
 	emit setx(	"show_mpmap",
 				checkBoxShowMpMap->isChecked(),
-				""
+				comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString()
 				);
 }
 
@@ -360,7 +360,7 @@ void CoreSettingsWidget::on_show_mp_map(){
 //======================================================================
 void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 {
-
+	//qDebug() << "op_upx";
 	if(option == "--callsign="){
 		txtCallSign->setText(value);
 

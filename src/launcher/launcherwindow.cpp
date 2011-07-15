@@ -180,7 +180,10 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	connect(buttonLoadSettings, SIGNAL(clicked()),
 			this, SLOT(load_settings())
 			);
-	
+	connect(buttonLoadSettings, SIGNAL(clicked()),
+			mainObject->S, SLOT(read_ini())
+	);
+
 	//= Save Settings
 	QToolButton *buttonSaveSettings = new QToolButton(this);
 	buttonSaveSettings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -192,7 +195,10 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	connect(buttonSaveSettings, SIGNAL(clicked()),
 			this, SLOT(save_settings())
 			);
-	
+	connect(buttonSaveSettings, SIGNAL(clicked()),
+			mainObject->S, SLOT(write_ini())
+	);
+
 	bottomActionLayout->addStretch(20);
 	
 	
@@ -271,7 +277,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
 	headerWidget->setText("Callsign - KSFO - AIRPORT");
-	connect(mainObject->S, SIGNAL(upx(bool,QString,QString)), this, SLOT(on_upx(bool,QString,QString)));
+	connect(mainObject->S, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 }
 
@@ -519,13 +525,10 @@ void LauncherWindow::on_whats_this() {
 	QWhatsThis::enterWhatsThisMode();
 }
 
-void LauncherWindow::on_upx(bool enabled, QString option, QString value)
+void LauncherWindow::on_upx(QString option, bool enabled, QString value)
 {
 	Q_UNUSED(enabled);
-	Q_UNUSED(value);
-	//qDebug() << "opt=" << option << value;
-	//#return;
-	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
+	Q_UNUSED(value);	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
 		QString header = QString("[%1] %2 %3").arg( mainObject->S->getx("--callsign=")
 									).arg( mainObject->S->getx("--aircraft=")
 									).arg( mainObject->S->getx("--airport="));

@@ -88,6 +88,8 @@ public:
 
     void closeEvent(QCloseEvent *event);
 
+
+
 public slots:
 
 
@@ -120,7 +122,7 @@ public slots:
 	//* Widget Events
 	void on_tab_changed(int);
 
-	void on_upx(bool enabled, QString option, QString value);
+	void on_upx(QString option, bool enabled, QString value);
 
 };
 

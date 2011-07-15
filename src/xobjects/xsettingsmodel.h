@@ -12,8 +12,8 @@ Q_OBJECT
 public:
 
 	enum COLS{
-		C_ENABLED = 0,
-		C_OPTION = 1,
+		C_OPTION = 0,
+		C_ENABLED = 1,
 		C_VALUE = 2,
 		C_DEFAULT = 3,
 		C_LEVEL = 4,

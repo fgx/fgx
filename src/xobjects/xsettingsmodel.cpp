@@ -18,7 +18,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	//======================================
 	// This list wil be the main issue and debates for a long time probably
 
-	add_option( "show_mapmap",false, "", "",10,"Follow in MpMap","Map");
+	add_option( "show_mpmap", false, "", "",10,"Follow in MpMap","Map");
 
 
 	add_option( "--enable-auto-coordination",false, "", "",10,"Enabled Rudder and Airelon","Control");
@@ -34,9 +34,27 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--airport=", false,"", "?", 1 ,"Airport","Airport");
 
 
-	add_option( "--multiplay=in", false,"", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
-	add_option( "--multiplay=out",false, "", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
+	//=Season
+	add_option("--season=", false,"","",1,"Season", "time");
+
+	//=Time
+	add_option("--timeofday=", false,"","",1,"Time of day", "time");
+
+	//= Weather
+	add_option("weather",						true, "","Weather Flag",2,"","weather");
+	add_option("--enable-real-weather-fetch",	false, "","",1,"Enable Real Weather","weather");
+	add_option("--disable-real-weather-fetch",	false, "","",1,"Disable Real Weather","weather");
+	add_option("--metar=",						false,"","",1,"","weather");
+
+
+	//= MultiPlayer
+	add_option( "--multiplay=in",  false,"", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
+	add_option( "--multiplay=out", false, "", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
+
+	//= FGCom Related
 	add_option( "--fgcom=",false, "", "",3,"FgCom","FgCom");
+
+
 
 }
 
@@ -81,7 +99,7 @@ void XSettingsModel::set_option(QString option, bool enabled, QString value)
 	vItem->setText(value);
 
 	//= Announce the change
-	emit upx(enabled, option, value);	
+	emit upx(option, enabled,  value);
 
 }
 
@@ -113,7 +131,9 @@ QString XSettingsModel::ini_file_path()
 // == Write Ini
 void XSettingsModel::write_ini()
 {
+	//= create init settings
 	QSettings settings(ini_file_path(), QSettings::IniFormat);
+	//= loop rows and save each "option" as an [ini section] with enabled, value as values
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
 		settings.beginGroup(item(row_idx, C_OPTION)->text());
 			settings.setValue( "enabled", item(row_idx, C_ENABLED)->text());
@@ -132,7 +152,10 @@ void XSettingsModel::read_ini()
 		settings.beginGroup(item(row_idx, C_OPTION)->text());
 			item(row_idx, C_ENABLED)->setText( settings.value("enabled").toBool() ? "1" : "0" );
 			item(row_idx, C_VALUE)->setText( settings.value("value").toString() );
-			emit upx(item(row_idx, C_ENABLED)->text() == "1", item(row_idx, C_OPTION)->text(), item(row_idx, C_VALUE)->text());
+			emit upx(item(row_idx, C_OPTION)->text(),
+					 item(row_idx, C_ENABLED)->text() == "1",
+					 item(row_idx, C_VALUE)->text()
+					 );
 		settings.endGroup();
 	}
 }
