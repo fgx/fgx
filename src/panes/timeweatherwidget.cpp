@@ -182,8 +182,8 @@ void TimeWeatherWidget::on_season_clicked(int idx)
 }
 
 //= Metar Clicked
-void TimeWeatherWidget::on_weather(){
-	qDebug() << buttonGroupMetar->checkedButton()->property("value").toString();
+void TimeWeatherWidget::on_weather()
+{
 	QString w = buttonGroupMetar->checkedButton()->property("value").toString();
 	emit setx("weather", true, w);
 	emit setx("--disable-real-weather-fetch", w == "none", "");
@@ -191,13 +191,6 @@ void TimeWeatherWidget::on_weather(){
 	emit setx("--metar=", w == "metar", txtMetar->toPlainText());
 
 
-	//if(w == "none"){
-	//
-	//	txtMetar->setEnabled(true);
-	//	txtMetar->setFocus();
-	//}else{
-	//	txtMetar->setEnabled(false);
-	//}
 }
 
 
@@ -205,20 +198,22 @@ void TimeWeatherWidget::on_weather(){
 //= Update Settings
 void TimeWeatherWidget::on_upx(QString option, bool enabled, QString value)
 {
-
 	if(option == "--timeofday="){
 		Helpers::select_radio(buttonGroupTime, value);
-
 
 	}else if(option == "--season="){
 		Helpers::select_radio(buttonGroupSeason, value);
 
 	}else if(option == "weather"){
 		Helpers::select_radio(buttonGroupMetar, value);
+		//qDebug() << option;
+		txtMetar->setEnabled(value == "custom");
+		if(txtMetar->isEnabled()){
+			txtMetar->setFocus();
+		}
 
 	}else if(option == "--metar="){
 		txtMetar->setPlainText(value);
 	}
-
 
 }

@@ -551,7 +551,7 @@ QStringList NetworkWidget::get_args(){
 //=============================================================
 // Save Settings
 void NetworkWidget::save_settings(){
-
+	return;
 	mainObject->settings->setValue("enable_mp", grpMpServer->isChecked());
 
 	mainObject->settings->setValue("in", checkBoxIn->isChecked());
@@ -593,7 +593,7 @@ void NetworkWidget::save_settings(){
 // Load Settings
 void NetworkWidget::load_settings(){
 	int idx;
-
+	return;
 	grpMpServer->setChecked( mainObject->settings->value("enable_mp").toBool() );
 
 	checkBoxIn->setChecked( mainObject->settings->value("in").toBool() );
@@ -648,7 +648,8 @@ QString NetworkWidget::validate(){
 }
 
 
-
+//=============================================================
+// Update Widgets
 void NetworkWidget::on_upx(QString option, bool enabled, QString value)
 {
 	if(option == "--telnet="){

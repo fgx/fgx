@@ -131,8 +131,9 @@ QString XSettingsModel::ini_file_path()
 // == Write Ini
 void XSettingsModel::write_ini()
 {
-	//= create init settings
+	//= create ini settings object
 	QSettings settings(ini_file_path(), QSettings::IniFormat);
+
 	//= loop rows and save each "option" as an [ini section] with enabled, value as values
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
 		settings.beginGroup(item(row_idx, C_OPTION)->text());
@@ -147,11 +148,16 @@ void XSettingsModel::write_ini()
 // == Read Ini
 void XSettingsModel::read_ini()
 {
+	//= Create ini settings object
 	QSettings settings(ini_file_path(), QSettings::IniFormat);
+
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
+		//= loop rows and load each "option" as an [ini section] with enabled, value as values
 		settings.beginGroup(item(row_idx, C_OPTION)->text());
 			item(row_idx, C_ENABLED)->setText( settings.value("enabled").toBool() ? "1" : "0" );
 			item(row_idx, C_VALUE)->setText( settings.value("value").toString() );
+
+			//= Broadcast changes
 			emit upx(item(row_idx, C_OPTION)->text(),
 					 item(row_idx, C_ENABLED)->text() == "1",
 					 item(row_idx, C_VALUE)->text()

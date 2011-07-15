@@ -2,6 +2,7 @@
 #define FGXDEBUGWIDGET_H
 
 #include <QWidget>
+#include <QPlainTextEdit>
 
 #include "xobjects/mainobject.h"
 
@@ -15,10 +16,12 @@ public:
 
 	MainObject *mainObject;
 
+	QPlainTextEdit *txtCommand;
+
 signals:
 
 public slots:
-
+	void on_tab(int idx);
 
 
 };
