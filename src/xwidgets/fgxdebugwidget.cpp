@@ -27,9 +27,9 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 	// TEMP DEBUG TREE
 	QTreeView *tree = new QTreeView();
 	tree->setRootIsDecorated(false);
-	tabWidget->addTab(tree, QIcon(":/icon/debug"), "Settings Model");
+	tabWidget->addTab(tree, QIcon(":/icon/debug"), "Model View");
 
-	tree->setModel(mainObject->S);
+	tree->setModel(mainObject->X);
 	tree->setSortingEnabled(true);
 	tree->sortByColumn(XSettingsModel::C_OPTION, Qt::AscendingOrder);
 	tree->setUniformRowHeights(true);
@@ -45,7 +45,7 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 
 	//+++ Text Command
 	txtCommand = new QPlainTextEdit();
-	tabWidget->addTab(txtCommand, QIcon(":/icon/debug"), "Settings Model");
+	tabWidget->addTab(txtCommand, QIcon(":/icon/debug"), "Command View");
 
 
 
@@ -56,12 +56,12 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 	QPushButton *buttLoad = new QPushButton();
 	buttLoad->setText("Load Ini");
 	bottBox->addWidget(buttLoad);
-	connect(buttLoad, SIGNAL(clicked()), mainObject->S, SLOT(read_ini()));
+	connect(buttLoad, SIGNAL(clicked()), mainObject->X, SLOT(read_ini()));
 
 	QPushButton *buttSave = new QPushButton();
 	buttSave->setText("Write Ini");
 	bottBox->addWidget(buttSave);
-	connect(buttSave, SIGNAL(clicked()), mainObject->S, SLOT(write_ini()));
+	connect(buttSave, SIGNAL(clicked()), mainObject->X, SLOT(write_ini()));
 
 	tabWidget->setCurrentIndex(mainObject->settings->value("fgx_debug_last_tab",0).toInt());
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab(int)));

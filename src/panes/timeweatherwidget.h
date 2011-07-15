@@ -41,7 +41,7 @@ signals:
 
 public slots:
 	void on_weather();
-	void on_time_clicked(int);
+	void on_time_clicked();
 	void on_season_clicked(int);
 
 	void on_upx(QString option, bool enabled, QString value);

@@ -473,5 +473,5 @@ void AircraftWidget::on_use_default_clicked(){
 
 void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 {
-	//
+	// Nothing to do
 }

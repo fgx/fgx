@@ -40,7 +40,7 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	buttonGroupTime = new QButtonGroup(this);
 	buttonGroupTime->setExclusive(true);
 	connect(buttonGroupTime, SIGNAL(buttonClicked(int)),
-			this, SLOT(on_time_clicked(int))
+			this, SLOT(on_time_clicked())
 	);
 
 	for(int i=0;  i < time_vals.size(); i++){
@@ -118,8 +118,8 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	laymetar->addStretch(20);
 
 
-	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->S, SLOT(set_option(QString,bool,QString)) );
-	connect(mainObject->S, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
+	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 }
 
@@ -170,7 +170,7 @@ void TimeWeatherWidget::save_settings(){
 
 //=========================================================================
 //== Time clicked
-void TimeWeatherWidget::on_time_clicked(int idx)
+void TimeWeatherWidget::on_time_clicked()
 {
 	setx("--timeofday=", true, buttonGroupTime->checkedButton()->property("value").toString());
 }

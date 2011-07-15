@@ -4,6 +4,18 @@
 
 #include "xobjects/xsettingsmodel.h"
 
+
+
+
+/*! \class XSettingsModel
+ * \brief The XSettingsModel is an extended QStandardItemModel, and the main "setting and state" for FGx
+ *
+ *
+ * @author: Peter Morgan
+ */
+
+
+
 XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
     QStandardItemModel(parent)
 {
@@ -15,8 +27,8 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	headers  << "Option" << "Ena" << "Val" << "Default" << "Level" << "Description" << "Class";
 	setHorizontalHeaderLabels(headers);
 
-	//======================================
-	// This list wil be the main issue and debates for a long time probably
+	//========================================================================
+	// This list wil be the main issue and debates for a long time probably, said pete
 
 	add_option( "show_mpmap", false, "", "",10,"Follow in MpMap","Map");
 

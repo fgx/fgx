@@ -32,7 +32,7 @@ MainObject::MainObject(QObject *parent) :
     settings = new XSettings();
 
 	//= NEW Settings Model
-	S = new XSettingsModel(this);
+	X = new XSettingsModel(this);
 
 	
 	//====================================================

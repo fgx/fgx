@@ -157,8 +157,8 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	layoutPaths->addStretch(20);
 
-	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->S, SLOT(set_option(QString,bool,QString)) );
-	connect(mainObject->S, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
+	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 }
 
