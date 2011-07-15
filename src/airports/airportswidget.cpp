@@ -825,7 +825,7 @@ void AirportsWidget::on_view_map(){
 }
 
 
-void AirportsWidget::on_upx(bool enabled, QString options, QString value)
+void AirportsWidget::on_upx(QString option, bool enabled, QString value)
 {
 
 }

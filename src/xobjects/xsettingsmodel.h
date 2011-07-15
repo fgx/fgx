@@ -25,17 +25,17 @@ public:
 
 	MainObject *mainObject;
 
-	void add_option(bool enabled, QString option, QString value, QString preset, int level, QString description, QString area);
+	void add_option(QString option, bool enabled, QString value, QString preset, int level, QString description, QString area);
 
 	QString getx(QString option);
 
 
 signals:
-	void upx(bool enabled, QString option, QString value);
+	void upx(QString option, bool enabled, QString value);
 
 public slots:
 
-	void set_option(bool enabled, QString option, QString value);
+	void set_option(QString option, bool enabled, QString value);
 
 	QString ini_file_path();
 	void write_ini();

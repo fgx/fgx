@@ -12,31 +12,31 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	setColumnCount(7);
 
 	QStringList headers;
-	headers << "Ena" << "Option" << "Val" << "Default" << "Level" << "Description" << "Class";
+	headers  << "Option" << "Ena" << "Val" << "Default" << "Level" << "Description" << "Class";
 	setHorizontalHeaderLabels(headers);
 
 	//======================================
 	// This list wil be the main issue and debates for a long time probably
 
-	add_option(false, "show_mapmap", "", "",10,"Follow in MpMap","Map");
+	add_option( "show_mapmap",false, "", "",10,"Follow in MpMap","Map");
 
 
-	add_option(false, "--enable-auto-coordination", "", "",10,"Enabled Rudder and Airelon","Control");
+	add_option( "--enable-auto-coordination",false, "", "",10,"Enabled Rudder and Airelon","Control");
 
-	add_option(false, "--full-screen", "", "", 1 ,"Enable Full Screen at Startup","Startup");
-	add_option(false, "--disable-splash-screen", "", "", 1 ,"Enable Splash Screen at Startup","Startup");
-
-
-	add_option(true, "--callsign=", "", "fgx001", 1 ,"Your Callsign","Core");
-
-	add_option(false, "--aircraft=", "", "?", 1 ,"Aircraft","Aircraft");
-
-	add_option(false, "--airport=", "", "?", 1 ,"Airport","Airport");
+	add_option( "--full-screen",false, "", "", 1 ,"Enable Full Screen at Startup","Startup");
+	add_option( "--disable-splash-screen", false, "", "", 1 ,"Enable Splash Screen at Startup","Startup");
 
 
-	add_option(false, "--multiplay=in", "", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
-	add_option(false, "--multiplay=out", "", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
-	add_option(false, "--fgcom=", "", "",3,"FgCom","FgCom");
+	add_option( "--callsign=", true,"", "fgx001", 1 ,"Your Callsign","Core");
+
+	add_option( "--aircraft=", false,"", "?", 1 ,"Aircraft","Aircraft");
+
+	add_option( "--airport=", false,"", "?", 1 ,"Airport","Airport");
+
+
+	add_option( "--multiplay=in", false,"", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
+	add_option( "--multiplay=out",false, "", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
+	add_option( "--fgcom=",false, "", "",3,"FgCom","FgCom");
 
 }
 
@@ -44,17 +44,17 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 //==================================================
 // == Add an Option
-void XSettingsModel::add_option(bool enabled, QString option, QString value, QString preset, int level, QString description, QString area)
+void XSettingsModel::add_option( QString option, bool enabled, QString value, QString preset, int level, QString description, QString area)
 {
 
 	QList<QStandardItem *>items;
-	items << new QStandardItem(enabled ? "1" : "0")
-				<< new QStandardItem(option)
-				<< new QStandardItem(value)
-				<< new QStandardItem(preset)
-				<< new QStandardItem(QString::number(level))
-				<< new QStandardItem(description)
-				<< new QStandardItem(area);
+	items 	<< new QStandardItem(option)
+			<< new QStandardItem(enabled ? "1" : "0")
+			<< new QStandardItem(value)
+			<< new QStandardItem(preset)
+			<< new QStandardItem(QString::number(level))
+			<< new QStandardItem(description)
+			<< new QStandardItem(area);
 	appendRow(items);
 
 }
@@ -63,11 +63,11 @@ void XSettingsModel::add_option(bool enabled, QString option, QString value, QSt
 
 //==================================================
 // == Set An Option
-void XSettingsModel::set_option(bool enabled, QString option, QString value)
+void XSettingsModel::set_option(QString option, bool enabled, QString value)
 {
 	//= Find item matching the "option"
 	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
-	qDebug() << "opts" << items;
+	//qDebug() << "opts" << items;
 
 	//TODO handle error if not found
 

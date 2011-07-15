@@ -80,12 +80,14 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 	checkBoxShowMpMap = new QCheckBox("Show Map in Browser");
 	grpMapFeatures->addWidget(checkBoxShowMpMap);
-	connect(checkBoxShowMpMap, SIGNAL(clicked()), this, SLOT(on_checkbox_show_mp_map()));
+	connect(checkBoxShowMpMap, SIGNAL(clicked()), this, SLOT(on_show_mp_map()));
 
 	comboMpMapServer = new QComboBox();
 	comboMpMapServer->addItem("mpmap01.flightgear.org", "http://mpmap01.flightgear.org");
 	comboMpMapServer->addItem("mpmap02.flightgear.org", "http://mpmap02.flightgear.org");
+	comboMpMapServer->setCurrentIndex(0);
 	grpMapFeatures->addWidget(comboMpMapServer);
+	connect(comboMpMapServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_show_mp_map()));
 
 
 	layoutLeft->addStretch(20);
@@ -179,7 +181,7 @@ void CoreSettingsWidget::load_settings(){
 	//* mpmap
 	checkBoxShowMpMap->setChecked(mainObject->settings->value("show_map_map", false).toBool());
 	comboMpMapServer->setCurrentIndex(mainObject->settings->value("mpmap", 0).toInt());
-	on_checkbox_show_mp_map();
+	//on_show_mp_map();
 
 
 	if(mainObject->settings->value("fgfs_use_default").toBool()){
@@ -318,7 +320,7 @@ void CoreSettingsWidget::on_radio_fg_path(){
 // Callsign Changed
 void CoreSettingsWidget::on_callsign_changed(QString txt)
 {
-	emit( setx(true, QString("--callsign="), txt ));
+	emit( setx("--callsign=", true, txt ));
 }
 
 //=====================================
@@ -326,27 +328,28 @@ void CoreSettingsWidget::on_callsign_changed(QString txt)
 void CoreSettingsWidget::on_checkbox_fullscreen()
 {
 	comboScreenSize->setDisabled( checkBoxFullScreenStartup->isChecked() );
-	emit setx(checkBoxFullScreenStartup->isChecked(), "--full-screen","");
+	emit setx( "--full-screen", checkBoxFullScreenStartup->isChecked(), "");
 }
 
 //=====================================
 // SplashScreen Changed
 void CoreSettingsWidget::on_checkbox_splash_screen()
 {
-	emit setx(checkBoxDisableSplashScreen->isChecked(), "--disable-splash-screen","");
+	emit setx("--disable-splash-screen", checkBoxDisableSplashScreen->isChecked(), "");
 }
 
 
 
 //=====================================
 // Show Mp Map
-void CoreSettingsWidget::on_checkbox_show_mp_map(){
+void CoreSettingsWidget::on_show_mp_map(){
 	comboMpMapServer->setEnabled(checkBoxShowMpMap->isChecked());
 	//qDebug() << comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString()
 	qDebug() << comboMpMapServer->currentIndex();
+	qDebug() << comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString();
 	return;
-	emit setx(	checkBoxShowMpMap->isChecked(),
-				"show_mpmap",
+	emit setx(	"show_mpmap",
+				checkBoxShowMpMap->isChecked(),
 				""
 				);
 }
@@ -355,7 +358,7 @@ void CoreSettingsWidget::on_checkbox_show_mp_map(){
 //======================================================================
 // Update Settings
 //======================================================================
-void CoreSettingsWidget::on_upx(bool enabled, QString option, QString value)
+void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 {
 
 	if(option == "--callsign="){

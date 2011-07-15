@@ -64,7 +64,7 @@ private:
     QStatusBar *statusBarAero;
 
 signals:
-	void setx(bool enabled, QString options, QString value);
+	void setx( QString option, bool enabled,QString value);
 
 public slots:
 	void load_tree();
@@ -72,7 +72,7 @@ public slots:
 	void on_tree_selection_changed();
 	void on_reload_cache();
 
-	void on_upx(bool enabled, QString options, QString value);
+	void on_upx(QString option, bool enabled, QString value);
 };
 
 #endif // AIRCRAFTWIDGET_H

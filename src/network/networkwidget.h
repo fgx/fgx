@@ -71,7 +71,7 @@ public:
 	QStringList get_args();
 
 signals:
-	void setx(bool enabled, QString options, QString value);
+	void setx(QString option, bool enabled, QString value);
 
 public slots:
 	void dns_lookup();
@@ -91,7 +91,7 @@ public slots:
 	void on_browse_screenshot();
 	void on_open_telnet();
 	
-	void on_upx(bool enabled, QString options, QString value);
+	void on_upx(QString option, bool enabled, QString value);
 
 };
 
