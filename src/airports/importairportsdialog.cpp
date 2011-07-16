@@ -76,6 +76,12 @@ ImportAirportsDialog::ImportAirportsDialog(QWidget *parent) :
     chkImportHeliports->setDisabled(true);
 	chkImportHeliports->hide();
 
+    //= Airports from additional scenery paths
+    chkBoxAdditionalAirports = new QCheckBox("Import from additional scenery paths.");
+    // ***TBD*** Set up a checkbox choice to include all scenery paths, and keep in settings
+    //mainVBox->addWidget(chkBoxAdditionalAirports, 1);
+    //connect(checkBoxAdditionalAirports, SIGNAL(clicked()), this, SLOT(on_additional_airports()));
+
     //*****************************************************************
     //** Bottom Button Box
     QHBoxLayout *buttonBox = new QHBoxLayout();

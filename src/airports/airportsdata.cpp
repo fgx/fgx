@@ -117,7 +117,9 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 
 		if (progress.wasCanceled()){
 			progress.hide();
-			return true;
+            fgx_gzClose(gzf);
+            outLog("User abort of airport imports!");
+            return true;
 
 		}
 		line_counter++;
@@ -219,6 +221,94 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 		}
 		c++;
 	}
+
+    // Step 3 - any MORE xml files to walk?
+    // Check the fgfs additional argument list,
+    // and/or any additional scenery path inputs
+    // *** take care NOT to duplicate ***
+    QStringList fgfs_args = mainObject->get_fgfs_args();
+    int i, ind;
+    QDir d;
+    QString path;
+#ifdef Q_OS_WIN
+    QChar psep(';');
+#else
+    QChar psep(':');
+#endif
+    for (i = 0; i < fgfs_args.size(); i++) {
+        msg = fgfs_args.at(i);
+        ind = msg.indexOf(QChar('"'));
+        if (ind == 0)
+            msg = msg.mid(1,msg.length()-2);
+        if (msg.indexOf("--fg-scenery=") == 0) {
+            // got a scenery folder to scan
+            msg = msg.mid(13);
+            ind = msg.indexOf(QChar('"'));
+            if (ind == 0)
+                msg = msg.mid(1,msg.length()-2);
+            QStringList path_list = msg.split(psep);
+            for( QStringList::ConstIterator entry = path_list.begin(); entry != path_list.end(); entry++) {
+                path = *entry;
+                if (d.exists(path)) {
+                    // we have a PATH to check, but we are ONLY checking 'Airports'
+                    if ( !(path.indexOf(QChar('/')) == (path.size()-1)) &&
+                         !(path.indexOf(QChar('\\')) == (path.size()-1)) )
+                        path.append("/");
+                    path.append("Airports"); // XML is only in here
+                    if (!d.exists(path))
+                        continue;
+                    QDirIterator loopFiles( path, QDirIterator::Subdirectories );
+                    while (loopFiles.hasNext()) {
+
+                        //= Get file handle if there is one
+                        xFileName = loopFiles.next();
+
+                        //= Check if file entry is a *.threshold.xml - cos this is what we want
+                        if(xFileName.endsWith(".threshold.xml") ){
+
+                            //= Split out "CODE.threshold.xml" with a "."
+                            QFileInfo fileInfoThreshold(xFileName);
+                            QString airport_code = fileInfoThreshold.fileName().split(".").at(0);
+
+                            //* Update progress
+                            if(c % 100 == 0){
+                                progress.setValue(c);
+                                progress.setLabelText(xFileName);
+                                progress.repaint();
+                            }
+
+                            QString airport_name("");
+                            if(airports.contains(airport_code)){
+                                airport_name = airports.value(airport_code);
+                            }
+
+                            QStringList cols; // missing in middle is description ??
+                            cols << airport_code << airport_name << fileInfoThreshold.absoluteDir().absolutePath();
+
+                            if( import_icao_only){
+                                if( rxICAOAirport.exactMatch(airport_code) ){
+                                    out << cols.join("\t").append("\n");
+                                    air_added++;
+                                }
+                            }else{
+                                out << cols.join("\t").append("\n");
+                                air_added++;
+                            }
+
+                            found++;
+                        }
+
+                        if(progress.wasCanceled()){
+                            progress.hide();
+                            return true;
+                        }
+                        c++;
+                    }
+                }
+            }
+        }
+    }
+
 
 	cacheFile.close();
 

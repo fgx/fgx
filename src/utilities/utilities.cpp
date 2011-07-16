@@ -11,68 +11,6 @@
 #include "utilities.h"
 #include "xobjects/xsettings.h"
 
-#if 0
-/*
-  ZIP FILE FUNCTION
- */
-#define MX_GZ_BUFFER 8*1024  // read zlib internal uses 8K buffer, so...
-// #define MX_GZ_BUFFER 256    // little buffer - for testing logic only
-static char _s_gz_buf[MX_GZ_BUFFER+2]; // NOTE: the +2 for zero termination
-static int gz_in_buffer = 0;
-static int gz_in_offset = 0;
-QString gzreadLine(gzFile file)
-{
-    QString data;
-    QString blk;
-    int i, len;
-    char c;
-    char * cp = _s_gz_buf;
-    char * bgn;
-    data = "";
-    if (!file)
-        return data;
-    while (!gzeof(file)) {
-        if (gz_in_offset == 0) {
-            gz_in_buffer = gzread(file, cp, MX_GZ_BUFFER);
-        }
-        if (gz_in_buffer) {
-            c = 0;
-            bgn = &cp[gz_in_offset];
-            for (i = gz_in_offset; i < gz_in_buffer; i++) {
-                c = cp[i];
-                if (c == '\n') {
-                    break;
-                }
-            }
-            if (c == '\n') {
-                int j = i;
-                while (j >= gz_in_offset) {
-                    if (cp[j] > ' ')
-                        break;  // stop at better than space
-                    cp[j] = 0;  // trim tail of data
-                    j--;        // backup
-                }
-                blk = bgn;              // get the BEGIN pointer
-                data.append(blk);       // add the data
-                gz_in_offset = i + 1;   // update next input
-                if (gz_in_offset >= gz_in_buffer)
-                    gz_in_offset = 0;   // deal with wrap
-                break;  // RETURN the accumuated data
-            }
-            cp[i] = 0;   // NOTE: space has been made for this OVERRUN
-            blk = bgn;    // data to QString
-            data.append(blk); // accumulate data
-            gz_in_offset = 0;   // restart offset
-        } else
-            break;
-    }
-    len = data.length(); // just for DEBUG
-    bgn = &_s_gz_buf[gz_in_offset];
-    i = gz_in_offset;
-    return data;
-}
-#endif
-
 /*
     LOG FILE FUNCTIONS
  */

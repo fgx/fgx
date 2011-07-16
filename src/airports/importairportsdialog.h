@@ -22,6 +22,7 @@ public:
     QRadioButton *buttIcaoOnly;
     QCheckBox *chkImportSeaports;
     QCheckBox *chkImportHeliports;
+    QCheckBox *chkBoxAdditionalAirports;
 
     QPushButton *buttImport;
     QPushButton *buttCancelImport;
