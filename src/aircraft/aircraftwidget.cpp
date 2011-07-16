@@ -82,7 +82,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 	//** Use Default Aircraft
 	checkBoxUseDefault = new QCheckBox(this);
-	checkBoxUseDefault->setText("Use default fuel load");
+	checkBoxUseDefault->setText("Use default aircraft");
 	treeTopBar->addWidget(checkBoxUseDefault);
 	connect(checkBoxUseDefault, SIGNAL(clicked()), this, SLOT(on_use_default_clicked()));
 
@@ -189,7 +189,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	
 	//** Use Default Aircraft
 	checkBoxUseDefaultFuel = new QCheckBox(this);
-	checkBoxUseDefaultFuel->setText("Use default");
+	checkBoxUseDefaultFuel->setText("Use default fuel load");
 	layoutFuelPane->addWidget(checkBoxUseDefaultFuel);
 	connect(checkBoxUseDefaultFuel, SIGNAL(clicked()), this, SLOT(on_use_default_fuel_clicked()));
 	
@@ -480,12 +480,13 @@ void AircraftWidget::on_navs_changed()
 }
 
 void AircraftWidget::on_use_default_fuel_clicked(){
-	treeWidget->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
+	txtTank1->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
+	txtTank2->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
+	txtTank3->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
 	emit setx("use_default_fuel", checkBoxUseDefaultFuel->isChecked(), "");
 }
 
 void AircraftWidget::on_enable_fuel_freeze_clicked(){
-	treeWidget->setEnabled( !checkBoxFuelFreeze->isChecked() );
 	emit setx("--enable-fuel-freeze", checkBoxFuelFreeze->isChecked(), "");
 }
 

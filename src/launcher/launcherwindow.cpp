@@ -158,17 +158,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	toolBox->addWidget(buttonShowWizard);
 	connect(buttonShowWizard, SIGNAL(clicked()), mainObject, SLOT(show_setup_wizard()));
 	
-	//== Show Profiles
-	/*QToolButton *buttonShowProfiles = new QToolButton();
-	buttonShowProfiles->setText("Profiles");
-	buttonShowProfiles->setAutoRaise(true);
-	buttonShowProfiles->setIcon(QIcon(":/icon/profile"));
-	buttonShowProfiles->setStyleSheet("padding: 0px;");
-	buttonShowProfiles->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttonShowProfiles->setEnabled(false);
-	toolBox->addWidget(buttonShowProfiles);
-	//connect(buttonShowProfiles, SIGNAL(clicked()), mainObject, SLOT(show_setup_profiles()));*/
-	
 	//= Load Settings
 	QToolButton *buttonLoadSettings = new QToolButton(this);
 	buttonLoadSettings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -210,14 +199,14 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//= Whats this button
 	buttonWhatsThis = new QToolButton();
 	buttonWhatsThis->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttonWhatsThis->setText("Whats this ?");
+	buttonWhatsThis->setText("Whats this");
 	buttonWhatsThis->setAutoRaise(true);
 	buttonWhatsThis->setIcon(QIcon(":/icon/help"));
 	buttonWhatsThis->setStyleSheet("padding: 0px;");
 	helpBox->addWidget(buttonWhatsThis);
 	connect(buttonWhatsThis, SIGNAL(clicked()), this, SLOT(on_whats_this()));
 	
-	bottomActionLayout->addStretch(20);
+	bottomActionLayout->addStretch(100);
 
 	//=============================================================
 	//== Start Stop ==
