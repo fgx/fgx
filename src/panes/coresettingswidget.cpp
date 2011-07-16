@@ -69,6 +69,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Disable Splash
 	checkBoxDisableSplashScreen = new QCheckBox(tr("Disable Splash Screen"));
 	grpBoxScreen->addWidget(checkBoxDisableSplashScreen);
+	connect(checkBoxDisableSplashScreen, SIGNAL(clicked()), this, SLOT(on_checkbox_splash_screen()));
 	checkBoxDisableSplashScreen->setWhatsThis(tr("<b>Disable Splash Screen</b><br><br>Disables FlightGear startup screen."));
 	
 	
@@ -79,12 +80,14 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 	checkBoxShowMpMap = new QCheckBox("Show Map in Browser");
 	grpMapFeatures->addWidget(checkBoxShowMpMap);
-	connect(checkBoxShowMpMap, SIGNAL(clicked()), this, SLOT(on_checkbox_show_mp_map()));
+	connect(checkBoxShowMpMap, SIGNAL(clicked()), this, SLOT(on_show_mp_map()));
 
 	comboMpMapServer = new QComboBox();
 	comboMpMapServer->addItem("mpmap01.flightgear.org", "http://mpmap01.flightgear.org");
 	comboMpMapServer->addItem("mpmap02.flightgear.org", "http://mpmap02.flightgear.org");
+	comboMpMapServer->setCurrentIndex(0);
 	grpMapFeatures->addWidget(comboMpMapServer);
+	connect(comboMpMapServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_show_mp_map()));
 
 
 	layoutLeft->addStretch(20);
@@ -137,6 +140,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Connect Mainobject (after paths wizard)
 	connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
 	
+
 	
 	//==================================================================
 	//= Controls
@@ -153,18 +157,18 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	layoutPaths->addStretch(20);
 
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
+	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+
 }
 
 
-void CoreSettingsWidget::on_checkbox_show_mp_map(){
-	comboMpMapServer->setEnabled(checkBoxShowMpMap->isChecked());
-}
 
 
 //====================================================
 //* Load Settings
 void CoreSettingsWidget::load_settings(){
-
+	return;
 	//= Callsign
 	txtCallSign->setText( mainObject->settings->value("callsign").toString() );
 
@@ -177,7 +181,7 @@ void CoreSettingsWidget::load_settings(){
 	//* mpmap
 	checkBoxShowMpMap->setChecked(mainObject->settings->value("show_map_map", false).toBool());
 	comboMpMapServer->setCurrentIndex(mainObject->settings->value("mpmap", 0).toInt());
-	on_checkbox_show_mp_map();
+	//on_show_mp_map();
 
 
 	if(mainObject->settings->value("fgfs_use_default").toBool()){
@@ -216,24 +220,6 @@ QString CoreSettingsWidget::validate(){
 	return QString("");
 }
 
-//====================================================
-//= Save Settings
-void CoreSettingsWidget::save_settings(){
-
-	//= Callsign
-	mainObject->settings->setValue("callsign", txtCallSign->text());
-
-	//= screen
-	mainObject->settings->setValue("screen_size", comboScreenSize->itemData(comboScreenSize->currentIndex()));
-	mainObject->settings->setValue("screen_full", checkBoxFullScreenStartup->isChecked());
-	mainObject->settings->setValue("screen_splash", checkBoxDisableSplashScreen->isChecked());
-
-	//= Map
-	mainObject->settings->setValue("show_map_map", checkBoxShowMpMap->isChecked());
-	mainObject->settings->setValue("mpmap", comboMpMapServer->currentIndex());
-
-}
-
 
 
 
@@ -242,11 +228,6 @@ void CoreSettingsWidget::save_settings(){
 void CoreSettingsWidget::initialize(){
 	load_joysticks();
 }
-
-
-//==============================================
-//== Input devices
-//==============================================
 
 
 //==============================================
@@ -323,16 +304,65 @@ void CoreSettingsWidget::on_radio_fg_path(){
 
 
 
+
+
 //=====================================
 // Callsign Changed
-void CoreSettingsWidget::on_callsign_changed(QString txt){
-	Q_UNUSED(txt);
-	save_settings();
-	//mainObject->set_callsign();
-	emit( setx(QString("--callsign"), txt ));
+void CoreSettingsWidget::on_callsign_changed(QString txt)
+{
+	emit( setx("--callsign=", true, txt ));
+}
+
+//=====================================
+// FullScreen Changed
+void CoreSettingsWidget::on_checkbox_fullscreen()
+{
+	comboScreenSize->setDisabled( checkBoxFullScreenStartup->isChecked() );
+	emit setx( "--full-screen", checkBoxFullScreenStartup->isChecked(), "");
+}
+
+//=====================================
+// SplashScreen Changed
+void CoreSettingsWidget::on_checkbox_splash_screen()
+{
+	emit setx("--disable-splash-screen", checkBoxDisableSplashScreen->isChecked(), "");
 }
 
 
-void CoreSettingsWidget::on_checkbox_fullscreen(){
-	comboScreenSize->setDisabled( checkBoxFullScreenStartup->isChecked() );
+
+//=====================================
+// Show Mp Map
+void CoreSettingsWidget::on_show_mp_map(){
+	comboMpMapServer->setEnabled(checkBoxShowMpMap->isChecked());
+	//qDebug() << comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString()
+	qDebug() << comboMpMapServer->currentIndex();
+	qDebug() << comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString();
+	//return;
+	emit setx(	"show_mpmap",
+				checkBoxShowMpMap->isChecked(),
+				comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString()
+				);
+}
+
+
+//======================================================================
+// Update Settings
+//======================================================================
+void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
+{
+	//qDebug() << "op_upx";
+	if(option == "--callsign="){
+		txtCallSign->setText(value);
+
+	}else if(option == "--full-screen"){
+		checkBoxFullScreenStartup->setChecked(enabled);
+
+	}else if(option == "--disable-splash-screen"){
+		checkBoxDisableSplashScreen->setChecked(enabled);
+
+
+	}else if(option == "show_mpmap"){
+		checkBoxShowMpMap->setChecked(enabled);
+		comboMpMapServer->setCurrentIndex(comboMpMapServer->findData(value));
+	}
 }

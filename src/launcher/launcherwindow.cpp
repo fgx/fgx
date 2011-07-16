@@ -59,26 +59,28 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
 	//== Header Banner
 	//====================================================
-	QString header_style("padding: 10px 0px 0px 0px; vertical-align: top");
+	/*
+	QString header_style("padding: 10px 0px 0px 0px; vertical-align: top, background-color: red;");
     headerLabel = new QLabel(this);
 	headerLabel->setFixedHeight(10);
 	headerLabel->setStyleSheet(header_style);
 	outerContainer->addWidget(headerLabel, 0);
-
+	*/
 
 
 	//=============================================
 	//=== Top toolbar
-	QHBoxLayout *toolbarLayout =  new QHBoxLayout();
-	toolbarLayout->setContentsMargins(10, 0, 10, 0);
-	outerContainer->addLayout(toolbarLayout);
+	//QHBoxLayout *toolbarLayout =  new QHBoxLayout();
+	//toolbarLayout->setContentsMargins(10, 0, 10, 0);
+	//outerContainer->addLayout(toolbarLayout);
 	
 	//== Message Label
 	
-	messageLabel = new XMessageLabel(this);
-	messageLabel->setStyleSheet("{ font-size: 16px; }");
-	messageLabel->showMessage("Welcome [Callsign]");
-	toolbarLayout->addWidget(messageLabel,1);
+	headerWidget = new HeaderWidget(mainObject);
+	headerWidget->setStyleSheet("{ font-size: 16px; }");
+	headerWidget->showMessage("Welcome [Callsign]");
+	outerContainer->addWidget(headerWidget,1);
+	//##connect(mainObject->S, SIGNAL(upx(bool,QString,QString)), messageLabel, SLOT()
 	
 	
 	QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -178,7 +180,10 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	connect(buttonLoadSettings, SIGNAL(clicked()),
 			this, SLOT(load_settings())
 			);
-	
+	connect(buttonLoadSettings, SIGNAL(clicked()),
+			mainObject->X, SLOT(read_ini())
+	);
+
 	//= Save Settings
 	QToolButton *buttonSaveSettings = new QToolButton(this);
 	buttonSaveSettings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -190,7 +195,10 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	connect(buttonSaveSettings, SIGNAL(clicked()),
 			this, SLOT(save_settings())
 			);
-	
+	connect(buttonSaveSettings, SIGNAL(clicked()),
+			mainObject->X, SLOT(write_ini())
+	);
+
 	bottomActionLayout->addStretch(20);
 	
 	
@@ -268,6 +276,9 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	initializing = false;
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
+	headerWidget->setText("Callsign - KSFO - AIRPORT");
+	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+
 }
 
 LauncherWindow::~LauncherWindow()
@@ -285,6 +296,7 @@ void LauncherWindow::initialize(){
 
 	//= First load the settings
 	load_settings();
+	mainObject->X->read_ini();
 
 	//= check paths are same
 	if(!mainObject->settings->paths_sane()){
@@ -344,11 +356,8 @@ void LauncherWindow::on_start_fgcom_clicked() {
 void LauncherWindow::save_settings()
 {
 	QString message("Settings saved.");
-	messageLabel->showMessage(message);
+	headerWidget->showMessage(message);
 
-	coreSettingsWidget->save_settings();
-	timeWeatherWidget->save_settings();
-	aircraftWidget->save_settings();
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
 	expertOptionsWidget->save_settings();
@@ -367,11 +376,8 @@ void LauncherWindow::load_settings()
 {
 	
 	QString message("Settings loaded.");
-	messageLabel->showMessage(message);
+	headerWidget->showMessage(message);
 	
-	coreSettingsWidget->load_settings();
-	timeWeatherWidget->load_settings();
-	aircraftWidget->load_settings();
 	airportsWidget->load_settings();
 	networkWidget->load_settings();
 	expertOptionsWidget->load_settings();
@@ -405,14 +411,14 @@ bool LauncherWindow::validate(){
 	v = coreSettingsWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(coreSettingsWidget));
-		messageLabel->showMessage(v);
+		headerWidget->showMessage(v);
 		return false;
 	}
 
 	v = aircraftWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(aircraftWidget));
-		messageLabel->showMessage(v);
+		headerWidget->showMessage(v);
 		return false;
 	}
 	outLog("*** FGx reports: Aircraft settings ok. ***");
@@ -420,7 +426,7 @@ bool LauncherWindow::validate(){
 	v = airportsWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(airportsWidget));
-		messageLabel->showMessage(v);
+		headerWidget->showMessage(v);
 		return false;
 	}
 	outLog("*** FGx reports: Airport settings ok. ***");
@@ -428,13 +434,13 @@ bool LauncherWindow::validate(){
 	v = networkWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(networkWidget));
-		messageLabel->showMessage(v);
+		headerWidget->showMessage(v);
 		return false;
 	}
 	v = timeWeatherWidget->validate();
 	if(v != ""){
 		tabWidget->setCurrentIndex( tabWidget->indexOf(timeWeatherWidget));
-		messageLabel->showMessage(v);
+		headerWidget->showMessage(v);
 		return false;
 	}
 	outLog("*** FGx reports: Network settings ok. ***");
@@ -514,4 +520,13 @@ void LauncherWindow::on_whats_this() {
 	QWhatsThis::enterWhatsThisMode();
 }
 
-
+void LauncherWindow::on_upx(QString option, bool enabled, QString value)
+{
+	Q_UNUSED(enabled);
+	Q_UNUSED(value);	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
+		QString header = QString("[%1] %2 %3").arg( mainObject->X->getx("--callsign=")
+									).arg( mainObject->X->getx("--aircraft=")
+									).arg( mainObject->X->getx("--airport="));
+		headerWidget->setText( header );
+	}
+}

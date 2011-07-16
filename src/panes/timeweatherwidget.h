@@ -12,8 +12,8 @@
 
 
 #include "xobjects/mainobject.h"
-
 class MainObject;
+
 
 class TimeWeatherWidget : public QWidget
 {
@@ -31,15 +31,17 @@ public:
 	QButtonGroup *buttonGroupMetar;
 	QPlainTextEdit *txtMetar;
 
-
-	void load_settings();
-	void save_settings();
 	QString validate();
 
 signals:
+	void setx(QString option, bool enabled, QString value);
 
 public slots:
-	void on_metar_clicked();
+	void on_weather();
+	void on_time_clicked();
+	void on_season_clicked(int);
+
+	void on_upx(QString option, bool enabled, QString value);
 };
 
 #endif // TIMEWEATHERWIDGET_H

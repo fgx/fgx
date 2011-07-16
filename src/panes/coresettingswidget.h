@@ -45,8 +45,6 @@ public:
 	XGroupHBox *groupBoxFgFs;
 	XGroupHBox *groupBoxFgRoot;
 
-	//QRadioButton *radioFgUseDefault;
-	//QRadioButton *radioFgUseCustom;
 	QLabel *labelFgFsPath;
 	QLabel *labelFgRootPath;
 	QLabel *labelFgFsInfo;
@@ -58,30 +56,26 @@ public:
 	//* Controls
 	QLabel *labelInputs;
 
-	//XGroupHBox *groupBoxTerraSync;
-	//QLineEdit *txtTerraSyncPath;
-
-
 	//* Functions
 	void initialize();
 	QString validate();
 
-	void save_settings();
-
 
 signals:
-	void setx(QString option_switch);
-	void setx(QString option, QString value);
+	void setx(QString option, bool enabled, QString value);
 
 
 public slots:
 
 	void on_callsign_changed(QString);
-	void on_checkbox_show_mp_map();
+	void on_show_mp_map();
 	void on_checkbox_fullscreen();
+	void on_checkbox_splash_screen();
 	void load_joysticks();
 	void on_radio_fg_path();
 	void load_settings();
+
+	void on_upx(QString option, bool enabled, QString value);
 };
 
 #endif // CORESETTINGSWIDGET_H

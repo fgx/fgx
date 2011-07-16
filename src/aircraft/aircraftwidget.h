@@ -58,8 +58,7 @@ public:
 	QLineEdit *txtTank3;
 
 	void initialize();
-	void save_settings();
-	void load_settings();
+
 	QString validate();
 	void select_node(QString aero);
 	QString selected_aircraft();
@@ -70,7 +69,7 @@ private:
     QStatusBar *statusBarAero;
 
 signals:
-	void set_arg(QString action, QString arg, QString value);
+	void setx( QString option, bool enabled,QString value);
 
 public slots:
 	void load_tree();
@@ -80,6 +79,9 @@ public slots:
 	void on_use_default_fuel_clicked();
 	void on_enable_fuel_freeze_clicked();
 
+	void on_navs_changed();
+
+	void on_upx(QString option, bool enabled, QString value);
 };
 
 #endif // AIRCRAFTWIDGET_H

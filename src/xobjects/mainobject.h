@@ -3,7 +3,6 @@
 
 #include <QtCore/QObject>
 
-//#include <QtSql/QSqlDatabase>
 
 #include <QtGui/QSystemTrayIcon>
 #include <QtGui/QAction>
@@ -14,26 +13,28 @@
 
 #include "xobjects/xsettings.h"
 
+#include "xobjects/xsettingsmodel.h"
+class XSettingsModel;
 
 #include "xobjects/xprocess.h"
 class XProcess;
 
 
+
 #include "launcher/launcherwindow.h"
 class LauncherWindow;
-
-
 
 #include "mpmap/mpmapwidget.h"
 #include "mpmap/mpmapxwidget.h"
 #include "logs/viewlogswidget.h"
 #include "props/propstreewidget.h"
+#include "xwidgets/fgxdebugwidget.h"
 
 class MpMapWidget;
 class MpMapXWidget;
 class ViewLogsWidget;
 class PropsTreeWidget;
-
+class FgxDebugWidget;
 
 
 
@@ -61,12 +62,15 @@ public:
 	
 
     XSettings *settings;
+	XSettingsModel *X;
+
 
 	LauncherWindow *launcherWindow;
 	MpMapWidget *mpMapWidget;
 	MpMapXWidget *mpMapXWidget;
 	ViewLogsWidget *viewLogsWidget;
 	PropsTreeWidget *propertiesBrowser;
+	FgxDebugWidget *fgxDebugWidget;
 
 	XProcess *processFgFs;
 	XProcess *processTerraSync;
@@ -84,11 +88,17 @@ public:
 
     QAction *actionLauncher;
     QAction *actionMpMap;
-	QAction *actionSetupWizard;
-	QAction *actionViewLog;
 	QAction *actionPropsBrowser;
+	QAction *actionSetupWizard;
+
+	QAction *actionViewLogs;
+	QAction *actionViewFgxDebug;
+	QAction *actionDebugMode;
+
+
 
     QAction *actionQuit;
+
 
 
 
@@ -102,6 +112,7 @@ public:
 signals:
 	void show_settings(int);
 	void reload_paths();
+	void debug_mode(bool enabled);
 
 public slots:
 
@@ -131,6 +142,9 @@ public slots:
 	void quit();
 
 	void set_callsign();
+
+	void on_view_fgx_debug();
+	void on_debug_mode();
 };
 
 

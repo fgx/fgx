@@ -8,33 +8,40 @@
 #include <QtGui/QActionGroup>
 #include <QtGui/QPushButton>
 
-#include "panes/coresettingswidget.h"
-#include "panes/timeweatherwidget.h"
-#include "aircraft/aircraftwidget.h"
-#include "airports/airportswidget.h"
-#include "network/networkwidget.h"
-#include "panes/expertoptionswidget.h"
 
+//++ Help
+//= because of recursive inputs please pleace forwards here, if you are a sausage make or eat hot tiguuillea..
+
+#include "panes/coresettingswidget.h"
+class CoreSettingsWidget;
+
+#include "panes/timeweatherwidget.h"
+class TimeWeatherWidget;
+
+#include "aircraft/aircraftwidget.h"
+class AircraftWidget;
+
+#include "airports/airportswidget.h"
+class AirportsWidget;
+
+#include "network/networkwidget.h"
+class NetworkWidget;
+
+#include "panes/expertoptionswidget.h"
+class ExpertOptionsWidget;
 
 #include "xwidgets/execontrols.h"
-#include "xwidgets/xmessagelabel.h"
+class ExeControls;
+
+#include "launcher/headerwidget.h"
+class HeaderWidget;
+
 #include "utilities/statusbar.h"
+
 #include "utilities/messagebox.h"
 
 #include "xobjects/mainobject.h"
 #include "xwidgets/xgroupboxes.h"
-
-
-//= Foward Declaratins
-class MainObject;
-class NetworkWidget;
-class CoreSettingsWidget;
-class TimeWeatherWidget;
-class AircraftWidget;
-class AirportsWidget;
-class NetworkWidget;
-class ExpertOptionsWidget;
-
 
 
 
@@ -52,14 +59,13 @@ public:
     MainObject *mainObject;
 	bool initializing;
 
-	XMessageLabel *messageLabel;
+	HeaderWidget *headerWidget;
 	
 	XGroupHBox *toolBox;
 	
 	QToolButton *buttonWhatsThis;
 
 	QActionGroup *actionGroupStyle;
-    QLabel *headerLabel;
     QTabWidget *tabWidget;
 
 	CoreSettingsWidget *coreSettingsWidget;
@@ -81,6 +87,8 @@ public:
 	MessageBox *messageBox;
 
     void closeEvent(QCloseEvent *event);
+
+
 
 public slots:
 
@@ -114,6 +122,7 @@ public slots:
 	//* Widget Events
 	void on_tab_changed(int);
 
+	void on_upx(QString option, bool enabled, QString value);
 
 };
 

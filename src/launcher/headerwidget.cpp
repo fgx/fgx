@@ -1,13 +1,16 @@
 
 #include <QtDebug>
 
+#include <QVBoxLayout>
 
-#include "xmessagelabel.h"
-#include "panes/coresettingswidget.h"
 
-XMessageLabel::XMessageLabel(QWidget *parent) :
-    QLabel(parent)
+#include "launcher/headerwidget.h"
+
+HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
+	QWidget(parent)
 {
+
+	mainObject = mob;
 
 	//= Fade Timer
 	fadeTimer = new QTimer(this);
@@ -15,7 +18,13 @@ XMessageLabel::XMessageLabel(QWidget *parent) :
 	fadeTimer->setInterval(60);
 
 	//= Init Label
-	setText("Hello Message Label");
+	QVBoxLayout *mainLayout = new QVBoxLayout();
+	setLayout(mainLayout);
+
+
+	headerLabel = new QLabel("Hello Header Label");
+	mainLayout->addWidget(headerLabel);
+
 
 	//setStyleSheet("font-size: 20pt; background-color: #ffffff;");
 	//setStyleSheet("  font-family: freeuniversal; color: #333333; font-size: 16px; background-image: url(:/artwork/fgx-logo-flyer-yellow); background-repeat: none; padding-left: 40px; padding-top: 3px; padding-bottom: 5px; padding-right: 5px; margin-top: 10px; margin-bottom: 20px; ");
@@ -46,14 +55,15 @@ XMessageLabel::XMessageLabel(QWidget *parent) :
 
 	popWidget->show();
 
+	setStyleSheet("background-color: yellow;");
 
 }
 
-void XMessageLabel::showMessage(QString message){
+void HeaderWidget::showMessage(QString message){
 	showMessage(message, 3000);
 }
 
-void XMessageLabel::showMessage(QString message, int timeout){
+void HeaderWidget::showMessage(QString message, int timeout){
 	return;
 	//#if pos:
 	//	offPos = QtCore.QPoint( pos.x() - self.width(), pos.y() )
@@ -71,12 +81,13 @@ void XMessageLabel::showMessage(QString message, int timeout){
 
 
 
-void XMessageLabel::start_fade(){
+void HeaderWidget::start_fade(){
 	setStyleSheet("font-family: freeuniversal; color: #666666; font-size: 16px; background-image: url(:/artwork/fgx-logo-flyer); background-repeat: none; padding-left: 40px; padding-top: 3px; padding-bottom: 5px; padding-right: 5px; margin-top: 10px; margin-bottom: 20px;");
 }
 
+//== The opacirty is stepped won with this timer until window siappears... dissipates.. like a cloud after a rought landing..
 
-void XMessageLabel::on_fade_timer()
+void HeaderWidget::on_fade_timer()
 {
 	if(popWidget->windowOpacity() == 0.0){
 		fadeTimer->stop();
@@ -84,4 +95,11 @@ void XMessageLabel::on_fade_timer()
 	}else{
 		popWidget->setWindowOpacity( popWidget->windowOpacity() - 0.1 );
 	}
+}
+
+
+
+void HeaderWidget::setText(QString text)
+{
+	headerLabel->setText(text);
 }

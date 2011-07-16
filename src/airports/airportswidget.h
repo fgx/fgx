@@ -100,7 +100,7 @@ public:
 
 
 signals:
-	void set_arg(QString action, QString arg, QString value);
+	void setx(QString option, bool enabled, QString value);
 
 public slots:
 
@@ -117,7 +117,7 @@ public slots:
 
 	void on_view_map();
 
-
+	void on_upx( QString option, bool enabled, QString value);
 };
 
 #endif // AIRPORTSWIDGET_H

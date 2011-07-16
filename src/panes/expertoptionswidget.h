@@ -1,5 +1,5 @@
-#ifndef OUTPUTPREVIEWWIDGET_H
-#define OUTPUTPREVIEWWIDGET_H
+#ifndef EXPERTOPTIONSWIDGET_H
+#define EXPERTOPTIONSWIDGET_H
 
 #include <QtGui/QPlainTextEdit>
 #include <QtGui/QPushButton>
@@ -49,4 +49,4 @@ public slots:
 	void load_settings();
 };
 
-#endif // OUTPUTPREVIEWWIDGET_H
+#endif // EXPERTOPTIONSWIDGET_H

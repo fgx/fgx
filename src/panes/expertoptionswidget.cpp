@@ -18,6 +18,7 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 {
 	mainObject = mOb;
 
+
 	//===============================================================================
 	//= Create Layouts
 	//===============================================================================
