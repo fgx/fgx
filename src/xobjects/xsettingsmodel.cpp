@@ -233,10 +233,12 @@ void XSettingsModel::write_ini()
 {
 	//= create ini settings object
 	
-	QString fileName =
-	QFileDialog::getSaveFileName(0, "Save Profiles", ini_file_path(), "Profile files (*.ini)" );
+	// TODO LATER
+	//QString fileName =
+	//QFileDialog::getSaveFileName(0, "Save Profiles", ini_file_path(), "Profile files (*.ini)" );
 
-	QSettings settings(fileName, QSettings::IniFormat);
+	//QSettings settings(fileName, QSettings::IniFormat);
+	QSettings settings(ini_file_path(),QSettings::IniFormat);
 
 	//= loop rows and save each "option" as an [ini section] with enabled, value as values
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
@@ -255,10 +257,12 @@ void XSettingsModel::read_ini()
 	_loading = true;
 
 	//= Create ini settings object
-	QString fileName =
-	QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
+	//TODO later
+	//QString fileName =
+	//QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
 	
-	QSettings settings(fileName, QSettings::IniFormat);
+	//QSettings settings(fileName, QSettings::IniFormat);
+	QSettings settings(ini_file_path(),QSettings::IniFormat);
 	
 
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
