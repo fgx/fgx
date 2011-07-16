@@ -4,9 +4,13 @@
 #include <QWidget>
 #include <QPlainTextEdit>
 
-#include "xobjects/mainobject.h"
 
+#include "xobjects/mainobject.h"
 class MainObject;
+
+#include "xwidgets/xcommandpreviewidget.h"
+class XCommandPrevieWidget;
+
 
 class FgxDebugWidget : public QWidget
 {
@@ -16,7 +20,7 @@ public:
 
 	MainObject *mainObject;
 
-	QPlainTextEdit *txtCommand;
+	XCommandPrevieWidget *commandPreviewWidget;
 
 signals:
 

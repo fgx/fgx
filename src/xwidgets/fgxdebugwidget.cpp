@@ -44,11 +44,12 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 
 
 	//+++ Text Command
-	txtCommand = new QPlainTextEdit();
-	tabWidget->addTab(txtCommand, QIcon(":/icon/debug"), "Command View");
+	commandPreviewWidget = new XCommandPrevieWidget(mainObject);
+	tabWidget->addTab(commandPreviewWidget, QIcon(":/icon/debug"), "Command View");
 
 
-
+	//===============
+	//= Bottom Buttons
 	QHBoxLayout *bottBox = new QHBoxLayout();
 	mainLayout->addLayout(bottBox);
 	bottBox->addStretch(10);
@@ -63,6 +64,8 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 	bottBox->addWidget(buttSave);
 	connect(buttSave, SIGNAL(clicked()), mainObject->X, SLOT(write_ini()));
 
+
+	//= Save last tab
 	tabWidget->setCurrentIndex(mainObject->settings->value("fgx_debug_last_tab",0).toInt());
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab(int)));
 
