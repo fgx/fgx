@@ -1,6 +1,8 @@
 
 
 #include <QDebug>
+#include <QFileDialog>
+#include <QDesktopServices>
 
 #include "xobjects/xsettingsmodel.h"
 
@@ -226,7 +228,14 @@ QString XSettingsModel::ini_file_path()
 void XSettingsModel::write_ini()
 {
 	//= create ini settings object
-	QSettings settings(ini_file_path(), QSettings::IniFormat);
+	
+	QString fileName =
+	QFileDialog::getSaveFileName(0,
+								 "Save settings",
+								 ini_file_path(),
+								 "Settings files (*.ini)" );
+
+	QSettings settings(fileName, QSettings::IniFormat);
 
 	//= loop rows and save each "option" as an [ini section] with enabled, value as values
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){

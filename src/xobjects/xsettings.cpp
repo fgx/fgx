@@ -392,7 +392,6 @@ QString XSettings::data_file(QString file_name){
 
 
 
-
 /** \brief Log File
  *
  * \return Absolute path to log file
