@@ -281,14 +281,6 @@ void XSettingsModel::read_ini()
 
 
 
-
-
-
-
-
-
-
-
 //==========================================================
 //= Get Options
 //==========================================================
@@ -347,8 +339,6 @@ QStringList XSettingsModel::get_fgfs_args()
 }
 
 
-
-
 QStringList XSettingsModel::get_fgfs_list()
 {
 	//TODO append the commands here
@@ -361,10 +351,6 @@ QString XSettingsModel::get_fgfs_command_string()
 {
 	return get_fgfs_args().join(" ");
 }
-
-
-
-
 
 
 
