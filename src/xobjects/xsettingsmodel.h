@@ -34,19 +34,34 @@ public:
 	XOpt get_opt(QString option);
 	bool get_ena(QString option);
 
-	QString get_fgfs_command_string();
-
-	QStringList get_fgfs_options();
-
-	QStringList get_fgfs_list();
 
 	QStringList get_fgfs_args();
+	QStringList get_fgfs_list();
+	QString get_fgfs_command_string();
 
 
 	bool fgfs_use_default();
 	QString fgfs_default_path();
 	QString fgfs_path();
 
+
+	QString fgroot();
+	QString fgroot(QString append_path);
+	bool fgroot_use_default();
+	QString fgroot_default_path();
+
+	QString aircraft_path();
+	QString aircraft_path(QString dir);
+
+	QString airports_path();
+
+	QString scenery_path();
+
+	bool terrasync_enabled();
+	QString terrasync_exe_path();
+	QString terrasync_sync_data_path();
+
+	bool paths_sane();
 
 signals:
 	void upx(QString option, bool enabled, QString value);

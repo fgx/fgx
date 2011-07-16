@@ -291,7 +291,7 @@ void XSettingsModel::read_ini()
 //==========================================================
 //= Get Options
 //==========================================================
-QStringList XSettingsModel::get_fgfs_options()
+QStringList XSettingsModel::get_fgfs_args()
 {
 	//= Read --options from tree
 	QStringList args;
@@ -309,7 +309,7 @@ QStringList XSettingsModel::get_fgfs_options()
 			}
 
 
-			// Add Extras
+			// Process Unique Items
 			if(op == "--fgcom="){
 				args << getx("fgcom_generic_socket");
 			}
@@ -332,6 +332,16 @@ QStringList XSettingsModel::get_fgfs_options()
 		}
 	}
 
+	//== FgRoot
+	args <<  QString("--fg-root=").append(fgroot());
+
+
+	//args << QString("--fg-scenery=").append(settings->terrasync_sync_data_path()).append(":").append(settings->scenery_path());
+	//args << QString("--atlas=socket,out,5,localhost,5505,udp");
+	//	args << QString ("--geometry=").append(settings->value("screen_size").toString());
+
+	//
+
 	return args;
 }
 
@@ -343,111 +353,13 @@ QStringList XSettingsModel::get_fgfs_list()
 	//TODO append the commands here
 	QStringList args;
 	args << fgfs_path();
-	args << get_fgfs_options();
+	args << get_fgfs_args();
 	return args;
 }
 QString XSettingsModel::get_fgfs_command_string()
 {
-	return get_fgfs_options().join(" ");
+	return get_fgfs_args().join(" ");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//=========================================================================
-//== FgFs Start args = command
-//=========================================================================
-QStringList XSettingsModel::get_fgfs_args(){
-
-	QStringList args;
-
-	//args << QString("--fg-root=").append(settings->fgroot());
-
-
-	//=== Screen
-	//	args << QString ("--geometry=").append(settings->value("screen_size").toString());
-
-	//=== Controls
-	//if(settings->value("mouse_control").toBool()){
-	//args << QString("--control=mouse");
-	//}
-
-
-	//== Terrasync
-
-		//args << QString("--fg-scenery=").append(settings->terrasync_sync_data_path()).append(":").append(settings->scenery_path());
-		//args << QString("--atlas=socket,out,5,localhost,5505,udp");
-
-
-	//XOpt oTerra = getopt("--fgcom=");
-
-
-
-
-	//=== FgCom
-	//if(settings->value("fgcom").toBool()){
-	//	args << QString("--generic=socket,out,10,localhost,%1,udp,fgcom"
-	//					).arg( settings->value("fgcom_port").toString()
-	//					);
-	//}
-
-
-
-	//=============================================================
-	//=== Extra Args
-	QString extra = getx("extra_args");
-	if (extra.length() > 0) {
-		QStringList parts = extra.split("\n");
-		if(parts.count() > 0){
-			for(int i=0; i < parts.count(); i++){
-				QString part = parts.at(i).trimmed();
-				if(part.length() > 0){
-					args << part;
-				}
-			}
-		}
-	}
-
-
-
-
-
-	//=== Airports and Startup Position
-	/*
-	if(settings->value("airport").toString().length() > 0){
-		args << QString("--airport=").append(settings->value("airport").toString());
-
-		QString runway_or_stand = settings->value("runway_or_stand").toString().trimmed();
-		if(runway_or_stand.length() > 0){
-			if(runway_or_stand == "runway"){
-				args << QString("--runway=").append(settings->value("startup_position").toString());
-
-			}else if(runway_or_stand == "stand"){
-				args << QString("--parkpos=").append(settings->value("startup_position").toString());
-			}
-		}
-	}
-	*/
-	args.sort();
-	return args;
-}
-
-
-
-
-
 
 
 
@@ -491,3 +403,162 @@ QString XSettingsModel::fgfs_default_path(){
 
 	return QString("UNKNOW OS in default_fgfs_path()");
 }
+
+
+
+//===========================================================================
+//== fgroot  path
+//===========================================================================
+/** \return The absolute path to FG_ROOT ie /fgdata directory */
+QString XSettingsModel::fgroot(){
+	if(fgroot_use_default()){
+		return fgroot_default_path();
+	}
+	return getx("fgroot_custom_path");
+}
+bool XSettingsModel::fgroot_use_default(){
+	return get_ena("fgroot_custom_path") == false;
+}
+
+/** \brief Path to FG_ROOT with appended path
+ *
+ * Returns the path to the FG_ROOT. If the default install
+ * is selected, then that is returned, otherwise the custom selected fg_data path.
+ * The file is appended with the append_path
+ * \return The absolute path.
+ */
+
+QString XSettingsModel::fgroot(QString append_path){
+	return this->fgroot().append(append_path);
+}
+
+/** \brief Platform specific default path for the FG_ROOT dir
+ *
+  * \return The absolute path to FG_ROOT
+ */
+QString XSettingsModel::fgroot_default_path(){
+
+	if(mainObject->runningOs() == MainObject::MAC){
+		return QDir::currentPath().append("/fgx.app/Contents/Resources/fgx-fgdata");
+
+	}else if(mainObject->runningOs() == MainObject::LINUX){
+		return QString("/usr/share/games/FlightGear");
+
+	}else if(mainObject->runningOs() == MainObject::WINDOWS){
+		return QString("C:/Program Files/FlightGear/data");
+	}
+
+	return QString("Your system is not handled for default fgdata path");
+}
+
+//===========================================================================
+//** Paths Sane
+//===========================================================================
+/** \brief Checks whether the executablem FG_ROOT paths are sane.
+ *
+ * \return true if sane
+ */
+bool XSettingsModel::paths_sane(){
+	if(!QFile::exists(fgfs_path())){
+		return false;
+	}
+	if(!QFile::exists(fgroot())){
+		return false;
+	}
+	return true;
+}
+
+
+//===========================================================================
+//** Aircraft Path
+//===========================================================================
+/** \brief The path to the /Aircraft directory
+ *
+  * \return absolute path.
+ */
+QString XSettingsModel::aircraft_path(){
+	return fgroot().append("/Aircraft");
+}
+
+/** \brief Path to the /Aircraft directory with a dir appended.
+ *
+ * \return absolute path.
+ */
+QString XSettingsModel::aircraft_path(QString dir){
+	return fgroot().append("/Aircraft/").append(dir);
+}
+
+
+//===========================================================================
+//** Airports path
+//===========================================================================
+/** \brief Return the absolute path to the /Airports directory
+ *
+ * \return If TerraSync is enabled, then returns a terrasync folder, otherwise the default.
+ */
+QString XSettingsModel::airports_path(){
+	QString rpath;
+	//= Using terrasync
+	if(terrasync_enabled()){
+		if(mainObject->runningOs() == MainObject::MAC){
+			rpath = QDir::homePath();
+			rpath.append("/Documents/TerrasyncScenery");
+		}else{
+			// Use the terra sync path
+			rpath = terrasync_sync_data_path().append("/Airports");
+		}
+	} else{ // Otherwise return the FG_ROOT airports/
+		rpath = fgroot().append("/Scenery/Airports");
+	}
+	//outLog("*** FGx settings: Airports path: " + rpath + " ***");
+	return rpath;
+}
+
+//===========================================================================
+//** Scenery Path - TODO x/win
+//===========================================================================
+/** \brief Returns the absolute path to the /Scenery file
+ *
+ * \return The absolute path.
+ */
+QString XSettingsModel::scenery_path(){
+
+	return fgroot("/Scenery");
+}
+
+//===========================================================================
+//** TerraSync
+//===========================================================================
+/** \brief  Using terrasync for scenery
+ *
+ * \return true if using terrasync
+ */
+bool XSettingsModel::terrasync_enabled(){
+	return get_ena("terrasync_path");
+}
+/** \brief terrasync executable
+ *
+  * \return path to terrasync executable
+  * \todo Windows path
+ */
+QString XSettingsModel::terrasync_exe_path(){
+	if (mainObject->runningOs() == MainObject::MAC) {
+		//* points to terrasync binary in app bundle
+		return QDir::currentPath().append("/fgx.app/Contents/MacOS/terrasync");
+
+	}else if(mainObject->runningOs() == MainObject::LINUX){
+		return QString("terrasync");
+
+	}else if(mainObject->runningOs() == MainObject::WINDOWS){
+		return QString("TODO/path to terrasync.exe");
+	}
+	return QString("TODO - terrasync");
+}
+/** \brief terrasync data path
+ *
+  * \return path to where terrasync will store files downloaded.
+ */
+QString XSettingsModel::terrasync_sync_data_path(){
+	return getx("terrasync_path");
+}
+
