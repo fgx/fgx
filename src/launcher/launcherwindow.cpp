@@ -360,7 +360,6 @@ void LauncherWindow::save_settings()
 
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
-	expertOptionsWidget->save_settings();
     mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	outLog("FGx: LauncherWindow::save_settings() saved ***");
@@ -381,7 +380,6 @@ void LauncherWindow::load_settings()
 	
 	airportsWidget->load_settings();
 	networkWidget->load_settings();
-	expertOptionsWidget->load_settings();
 	exeTerraSync->setEnabled( mainObject->settings->terrasync_enabled() );
 	outLog("FGx: Settings loaded in LauncherWIndow::load_settings()");
 	

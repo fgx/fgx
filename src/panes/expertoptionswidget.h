@@ -8,6 +8,9 @@
 
 #include "xobjects/mainobject.h"
 
+#include "xwidgets/xcommandpreviewidget.h"
+class XCommandPrevieWidget;
+
 class ExpertOptionsWidget : public QWidget
 {
 Q_OBJECT
@@ -24,26 +27,14 @@ public:
 	XGroupVBox *groupBoxWriteLog;
 	QComboBox *comboLogLevels;
 
-	QStringList get_args();
-	QStringList get_env();
-	QString		get_runtime();
-
-
 	// preview
-	QPlainTextEdit *txtPreviewOutput;
-	QPushButton *buttonCommandPreview;
-	QPushButton *buttonCommandHelp;
-	QPushButton *buttonCommandVersion;
-	QButtonGroup *buttonGroup;
-
+	XCommandPrevieWidget *commandPreviewWidget;
 
 signals:
 	void setx(QString option, bool enabled, QString value);
+
 public slots:
 
-	void on_command_help();
-	void on_command_version();
-	void preview();
 
 
 	void on_extra();
