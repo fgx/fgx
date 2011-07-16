@@ -198,7 +198,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	checkBoxFuelFreeze = new QCheckBox(this);
 	checkBoxFuelFreeze->setText("Enable fuel freeze");
 	layoutFuelPane->addWidget(checkBoxFuelFreeze);
-	connect(checkBoxFuelFreeze, SIGNAL(clicked()), this, SLOT(on_fuel_freeze_clicked()));
+	connect(checkBoxFuelFreeze, SIGNAL(clicked()), this, SLOT(on_enable_fuel_freeze_clicked()));
 	
 	//* Tank 1
 	rowFuel++;
@@ -463,8 +463,6 @@ void AircraftWidget::initialize(){
 }
 
 
-
-
 void AircraftWidget::on_use_default_clicked(){
 	treeWidget->setEnabled( !checkBoxUseDefault->isChecked() );
 	emit setx("use_default_aircraft", checkBoxUseDefault->isChecked(), "");
@@ -479,6 +477,16 @@ void AircraftWidget::on_navs_changed()
 	emit setx("--com1=", true, txtComm1->text());
 	emit setx("--com2=", true, txtComm2->text());
 
+}
+
+void AircraftWidget::on_use_default_fuel_clicked(){
+	treeWidget->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
+	emit setx("use_default_fuel", checkBoxUseDefaultFuel->isChecked(), "");
+}
+
+void AircraftWidget::on_enable_fuel_freeze_clicked(){
+	treeWidget->setEnabled( !checkBoxFuelFreeze->isChecked() );
+	emit setx("--enable-fuel-freeze", checkBoxFuelFreeze->isChecked(), "");
 }
 
 void AircraftWidget::on_fuel_changed()
@@ -512,10 +520,16 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 	}else if(option == "--com2="){
 		txtComm2->setText(value);
 
+	// tab fuel
 	}else if(option == "use_default_aircraft"){
 		checkBoxUseDefault->setChecked(enabled);
 		
-	// tab fuel
+	}else if(option == "use_default_fuel"){
+		checkBoxUseDefaultFuel->setChecked(enabled);
+		
+	}else if(option == "--enable-fuel-freeze"){
+		checkBoxFuelFreeze->setChecked(enabled);
+	
 	}else if(option == "--prop:/consumables/fuels/tank[1]/level-gal="){
 		txtTank1->setText(value);
 		
@@ -524,16 +538,6 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 		
 	}else if(option == "--prop:/consumables/fuels/tank[3]/level-gal="){
 		txtTank3->setText(value);
+	}
 }
 
-}
-
-void AircraftWidget::on_use_default_fuel_clicked(){
-	txtTank1->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
-	txtTank2->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
-	txtTank3->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
-}
-
-void AircraftWidget::on_enable_fuel_freeze_clicked(){
-	
-}

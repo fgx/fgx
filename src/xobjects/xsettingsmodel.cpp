@@ -91,9 +91,11 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--com2=",false, "", "",3,"","Radio");
 
 	add_option( "--aircraft=", false,"", "", 1 ,"Aircraft","Aircraft");
-	add_option("use_default_aircraft",true,"","",1,"","Aircraft");
+	add_option( "use_default_aircraft",true,"","",1,"","Aircraft");
 	
 	//-- Fuel
+	add_option( "use_default_fuel",true,"","",3,"","Aircraft");
+	add_option( "--enable-fuel-freeze",false,"","",3,"","Aircraft");
 	add_option( "--prop:/consumables/fuels/tank[1]/level-gal=",false, "", "",9,"","Fuel");
 	add_option( "--prop:/consumables/fuels/tank[2]/level-gal=",false, "", "",9,"","Fuel");
 	add_option( "--prop:/consumables/fuels/tank[3]/level-gal=",false, "", "",9,"","Fuel");
