@@ -369,7 +369,7 @@ void MainObject::stop_all(){
 //== Start FGFS
 void MainObject::start_fgfs(){
 	//qDebug() << get_fgfs_command();
-	processFgFs->start(X->get_fgfs_command(), X->get_fgfs_env() );
+	processFgFs->start(X->get_fgfs_command_string(), X->get_fgfs_env() );
 }
 
 //========================================================

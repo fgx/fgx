@@ -360,8 +360,8 @@ QString XSettingsModel::get_fgfs_command_string()
 
 //========================================================
 //** Get Enviroment
-/*
-QStringList MainObject::get_fgfs_env(){
+
+QStringList XSettingsModel::get_fgfs_env(){
 
 	QStringList args;
 	QString extra = getx("extra_env");
@@ -378,7 +378,7 @@ QStringList MainObject::get_fgfs_env(){
 	}
 	return args;
 }
-*/
+
 
 
 
