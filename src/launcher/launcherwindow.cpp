@@ -159,7 +159,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	connect(buttonShowWizard, SIGNAL(clicked()), mainObject, SLOT(show_setup_wizard()));
 	
 	//== Show Profiles
-	QToolButton *buttonShowProfiles = new QToolButton();
+	/*QToolButton *buttonShowProfiles = new QToolButton();
 	buttonShowProfiles->setText("Profiles");
 	buttonShowProfiles->setAutoRaise(true);
 	buttonShowProfiles->setIcon(QIcon(":/icon/profile"));
@@ -167,12 +167,12 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	buttonShowProfiles->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttonShowProfiles->setEnabled(false);
 	toolBox->addWidget(buttonShowProfiles);
-	//connect(buttonShowProfiles, SIGNAL(clicked()), mainObject, SLOT(show_setup_profiles()));
+	//connect(buttonShowProfiles, SIGNAL(clicked()), mainObject, SLOT(show_setup_profiles()));*/
 	
 	//= Load Settings
 	QToolButton *buttonLoadSettings = new QToolButton(this);
 	buttonLoadSettings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttonLoadSettings->setText("Load Settings");
+	buttonLoadSettings->setText("Load Profile");
 	buttonLoadSettings->setAutoRaise(true);
 	buttonLoadSettings->setIcon(QIcon(":/icon/load"));
 	buttonLoadSettings->setStyleSheet("padding: 0px;");
@@ -187,7 +187,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//= Save Settings
 	QToolButton *buttonSaveSettings = new QToolButton(this);
 	buttonSaveSettings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttonSaveSettings->setText("Save Settings");
+	buttonSaveSettings->setText("Save Profile");
 	buttonSaveSettings->setAutoRaise(true);
 	buttonSaveSettings->setIcon(QIcon(":/icon/save"));
 	buttonSaveSettings->setStyleSheet("padding: 0px;");
