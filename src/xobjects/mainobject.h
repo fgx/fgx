@@ -69,6 +69,15 @@ public:
 	};
 	static int runningOs();
 
+	static QString log_file_path();
+
+	QString data_file(QString file_name);
+
+	static QString temp_dir();
+	static QString temp_dir(QString append_path);
+
+
+
     XSettings *settings;
 	XSettingsModel *X;
 
@@ -148,8 +157,6 @@ public slots:
 	void stop_all();
 
 	void quit();
-
-	void set_callsign();
 
 	void on_view_fgx_debug();
 	void on_debug_mode();

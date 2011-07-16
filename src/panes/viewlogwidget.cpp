@@ -54,7 +54,7 @@ ViewLogWidget::ViewLogWidget(MainObject *mOb, QWidget *parent) :
 
 void ViewLogWidget::on_load_log_file(){
 
-	QString file_name = mainObject->settings->log_file_path();
+	QString file_name = mainObject->log_file_path();
 	QFile file(file_name);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
 		return;

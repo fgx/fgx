@@ -82,7 +82,7 @@ ViewLogsWidget::ViewLogsWidget(MainObject *mOb, QWidget *parent) :
 //== FGx log
 void ViewLogsWidget::on_load_fgx_log_file(){
 
-	QString file_name = mainObject->settings->log_file_path();
+	QString file_name = mainObject->log_file_path();
 	QFile file(file_name);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
 		return;

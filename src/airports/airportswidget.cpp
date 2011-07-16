@@ -360,7 +360,7 @@ void AirportsWidget::initialize(){
 		return;
 	}
 
-	if (!QFile::exists(mainObject->settings->data_file("airports.txt"))){
+	if (!QFile::exists(mainObject->data_file("airports.txt"))){
 		statusBarAirports->showMessage("No cached data. Click Import");
 	}else{
 		load_airports_tree();
@@ -381,7 +381,7 @@ void AirportsWidget::load_airports_tree(){
 	treeViewAirports->setUpdatesEnabled(false);
 
 	//* Airports Cache File
-	QFile dataFile(mainObject->settings->data_file(("airports.txt")));
+	QFile dataFile(mainObject->data_file(("airports.txt")));
 	if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
 		   return;
 	}

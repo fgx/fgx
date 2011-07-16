@@ -82,7 +82,7 @@ void FgRootPage::initializePage()
 {
 	radioDefault->setChecked( mainObject->X->get_ena("fgroot_custom_path") == false );
 	radioCustom->setChecked( mainObject->X->get_ena("fgroot_custom_path")  == true);
-	lblDefault->setText( mainObject->settings->fgroot_default_path() );
+	lblDefault->setText( mainObject->X->fgroot_default_path() );
 	txtFgRoot->setText( mainObject->X->getx("fgroot_custom_path") );
 }
 
@@ -90,7 +90,7 @@ void FgRootPage::initializePage()
 void FgRootPage::check_paths()
 {
 	//= Check the default path
-	QString default_path = mainObject->settings->fgroot_default_path();
+	QString default_path = mainObject->X->fgroot_default_path();
 	bool default_exists = QFile::exists(default_path);
 	QString lbl_default(default_path);
 	lbl_default.append( default_exists ? " - Ok" : " - Not Found" );

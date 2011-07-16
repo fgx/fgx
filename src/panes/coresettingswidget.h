@@ -73,7 +73,6 @@ public slots:
 	void on_checkbox_splash_screen();
 	void load_joysticks();
 	void on_radio_fg_path();
-	void load_settings();
 
 	void on_upx(QString option, bool enabled, QString value);
 };

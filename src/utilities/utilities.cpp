@@ -9,7 +9,8 @@
 
 #include <QMutex>
 #include "utilities.h"
-#include "xobjects/xsettings.h"
+#include "xobjects/mainobject.h"
+
 
 /*
     LOG FILE FUNCTIONS
@@ -65,7 +66,7 @@ bool util_setStdLogFile()
 #endif
    log = dir + "/" + file;
    */
-	return util_createLogFile(XSettings::log_file_path());
+	return util_createLogFile(MainObject::log_file_path());
 }
 
 // append to LOG file, after acquiring the mutext

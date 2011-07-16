@@ -1,8 +1,12 @@
 
 
 #include <QDebug>
-#include <QFileDialog>
+
 #include <QDesktopServices>
+#include <QFile>
+#include <QDir>
+#include <QFileDialog>
+
 
 #include "xobjects/xsettingsmodel.h"
 
@@ -220,7 +224,7 @@ XOpt XSettingsModel::get_opt(QString option)
 //==================================================
 QString XSettingsModel::ini_file_path()
 {
-	return mainObject->settings->data_file("profile.ini");
+	return mainObject->data_file("profile.ini");
 }
 
 
@@ -229,10 +233,12 @@ void XSettingsModel::write_ini()
 {
 	//= create ini settings object
 	
-	QString fileName =
-	QFileDialog::getSaveFileName(0, "Save Profiles", ini_file_path(), "Profile files (*.ini)" );
+	// TODO LATER
+	//QString fileName =
+	//QFileDialog::getSaveFileName(0, "Save Profiles", ini_file_path(), "Profile files (*.ini)" );
 
-	QSettings settings(fileName, QSettings::IniFormat);
+	//QSettings settings(fileName, QSettings::IniFormat);
+	QSettings settings(ini_file_path(),QSettings::IniFormat);
 
 	//= loop rows and save each "option" as an [ini section] with enabled, value as values
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
@@ -251,10 +257,12 @@ void XSettingsModel::read_ini()
 	_loading = true;
 
 	//= Create ini settings object
-	QString fileName =
-	QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
+	//TODO later
+	//QString fileName =
+	//QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
 	
-	QSettings settings(fileName, QSettings::IniFormat);
+	//QSettings settings(fileName, QSettings::IniFormat);
+	QSettings settings(ini_file_path(),QSettings::IniFormat);
 	
 
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
@@ -351,6 +359,31 @@ QString XSettingsModel::get_fgfs_command_string()
 {
 	return get_fgfs_args().join(" ");
 }
+
+
+
+//========================================================
+//** Get Enviroment
+
+QStringList XSettingsModel::get_fgfs_env(){
+
+	QStringList args;
+	QString extra = getx("extra_env");
+	if (extra.length() > 0) {
+		QStringList parts = extra.split("\n");
+		if(parts.count() > 0){
+			for(int i=0; i < parts.count(); i++){
+				QString part = parts.at(i).trimmed();
+				if(part.length() > 0){
+					args << part;
+				}
+			}
+		}
+	}
+	return args;
+}
+
+
 
 
 
@@ -548,4 +581,30 @@ QString XSettingsModel::terrasync_exe_path(){
 QString XSettingsModel::terrasync_sync_data_path(){
 	return getx("terrasync_path");
 }
+
+
+
+QString XSettingsModel::fgcom_exe_path(){
+	if (mainObject->runningOs() == MainObject::MAC) {
+			// Default fgcomx installation with fgcom installer by gral
+			// Will change with fgcom coming in app bundle
+			return QString("/usr/local/bin/fgcom");
+		}
+		else if(mainObject->runningOs() == MainObject::LINUX){
+			return QString("fgcom");
+		}
+
+		else if(mainObject->runningOs() == MainObject::WINDOWS){
+			return QString("fgcom"); // TODO!
+		}
+
+	return "fgcom";
+}
+
+
+
+
+
+
+
 

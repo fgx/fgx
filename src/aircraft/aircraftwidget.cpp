@@ -311,7 +311,7 @@ void AircraftWidget::on_tree_selection_changed(){
 	emit setx("--aircraft=", true, item->text(C_AERO));
 
 	//= Get the thumbnail image
-	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->settings->aircraft_path(),
+	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
                                                                     item->text(C_DIR),
                                                                     item->text(C_AERO));
 	if(QFile::exists(thumb_file)){
@@ -398,7 +398,7 @@ void AircraftWidget::load_tree(){
 	treeWidget->setColumnHidden(C_DIR, view == LIST_VIEW);
 	treeWidget->setRootIsDecorated(view == FOLDER_VIEW);
 
-	QFile dataFile(mainObject->settings->data_file(("aircraft.txt")));
+	QFile dataFile(mainObject->data_file(("aircraft.txt")));
 	if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
 		   return;
 	}
@@ -454,7 +454,7 @@ void AircraftWidget::initialize(){
 	if(first_load_done){
 		return;
 	}
-	if (!QFile::exists(mainObject->settings->data_file("aircraft.txt"))){
+	if (!QFile::exists(mainObject->data_file("aircraft.txt"))){
 		statusBarAero->showMessage("No cached data. Click Import");
 	}else{
 		load_tree();

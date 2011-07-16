@@ -288,7 +288,7 @@ void LauncherWindow::initialize(){
 	mainObject->X->read_ini();
 
 	//= check paths are same
-	if(!mainObject->settings->paths_sane()){
+	if(!mainObject->X->paths_sane()){
 		mainObject->show_setup_wizard();
 	}
 
@@ -371,7 +371,7 @@ void LauncherWindow::load_settings()
 	//airportsWidget->load_settings();
 	//networkWidget->load_settings();
 	//expertOptionsWidget->load_settings();
-	exeTerraSync->setEnabled( mainObject->settings->terrasync_enabled() );
+	exeTerraSync->setEnabled( mainObject->X->terrasync_enabled() );
 	outLog("FGx: Settings loaded in LauncherWIndow::load_settings()");
 	
 

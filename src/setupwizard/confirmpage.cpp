@@ -114,7 +114,7 @@ void ConfirmPage::initializePage()
 
 	if(field("fgfs_use_default").toBool()){
 		lblFgExeUsingDefault->setText("Using Default Path");
-		lblFgExePath->setText(mainObject->settings->fgfs_default_path());
+		lblFgExePath->setText(mainObject->X->fgfs_default_path());
 	}else{
 		lblFgExeUsingDefault->setText("Using Custom Path");
 		lblFgExePath->setText(field("fgfs_custom_path").toString());
@@ -122,7 +122,7 @@ void ConfirmPage::initializePage()
 
 	if(field("fgroot_use_default").toBool()){
 		lblFgRootUsingDefault->setText("Using Default Data Path");
-		lblFgRootPath->setText(mainObject->settings->fgroot_default_path());
+		lblFgRootPath->setText(mainObject->X->fgroot_default_path());
 	}else{
 		lblFgRootUsingDefault->setText("Using Custom Data Path");
 		lblFgRootPath->setText(field("fgroot_custom_path").toString());
@@ -138,12 +138,12 @@ void ConfirmPage::initializePage()
 
 	//= Check is an airport update is required ie fg root has changed
 	bool airports_update = false;
-	if(field("fgroot_use_default").toBool() != mainObject->settings->fgroot_use_default()){
+	if(field("fgroot_use_default").toBool() != mainObject->X->fgroot_use_default()){
 		// not the same as last time
 		airports_update = true;
 
 	}else if(field("fgfs_use_default").toBool() &&
-			 field("fgroot_custom_path").toString() != mainObject->settings->value("fgroot_custom_path")){
+			 field("fgroot_custom_path").toString() != mainObject->X->getx("fgroot_custom_path")){
 		// custom path has changed
 		airports_update = true;
 	}
@@ -152,7 +152,7 @@ void ConfirmPage::initializePage()
 
 	//= Check is an aircraft update is required ie fgdata changed
 	bool aircraft_update = false;
-	if(field("terrasync_enabled").toBool() != mainObject->settings->terrasync_enabled()){
+	if(field("terrasync_enabled").toBool() != mainObject->X->terrasync_enabled()){
 		// not the same as last time
 		aircraft_update = true;
 

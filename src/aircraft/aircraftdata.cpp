@@ -27,7 +27,7 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 	progress.repaint();
 
 	//= Cache File
-	QFile cacheFile( mainObject->settings->data_file("aircraft.txt") );
+	QFile cacheFile( mainObject->data_file("aircraft.txt") );
 	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
 		//qDebug() << "TODO Open error cachce file=";
 		return true;
@@ -38,7 +38,7 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 	QTextStream out(&cacheFile);
 
 	//= Get files Entries from Aircaft/ directory
-	QDir aircraftDir( mainObject->settings->aircraft_path() );
+	QDir aircraftDir( mainObject->X->aircraft_path() );
 	aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
 
 	QStringList entries = aircraftDir.entryList();
@@ -54,7 +54,7 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 			progress.repaint();
 
 			//** get the List of *-set.xml files in dir
-			QDir dir( mainObject->settings->aircraft_path(*entry) );
+			QDir dir( mainObject->X->aircraft_path(*entry) );
 			QStringList filters;
 			filters << "*-set.xml";
 			QStringList list_xml = dir.entryList(filters);
@@ -77,7 +77,7 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 					aero.chop(8);
 
 					//*=parse the Xml file - f&*& long winded
-					QString file_path =  mainObject->settings->aircraft_path(*entry);
+					QString file_path =  mainObject->X->aircraft_path(*entry);
 					file_path.append("/");
 					file_path.append(list_xml.at(i));
 					QFile xmlFile( file_path);
