@@ -31,6 +31,15 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	// This list wil be the main issue and debates for a long time probably, said pete
 	//========================================================================
 
+
+	//+++++++
+	add_option("fgfs_custom_path", false,"","",0,"","paths");
+	add_option("fgroot_custom_path", false,"","",0,"","paths");
+	add_option("terrasync_path", false,"","",0,"","paths");
+
+	//==
+
+
 	add_option( "show_mpmap", false, "", "",10,"Follow in MpMap","Map");
 
 
@@ -152,7 +161,18 @@ QString XSettingsModel::getx(QString option)
 }
 
 
+//==================================================
+// == Get Option enabled
+bool XSettingsModel::get_ena(QString option)
+{
+	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
+	//#qDebug() << "opts" << items;
 
+	// Get the item in the same row in the enabled field
+	QStandardItem *xItem = item(items[0]->row(),C_ENABLED);
+	return xItem->text() == "1";
+
+}
 
 //==================================================
 //= File Functions

@@ -61,6 +61,7 @@ FgRootPage::FgRootPage(MainObject *mob, QWidget *parent) :
 
 
 	registerField("fgroot_use_default", radioDefault);
+	registerField("fgroot_use_custom", radioCustom);
 	registerField("fgroot_custom_path", txtFgRoot);
 
 }
@@ -79,9 +80,10 @@ void FgRootPage::on_select_path()
 //= initializePage
 void FgRootPage::initializePage()
 {
-	radioDefault->setChecked( mainObject->settings->fgroot_use_default() );
+	radioDefault->setChecked( mainObject->X->get_ena("fgroot_custom_path") == false );
+	radioCustom->setChecked( mainObject->X->get_ena("fgroot_custom_path")  == true);
 	lblDefault->setText( mainObject->settings->fgroot_default_path() );
-	txtFgRoot->setText( mainObject->settings->value("fgroot_custom_path").toString() );
+	txtFgRoot->setText( mainObject->X->getx("fgroot_custom_path") );
 }
 
 
