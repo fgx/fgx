@@ -220,24 +220,6 @@ QString CoreSettingsWidget::validate(){
 	return QString("");
 }
 
-//====================================================
-//= Save Settings
-void CoreSettingsWidget::save_settings(){
-	return;
-	//= Callsign
-	mainObject->settings->setValue("callsign", txtCallSign->text());
-
-	//= screen
-	mainObject->settings->setValue("screen_size", comboScreenSize->itemData(comboScreenSize->currentIndex()));
-	mainObject->settings->setValue("screen_full", checkBoxFullScreenStartup->isChecked());
-	mainObject->settings->setValue("screen_splash", checkBoxDisableSplashScreen->isChecked());
-
-	//= Map
-	mainObject->settings->setValue("show_map_map", checkBoxShowMpMap->isChecked());
-	mainObject->settings->setValue("mpmap", comboMpMapServer->currentIndex());
-
-}
-
 
 
 
@@ -246,11 +228,6 @@ void CoreSettingsWidget::save_settings(){
 void CoreSettingsWidget::initialize(){
 	load_joysticks();
 }
-
-
-//==============================================
-//== Input devices
-//==============================================
 
 
 //==============================================

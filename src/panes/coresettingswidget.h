@@ -45,8 +45,6 @@ public:
 	XGroupHBox *groupBoxFgFs;
 	XGroupHBox *groupBoxFgRoot;
 
-	//QRadioButton *radioFgUseDefault;
-	//QRadioButton *radioFgUseCustom;
 	QLabel *labelFgFsPath;
 	QLabel *labelFgRootPath;
 	QLabel *labelFgFsInfo;
@@ -58,15 +56,9 @@ public:
 	//* Controls
 	QLabel *labelInputs;
 
-	//XGroupHBox *groupBoxTerraSync;
-	//QLineEdit *txtTerraSyncPath;
-
-
 	//* Functions
 	void initialize();
 	QString validate();
-
-	void save_settings();
 
 
 signals:
