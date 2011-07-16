@@ -116,7 +116,10 @@ public slots:
 
 	void on_view_map();
 
+	void on_coordinates_changed();
+	
 	void on_upx( QString option, bool enabled, QString value);
+	
 };
 
 #endif // AIRPORTSWIDGET_H
