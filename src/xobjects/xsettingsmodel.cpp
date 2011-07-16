@@ -139,7 +139,7 @@ void XSettingsModel::set_option(QString option, bool enabled, QString value)
 
 	//= Announce the change
 	emit upx(option, enabled,  value);
-	emit uplines(get_command_lines());
+	//emit uplines(get_fgfs_command_string());
 }
 
 //==================================================
@@ -224,24 +224,27 @@ void XSettingsModel::read_ini()
 
 
 //==========================================================
-QStringList XSettingsModel::get_command_lines()
+QStringList XSettingsModel::get_fgfs_options()
 {
-	QStringList lines;
+	QStringList opts;
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
 		if(item(row_idx, C_ENABLED)->text() == "1"){
 			QString str("");
 			if(item(row_idx, C_VALUE)->text().startsWith("--")){
 				str.append(item(row_idx, C_OPTION)->text()).append(item(row_idx, C_VALUE)->text());
 			}
-			lines << str;
+			if(str.length() > 0){
+				opts << str;
+			}
+
 		}
 	}
-	return lines;
+	return opts;
 }
 
-QString XSettingsModel::get_command_string()
+QString XSettingsModel::get_fgfs_command_string()
 {
-	return get_command_lines().join(" ");
+	return get_fgfs_options().join(" ");
 }
 
 

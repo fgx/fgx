@@ -24,18 +24,21 @@ public:
 	explicit XSettingsModel(MainObject *mob, QObject *parent = 0);
 
 	MainObject *mainObject;
+	bool _loading;
 
 	void add_option(QString option, bool enabled, QString value, QString preset, int level, QString description, QString area);
 
 	QString getx(QString option);
 	bool get_ena(QString option);
 
-	QString get_command_string();
-	QStringList get_command_lines();
+	QString get_fgfs_command_string();
+	QStringList get_fgfs_options();
+
 
 signals:
 	void upx(QString option, bool enabled, QString value);
 	void uplines(QStringList lines);
+
 
 public slots:
 
