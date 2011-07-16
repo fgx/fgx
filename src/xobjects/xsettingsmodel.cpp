@@ -39,6 +39,13 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option("fgroot_custom_path", false,"","",0,"","paths");
 	add_option("terrasync_path", false,"","",0,"","paths");
 
+
+	add_option("extra_args", false,"","",0,"","expert");
+	add_option("extra_env", false,"","",0,"","expert");
+
+	add_option("runtime", false,"","",0,"","expert");
+	add_option("--log-level=", false,"","",0,"","expert");
+
 	//==
 
 
@@ -78,6 +85,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 	//= FGCom Related
 	add_option( "--fgcom=",false, "", "fgcom.flightgear.org.uk:16661",3,"FgCom","FgCom");
+	add_option( "fgcom_generic_socket", false, "", "",10,"FgCom Socket","FgCom");
 
 	//= Local Servers
 	add_option( "--telnet=",false, "", "",3,"Enable Telnet","servers");
@@ -144,6 +152,10 @@ void XSettingsModel::add_option( QString option, bool enabled, QString value, QS
 // == Set An Option
 void XSettingsModel::set_option(QString option, bool enabled, QString value)
 {
+	qDebug() << "set " << option << _loading;
+	if(_loading){
+		return;
+	}
 	//= Find item matching the "option"
 	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
 	//qDebug() << "opts" << items;
@@ -191,7 +203,7 @@ bool XSettingsModel::get_ena(QString option)
 
 }
 
-XOpt XSettingsModel::getob(QString option)
+XOpt XSettingsModel::get_opt(QString option)
 {
 	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
 	return XOpt(item(items[0]->row(),C_OPTION)->text(),
@@ -230,6 +242,8 @@ void XSettingsModel::write_ini()
 // == Read Ini
 void XSettingsModel::read_ini()
 {
+	_loading = true;
+
 	//= Create ini settings object
 	QSettings settings(ini_file_path(), QSettings::IniFormat);
 
@@ -250,30 +264,74 @@ void XSettingsModel::read_ini()
 					 );
 		settings.endGroup();
 	}
+	_loading = false;
 	qDebug() << "Read ini";
 	emit updated(get_fgfs_list());
 }
 
 
 
+
+
+
+
+
+
+
+
+//==========================================================
+//= Get Options
 //==========================================================
 QStringList XSettingsModel::get_fgfs_options()
 {
-	QStringList opts;
+	//= Read --options from tree
+	QStringList args;
+
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
+
 		if(item(row_idx, C_ENABLED)->text() == "1"){
 			QString str("");
-			if(item(row_idx, C_OPTION)->text().startsWith("--")){
+			QString op = item(row_idx, C_OPTION)->text();
+			if(op.startsWith("--")){
 				str.append(item(row_idx, C_OPTION)->text()).append(item(row_idx, C_VALUE)->text());
 			}
+
+
+
 			if(str.length() > 0){
-				opts << str;
+				args << str;
+			}
+
+
+			// Add Extras
+			if(op == "--fgcom="){
+				args << getx("fgcom_generic_socket");
 			}
 
 		}
 	}
-	return opts;
+
+
+	//= add Extra args
+	QString extra = getx("extra_args");
+	if (extra.length() > 0) {
+		QStringList parts = extra.split("\n");
+		if(parts.count() > 0){
+			for(int i=0; i < parts.count(); i++){
+				QString part = parts.at(i).trimmed();
+				if(part.length() > 0){
+					args << part;
+				}
+			}
+		}
+	}
+
+	return args;
 }
+
+
+
+
 QStringList XSettingsModel::get_fgfs_list()
 {
 	//TODO append the commands here
@@ -285,4 +343,95 @@ QString XSettingsModel::get_fgfs_command_string()
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//=========================================================================
+//== FgFs Start args = command
+//=========================================================================
+QStringList XSettingsModel::get_fgfs_args(){
+
+	QStringList args;
+
+	//args << QString("--fg-root=").append(settings->fgroot());
+
+
+	//=== Screen
+	//	args << QString ("--geometry=").append(settings->value("screen_size").toString());
+
+	//=== Controls
+	//if(settings->value("mouse_control").toBool()){
+	//args << QString("--control=mouse");
+	//}
+
+
+	//== Terrasync
+
+		//args << QString("--fg-scenery=").append(settings->terrasync_sync_data_path()).append(":").append(settings->scenery_path());
+		//args << QString("--atlas=socket,out,5,localhost,5505,udp");
+
+
+	//XOpt oTerra = getopt("--fgcom=");
+
+
+
+
+	//=== FgCom
+	//if(settings->value("fgcom").toBool()){
+	//	args << QString("--generic=socket,out,10,localhost,%1,udp,fgcom"
+	//					).arg( settings->value("fgcom_port").toString()
+	//					);
+	//}
+
+
+
+	//=============================================================
+	//=== Extra Args
+	QString extra = getx("extra_args");
+	if (extra.length() > 0) {
+		QStringList parts = extra.split("\n");
+		if(parts.count() > 0){
+			for(int i=0; i < parts.count(); i++){
+				QString part = parts.at(i).trimmed();
+				if(part.length() > 0){
+					args << part;
+				}
+			}
+		}
+	}
+
+
+
+
+
+	//=== Airports and Startup Position
+	/*
+	if(settings->value("airport").toString().length() > 0){
+		args << QString("--airport=").append(settings->value("airport").toString());
+
+		QString runway_or_stand = settings->value("runway_or_stand").toString().trimmed();
+		if(runway_or_stand.length() > 0){
+			if(runway_or_stand == "runway"){
+				args << QString("--runway=").append(settings->value("startup_position").toString());
+
+			}else if(runway_or_stand == "stand"){
+				args << QString("--parkpos=").append(settings->value("startup_position").toString());
+			}
+		}
+	}
+	*/
+	args.sort();
+	return args;
+}
 

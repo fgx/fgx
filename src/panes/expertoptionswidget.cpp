@@ -43,6 +43,7 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	txtExtraArgs = new QPlainTextEdit();
 	groupBoxArgs->addWidget(txtExtraArgs);
+	connect(txtExtraArgs, SIGNAL(textChanged()), this, SLOT(on_extra()));
 
 
 	//======================
@@ -52,6 +53,7 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	txtExtraEnv = new QPlainTextEdit();
 	groupBoxEnv->addWidget(txtExtraEnv);
+	connect(txtExtraEnv, SIGNAL(textChanged()), this, SLOT(on_env()));
 
 
 	//======================
@@ -62,6 +64,7 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	txtRuntime = new QLineEdit("");
 	groupBoxRun->addWidget(txtRuntime);
+	connect(txtRuntime, SIGNAL(textChanged(QString)), this, SLOT(on_runtime()));
 
 
 	//======================
@@ -71,6 +74,7 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	comboLogLevels = new QComboBox();
 	groupBoxWriteLog->addWidget(comboLogLevels);
+	connect(comboLogLevels, SIGNAL(currentIndexChanged(int)), this, SLOT(on_log_level()));
 
 	//TODO - these need to go in "DD"
 	QStringList values;
@@ -91,103 +95,24 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 	XGroupVBox *groupBox = new XGroupVBox(tr("Command Output"));
 	rightLayout->addWidget(groupBox);
 
-
-	txtPreviewOutput = new QPlainTextEdit();
-	groupBox->addWidget(txtPreviewOutput);
-	txtPreviewOutput->setReadOnly(true);
+	commandPreviewWidget = new XCommandPrevieWidget(mainObject);
 
 
-	QHBoxLayout *layoutButtons = new QHBoxLayout();
-	groupBox->addLayout(layoutButtons);
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
+	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
-
-	//=============================================================
-	buttonGroup = new QButtonGroup(this);
-	buttonGroup->setExclusive(true);
-	connect(buttonGroup, SIGNAL(buttonClicked(int)) , this, SLOT(preview()));
-
-	QRadioButton *radioString = new QRadioButton();
-	radioString->setText("Single line");
-	radioString->setProperty("value", "string");
-	layoutButtons->addWidget(radioString);
-	buttonGroup->addButton(radioString, 0);
-
-	QRadioButton *radioLines = new QRadioButton();
-	radioLines->setText("Separate lines");
-	radioLines->setProperty("value", "lines");
-	layoutButtons->addWidget(radioLines);
-	buttonGroup->addButton(radioLines, 1);
-
-	QRadioButton *radioShell = new QRadioButton();
-	radioShell->setText("Shell lines");
-	radioShell->setProperty("value", "shell");
-	layoutButtons->addWidget(radioShell);
-	buttonGroup->addButton(radioShell, 2);
-
-
-	//=============================================================
-	buttonCommandPreview = new QPushButton();
-	buttonCommandPreview->setText(tr("Preview"));
-	layoutButtons->addWidget(buttonCommandPreview);
-	connect(buttonCommandPreview, SIGNAL(clicked()), this, SLOT(preview()));
-
-	buttonCommandHelp = new QPushButton();
-	buttonCommandHelp->setText(tr("Help"));
-	layoutButtons->addWidget(buttonCommandHelp);
-	connect(buttonCommandHelp, SIGNAL(clicked()), this, SLOT(on_command_help()));
-	
-	buttonCommandVersion = new QPushButton();
-	buttonCommandVersion->setText(tr("Version"));
-	layoutButtons->addWidget(buttonCommandVersion);
-	connect(buttonCommandVersion, SIGNAL(clicked()), this, SLOT(on_command_version()));
-
-	layoutButtons->addStretch(20);
-
-	buttonGroup->button(mainObject->settings->value("preview_type", "1").toInt())->setChecked(true);
 }
 
 
 
-//=============================================================================================================//
-//== Advanced Handlers
-//=============================================================================================================//
-
-//=================================
-//= Get Args
-QStringList ExpertOptionsWidget::get_args(){
-
-	QStringList args;
-	//*  Additonal args in text box..
-
-	QString extra = txtExtraArgs->toPlainText().trimmed();
-	if (extra.length() > 0) {
-		QStringList parts = extra.split("\n");
-		if(parts.count() > 0){
-			for(int i=0; i < parts.count(); i++){
-				QString part = parts.at(i).trimmed();
-				if(part.length() > 0){
-					args << part;
-				}
-			}
-		}
-	}
-
-	//* get fgfs log level argument
-
-	QStringList values;
-	values << "warn" << "info" << "debug" << "bulk" << "alert";
-
-	args << "--log-level=" + comboLogLevels->itemData(comboLogLevels->currentIndex()).toString();
-
-	return args;
-}
 
 //=================================
 //== Get Env
+/*
 QStringList ExpertOptionsWidget::get_env(){
 
 	QStringList args;
-	//*  Additonal args in text box..
+	//=  Additonal args in text box..
 
 	QString extra = txtExtraEnv->toPlainText().trimmed();
 	if (extra.length() > 0) {
@@ -203,85 +128,53 @@ QStringList ExpertOptionsWidget::get_env(){
 	}
 	return args;
 }
+*/
 
-//=================================
-//== Get runtime
-QString ExpertOptionsWidget::get_runtime(){
-	return txtRuntime->text().trimmed();
+
+//==========================================================
+//= Events
+//==========================================================
+void ExpertOptionsWidget::on_extra()
+{
+	emit setx("extra_args", true, txtExtraArgs->toPlainText().trimmed());
+}
+
+
+void ExpertOptionsWidget::on_env()
+{
+	emit setx("extra_env", true, txtExtraEnv->toPlainText().trimmed());
+}
+
+void ExpertOptionsWidget::on_log_level()
+{
+
+	QString log = comboLogLevels->itemData(comboLogLevels->currentIndex()).toString();
+	emit setx("--log-level=", log != "none",  log);
+}
+
+void ExpertOptionsWidget::on_runtime()
+{
+	emit setx("runtime", true, txtRuntime->text().trimmed());
 }
 
 
 
+//==========================================================
+//= Update
+//==========================================================
 
+void ExpertOptionsWidget::on_upx(QString option, bool enabled, QString value)
+{
 
-//=============================================================================================================//
-//== Command Preview Handlers
-//=============================================================================================================//
+	if(option == "extra_args"){
+		txtExtraArgs->setPlainText(value);
 
+	}else if(option == "extra_env"){
+		txtExtraEnv->setPlainText(value);
 
-void ExpertOptionsWidget::on_command_help(){
-	QProcess process;
-	QStringList args;
-	args << "-h" << "-v" << QString("--fg-root=").append(mainObject->settings->fgroot());
-	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
-	if(process.waitForStarted()){
-		process.waitForFinished(10000);
-		QString ok_result = process.readAllStandardOutput();
-		txtPreviewOutput->setPlainText(ok_result);
+	}else if(option == "--log-level="){
+		Helpers::select_combo(comboLogLevels, value);
 	}
 }
 
-void ExpertOptionsWidget::on_command_version(){
-	QProcess process;
-	QStringList args;
-	args << "-h" << "--version" << QString("--fg-root=").append(mainObject->settings->fgroot());
-	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
-	if(process.waitForStarted()){
-		process.waitForFinished(10000);
-		QString ok_result = process.readAllStandardError();
-		outLog(process.readAllStandardError());
-		txtPreviewOutput->setPlainText(ok_result);
-	}
-}
 
-
-void ExpertOptionsWidget::preview(){
-	mainObject->settings->setValue("preview_type", buttonGroup->checkedId());
-	QString delim("");
-	QString type = buttonGroup->checkedButton()->property("value").toString();
-	if(type == "lines"){
-		delim.append("\n");
-	}else if(type == "shell"){
-		delim.append(" \\\n");
-	}else{
-		delim.append(" ");
-	}
-	QString cmd = mainObject->settings->fgfs_path().append(delim);
-	cmd.append( mainObject->get_fgfs_args().join(delim));
-	txtPreviewOutput->setPlainText(cmd);
-}
-
-
-
-//========================================================================================================== ;-)
-
-//=====================
-//== Load Settings
-void ExpertOptionsWidget::load_settings(){
-
-	txtExtraArgs->setPlainText(mainObject->settings->value("extra_args").toString());
-	txtExtraEnv->setPlainText(mainObject->settings->value("extra_env").toString());
-	txtRuntime->setText(mainObject->settings->value("runtime_dir").toString());
-	Helpers::select_combo(comboLogLevels, mainObject->settings->value("log_level","none").toString() );
-}
-
-
-//=====================
-//== Save Settings
-void ExpertOptionsWidget::save_settings(){
-
-	mainObject->settings->setValue("extra_args", txtExtraArgs->toPlainText());
-	mainObject->settings->setValue("extra_env", txtExtraEnv->toPlainText());
-	mainObject->settings->setValue("runtime_dir", txtRuntime->text());
-	mainObject->settings->setValue("log_level", comboLogLevels->itemData(comboLogLevels->currentIndex()));
-}
