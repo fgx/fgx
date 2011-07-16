@@ -29,6 +29,8 @@ public:
 
 	QString getx(QString option);
 
+	QString get_command_string();
+	QStringList get_command_lines();
 
 signals:
 	void upx(QString option, bool enabled, QString value);

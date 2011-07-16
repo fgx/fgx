@@ -188,3 +188,29 @@ void XSettingsModel::read_ini()
 	}
 	qDebug() << "Read ini";
 }
+
+
+
+//==========================================================
+QStringList XSettingsModel::get_command_lines()
+{
+	QStringList lines;
+	for(int row_idx=0; row_idx < rowCount(); row_idx++){
+		if(item(row_idx, C_ENABLED)->text() == "1"){
+			QString str("");
+			if(item(row_idx, C_VALUE)->text().startsWith("--")){
+				str.append(item(row_idx, C_OPTION)->text()).append(item(row_idx, C_VALUE)->text());
+			}
+			lines << str;
+		}
+	}
+	return lines;
+}
+
+QString XSettingsModel::get_command_string()
+{
+
+}
+
+
+
