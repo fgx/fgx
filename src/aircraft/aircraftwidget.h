@@ -80,6 +80,7 @@ public slots:
 	void on_enable_fuel_freeze_clicked();
 
 	void on_navs_changed();
+	void on_fuel_changed();
 
 	void on_upx(QString option, bool enabled, QString value);
 };

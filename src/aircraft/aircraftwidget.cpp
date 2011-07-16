@@ -206,6 +206,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	txtTank1 = new QLineEdit();
 	txtTank1->setValidator(new QDoubleValidator(0, 200, 1, this));
 	layoutFuelPane->addWidget(txtTank1,rowFuel, 1, 1, 1, Qt::AlignLeft);
+	connect(txtTank1, SIGNAL(textChanged(QString)), this, SLOT(on_fuel_changed()));
 	
 	//* Tank 2
 	rowFuel++;
@@ -213,6 +214,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	txtTank2 = new QLineEdit();
 	txtTank2->setValidator(new QDoubleValidator(0, 200, 1, this));
 	layoutFuelPane->addWidget(txtTank2,rowFuel, 1, 1, 1, Qt::AlignLeft);
+	connect(txtTank2, SIGNAL(textChanged(QString)), this, SLOT(on_fuel_changed()));
 	
 	//* Tank 3
 	rowFuel++;
@@ -220,6 +222,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	txtTank3 = new QLineEdit();
 	txtTank3->setValidator(new QDoubleValidator(0, 200, 1, this));
 	layoutFuelPane->addWidget(txtTank3, rowFuel, 1, 1, 1, Qt::AlignLeft);
+	connect(txtTank3, SIGNAL(textChanged(QString)), this, SLOT(on_fuel_changed()));
 	
 	layoutFuelPane->setRowStretch(rowFuel + 1, 20); // stretch end
 	
@@ -329,61 +332,6 @@ void AircraftWidget::on_tree_selection_changed(){
 }
 
 
-
-<<<<<<< HEAD
-
-
-
-
-//=============================================================
-// Save Settings
-void AircraftWidget::save_settings(){
-	QTreeWidgetItem *item = treeWidget->currentItem();
-	if(item && item->text(C_AERO).length() > 0){
-		mainObject->settings->setValue("aircraft", item->text(C_AERO) );
-	}
-	mainObject->settings->setValue("use_default_fuel", checkBoxUseDefaultFuel->isChecked());
-	mainObject->settings->setValue("enable_fuel_freeze", checkBoxFuelFreeze->isChecked());
-
-	mainObject->settings->setValue("nav1", txtNav1->text());
-	mainObject->settings->setValue("nav2", txtNav2->text());
-	mainObject->settings->setValue("adf", txtAdf->text());
-	mainObject->settings->setValue("com1", txtComm1->text());
-	mainObject->settings->setValue("com2", txtComm2->text());
-	
-	mainObject->settings->setValue("aircraft_use_default", checkBoxUseDefault->isChecked());
-	
-	mainObject->settings->setValue("prop:/consumables/fuels/tank[1]/level-gal", txtTank1->text());
-	mainObject->settings->setValue("prop:/consumables/fuels/tank[2]/level-gal", txtTank2->text());
-	mainObject->settings->setValue("prop:/consumables/fuels/tank[3]/level-gal", txtTank3->text());
-
-	mainObject->settings->sync();
-}
-
-
-//=============================================================
-// Load Settings
-void AircraftWidget::load_settings(){
-
-	//select_node(mainObject->settings->value("aircraft").toString());
-	
-	checkBoxUseDefaultFuel->setChecked(mainObject->settings->value("use_default_fuel", false).toBool());
-	checkBoxFuelFreeze->setChecked(mainObject->settings->value("enable_fuel_freeze", false).toBool());
-	txtTank1->setText(mainObject->settings->value("prop:/consumables/fuels/tank[1]/level-gal").toString());
-	txtTank2->setText(mainObject->settings->value("prop:/consumables/fuels/tank[2]/level-gal").toString());
-	txtTank3->setText(mainObject->settings->value("prop:/consumables/fuels/tank[3]/level-gal").toString());
-
-	txtNav1->setText(mainObject->settings->value("nav1").toString());
-	txtNav2->setText(mainObject->settings->value("nav2").toString());
-	txtAdf->setText(mainObject->settings->value("adf").toString());
-	txtComm1->setText(mainObject->settings->value("com1").toString());
-	txtComm2->setText(mainObject->settings->value("com2").toString());
-	checkBoxUseDefault->setChecked(mainObject->settings->value("aircraft_use_default", false).toBool());
-	on_use_default_clicked();
-}
-
-=======
->>>>>>> 52a6ef176bff6c97e0c6b3c1775efc3122e2a971
 //==============================
 //== Select an aircraft in tree
 void AircraftWidget::select_node(QString aero){
@@ -533,6 +481,14 @@ void AircraftWidget::on_navs_changed()
 
 }
 
+void AircraftWidget::on_fuel_changed()
+{
+	emit setx("--prop:/consumables/fuels/tank[1]/level-gal=", true, txtTank1->text());
+	emit setx("--prop:/consumables/fuels/tank[2]/level-gal=", true, txtTank2->text());
+	emit setx("--prop:/consumables/fuels/tank[3]/level-gal=", true, txtTank3->text());
+	
+}
+
 
 //=====================================================
 void AircraftWidget::on_upx( QString option, bool enabled, QString value)
@@ -540,6 +496,7 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 	Q_UNUSED(enabled);
 	//= NOTE: The --aircraft= is detected as the tree loads from cache
 
+	//* tab radio
 	if(option == "--nav1="){
 		txtNav1->setText(value);
 
@@ -557,7 +514,17 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 
 	}else if(option == "use_default_aircraft"){
 		checkBoxUseDefault->setChecked(enabled);
-	}
+		
+	// tab fuel
+	}else if(option == "--prop:/consumables/fuels/tank[1]/level-gal="){
+		txtTank1->setText(value);
+		
+	}else if(option == "--prop:/consumables/fuels/tank[2]/level-gal="){
+		txtTank2->setText(value);
+		
+	}else if(option == "--prop:/consumables/fuels/tank[3]/level-gal="){
+		txtTank3->setText(value);
+}
 
 }
 
