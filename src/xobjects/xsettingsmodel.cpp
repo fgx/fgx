@@ -230,10 +230,7 @@ void XSettingsModel::write_ini()
 	//= create ini settings object
 	
 	QString fileName =
-	QFileDialog::getSaveFileName(0,
-								 "Save Profiles",
-								 ini_file_path(),
-								 "Profile files (*.ini)" );
+	QFileDialog::getSaveFileName(0, "Save Profiles", ini_file_path(), "Profile files (*.ini)" );
 
 	QSettings settings(fileName, QSettings::IniFormat);
 
@@ -255,10 +252,7 @@ void XSettingsModel::read_ini()
 
 	//= Create ini settings object
 	QString fileName =
-	QFileDialog::getOpenFileName(0,
-								 "Load Profiles",
-								 ini_file_path(),
-								 "Profile files (*.ini)" );
+	QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
 	
 	QSettings settings(fileName, QSettings::IniFormat);
 	
