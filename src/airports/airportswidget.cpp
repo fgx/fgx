@@ -278,23 +278,51 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Latitude (negative is west)")));
 	txtLat = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtLat);
+	connect(txtLat, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
 
 	groupBoxUseCoordinates->xLayout->addSpacing(space);
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Longtitude (negative is south)")));
-	txtLng = new QLineEdit();
-	groupBoxUseCoordinates->addWidget(txtLng);
+	txtLon = new QLineEdit();
+	groupBoxUseCoordinates->addWidget(txtLon);
+	connect(txtLon, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
+	
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Start at VOR")));
+	txtVOR = new QLineEdit();
+	groupBoxUseCoordinates->addWidget(txtVOR);
+	connect(txtVOR, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
+	
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Start at NDB")));
+	txtNDB = new QLineEdit();
+	groupBoxUseCoordinates->addWidget(txtNDB);
+	connect(txtNDB, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
+	
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Start at FIX")));
+	txtFIX = new QLineEdit();
+	groupBoxUseCoordinates->addWidget(txtFIX);
+	connect(txtFIX, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
+	
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Offset distance")));
+	txtOffset = new QLineEdit();
+	groupBoxUseCoordinates->addWidget(txtOffset);
+	connect(txtOffset, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
 
 	groupBoxUseCoordinates->xLayout->addSpacing(space);
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Altitude")));
 	txtAltitude = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtAltitude);
+	connect(txtAltitude, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
 
 	groupBoxUseCoordinates->xLayout->addSpacing(space);
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Heading")));
 	txtHeading = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtHeading);
+	connect(txtHeading, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
 
-	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	/*groupBoxUseCoordinates->xLayout->addSpacing(space);
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Roll")));
 	txtRoll = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtRoll);
@@ -307,7 +335,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	groupBoxUseCoordinates->xLayout->addSpacing(space);
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Airspeed")));
 	txtAirspeed = new QLineEdit();
-	groupBoxUseCoordinates->addWidget(txtAirspeed);
+	groupBoxUseCoordinates->addWidget(txtAirspeed);*/
 
 
 	groupBoxUseCoordinates->xLayout->addStretch(20);
@@ -729,61 +757,6 @@ QString AirportsWidget::current_airport(){
 
 
 
-//=============================================================
-// Save Settings
-void AirportsWidget::save_settings(){
-
-	mainObject->settings->setValue("use_position", buttonGroupUse->checkedId());
-
-	mainObject->settings->setValue("lat", txtLat->text());
-	mainObject->settings->setValue("lng", txtLng->text());
-	mainObject->settings->setValue("altitude", txtAltitude->text());
-	mainObject->settings->setValue("heading", txtHeading->text());
-	mainObject->settings->setValue("roll", txtRoll->text());
-	mainObject->settings->setValue("pitch", txtPitch->text());
-	mainObject->settings->setValue("airspeed", txtAirspeed->text());
-
-	//** Save Airport
-	if(treeViewAirports->selectionModel()->selectedIndexes().size() > 0){
-
-		mainObject->settings->setValue("airport", current_airport());
-
-		//** save runway or parking
-		if(treeWidgetAirportInfo->currentItem()){
-			mainObject->settings->setValue("runway_or_stand", treeWidgetAirportInfo->currentItem()->text(CI_TYPE));
-			mainObject->settings->setValue("runway_stand", treeWidgetAirportInfo->currentItem()->text(CI_SETTING_KEY));
-			mainObject->settings->setValue("startup_position", treeWidgetAirportInfo->currentItem()->text(CI_NODE));
-		}else{
-			mainObject->settings->setValue("runway_or_stand", "");
-			mainObject->settings->setValue("startup_position", "");
-		}
-	}
-
-	mainObject->settings->sync();
-}
-
-
-//====================================================================
-// Load Settings
-// Restoring the airport/runway is done in the load_tree functions
-//====================================================================
-void AirportsWidget::load_settings(){
-
-	buttonGroupUse->button( mainObject->settings->value("use_position", USE_DEFAULT).toInt() )->setChecked(true);
-
-	txtLat->setText(mainObject->settings->value("lat").toString());
-	txtLng->setText(mainObject->settings->value("lng").toString());
-	txtAltitude->setText(mainObject->settings->value("altitude").toString());
-	txtHeading->setText(mainObject->settings->value("heading").toString());
-	txtRoll->setText(mainObject->settings->value("roll").toString());
-	txtPitch->setText(mainObject->settings->value("pitch").toString());
-	txtAirspeed->setText(mainObject->settings->value("airspeed").toString());
-
-	on_buttonGroupUse();
-
-}
-
-
 QString AirportsWidget::validate(){
 
 	//* Validate Coordinates TODO - other stuff
@@ -792,8 +765,8 @@ QString AirportsWidget::validate(){
 			txtLat->setFocus();
 			return QString("Need Latitude");
 		}
-		if(txtLng->text().trimmed().length() == 0){
-			txtLng->setFocus();
+		if(txtLon->text().trimmed().length() == 0){
+			txtLon->setFocus();
 			return QString("Need Longtitude");
 		}
 

@@ -85,15 +85,14 @@ public:
 	int load_parking_node(QString airport_dir, QString airport_code);
 
 	QLineEdit *txtLat;
-	QLineEdit *txtLng;
+	QLineEdit *txtLon;
+	QLineEdit *txtVOR;
+	QLineEdit *txtNDB;
+	QLineEdit *txtFIX;
+	QLineEdit *txtOffset;
 	QLineEdit *txtAltitude;
 	QLineEdit *txtHeading;
-	QLineEdit *txtRoll;
-	QLineEdit *txtPitch;
-	QLineEdit *txtAirspeed;
 
-	void save_settings();
-	void load_settings();
 	QString validate();
 
 	QString current_airport();
