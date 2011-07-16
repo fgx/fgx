@@ -38,15 +38,20 @@ public:
 
 
 signals:
-
+	void setx(QString option, bool enabled, QString value);
 public slots:
 
 	void on_command_help();
 	void on_command_version();
 	void preview();
 
-	void save_settings();
-	void load_settings();
+
+	void on_extra();
+	void on_env();
+	void on_runtime();
+	void on_log_level();
+
+	void on_upx(QString option, bool enabled, QString value);
 };
 
 #endif // EXPERTOPTIONSWIDGET_H

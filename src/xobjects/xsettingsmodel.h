@@ -35,8 +35,13 @@ public:
 	bool get_ena(QString option);
 
 	QString get_fgfs_command_string();
+
 	QStringList get_fgfs_options();
+
 	QStringList get_fgfs_list();
+
+	QStringList get_fgfs_args();
+
 
 
 signals:

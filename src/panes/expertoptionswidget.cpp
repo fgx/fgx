@@ -43,6 +43,7 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	txtExtraArgs = new QPlainTextEdit();
 	groupBoxArgs->addWidget(txtExtraArgs);
+	connect(txtExtraArgs, SIGNAL(textChanged()), this, SLOT(on_extra()));
 
 
 	//======================
@@ -52,6 +53,7 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	txtExtraEnv = new QPlainTextEdit();
 	groupBoxEnv->addWidget(txtExtraEnv);
+	connect(txtExtraEnv, SIGNAL(textChanged()), this, SLOT(on_env()));
 
 
 	//======================
@@ -62,6 +64,7 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	txtRuntime = new QLineEdit("");
 	groupBoxRun->addWidget(txtRuntime);
+	connect(txtRuntime, SIGNAL(textChanged(QString)), this, SLOT(on_runtime()));
 
 
 	//======================
@@ -71,6 +74,7 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	comboLogLevels = new QComboBox();
 	groupBoxWriteLog->addWidget(comboLogLevels);
+	connect(comboLogLevels, SIGNAL(currentIndexChanged(int)), this, SLOT(on_log_level()));
 
 	//TODO - these need to go in "DD"
 	QStringList values;
@@ -144,6 +148,10 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 	layoutButtons->addStretch(20);
 
 	buttonGroup->button(mainObject->settings->value("preview_type", "1").toInt())->setChecked(true);
+
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
+	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+
 }
 
 
@@ -268,7 +276,7 @@ void ExpertOptionsWidget::preview(){
 //=====================
 //== Load Settings
 void ExpertOptionsWidget::load_settings(){
-
+	return;
 	txtExtraArgs->setPlainText(mainObject->settings->value("extra_args").toString());
 	txtExtraEnv->setPlainText(mainObject->settings->value("extra_env").toString());
 	txtRuntime->setText(mainObject->settings->value("runtime_dir").toString());
@@ -279,9 +287,62 @@ void ExpertOptionsWidget::load_settings(){
 //=====================
 //== Save Settings
 void ExpertOptionsWidget::save_settings(){
-
+	return;
 	mainObject->settings->setValue("extra_args", txtExtraArgs->toPlainText());
 	mainObject->settings->setValue("extra_env", txtExtraEnv->toPlainText());
 	mainObject->settings->setValue("runtime_dir", txtRuntime->text());
 	mainObject->settings->setValue("log_level", comboLogLevels->itemData(comboLogLevels->currentIndex()));
 }
+
+
+
+
+
+//==========================================================
+//=
+//==========================================================
+void ExpertOptionsWidget::on_extra()
+{
+	emit setx("extra_args", true, txtExtraArgs->toPlainText().trimmed());
+}
+
+
+void ExpertOptionsWidget::on_env()
+{
+	emit setx("extra_env", true, txtExtraEnv->toPlainText().trimmed());
+}
+
+void ExpertOptionsWidget::on_log_level()
+{
+
+	QString log = comboLogLevels->itemData(comboLogLevels->currentIndex()).toString();
+	emit setx("--log-level=", log != "none",  log);
+}
+
+void ExpertOptionsWidget::on_runtime()
+{
+	emit setx("runtime", true, txtRuntime->text().trimmed());
+}
+
+
+
+//==========================================================
+//=
+//==========================================================
+
+void ExpertOptionsWidget::on_upx(QString option, bool enabled, QString value)
+{
+
+	if(option == "extra_args"){
+		//txtExtraArgs->setPlainText(value);
+
+	}else if(option == "extra_env"){
+		//txtExtraEnv->setPlainText(value);
+
+	}else if(option == "--log-level="){
+		qDebug() << "--log";
+		Helpers::select_combo(comboLogLevels, value);
+	}
+}
+
+

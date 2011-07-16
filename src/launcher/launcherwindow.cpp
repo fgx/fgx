@@ -375,6 +375,7 @@ void LauncherWindow::save_settings()
 void LauncherWindow::load_settings()
 {
 	
+
 	QString message("Settings loaded.");
 	headerWidget->showMessage(message);
 	
