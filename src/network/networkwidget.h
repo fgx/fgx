@@ -65,10 +65,9 @@ public:
 
 	void load_local_addresses();
 	void populate_combo_hz(QComboBox *combo);
-	void save_settings();
-	void load_settings();
+
 	QString validate();
-	QStringList get_args();
+
 
 signals:
 	void setx(QString option, bool enabled, QString value);

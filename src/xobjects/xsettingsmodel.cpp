@@ -85,6 +85,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 	//= FGCom Related
 	add_option( "--fgcom=",false, "", "fgcom.flightgear.org.uk:16661",3,"FgCom","FgCom");
+	add_option( "fgcom_generic_socket", false, "", "",10,"FgCom Socket","FgCom");
 
 	//= Local Servers
 	add_option( "--telnet=",false, "", "",3,"Enable Telnet","servers");
@@ -189,7 +190,7 @@ bool XSettingsModel::get_ena(QString option)
 
 }
 
-XOpt XSettingsModel::getob(QString option)
+XOpt XSettingsModel::get_opt(QString option)
 {
 	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
 	return XOpt(item(items[0]->row(),C_OPTION)->text(),
@@ -272,14 +273,26 @@ QStringList XSettingsModel::get_fgfs_options()
 {
 	//= Read --options from tree
 	QStringList args;
+
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
+
 		if(item(row_idx, C_ENABLED)->text() == "1"){
 			QString str("");
-			if(item(row_idx, C_OPTION)->text().startsWith("--")){
+			QString op = item(row_idx, C_OPTION)->text();
+			if(op.startsWith("--")){
 				str.append(item(row_idx, C_OPTION)->text()).append(item(row_idx, C_VALUE)->text());
 			}
+
+
+
 			if(str.length() > 0){
 				args << str;
+			}
+
+
+			// Add Extras
+			if(op == "--fgcom="){
+				args << getx("fgcom_generic_socket");
 			}
 
 		}

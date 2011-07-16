@@ -173,7 +173,6 @@ void ExpertOptionsWidget::on_upx(QString option, bool enabled, QString value)
 		txtExtraEnv->setPlainText(value);
 
 	}else if(option == "--log-level="){
-		qDebug() << "--log";
 		Helpers::select_combo(comboLogLevels, value);
 	}
 }

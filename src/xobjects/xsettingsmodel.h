@@ -31,7 +31,7 @@ public:
 	void add_option(QString option, bool enabled, QString value, QString preset, int level, QString description, QString area);
 
 	QString getx(QString option);
-	XOpt getob(QString option);
+	XOpt get_opt(QString option);
 	bool get_ena(QString option);
 
 	QString get_fgfs_command_string();

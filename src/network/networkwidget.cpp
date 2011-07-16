@@ -456,6 +456,10 @@ void NetworkWidget::set_mp_server(){
 // Setup fgCom
 void NetworkWidget::set_fgcom(){
 	emit setx( "--fgcom=", grpFgCom->isChecked(), txtFgComNo->text().append(":").append( txtFgComPort->text() ) );
+	emit setx( "fgcom_generic_socket",
+				grpFgCom->isChecked(),
+				QString("--generic=socket,out,10,localhost,%1,udp,fgcom").arg(txtFgComPort->text())
+			);
 }
 		
 		
@@ -510,152 +514,8 @@ void NetworkWidget::on_open_telnet(){
 	// TODO
 }
 
-//=============================================================
-// Get Args
-QStringList NetworkWidget::get_args(){
-
-	validate();
-	QStringList args;
-
-	
-	//* Enable Multiplay
-	if(grpMpServer->isChecked()){
-		
-		/*if (mainObject->settings->value("use_terrasync") == false) {
-			args << QString("--atlas=socket,out,5,localhost,5505,udp");
-		}*/
-		
-
-		
-		if(checkBoxIn->isChecked()){
-			args << QString("--multiplay=in,%1,%2,%3").arg(
-									comboHzIn->currentText()).arg(
-									comboLocalIpAddress->currentText()).arg(
-									comboLocalPort->currentText()
-							);
-		}
-		if(checkBoxOut->isChecked()){
-			if(treeWidget->currentItem()){
-				QString remote_server(	comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString() == "domain"
-								? treeWidget->currentItem()->text(C_DOMAIN)
-								: treeWidget->currentItem()->text(C_IP_ADDRESS));
-				args << QString("--multiplay=out,%1,%2,%3").arg(
-								comboHzOut->currentText()).arg(
-								remote_server).arg(
-								comboRemotePort->currentText());
-			}
-		}
-		
-	}
-
-	//* FgCom
-	if(grpFgCom->isChecked()){
-		args << QString("--generic=socket,out,10,localhost,%1,udp,fgcom").arg( txtFgComPort->text() );
-	}
-
-	//* Http
-	if(grpHttp->isChecked()){
-		args << QString("--http=%1").arg( txtHttp->text() );
-	}
-
-	//* Telnet
-	if(grpTelnet->isChecked()){
-		args << QString("--telnet=%1").arg( txtTelnet->text() );
-	}
-
-	//* ScreenShot
-	if(grpScreenShot->isChecked()){
-		args << QString("--jpg-httpd=%1").arg( txtScreenShot->text() );
-	}
-
-	
-	return args;
-}
-
-//=============================================================
-// Save Settings
-void NetworkWidget::save_settings(){
-	return;
-	mainObject->settings->setValue("enable_mp", grpMpServer->isChecked());
-
-	mainObject->settings->setValue("in", checkBoxIn->isChecked());
-	mainObject->settings->setValue("out", checkBoxOut->isChecked());
-
-	mainObject->settings->setValue("in_address", comboLocalIpAddress->currentText());
-
-	QString ip_or_domain( comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(), Qt::UserRole).toString());
-	mainObject->settings->setValue("out_with", ip_or_domain);
-	if(treeWidget->currentItem()){
-		mainObject->settings->setValue("mpserver", treeWidget->currentItem()->text(C_DOMAIN));
-	}
-
-	mainObject->settings->setValue("in_port", comboLocalPort->currentText());
-	mainObject->settings->setValue("out_port", comboRemotePort->currentText());
-
-	mainObject->settings->setValue("in_hz", comboHzIn->currentText());
-	mainObject->settings->setValue("out_hz", comboHzOut->currentText());
-
-	mainObject->settings->setValue("fgcom", grpFgCom->isChecked());
-	mainObject->settings->setValue("fgcom_no", txtFgComNo->text());
-	mainObject->settings->setValue("fgcom_port", txtFgComPort->text());
 
 
-	mainObject->settings->setValue("telnet", grpTelnet->isChecked());
-	mainObject->settings->setValue("telnet_port", txtTelnet->text());
-
-	mainObject->settings->setValue("http", grpHttp->isChecked());
-	mainObject->settings->setValue("http_port", txtHttp->text());
-
-	mainObject->settings->setValue("screenshot", grpScreenShot->isChecked());
-	mainObject->settings->setValue("screenshot_port", txtScreenShot->text());
-
-	mainObject->settings->sync();
-}
-
-
-//=============================================================
-// Load Settings
-void NetworkWidget::load_settings(){
-	int idx;
-	return;
-	grpMpServer->setChecked( mainObject->settings->value("enable_mp").toBool() );
-
-	checkBoxIn->setChecked( mainObject->settings->value("in").toBool() );
-	checkBoxOut->setChecked( mainObject->settings->value("out").toBool() );
-
-	idx = comboLocalIpAddress->findText(mainObject->settings->value("in_address").toString(), Qt::MatchExactly);
-	comboLocalIpAddress->setCurrentIndex( idx == -1 ? 0 : idx);
-
-	idx = comboRemoteAddress->findData(mainObject->settings->value("out_with").toString(), Qt::UserRole, Qt::MatchExactly);
-	comboRemoteAddress->setCurrentIndex( idx == -1 ? 0 : idx);
-
-	idx = comboHzIn->findText(mainObject->settings->value("in_hz").toString(), Qt::MatchExactly);
-	comboHzIn->setCurrentIndex( idx == -1 ? 0 : idx );
-	idx = comboHzOut->findText(mainObject->settings->value("out_hz").toString(), Qt::MatchExactly);
-	comboHzOut->setCurrentIndex( idx == -1 ? 0 : idx );
-
-	idx = comboLocalPort->findText(mainObject->settings->value("in_port").toString(), Qt::MatchExactly);
-	comboLocalPort->setCurrentIndex( idx == -1 ? 0 : idx );
-	idx = comboRemotePort->findText(mainObject->settings->value("out_port").toString(), Qt::MatchExactly);
-	comboRemotePort->setCurrentIndex( idx == -1 ? 0 : idx );
-
-
-	grpFgCom->setChecked( mainObject->settings->value("fgcom").toBool() );
-	txtFgComNo->setText( mainObject->settings->value("fgcom_no", mainObject->settings->default_fgcom_no()).toString());
-	txtFgComPort->setText( mainObject->settings->value("fgcom_port", mainObject->settings->default_fgcom_port()).toString());
-
-
-	grpHttp->setChecked( mainObject->settings->value("http").toBool() );
-	grpTelnet->setChecked( mainObject->settings->value("telnet").toBool() );
-	grpScreenShot->setChecked( mainObject->settings->value("screenshot").toBool() );
-
-	txtHttp->setText(mainObject->settings->value("http_port", "8080").toString());
-	txtTelnet->setText(mainObject->settings->value("telnet_port", "5555").toString());
-	txtScreenShot->setText(mainObject->settings->value("screenshot_port", "8081").toString());
-
-	on_checkbox_in();
-	on_checkbox_out();
-}
 
 //=============================================================
 // Validate
