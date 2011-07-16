@@ -358,7 +358,6 @@ void LauncherWindow::save_settings()
 	QString message("Settings saved.");
 	headerWidget->showMessage(message);
 
-	aircraftWidget->save_settings();
 	airportsWidget->save_settings();
 	networkWidget->save_settings();
 	expertOptionsWidget->save_settings();
@@ -379,7 +378,6 @@ void LauncherWindow::load_settings()
 	QString message("Settings loaded.");
 	headerWidget->showMessage(message);
 	
-	aircraftWidget->load_settings();
 	airportsWidget->load_settings();
 	networkWidget->load_settings();
 	expertOptionsWidget->load_settings();
