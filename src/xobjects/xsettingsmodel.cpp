@@ -1,9 +1,12 @@
 
 
 #include <QDebug>
+
 #include <QDesktopServices>
 #include <QFile>
 #include <QDir>
+#include <QFileDialog>
+
 
 #include "xobjects/xsettingsmodel.h"
 
@@ -229,7 +232,11 @@ QString XSettingsModel::ini_file_path()
 void XSettingsModel::write_ini()
 {
 	//= create ini settings object
-	QSettings settings(ini_file_path(), QSettings::IniFormat);
+	
+	QString fileName =
+	QFileDialog::getSaveFileName(0, "Save Profiles", ini_file_path(), "Profile files (*.ini)" );
+
+	QSettings settings(fileName, QSettings::IniFormat);
 
 	//= loop rows and save each "option" as an [ini section] with enabled, value as values
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
@@ -248,7 +255,11 @@ void XSettingsModel::read_ini()
 	_loading = true;
 
 	//= Create ini settings object
-	QSettings settings(ini_file_path(), QSettings::IniFormat);
+	QString fileName =
+	QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
+	
+	QSettings settings(fileName, QSettings::IniFormat);
+	
 
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
 		//= loop rows and load each "option" as an [ini section] with enabled, value as values
@@ -271,14 +282,6 @@ void XSettingsModel::read_ini()
 	qDebug() << "Read ini";
 	emit updated(get_fgfs_list());
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -340,8 +343,6 @@ QStringList XSettingsModel::get_fgfs_args()
 }
 
 
-
-
 QStringList XSettingsModel::get_fgfs_list()
 {
 	//TODO append the commands here
@@ -354,7 +355,6 @@ QString XSettingsModel::get_fgfs_command_string()
 {
 	return get_fgfs_args().join(" ");
 }
-
 
 
 
@@ -378,7 +378,6 @@ QStringList XSettingsModel::get_fgfs_env(){
 	}
 	return args;
 }
-
 
 
 

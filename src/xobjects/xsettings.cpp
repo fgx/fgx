@@ -98,10 +98,6 @@ QString XSettings::_windowName(QWidget *widget){
 
 
 
-
-
-
-
 /** \brief The "Special Developer Flag"
  *
  * This is one of those magic workaround functions to detect if in development mode.
