@@ -43,6 +43,10 @@ public:
 	QStringList get_fgfs_args();
 
 
+	bool fgfs_use_default();
+	QString fgfs_default_path();
+	QString fgfs_path();
+
 
 signals:
 	void upx(QString option, bool enabled, QString value);

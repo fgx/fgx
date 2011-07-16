@@ -295,9 +295,6 @@ QStringList XSettingsModel::get_fgfs_options()
 			if(op.startsWith("--")){
 				str.append(item(row_idx, C_OPTION)->text()).append(item(row_idx, C_VALUE)->text());
 			}
-
-
-
 			if(str.length() > 0){
 				args << str;
 			}
@@ -335,7 +332,10 @@ QStringList XSettingsModel::get_fgfs_options()
 QStringList XSettingsModel::get_fgfs_list()
 {
 	//TODO append the commands here
-	return get_fgfs_options();
+	QStringList args;
+	args << fgfs_path();
+	args << get_fgfs_options();
+	return args;
 }
 QString XSettingsModel::get_fgfs_command_string()
 {
@@ -435,3 +435,50 @@ QStringList XSettingsModel::get_fgfs_args(){
 	return args;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+//===========================================================================
+//== fgfs Executable
+//===========================================================================
+/** \brief Path to fgfs executable
+ */
+QString XSettingsModel::fgfs_path(){
+	if(fgfs_use_default()){
+		return fgfs_default_path();
+	}
+	return getx("fgfs_custom_path");
+}
+
+/** \brief true is the default path is being used
+ */
+
+bool XSettingsModel::fgfs_use_default(){
+	return get_ena("fgfs_custom_path") == false;
+}
+
+/** \brief absolute default path for the fgfs executable
+ */
+QString XSettingsModel::fgfs_default_path(){
+
+	if(mainObject->runningOs() == MainObject::MAC){
+		return QDir::currentPath().append("/fgx.app/Contents/MacOS/fgfs");
+
+	}else if(mainObject->runningOs() == MainObject::LINUX){
+		return QString("/usr/local/bin/fgfs");
+
+
+	}else if(mainObject->runningOs() == MainObject::WINDOWS){
+		return QString("C:/Program Files/FlightGear/bin/win32/fgfs.exe");
+	}
+
+	return QString("UNKNOW OS in default_fgfs_path()");
+}

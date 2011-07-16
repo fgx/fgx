@@ -96,6 +96,7 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 	rightLayout->addWidget(groupBox);
 
 	commandPreviewWidget = new XCommandPrevieWidget(mainObject);
+	groupBox->addWidget(commandPreviewWidget);
 
 
 	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );

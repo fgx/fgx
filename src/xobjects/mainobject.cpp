@@ -656,3 +656,28 @@ void MainObject::on_debug_mode()
 {
 	emit debug_mode(actionDebugMode->isChecked());
 }
+
+
+
+//===========================================================================
+//** OS detection
+//===========================================================================
+/** \brief What OS is running
+ *
+ * \return a OS enum value
+ */
+int MainObject::runningOs() {
+	#ifdef Q_WS_X11
+		return MainObject::LINUX;
+	#endif
+
+	#ifdef Q_WS_MAC
+		return MainObject::MAC;
+	#endif
+
+	#ifdef Q_WS_WIN
+		return MainObject::WINDOWS;
+	#endif
+
+	return MainObject::UNKNOWN;
+}
