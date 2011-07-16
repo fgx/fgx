@@ -31,6 +31,9 @@ public:
 	void add_option(QString option, bool enabled, QString value, QString preset, int level, QString description, QString area);
 
 	QString getx(QString option);
+	QString getx(QString option, bool return_default);
+	QString getx(QString option, QString default_string);
+
 	XOpt get_opt(QString option);
 	bool get_ena(QString option);
 

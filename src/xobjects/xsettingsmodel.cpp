@@ -158,7 +158,7 @@ void XSettingsModel::add_option( QString option, bool enabled, QString value, QS
 // == Set An Option
 void XSettingsModel::set_option(QString option, bool enabled, QString value)
 {
-	qDebug() << "set " << option << _loading;
+	//qDebug() << "set " << option << _loading;
 	if(_loading){
 		return;
 	}
@@ -184,6 +184,7 @@ void XSettingsModel::set_option(QString option, bool enabled, QString value)
 
 //==================================================
 // == Get Option
+//==================================================
 QString XSettingsModel::getx(QString option)
 {
 	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
@@ -194,7 +195,19 @@ QString XSettingsModel::getx(QString option)
 	return xItem->text();
 
 }
+QString XSettingsModel::getx(QString option, bool return_default)
+{
+	return getx(option);
+}
+QString XSettingsModel::getx(QString option, QString default_string)
+{
+	QString v = getx(option);
+	if(v.length() == 0){
+		return default_string;
+	}
+	return v;
 
+}
 
 //==================================================
 // == Get Option enabled

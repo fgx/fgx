@@ -411,7 +411,7 @@ void AirportsWidget::load_airports_tree(){
 	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
 
 	//* Restore previous airport from settings.. if found
-	QList<QStandardItem *> items = model->findItems( mainObject->settings->value("airport", "KSFO").toString(), Qt::MatchExactly, CA_CODE);
+	QList<QStandardItem *> items = model->findItems( mainObject->X->getx("--airport=", "KSFO"), Qt::MatchExactly, CA_CODE);
 	if(items.count() > 0){
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
 		QModelIndex proxIdx = proxyModel->mapFromSource(srcIdx);
