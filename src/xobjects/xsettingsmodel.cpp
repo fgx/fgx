@@ -118,7 +118,7 @@ void XSettingsModel::set_option(QString option, bool enabled, QString value)
 
 	//= Announce the change
 	emit upx(option, enabled,  value);
-
+	emit uplines(get_command_lines());
 }
 
 //==================================================

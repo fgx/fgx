@@ -34,6 +34,7 @@ public:
 
 signals:
 	void upx(QString option, bool enabled, QString value);
+	void uplines(QStringList lines);
 
 public slots:
 
