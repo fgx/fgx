@@ -122,6 +122,6 @@ void XCommandPrevieWidget::preview(){
 	//QString cmd = mainObject->settings->fgfs_path().append(delim);
 	//cmd.append( mainObject->get_fgfs_args().join(delim));
 
-	txtPreviewOutput->setPlainText(mainObject->X->get_fgfs_options().join("\n"));
+	txtPreviewOutput->setPlainText(mainObject->X->get_fgfs_list().join("\n"));
 }
 
