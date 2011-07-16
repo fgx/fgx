@@ -74,32 +74,3 @@ OutputPreviewWidget::OutputPreviewWidget(MainObject *mOb, QWidget *parent) :
 }
 
 
-
-void OutputPreviewWidget::on_command_help(){
-	QProcess process;
-	QStringList args;
-	args << "-h" << "-v" << QString("--fg-root=").append(mainObject->settings->fgroot());
-	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
-	if(process.waitForStarted()){
-		process.waitForFinished(10000);
-		QString ok_result = process.readAllStandardOutput();
-		txtPreviewOutput->setPlainText(ok_result);
-	}
-}
-
-
-void OutputPreviewWidget::preview(){
-	mainObject->settings->setValue("preview_type", buttonGroup->checkedId());
-	QString delim("");
-	QString type = buttonGroup->checkedButton()->property("value").toString();
-	if(type == "lines"){
-		delim.append("\n");
-	}else if(type == "shell"){
-		delim.append(" \\\n");
-	}else{
-		delim.append(" ");
-	}
-	QString cmd = mainObject->settings->fgfs_path().append(delim);
-	cmd.append( mainObject->get_fgfs_args().join(delim));
-	txtPreviewOutput->setPlainText(cmd);
-}

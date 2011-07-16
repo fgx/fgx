@@ -36,7 +36,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
     QTime tm;
     int   ms;
 
-	QString zf = mainObject->settings->fgroot("/Airports/apt.dat.gz");
+	QString zf = mainObject->X->fgroot("/Airports/apt.dat.gz");
     fgx_gzHandle gzf; // opaque file gz handle
     QFile f;
     if (!f.exists(zf)) {
@@ -156,7 +156,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
     ms = tm.restart();
 
 	//= Cache File
-	QFile cacheFile( mainObject->settings->data_file("airports.txt") );
+	QFile cacheFile( mainObject->data_file("airports.txt") );
 	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
 		//qDebug() << "TODO Open error cachce file=";
 		return true;
@@ -167,7 +167,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 	//================================================
 	//* Lets Loop the directories
 	//* Get out aiports path from setings and get the the subdir also
-	QDirIterator loopAirportsFiles( mainObject->settings->airports_path(), QDirIterator::Subdirectories );
+	QDirIterator loopAirportsFiles( mainObject->X->airports_path(), QDirIterator::Subdirectories );
 	QString xFileName;
 
     msg = "Scanning XML files";
@@ -226,7 +226,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
     // Check the fgfs additional argument list,
     // and/or any additional scenery path inputs
     // *** take care NOT to duplicate ***
-    QStringList fgfs_args = mainObject->get_fgfs_args();
+	QStringList fgfs_args = mainObject->X->get_fgfs_args();
     int i, ind;
     QDir d;
     QString path;

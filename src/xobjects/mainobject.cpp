@@ -345,228 +345,6 @@ void MainObject::add_log(QString log_name, QString data){
 }
 
 
-//=========================================================================
-//== FgFs Start args = command
-//=========================================================================
-QStringList MainObject::get_fgfs_args(){
-
-	QStringList args;
-
-	args << QString("--fg-root=").append(settings->fgroot());
-
-	//=== Callsign
-	args << QString ("--callsign=").append(settings->value("callsign").toString());
-
-
-	//=== Screen
-	if(settings->value("screen_size").toString() != "default"){
-		args << QString ("--geometry=").append(settings->value("screen_size").toString());
-	}
-	if(settings->value("screen_splash").toBool()){
-		args << QString ("--disable-splash-screen");
-	}
-	if( settings->value("screen_full").toBool()){
-		args << QString ("--enable-fullscreen");
-	}
-
-
-
-	//=== Weather
-	QString weather_method = settings->value("weather").toString();
-	if(weather_method == "live") {
-		//= real weather
-		args << QString("--enable-real-weather-fetch");
-
-	}else if(weather_method == "custom"){
-		//= custom metar
-		args << QString("--metar=").append("\"").append(settings->value("metar").toString()).append("\"");
-
-	}else{
-		//= no weather
-		args << QString("--disable-real-weather-fetch");
-	}
-
-
-	//=== Time of Day
-	QString timeofday = settings->value("timeofday").toString();
-	if (timeofday != "real") {
-		args << QString("--timeofday=").append(timeofday);
-	}
-
-	//=== Season
-	//args << QString("--season=").append(mainObject->settings->value("season").toString());
-
-	//=== Controls
-	if(settings->value("mouse_control").toBool()){
-		args << QString("--control=mouse");
-	}
-
-	//== AutoCordination
-	if(settings->value("enable_auto_coordination").toBool()){
-		args << QString("--enable-auto-coordination");
-	}
-	//+ TODO joystick
-
-
-
-	//== Terrasync
-	if (settings->terrasync_enabled()) {
-		args << QString("--fg-scenery=").append(settings->terrasync_sync_data_path()).append(":").append(settings->scenery_path());
-		args << QString("--atlas=socket,out,5,localhost,5505,udp");
-	}
-
-
-	//== Multiplayer
-	if(settings->value("enable_mp").toBool()){
-		//= In
-		if(settings->value("in").toBool()){
-			args << QString("--multiplay=in,%1,%2,%3"
-								).arg(	settings->value("in_hz").toString()
-								).arg(	settings->value("in_address").toString()
-								).arg(	settings->value("in_port").toString()
-							);
-		}
-		//= Out
-		if(settings->value("out").toBool()){
-			args << QString("--multiplay=out,%1,%2,%3"
-							).arg(	settings->value("out_hz").toString()
-							).arg( 	settings->value("mpserver").toString()
-							).arg( settings->value("out_port").toString()
-						);
-		}
-	}
-
-	//== Servers
-	//= Http
-	if(settings->value("http").toBool()){
-		args << QString("--httpd=%1").arg( settings->value("http_port").toString() );
-	}
-	//= Telnet
-	if(settings->value("telnet").toBool()){
-		args << QString("--telnet=%1").arg( settings->value("telnet_port").toString() );
-	}
-	//= ScreenShot
-	if(settings->value("screenshot").toBool()){
-		// BUG - this reports unknow option ??
-		//args << QString("--jpg-httpd=%1").arg( settings->value("screenshot_port").toString() );
-	}
-
-
-	//=== FgCom
-	if(settings->value("fgcom").toBool()){
-		args << QString("--generic=socket,out,10,localhost,%1,udp,fgcom"
-						).arg( settings->value("fgcom_port").toString()
-						);
-	}
-
-
-
-	//=============================================================
-	//=== Extra Args
-	QString extra = settings->value("extra_args").toString().trimmed();
-	if (extra.length() > 0) {
-		QStringList parts = extra.split("\n");
-		if(parts.count() > 0){
-			for(int i=0; i < parts.count(); i++){
-				QString part = parts.at(i).trimmed();
-				if(part.length() > 0){
-					args << part;
-				}
-			}
-		}
-	}
-
-	//= Log Level
-	if(settings->value("log_level").toString() != "none"){
-		args << QString("--log-level=").append(settings->value("log_level").toString());
-	}
-
-	//* Aircraft
-	if(settings->value("aircraft").toString().length() > 0){
-		args << QString("--aircraft=").append(settings->value("aircraft").toString());
-	}
-
-	//== Navigation Radio
-	QStringList navkeys;
-	navkeys << "nav1" << "nav2" << "com1" << "com2" << "adf";
-	for(int nidx=0; nidx < navkeys.size(); nidx++){
-		if(settings->value(navkeys.at(nidx)).toString().length() > 0){
-			args << QString("--%1=%2").arg(navkeys.at(nidx)).arg(settings->value(navkeys.at(nidx)).toString());
-		}
-	}
-	
-	//== Fuel
-	QStringList fuelkeys;
-	fuelkeys << "prop:/consumables/fuels/tank[1]/level-gal" << "prop:/consumables/fuels/tank[2]/level-gal" << "prop:/consumables/fuels/tank[3]/level-gal";
-	if (settings->value("use_default_fuel").toBool() != true) {
-		
-		for(int nidx=0; nidx < fuelkeys.size(); nidx++){
-			if(settings->value(fuelkeys.at(nidx)).toString().length() > 0){
-				args << QString("--%1=%2").arg(fuelkeys.at(nidx)).arg(settings->value(fuelkeys.at(nidx)).toString());
-			}
-		}
-	}
-	
-	if (settings->value("enable_fuel_freeze").toBool() == true) {
-		args << QString("--enable-fuel-freeze");
-	}
-		
-
-	//=== Airports and Startup Position
-	if(settings->value("airport").toString().length() > 0){
-		args << QString("--airport=").append(settings->value("airport").toString());
-
-		QString runway_or_stand = settings->value("runway_or_stand").toString().trimmed();
-		if(runway_or_stand.length() > 0){
-			if(runway_or_stand == "runway"){
-				args << QString("--runway=").append(settings->value("startup_position").toString());
-
-			}else if(runway_or_stand == "stand"){
-				args << QString("--parkpos=").append(settings->value("startup_position").toString());
-			}
-		}
-	}
-
-	//* Ai Traffic TODO
-	/*
-	if (enableAITraffic->isChecked()) {
-		args << QString("--enable-ai-traffic");
-	}else{
-		args << QString("--disable-ai-traffic");
-	}
-	*/
-	//** Enable AI models ???
-	//args << QString("--enable-ai-models");
-	//qDebug() << args;
-	args.sort();
-	return args;
-}
-
-QString MainObject::get_fgfs_command(){
-	QString command = settings->fgfs_path();
-	command.append(" ").append(get_fgfs_args().join(" "));
-	return command;
-}
-
-//========================================================
-//** Get Enviroment
-QStringList MainObject::get_env(){
-
-	QStringList args;
-	QString extra = settings->value("extra_env").toString().trimmed();
-	if (extra.length() > 0) {
-		QStringList parts = extra.split("\n");
-		if(parts.count() > 0){
-			for(int i=0; i < parts.count(); i++){
-				QString part = parts.at(i).trimmed();
-				if(part.length() > 0){
-					args << part;
-				}
-			}
-		}
-	}
-	return args;
-}
 
 
 //========================================================
@@ -591,7 +369,7 @@ void MainObject::stop_all(){
 //== Start FGFS
 void MainObject::start_fgfs(){
 	//qDebug() << get_fgfs_command();
-	processFgFs->start(get_fgfs_command(), get_env() );
+	processFgFs->start(X->get_fgfs_command(), X->get_fgfs_env() );
 }
 
 //========================================================
@@ -599,9 +377,9 @@ void MainObject::start_fgfs(){
 void MainObject::start_terrasync(){
 	qDebug() << "Start";
 	QStringList terraargs;
-	terraargs << "-p" << "5505" << "-S" << "-d" << settings->terrasync_sync_data_path();
+	terraargs << "-p" << "5505" << "-S" << "-d" << X->terrasync_sync_data_path();
 
-	QString terra_command_line = settings->terrasync_exe_path();
+	QString terra_command_line = X->terrasync_exe_path();
 	terra_command_line.append(" ").append( terraargs.join(" ") );
 
 	//qDebug() << terra_command_line;
@@ -620,7 +398,7 @@ void MainObject::start_fgcom(){
 	args << QString("-S");
 	args << settings->value("fgcom_no").toString();
 
-	QString command_line = settings->fgcom_exe_path();
+	QString command_line = X->fgcom_exe_path();
 	command_line.append(" ").append( args.join(" ") );
 	//qDebug() << command_line;
 	processFgCom->start(command_line, QStringList() );
@@ -632,10 +410,6 @@ void MainObject::quit(){
 }
 
 
-void MainObject::set_callsign(){
-	lblCallsign->setText(settings->value("callsign").toString());
-	mpMapWidget->on_combo_server();
-}
 
 
 
@@ -681,3 +455,70 @@ int MainObject::runningOs() {
 
 	return MainObject::UNKNOWN;
 }
+
+
+/** \brief Log File
+ *
+ * \return Absolute path to log file
+ */
+QString MainObject::log_file_path(){
+	if(runningOs() == MainObject::WINDOWS){
+		return temp_dir("/fgx-log.txt");
+
+	}else if(runningOs() == MainObject::MAC){
+		return QDir::homePath().append("/Library/Logs/fgx.log");
+
+	}else if(runningOs() == MainObject::LINUX){
+		return temp_dir("/fgx.log");
+
+	}else{
+		return "UNKNOWN log_file_path()";
+	}
+}
+
+
+
+
+//===========================================================================
+//** temp
+//===========================================================================
+/** \brief location if temp directoty , os specific
+ *
+ * Shortcut method for Qt's storageLocation()
+ * \return Absolute path
+ */
+QString MainObject::temp_dir(){
+	return QDir(QDesktopServices::storageLocation(QDesktopServices::TempLocation)).absolutePath();
+}
+/** \brief location if temp directoty , os specific with appended file/path
+ *
+ * Shortcut method for Qt's storageLocation()
+ * \return Absolute path with appended paths.
+ */
+QString MainObject::temp_dir(QString append_path){
+	return temp_dir().append(append_path);
+}
+
+
+
+
+
+
+//===========================================================================
+//** Data File eg airports.txt
+//===========================================================================
+/** \brief Path to a data file eg data_file("airports.txt")
+ *
+ * \return Absolute path to the file
+ */
+QString MainObject::data_file(QString file_name){
+	QString storedir = QDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).absolutePath();
+
+	// create path is not exist
+	if(!QFile::exists(storedir)){
+		QDir *dir = new QDir("");
+		dir->mkpath(storedir);
+	}
+	return storedir.append("/").append(file_name);
+}
+

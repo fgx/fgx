@@ -38,7 +38,7 @@ public:
 	QStringList get_fgfs_args();
 	QStringList get_fgfs_list();
 	QString get_fgfs_command_string();
-
+	QStringList get_fgfs_env();
 
 	bool fgfs_use_default();
 	QString fgfs_default_path();
@@ -61,7 +61,13 @@ public:
 	QString terrasync_exe_path();
 	QString terrasync_sync_data_path();
 
+	QString fgcom_exe_path();
+
+
 	bool paths_sane();
+
+
+
 
 signals:
 	void upx(QString option, bool enabled, QString value);

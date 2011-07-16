@@ -85,8 +85,8 @@ XCommandPrevieWidget::XCommandPrevieWidget(MainObject *mob, QWidget *parent) :
 void XCommandPrevieWidget::on_command_help(){
 	QProcess process;
 	QStringList args;
-	args << "-h" << "-v" << QString("--fg-root=").append(mainObject->settings->fgroot());
-	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
+	args << "-h" << "-v" << QString("--fg-root=").append(mainObject->X->fgroot());
+	process.start(mainObject->X->fgfs_path(), args, QIODevice::ReadOnly);
 	if(process.waitForStarted()){
 		process.waitForFinished(10000);
 		QString ok_result = process.readAllStandardOutput();
@@ -97,8 +97,8 @@ void XCommandPrevieWidget::on_command_help(){
 void XCommandPrevieWidget::on_command_version(){
 	QProcess process;
 	QStringList args;
-	args << "-h" << "--version" << QString("--fg-root=").append(mainObject->settings->fgroot());
-	process.start(mainObject->settings->fgfs_path(), args, QIODevice::ReadOnly);
+	args << "-h" << "--version" << QString("--fg-root=").append(mainObject->X->fgroot());
+	process.start(mainObject->X->fgfs_path(), args, QIODevice::ReadOnly);
 	if(process.waitForStarted()){
 		process.waitForFinished(10000);
 		QString ok_result = process.readAllStandardError();
@@ -119,9 +119,7 @@ void XCommandPrevieWidget::preview(){
 	}else{
 		delim.append(" ");
 	}
-	//QString cmd = mainObject->settings->fgfs_path().append(delim);
-	//cmd.append( mainObject->get_fgfs_args().join(delim));
 
-	txtPreviewOutput->setPlainText(mainObject->X->get_fgfs_list().join("\n"));
+	txtPreviewOutput->setPlainText(mainObject->X->get_fgfs_list().join(delim));
 }
 

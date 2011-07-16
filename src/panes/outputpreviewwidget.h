@@ -26,8 +26,6 @@ signals:
 
 public slots:
 
-	void on_command_help();
-	void preview();
 };
 
 #endif // OUTPUTPREVIEWWIDGET_H

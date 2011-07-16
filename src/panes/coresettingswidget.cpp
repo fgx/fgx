@@ -165,51 +165,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 
 
-//====================================================
-//* Load Settings
-void CoreSettingsWidget::load_settings(){
-	return;
-	//= Callsign
-	txtCallSign->setText( mainObject->settings->value("callsign").toString() );
-
-	//= Sartup screen
-	Helpers::select_combo(comboScreenSize, mainObject->settings->value("screen_size").toString());
-	checkBoxFullScreenStartup->setChecked(mainObject->settings->value("screen_full").toBool());
-	checkBoxDisableSplashScreen->setChecked(mainObject->settings->value("screen_splash").toBool());
-	on_checkbox_fullscreen();
-
-	//* mpmap
-	checkBoxShowMpMap->setChecked(mainObject->settings->value("show_map_map", false).toBool());
-	comboMpMapServer->setCurrentIndex(mainObject->settings->value("mpmap", 0).toInt());
-	//on_show_mp_map();
-
-
-	if(mainObject->settings->value("fgfs_use_default").toBool()){
-		labelFgFsInfo->setText("Using Default Executable Path:");
-	}else{
-		labelFgFsInfo->setText("Using Custom Executable Path:");
-	}
-	labelFgFsPath->setText(mainObject->settings->fgfs_path());
-
-	if(mainObject->settings->value("fgroot_use_default").toBool()){
-		labelFgRootInfo->setText("Using Default Data Path (FG_ROOT):");
-	}else{
-		labelFgRootInfo->setText("Using Custom Data Path (FG_ROOT):");
-	}
-	labelFgRootPath->setText(mainObject->settings->fgroot());
-
-
-	labelTerraSyncInfo->setText( mainObject->settings->terrasync_enabled()
-								 ? "Using Terrasync to directory below" : "Using default scenery at path below"
-								 );
-	if (mainObject->settings->value("terrasync_enabled").toBool()) {
-		labelTerraSyncDataPath->setText( mainObject->settings->terrasync_sync_data_path());
-	} else {
-		labelTerraSyncDataPath->setText("No path");
-	}
-
-}
-
 
 
 QString CoreSettingsWidget::validate(){
@@ -242,18 +197,20 @@ void CoreSettingsWidget::load_joysticks(){
     QString startJSDemoPath;
     QStringList args;
     startJSDemoPath = "js_demo";
+
+	// TODO Fix this marcro
 #ifdef Q_OS_MAC
     startJSDemoPath = mainObject->settings->fgfs_path();
 	startJSDemoPath.chop(4);
 	startJSDemoPath.append("js_demo");
     process.start(startJSDemoPath, QStringList(), QIODevice::ReadOnly);
 #elif defined(Q_OS_UNIX)
-    if ( ! mainObject->settings->fgroot_use_default() ) {
-        startJSDemoPath = mainObject->settings->fgfs_path();
+	if ( ! mainObject->X->fgroot_use_default() ) {
+		startJSDemoPath = mainObject->X->fgfs_path();
         startJSDemoPath.chop(4);
         startJSDemoPath.append("js_demo");
     }
-    QStringList extra_env = mainObject->get_env();
+	QStringList extra_env = mainObject->X->get_fgfs_env();
     if (extra_env.size()) {
         //= append new env vars
         QStringList env = QProcess::systemEnvironment();
