@@ -40,9 +40,11 @@ public:
 	void initializePage();
 	bool validatePage();
 signals:
+	void setx(QString option, bool enabled, QString value);
 
 public slots:
 	void on_import_airports();
+	void on_upx(QString option, bool enabled, QString value);
 };
 
 #endif // CONFIRMPAGE_H

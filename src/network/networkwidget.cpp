@@ -708,9 +708,9 @@ void NetworkWidget::on_upx(QString option, bool enabled, QString value)
 
 
 	}else if(option == "--multiplay=in" || option == "--multiplay=out"){
-		//=out,10,server.ip.address,5000
+
+		// --multiplay=out,10,server.ip.address,5000
 		parts = value.split(",",QString::SkipEmptyParts);
-		qDebug() << "on_upx" << value << parts;
 
 		if(option == "--multiplay=in"){
 			checkBoxIn->setChecked(enabled);

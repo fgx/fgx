@@ -95,6 +95,10 @@ ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
 
 	grpImports->gridLayout->setColumnStretch(0, 1);
 	grpImports->gridLayout->setColumnStretch(1, 10);
+
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
+	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+
 }
 
 
@@ -171,14 +175,20 @@ void ConfirmPage::initializePage()
 bool ConfirmPage::validatePage()
 {
 
-	mainObject->settings->setValue("fgfs_use_default", field("fgfs_use_default"));
-	mainObject->settings->setValue("fgfs_custom_path", field("fgfs_custom_path"));
+	//emit setx("fgfs_use_default", field("fgfs_use_default").toBool(), "");
+	//mainObject->settings->setValue("fgfs_use_default", field("fgfs_use_default"));
+	//mainObject->settings->setValue("fgfs_custom_path", field("fgfs_custom_path"));
+	emit setx("fgfs_custom_path", field("fgfs_use_custom").toBool(), field("fgfs_custom_path").toString());
 
-	mainObject->settings->setValue("fgroot_use_default", field("fgroot_use_default"));
-	mainObject->settings->setValue("fgroot_custom_path", field("fgroot_custom_path"));
+	//emit setx("fgroot_use_default", field("fgroot_use_default").toBool(), "");
+	//mainObject->settings->setValue("fgroot_use_default", field("fgroot_use_default"));
+	//mainObject->settings->setValue("fgroot_custom_path", field("fgroot_custom_path"));
+	emit setx("fgroot_custom_path", field("fgroot_use_custom").toBool(), field("fgroot_custom_path").toString());
 
-	mainObject->settings->setValue("terrasync_enabled", field("terrasync_enabled"));
-	mainObject->settings->setValue("terrasync_path", field("terrasync_path"));
+	//emit setx("terrasync_enabled", field("terrasync_enabled").toBool(), "");
+	//mainObject->settings->setValue("terrasync_enabled", field("terrasync_enabled"));
+	//mainObject->settings->setValue("terrasync_path", field("terrasync_path"));
+	emit setx("terrasync_path", field("terrasync_enabled").toBool() == true, field("terrasync_path").toString());
 
 	mainObject->settings->setValue("last_import_icao_checked", radioIcaoOnly->isChecked());
 
@@ -201,5 +211,7 @@ bool ConfirmPage::validatePage()
 	return true;
 }
 
-
-
+void ConfirmPage::on_upx(QString option, bool enabled, QString value)
+{
+	// Unused atmo
+}

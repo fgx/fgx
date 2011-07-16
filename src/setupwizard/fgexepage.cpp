@@ -83,6 +83,7 @@ FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
 	layoutExe->setColumnStretch(2,0);
 
 	registerField("fgfs_use_default", radioDefault);
+	registerField("fgfs_use_custom", radioCustom);
 	registerField("fgfs_custom_path", txtFgfs);
 
 }
@@ -178,9 +179,13 @@ void FgExePage::check_paths()
 //= initializePage
 void FgExePage::initializePage()
 {
-	radioDefault->setChecked( mainObject->settings->fgfs_use_default() );
+
+	//radioDefault->setChecked( mainObject->settings->fgfs_use_default() );
+	radioDefault->setChecked( mainObject->X->get_ena("fgfs_custom_path") == false );
+	radioCustom->setChecked( mainObject->X->get_ena("fgfs_custom_path") == true );
+
 	lblDefault->setText( QString("Default: ").append(mainObject->settings->fgfs_default_path()) );
-	txtFgfs->setText( mainObject->settings->value("fgfs_custom_path").toString() );
+	txtFgfs->setText( mainObject->X->getx("fgfs_custom_path") );
 	check_paths();
 }
 

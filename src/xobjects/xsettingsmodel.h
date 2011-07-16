@@ -28,6 +28,7 @@ public:
 	void add_option(QString option, bool enabled, QString value, QString preset, int level, QString description, QString area);
 
 	QString getx(QString option);
+	bool get_ena(QString option);
 
 	QString get_command_string();
 	QStringList get_command_lines();
