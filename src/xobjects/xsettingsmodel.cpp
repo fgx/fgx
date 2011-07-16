@@ -178,6 +178,16 @@ bool XSettingsModel::get_ena(QString option)
 
 }
 
+XOpt XSettingsModel::getob(QString option)
+{
+	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
+	return XOpt(item(items[0]->row(),C_OPTION)->text(),
+				item(items[0]->row(),C_ENABLED)->text() == "1",
+				item(items[0]->row(),C_VALUE)->text()
+				);
+}
+
+
 //==================================================
 //= File Functions
 //==================================================

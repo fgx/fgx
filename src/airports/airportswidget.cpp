@@ -316,6 +316,14 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	connect(buttonGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
 			this, SLOT(on_update_airports_filter())
 	);
+
+
+	//== Main Settings connection
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
+	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+
+
+
 }
 
 void AirportsWidget::initialize(){
