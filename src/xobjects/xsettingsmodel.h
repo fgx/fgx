@@ -33,11 +33,12 @@ public:
 
 	QString get_fgfs_command_string();
 	QStringList get_fgfs_options();
+	QStringList get_fgfs_list();
 
 
 signals:
 	void upx(QString option, bool enabled, QString value);
-	void uplines(QStringList lines);
+	void updated(QStringList lines);
 
 
 public slots:

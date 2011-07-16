@@ -21,6 +21,8 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 {
 	mainObject = mob;
 
+	_loading = false;
+
 	setColumnCount(7);
 
 	QStringList headers;
@@ -146,7 +148,7 @@ void XSettingsModel::set_option(QString option, bool enabled, QString value)
 
 	//= Announce the change
 	emit upx(option, enabled,  value);
-	//emit uplines(get_fgfs_command_string());
+	emit updated(get_fgfs_list());
 }
 
 //==================================================
@@ -226,6 +228,7 @@ void XSettingsModel::read_ini()
 		settings.endGroup();
 	}
 	qDebug() << "Read ini";
+	emit updated(get_fgfs_list());
 }
 
 
@@ -237,7 +240,7 @@ QStringList XSettingsModel::get_fgfs_options()
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
 		if(item(row_idx, C_ENABLED)->text() == "1"){
 			QString str("");
-			if(item(row_idx, C_VALUE)->text().startsWith("--")){
+			if(item(row_idx, C_OPTION)->text().startsWith("--")){
 				str.append(item(row_idx, C_OPTION)->text()).append(item(row_idx, C_VALUE)->text());
 			}
 			if(str.length() > 0){
@@ -248,7 +251,11 @@ QStringList XSettingsModel::get_fgfs_options()
 	}
 	return opts;
 }
-
+QStringList XSettingsModel::get_fgfs_list()
+{
+	//TODO append the commands here
+	return get_fgfs_options();
+}
 QString XSettingsModel::get_fgfs_command_string()
 {
 	return get_fgfs_options().join(" ");

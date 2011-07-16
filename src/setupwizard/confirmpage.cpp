@@ -211,7 +211,3 @@ bool ConfirmPage::validatePage()
 	return true;
 }
 
-void ConfirmPage::on_upx(QString option, bool enabled, QString value)
-{
-	// Unused atmo
-}

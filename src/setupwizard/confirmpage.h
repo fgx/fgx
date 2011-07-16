@@ -44,7 +44,7 @@ signals:
 
 public slots:
 	void on_import_airports();
-	void on_upx(QString option, bool enabled, QString value);
+
 };
 
 #endif // CONFIRMPAGE_H

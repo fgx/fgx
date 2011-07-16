@@ -69,6 +69,10 @@ XCommandPrevieWidget::XCommandPrevieWidget(MainObject *mob, QWidget *parent) :
 
 	buttonGroup->button(mainObject->settings->value("preview_type", "1").toInt())->setChecked(true);
 
+
+	// Connections
+	connect(mainObject->X, SIGNAL(updated(QStringList)), this, SLOT(preview()));
+
 }
 
 
@@ -115,8 +119,9 @@ void XCommandPrevieWidget::preview(){
 	}else{
 		delim.append(" ");
 	}
-	QString cmd = mainObject->settings->fgfs_path().append(delim);
-	cmd.append( mainObject->get_fgfs_args().join(delim));
-	txtPreviewOutput->setPlainText(cmd);
+	//QString cmd = mainObject->settings->fgfs_path().append(delim);
+	//cmd.append( mainObject->get_fgfs_args().join(delim));
+
+	txtPreviewOutput->setPlainText(mainObject->X->get_fgfs_options().join("\n"));
 }
 
