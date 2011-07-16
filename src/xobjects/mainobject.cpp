@@ -250,11 +250,6 @@ void MainObject::initialize(){
 //============================================================================
 //=  Launcher window
 void MainObject::on_launcher(){
-	
-	/* for layout checking purposes, to be removed
-	launcherWindow->move(QPoint(0,0));
-	launcherWindow->resize(QSize(800,600));
-	 */
 
 	launcherWindow->show();
 	launcherWindow->raise();
