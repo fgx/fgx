@@ -101,6 +101,19 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--prop:/consumables/fuels/tank[1]/level-gal=",false, "", "",9,"","Fuel");
 	add_option( "--prop:/consumables/fuels/tank[2]/level-gal=",false, "", "",9,"","Fuel");
 	add_option( "--prop:/consumables/fuels/tank[3]/level-gal=",false, "", "",9,"","Fuel");
+	
+	//* Airport Tab
+	
+	// Coordinates
+	add_option( "use_coordinates",false, "", "",3,"","Coordinates");
+	add_option( "--vor=",false, "", "",3,"","Coordinates");
+	add_option( "--ndb=",false, "", "",3,"","Coordinates");
+	add_option( "--fix=",false, "", "",3,"","Coordinates");
+	add_option( "--lat=",false, "", "",3,"","Coordinates");
+	add_option( "--lon=",false, "", "",3,"","Coordinates");
+	add_option( "--offset-distance=",false, "", "",3,"","Coordinates");
+	add_option( "--altitude=",false, "", "",3,"","Coordinates");
+	add_option( "--heading=",false, "", "",3,"","Coordinates");
 
 
 
