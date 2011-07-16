@@ -204,37 +204,43 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	aeroControlWidget->setLayout(layoutAeroPane);
 	int row = 1;
 
-	//* Navs
+	//= Navs
 	layoutAeroPane->addWidget(new QLabel(tr("Nav 1")), row, 0, 1, 1, Qt::AlignRight);
 	txtNav1 = new QLineEdit();
 	txtNav1->setValidator(new QDoubleValidator(0, 200, 2, this));
 	layoutAeroPane->addWidget(txtNav1,row, 1, 1, 1);
+	connect(txtNav1, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
 
 	row++;
 	layoutAeroPane->addWidget(new QLabel(tr("Nav 2")), row, 0, 1, 1, Qt::AlignRight);
 	txtNav2 = new QLineEdit();
 	txtNav2->setValidator(new QDoubleValidator(0, 200, 2, this));
 	layoutAeroPane->addWidget(txtNav2,row, 1, 1, 1);
+	connect(txtNav2, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
 
-	//* ADF
+	//= ADF
 	row++;
 	layoutAeroPane->addWidget(new QLabel(tr("Adf")), row, 0, 1, 1, Qt::AlignRight);
 	txtAdf = new QLineEdit();
 	txtAdf->setValidator(new QDoubleValidator(0, 200,0, this));
 	layoutAeroPane->addWidget(txtAdf, row, 1, 1, 1);
+	connect(txtAdf, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
 
-	//* Comms
+	//= Comms
 	row++;
 	layoutAeroPane->addWidget(new QLabel(tr("Comm 1")), row, 0, 1, 1, Qt::AlignRight);
 	txtComm1 = new QLineEdit();
 	txtComm1->setValidator(new QDoubleValidator(0, 200, 2, this));
 	layoutAeroPane->addWidget(txtComm1,row, 1, 1, 1);
+	connect(txtComm1, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
 
 	row++;
 	layoutAeroPane->addWidget(new QLabel(tr("Comm 2")), row, 0, 1, 1, Qt::AlignRight);
 	txtComm2 = new QLineEdit();
 	txtComm2->setValidator(new QDoubleValidator(0, 200, 2, this));
 	layoutAeroPane->addWidget(txtComm2,row, 1, 1, 1);
+	connect(txtComm2, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
+
 
 	layoutAeroPane->setRowStretch(row + 1, 20); // stretch end
 
@@ -246,12 +252,15 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	splitter->setStretchFactor(0, 50);
 	splitter->setStretchFactor(1, 1);
 
+	//== Main Settings connection
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
+	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+
 }
 
 
 
-
-//==========================================================================
+//==========================================================================1
 // Aircraft Selected
 //==========================================================================
 void AircraftWidget::on_tree_selection_changed(){
@@ -295,44 +304,6 @@ void AircraftWidget::on_tree_selection_changed(){
 }
 
 
-
-
-
-
-
-//=============================================================
-// Save Settings
-void AircraftWidget::save_settings(){
-	QTreeWidgetItem *item = treeWidget->currentItem();
-	if(item && item->text(C_AERO).length() > 0){
-		mainObject->settings->setValue("aircraft", item->text(C_AERO) );
-	}
-	mainObject->settings->setValue("aircraft_use_default", checkBoxUseDefault->isChecked());
-
-	mainObject->settings->setValue("nav1", txtNav1->text());
-	mainObject->settings->setValue("nav2", txtNav2->text());
-	mainObject->settings->setValue("adf", txtAdf->text());
-	mainObject->settings->setValue("com1", txtComm1->text());
-	mainObject->settings->setValue("com2", txtComm2->text());
-
-	mainObject->settings->sync();
-}
-
-
-//=============================================================
-// Load Settings
-void AircraftWidget::load_settings(){
-
-	//select_node(mainObject->settings->value("aircraft").toString());
-
-	txtNav1->setText(mainObject->settings->value("nav1").toString());
-	txtNav2->setText(mainObject->settings->value("nav2").toString());
-	txtAdf->setText(mainObject->settings->value("adf").toString());
-	txtComm1->setText(mainObject->settings->value("com1").toString());
-	txtComm2->setText(mainObject->settings->value("com2").toString());
-	checkBoxUseDefault->setChecked(mainObject->settings->value("aircraft_use_default", false).toBool());
-	on_use_default_clicked();
-}
 
 //==============================
 //== Select an aircraft in tree
@@ -469,9 +440,44 @@ void AircraftWidget::initialize(){
 
 void AircraftWidget::on_use_default_clicked(){
 	treeWidget->setEnabled( !checkBoxUseDefault->isChecked() );
+	emit setx("use_default_aircraft", checkBoxUseDefault->isChecked(), "");
 }
 
+
+void AircraftWidget::on_navs_changed()
+{
+	emit setx("--nav1=", true, txtNav1->text());
+	emit setx("--nav2=", true, txtNav2->text());
+	emit setx("--adf=", true, txtAdf->text());
+	emit setx("--com1=", true, txtComm1->text());
+	emit setx("--com2=", true, txtComm2->text());
+
+}
+
+
+//=====================================================
 void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 {
-	// Nothing to do
+	Q_UNUSED(enabled);
+	//= NOTE: The --aircraft= is detected as the tree loads from cache
+
+	if(option == "--nav1="){
+		txtNav1->setText(value);
+
+	}else if(option == "--nav2="){
+		txtNav2->setText(value);
+
+	}else if(option == "--adf="){
+		txtAdf->setText(value);
+
+	}else if(option == "--com1="){
+		txtComm1->setText(value);
+
+	}else if(option == "--com2="){
+		txtComm2->setText(value);
+
+	}else if(option == "use_default_aircraft"){
+		checkBoxUseDefault->setChecked(enabled);
+	}
+
 }

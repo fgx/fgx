@@ -42,7 +42,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 	add_option( "--callsign=", true,"", "fgx001", 1 ,"Your Callsign","Core");
 
-	add_option( "--aircraft=", false,"", "", 1 ,"Aircraft","Aircraft");
+
 
 	add_option( "--airport=", false,"", "", 1 ,"Airport","Airport");
 
@@ -72,6 +72,17 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--telnet=",false, "", "",3,"Enable Telnet","servers");
 	add_option( "--httpd=",false, "", "",3,"Enable Httpd","servers");
 	add_option( "--jpg-httpd=",false, "", "",3,"Enable Screenshot","servers");
+
+
+	//-- Navigation
+	add_option( "--nav1=",false, "", "",3,"","Radio");
+	add_option( "--nav2=",false, "", "",3,"","Radio");
+	add_option( "--adf=",false, "", "",3,"","Radio");
+	add_option( "--com1=",false, "", "",3,"","Radio");
+	add_option( "--com2=",false, "", "",3,"","Radio");
+
+	add_option( "--aircraft=", false,"", "", 1 ,"Aircraft","Aircraft");
+	add_option("use_default_aircraft",true,"","",1,"","Aircraft");
 
 
 

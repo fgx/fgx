@@ -149,7 +149,8 @@ void TimeWeatherWidget::on_time_clicked()
 //== Season Clicked
 void TimeWeatherWidget::on_season_clicked(int idx)
 {
-	setx("--season=", true, buttonGroupSeason->checkedButton()->property("value").toString());
+	emit setx("--season=", true, buttonGroupSeason->checkedButton()->property("value").toString());
+	Q_UNUSED(idx);
 }
 
 //== Metar Clicked
@@ -169,6 +170,7 @@ void TimeWeatherWidget::on_weather()
 //= Update Settings
 void TimeWeatherWidget::on_upx(QString option, bool enabled, QString value)
 {
+	Q_UNUSED(enabled);
 	if(option == "--timeofday="){
 		Helpers::select_radio(buttonGroupTime, value);
 

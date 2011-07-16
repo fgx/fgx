@@ -52,8 +52,7 @@ public:
 	QLineEdit *txtComm2;
 
 	void initialize();
-	void save_settings();
-	void load_settings();
+
 	QString validate();
 	void select_node(QString aero);
 	QString selected_aircraft();
@@ -71,6 +70,8 @@ public slots:
 	void on_use_default_clicked();
 	void on_tree_selection_changed();
 	void on_reload_cache();
+
+	void on_navs_changed();
 
 	void on_upx(QString option, bool enabled, QString value);
 };
