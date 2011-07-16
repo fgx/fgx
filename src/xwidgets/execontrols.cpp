@@ -9,7 +9,6 @@
 #include <QtGui/QHBoxLayout>
 
 #include "execontrols.h"
-//#include "panes/advancedoptionswidget.h"
 #include "launcher/launcherwindow.h"
 #include "utilities/utilities.h"
 

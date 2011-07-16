@@ -12,10 +12,10 @@
 //++ Help
 //= because of recursive inputs please pleace forwards here, if you are a sausage make or eat hot tiguuillea..
 
-#include "panes/coresettingswidget.h"
+#include "launcher/coresettingswidget.h"
 class CoreSettingsWidget;
 
-#include "panes/timeweatherwidget.h"
+#include "launcher/timeweatherwidget.h"
 class TimeWeatherWidget;
 
 #include "aircraft/aircraftwidget.h"
@@ -27,7 +27,7 @@ class AirportsWidget;
 #include "network/networkwidget.h"
 class NetworkWidget;
 
-#include "panes/expertoptionswidget.h"
+#include "launcher/expertoptionswidget.h"
 class ExpertOptionsWidget;
 
 #include "xwidgets/execontrols.h"

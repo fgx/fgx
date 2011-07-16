@@ -9,7 +9,7 @@
 #include <QtGui/QPushButton>
 
 #include "xwidgets/xgroupboxes.h"
-#include "panes/expertoptionswidget.h"
+#include "launcher/expertoptionswidget.h"
 #include "utilities/helpers.h"
 #include "utilities/utilities.h"
 

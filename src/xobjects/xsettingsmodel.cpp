@@ -29,6 +29,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 	//========================================================================
 	// This list wil be the main issue and debates for a long time probably, said pete
+	//========================================================================
 
 	add_option( "show_mpmap", false, "", "",10,"Follow in MpMap","Map");
 
@@ -46,10 +47,10 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--airport=", false,"", "", 1 ,"Airport","Airport");
 
 
-	//=Season
+	//= Season
 	add_option("--season=", false,"","summer",1,"Season", "time");
 
-	//=Time
+	//= Time
 	add_option("--timeofday=", false,"","realtime",1,"Time of day", "time");
 
 	//= Weather
@@ -82,7 +83,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 // == Add an Option
 void XSettingsModel::add_option( QString option, bool enabled, QString value, QString preset, int level, QString description, QString area)
 {
-
+	Q_UNUSED(value); //= Uses preset intead
 	QList<QStandardItem *>items;
 	items 	<< new QStandardItem(option)
 			<< new QStandardItem(enabled ? "1" : "0")
@@ -209,7 +210,7 @@ QStringList XSettingsModel::get_command_lines()
 
 QString XSettingsModel::get_command_string()
 {
-
+	return get_command_lines().join(" ");
 }
 
 

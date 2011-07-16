@@ -12,7 +12,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QWhatsThis>
 
-#include "panes/coresettingswidget.h"
+#include "launcher/coresettingswidget.h"
 #include "xwidgets/xgroupboxes.h"
 #include "utilities/helpers.h"
 #include "utilities/utilities.h"

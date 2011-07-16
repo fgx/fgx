@@ -14,7 +14,7 @@
 #include <QtGui/QComboBox>
 
 #include "mpmap/mpmapwidget.h"
-#include "panes/coresettingswidget.h"
+#include "launcher/coresettingswidget.h"
 #include "launcher/launcherwindow.h"
 
 

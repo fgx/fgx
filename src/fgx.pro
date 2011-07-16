@@ -18,10 +18,10 @@ HEADERS += xobjects/xsettings.h \
     aircraft/aircraftwidget.h \
     airports/airportswidget.h \
     xwidgets/execontrols.h \
-    panes/timeweatherwidget.h \
-    panes/advancedoptionswidget.h \
-    panes/outputpreviewwidget.h \
-    panes/coresettingswidget.h \
+	launcher/timeweatherwidget.h \
+	launcher/advancedoptionswidget.h \
+	panes/outputpreviewwidget.h \
+	launcher/coresettingswidget.h \
     xwidgets/xgroupboxes.h \
     xobjects/mainobject.h \
     launcher/launcherwindow.h \
@@ -75,10 +75,10 @@ SOURCES += main.cpp \
     aircraft/aircraftwidget.cpp \
     airports/airportswidget.cpp \
     xwidgets/execontrols.cpp \
-    panes/timeweatherwidget.cpp \
-    panes/advancedoptionswidget.cpp \
-    panes/outputpreviewwidget.cpp \
-    panes/coresettingswidget.cpp \
+	launcher/timeweatherwidget.cpp \
+	launcher/advancedoptionswidget.cpp \
+	panes/outputpreviewwidget.cpp \
+	launcher/coresettingswidget.cpp \
     xwidgets/xgroupboxes.cpp \
     xobjects/mainobject.cpp \
     launcher/launcherwindow.cpp \
@@ -123,7 +123,7 @@ SOURCES += main.cpp \
     mpmap/pilotswidget.cpp \
     mpmap/gmapwidget.cpp \
     mpmap/xwebpage.cpp \
-    panes/expertoptionswidget.cpp \
+	launcher/expertoptionswidget.cpp \
     xobjects/xsettingsmodel.cpp \
     xwidgets/fgxdebugwidget.cpp \
     launcher/headerwidget.cpp
