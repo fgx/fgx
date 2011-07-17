@@ -137,13 +137,13 @@ QStringList ExpertOptionsWidget::get_env(){
 //==========================================================
 void ExpertOptionsWidget::on_extra()
 {
-	//emit setx("extra_args", true, txtExtraArgs->toPlainText().trimmed());
+	emit setx("extra_args", true, txtExtraArgs->toPlainText().trimmed());
 }
 
 
 void ExpertOptionsWidget::on_env()
 {
-	//emit setx("extra_env", true, txtExtraEnv->toPlainText().trimmed());
+	emit setx("extra_env", true, txtExtraEnv->toPlainText().trimmed());
 }
 
 void ExpertOptionsWidget::on_log_level()
@@ -168,15 +168,18 @@ void ExpertOptionsWidget::on_upx(QString option, bool enabled, QString value)
 {
 	Q_UNUSED(enabled);
 
-	// TODO - Huge BUGGGGGGGGGGGGGGGGGGGGGGGGG!
-	// * there is a huge bug here as the extraargs emits a signal and then reads and gets locked up
 	if(option == "extra_args"){
-		//if(value != txtExtraArgs->toPlainText()){
-		//	txtExtraArgs->setPlainText(value);
-		//}
+		if(value != txtExtraArgs->toPlainText()){
+			txtExtraArgs->setPlainText(value);
+		}
 
 	}else if(option == "extra_env"){
-		//txtExtraEnv->setPlainText(value);
+		if(value != txtExtraEnv->toPlainText()){
+			txtExtraEnv->setPlainText(value);
+		}
+
+	}else if(option == "runtime"){
+		txtRuntime->setText(value);
 
 	}else if(option == "--log-level="){
 		Helpers::select_combo(comboLogLevels, value);
