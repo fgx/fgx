@@ -53,7 +53,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
 	QVBoxLayout *outerContainer = new QVBoxLayout();
 	outerContainer->setContentsMargins(0, 0, 0, 0);
-	outerContainer->setSpacing(0);
+	//outerContainer->setSpacing(0);
 	setLayout(outerContainer);	
 	
 	//====================================================
@@ -77,15 +77,11 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//== Message Label
 	
 	headerWidget = new HeaderWidget(mainObject);
-	headerWidget->setStyleSheet("{ font-size: 16px; }");
-	headerWidget->showMessage("Welcome [Callsign]");
-	outerContainer->addWidget(headerWidget,1);
-	//##connect(mainObject->S, SIGNAL(upx(bool,QString,QString)), messageLabel, SLOT()
+	outerContainer->addWidget(headerWidget,0);
 	
 	
 	QVBoxLayout *mainLayout = new QVBoxLayout();
 	mainLayout->setContentsMargins(10, 0, 10, 10);
-	mainLayout->setSpacing(0);
 	outerContainer->addLayout(mainLayout);
 
 
@@ -265,7 +261,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	initializing = false;
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
-	headerWidget->setText("Callsign - KSFO - AIRPORT");
+	//headerWidget->setText("Callsign - KSFO - AIRPORT");
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 }
@@ -506,8 +502,10 @@ void LauncherWindow::on_whats_this() {
 void LauncherWindow::on_upx(QString option, bool enabled, QString value)
 {
 	Q_UNUSED(enabled);
-	Q_UNUSED(value);	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
-		QString header = QString("[%1] %2 %3").arg( mainObject->X->getx("--callsign=")
+	Q_UNUSED(value);	
+	
+	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
+		QString header = QString("<font color=#ff0000>%1</font> with Aircraft <b>%2</b> at Airport <b>%3</b>").arg( mainObject->X->getx("--callsign=")
 									).arg( mainObject->X->getx("--aircraft=")
 									).arg( mainObject->X->getx("--airport="));
 		headerWidget->setText( header );
