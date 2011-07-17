@@ -83,7 +83,7 @@ void FgRootPage::initializePage()
 {
 	XOpt opt = mainObject->X->get_opt("fgroot_custom_path");
 	radioDefault->setChecked( opt.enabled == false );
-	radioCustom->setChecked( opt.enabled  == true);
+	radioCustom->setChecked( opt.enabled  == true );
 	lblDefault->setText( mainObject->X->fgroot_default_path() );
 	txtFgRoot->setText( opt.value );
 }

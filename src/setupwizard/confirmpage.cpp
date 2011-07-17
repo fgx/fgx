@@ -157,7 +157,7 @@ void ConfirmPage::initializePage()
 		aircraft_update = true;
 
 	}else if(field("terrasync_enabled").toBool() &&
-			 field("terrasync_path").toString() != mainObject->settings->value("terrasync_path")){
+			 field("terrasync_path").toString() != mainObject->X->terrasync_sync_data_path()){
 		// terrasync path changed
 		aircraft_update = true;
 	}
@@ -175,19 +175,11 @@ void ConfirmPage::initializePage()
 bool ConfirmPage::validatePage()
 {
 
-	//emit setx("fgfs_use_default", field("fgfs_use_default").toBool(), "");
-	//mainObject->settings->setValue("fgfs_use_default", field("fgfs_use_default"));
-	//mainObject->settings->setValue("fgfs_custom_path", field("fgfs_custom_path"));
 	emit setx("fgfs_custom_path", field("fgfs_use_custom").toBool(), field("fgfs_custom_path").toString());
 
-	//emit setx("fgroot_use_default", field("fgroot_use_default").toBool(), "");
-	//mainObject->settings->setValue("fgroot_use_default", field("fgroot_use_default"));
-	//mainObject->settings->setValue("fgroot_custom_path", field("fgroot_custom_path"));
 	emit setx("fgroot_custom_path", field("fgroot_use_custom").toBool(), field("fgroot_custom_path").toString());
 
-	emit setx("terrasync_enabled", field("terrasync_enabled").toBool(), "");
-	//mainObject->settings->setValue("terrasync_enabled", field("terrasync_enabled"));
-	//mainObject->settings->setValue("terrasync_path", field("terrasync_path"));
+	//emit setx("terrasync_enabled", field("terrasync_enabled").toBool(), "");
 	emit setx("terrasync_path", field("terrasync_enabled").toBool() == true, field("terrasync_path").toString());
 
 	mainObject->settings->setValue("last_import_icao_checked", radioIcaoOnly->isChecked());

@@ -24,13 +24,13 @@ XDebugTreeWidget::XDebugTreeWidget(MainObject *mob, QWidget *parent) :
 	groupFilter = new QActionGroup(this);
 	groupFilter->setExclusive(true);
 	QStringList filters;
-	filters << "None" << "Enabled" << "Disabled";
+	filters << "All" << "Enabled" << "Disabled";
 
 	for(int fidx = 0; fidx < filters.size(); fidx++ )
 	{
 		QAction *act = toolbar->addAction(filters.at(fidx)) ;
 		act->setCheckable(true);
-		act->setChecked(filters.at(fidx) == "None");
+		act->setChecked(filters.at(fidx) == "All");
 		groupFilter->addAction( act );
 
 	}
