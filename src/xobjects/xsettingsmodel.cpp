@@ -177,6 +177,8 @@ void XSettingsModel::set_option(QString option, bool enabled, QString value)
 	QStandardItem *vItem = item(items[0]->row(),C_VALUE);
 	vItem->setText(value);
 
+	set_row_bg(items[0]->row(), enabled ? QColor(200,255,200) : QColor(240,240,240));
+
 	//= Announce the change
 	emit upx(option, enabled,  value);
 	emit updated(get_fgfs_list());
@@ -240,7 +242,7 @@ QString XSettingsModel::ini_file_path()
 	return mainObject->data_file("profile.ini");
 }
 
-
+//=============================================
 // == Write Ini
 void XSettingsModel::write_ini()
 {
@@ -263,7 +265,7 @@ void XSettingsModel::write_ini()
 	qDebug() << "Written ini";
 }
 
-
+//=============================================
 // == Read Ini
 void XSettingsModel::read_ini()
 {
@@ -277,17 +279,18 @@ void XSettingsModel::read_ini()
 	//QSettings settings(fileName, QSettings::IniFormat);
 	QSettings settings(ini_file_path(),QSettings::IniFormat);
 	
-
+	bool ena;
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
 		//= loop rows and load each "option" as an [ini section] with enabled, value as values
 		settings.beginGroup(item(row_idx, C_OPTION)->text());
-			item(row_idx, C_ENABLED)->setText( settings.value("enabled").toBool() ? "1" : "0" );
+			ena = settings.value("enabled").toBool() ;
+			item(row_idx, C_ENABLED)->setText( ena ? "1" : "0");
 			QString val = settings.value("value").toString();
 			if(val == ""){
 				val = item(row_idx, C_DEFAULT)->text();
 			}
 			item(row_idx, C_VALUE)->setText(val );
-
+			set_row_bg(row_idx, ena ? QColor(200,255,200) : QColor(240,240,240));
 			//= Broadcast changes
 			emit upx(item(row_idx, C_OPTION)->text(),
 					 item(row_idx, C_ENABLED)->text() == "1",
@@ -617,7 +620,13 @@ QString XSettingsModel::fgcom_exe_path(){
 
 
 
-
+void XSettingsModel::set_row_bg(int row_idx, QColor  bg_color)
+{
+	for(int col_idx=0; col_idx < columnCount(); col_idx++)
+	{
+		item(row_idx, col_idx)->setBackground(bg_color);
+	}
+}
 
 
 

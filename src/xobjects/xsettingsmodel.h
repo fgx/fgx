@@ -69,7 +69,7 @@ public:
 
 	bool paths_sane();
 
-
+	void set_row_bg(int row_idx, QColor bgcolor);
 
 
 signals:

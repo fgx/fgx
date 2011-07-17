@@ -291,10 +291,6 @@ void CoreSettingsWidget::on_checkbox_splash_screen()
 // Show Mp Map
 void CoreSettingsWidget::on_show_mp_map(){
 	comboMpMapServer->setEnabled(checkBoxShowMpMap->isChecked());
-	//qDebug() << comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString()
-	qDebug() << comboMpMapServer->currentIndex();
-	qDebug() << comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString();
-	//return;
 	emit setx(	"show_mpmap",
 				checkBoxShowMpMap->isChecked(),
 				comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString()
