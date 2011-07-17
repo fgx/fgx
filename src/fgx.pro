@@ -68,7 +68,8 @@ HEADERS += xobjects/xsettings.h \
     xwidgets/fgxdebugwidget.h \
     launcher/headerwidget.h \
     xwidgets/xcommandpreviewidget.h \
-    xobjects/xopt.h
+    xobjects/xopt.h \
+    xwidgets/xdebugmodelwidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -130,7 +131,8 @@ SOURCES += main.cpp \
     xwidgets/fgxdebugwidget.cpp \
     launcher/headerwidget.cpp \
     xwidgets/xcommandpreviewidget.cpp \
-    xobjects/xopt.cpp
+    xobjects/xopt.cpp \
+    xwidgets/xdebugmodelwidget.cpp
 RESOURCES += resources/ycons.qrc \
     resources/artwork.qrc \
     resources/fonts.qrc \

@@ -20,6 +20,8 @@ public:
 
 	MainObject *mainObject;
 
+	QButtonGroup *buttongroupFilter;
+
 	XCommandPrevieWidget *commandPreviewWidget;
 
 signals:
