@@ -118,6 +118,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelFgFsPath = new QLabel(" ");
 	labelFgFsPath->setStyleSheet(style_paths);
 	grpFgPaths->addWidget(labelFgFsPath);
+	labelFgFsPath->setText( mainObject->X->fgfs_path() );
 
 
 	//----------------------------------------------
@@ -129,6 +130,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelFgRootPath = new QLabel(" ");
 	labelFgRootPath->setStyleSheet(style_paths);
 	grpFgPaths->addWidget(labelFgRootPath);
+	labelFgRootPath->setText( mainObject->X->fgroot_default_path() );
 	
 	
 	//----------------------------------------------
@@ -140,6 +142,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelTerraSyncDataPath = new QLabel("");
 	labelTerraSyncDataPath->setStyleSheet(style_paths);
 	grpFgPaths->addWidget(labelTerraSyncDataPath);
+	labelTerraSyncDataPath->setText( mainObject->X->terrasync_sync_data_path() );
 
 	//= Connect Mainobject (after paths wizard)
 	connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
@@ -165,10 +168,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 }
-
-
-
-
 
 
 QString CoreSettingsWidget::validate(){
@@ -310,6 +309,7 @@ void CoreSettingsWidget::on_show_mp_map(){
 				comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString()
 				);
 }
+
 
 
 //======================================================================
