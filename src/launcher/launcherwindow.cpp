@@ -439,22 +439,6 @@ bool LauncherWindow::validate(){
 	return true;
 }
 
-//=======================================================================================================================
-//* Help Menu Events
-//=======================================================================================================================
-void LauncherWindow::on_about_fgx(){
-	QString txt;
-	txt.append("<html><body><p>FGx FlightGear Launcher</b></p>");
-	txt.append("<p>&copy; 2011 Yves Sablonier, Pete Morgan, Geoff McLane</p>");
-	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPLv2 and later</a></p>");
-	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear Wiki</a></p>");
-	txt.append("</body></html>");
-	QMessageBox::about(this, "About FGx", txt);
-}
-
-void LauncherWindow::on_about_qt(){
-	QMessageBox::aboutQt(this, "About Qt");
-}
 
 
 

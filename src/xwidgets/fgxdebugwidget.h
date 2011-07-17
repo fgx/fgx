@@ -8,6 +8,9 @@
 #include "xobjects/mainobject.h"
 class MainObject;
 
+#include "xwidgets/xdebugtreewidget.h"
+class XDebugTreeWidget;
+
 #include "xwidgets/xcommandpreviewidget.h"
 class XCommandPrevieWidget;
 
@@ -20,8 +23,7 @@ public:
 
 	MainObject *mainObject;
 
-	QButtonGroup *buttongroupFilter;
-
+	XDebugTreeWidget *debugTreeWidget;
 	XCommandPrevieWidget *commandPreviewWidget;
 
 signals:

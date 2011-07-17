@@ -160,6 +160,9 @@ public slots:
 
 	void on_view_fgx_debug();
 	void on_debug_mode();
+
+	//void on_about_qt();
+	//void on_about_fgx();
 };
 
 

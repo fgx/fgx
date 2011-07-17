@@ -5,6 +5,7 @@
 
 #include <QTreeView>
 #include <QHeaderView>
+#include <QToolBar>
 
 #include "xdebugtreewidget.h"
 
@@ -12,13 +13,33 @@ XDebugTreeWidget::XDebugTreeWidget(MainObject *mob, QWidget *parent) :
     QWidget(parent)
 {
 
+	mainObject = mob;
+
 	QVBoxLayout *mainLayout = new QVBoxLayout();
 	setLayout(mainLayout);
 
+	QToolBar *toolbar = new QToolBar();
+	mainLayout->addWidget(toolbar);
 
-	buttonGroupFilter = new QButtonGroup(this);
+	groupFilter = new QActionGroup(this);
+	groupFilter->setExclusive(true);
 	QStringList filters;
 	filters << "None" << "Enabled" << "Disabled";
+
+	for(int fidx = 0; fidx < filters.size(); fidx++ )
+	{
+		QAction *act = toolbar->addAction(filters.at(fidx)) ;
+		act->setCheckable(true);
+		act->setChecked(filters.at(fidx) == "None");
+		groupFilter->addAction( act );
+
+	}
+
+	// ======================
+	// == Models
+	proxyModel = new QSortFilterProxyModel(this);
+	proxyModel->setSourceModel(mainObject->X);
+
 
 
 
@@ -26,9 +47,9 @@ XDebugTreeWidget::XDebugTreeWidget(MainObject *mob, QWidget *parent) :
 	// TEMP DEBUG TREE
 	QTreeView *tree = new QTreeView();
 	tree->setRootIsDecorated(false);
-	mainLayout->addTab(tree);
+	mainLayout->addWidget(tree);
 
-	tree->setModel(mainObject->X);
+	tree->setModel(proxyModel);
 
 
 	tree->setSortingEnabled(true);

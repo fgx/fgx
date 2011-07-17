@@ -140,9 +140,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelTerraSyncDataPath = new QLabel("");
 	labelTerraSyncDataPath->setStyleSheet(style_paths);
 	grpFgPaths->addWidget(labelTerraSyncDataPath);
-
-	//= Connect Mainobject (after paths wizard)
-	connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
 	
 
 	

@@ -25,6 +25,7 @@ MainObject::MainObject(QObject *parent) :
     QObject(parent)
 {
 
+	//TODO Geoff to change this to object even static
 	//= init the LOG file
 	util_setStdLogFile();
 
@@ -35,6 +36,14 @@ MainObject::MainObject(QObject *parent) :
 	X = new XSettingsModel(this);
 
 	
+
+	//= Set GLobal style
+	QApplication::setStyle( QStyleFactory::create(settings->style_current()) );
+	QApplication::setQuitOnLastWindowClosed(false);
+
+
+
+
 	//====================================================
 	//== Setup Menus
 	//====================================================
@@ -66,7 +75,7 @@ MainObject::MainObject(QObject *parent) :
 	menuBar->addMenu(menuHelp);
 	
 	QActionGroup *actionGroupUrls = new QActionGroup(this);
-	connect(actionGroupUrls, SIGNAL(triggered(QAction*)), this, SLOT(on_action_open_url(QAction*)));
+	//TODO connect(actionGroupUrls, SIGNAL(triggered(QAction*)), this, SLOT(on_action_open_url(QAction*)));
 	
 	QAction *act = menuHelp->addAction(tr("Project Page"));
 	act->setProperty("url", "http://code.google.com/p/fgx");
@@ -81,15 +90,13 @@ MainObject::MainObject(QObject *parent) :
 	actionGroupUrls->addAction(act);
 	
 	menuHelp->addSeparator();
-	menuHelp->addAction(tr("About FGx"), this, SLOT(on_about_fgx()));
-	menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
-
-	//= Set GLobal style
-	QApplication::setStyle( QStyleFactory::create(settings->style_current()) );
-	QApplication::setQuitOnLastWindowClosed(false);
+	//TODO menuHelp->addAction(tr("About FGx"), this, SLOT(on_about_fgx()));
+	//TODO menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
 
 
-	//= Processes
+	//================================================================
+	//= Processes - the nub..
+	//================================================================
 	processFgFs  = new XProcess(this, "fgfs");
 	processTerraSync  = new XProcess(this, "terrasync");
 	processFgCom  = new XProcess(this, "fgcom");
@@ -516,3 +523,23 @@ QString MainObject::data_file(QString file_name){
 	return storedir.append("/").append(file_name);
 }
 
+
+//=======================================================================================================================
+//* Help Menu Events
+//=======================================================================================================================
+/*
+void MainObject::on_about_fgx(){
+	QString txt;
+	txt.append("<html><body><p>FGx FlightGear Launcher</b></p>");
+	txt.append("<p>&copy; 2011 Yves Sablonier, Pete Morgan, Geoff McLane</p>");
+	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPLv2 and later</a></p>");
+	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear Wiki</a></p>");
+	txt.append("<pre>rock on and avoid mountauns near Zurich, Near geoff at PARID and pete at EGFF..</pre></body></html>");
+	QMessageBox::about(0, "About FGx", txt);
+}
+
+void MainObject::on_about_qt(){
+	QMessageBox::aboutQt(0, "About Qt");
+}
+
+*/

@@ -9,9 +9,6 @@
 #include <QtGui/QPushButton>
 
 
-//++ Help
-//= because of recursive inputs please pleace forwards here, if you are a sausage make or eat hot tiguuillea..
-
 #include "panes/coresettingswidget.h"
 class CoreSettingsWidget;
 
@@ -101,8 +98,6 @@ public slots:
 
 
 	//* Actions
-	void on_about_fgx();
-	void on_about_qt();
 	void on_quit();
 	//void on_action_style(QAction *act);
 	void on_action_open_url(QAction *act);

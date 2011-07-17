@@ -4,6 +4,7 @@
 
 #include "xwidgets/fgxdebugwidget.h"
 
+
 #include "xobjects/xsettingsmodel.h"
 
 FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
@@ -21,9 +22,9 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 	QTabWidget *tabWidget = new QTabWidget();
 	mainLayout->addWidget(tabWidget);
 
-
-
-
+	//== Debug Tree == Coeden in welsh
+	debugTreeWidget = new XDebugTreeWidget(mainObject);
+	tabWidget->addTab(debugTreeWidget, QIcon(":/icon/debug"), "TREEEE View");
 
 	//== Command Preview and Output
 	commandPreviewWidget = new XCommandPrevieWidget(mainObject);

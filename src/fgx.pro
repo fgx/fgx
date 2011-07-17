@@ -20,7 +20,6 @@ HEADERS += xobjects/xsettings.h \
     xwidgets/execontrols.h \
     panes/timeweatherwidget.h \
     panes/advancedoptionswidget.h \
-    panes/outputpreviewwidget.h \
     panes/coresettingswidget.h \
     xwidgets/xgroupboxes.h \
     xobjects/mainobject.h \
@@ -69,7 +68,7 @@ HEADERS += xobjects/xsettings.h \
     launcher/headerwidget.h \
     xwidgets/xcommandpreviewidget.h \
     xobjects/xopt.h \
-    xwidgets/xdebugmodelwidget.h
+	xwidgets/xdebugtreewidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -80,7 +79,6 @@ SOURCES += main.cpp \
     xwidgets/execontrols.cpp \
     panes/timeweatherwidget.cpp \
     panes/advancedoptionswidget.cpp \
-    panes/outputpreviewwidget.cpp \
     panes/coresettingswidget.cpp \
     xwidgets/xgroupboxes.cpp \
     xobjects/mainobject.cpp \
@@ -132,7 +130,7 @@ SOURCES += main.cpp \
     launcher/headerwidget.cpp \
     xwidgets/xcommandpreviewidget.cpp \
     xobjects/xopt.cpp \
-    xwidgets/xdebugmodelwidget.cpp
+	xwidgets/xdebugtreewidget.cpp
 RESOURCES += resources/ycons.qrc \
     resources/artwork.qrc \
     resources/fonts.qrc \
