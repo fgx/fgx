@@ -202,7 +202,7 @@ void CoreSettingsWidget::load_joysticks(){
 
 	// TODO Fix this marcro
 #ifdef Q_OS_MAC
-    startJSDemoPath = mainObject->settings->fgfs_path();
+    startJSDemoPath = mainObject->X->fgfs_path();
 	startJSDemoPath.chop(4);
 	startJSDemoPath.append("js_demo");
     process.start(startJSDemoPath, QStringList(), QIODevice::ReadOnly);
