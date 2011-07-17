@@ -193,7 +193,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	
 	//== Help Box
 	XGroupHBox *helpBox = new XGroupHBox(tr("Help"));
-	helpBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: yellow }");
+	helpBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: #ffff00 }");
 	bottomActionLayout->addWidget(helpBox);
 	
 	//= Whats this button
