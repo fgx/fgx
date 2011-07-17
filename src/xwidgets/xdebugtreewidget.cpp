@@ -25,12 +25,13 @@ XDebugTreeWidget::XDebugTreeWidget(MainObject *mob, QWidget *parent) :
 	groupFilter->setExclusive(true);
 	QStringList filters;
 	filters << "All" << "Enabled" << "Disabled";
-
+	connect(groupFilter, SIGNAL(triggered(QAction*)), this, SLOT(on_filter(QAction*)) );
 	for(int fidx = 0; fidx < filters.size(); fidx++ )
 	{
 		QAction *act = toolbar->addAction(filters.at(fidx)) ;
 		act->setCheckable(true);
 		act->setChecked(filters.at(fidx) == "All");
+		act->setProperty("filter", filters.at(fidx));
 		groupFilter->addAction( act );
 
 	}
@@ -39,7 +40,7 @@ XDebugTreeWidget::XDebugTreeWidget(MainObject *mob, QWidget *parent) :
 	// == Models
 	proxyModel = new QSortFilterProxyModel(this);
 	proxyModel->setSourceModel(mainObject->X);
-
+	proxyModel->setFilterKeyColumn(XSettingsModel::C_ENABLED);
 
 
 
@@ -64,4 +65,17 @@ XDebugTreeWidget::XDebugTreeWidget(MainObject *mob, QWidget *parent) :
 	tree->setColumnWidth(XSettingsModel::C_OPTION, 200);
 	tree->setColumnWidth(XSettingsModel::C_VALUE, 200);
 
+}
+
+
+void XDebugTreeWidget::on_filter(QAction *act)
+{
+	QString f = act->property("filter").toString();
+	if(f == "All"){
+		proxyModel->setFilterRegExp("");
+	}else if(f == "Enabled"){
+		proxyModel->setFilterRegExp("1");
+	}else{
+		proxyModel->setFilterRegExp("0");
+	}
 }

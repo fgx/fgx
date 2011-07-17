@@ -27,7 +27,9 @@ public:
 
 signals:
 
+
 public slots:
+	void on_filter(QAction*);
 
 };
 
