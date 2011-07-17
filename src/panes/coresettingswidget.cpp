@@ -324,14 +324,17 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 		checkBoxShowMpMap->setChecked(enabled);
 		comboMpMapServer->setCurrentIndex(comboMpMapServer->findData(value));
 
+	//= Fgfs Path
 	}else if(option == "fgfs_custom_path"){
 		labelFgFsInfo->setText(enabled ? "Using custom path" : "Using default path");
 		labelFgFsPath->setText(enabled ? value : mainObject->X->fgfs_default_path());
 
+	//= fgroot path
 	}else if(option == "fgroot_custom_path"){
 		labelFgRootInfo->setText(enabled ? "Using custom path" : "Using default path");
 		labelFgRootPath->setText(enabled ? value : mainObject->X->fgroot_default_path());
 
+	//= terrasync
 	}else if(option == "terrasync_path"){
 
 		labelTerraSyncDataPath->setText(enabled ? value : mainObject->X->terrasync_sync_data_path());
