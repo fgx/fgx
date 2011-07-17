@@ -44,6 +44,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option("fgfs_use_default", false,"","",0,"","paths");
 	add_option("fgfs_custom_path", false,"","",0,"","paths");
 	add_option("fgroot_custom_path", false,"","",0,"","paths");
+	add_option("terrasync_enabled", false,"","",0,"","paths");
 	add_option("terrasync_path", false,"","",0,"","paths");
 
 

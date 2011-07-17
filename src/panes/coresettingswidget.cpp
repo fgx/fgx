@@ -112,7 +112,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//----------------------------------------------
 	//= FlightGear executable
 
-	labelFgFsInfo = new QLabel(tr("Custom FlightGear Executable (fgfs):"));
+	labelFgFsInfo = new QLabel(tr("FlightGear Executable (fgfs):"));
 	grpFgPaths->addWidget(labelFgFsInfo, 1);
 
 	labelFgFsPath = new QLabel(" ");
@@ -124,13 +124,13 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//----------------------------------------------
 	//= FG ROOT Data Directory
 
-	labelFgRootInfo = new QLabel(tr("Custom FlightGear Data Directory (fgdata):"));
+	labelFgRootInfo = new QLabel(tr("FlightGear Data Directory (fgdata):"));
 	grpFgPaths->addWidget(labelFgRootInfo, 1);
 
 	labelFgRootPath = new QLabel(" ");
 	labelFgRootPath->setStyleSheet(style_paths);
 	grpFgPaths->addWidget(labelFgRootPath);
-	labelFgRootPath->setText( mainObject->X->fgroot_default_path() );
+	labelFgRootPath->setText( mainObject->X->fgroot() );
 	
 	
 	//----------------------------------------------
@@ -201,7 +201,7 @@ void CoreSettingsWidget::load_joysticks(){
     QStringList args;
     startJSDemoPath = "js_demo";
 
-	// TODO Fix this marcro
+	// TODO Fix this macro
 #ifdef Q_OS_MAC
     startJSDemoPath = mainObject->X->fgfs_path();
 	startJSDemoPath.chop(4);
