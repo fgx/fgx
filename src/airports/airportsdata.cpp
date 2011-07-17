@@ -25,7 +25,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 	//====================================
 	// Step 1: Get a hash map of aircraft descriptions from aptdat
 	int estimated_lines = 1510000;
-
+	qDebug() << "IMPORT";
 	progress.setValue(0);
 	progress.setWindowTitle("Importing Apt Dat");
 	progress.setRange(0, estimated_lines);

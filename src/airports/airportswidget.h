@@ -13,6 +13,7 @@
 #include <QtGui/QStatusBar>
 #include <QtGui/QRadioButton>
 #include <QtGui/QToolButton>
+#include <QtGui/QTabWidget>
 
 
 #include <QtGui/QStandardItemModel>
@@ -56,6 +57,9 @@ public:
 	MainObject *mainObject;
 
 	QButtonGroup *buttonGroupUse;
+
+	QTabWidget *tabWidget;
+	XGroupVBox *mapPlaceholder;
 
 	XGroupVBox *groupBoxAirport;
 	XGroupVBox *groupBoxUseCoordinates;

@@ -166,12 +166,17 @@ void ExpertOptionsWidget::on_runtime()
 
 void ExpertOptionsWidget::on_upx(QString option, bool enabled, QString value)
 {
+	Q_UNUSED(enabled);
 
+	// TODO - Huge BUGGGGGGGGGGGGGGGGGGGGGGGGG!
+	// * there is a huge bug here as the extraargs emits a signal and then reads and gets locked up
 	if(option == "extra_args"){
-		txtExtraArgs->setPlainText(value);
+		//if(value != txtExtraArgs->toPlainText()){
+		//	txtExtraArgs->setPlainText(value);
+		//}
 
 	}else if(option == "extra_env"){
-		txtExtraEnv->setPlainText(value);
+		//txtExtraEnv->setPlainText(value);
 
 	}else if(option == "--log-level="){
 		Helpers::select_combo(comboLogLevels, value);

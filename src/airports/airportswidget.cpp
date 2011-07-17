@@ -48,14 +48,21 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	mainObject = mOb;
 
     //* Main Layout
-	QGridLayout *mainLayout = new QGridLayout();
+	QHBoxLayout *mainLayout = new QHBoxLayout();
     setLayout(mainLayout);
 	mainLayout->setSpacing(10);
 	int m = 10;
 	mainLayout->setContentsMargins(m,m,m,m);
 
+
+	//= Tab Widget
+	tabWidget = new QTabWidget();
+	mainLayout->addWidget(tabWidget);
+
+
 	//=====================================
 	//** Top Startup Option Buttons
+	/*
 	QHBoxLayout *layoutTop = new QHBoxLayout();
 	mainLayout->addLayout(layoutTop,0,0,1,2);
 
@@ -77,12 +84,12 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	buttonGroupUse->addButton(radioButtonUseCoordinates, USE_COORDINATES);
 
 	layoutTop->addStretch(10);
-
+	*/
 
 	//=================================================================================
 	//* Airport Details
 	groupBoxAirport = new XGroupVBox("Airport Details");
-	mainLayout->addWidget(groupBoxAirport, 1, 0);
+	tabWidget->addTab(groupBoxAirport, QIcon(":/icon/XXX"), tr("Start At Aiport"));
 
 	groupBoxAirport->xLayout->setContentsMargins(10,10,10,10);
 	groupBoxAirport->xLayout->setSpacing(0);
@@ -271,7 +278,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	groupBoxUseCoordinates = new XGroupVBox("Coordinates", this);
 	groupBoxUseCoordinates->setMaximumWidth(300);
-	mainLayout->addWidget(groupBoxUseCoordinates, 1, 2);
+	tabWidget->addTab(groupBoxUseCoordinates, QIcon(":/icon/XXX"), "Start At Position");
 
 	int space = 5;
 
@@ -344,6 +351,26 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	connect(buttonGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
 			this, SLOT(on_update_airports_filter())
 	);
+
+
+
+
+	//==============================================================
+	// Map Widget Placeholfer
+	mapPlaceholder = new XGroupVBox("Map Placeholder");
+	mapPlaceholder->setMinimumWidth(400);
+	mainLayout->addWidget(mapPlaceholder);
+
+	QLabel *lblMapPlaceholder = new QLabel("map");
+	lblMapPlaceholder->setStyleSheet("background-color: green;");
+	mapPlaceholder->addWidget(lblMapPlaceholder);
+
+
+
+
+
+
+
 
 
 	//== Main Settings connection
@@ -444,12 +471,14 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 
 	//= No selection -eg a filter removing a selected node
 	if(!currentIdx.isValid()){
+		emit setx("--airport=", false, "");
 		return;
 	}
 	//= Get the airport code forn source model
 	QModelIndex srcIndex = proxyModel->mapToSource(currentIdx);
 	QString airport_code = model->item(srcIndex.row(), CA_CODE)->text();
 	QString airport_dir = model->item(srcIndex.row(), CA_DIR)->text();
+	emit setx("--airport=", true, airport_code);
 	load_info_tree(airport_dir, airport_code);
 
 }
