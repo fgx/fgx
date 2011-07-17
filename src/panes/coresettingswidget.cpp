@@ -59,6 +59,8 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	comboScreenSize->addItem("1280 x 1024", "1280x1024");
 	comboScreenSize->addItem("1600 x 900", "1600x900");
 	grpBoxScreen->addWidget(comboScreenSize);
+	connect(comboScreenSize, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_screensize()));
+
 	
 	//= Full Screen
 	checkBoxFullScreenStartup = new QCheckBox(tr("Fullscreen mode"));
@@ -252,16 +254,6 @@ void CoreSettingsWidget::load_joysticks(){
 }
 
 
-void CoreSettingsWidget::on_radio_fg_path(){
-	//bool use_custom = buttonGroupPaths->checkedId() == 1;
-	//txtFgFs->setEnabled(use_custom);
-	//txtFgRoot->setEnabled(use_custom);
-}
-
-
-
-
-
 
 //=====================================
 // Callsign Changed
@@ -269,6 +261,22 @@ void CoreSettingsWidget::on_callsign_changed(QString txt)
 {
 	emit( setx("--callsign=", true, txt ));
 }
+
+
+//=====================================
+// ScreenSize changed
+void CoreSettingsWidget::on_combo_screensize()
+{
+	if(comboScreenSize->currentIndex() == 0){
+		emit setx("--geometry=", false, "# no #");
+	}
+	emit setx( "--geometry=",
+			   checkBoxFullScreenStartup->isChecked() == false,
+					comboScreenSize->itemData(comboScreenSize->currentIndex()).toString()
+			   );
+}
+
+
 
 //=====================================
 // FullScreen Changed
@@ -309,6 +317,7 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 
 	}else if(option == "--full-screen"){
 		checkBoxFullScreenStartup->setChecked(enabled);
+		comboScreenSize->setDisabled(enabled);
 
 	}else if(option == "--disable-splash-screen"){
 		checkBoxDisableSplashScreen->setChecked(enabled);

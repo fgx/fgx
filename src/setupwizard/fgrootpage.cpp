@@ -5,6 +5,7 @@
 #include <QtGui/QFileDialog>
 
 #include "setupwizard/fgrootpage.h"
+#include "xobjects/xopt.h"
 
 FgRootPage::FgRootPage(MainObject *mob, QWidget *parent) :
     QWizardPage(parent)
@@ -80,10 +81,11 @@ void FgRootPage::on_select_path()
 //= initializePage
 void FgRootPage::initializePage()
 {
-	radioDefault->setChecked( mainObject->X->get_ena("fgroot_custom_path") == false );
-	radioCustom->setChecked( mainObject->X->get_ena("fgroot_custom_path")  == true);
+	XOpt opt = mainObject->X->get_opt("fgroot_custom_path");
+	radioDefault->setChecked( opt.enabled == false );
+	radioCustom->setChecked( opt.enabled  == true);
 	lblDefault->setText( mainObject->X->fgroot_default_path() );
-	txtFgRoot->setText( mainObject->X->getx("fgroot_custom_path") );
+	txtFgRoot->setText( opt.value );
 }
 
 

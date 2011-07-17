@@ -11,6 +11,7 @@
 #include <QtGui/QFileDialog>
 
 #include "fgexepage.h"
+#include "xobjects/xopt.h"
 
 FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
     QWizardPage(parent)
@@ -179,13 +180,12 @@ void FgExePage::check_paths()
 //= initializePage
 void FgExePage::initializePage()
 {
-
-	//radioDefault->setChecked( mainObject->settings->fgfs_use_default() );
-	radioDefault->setChecked( mainObject->X->get_ena("fgfs_custom_path") == false );
-	radioCustom->setChecked( mainObject->X->get_ena("fgfs_custom_path") == true );
+	XOpt opt = mainObject->X->get_opt("fgfs_custom_path");
+	radioDefault->setChecked( opt.enabled == false );
+	radioCustom->setChecked( opt.enabled == true );
 
 	lblDefault->setText( QString("Default: ").append(mainObject->X->fgfs_default_path()) );
-	txtFgfs->setText( mainObject->X->getx("fgfs_custom_path") );
+	txtFgfs->setText( opt.value );
 	check_paths();
 }
 

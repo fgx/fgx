@@ -4,7 +4,8 @@
 #include <QGridLayout>
 #include <QFileDialog>
 
-#include "terrasyncpage.h"
+#include "setupwizard/terrasyncpage.h"
+#include "xobjects/xopt.h"
 
 TerraSyncPage::TerraSyncPage(MainObject *mob, QWidget *parent) :
     QWizardPage(parent)
@@ -98,8 +99,9 @@ void TerraSyncPage::check_paths()
 //= InitializePage
 void TerraSyncPage::initializePage()
 {
-	checkBoxUseTerrasync->setChecked( mainObject->settings->value("terrasync_enabled", "1").toBool() );
-	txtTerraSyncPath->setText( mainObject->settings->value("terrasync_path", "").toString() );
+	XOpt opt = mainObject->X->get_opt("terrasync_path");
+	checkBoxUseTerrasync->setChecked( opt.enabled );
+	txtTerraSyncPath->setText( opt.value );
 	on_checkbox_clicked();
 }
 
