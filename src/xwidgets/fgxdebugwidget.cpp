@@ -43,13 +43,13 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 	tree->setColumnWidth(XSettingsModel::C_VALUE, 200);
 
 
-	//+++ Text Command
+	//== Command Preview and Output
 	commandPreviewWidget = new XCommandPrevieWidget(mainObject);
 	tabWidget->addTab(commandPreviewWidget, QIcon(":/icon/debug"), "Command View");
 
 
-	//===============
-	//= Bottom Buttons
+	//========================================================
+	//= Bottom TEST Buttons
 	QHBoxLayout *bottBox = new QHBoxLayout();
 	mainLayout->addLayout(bottBox);
 	bottBox->addStretch(10);
@@ -65,6 +65,7 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 	connect(buttSave, SIGNAL(clicked()), mainObject->X, SLOT(write_ini()));
 
 
+	//========================================================
 	//= Save last tab
 	tabWidget->setCurrentIndex(mainObject->settings->value("fgx_debug_last_tab",0).toInt());
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab(int)));

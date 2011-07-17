@@ -240,6 +240,10 @@ XOpt XSettingsModel::get_opt(QString option)
 //==================================================
 //= File Functions
 //==================================================
+/** \brief Return current profile.ini.. THIS is subject to MAJOR CHANGE
+ *
+  * \return The absolute path to the ini file
+ */
 QString XSettingsModel::ini_file_path()
 {
 	return mainObject->data_file("profile.ini");
@@ -247,6 +251,8 @@ QString XSettingsModel::ini_file_path()
 
 //=============================================
 // == Write Ini
+/** \brief Write out values to ini
+ */
 void XSettingsModel::write_ini()
 {
 	//= create ini settings object
@@ -270,6 +276,9 @@ void XSettingsModel::write_ini()
 
 //=============================================
 // == Read Ini
+/** \brief Read Values from ini
+ */
+
 void XSettingsModel::read_ini()
 {
 	_loading = true;
