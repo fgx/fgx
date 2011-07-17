@@ -274,21 +274,10 @@ void CoreSettingsWidget::on_screensize()
 					comboScreenSize->itemData(comboScreenSize->currentIndex()).toString()
 			   );
 	}
-	//comboScreenSize->setDisabled( checkBoxFullScreenStartup->isChecked() );
 	emit setx( "--full-screen", checkBoxFullScreenStartup->isChecked(), "");
 }
 
 
-
-//=====================================
-// FullScreen Changed
-/*
-void CoreSettingsWidget::on_checkbox_fullscreen()
-{
-	comboScreenSize->setDisabled( checkBoxFullScreenStartup->isChecked() );
-	emit setx( "--full-screen", checkBoxFullScreenStartup->isChecked(), "");
-}
-*/
 //=====================================
 // SplashScreen Changed
 void CoreSettingsWidget::on_checkbox_splash_screen()

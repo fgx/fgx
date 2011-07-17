@@ -41,7 +41,7 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
 	//================================================================
 	//** Runtime Directory
 	
-	// *TBD* Would also be nice to have a button [...] to aid in setting this directory.
+	// TODO Would also be nice to have a button [...] to aid in setting this directory.
 	
 	XGroupHBox *groupBoxRun = new XGroupHBox(tr("Set a specific runtime directory"));
 	mainLayout->addWidget(groupBoxRun);
@@ -51,7 +51,7 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 
 	//================================================================
-	//** Write Log
+	//== Write Log
 	groupBoxWriteLog = new XGroupVBox(tr("FlightGear Loglevel"));
 	mainLayout->addWidget(groupBoxWriteLog);
 
@@ -75,7 +75,7 @@ AdvancedOptionsWidget::AdvancedOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 
 //========================================================
-//** Get Args
+//== Get Args
 QStringList AdvancedOptionsWidget::get_args(){
 
 	QStringList args;
@@ -101,7 +101,6 @@ QStringList AdvancedOptionsWidget::get_args(){
 	
 	args << "--log-level=" + values[buttonGroupLogOptions->checkedId()];
 	
-	
 	return args;
 }
 
@@ -110,7 +109,7 @@ QStringList AdvancedOptionsWidget::get_args(){
 QStringList AdvancedOptionsWidget::get_env(){
 
         QStringList args;
-        //*  Additonal args in text box..
+		//=  Additonal args in text box..
 
         QString extra = txtExtraEnv->toPlainText().trimmed();
         if (extra.length() > 0) {
@@ -129,7 +128,7 @@ QStringList AdvancedOptionsWidget::get_env(){
 }
 
 //========================================================
-//** Get runtime
+//== Get runtime
 QString AdvancedOptionsWidget::get_runtime(){
     QString rt = txtRuntime->text().trimmed();
     return rt;
@@ -137,7 +136,7 @@ QString AdvancedOptionsWidget::get_runtime(){
 
 
 //========================================================
-//** Load Settings
+//==* Load Settings
 void AdvancedOptionsWidget::load_settings(){
 
 	txtExtraArgs->setPlainText(mainObject->settings->value("extra_args").toString());

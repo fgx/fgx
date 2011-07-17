@@ -30,9 +30,10 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 
 	//===============================================================
 	// Time group
-	QStringList time_vals; //* The command arg stored in property
+	QStringList time_vals; //= are the values
 	time_vals << "real" << "dawn" << "morning" << "noon" << "afternoon" << "dusk" << "evening" << "midnight";
-	QStringList time_labels; //* The labels - subject ot transtation
+
+	QStringList time_labels; //= are the labels
 	time_labels << tr("Real time") << tr("Dawn") << tr("Morning") << tr("Noon") << tr("Afternoon") << tr("Dusk") << tr("Evening") << tr("Midnight");
 
 	XGroupVBox *grpBoxTime = new XGroupVBox(tr("Time"));
@@ -52,11 +53,14 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	}
 	buttonGroupTime->button(0)->setChecked(true);
 
+
+
 	//===============================================================
 	// Season group
-	QStringList season_vals; //* The command arg stored in property
+	QStringList season_vals; //= values
 	season_vals << "winter" << "summer";
-	QStringList season_labels; //* The labels - subject ot transtation
+
+	QStringList season_labels; // = labels
 	season_labels << tr("Winter") << tr("Summer");
 
 	XGroupVBox *grpBoxSeason = new XGroupVBox(tr("Season"));
@@ -76,10 +80,10 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 	}
 	buttonGroupSeason->button(0)->setChecked(true);
 
-	//** Add some stretch to column bottom
+	//= Add some stretch to column bottom
 	layTimeSeason->addStretch(100);
 
-	//** Add A Spacer in Middle Column
+	//= Add A Spacer in Middle Column
 	mainLayout->addStretch(1);
 
 
@@ -91,9 +95,9 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 
 	//===============================================================
 	// Metar group
-	QStringList metar_vals; //* The command arg stored in property
+	QStringList metar_vals; //= values
 	metar_vals << "none" << "live" << "custom";
-	QStringList metar_labels; //* The labels - subject ot transtation
+	QStringList metar_labels; //= labels
 	metar_labels << tr("None (default weather)") << tr("Fetch METAR data live") << tr("Set static METAR below");
 
 	XGroupVBox *grpBoxMetar = new XGroupVBox(tr("METAR"));
@@ -127,7 +131,6 @@ TimeWeatherWidget::TimeWeatherWidget(MainObject *mOb, QWidget *parent) :
 
 
 //== Validate
-
 QString TimeWeatherWidget::validate(){
 	if(	buttonGroupMetar->checkedButton()->property("value").toString() == "custom"
 		&& txtMetar->toPlainText().length() == 0){
@@ -143,7 +146,7 @@ QString TimeWeatherWidget::validate(){
 //== Time clicked
 void TimeWeatherWidget::on_time_clicked()
 {
-	setx("--timeofday=", true, buttonGroupTime->checkedButton()->property("value").toString());
+	emit setx("--timeofday=", true, buttonGroupTime->checkedButton()->property("value").toString());
 }
 
 //== Season Clicked
@@ -179,7 +182,6 @@ void TimeWeatherWidget::on_upx(QString option, bool enabled, QString value)
 
 	}else if(option == "weather"){
 		Helpers::select_radio(buttonGroupMetar, value);
-		//qDebug() << option;
 		txtMetar->setEnabled(value == "custom");
 		if(txtMetar->isEnabled()){
 			txtMetar->setFocus();

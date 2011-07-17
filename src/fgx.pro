@@ -19,7 +19,6 @@ HEADERS += xobjects/xsettings.h \
     airports/airportswidget.h \
     xwidgets/execontrols.h \
     panes/timeweatherwidget.h \
-    panes/advancedoptionswidget.h \
     panes/coresettingswidget.h \
     xwidgets/xgroupboxes.h \
     xobjects/mainobject.h \
@@ -78,7 +77,6 @@ SOURCES += main.cpp \
     airports/airportswidget.cpp \
     xwidgets/execontrols.cpp \
     panes/timeweatherwidget.cpp \
-    panes/advancedoptionswidget.cpp \
     panes/coresettingswidget.cpp \
     xwidgets/xgroupboxes.cpp \
     xobjects/mainobject.cpp \
