@@ -20,8 +20,9 @@ public:
 
 	MainObject *mainObject;
 
-	QTimer *fadeTimer;
+	//QTimer *fadeTimer;
 
+	QWidget *headerWidget;
 	QLabel *headerLabel;
 
 	QWidget *popWidget;
@@ -39,9 +40,6 @@ public slots:
 	void showMessage(QString message, int timeout);
 	void showMessage(QString message);
 	
-
-	void start_fade();
-	void on_fade_timer();
 };
 
 #endif // XHEADERWIDGET_H

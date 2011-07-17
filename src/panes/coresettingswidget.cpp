@@ -112,34 +112,42 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//----------------------------------------------
 	//= FlightGear executable
 
-	labelFgFsInfo = new QLabel(tr("Custom FlightGear Executable (fgfs):"));
+	labelFgFsInfo = new QLabel(tr("FlightGear Executable (fgfs):"));
 	grpFgPaths->addWidget(labelFgFsInfo, 1);
 
 	labelFgFsPath = new QLabel(" ");
 	labelFgFsPath->setStyleSheet(style_paths);
 	grpFgPaths->addWidget(labelFgFsPath);
+	labelFgFsPath->setText( mainObject->X->fgfs_path() );
 
 
 	//----------------------------------------------
 	//= FG ROOT Data Directory
 
-	labelFgRootInfo = new QLabel(tr("Custom FlightGear Data Directory (fgdata):"));
+	labelFgRootInfo = new QLabel(tr("FlightGear Data Directory (fgdata):"));
 	grpFgPaths->addWidget(labelFgRootInfo, 1);
 
 	labelFgRootPath = new QLabel(" ");
 	labelFgRootPath->setStyleSheet(style_paths);
 	grpFgPaths->addWidget(labelFgRootPath);
+	labelFgRootPath->setText( mainObject->X->fgroot() );
 	
 	
 	//----------------------------------------------
 	//= Terrasync Directory
 
-	labelTerraSyncInfo = new QLabel(tr(""));
+	labelTerraSyncInfo = new QLabel(tr("Terrasync scenery path:"));
 	grpFgPaths->addWidget(labelTerraSyncInfo, 1);
 
 	labelTerraSyncDataPath = new QLabel("");
 	labelTerraSyncDataPath->setStyleSheet(style_paths);
 	grpFgPaths->addWidget(labelTerraSyncDataPath);
+
+	labelTerraSyncDataPath->setText( mainObject->X->terrasync_sync_data_path() );
+
+	//= Connect Mainobject (after paths wizard)
+	//connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
+
 	
 
 	
@@ -162,10 +170,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 }
-
-
-
-
 
 
 QString CoreSettingsWidget::validate(){
@@ -199,7 +203,7 @@ void CoreSettingsWidget::load_joysticks(){
     QStringList args;
     startJSDemoPath = "js_demo";
 
-	// TODO Fix this marcro
+	// TODO Fix this macro
 #ifdef Q_OS_MAC
     startJSDemoPath = mainObject->X->fgfs_path();
 	startJSDemoPath.chop(4);
@@ -296,6 +300,7 @@ void CoreSettingsWidget::on_show_mp_map(){
 				comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString()
 				);
 }
+
 
 
 //======================================================================

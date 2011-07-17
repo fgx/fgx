@@ -137,13 +137,13 @@ QStringList ExpertOptionsWidget::get_env(){
 //==========================================================
 void ExpertOptionsWidget::on_extra()
 {
-	emit setx("extra_args", true, txtExtraArgs->toPlainText().trimmed());
+	//emit setx("extra_args", true, txtExtraArgs->toPlainText().trimmed());
 }
 
 
 void ExpertOptionsWidget::on_env()
 {
-	emit setx("extra_env", true, txtExtraEnv->toPlainText().trimmed());
+	//emit setx("extra_env", true, txtExtraEnv->toPlainText().trimmed());
 }
 
 void ExpertOptionsWidget::on_log_level()

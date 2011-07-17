@@ -97,7 +97,7 @@ ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
 	grpImports->gridLayout->setColumnStretch(1, 10);
 
 	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
-	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+	connect(mainObject->X, SIGNAL(on_upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 }
 
@@ -185,7 +185,7 @@ bool ConfirmPage::validatePage()
 	//mainObject->settings->setValue("fgroot_custom_path", field("fgroot_custom_path"));
 	emit setx("fgroot_custom_path", field("fgroot_use_custom").toBool(), field("fgroot_custom_path").toString());
 
-	//emit setx("terrasync_enabled", field("terrasync_enabled").toBool(), "");
+	emit setx("terrasync_enabled", field("terrasync_enabled").toBool(), "");
 	//mainObject->settings->setValue("terrasync_enabled", field("terrasync_enabled"));
 	//mainObject->settings->setValue("terrasync_path", field("terrasync_path"));
 	emit setx("terrasync_path", field("terrasync_enabled").toBool() == true, field("terrasync_path").toString());

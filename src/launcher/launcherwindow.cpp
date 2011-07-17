@@ -53,7 +53,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
 	QVBoxLayout *outerContainer = new QVBoxLayout();
 	outerContainer->setContentsMargins(0, 0, 0, 0);
-	outerContainer->setSpacing(0);
+	//outerContainer->setSpacing(0);
 	setLayout(outerContainer);	
 	
 	//====================================================
@@ -77,15 +77,11 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//== Message Label
 	
 	headerWidget = new HeaderWidget(mainObject);
-	headerWidget->setStyleSheet("{ font-size: 16px; }");
-	headerWidget->showMessage("Welcome [Callsign]");
-	outerContainer->addWidget(headerWidget,1);
-	//##connect(mainObject->S, SIGNAL(upx(bool,QString,QString)), messageLabel, SLOT()
+	outerContainer->addWidget(headerWidget,0);
 	
 	
 	QVBoxLayout *mainLayout = new QVBoxLayout();
 	mainLayout->setContentsMargins(10, 0, 10, 10);
-	mainLayout->setSpacing(0);
 	outerContainer->addLayout(mainLayout);
 
 
@@ -193,7 +189,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	
 	//== Help Box
 	XGroupHBox *helpBox = new XGroupHBox(tr("Help"));
-	helpBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: yellow }");
+	helpBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: #ffff00 }");
 	bottomActionLayout->addWidget(helpBox);
 	
 	//= Whats this button
@@ -265,7 +261,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	initializing = false;
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
-	headerWidget->setText("Callsign - KSFO - AIRPORT");
+	//headerWidget->setText("Callsign - KSFO - AIRPORT");
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 }
@@ -287,7 +283,7 @@ void LauncherWindow::initialize(){
 	load_settings();
 	mainObject->X->read_ini();
 
-	//= check paths are same
+	//= check paths are sane
 	if(!mainObject->X->paths_sane()){
 		mainObject->show_setup_wizard();
 	}
@@ -347,9 +343,6 @@ void LauncherWindow::save_settings()
 	QString message("Settings saved.");
 	headerWidget->showMessage(message);
 
-	//airportsWidget->save_settings();
-	//networkWidget->save_settings();
-	//expertOptionsWidget->save_settings();
     mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	outLog("FGx: LauncherWindow::save_settings() saved ***");
@@ -368,10 +361,6 @@ void LauncherWindow::load_settings()
 	QString message("Settings loaded.");
 	headerWidget->showMessage(message);
 	
-	//airportsWidget->load_settings();
-	//networkWidget->load_settings();
-	//expertOptionsWidget->load_settings();
-	exeTerraSync->setEnabled( mainObject->X->terrasync_enabled() );
 	outLog("FGx: Settings loaded in LauncherWIndow::load_settings()");
 	
 
@@ -478,7 +467,7 @@ void LauncherWindow::on_tab_changed(int tab_idx){
 
 
 	if(tab_idx == tabWidget->indexOf(expertOptionsWidget)){
-		on_command_preview();
+		//on_command_preview();
 	}else{
 		//= we dont want to restore to output preview cos it validates and will throw popup
 		mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
@@ -497,8 +486,10 @@ void LauncherWindow::on_whats_this() {
 void LauncherWindow::on_upx(QString option, bool enabled, QString value)
 {
 	Q_UNUSED(enabled);
-	Q_UNUSED(value);	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
-		QString header = QString("[%1] %2 %3").arg( mainObject->X->getx("--callsign=")
+	Q_UNUSED(value);	
+	
+	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
+		QString header = QString("<font color=#ff0000>%1</font> with Aircraft <b>%2</b> at Airport <b>%3</b>").arg( mainObject->X->getx("--callsign=")
 									).arg( mainObject->X->getx("--aircraft=")
 									).arg( mainObject->X->getx("--airport="));
 		headerWidget->setText( header );
