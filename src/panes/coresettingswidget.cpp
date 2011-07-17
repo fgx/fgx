@@ -59,14 +59,16 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	comboScreenSize->addItem("1280 x 1024", "1280x1024");
 	comboScreenSize->addItem("1600 x 900", "1600x900");
 	grpBoxScreen->addWidget(comboScreenSize);
-	connect(comboScreenSize, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_screensize()));
+	connect(comboScreenSize, SIGNAL(currentIndexChanged(int)),
+			this, SLOT(on_screensize())
+	);
 
 	
 	//= Full Screen
 	checkBoxFullScreenStartup = new QCheckBox(tr("Fullscreen mode"));
 	grpBoxScreen->addWidget(checkBoxFullScreenStartup);
-	connect(checkBoxFullScreenStartup, SIGNAL(clicked()), this, SLOT(on_checkbox_fullscreen()));
 	checkBoxFullScreenStartup->setWhatsThis(tr("<b>Full Screen</b><br><br>Will start FlightGear in Full Screen Mode (ESC to cancel mode)."));
+	connect(checkBoxFullScreenStartup, SIGNAL(clicked()), this, SLOT(on_screensize()));
 
 	//= Disable Splash
 	checkBoxDisableSplashScreen = new QCheckBox(tr("Disable Splash Screen"));
@@ -265,27 +267,31 @@ void CoreSettingsWidget::on_callsign_changed(QString txt)
 
 //=====================================
 // ScreenSize changed
-void CoreSettingsWidget::on_combo_screensize()
+void CoreSettingsWidget::on_screensize()
 {
 	if(comboScreenSize->currentIndex() == 0){
 		emit setx("--geometry=", false, "# no #");
-	}
-	emit setx( "--geometry=",
+	}else{
+		emit setx( "--geometry=",
 			   checkBoxFullScreenStartup->isChecked() == false,
 					comboScreenSize->itemData(comboScreenSize->currentIndex()).toString()
 			   );
+	}
+	//comboScreenSize->setDisabled( checkBoxFullScreenStartup->isChecked() );
+	emit setx( "--full-screen", checkBoxFullScreenStartup->isChecked(), "");
 }
 
 
 
 //=====================================
 // FullScreen Changed
+/*
 void CoreSettingsWidget::on_checkbox_fullscreen()
 {
 	comboScreenSize->setDisabled( checkBoxFullScreenStartup->isChecked() );
 	emit setx( "--full-screen", checkBoxFullScreenStartup->isChecked(), "");
 }
-
+*/
 //=====================================
 // SplashScreen Changed
 void CoreSettingsWidget::on_checkbox_splash_screen()

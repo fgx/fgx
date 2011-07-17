@@ -69,14 +69,12 @@ public slots:
 
 	void on_callsign_changed(QString);
 
-	void on_combo_screensize();
-	void on_checkbox_fullscreen();
+	void on_screensize();
 	void on_checkbox_splash_screen();
 
 	void on_show_mp_map();
 
 	void load_joysticks();
-	void on_radio_fg_path();
 
 	void on_upx(QString option, bool enabled, QString value);
 };
