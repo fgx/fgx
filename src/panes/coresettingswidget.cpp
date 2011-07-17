@@ -136,7 +136,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//----------------------------------------------
 	//= Terrasync Directory
 
-	labelTerraSyncInfo = new QLabel(tr(""));
+	labelTerraSyncInfo = new QLabel(tr("Terrasync scenery path:"));
 	grpFgPaths->addWidget(labelTerraSyncInfo, 1);
 
 	labelTerraSyncDataPath = new QLabel("");
@@ -145,7 +145,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelTerraSyncDataPath->setText( mainObject->X->terrasync_sync_data_path() );
 
 	//= Connect Mainobject (after paths wizard)
-	connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
+	//connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
 	
 
 	

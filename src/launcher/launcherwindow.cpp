@@ -287,7 +287,7 @@ void LauncherWindow::initialize(){
 	load_settings();
 	mainObject->X->read_ini();
 
-	//= check paths are same
+	//= check paths are sane
 	if(!mainObject->X->paths_sane()){
 		mainObject->show_setup_wizard();
 	}
@@ -347,9 +347,6 @@ void LauncherWindow::save_settings()
 	QString message("Settings saved.");
 	headerWidget->showMessage(message);
 
-	//airportsWidget->save_settings();
-	//networkWidget->save_settings();
-	//expertOptionsWidget->save_settings();
     mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	outLog("FGx: LauncherWindow::save_settings() saved ***");
@@ -368,10 +365,6 @@ void LauncherWindow::load_settings()
 	QString message("Settings loaded.");
 	headerWidget->showMessage(message);
 	
-	//airportsWidget->load_settings();
-	//networkWidget->load_settings();
-	//expertOptionsWidget->load_settings();
-	exeTerraSync->setEnabled( mainObject->X->terrasync_enabled() );
 	outLog("FGx: Settings loaded in LauncherWIndow::load_settings()");
 	
 
@@ -494,7 +487,7 @@ void LauncherWindow::on_tab_changed(int tab_idx){
 
 
 	if(tab_idx == tabWidget->indexOf(expertOptionsWidget)){
-		on_command_preview();
+		//on_command_preview();
 	}else{
 		//= we dont want to restore to output preview cos it validates and will throw popup
 		mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
