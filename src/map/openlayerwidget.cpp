@@ -79,9 +79,9 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	
 	//== Browser
 	webView = new QWebView();
-	mainLayout->addWidget(webView, 500);
+	mainLayout->addWidget(webView,10);
 	webView->page()->networkAccessManager()->setCache(networkDiskCache);
-	webView->page()->networkAccessManager()->setCookieJar(networkCookieJar);
+	//webView->page()->networkAccessManager()->setCookieJar(networkCookieJar);
 	connect(webView, SIGNAL(loadStarted()), this, SLOT(start_progress()));
 	connect(webView, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
 	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));
@@ -107,6 +107,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	//connect(groupZoom, SIGNAL(buttonClicked(QAbstractButton*)),
 	//		this, SLOT(on_zoom_action(QAbstractButton*))
 	//);
+	/*
 	for(int z=1; z < 15; z++){
 		QToolButton *act = new QToolButton(this);
 		act->setText(QString(" %1 ").arg(z));
@@ -117,7 +118,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 		statusBar->addPermanentWidget(act);
 		groupZoom->addButton(act);
 	}
-
+	*/
 
 
 
@@ -125,19 +126,6 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	init_xmap();
 }
 
-
-//void OpenLayerWidget::init_xmap(){
-	//return;
-	//webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
-	//QUrl server_url( "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/fgx-map/fgx-map.html" );
-	//QUrl server_url( QDir::currentPath().append("/fgx.app/Contents/Resources/openlayers/fgx-map/fgx-map.html"));
-	//connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
-	//connect(webView, SIGNAL(loadStarted()), this, SLOT(setLatLon()));
-	//connect(webView, SIGNAL(loadStarted()), this, SLOT(setZoom()));
-	//connect(webView, SIGNAL(loadStarted()), this, SLOT(addRunway()));
-	//webView->load( server_url );
-	//statusBar->showMessage(QString("Loading: ").append( server_url.toString()) );
-//}
 
 
 //===========================================================================
@@ -161,8 +149,10 @@ void OpenLayerWidget::init_xmap(){
 
 		QByteArray contents = file.readAll();
 		qDebug() << "contents OK";
-		webView->setHtml(contents);//, QUrl("qrc:///openlayers/"));
-		webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
+		//webView->setHtml("<html><head><title>FOO</title></head><body><h1>HELP</h1><h1>HELP</h1><h1>HELP</h1><h1>HELP</h1></body></html>");
+		webView->setHtml(contents, QUrl("qrc:///"));
+		//webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
+		qDebug() << webView->title();
 
 	}
 	map_initialized = true;

@@ -10,7 +10,8 @@
 	<!-- <script src="http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=euzuro-openlayers"></script> -->
     
 	<!-- this is our main api -->
-	<script src="qrc:///lib/OpenLayers.js"></script>
+
+	<script src="lib/OpenLayers.js"></script>
 <script>
 	//alert("ere");
 </script>
@@ -43,16 +44,16 @@
 	
     <script type="text/javascript">
         var lon, lat;
-		var zoom;
+		var zoom = 4;
 		
 		var rwyLon1, rwyLat1, rwyLon2, rwyLat2;
 		
         var map, layer;
 		
         function init(){
-            
+           
 			map = new OpenLayers.Map('map');
-			
+			// alert("init");
 			// add OpenStreetMap layer
 			layer = new OpenLayers.Layer.OSM( "OSM Map");
             map.addLayer(layer);
@@ -67,7 +68,7 @@
                     map.getProjectionObject()
                 ), zoom
             );
-			
+			 
 			//setting vector layer style
 			var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
 				
@@ -92,14 +93,15 @@
 			// drawing a point
 			var point = new OpenLayers.Geometry.Point(5,40).transform(osmprojection,map.getProjectionObject());
             var feature = new OpenLayers.Feature.Vector(point,null, pointDefaultStyle);
-			
+			/*
 			var points = new Array(
                           new OpenLayers.Geometry.Point(rwyLon1, rwyLat1),
                           new OpenLayers.Geometry.Point(rwyLon2, rwyLat2)
                           );
 
-			
+			*/
 			// add a runway
+			/*
 			var points = new Array(
                           new OpenLayers.Geometry.Point(rwyLon1, rwyLat1),
                           new OpenLayers.Geometry.Point(rwyLon2, rwyLat2)
@@ -112,12 +114,13 @@
 			vectorLayer.addFeatures(feature);
 			vectorLayer.addFeatures(runwayFeature);
             map.addLayer(vectorLayer);
-
+			*/
+		alert("init done");
 
         }
     </script>
   </head>
   <body onload="init()">
-    <div id="map"></div>
+    <div id="map" style="width: 100%; height: 100%;"></div>
   </body>
 </html>
