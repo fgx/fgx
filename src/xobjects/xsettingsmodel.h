@@ -1,7 +1,11 @@
 #ifndef XSETTINGSMODEL_H
 #define XSETTINGSMODEL_H
 
+#include <QString>
+#include <QStringList>
+
 #include <QStandardItemModel>
+#include <QModelIndex>
 
 #include "xobjects/xopt.h"
 #include "xobjects/mainobject.h"
@@ -29,6 +33,8 @@ public:
 	bool _loading;
 
 	void add_option(QString option, bool enabled, QString value, QString preset, int level, QString description, QString area);
+
+	QModelIndex get_index(QString option);
 
 	QString getx(QString option);
 	QString getx(QString option, bool return_default);

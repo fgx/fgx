@@ -112,6 +112,7 @@ public slots:
 	void on_update_airports_filter();
 
 	void on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx);
+	void on_airport_info_selection_changed();
 
 	void on_reload_cache();
 

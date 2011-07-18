@@ -16,6 +16,10 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 	setMinimumWidth(800);
 	setMinimumHeight(600);
 
+	setProperty("settings_namespace", QVariant("fgxdebug_window"));
+	mainObject->settings->restoreWindow(this);
+
+
 	QVBoxLayout *mainLayout = new QVBoxLayout();
 	setLayout(mainLayout);
 
@@ -59,3 +63,12 @@ void FgxDebugWidget::on_tab(int idx)
 {
 	mainObject->settings->setValue("fgx_debug_last_tab", idx);
 }
+
+//= window close
+void FgxDebugWidget::closeEvent(QCloseEvent *event){
+
+	mainObject->settings->saveWindow(this);
+	mainObject->settings->sync();
+	event->accept();
+}
+

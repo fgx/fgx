@@ -31,7 +31,7 @@ signals:
 public slots:
 	void on_tab(int idx);
 
-
+	void closeEvent(QCloseEvent *event);
 };
 
 #endif // FGXDEBUGWIDGET_H

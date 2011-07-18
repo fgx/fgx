@@ -119,6 +119,7 @@ public slots:
 
 	void on_upx(QString option, bool enabled, QString value);
 
+	void on_debug_mode();
 };
 
 #endif // LAUNCHERWINDOW_H

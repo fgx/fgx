@@ -47,9 +47,10 @@ public:
 
 	QLineEdit *txtNav1;
 	QLineEdit *txtNav2;
-	QLineEdit *txtAdf;
-	QLineEdit *txtComm1;
-	QLineEdit *txtComm2;
+	QLineEdit *txtAdf1;
+	QLineEdit *txtAdf2;
+	QLineEdit *txtCom1;
+	QLineEdit *txtCom2;
 	
 	QCheckBox *checkBoxUseDefaultFuel;
 	QCheckBox *checkBoxFuelFreeze;

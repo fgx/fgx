@@ -135,24 +135,27 @@ QStringList ExpertOptionsWidget::get_env(){
 //==========================================================
 //= Events
 //==========================================================
+
+//= Extras Options changed
 void ExpertOptionsWidget::on_extra()
 {
 	emit setx("extra_args", true, txtExtraArgs->toPlainText().trimmed());
 }
 
-
+//= Extra Env changed
 void ExpertOptionsWidget::on_env()
 {
 	emit setx("extra_env", true, txtExtraEnv->toPlainText().trimmed());
 }
 
+//= Log level changed
 void ExpertOptionsWidget::on_log_level()
 {
-
 	QString log = comboLogLevels->itemData(comboLogLevels->currentIndex()).toString();
 	emit setx("--log-level=", log != "none",  log);
 }
 
+//= Runtime changed
 void ExpertOptionsWidget::on_runtime()
 {
 	emit setx("runtime", true, txtRuntime->text().trimmed());
@@ -163,10 +166,14 @@ void ExpertOptionsWidget::on_runtime()
 //==========================================================
 //= Update
 //==========================================================
+// NOTE: QPlainTextEfit need only be "set" when
+//       text is different to void recursive loop
 
 void ExpertOptionsWidget::on_upx(QString option, bool enabled, QString value)
 {
 	Q_UNUSED(enabled);
+
+
 
 	if(option == "extra_args"){
 		if(value != txtExtraArgs->toPlainText()){

@@ -35,12 +35,14 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	headers  << "Option" << "Ena" << "Val" << "Default" << "Level" << "Description" << "Class";
 	setHorizontalHeaderLabels(headers);
 
+
+
 	//========================================================================
 	// This list wil be the main issue and debates for a long time probably, said pete
 	//========================================================================
 
 
-	//+++++++
+	//==================
 	add_option("fgfs_use_default", false,"","",0,"","paths");
 	add_option("fgfs_custom_path", false,"","",0,"","paths");
 	add_option("fgroot_custom_path", false,"","",0,"","paths");
@@ -73,7 +75,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 
 
-	add_option( "--airport=", false,"", "", 1 ,"Airport","Airport");
+
 
 
 	//= Season
@@ -107,10 +109,12 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	//-- Radio
 	add_option( "--nav1=",false, "", "",3,"","Radio");
 	add_option( "--nav2=",false, "", "",3,"","Radio");
-	add_option( "--adf=",false, "", "",3,"","Radio");
+	add_option( "--adf1=",false, "", "",3,"","Radio");
+	add_option( "--adf2=",false, "", "",3,"","Radio");
 	add_option( "--com1=",false, "", "",3,"","Radio");
 	add_option( "--com2=",false, "", "",3,"","Radio");
 
+	//== Aircraft
 	add_option( "--aircraft=", false,"", "", 1 ,"Aircraft","Aircraft");
 	add_option( "use_default_aircraft",true,"","",1,"","Aircraft");
 	
@@ -121,8 +125,12 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--prop:/consumables/fuels/tank[2]/level-gal=",false, "", "",9,"","Fuel");
 	add_option( "--prop:/consumables/fuels/tank[3]/level-gal=",false, "", "",9,"","Fuel");
 	
-	//* Airport Tab
-	
+	//= Airport Tab
+	add_option( "--airport=", false,"", "", 1 ,"Airport","Airport");
+	add_option( "--runway=", false,"", "", 1 ,"Runway","Airport");
+	add_option( "--parking-id=", false,"", "", 1 ,"Parking","Airport");
+	add_option("runway_stand", false, "", "",1,"Flag to whether runway or stand", "Airport" );
+
 	// Coordinates
 	add_option( "use_coordinates",false, "", "",3,"","Coordinates");
 	add_option( "--vor=",false, "", "",3,"","Coordinates");
@@ -187,6 +195,12 @@ void XSettingsModel::set_option(QString option, bool enabled, QString value)
 	//= Announce the change
 	emit upx(option, enabled,  value);
 	emit updated(get_fgfs_list());
+}
+
+QModelIndex XSettingsModel::get_index(QString option)
+{
+	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
+	return indexFromItem(items[0]);
 }
 
 //==================================================
