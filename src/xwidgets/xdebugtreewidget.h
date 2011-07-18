@@ -24,13 +24,14 @@ public:
 
 	QSortFilterProxyModel *proxyModel;
 
+	QTreeView *tree;
 
 signals:
 
 
 public slots:
 	void on_filter(QAction*);
-
+	void on_select_a_node(QString option, bool enabled, QString value);
 };
 
 #endif // XDEBUGTREEWIDGET_H

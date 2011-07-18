@@ -31,6 +31,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//= XSettings Object
     settings = new XSettings();
+	debug_mode = settings->value("DEBUG_MODE","0").toBool();
 
 	//= NEW Settings Model
 	X = new XSettingsModel(this);
@@ -188,7 +189,7 @@ MainObject::MainObject(QObject *parent) :
 	actionDebugMode->setChecked(true);
 	popupMenu->addAction(actionDebugMode);
 	connect(actionDebugMode, SIGNAL(triggered()),
-			this, SLOT(on_debug_mode())
+			this, SLOT(set_debug_mode())
 	);
 
 
@@ -418,12 +419,13 @@ void MainObject::on_view_fgx_debug(){
 	fgxDebugWidget->show();
 }
 
-void MainObject::on_debug_mode()
+void MainObject::set_debug_mode()
 {
-	emit debug_mode(actionDebugMode->isChecked());
+	debug_mode = actionDebugMode->isChecked();
+	emit on_debug_mode(debug_mode);
 }
 
-
+//void MainObject::on_debug_mode()
 
 //===========================================================================
 //** OS detection

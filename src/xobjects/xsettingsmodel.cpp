@@ -129,6 +129,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--airport=", false,"", "", 1 ,"Airport","Airport");
 	add_option( "--runway=", false,"", "", 1 ,"Runway","Airport");
 	add_option( "--parking=", false,"", "", 1 ,"Parking","Airport");
+	add_option("runway_stand", false, "", "",1,"Flag to whether runway or stand", "Airport" );
 
 	// Coordinates
 	add_option( "use_coordinates",false, "", "",3,"","Coordinates");
@@ -194,6 +195,12 @@ void XSettingsModel::set_option(QString option, bool enabled, QString value)
 	//= Announce the change
 	emit upx(option, enabled,  value);
 	emit updated(get_fgfs_list());
+}
+
+QModelIndex XSettingsModel::get_index(QString option)
+{
+	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
+	return indexFromItem(items[0]);
 }
 
 //==================================================

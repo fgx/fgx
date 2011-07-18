@@ -69,6 +69,8 @@ public:
 	};
 	static int runningOs();
 
+	bool debug_mode;
+
 	static QString log_file_path();
 
 	QString data_file(QString file_name);
@@ -129,7 +131,7 @@ public:
 signals:
 	void show_settings(int);
 	void reload_paths();
-	void debug_mode(bool enabled);
+	void on_debug_mode(bool enabled);
 
 public slots:
 
@@ -159,7 +161,7 @@ public slots:
 	void quit();
 
 	void on_view_fgx_debug();
-	void on_debug_mode();
+	void set_debug_mode();
 
 	//void on_about_qt();
 	//void on_about_fgx();

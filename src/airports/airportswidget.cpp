@@ -511,9 +511,9 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 	statusBarAirportInfo->showMessage(count_label);
 
-	//* Restore previous node from settings
+	//= Restore previous node from settings
 	QList<QTreeWidgetItem *> items = treeWidgetAirportInfo->findItems(
-														mainObject->settings->value("runway_stand").toString(),
+														mainObject->X->getx("runway_stand"),
 														Qt::MatchExactly | Qt::MatchRecursive,
 														CI_SETTING_KEY);
 	if(items.size() > 0){

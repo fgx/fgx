@@ -33,9 +33,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 {
 	
 	
-	//#####= Set to true to show all exec controls
-	bool show_all_exe_controls = false;
-
 
 	initializing = true;
     mainObject = mainOb;
@@ -218,7 +215,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	connect(mainObject->processFgCom, SIGNAL(running(bool)), exeFgCom, SLOT(set_running(bool)));
 	connect(exeFgCom, SIGNAL(stop()), mainObject->processFgCom, SLOT(stop()));
-	exeFgCom->setVisible(show_all_exe_controls);
 
 	//= TerraSync
 	exeTerraSync = new ExeControls("TerraSync");
@@ -229,7 +225,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	connect(mainObject->processTerraSync, SIGNAL(running(bool)), exeTerraSync, SLOT(set_running(bool)));
 	connect(exeTerraSync, SIGNAL(stop()), mainObject->processTerraSync, SLOT(stop()));
-	exeTerraSync->setVisible(show_all_exe_controls);
 
 	//= FlightGear
 	exeFgfs = new ExeControls("FgFs");
@@ -239,7 +234,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 			);
 	connect(mainObject->processFgFs, SIGNAL(running(bool)), exeFgfs, SLOT(set_running(bool)));
 	connect(exeFgfs, SIGNAL(stop()), mainObject->processFgFs, SLOT(stop()));
-	exeFgfs->setVisible(show_all_exe_controls);
 
 	//= All
 	exeAll = new ExeControls("FlightGear");
@@ -250,6 +244,8 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 			);
 	connect(mainObject->processFgFs, SIGNAL(running(bool)), exeAll, SLOT(set_running(bool)));
 	connect(exeAll, SIGNAL(stop()), mainObject, SLOT(stop_all()) );
+
+	on_debug_mode(); //= Show hide exe widgets
 
 	//====================================================================================
 	//* Problem:  Qt Has no "Show event" for a "widget", so we need to present Widgets first
@@ -263,6 +259,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	//headerWidget->setText("Callsign - KSFO - AIRPORT");
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+	connect(mainObject, SIGNAL(on_debug_mode(bool)), this, SLOT(on_debug_mode()));
 
 }
 
@@ -494,4 +491,13 @@ void LauncherWindow::on_upx(QString option, bool enabled, QString value)
 									).arg( mainObject->X->getx("--airport="));
 		headerWidget->setText( header );
 	}
+}
+
+
+void LauncherWindow::on_debug_mode()
+{
+	exeFgfs->setVisible(mainObject->debug_mode == true);
+	exeFgCom->setVisible(mainObject->debug_mode == true);
+	exeTerraSync->setVisible(mainObject->debug_mode == true);
+	exeAll->setVisible(mainObject->debug_mode == false);
 }
