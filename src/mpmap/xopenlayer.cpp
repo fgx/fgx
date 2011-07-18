@@ -1,7 +1,5 @@
 
 
-//#include <QtCore/QDebug>
-
 #include <QtCore/QByteArray>
 #include <QtCore/QFile>
 #include <QtCore/QStringList>
@@ -100,6 +98,8 @@ void XOpenLayerWidget::init_xmap(){
 	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 	QUrl server_url( "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/fgx-map/fgx-map.html" );
 	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
+	connect(webView, SIGNAL(loadStarted()), this, SLOT(setLatLon()));
+	connect(webView, SIGNAL(loadStarted()), this, SLOT(setZoom()));
 	webView->load( server_url );
 	statusBar->showMessage(QString("Loading: ").append( server_url.toString()) );
 }
@@ -113,6 +113,19 @@ void XOpenLayerWidget::closeEvent(QCloseEvent *event)
 
 void XOpenLayerWidget::loadFinished(bool)
 {
-    QVariant jsReturn = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("testFunction('jsReturn is working.')");
+    QVariant jsReturn = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("testFunction('loadFinished testFunction with QVariant jsReturn is working.')");
     qDebug() << jsReturn.toString();
+}
+
+void XOpenLayerWidget::setLatLon()
+{
+    QVariant lat = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var lat = 40;");
+	QVariant lon = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var lon = 5;");
+    qDebug() << "lat: " << lat.toString() << "lon: " << lon.toString();
+}
+
+void XOpenLayerWidget::setZoom()
+{
+    QVariant zoom = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var zoom = 5;");
+    qDebug() << "zoom: " << zoom.toString();
 }

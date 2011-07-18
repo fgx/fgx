@@ -52,6 +52,8 @@ signals:
 	void init_xmap();
     void closeEvent(QCloseEvent *event);
 	void loadFinished(bool);
+	void setLatLon();
+	void setZoom();
 };
 
 #endif // XOPENLAYERWIDGET
