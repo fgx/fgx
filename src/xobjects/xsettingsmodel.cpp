@@ -128,7 +128,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	//= Airport Tab
 	add_option( "--airport=", false,"", "", 1 ,"Airport","Airport");
 	add_option( "--runway=", false,"", "", 1 ,"Runway","Airport");
-	add_option( "--parking=", false,"", "", 1 ,"Parking","Airport");
+	add_option( "--parking-id=", false,"", "", 1 ,"Parking","Airport");
 	add_option("runway_stand", false, "", "",1,"Flag to whether runway or stand", "Airport" );
 
 	// Coordinates

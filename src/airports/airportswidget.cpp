@@ -135,6 +135,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	layoutAptTopBar->addStretch(20);
 
+
 	buttonViewMap = new QToolButton(this);
 	layoutAptTopBar->addWidget(buttonViewMap);
 	buttonViewMap->setText("View Map");
@@ -256,10 +257,14 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	treeWidgetAirportInfo->setColumnHidden(CI_WIDTH,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_LENGTH,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_ALIGNMNET,true);
+	treeWidgetAirportInfo->setColumnHidden(CI_RUNWAYS, true);
 
 
 	treeWidgetAirportInfo->setColumnWidth(CI_NODE, 120);
 	treeWidgetAirportInfo->header()->setStretchLastSection(true);
+
+	connect(treeWidgetAirportInfo, SIGNAL(itemSelectionChanged()), this, SLOT(on_airport_info_selection_changed()));
+
 
 	statusBarAirportInfo = new QStatusBar();
 	statusBarAirportInfo->setSizeGripEnabled(false);
@@ -355,8 +360,9 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 
 
-	//==============================================================
-	// Map Widget Placeholfer
+	//============================================================================
+	// Map Widget Placeholder
+	//============================================================================
 	mapPlaceholder = new XGroupVBox("Map Placeholder");
 	mapPlaceholder->setMinimumWidth(400);
 	mainLayout->addWidget(mapPlaceholder);
@@ -366,13 +372,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	mapPlaceholder->addWidget(lblMapPlaceholder);
 
 
-
-
-
-
-
-
-
+	//============================================================================
 	//== Main Settings connection
 	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
@@ -381,6 +381,8 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 }
 
+//==============================================
+//== Initialize
 void AirportsWidget::initialize(){
 	static bool first_load_done = false;
 	if(first_load_done){
@@ -399,7 +401,7 @@ void AirportsWidget::initialize(){
 
 
 //============================================================================
-//** Load Airports Tree
+//== Load Airports Tree
 //============================================================================
 void AirportsWidget::load_airports_tree(){
 
@@ -434,10 +436,10 @@ void AirportsWidget::load_airports_tree(){
 		line = in.readLine();
 	}
 
-	//* Update the status bar with the count
+	//= Update the status bar with the count
 	statusBarAirports->showMessage( QString("%1 airports").arg(model->rowCount()) );
 
-	//* Restore previous airport from settings.. if found
+	//= Restore previous airport from settings.. if found
 	QList<QStandardItem *> items = model->findItems( mainObject->X->getx("--airport=", "KSFO"), Qt::MatchExactly, CA_CODE);
 	if(items.count() > 0){
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
@@ -472,6 +474,8 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 	//= No selection -eg a filter removing a selected node
 	if(!currentIdx.isValid()){
 		emit setx("--airport=", false, "");
+		emit setx("--runway=", false, "");
+		emit setx("--parking-id=", false,"");
 		return;
 	}
 	//= Get the airport code forn source model
@@ -479,6 +483,8 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 	QString airport_code = model->item(srcIndex.row(), CA_CODE)->text();
 	QString airport_dir = model->item(srcIndex.row(), CA_DIR)->text();
 	emit setx("--airport=", true, airport_code);
+	emit setx("--runway=", false, "");
+	emit setx("--parking-id=", false,"");
 	load_info_tree(airport_dir, airport_code);
 
 }
@@ -511,15 +517,31 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 	statusBarAirportInfo->showMessage(count_label);
 
-	//= Restore previous node from settings
-	QList<QTreeWidgetItem *> items = treeWidgetAirportInfo->findItems(
-														mainObject->X->getx("runway_stand"),
+	//= Restore Runway node from settings
+	XOpt optRunway = mainObject->X->get_opt("--runway=");
+	if(optRunway.enabled){
+		QList<QTreeWidgetItem *> items = treeWidgetAirportInfo->findItems(
+														optRunway.value,
 														Qt::MatchExactly | Qt::MatchRecursive,
-														CI_SETTING_KEY);
-	if(items.size() > 0){
-		treeWidgetAirportInfo->setCurrentItem(items.at(0));
+														CI_NODE);
+		if(items.size() > 0){
+			treeWidgetAirportInfo->setCurrentItem(items[0]);
+			treeWidgetAirportInfo->scrollToItem(items[0], QAbstractItemView::EnsureVisible);
+		}
+		return; //= dontbother with stand below as we found runway
 	}
-
+	//= Restore Stand node from settings
+	XOpt optStand = mainObject->X->get_opt("--parking-id=");
+	if(optStand.enabled){
+		QList<QTreeWidgetItem *> items = treeWidgetAirportInfo->findItems(
+														optStand.value,
+														Qt::MatchExactly | Qt::MatchRecursive,
+														CI_NODE);
+		if(items.size() > 0){
+			treeWidgetAirportInfo->setCurrentItem(items[0]);
+			treeWidgetAirportInfo->scrollToItem(items[0], QAbstractItemView::EnsureVisible);
+		}
+	}
 }
 
 //==============================================================
@@ -683,8 +705,8 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 
 	//* Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
 	QString file_path(airport_dir.append("/").append(airport_code));
-	file_path.append(mainObject->settings->value("use_terrasync").toBool() == true ? ".groundnet.xml" : ".parking.xml");
-
+	file_path.append( mainObject->X->terrasync_enabled() ? ".groundnet.xml" : ".parking.xml");
+	qDebug() << file_path;
 	//* Check parking file exists
 	if(QFile::exists(file_path)){
 
@@ -879,4 +901,37 @@ void AirportsWidget::on_upx(QString option, bool enabled, QString value)
 	}
 	
 	
+}
+
+
+void AirportsWidget::on_airport_info_selection_changed()
+{
+	//= No Selection
+	if(treeWidgetAirportInfo->selectionModel()->hasSelection() == false){
+		emit setx("--runway=", false, "");
+		emit setx("--parking-id=", false,"");
+		return;
+	}
+
+	QTreeWidgetItem *item = treeWidgetAirportInfo->currentItem();
+
+	//= Its a runway
+	if(item->text(CI_TYPE) == "runway"){
+		emit setx("--runway=", true, item->text(CI_NODE));
+		emit setx("--parking-id=", false,"");
+		return;
+	}
+
+	//= Its a runway
+	if(item->text(CI_TYPE) == "stand"){
+		emit setx("--runway=", false, "");
+		emit setx("--parking-id=", true, item->text(CI_NODE));
+		return;
+	}
+
+	//.if(treeWidgetAirportInfo->indexOfTopLevelItem(item) != -1){
+	//	emit setx("--runway=", false, "");
+	//	emit setx("--parking-id=", false,"");
+	//}
+
 }
