@@ -66,6 +66,7 @@ XOpenLayerWidget::XOpenLayerWidget(MainObject *mob, QWidget *parent) :
 	connect(webView, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
 	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));
 	
+	
     //*** Status Bar
     statusBar = new QStatusBar(this);
     mainLayout->addWidget(statusBar);
@@ -98,6 +99,7 @@ void XOpenLayerWidget::end_progress(bool Ok){
 void XOpenLayerWidget::init_xmap(){
 	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 	QUrl server_url( "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/fgx-map/fgx-map.html" );
+	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
 	webView->load( server_url );
 	statusBar->showMessage(QString("Loading: ").append( server_url.toString()) );
 }
@@ -107,4 +109,10 @@ void XOpenLayerWidget::closeEvent(QCloseEvent *event)
 {
 	mainObject->settings->saveWindow(this);
 	Q_UNUSED(event);
+}
+
+void XOpenLayerWidget::loadFinished(bool)
+{
+    QVariant jsReturn = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("testFunction('jsReturn is working.')");
+    qDebug() << jsReturn.toString();
 }
