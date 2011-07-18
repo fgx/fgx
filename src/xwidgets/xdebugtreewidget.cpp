@@ -89,9 +89,10 @@ void XDebugTreeWidget::on_filter(QAction *act)
 
 void XDebugTreeWidget::on_select_a_node(QString option, bool enabled, QString value)
 {
+	return; // TODO
 	Q_UNUSED(enabled);
 	Q_UNUSED(value);
 	tree->selectionModel()->setCurrentIndex( proxyModel->mapFromSource(mainObject->X->get_index(option)), QItemSelectionModel::Rows );
 	tree->selectionModel()->select( proxyModel->mapFromSource(mainObject->X->get_index(option)), QItemSelectionModel::Rows );
-	qDebug() << "select" << option << " " << mainObject->X->get_index(option).row();
+	//qDebug() << "select" << option << " " << mainObject->X->get_index(option).row();
 }
