@@ -83,7 +83,7 @@
 			
 
 			// adding a vector layer with osm projection
-			var vectorLayer = new OpenLayers.Layer.Vector("Glyphs", {projection: map.displayProjection});
+			var vectorLayer = new OpenLayers.Layer.Vector("Glyphs", osmprojection);
 			
 			// drawing a point
 			var point = new OpenLayers.Geometry.Point(5,40).transform(osmprojection,map.getProjectionObject());
