@@ -248,26 +248,33 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 	//= ADF
 	row++;
-	layoutAeroPane->addWidget(new QLabel(tr("ADF")), row, 0, 1, 1, Qt::AlignRight);
-	txtAdf = new QLineEdit();
-	txtAdf->setValidator(new QDoubleValidator(0, 200,0, this));
-	layoutAeroPane->addWidget(txtAdf, row, 1, 1, 1);
-	connect(txtAdf, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
+	layoutAeroPane->addWidget(new QLabel(tr("ADF1")), row, 0, 1, 1, Qt::AlignRight);
+	txtAdf1 = new QLineEdit();
+	txtAdf1->setValidator(new QDoubleValidator(0, 200,0, this));
+	layoutAeroPane->addWidget(txtAdf1, row, 1, 1, 1);
+	connect(txtAdf1, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
+
+	row++;
+	layoutAeroPane->addWidget(new QLabel(tr("ADF2")), row, 0, 1, 1, Qt::AlignRight);
+	txtAdf2 = new QLineEdit();
+	txtAdf2->setValidator(new QDoubleValidator(0, 200,0, this));
+	layoutAeroPane->addWidget(txtAdf2, row, 1, 1, 1);
+	connect(txtAdf2, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
 
 	//= Comms
 	row++;
 	layoutAeroPane->addWidget(new QLabel(tr("COM1")), row, 0, 1, 1, Qt::AlignRight);
-	txtComm1 = new QLineEdit();
-	txtComm1->setValidator(new QDoubleValidator(0, 200, 2, this));
-	layoutAeroPane->addWidget(txtComm1,row, 1, 1, 1);
-	connect(txtComm1, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
+	txtCom1 = new QLineEdit();
+	txtCom1->setValidator(new QDoubleValidator(0, 200, 2, this));
+	layoutAeroPane->addWidget(txtCom1,row, 1, 1, 1);
+	connect(txtCom1, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
 
 	row++;
 	layoutAeroPane->addWidget(new QLabel(tr("COM2")), row, 0, 1, 1, Qt::AlignRight);
-	txtComm2 = new QLineEdit();
-	txtComm2->setValidator(new QDoubleValidator(0, 200, 2, this));
-	layoutAeroPane->addWidget(txtComm2,row, 1, 1, 1);
-	connect(txtComm2, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
+	txtCom2 = new QLineEdit();
+	txtCom2->setValidator(new QDoubleValidator(0, 200, 2, this));
+	layoutAeroPane->addWidget(txtCom2,row, 1, 1, 1);
+	connect(txtCom2, SIGNAL(textChanged(QString)), this, SLOT(on_navs_changed()));
 
 
 	layoutAeroPane->setRowStretch(row + 1, 20); // stretch end
@@ -473,9 +480,10 @@ void AircraftWidget::on_navs_changed()
 {
 	emit setx("--nav1=", true, txtNav1->text());
 	emit setx("--nav2=", true, txtNav2->text());
-	emit setx("--adf=", true, txtAdf->text());
-	emit setx("--com1=", true, txtComm1->text());
-	emit setx("--com2=", true, txtComm2->text());
+	emit setx("--adf1=", true, txtAdf1->text());
+	emit setx("--adf2=", true, txtAdf2->text());
+	emit setx("--com1=", true, txtCom1->text());
+	emit setx("--com2=", true, txtCom2->text());
 
 }
 
@@ -503,25 +511,31 @@ void AircraftWidget::on_fuel_changed()
 void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 {
 	Q_UNUSED(enabled);
-	//= NOTE: The --aircraft= is detected as the tree loads from cache
+	//= NOTE: The --aircraft=. --runway, etc is detected as the tree loads from cache
 
-	//* tab radio
+	//=== tab radio
 	if(option == "--nav1="){
 		txtNav1->setText(value);
 
 	}else if(option == "--nav2="){
 		txtNav2->setText(value);
 
-	}else if(option == "--adf="){
-		txtAdf->setText(value);
+
+	}else if(option == "--adf1="){
+		txtAdf1->setText(value);
+
+	}else if(option == "--adf2="){
+		txtAdf2->setText(value);
+
 
 	}else if(option == "--com1="){
-		txtComm1->setText(value);
+		txtCom1->setText(value);
 
 	}else if(option == "--com2="){
-		txtComm2->setText(value);
+		txtCom2->setText(value);
 
-	// tab fuel
+
+	//=== tab fuel
 	}else if(option == "use_default_aircraft"){
 		checkBoxUseDefault->setChecked(enabled);
 		
