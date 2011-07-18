@@ -59,7 +59,7 @@
             map.addLayer(layer);
             map.setCenter(
                 new OpenLayers.LonLat(lon, lat).transform(
-                    new OpenLayers.Projection("EPSG:4326"),
+                    osmprojection,
                     map.getProjectionObject()
                 ), zoom
             );
