@@ -812,12 +812,12 @@ QString AirportsWidget::validate(){
 
 
 void AirportsWidget::on_view_map(){
-	qDebug() << "on_map";
-	QString cApt = current_airport();
-	QList<QTreeWidgetItem *> runways = treeWidgetAirportInfo->findItems("1", Qt::MatchExactly | Qt::MatchRecursive, CI_RUNWAYS);
-	qDebug() << "runways" << runways.length();
-	mainObject->mpMapXWidget->add_airport(cApt);
-	for(int idx =0; idx < runways.length(); idx++){
+	qDebug() << "Map: OpenLayer";
+	//QString cApt = current_airport();
+	//QList<QTreeWidgetItem *> runways = treeWidgetAirportInfo->findItems("1", Qt::MatchExactly | Qt::MatchRecursive, CI_RUNWAYS);
+	//qDebug() << "runways" << runways.length();
+	//mainObject->mpMapXWidget->add_airport(cApt);
+	/*for(int idx =0; idx < runways.length(); idx++){
 		//qDebug() << item->child(idx)->text(CI_LAT);
 		mainObject->mpMapXWidget->add_runway(cApt,
 										runways.at(idx)->child(0)->text(CI_NODE),
@@ -828,9 +828,9 @@ void AirportsWidget::on_view_map(){
 										runways.at(idx)->child(1)->text(CI_LNG)
 										);
 
-	}
-	mainObject->mpMapXWidget->show_airport(cApt);
-	mainObject->mpMapXWidget->show();
+	}*/
+	//mainObject->mpMapXWidget->show_airport(cApt);
+	mainObject->xOpenLayerWidget->show();
 
 }
 

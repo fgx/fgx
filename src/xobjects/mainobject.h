@@ -25,6 +25,7 @@ class XProcess;
 class LauncherWindow;
 
 #include "mpmap/mpmapwidget.h"
+#include "mpmap/xopenlayer.h"
 #include "mpmap/mpmapxwidget.h"
 #include "logs/viewlogswidget.h"
 #include "props/propstreewidget.h"
@@ -35,6 +36,7 @@ class MpMapXWidget;
 class ViewLogsWidget;
 class PropsTreeWidget;
 class FgxDebugWidget;
+class XOpenLayerWidget;
 
 
 
@@ -85,6 +87,7 @@ public:
 	LauncherWindow *launcherWindow;
 	MpMapWidget *mpMapWidget;
 	MpMapXWidget *mpMapXWidget;
+	XOpenLayerWidget *xOpenLayerWidget;
 	ViewLogsWidget *viewLogsWidget;
 	PropsTreeWidget *propertiesBrowser;
 	FgxDebugWidget *fgxDebugWidget;

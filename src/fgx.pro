@@ -67,7 +67,8 @@ HEADERS += xobjects/xsettings.h \
     launcher/headerwidget.h \
     xwidgets/xcommandpreviewidget.h \
     xobjects/xopt.h \
-	xwidgets/xdebugtreewidget.h
+	xwidgets/xdebugtreewidget.h \
+	mpmap/xopenlayer.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -128,9 +129,11 @@ SOURCES += main.cpp \
     launcher/headerwidget.cpp \
     xwidgets/xcommandpreviewidget.cpp \
     xobjects/xopt.cpp \
-	xwidgets/xdebugtreewidget.cpp
+	xwidgets/xdebugtreewidget.cpp \
+	mpmap/xopenlayer.cpp
 RESOURCES += resources/ycons.qrc \
     resources/artwork.qrc \
     resources/fonts.qrc \
-    resources/google_map.qrc
+    resources/google_map.qrc \
+	resources/fgx-map.qrc
 CONFIG += console

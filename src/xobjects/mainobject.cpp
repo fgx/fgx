@@ -221,6 +221,10 @@ MainObject::MainObject(QObject *parent) :
 	//= FGx Map Widget
 	mpMapXWidget = new MpMapXWidget(this);
 	mpMapXWidget->hide();
+	
+	//= FGx Map Widget
+	xOpenLayerWidget = new XOpenLayerWidget(this);
+	xOpenLayerWidget->hide();
 
 
 	//= Log Viewer is hidden
