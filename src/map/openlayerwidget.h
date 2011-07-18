@@ -66,9 +66,9 @@ signals:
 	//====================================
 	//== Map Events
 	void map_debug(QVariant);
-	void map_mouse_move(QVariant lat, QVariant lng);
-	void map_click(QVariant lat, QVariant lng);
-	void map_right_click(QVariant lat, QVariant lng);
+	void map_mouse_move(QVariant lat, QVariant lon);
+	void map_click(QVariant lat, QVariant lon);
+	void map_right_click(QVariant lat, QVariant lon);
 
 
 	void map_zoom_changed(QVariant zoom);
