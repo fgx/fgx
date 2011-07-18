@@ -43,6 +43,8 @@
         var lon, lat;
 		var zoom;
 		
+		var rwyLon1, rwyLat1, rwyLon2, rwyLat2;
+		
         var map, layer;
 		
         function init(){
@@ -88,9 +90,25 @@
 			// drawing a point
 			var point = new OpenLayers.Geometry.Point(5,40).transform(osmprojection,map.getProjectionObject());
             var feature = new OpenLayers.Feature.Vector(point,null, pointDefaultStyle);
+			
+			var points = new Array(
+                          new OpenLayers.Geometry.Point(rwyLon1, rwyLat1),
+                          new OpenLayers.Geometry.Point(rwyLon2, rwyLat2)
+                          );
+
+			
+			// add a runway
+			var points = new Array(
+                          new OpenLayers.Geometry.Point(rwyLon1, rwyLat1),
+                          new OpenLayers.Geometry.Point(rwyLon2, rwyLat2)
+                          );
+						  
+			var line = new OpenLayers.Geometry.LineString(points).transform(osmprojection,map.getProjectionObject());
+            var runwayFeature = new OpenLayers.Feature.Vector(line,null, pointDefaultStyle);
             
 			// add point to vector layer and to map
 			vectorLayer.addFeatures(feature);
+			vectorLayer.addFeatures(runwayFeature);
             map.addLayer(vectorLayer);
 
 

@@ -54,6 +54,7 @@ signals:
 	void loadFinished(bool);
 	void setLatLon();
 	void setZoom();
+	void addRunway();
 };
 
 #endif // XOPENLAYERWIDGET

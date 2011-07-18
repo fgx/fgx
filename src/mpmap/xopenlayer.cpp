@@ -96,11 +96,12 @@ void XOpenLayerWidget::end_progress(bool Ok){
 
 void XOpenLayerWidget::init_xmap(){
 	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
-	//QUrl server_url( "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/fgx-map/fgx-map.html" );
-	QUrl server_url( ":/map/fgx-map" );
+	QUrl server_url( "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/fgx-map/fgx-map.html" );
+	//QUrl server_url( QDir::currentPath().append("/fgx.app/Contents/Resources/openlayers/fgx-map/fgx-map.html"));
 	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
 	connect(webView, SIGNAL(loadStarted()), this, SLOT(setLatLon()));
 	connect(webView, SIGNAL(loadStarted()), this, SLOT(setZoom()));
+	connect(webView, SIGNAL(loadStarted()), this, SLOT(addRunway()));
 	webView->load( server_url );
 	statusBar->showMessage(QString("Loading: ").append( server_url.toString()) );
 }
@@ -127,4 +128,13 @@ void XOpenLayerWidget::setLatLon()
 void XOpenLayerWidget::setZoom()
 {
     QVariant zoom = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var zoom = 5;");
+}
+
+void XOpenLayerWidget::addRunway()
+{
+	
+	QVariant rwyLon1 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLon1 = 5;");
+    QVariant rwyLat1 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLat1 = 40;");
+	QVariant rwyLon2 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLon2 = 6;");
+    QVariant rwyLat2 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLat2 = 41;");
 }

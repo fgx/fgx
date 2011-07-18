@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/map">
-        <file alias="fgx-map">openlayers/fgx-map/fgx-map.html</file>
+	<qresource prefix="/map" >
+	<file alias="fgxmap">openlayers/fgx-map/fgx-map.html</file>
     </qresource>
 </RCC>
