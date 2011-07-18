@@ -20,7 +20,7 @@
 #include "xobjects/latlng.h"
 
 class MainObject;
-
+QT_FORWARD_DECLARE_CLASS(QNetworkDiskCache)
 
 class XOpenLayerWidget : public QWidget
 {
@@ -29,16 +29,28 @@ public:
 	explicit XOpenLayerWidget(MainObject *mob, QWidget *parent = 0);
 
 	MainObject *mainObject;
-
-    QWebView *webView;
-
-
+	QString *mpmapFollowCallsign;
+	
+private:
+	
+	QProgressBar *progressBar;
+	QStatusBar *statusBar;
+	QComboBox *comboServer;
+	
+	
+	QWebView *webView;
+	QNetworkDiskCache *networkDiskCache;
+	QNetworkCookieJar *networkCookieJar;
+	
 signals:
-
-public slots:
 	
-	void init_map();
+	public slots:
+    void start_progress();
+    void update_progress(int progress);
+    void end_progress(bool Ok);
 	
+	void init_xmap();
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // XOPENLAYERWIDGET

@@ -43,43 +43,68 @@ XOpenLayerWidget::XOpenLayerWidget(MainObject *mob, QWidget *parent) :
     mainLayout->setSpacing(0);
 	
 	QLabel *label_notice = new QLabel();
-	label_notice->setText("This openlayer widget is currently work in progress ...");
+	label_notice->setText("Experimental OpenLayer Widget");
 	label_notice->setStyleSheet("background-color: #eeeedd; color: #000099; padding: 5px;");
 	mainLayout->addWidget(label_notice, 0);
 	
-	QSplitter *splitter = new QSplitter();
-	mainLayout->addWidget(splitter, 10);
+
 	
+	//=============================================================
+	//== Cache
+	
+	networkDiskCache = new QNetworkDiskCache(this);
+	networkDiskCache->setCacheDirectory(QDesktopServices::storageLocation(QDesktopServices::CacheLocation));
+	
+	networkCookieJar = new QNetworkCookieJar(this);
+	
+	//== Browser
 	webView = new QWebView();
 	mainLayout->addWidget(webView, 500);
+	webView->page()->networkAccessManager()->setCache(networkDiskCache);
+	webView->page()->networkAccessManager()->setCookieJar(networkCookieJar);
+	connect(webView, SIGNAL(loadStarted()), this, SLOT(start_progress()));
+	connect(webView, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
+	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));
 	
-	init_map();
+    //*** Status Bar
+    statusBar = new QStatusBar(this);
+    mainLayout->addWidget(statusBar);
+    statusBar->showMessage("Idle");
 	
+    //** Progress Bar
+    progressBar = new QProgressBar();
+    progressBar->setVisible(false);
+    statusBar->addPermanentWidget(progressBar);
+	
+    //*** Initialise
+	init_xmap();
 }
-	//===========================================================================
-	//== Initialisaztion
-	//===========================================================================
-	void XOpenLayerWidget::init_map(){
-		
-		static bool map_initialized = false;
-		if(map_initialized == false){
-			//= Read file if in dev_mode() - no need to "recompile" the resource file
-			QFile file(
-					   mainObject->settings->dev_mode()
-					   ? XSettings::fgx_current_dir().append("/resources/openlayers/fgx-map/fgx-map.html")
-					   : ":/fgx-map/fgx-map"
-					   );
-			if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-				qDebug("FGx Map: can not open map file");
-				return;
-			}
-			
-			//webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
-			QByteArray contents = file.readAll();
-			qDebug() << contents;
-			webView->setHtml(contents);
-			
-		}
-		map_initialized = true;
-	}
-	
+
+//** Progress Slots
+void XOpenLayerWidget::start_progress(){
+    progressBar->setVisible(true);
+}
+
+void XOpenLayerWidget::update_progress(int v){
+    progressBar->setValue(v);
+}
+void XOpenLayerWidget::end_progress(bool Ok){
+	Q_UNUSED(Ok);
+    progressBar->setVisible(false);
+	statusBar->showMessage( webView->url().toString() );
+}
+
+
+void XOpenLayerWidget::init_xmap(){
+	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
+	QUrl server_url( "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/fgx-map/fgx-map.html" );
+	webView->load( server_url );
+	statusBar->showMessage(QString("Loading: ").append( server_url.toString()) );
+}
+
+//** Overide the closeEvent
+void XOpenLayerWidget::closeEvent(QCloseEvent *event)
+{
+	mainObject->settings->saveWindow(this);
+	Q_UNUSED(event);
+}
