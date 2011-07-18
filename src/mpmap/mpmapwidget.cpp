@@ -85,7 +85,8 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
 	on_combo_server();
 }
 
-//** Progress Slots
+//=============================================================
+//== Progress Slots
 void MpMapWidget::start_progress(){
     progressBar->setVisible(true);
 }

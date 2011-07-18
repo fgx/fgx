@@ -37,6 +37,13 @@ private:
 	QStatusBar *statusBar;
 	QComboBox *comboServer;
 	
+	QLabel *lblLat;
+	QLabel *lblLon;
+
+	QLabel *lblZoom;
+	QButtonGroup *groupZoom;
+	QToolButton *buttZoom;
+
 	
 	QWebView *webView;
 	QNetworkDiskCache *networkDiskCache;
@@ -55,6 +62,28 @@ signals:
 	void setLatLon();
 	void setZoom();
 	void addRunway();
+
+	//====================================
+	//== Map Events
+	void map_debug(QVariant);
+	void map_mouse_move(QVariant lat, QVariant lng);
+	void map_click(QVariant lat, QVariant lng);
+	void map_right_click(QVariant lat, QVariant lng);
+
+
+	void map_zoom_changed(QVariant zoom);
+	void map_error(QVariant err);
+
+	void marker_clicked(QVariant marker, QVariant mId);
+	void marker_unselected(QVariant curr_idx, QVariant mLocationId);
+
+
+
+	//void add_airport(QString airport);
+	//void add_runway(QString airport, QString rwy1, QString lat1, QString lng1, QString rwy2, QString lat2, QString lng2);
+	//void show_airport(QString airport);
+
+
 };
 
 #endif // XOPENLAYERWIDGET
