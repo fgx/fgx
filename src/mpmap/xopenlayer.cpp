@@ -96,7 +96,8 @@ void XOpenLayerWidget::end_progress(bool Ok){
 
 void XOpenLayerWidget::init_xmap(){
 	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
-	QUrl server_url( "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/fgx-map/fgx-map.html" );
+	//QUrl server_url( "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/fgx-map/fgx-map.html" );
+	QUrl server_url( ":/map/fgx-map" );
 	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
 	connect(webView, SIGNAL(loadStarted()), this, SLOT(setLatLon()));
 	connect(webView, SIGNAL(loadStarted()), this, SLOT(setZoom()));
@@ -119,13 +120,11 @@ void XOpenLayerWidget::loadFinished(bool)
 
 void XOpenLayerWidget::setLatLon()
 {
-    QVariant lat = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var lat = 40;");
 	QVariant lon = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var lon = 5;");
-    qDebug() << "lat: " << lat.toString() << "lon: " << lon.toString();
+    QVariant lat = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var lat = 40;");
 }
 
 void XOpenLayerWidget::setZoom()
 {
     QVariant zoom = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var zoom = 5;");
-    qDebug() << "zoom: " << zoom.toString();
 }
