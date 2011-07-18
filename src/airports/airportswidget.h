@@ -35,11 +35,13 @@ class AirportsWidget : public QWidget
 {
 Q_OBJECT
 public:
+
 	enum AIPORTS_TREE_COLS{
 		CA_CODE = 0,
 		CA_NAME = 1,
 		CA_DIR = 2
     };
+
 	enum AIRPORT_INFO_TREE_COLS{
 		CI_NODE = 0,
 		CI_LABEL = 1,

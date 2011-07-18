@@ -134,5 +134,5 @@ SOURCES += main.cpp \
 RESOURCES += resources/ycons.qrc \
     resources/artwork.qrc \
     resources/fonts.qrc \
-    resources/fgx-map.qrc
+	resources/openlayers.qrc
 CONFIG += console

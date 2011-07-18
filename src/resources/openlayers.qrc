@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/openlayers">
+        <file alias="map.html">openlayers/map.html</file>
+    </qresource>
+    <qresource prefix="/lib">
+        <file alias="OpenLayers.js">openlayers/lib/OpenLayers.js</file>
+    </qresource>
+</RCC>

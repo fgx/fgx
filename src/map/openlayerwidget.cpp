@@ -104,9 +104,9 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	statusBar->addPermanentWidget(new QLabel("Zoom:"));
 	groupZoom = new QButtonGroup(this);
 	groupZoom->setExclusive(true);
-	connect(groupZoom, SIGNAL(buttonClicked(QAbstractButton*)),
-			this, SLOT(on_zoom_action(QAbstractButton*))
-	);
+	//connect(groupZoom, SIGNAL(buttonClicked(QAbstractButton*)),
+	//		this, SLOT(on_zoom_action(QAbstractButton*))
+	//);
 	for(int z=1; z < 15; z++){
 		QToolButton *act = new QToolButton(this);
 		act->setText(QString(" %1 ").arg(z));
@@ -121,23 +121,54 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 
 
-    //*** Initialise
-	//init_xmap();
+	//=== Initialise
+	init_xmap();
 }
 
 
-void OpenLayerWidget::init_xmap(){
-	return;
-	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
-	QUrl server_url( "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/fgx-map/fgx-map.html" );
+//void OpenLayerWidget::init_xmap(){
+	//return;
+	//webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
+	//QUrl server_url( "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/fgx-map/fgx-map.html" );
 	//QUrl server_url( QDir::currentPath().append("/fgx.app/Contents/Resources/openlayers/fgx-map/fgx-map.html"));
 	//connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
-	connect(webView, SIGNAL(loadStarted()), this, SLOT(setLatLon()));
-	connect(webView, SIGNAL(loadStarted()), this, SLOT(setZoom()));
-	connect(webView, SIGNAL(loadStarted()), this, SLOT(addRunway()));
-	webView->load( server_url );
-	statusBar->showMessage(QString("Loading: ").append( server_url.toString()) );
+	//connect(webView, SIGNAL(loadStarted()), this, SLOT(setLatLon()));
+	//connect(webView, SIGNAL(loadStarted()), this, SLOT(setZoom()));
+	//connect(webView, SIGNAL(loadStarted()), this, SLOT(addRunway()));
+	//webView->load( server_url );
+	//statusBar->showMessage(QString("Loading: ").append( server_url.toString()) );
+//}
+
+
+//===========================================================================
+//== Initialisaztion
+//===========================================================================
+void OpenLayerWidget::init_xmap(){
+
+	static bool map_initialized = false;
+	if(map_initialized == false){
+		//= Read file if in dev_mode() - no need to "recompile" the resource file
+		QFile file(
+						QFile::exists("/home/ffs/SPETE_PC.txt")
+						? "/home/ffs/fgx/src/resources/openlayers/map.html"
+						: ":/openlayers/map.html"
+					);
+		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+			qDebug() << "MAP: could not open file" << file.fileName();
+			return;
+		}
+
+
+		QByteArray contents = file.readAll();
+		qDebug() << "contents OK";
+		webView->setHtml(contents);//, QUrl("qrc:///openlayers/"));
+		webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
+
+	}
+	map_initialized = true;
 }
+
+
 
 //** Overide the closeEvent
 void OpenLayerWidget::closeEvent(QCloseEvent *event)

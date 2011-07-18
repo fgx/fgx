@@ -702,7 +702,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 	//* Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
 	QString file_path(airport_dir.append("/").append(airport_code));
 	file_path.append( mainObject->X->terrasync_enabled() ? ".groundnet.xml" : ".parking.xml");
-	qDebug() << file_path;
+
 	//* Check parking file exists
 	if(QFile::exists(file_path)){
 
