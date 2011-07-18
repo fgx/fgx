@@ -1,5 +1,5 @@
-#ifndef XOPENLAYERWIDGET_H
-#define XOPENLAYERWIDGET_H
+#ifndef OPENLAYERWIDGET_H
+#define OPENLAYERWIDGET_H
 
 #include <QtCore/QVariant>
 #include <QtCore/QString>
@@ -22,11 +22,11 @@
 class MainObject;
 QT_FORWARD_DECLARE_CLASS(QNetworkDiskCache)
 
-class XOpenLayerWidget : public QWidget
+class OpenLayerWidget : public QWidget
 {
 Q_OBJECT
 public:
-	explicit XOpenLayerWidget(MainObject *mob, QWidget *parent = 0);
+	explicit OpenLayerWidget(MainObject *mob, QWidget *parent = 0);
 
 	MainObject *mainObject;
 	QString *mpmapFollowCallsign;
@@ -86,4 +86,4 @@ signals:
 
 };
 
-#endif // XOPENLAYERWIDGET
+#endif // OPENLAYERWIDGET

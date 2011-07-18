@@ -25,7 +25,7 @@ class XProcess;
 class LauncherWindow;
 
 #include "mpmap/mpmapwidget.h"
-#include "mpmap/xopenlayer.h"
+#include "map/openlayerwidget.h"
 #include "mpmap/mpmapxwidget.h"
 #include "logs/viewlogswidget.h"
 #include "props/propstreewidget.h"
@@ -36,7 +36,7 @@ class MpMapXWidget;
 class ViewLogsWidget;
 class PropsTreeWidget;
 class FgxDebugWidget;
-class XOpenLayerWidget;
+class OpenLayerWidget;
 
 
 
@@ -89,7 +89,7 @@ public:
 	LauncherWindow *launcherWindow;
 	MpMapWidget *mpMapWidget;
 	MpMapXWidget *mpMapXWidget;
-	XOpenLayerWidget *xOpenLayerWidget;
+	OpenLayerWidget *openLayerWidget;
 	ViewLogsWidget *viewLogsWidget;
 	PropsTreeWidget *propertiesBrowser;
 	FgxDebugWidget *fgxDebugWidget;
@@ -117,12 +117,7 @@ public:
 	QAction *actionViewFgxDebug;
 	QAction *actionDebugMode;
 
-
-
     QAction *actionQuit;
-
-
-
 
 	QString get_fgfs_command();
 	QStringList get_fgfs_args();

@@ -17,12 +17,12 @@
 #include <QtWebKit/QWebFrame>
 #include <QtGui/QDesktopServices>
 
-#include "mpmap/xopenlayer.h"
+#include "map/openlayerwidget.h"
 
 
 
 
-XOpenLayerWidget::XOpenLayerWidget(MainObject *mob, QWidget *parent) :
+OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
     QWidget(parent)
 {
 
@@ -31,7 +31,7 @@ XOpenLayerWidget::XOpenLayerWidget(MainObject *mob, QWidget *parent) :
 	setWindowTitle(tr("FGx OpenLayer Map"));
 	setWindowIcon(QIcon(":/icon/mpmap"));
 	
-	setProperty("settings_namespace", QVariant("xopenlayerwidget_window"));
+	setProperty("settings_namespace", QVariant("OpenLayerWidget_window"));
 	mainObject->settings->restoreWindow(this);
 
 	//======================================================
@@ -126,7 +126,7 @@ XOpenLayerWidget::XOpenLayerWidget(MainObject *mob, QWidget *parent) :
 }
 
 
-void XOpenLayerWidget::init_xmap(){
+void OpenLayerWidget::init_xmap(){
 	return;
 	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 	QUrl server_url( "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/fgx-map/fgx-map.html" );
@@ -140,30 +140,30 @@ void XOpenLayerWidget::init_xmap(){
 }
 
 //** Overide the closeEvent
-void XOpenLayerWidget::closeEvent(QCloseEvent *event)
+void OpenLayerWidget::closeEvent(QCloseEvent *event)
 {
 	mainObject->settings->saveWindow(this);
 	Q_UNUSED(event);
 }
 
-void XOpenLayerWidget::loadFinished(bool)
+void OpenLayerWidget::loadFinished(bool)
 {
     QVariant jsReturn = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("testFunction('loadFinished testFunction with QVariant jsReturn is working.')");
     qDebug() << jsReturn.toString();
 }
 
-void XOpenLayerWidget::setLatLon()
+void OpenLayerWidget::setLatLon()
 {
 	QVariant lon = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var lon = 5;");
     QVariant lat = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var lat = 40;");
 }
 
-void XOpenLayerWidget::setZoom()
+void OpenLayerWidget::setZoom()
 {
     QVariant zoom = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var zoom = 5;");
 }
 
-void XOpenLayerWidget::addRunway()
+void OpenLayerWidget::addRunway()
 {
 	
 	QVariant rwyLon1 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLon1 = 5;");
@@ -181,14 +181,14 @@ void XOpenLayerWidget::addRunway()
 //===========================================================================
 // Called from JS
 //===========================================================================
-void XOpenLayerWidget::map_debug(QVariant mess){
+void OpenLayerWidget::map_debug(QVariant mess){
 	qDebug() << "< " << mess.toString();
 }
 
 
 //= JS - map_mouse_move
 // - this is not firing ;-(
-void XOpenLayerWidget::map_mouse_move(QVariant dLat, QVariant dLon){
+void OpenLayerWidget::map_mouse_move(QVariant dLat, QVariant dLon){
 	//qDebug("YES");
 	//qDebug() << "map_mouse_move" << dLat.toString();
 	lblLat->setText(dLat.toString());
@@ -197,14 +197,14 @@ void XOpenLayerWidget::map_mouse_move(QVariant dLat, QVariant dLon){
 
 
 //== JS - map_click()
-void XOpenLayerWidget::map_click(QVariant lat, QVariant lon){
+void OpenLayerWidget::map_click(QVariant lat, QVariant lon){
 	Q_UNUSED(lat);
 	Q_UNUSED(lon);
 	//qDebug() << "map_click()" << lat << lng;
 }
 
 //== JS - map_right_click()
-void XOpenLayerWidget::map_right_click(QVariant lat, QVariant lon){
+void OpenLayerWidget::map_right_click(QVariant lat, QVariant lon){
 	Q_UNUSED(lat);
 	Q_UNUSED(lon);
 	//qDebug() << "map_right_click()" << lat << lng;
@@ -215,18 +215,18 @@ void XOpenLayerWidget::map_right_click(QVariant lat, QVariant lon){
 
 
 
-void XOpenLayerWidget::map_error(QVariant err){
+void OpenLayerWidget::map_error(QVariant err){
 	//qDebug("map_error()");
 	Q_UNUSED(err);
 }
 
-void XOpenLayerWidget::marker_clicked(QVariant marker, QVariant mId){
+void OpenLayerWidget::marker_clicked(QVariant marker, QVariant mId){
 	//qDebug("marker_clicked()");
 		Q_UNUSED(marker);
 			Q_UNUSED(mId);
 }
 
-void XOpenLayerWidget::marker_unselected(QVariant curr_idx, QVariant mLocationId){
+void OpenLayerWidget::marker_unselected(QVariant curr_idx, QVariant mLocationId){
 	//qDebug("marker_unselected()");
 		Q_UNUSED(curr_idx);
 			Q_UNUSED(mLocationId);
@@ -235,7 +235,7 @@ void XOpenLayerWidget::marker_unselected(QVariant curr_idx, QVariant mLocationId
 
 
 //** JS
-void XOpenLayerWidget::map_zoom_changed(QVariant zoom){
+void OpenLayerWidget::map_zoom_changed(QVariant zoom){
 	//qDebug() << "map_zoom_changed" << zoom;
 	return;
 	buttZoom->setText(zoom.toString());
@@ -263,14 +263,14 @@ void XOpenLayerWidget::map_zoom_changed(QVariant zoom){
 //============================================================================================
 //== Progress Slots
 //=============================================================
-void XOpenLayerWidget::start_progress(){
+void OpenLayerWidget::start_progress(){
 	progressBar->setVisible(true);
 }
 
-void XOpenLayerWidget::update_progress(int v){
+void OpenLayerWidget::update_progress(int v){
 	progressBar->setValue(v);
 }
-void XOpenLayerWidget::end_progress(bool Ok){
+void OpenLayerWidget::end_progress(bool Ok){
 	Q_UNUSED(Ok);
 	progressBar->setVisible(false);
 	statusBar->showMessage( webView->url().toString() );

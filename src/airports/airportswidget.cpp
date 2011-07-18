@@ -361,15 +361,11 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 
 	//============================================================================
-	// Map Widget Placeholder
+	// Map Widget
 	//============================================================================
-	mapPlaceholder = new XGroupVBox("Map Placeholder");
-	mapPlaceholder->setMinimumWidth(400);
-	mainLayout->addWidget(mapPlaceholder);
-
-	QLabel *lblMapPlaceholder = new QLabel("map");
-	lblMapPlaceholder->setStyleSheet("background-color: green;");
-	mapPlaceholder->addWidget(lblMapPlaceholder);
+	mapWidget = new OpenLayerWidget(mainObject);
+	mapWidget->setMinimumWidth(400);
+	mainLayout->addWidget(mapWidget);
 
 
 	//============================================================================
@@ -852,7 +848,7 @@ void AirportsWidget::on_view_map(){
 
 	}*/
 	//mainObject->mpMapXWidget->show_airport(cApt);
-	mainObject->xOpenLayerWidget->show();
+	//mainObject->xOpenLayerWidget->show();
 
 }
 

@@ -186,7 +186,7 @@ MainObject::MainObject(QObject *parent) :
 	actionDebugMode = new QAction(this);
 	actionDebugMode->setText(tr("Debug Mode"));
 	actionDebugMode->setCheckable(true);
-	actionDebugMode->setChecked(true);
+	actionDebugMode->setChecked(debug_mode);
 	popupMenu->addAction(actionDebugMode);
 	connect(actionDebugMode, SIGNAL(triggered()),
 			this, SLOT(set_debug_mode())
@@ -224,8 +224,8 @@ MainObject::MainObject(QObject *parent) :
 	mpMapXWidget->hide();
 	
 	//= FGx Map Widget
-	xOpenLayerWidget = new XOpenLayerWidget(this);
-	xOpenLayerWidget->hide();
+	openLayerWidget = new OpenLayerWidget(this);
+	openLayerWidget->hide();
 
 
 	//= Log Viewer is hidden

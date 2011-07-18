@@ -22,7 +22,14 @@
 #include <QtGui/QTreeWidget>
 
 #include "xwidgets/xgroupboxes.h"
+
 #include "xobjects/mainobject.h"
+class MainObject;
+
+#include "map/openlayerwidget.h"
+class OpenLayerWidget;
+
+
 
 class AirportsWidget : public QWidget
 {
@@ -59,7 +66,7 @@ public:
 	QButtonGroup *buttonGroupUse;
 
 	QTabWidget *tabWidget;
-	XGroupVBox *mapPlaceholder;
+	OpenLayerWidget *mapWidget;
 
 	XGroupVBox *groupBoxAirport;
 	XGroupVBox *groupBoxUseCoordinates;
