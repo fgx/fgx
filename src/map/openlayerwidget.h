@@ -69,7 +69,7 @@ signals:
 	void add_runway(QString apt, QString lat1, QString lon1, QString lat2, QString lon2);
 	void zoom_to_airport(QString apt);
 
-	void add_aircraft(QString callsign, QString lat, QString lon);
+	void add_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude);
 
 	//====================================
 	//== Map Events

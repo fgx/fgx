@@ -201,8 +201,8 @@ void OpenLayerWidget::zoom_to_airport(QString apt){
 }
 
 
-void OpenLayerWidget::add_aircraft(QString callsign, QString lat, QString lon){
-	QString jstr = QString("add_aircraft('%1', %2, %3);").arg(callsign).arg(lat).arg(lon);
+void OpenLayerWidget::add_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude){
+	QString jstr = QString("add_aircraft('%1', %2, %3, %4);").arg(callsign).arg(lat).arg(lon).arg(heading);
 	execute_js(jstr);
 }
 

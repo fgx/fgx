@@ -115,7 +115,7 @@ pointDefaultStyle.strokeLinecap = "butt";
 
 var planeStyleMap = new OpenLayers.StyleMap({
 	externalGraphic: "img/marker-blue.png",
-	graphicWidth: 25,
+	graphicWidth: 21,
 	graphicHeight: 25,
 	fillOpacity: 0.85,
 	rotation: "${angle}"
@@ -216,15 +216,18 @@ function init(){
 
 }
 
-function add_aircraft(aircraft, lat, lon){
+function add_aircraft(aircraft, lat, lon, heading){
 	
-	var lonlat = new OpenLayers.LonLat(lon, lat).transform(osmprojection, map.getProjectionObject());
+	//var lonlat = new OpenLayers.LonLat(lon, lat).transform(osmprojection, map.getProjectionObject());
 	//alert(px.x + "=" + px.y);
 	//getViewPortPxFromLonLat
-	var px = map.getViewPortPxFromLonLat(lonlat);
-	alert(px.x + "=" + px.y);
-	var feature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(px.x, px.y), {
-				angle: 0,
+	var point = new OpenLayers.Geometry.Point(lon, lat);
+    point.transform(osmprojection, map.getProjectionObject() );
+
+	//var px = map.getViewPortPxFromLonLat(lonlat);
+	//alert(px.x + "=" + px.y);
+	var feature = new OpenLayers.Feature.Vector(point, {
+				angle: heading,
 				poppedup: false
 			});
 	planes.addFeatures([feature]);

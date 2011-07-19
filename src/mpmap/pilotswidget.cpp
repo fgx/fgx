@@ -190,7 +190,7 @@ void PilotsWidget::on_server_read_finished(){
 	if (nodes.count() > 0){
 		for(int idxd =0; idxd < nodes.count(); idxd++){
 			if( idxd == 3){
-				return;
+				//return;
 			}
 
 			QDomNode node = nodes.at(idxd);
@@ -220,7 +220,11 @@ void PilotsWidget::on_server_read_finished(){
 
 			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
 			item->setText(C_FLAG, "");
-			emit radar(item->text(C_AIRCRAFT), item->text(C_LAT), item->text(C_LON));
+			emit radar(item->text(C_AIRCRAFT),
+					   item->text(C_LAT), item->text(C_LON),
+					   item->text(C_HEADING),
+					   item->text(C_ALTITUDE)
+				);
 		}
 	}
 

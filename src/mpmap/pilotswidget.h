@@ -57,7 +57,7 @@ public:
 
 signals:
 
-	void radar(QString callsign, QString lat, QString lon);
+	void radar(QString callsign, QString lat, QString lon, QString heading, QString altitude);
 
 public slots:
 
