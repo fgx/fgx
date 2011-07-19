@@ -126,6 +126,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--prop:/consumables/fuels/tank[3]/level-gal=",false, "", "",9,"","Fuel");
 	
 	//= Airport Tab
+	add_option( "start_postition", true, "","0",0,"Start Location", "Airport");
 	add_option( "--airport=", false,"", "", 1 ,"Airport","Airport");
 	add_option( "--runway=", false,"", "", 1 ,"Runway","Airport");
 	add_option( "--parking-id=", false,"", "", 1 ,"Parking","Airport");
@@ -399,9 +400,10 @@ QStringList XSettingsModel::get_fgfs_list()
 	args << get_fgfs_args();
 	return args;
 }
+
 QString XSettingsModel::get_fgfs_command_string()
 {
-	return get_fgfs_args().join(" ");
+	return fgfs_path().append(" ").append( get_fgfs_args().join(" ") );
 }
 
 

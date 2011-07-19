@@ -119,7 +119,7 @@ void MpMapXWidget::show_airport(QString airport){
 	mapWidget->zoom_to_airport(airport);
 }
 void MpMapXWidget::add_runway(QString airport, QString rwy1, QString lat1, QString lng1, QString rwy2, QString lat2, QString lng2){
-	mapWidget->add_runway(airport,  lat1, lng1, lat2, lng2);
+	mapWidget->add_runway(airport, lat1, lng1, lat2, lng2);
 }
 
 

@@ -307,9 +307,11 @@ void LauncherWindow::on_start_all_clicked() {
 
 //= Start FgFs
 void LauncherWindow::on_start_fgfs_clicked() {
+	qDebug() << "pre validate";
 	if(!validate()){
 		return;
 	}
+	qDebug() << "save";
 	save_settings();
 	mainObject->start_fgfs();
 }

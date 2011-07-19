@@ -52,20 +52,20 @@ private:
 signals:
 	
 	public slots:
+
+	//= browser progress
     void start_progress();
     void update_progress(int progress);
     void end_progress(bool Ok);
 	
+	//= map calls
 	void init_map();
 	void execute_js(QString js_string);
 
 
 
-    void closeEvent(QCloseEvent *event);
-	void loadFinished(bool);
-	void setLatLon();
-	void setZoom();
 
+	//= markers and features
 	void add_runway(QString apt, QString lat1, QString lon1, QString lat2, QString lon2);
 	void zoom_to_airport(QString apt);
 
@@ -86,12 +86,8 @@ signals:
 	void marker_clicked(QVariant marker, QVariant mId);
 	void marker_unselected(QVariant curr_idx, QVariant mLocationId);
 
-
-
-	//void add_airport(QString airport);
-	//void add_runway(QString airport, QString rwy1, QString lat1, QString lng1, QString rwy2, QString lat2, QString lng2);
-	//void show_airport(QString airport);
-
+	//======================================
+	void closeEvent(QCloseEvent *event);
 
 };
 

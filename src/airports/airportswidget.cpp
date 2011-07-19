@@ -58,6 +58,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	//= Tab Widget
 	tabWidget = new QTabWidget();
 	mainLayout->addWidget(tabWidget);
+	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed()));
 
 
 	//=====================================
@@ -767,10 +768,6 @@ void AirportsWidget::on_reload_cache(){
 	load_airports_tree();
 }
 
-void AirportsWidget::on_buttonGroupUse(){
-	groupBoxAirport->setEnabled(buttonGroupUse->checkedId() == USE_AIRPORT);
-	groupBoxUseCoordinates->setEnabled(buttonGroupUse->checkedId() == USE_COORDINATES);
-}
 
 
 //====================================================================
@@ -792,7 +789,7 @@ QString AirportsWidget::current_airport(){
 QString AirportsWidget::validate(){
 
 	//* Validate Coordinates TODO - other stuff
-	if(buttonGroupUse->checkedId() == USE_COORDINATES){
+	if(mainObject->X->getx("start_postition") == "1"){
 		if(txtLat->text().trimmed().length() == 0){
 			txtLat->setFocus();
 			return QString("Need Latitude");
@@ -803,7 +800,7 @@ QString AirportsWidget::validate(){
 		}
 
 	//* Validate Airport
-	}else if(buttonGroupUse->checkedId() == USE_AIRPORT){
+	}else{
 		if (!treeViewAirports->selectionModel()->hasSelection()){
 			return QString(tr("Airport: No Airport selected or check [x] Use Default;"));
 		}
@@ -814,28 +811,11 @@ QString AirportsWidget::validate(){
 }
 
 
-//void AirportsWidget::on_view_map(){
-//	qDebug() << "Map: OpenLayer";
-	//QString cApt = current_airport();
-	//QList<QTreeWidgetItem *> runways = treeWidgetAirportInfo->findItems("1", Qt::MatchExactly | Qt::MatchRecursive, CI_RUNWAYS);
-	//qDebug() << "runways" << runways.length();
-	//mainObject->mpMapXWidget->add_airport(cApt);
-	/*for(int idx =0; idx < runways.length(); idx++){
-		//qDebug() << item->child(idx)->text(CI_LAT);
-		mainObject->mpMapXWidget->add_runway(cApt,
-										runways.at(idx)->child(0)->text(CI_NODE),
-										runways.at(idx)->child(0)->text(CI_LAT),
-										runways.at(idx)->child(0)->text(CI_LNG),
-										runways.at(idx)->child(1)->text(CI_NODE),
-										runways.at(idx)->child(1)->text(CI_LAT),
-										runways.at(idx)->child(1)->text(CI_LNG)
-										);
+//==========================================================================
+void AirportsWidget::on_tab_changed(){
+	emit setx("start_postition", true, QString::number(tabWidget->currentIndex()));
+}
 
-	}*/
-	//mainObject->mpMapXWidget->show_airport(cApt);
-	//mainObject->xOpenLayerWidget->show();
-
-//}
 
 void AirportsWidget::on_coordinates_changed()
 {
@@ -910,9 +890,9 @@ void AirportsWidget::on_airport_info_selection_changed()
 		return;
 	}
 
-	//.if(treeWidgetAirportInfo->indexOfTopLevelItem(item) != -1){
-	//	emit setx("--runway=", false, "");
-	//	emit setx("--parking-id=", false,"");
-	//}
+	if(treeWidgetAirportInfo->indexOfTopLevelItem(item) != -1){
+		emit setx("--runway=", false, "");
+		emit setx("--parking-id=", false,"");
+	}
 
 }

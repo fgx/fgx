@@ -373,7 +373,7 @@ void MainObject::stop_all(){
 //========================================================
 //== Start FGFS
 void MainObject::start_fgfs(){
-	//qDebug() << get_fgfs_command();
+	//qDebug() << "start"; //X->get_fgfs_command_string();
 	processFgFs->start(X->get_fgfs_command_string(), X->get_fgfs_env() );
 }
 
@@ -425,6 +425,7 @@ void MainObject::on_view_fgx_debug(){
 void MainObject::set_debug_mode()
 {
 	debug_mode = actionDebugMode->isChecked();
+	settings->setValue("DEBUG_MODE",debug_mode);
 	emit on_debug_mode(debug_mode);
 }
 

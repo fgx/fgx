@@ -167,22 +167,6 @@ void OpenLayerWidget::closeEvent(QCloseEvent *event)
 	Q_UNUSED(event);
 }
 
-void OpenLayerWidget::loadFinished(bool)
-{
-    QVariant jsReturn = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("testFunction('loadFinished testFunction with QVariant jsReturn is working.')");
-    qDebug() << jsReturn.toString();
-}
-
-void OpenLayerWidget::setLatLon()
-{
-	QVariant lon = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var lon = 5;");
-    QVariant lat = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var lat = 40;");
-}
-
-void OpenLayerWidget::setZoom()
-{
-    QVariant zoom = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var zoom = 5;");
-}
 
 
 
@@ -218,7 +202,9 @@ void OpenLayerWidget::focus_aircraft(QString callsign){
 // Execute Javascript
 //================================================
 void OpenLayerWidget::execute_js(QString js_str){
-	qDebug() << "> js= " << js_str;
+	if(mainObject->debug_mode){
+		qDebug() << "> js= " << js_str;
+	}
 	webView->page()->mainFrame()->evaluateJavaScript(js_str);
 }
 
