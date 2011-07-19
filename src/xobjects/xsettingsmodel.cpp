@@ -219,7 +219,13 @@ QString XSettingsModel::getx(QString option)
 }
 QString XSettingsModel::getx(QString option, bool return_default)
 {
-	return getx(option);
+	//=PETE - I dont think this is being used...
+	Q_UNUSED(return_default);
+	XOpt opt = get_opt(option);
+	if(opt.value.length() == 0){
+		return opt.default_value;
+	}
+	return opt.value;
 }
 QString XSettingsModel::getx(QString option, QString default_string)
 {
@@ -247,9 +253,10 @@ bool XSettingsModel::get_ena(QString option)
 XOpt XSettingsModel::get_opt(QString option)
 {
 	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
-	return XOpt(item(items[0]->row(),C_OPTION)->text(),
-				item(items[0]->row(),C_ENABLED)->text() == "1",
-				item(items[0]->row(),C_VALUE)->text()
+	return XOpt(item(items[0]->row(), C_OPTION)->text(),
+				item(items[0]->row(), C_ENABLED)->text() == "1",
+				item(items[0]->row(), C_VALUE)->text(),
+				item(items[0]->row(), C_DEFAULT)->text()
 				);
 }
 

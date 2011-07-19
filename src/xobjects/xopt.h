@@ -6,11 +6,11 @@
 class XOpt
 {
 public:
-	explicit XOpt(QString option, bool enabled, QString value);
+	explicit XOpt(QString option, bool enabled, QString value, QString default_value);
 	QString option;
 	QString value;
 	bool enabled;
-
+	QString default_value;
 
 };
 

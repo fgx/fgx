@@ -67,7 +67,8 @@ HEADERS += xobjects/xsettings.h \
     xwidgets/xcommandpreviewidget.h \
     xobjects/xopt.h \
     xwidgets/xdebugtreewidget.h \
-    map/openlayerwidget.h
+    map/openlayerwidget.h \
+    xwidgets/xmaintabwidget.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -128,9 +129,10 @@ SOURCES += main.cpp \
     xwidgets/xcommandpreviewidget.cpp \
     xobjects/xopt.cpp \
     xwidgets/xdebugtreewidget.cpp \
-    map/openlayerwidget.cpp
+    map/openlayerwidget.cpp \
+    xwidgets/xmaintabwidget.cpp
 RESOURCES += resources/ycons.qrc \
     resources/artwork.qrc \
     resources/fonts.qrc \
-	resources/openlayers.qrc
+    resources/openlayers.qrc
 CONFIG += console

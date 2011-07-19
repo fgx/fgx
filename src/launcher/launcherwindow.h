@@ -3,7 +3,6 @@
 
 #include <QtGui/QWidget>
 
-#include <QtGui/QTabWidget>
 #include <QtGui/QAction>
 #include <QtGui/QActionGroup>
 #include <QtGui/QPushButton>

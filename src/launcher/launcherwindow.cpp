@@ -86,6 +86,8 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//** Main TabWidget with Widgets
 	//====================================================
     tabWidget = new QTabWidget(this);
+	tabWidget->setObjectName("launcher_tabs");
+	//tabWidget->tabBar()->setObjectName("launcher_tab");
 	mainLayout->addWidget(tabWidget);
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed(int)));
 
