@@ -84,11 +84,8 @@ var control = {
 //var Qt;
 
 
+var aptBounds = {};
 
-
-
-var lon = 0.0;
-var lat = 0.0;
 var zoom = 4;
 
 
@@ -144,8 +141,7 @@ function init(){
 
 	//map.addLayer(layer);
 	map.setCenter(
-
-		new OpenLayers.LonLat(lon, lat).transform(
+		new OpenLayers.LonLat(0, 0).transform(
 			osmprojection,
 			map.getProjectionObject()
 			), zoom
@@ -161,13 +157,16 @@ function init(){
 	map.events.register("click", map, on_map_click);
 	map.events.register("mousemove", map, on_map_mousemove);
 
+	markers = new OpenLayers.Layer.Markers( "Markers" );
+	markers.setOpacity(1.0);
+	map.addLayer(markers);
+
+
 	// adding a vector layer with osm projection
 	vectorLayer = new OpenLayers.Layer.Vector("Glyphs", osmprojection);
 	map.addLayer(vectorLayer);
 
-	markers = new OpenLayers.Layer.Markers( "Markers" );
-	markers.setOpacity(1.0);
-	map.addLayer(markers);
+
 
 	// drawing a point
 	//var point = new OpenLayers.Geometry.Point(5,40).transform(osmprojection,map.getProjectionObject());
@@ -200,17 +199,45 @@ function init(){
 }
 
 function add_marker(mlat, mlon){
-	var size = new OpenLayers.Size(21,25);
-	var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-	var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset);
-	markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(mlon, mlat), icon));
+	//var size = new OpenLayers.Size(21,25);
+	//var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+	//var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset);
+	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
+	var marker = new OpenLayers.Marker(lonlat);
+	markers.addMarker(marker);
+	//alert("y");
+	return;
+	markers.addMarker(new OpenLayers.Marker(
+					new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject() )
+					, icon)
+	);
+	//alert("ere");
+}
+
+function zoom_to_airport(apt){
+	//alert(markers.getDataExtent());
+	//map.zoomToExtent(aptBounds[apt]);
+	//return;
+	map.setCenter(
+
+		aptBounds[apt].getCenterLonLat().transform(
+			osmprojection,
+			map.getProjectionObject()
+			), 12
+	);
 }
 
 //======================================================
 // Add_runway
 //======================================================
-function add_runway(lat1, lon1, lat2, lon2){
+function add_runway(apt, lat1, lon1, lat2, lon2){
 	
+	if( !aptBounds[apt] ){
+		aptBounds[apt] = new OpenLayers.Bounds();
+		//alert("new bounds");
+	}
+	aptBounds[apt].extend( new OpenLayers.LonLat(lon1, lat1) );
+	aptBounds[apt].extend( new OpenLayers.LonLat(lon2, lat2) );
 
 	add_marker(lat1, lon1);
 	add_marker(lat2, lon2);
@@ -222,13 +249,7 @@ function add_runway(lat1, lon1, lat2, lon2){
 	var runwayFeature = new OpenLayers.Feature.Vector(line,null, pointDefaultStyle);
 	vectorLayer.addFeatures(runwayFeature);
 
-	map.setCenter(
 
-		new OpenLayers.LonLat(lon1, lat1).transform(
-			osmprojection,
-			map.getProjectionObject()
-			), 14
-	);
 
 	//alert("add_runway");
 }

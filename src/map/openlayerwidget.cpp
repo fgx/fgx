@@ -184,9 +184,19 @@ void OpenLayerWidget::setZoom()
     QVariant zoom = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var zoom = 5;");
 }
 
-void OpenLayerWidget::add_runway(QString lat1, QString lon1, QString lat2, QString lon2)
+
+
+//================================================
+// Add Runway
+void OpenLayerWidget::add_runway(QString apt, QString lat1, QString lon1, QString lat2, QString lon2)
 {
-	QString jstr = QString("add_runway(%1, %2, %3, %4)").arg(lat1).arg(lon1).arg(lat2).arg(lon2);
+	QString jstr = QString("add_runway('%1', %2, %3, %4, %5)").arg(apt).arg(lat1).arg(lon1).arg(lat2).arg(lon2);
+	execute_js(jstr);
+}
+//================================================
+// Zoom Airport
+void OpenLayerWidget::zoom_to_airport(QString apt){
+	QString jstr = QString("zoom_to_airport('%1')").arg(apt);
 	execute_js(jstr);
 }
 

@@ -611,7 +611,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()
 									));
 			treeWidgetAirportInfo->setItemExpanded(rItem, true);
-			//treeWidgetAirportInfo->setFirstItemColumnSpanned(rItem, true);
+			treeWidgetAirportInfo->setFirstItemColumnSpanned(rItem, true);
 
 			//= Runway threshold 0
 			QTreeWidgetItem *tItem0 = new QTreeWidgetItem(rItem);
@@ -622,6 +622,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			tItem0->setText(CI_TYPE, "runway");
 			tItem0->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(0).firstChildElement("rwy").text()));
+
 			//= Runway  threshold 1
 			QTreeWidgetItem *tItem1 = new QTreeWidgetItem(rItem);
 			tItem1->setIcon(0, QIcon(":/icon/runway"));
@@ -631,36 +632,17 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			tItem1->setText(CI_TYPE, "runway");
 			tItem1->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()));
-			//nodeRunway.firstChildElement("threshold");
 
-			mapWidget->add_runway(	tItem0->text(CI_LAT), tItem0->text(CI_LON),
+
+
+			mapWidget->add_runway(	airport_code,
+									tItem0->text(CI_LAT), tItem0->text(CI_LON),
 									tItem1->text(CI_LAT), tItem1->text(CI_LON)
 									);
-			//qDebug() << nodeRunway.firstChildElement("rwy").text();
-			//list << thresholdNode.firstChildElement("rwy").text();
-			//list << thresholdNode.firstChildElement("lat").text();
-			//list << thresholdNode.firstChildElement("lng").text();
-			/*
-			QTreeWidgetItem *rItem = new QTreeWidgetItem(runwaysParent);
-			rItem->setText(CI_NODE,  thresholdNode.firstChildElement("rwy").text());
-			rItem->setText(CI_LAT,  thresholdNode.firstChildElement("lat").text());
-			rItem->setText(CI_LNG,  thresholdNode.firstChildElement("lon").text());
-			rItem->setText(CI_TYPE, "runway");
-			rItem->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(thresholdNode.firstChildElement("rwy").text()));
-			*/
 		}
 	}
-	/*
-	if(list.size() > 0){
-		list.sort();
-		for(int i = 0; i  < list.size(); i++){
-			QTreeWidgetItem *rItem = new QTreeWidgetItem(runwaysParent);
-			rItem->setText(CI_NODE, list.at(i));
-			rItem->setText(CI_TYPE, "runway");
-			rItem->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(list.at(i))); // settings to search for on restore
-		}
-	}
-	*/
+	mapWidget->zoom_to_airport(airport_code);
+
 	return runwaysParent->childCount();
 }
 
