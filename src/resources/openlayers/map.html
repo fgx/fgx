@@ -96,9 +96,11 @@ var map;
 var layer;
 var osmprojection;
 var vectorLayer;
+var markers
+
+
 
 var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
-
 // opacity
 layer_style.strokeOpacity = 0.8;
 layer_style.fillOpacity = 0.5;
@@ -108,7 +110,7 @@ pointDefaultStyle.strokeColor = "red";
 pointDefaultStyle.fillColor = "red";
 pointDefaultStyle.graphicName = "star";
 pointDefaultStyle.pointRadius = 10;
-pointDefaultStyle.strokeWidth = 1;
+pointDefaultStyle.strokeWidth = 4;
 pointDefaultStyle.rotation = 45;
 pointDefaultStyle.strokeLinecap = "butt";
 
@@ -130,6 +132,13 @@ function init(){
 	layer = new OpenLayers.Layer.OSM( "OSM Map");
 	map.addLayer(layer);
 
+	//var urlArray = ["http://tilecache.osgeo.org/wms-c/Basic.py",
+	//				"http://tilecache.osgeo.org/wms-c/Basic.py"];
+	//layer = new OpenLayers.Layer.WMS( "OpenLayers WMS", 
+	//									urlArray,
+	//									{layers: 'basic'} );
+	//map.addLayer(layer);
+
 	// set osm projection
 	osmprojection = new OpenLayers.Projection("EPSG:4326");
 
@@ -141,6 +150,9 @@ function init(){
 			map.getProjectionObject()
 			), zoom
 	);
+
+
+
 	//map.addControl(control);
 	//map.addControl(new OpenLayers.Control.MousePosition());
 	//setting vector layer style
@@ -151,6 +163,11 @@ function init(){
 
 	// adding a vector layer with osm projection
 	vectorLayer = new OpenLayers.Layer.Vector("Glyphs", osmprojection);
+	map.addLayer(vectorLayer);
+
+	markers = new OpenLayers.Layer.Markers( "Markers" );
+	markers.setOpacity(1.0);
+	map.addLayer(markers);
 
 	// drawing a point
 	//var point = new OpenLayers.Geometry.Point(5,40).transform(osmprojection,map.getProjectionObject());
@@ -177,13 +194,26 @@ function init(){
 	vectorLayer.addFeatures(runwayFeature);
 	map.addLayer(vectorLayer);
 	*/
-	map.addLayer(vectorLayer);
+	
 	//alert("init done");
 
 }
+
+function add_marker(mlat, mlon){
+	var size = new OpenLayers.Size(21,25);
+	var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+	var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset);
+	markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(mlon, mlat), icon));
+}
+
+//======================================================
+// Add_runway
+//======================================================
 function add_runway(lat1, lon1, lat2, lon2){
 	
 
+	add_marker(lat1, lon1);
+	add_marker(lat2, lon2);
 	var points = new Array(
 		new OpenLayers.Geometry.Point(lon1, lat1),
 		new OpenLayers.Geometry.Point(lon2, lat2)
@@ -202,6 +232,8 @@ function add_runway(lat1, lon1, lat2, lon2){
 
 	//alert("add_runway");
 }
+
+
 </script>
 
 
