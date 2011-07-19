@@ -37,9 +37,9 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 
 
-	//========================================================================
+	//=================================================================================
 	// This list wil be the main issue and debates for a long time probably, said pete
-	//========================================================================
+	//=================================================================================
 
 
 	//==================
@@ -92,7 +92,6 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 
 	//= MultiPlayer
-	add_option( "enable_mp", false, "","",1,"","");
 	add_option( "--multiplay=in",  false,"", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
 	add_option( "--multiplay=out", false, "", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
 
@@ -298,6 +297,7 @@ void XSettingsModel::write_ini()
 	qDebug() << "Written ini";
 }
 
+
 //=============================================
 // == Read Ini
 /** \brief Read Values from ini
@@ -335,7 +335,7 @@ void XSettingsModel::read_ini()
 		settings.endGroup();
 	}
 	_loading = false;
-	qDebug() << "Read ini";
+	//qDebug() << "Read ini";
 	emit updated(get_fgfs_list());
 }
 

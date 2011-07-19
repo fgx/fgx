@@ -36,10 +36,10 @@ public:
 
 	MainObject *mainObject;
 
-	XGroupVBox *grpMpServer;
+	XGroupHBox *grpMpServerIn;
+	XGroupHBox *grpMpServerOut;
 
-	QCheckBox *checkBoxIn;
-	QCheckBox *checkBoxOut;
+
 	QComboBox *comboLocalIpAddress;
 	QComboBox *comboRemoteAddress;
 	QComboBox *comboRemotePort;
@@ -82,11 +82,6 @@ public slots:
 
 	void set_fgcom();
 
-
-	void on_checkbox_in();
-	void on_checkbox_out();
-	void set_mpin_enabled(bool state);
-	void set_mpout_enabled(bool state);
 
 	void on_enable_mp(bool);
 	void on_http();
