@@ -58,6 +58,7 @@ public:
 signals:
 
 	void radar(QString callsign, QString lat, QString lon, QString heading, QString altitude);
+	void aircraft_selected(QString callsign);
 
 public slots:
 
@@ -69,6 +70,8 @@ public slots:
 
 	void on_check_autorefresh(int);
 	void on_combo_changed(int);
+	void on_item_doubled_clicked(QTreeWidgetItem*,int);
+
 };
 
 #endif // PILOTSWIDGET_H

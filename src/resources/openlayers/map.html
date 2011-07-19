@@ -86,7 +86,7 @@ var control = {
 
 var aptBounds = {};
 
-var zoom = 4;
+var zoom = 2;
 
 
 var map;
@@ -121,8 +121,8 @@ var planeStyleMap = new OpenLayers.StyleMap({
 	rotation: "${angle}"
 });
 
-var planes = new OpenLayers.Layer.Vector("Planes",{styleMap:planeStyleMap});
-
+var planes;
+var aircraft = {};
 
 
 
@@ -190,7 +190,7 @@ function init(){
 
 }
 
-function show_aircraft(aircraft, lat, lon, heading, altitude){
+function show_aircraft(callsign, lat, lon, heading, altitude){
 	
 	//var lonlat = new OpenLayers.LonLat(lon, lat).transform(osmprojection, map.getProjectionObject());
 	//alert(px.x + "=" + px.y);
@@ -200,12 +200,16 @@ function show_aircraft(aircraft, lat, lon, heading, altitude){
 
 	//var px = map.getViewPortPxFromLonLat(lonlat);
 	//alert(px.x + "=" + px.y);
-	var feature = new OpenLayers.Feature.Vector(point, {
+	aircraft[callsign] = new OpenLayers.Feature.Vector(point, {
 				angle: heading,
 				poppedup: false
 			});
-	planes.addFeatures([feature]);
+	planes.addFeatures([aircraft[callsign]]);
 	//alert(aircraft);
+}
+
+function focus_aircraft(callsign){
+	alert(callsign);
 }
 
 

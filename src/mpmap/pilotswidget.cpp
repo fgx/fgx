@@ -99,6 +99,8 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 
 	tree->setSortingEnabled(true);
 	tree->sortByColumn(C_CALLSIGN, Qt::AscendingOrder);
+	connect(tree,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+			this, SLOT(on_item_doubled_clicked(QTreeWidgetItem*,int)));
 
 	//= Status Bar
 	statusBar = new QStatusBar();
@@ -261,6 +263,11 @@ void PilotsWidget::on_combo_changed(int idx){
 	Q_UNUSED(idx);
 	mainObject->settings->setValue("mpxmap_autorefresh_hz", comboBoxHz->itemData(comboBoxHz->currentIndex()).toString());
 	timer->setInterval(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt());
+}
+
+void PilotsWidget::on_item_doubled_clicked(QTreeWidgetItem *item, int colidx){
+	Q_UNUSED(colidx);
+	emit aircraft_selected(item->text(C_CALLSIGN));
 }
 
 
