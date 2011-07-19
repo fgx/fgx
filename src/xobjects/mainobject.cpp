@@ -242,8 +242,6 @@ MainObject::MainObject(QObject *parent) :
 	launcherWindow->hide();
 
 
-	on_mpxmap();
-
 	//== initialise after initial show so UI dont look frozen while cache loading etc
 	QTimer::singleShot(300, this, SLOT(initialize()));
 

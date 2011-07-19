@@ -192,7 +192,7 @@ void PilotsWidget::on_server_read_finished(){
 	if (nodes.count() > 0){
 		for(int idxd =0; idxd < nodes.count(); idxd++){
 			if( idxd == 5){
-				return; //######################################
+				//return; //######################################
 			}
 
 			QDomNode node = nodes.at(idxd);
