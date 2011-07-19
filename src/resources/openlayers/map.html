@@ -29,12 +29,31 @@
 </style>
 	
 <script type="text/javascript">
-var lon, lat;
+
+var lon = 0.0;
+var lat = 0.0;
 var zoom = 4;
 
-var rwyLon1, rwyLat1, rwyLon2, rwyLat2;
 
-var map, layer;
+var map;
+var layer;
+var osmprojection;
+var vectorLayer;
+
+var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+
+// opacity
+layer_style.strokeOpacity = 0.8;
+layer_style.fillOpacity = 0.5;
+
+var pointDefaultStyle = OpenLayers.Util.extend({}, layer_style);
+pointDefaultStyle.strokeColor = "red";
+pointDefaultStyle.fillColor = "red";
+pointDefaultStyle.graphicName = "star";
+pointDefaultStyle.pointRadius = 10;
+pointDefaultStyle.strokeWidth = 1;
+pointDefaultStyle.rotation = 45;
+pointDefaultStyle.strokeLinecap = "butt";
 
 function init(){
 
@@ -47,38 +66,28 @@ function init(){
 	// set osm projection
 	osmprojection = new OpenLayers.Projection("EPSG:4326");
 
-	map.addLayer(layer);
+	//map.addLayer(layer);
 	map.setCenter(
-	new OpenLayers.LonLat(lon, lat).transform(
-	osmprojection,
-	map.getProjectionObject()
-	), zoom
+
+		new OpenLayers.LonLat(lon, lat).transform(
+			osmprojection,
+			map.getProjectionObject()
+			), zoom
 	);
 
 	//setting vector layer style
-	var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
 
-	// opacity
-	layer_style.strokeOpacity = 0.8;
-	layer_style.fillOpacity = 0.5;
 
 	// adding point default style
-	var pointDefaultStyle = OpenLayers.Util.extend({}, layer_style);
-	pointDefaultStyle.strokeColor = "red";
-	pointDefaultStyle.fillColor = "red";
-	pointDefaultStyle.graphicName = "star";
-	pointDefaultStyle.pointRadius = 10;
-	pointDefaultStyle.strokeWidth = 1;
-	pointDefaultStyle.rotation = 45;
-	pointDefaultStyle.strokeLinecap = "butt";
+
 
 
 	// adding a vector layer with osm projection
-	var vectorLayer = new OpenLayers.Layer.Vector("Glyphs", osmprojection);
+	vectorLayer = new OpenLayers.Layer.Vector("Glyphs", osmprojection);
 
 	// drawing a point
-	var point = new OpenLayers.Geometry.Point(5,40).transform(osmprojection,map.getProjectionObject());
-	var feature = new OpenLayers.Feature.Vector(point,null, pointDefaultStyle);
+	//var point = new OpenLayers.Geometry.Point(5,40).transform(osmprojection,map.getProjectionObject());
+	//var feature = new OpenLayers.Feature.Vector(point,null, pointDefaultStyle);
 	/*
 	var points = new Array(
 			new OpenLayers.Geometry.Point(rwyLon1, rwyLat1),
@@ -101,16 +110,30 @@ function init(){
 	vectorLayer.addFeatures(runwayFeature);
 	map.addLayer(vectorLayer);
 	*/
+	map.addLayer(vectorLayer);
 	//alert("init done");
 
 }
 function add_runway(lat1, lon1, lat2, lon2){
-	alert("add_runway");
+	
+
 	var points = new Array(
 		new OpenLayers.Geometry.Point(lon1, lat1),
 		new OpenLayers.Geometry.Point(lon2, lat2)
 	);
 	var line = new OpenLayers.Geometry.LineString(points).transform(osmprojection,map.getProjectionObject());
+	var runwayFeature = new OpenLayers.Feature.Vector(line,null, pointDefaultStyle);
+	vectorLayer.addFeatures(runwayFeature);
+
+	map.setCenter(
+
+		new OpenLayers.LonLat(lon1, lat1).transform(
+			osmprojection,
+			map.getProjectionObject()
+			), 14
+	);
+
+	//alert("add_runway");
 }
 </script>
 

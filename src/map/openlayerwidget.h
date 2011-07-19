@@ -57,6 +57,10 @@ signals:
     void end_progress(bool Ok);
 	
 	void init_xmap();
+	void execute_js(QString js_string);
+
+
+
     void closeEvent(QCloseEvent *event);
 	void loadFinished(bool);
 	void setLatLon();

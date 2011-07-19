@@ -151,7 +151,7 @@ void OpenLayerWidget::init_xmap(){
 		qDebug() << "contents OK";
 		//webView->setHtml("<html><head><title>FOO</title></head><body><h1>HELP</h1><h1>HELP</h1><h1>HELP</h1><h1>HELP</h1></body></html>");
 		webView->setHtml(contents, QUrl("qrc:///"));
-		//webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
+		webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 		qDebug() << webView->title();
 
 	}
@@ -186,14 +186,15 @@ void OpenLayerWidget::setZoom()
 
 void OpenLayerWidget::add_runway(QString lat1, QString lon1, QString lat2, QString lon2)
 {
-	QString jstr = QString("add_runway(%1, %2, %3, %4").arg(lat1).arg(lon1).arg(lat2).arg(lon2);
-	//QVariant rwyLon1 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLon1 = 5;");
-	//QVariant rwyLat1 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLat1 = 40;");
-	//QVariant rwyLon2 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLon2 = 6;");
-   //QVariant rwyLat2 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLat2 = 41;");
+	QString jstr = QString("add_runway(%1, %2, %3, %4)").arg(lat1).arg(lon1).arg(lat2).arg(lon2);
+	execute_js(jstr);
 }
 
 
+void OpenLayerWidget::execute_js(QString js_str){
+	qDebug() << "> js= " << js_str;
+	webView->page()->mainFrame()->evaluateJavaScript(js_str);
+}
 
 
 
