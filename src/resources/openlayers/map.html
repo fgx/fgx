@@ -177,46 +177,20 @@ function init(){
 	map.addLayer(markers);
 
 
-	// adding a vector layer with osm projection
 	vectorLayer = new OpenLayers.Layer.Vector("Glyphs", osmprojection);
 	map.addLayer(vectorLayer);
 
 
 
-	planes = new OpenLayers.Layer.Vector("Planes",	{styleMap:planeStyleMap});
+	planes = new OpenLayers.Layer.Vector("Planes",	{styleMap: planeStyleMap});
 	map.addLayer(planes);
 
-	// drawing a point
-	//var point = new OpenLayers.Geometry.Point(5,40).transform(osmprojection,map.getProjectionObject());
-	//var feature = new OpenLayers.Feature.Vector(point,null, pointDefaultStyle);
-	/*
-	var points = new Array(
-			new OpenLayers.Geometry.Point(rwyLon1, rwyLat1),
-			new OpenLayers.Geometry.Point(rwyLon2, rwyLat2)
-			);
 
-	*/
-	// add a runway
-	/*
-	var points = new Array(
-			new OpenLayers.Geometry.Point(rwyLon1, rwyLat1),
-			new OpenLayers.Geometry.Point(rwyLon2, rwyLat2)
-			);
-			
-	var line = new OpenLayers.Geometry.LineString(points).transform(osmprojection,map.getProjectionObject());
-	var runwayFeature = new OpenLayers.Feature.Vector(line,null, pointDefaultStyle);
-
-	// add point to vector layer and to map
-	vectorLayer.addFeatures(feature);
-	vectorLayer.addFeatures(runwayFeature);
-	map.addLayer(vectorLayer);
-	*/
-	
 	//alert("init done");
 
 }
 
-function add_aircraft(aircraft, lat, lon, heading){
+function show_aircraft(aircraft, lat, lon, heading, altitude){
 	
 	//var lonlat = new OpenLayers.LonLat(lon, lat).transform(osmprojection, map.getProjectionObject());
 	//alert(px.x + "=" + px.y);

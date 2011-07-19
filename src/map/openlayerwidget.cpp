@@ -123,7 +123,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 
 	//=== Initialise
-	//init_xmap();
+	init_map();
 }
 
 
@@ -133,8 +133,8 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 //===========================================================================
 void OpenLayerWidget::init_map(){
 
-	static bool map_initialized = false;
-	if(map_initialized == false){
+	//static bool map_initialized = false;
+	//if(map_initialized == false){
 		//= Read file if in dev_mode() - no need to "recompile" the resource file
 		QFile file(
 						QFile::exists("/home/ffs/SPETE_PC.txt")
@@ -152,10 +152,10 @@ void OpenLayerWidget::init_map(){
 		//webView->setHtml("<html><head><title>FOO</title></head><body><h1>HELP</h1><h1>HELP</h1><h1>HELP</h1><h1>HELP</h1></body></html>");
 		webView->setHtml(contents, QUrl("qrc:///"));
 		webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
-		qDebug() << webView->title();
+		//qDebug() << webView->title();
 
-	}
-	map_initialized = true;
+	//}
+	//map_initialized = true;
 }
 
 
@@ -200,9 +200,16 @@ void OpenLayerWidget::zoom_to_airport(QString apt){
 	execute_js(jstr);
 }
 
-
-void OpenLayerWidget::add_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude){
-	QString jstr = QString("add_aircraft('%1', %2, %3, %4);").arg(callsign).arg(lat).arg(lon).arg(heading);
+//=================================================
+// Show Aircraft
+void OpenLayerWidget::show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude){
+	QString jstr = QString("show_aircraft('%1', %2, %3, %4, %5);").arg(callsign).arg(lat).arg(lon).arg(heading).arg(altitude);
+	execute_js(jstr);
+}
+//=================================================
+// Show Aircraft
+void OpenLayerWidget::focus_aircraft(QString callsign){
+	QString jstr = QString("focus_aircraft('%1');").arg(callsign);
 	execute_js(jstr);
 }
 

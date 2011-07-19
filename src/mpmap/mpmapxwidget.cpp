@@ -91,13 +91,13 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 
 
 	connect(pilotsWidget,	SIGNAL(radar(QString,QString,QString, QString, QString)),
-			mapWidget,		SLOT(add_aircraft(QString,QString,QString, QString, QString)));
+			mapWidget,		SLOT(show_aircraft(QString,QString,QString, QString, QString)));
 
 
 }
 
 void MpMapXWidget::initialize(){
-	mapWidget->init_map();
+	//mapWidget->init_map();
 }
 
 //= window close
