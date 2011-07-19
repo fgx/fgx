@@ -114,7 +114,7 @@ pointDefaultStyle.strokeLinecap = "butt";
 
 
 var planeStyleMap = new OpenLayers.StyleMap({
-	externalGraphic: "icons/Garrow360.png",
+	externalGraphic: "img/marker-blue.png",
 	graphicWidth: 25,
 	graphicHeight: 25,
 	fillOpacity: 0.85,
@@ -217,12 +217,18 @@ function init(){
 }
 
 function add_aircraft(aircraft, lat, lon){
-	var feature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(0, 0), {
+	
+	var lonlat = new OpenLayers.LonLat(lon, lat).transform(osmprojection, map.getProjectionObject());
+	//alert(px.x + "=" + px.y);
+	//getViewPortPxFromLonLat
+	var px = map.getViewPortPxFromLonLat(lonlat);
+	alert(px.x + "=" + px.y);
+	var feature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(px.x, px.y), {
 				angle: 0,
 				poppedup: false
 			});
 	planes.addFeatures([feature]);
-	alert(aircraft);
+	//alert(aircraft);
 }
 
 
