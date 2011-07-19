@@ -135,7 +135,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	layoutAptTopBar->addStretch(20);
 
-
+	/*
 	buttonViewMap = new QToolButton(this);
 	layoutAptTopBar->addWidget(buttonViewMap);
 	buttonViewMap->setText("View Map");
@@ -145,7 +145,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	buttonViewMap->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	connect(buttonViewMap, SIGNAL(clicked()), this, SLOT(on_view_map()) );
 	//buttonViewMap->setVisible(false); // NOt to confuse anyone
-
+	*/
 
 	QToolButton *buttonReloadCache = new QToolButton(this);
 	layoutAptTopBar->addWidget(buttonReloadCache);
@@ -814,8 +814,8 @@ QString AirportsWidget::validate(){
 }
 
 
-void AirportsWidget::on_view_map(){
-	qDebug() << "Map: OpenLayer";
+//void AirportsWidget::on_view_map(){
+//	qDebug() << "Map: OpenLayer";
 	//QString cApt = current_airport();
 	//QList<QTreeWidgetItem *> runways = treeWidgetAirportInfo->findItems("1", Qt::MatchExactly | Qt::MatchRecursive, CI_RUNWAYS);
 	//qDebug() << "runways" << runways.length();
@@ -835,7 +835,7 @@ void AirportsWidget::on_view_map(){
 	//mainObject->mpMapXWidget->show_airport(cApt);
 	//mainObject->xOpenLayerWidget->show();
 
-}
+//}
 
 void AirportsWidget::on_coordinates_changed()
 {

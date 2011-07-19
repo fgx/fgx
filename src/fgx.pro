@@ -59,7 +59,6 @@ HEADERS += xobjects/xsettings.h \
     mpmap/mpmapwidget.h \
     mpmap/mpmapxwidget.h \
     mpmap/pilotswidget.h \
-    mpmap/gmapwidget.h \
     mpmap/xwebpage.h \
     panes/expertoptionswidget.h \
     xobjects/xsettingsmodel.h \
@@ -121,7 +120,6 @@ SOURCES += main.cpp \
     mpmap/mpmapwidget.cpp \
     mpmap/mpmapxwidget.cpp \
     mpmap/pilotswidget.cpp \
-    mpmap/gmapwidget.cpp \
     mpmap/xwebpage.cpp \
     panes/expertoptionswidget.cpp \
     xobjects/xsettingsmodel.cpp \

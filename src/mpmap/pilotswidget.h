@@ -17,8 +17,9 @@
 
 
 #include "xobjects/mainobject.h"
-
 class MainObject;
+
+
 
 class PilotsWidget : public QWidget
 {
@@ -33,7 +34,7 @@ public:
 		C_HEADING,
 		C_PITCH,
 		C_LAT,
-		C_LNG,
+		C_LON,
 		C_FLAG
 	};
 
@@ -55,6 +56,8 @@ public:
 
 
 signals:
+
+	void radar(QString callsign, QString lat, QString lon);
 
 public slots:
 

@@ -56,7 +56,7 @@ signals:
     void update_progress(int progress);
     void end_progress(bool Ok);
 	
-	void init_xmap();
+	void init_map();
 	void execute_js(QString js_string);
 
 
@@ -68,6 +68,8 @@ signals:
 
 	void add_runway(QString apt, QString lat1, QString lon1, QString lat2, QString lon2);
 	void zoom_to_airport(QString apt);
+
+	void add_aircraft(QString callsign, QString lat, QString lon);
 
 	//====================================
 	//== Map Events

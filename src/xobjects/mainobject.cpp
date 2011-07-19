@@ -137,7 +137,7 @@ MainObject::MainObject(QObject *parent) :
 	QAction *actionMpXMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open XMap (experimental)..."));
 	actionMpXMap->setIconVisibleInMenu(true);
 	connect(actionMpXMap, SIGNAL(triggered()), this, SLOT(on_mpxmap()));
-	actionMpXMap->setVisible(false);
+	//actionMpXMap->setVisible(false);
 
 	//= Settings Action
 	QAction *actionSetupWizard= new QAction(this);

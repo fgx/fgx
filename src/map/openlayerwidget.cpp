@@ -123,7 +123,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 
 	//=== Initialise
-	init_xmap();
+	//init_xmap();
 }
 
 
@@ -131,7 +131,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 //===========================================================================
 //== Initialisaztion
 //===========================================================================
-void OpenLayerWidget::init_xmap(){
+void OpenLayerWidget::init_map(){
 
 	static bool map_initialized = false;
 	if(map_initialized == false){
@@ -148,7 +148,7 @@ void OpenLayerWidget::init_xmap(){
 
 
 		QByteArray contents = file.readAll();
-		qDebug() << "contents OK";
+		//qDebug() << "contents OK";
 		//webView->setHtml("<html><head><title>FOO</title></head><body><h1>HELP</h1><h1>HELP</h1><h1>HELP</h1><h1>HELP</h1></body></html>");
 		webView->setHtml(contents, QUrl("qrc:///"));
 		webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
@@ -190,13 +190,19 @@ void OpenLayerWidget::setZoom()
 // Add Runway
 void OpenLayerWidget::add_runway(QString apt, QString lat1, QString lon1, QString lat2, QString lon2)
 {
-	QString jstr = QString("add_runway('%1', %2, %3, %4, %5)").arg(apt).arg(lat1).arg(lon1).arg(lat2).arg(lon2);
+	QString jstr = QString("add_runway('%1', %2, %3, %4, %5);").arg(apt).arg(lat1).arg(lon1).arg(lat2).arg(lon2);
 	execute_js(jstr);
 }
 //================================================
 // Zoom Airport
 void OpenLayerWidget::zoom_to_airport(QString apt){
-	QString jstr = QString("zoom_to_airport('%1')").arg(apt);
+	QString jstr = QString("zoom_to_airport('%1');").arg(apt);
+	execute_js(jstr);
+}
+
+
+void OpenLayerWidget::add_aircraft(QString callsign, QString lat, QString lon){
+	QString jstr = QString("add_aircraft('%1', %2, %3);").arg(callsign).arg(lat).arg(lon);
 	execute_js(jstr);
 }
 

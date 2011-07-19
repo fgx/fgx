@@ -16,15 +16,21 @@
 #include <QtGui/QActionGroup>
 #include <QtGui/QToolButton>
 
-#include "mpmap/gmapwidget.h"
+
+#include "map/openlayerwidget.h"
+class OpenLayerWidget;
+
 #include "mpmap/pilotswidget.h"
+class PilotsWidget;
 
 #include "xobjects/mainobject.h"
+class MainObject;
+
 #include "xobjects/latlng.h"
 
-class MainObject;
-class PilotsWidget;
-class GMapWidget;
+
+
+
 
 
 class MpMapXWidget : public QWidget
@@ -35,7 +41,7 @@ public:
 
 	MainObject *mainObject;
 
-	GMapWidget *gMapWidget;
+	OpenLayerWidget *mapWidget;
 	PilotsWidget *pilotsWidget;
 
 

@@ -86,7 +86,7 @@ public:
 	QTreeWidget *treeWidgetAirportInfo;
 	QStatusBar *statusBarAirportInfo;
 
-	QToolButton *buttonViewMap;
+	//QToolButton *buttonViewMap;
 
 	void scan_airports_xml();
 	void show_progress(bool state);
@@ -128,7 +128,7 @@ public slots:
 
 	void on_buttonGroupUse();
 
-	void on_view_map();
+	//void on_view_map();
 
 	void on_coordinates_changed();
 	

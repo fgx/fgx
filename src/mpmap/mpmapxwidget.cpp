@@ -73,8 +73,8 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 
 	//======================================================
 	//= Map
-	gMapWidget = new GMapWidget(mainObject);
-	splitter->addWidget(gMapWidget);
+	mapWidget = new OpenLayerWidget(mainObject);
+	splitter->addWidget(mapWidget);
 
 
 	//================================================================================
@@ -90,11 +90,13 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	splitter->setStretchFactor(1, 1);
 
 
+	connect(pilotsWidget, SIGNAL(radar(QString,QString,QString)), mapWidget, SLOT(add_aircraft(QString,QString,QString)));
+
 
 }
 
 void MpMapXWidget::initialize(){
-	gMapWidget->init_map();
+	mapWidget->init_map();
 }
 
 //= window close
@@ -107,14 +109,14 @@ void MpMapXWidget::closeEvent(QCloseEvent *event){
 
 
 void MpMapXWidget::add_airport(QString airport){
-	gMapWidget->add_airport(airport);
+	//mapWidget->add_airport(airport);
 }
 
 void MpMapXWidget::show_airport(QString airport){
-	gMapWidget->show_airport(airport);
+	mapWidget->zoom_to_airport(airport);
 }
 void MpMapXWidget::add_runway(QString airport, QString rwy1, QString lat1, QString lng1, QString rwy2, QString lat2, QString lng2){
-	gMapWidget->add_runway(airport, rwy1, lat1, lng1, rwy2, lat2, lng2);
+	mapWidget->add_runway(airport,  lat1, lng1, lat2, lng2);
 }
 
 

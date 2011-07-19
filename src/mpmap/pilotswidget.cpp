@@ -81,13 +81,13 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	tree->headerItem()->setText(C_HEADING, "Hdg");
 	tree->headerItem()->setText(C_PITCH, "Pitch");
 	tree->headerItem()->setText(C_LAT, "Lat");
-	tree->headerItem()->setText(C_LNG, "Lng");
+	tree->headerItem()->setText(C_LON, "Lon");
 	tree->headerItem()->setText(C_FLAG, "Flag");
 
 	tree->headerItem()->setTextAlignment(C_ALTITUDE, Qt::AlignRight);
 	tree->headerItem()->setTextAlignment(C_HEADING, Qt::AlignRight);
 	tree->headerItem()->setTextAlignment(C_LAT, Qt::AlignRight);
-	tree->headerItem()->setTextAlignment(C_LNG, Qt::AlignRight);
+	tree->headerItem()->setTextAlignment(C_LON, Qt::AlignRight);
 
 	tree->setColumnHidden(C_PITCH, true);
 	tree->setColumnHidden(C_FLAG, true);
@@ -212,12 +212,12 @@ void PilotsWidget::on_server_read_finished(){
 
 			item->setText(C_LAT, attribs.namedItem("lat").nodeValue());
 			item->setTextAlignment(C_LAT, Qt::AlignRight);
-			item->setText(C_LNG, attribs.namedItem("lng").nodeValue());
-			item->setTextAlignment(C_LNG, Qt::AlignRight);
+			item->setText(C_LON, attribs.namedItem("lng").nodeValue());
+			item->setTextAlignment(C_LON, Qt::AlignRight);
 
 			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
 			item->setText(C_FLAG, "");
-
+			emit radar(item->text(C_AIRCRAFT), item->text(C_LAT), item->text(C_LON));
 		}
 	}
 
