@@ -141,7 +141,7 @@ function init(){
 	map = new OpenLayers.Map('map');
 	// alert("init");
 	// add OpenStreetMap layer
-	layer = new OpenLayers.Layer.OSM( "OSM Map");
+	layer = new OpenLayers.Layer.OSM("OSM Map");
 	map.addLayer(layer);
 
 	//var urlArray = ["http://tilecache.osgeo.org/wms-c/Basic.py",
@@ -190,39 +190,63 @@ function init(){
 
 }
 
+
+
+//==========================================================
 function show_aircraft(callsign, lat, lon, heading, altitude){
 	
-	//var lonlat = new OpenLayers.LonLat(lon, lat).transform(osmprojection, map.getProjectionObject());
-	//alert(px.x + "=" + px.y);
-	//getViewPortPxFromLonLat
-	var point = new OpenLayers.Geometry.Point(lon, lat);
-    point.transform(osmprojection, map.getProjectionObject() );
+	var point = new OpenLayers.Geometry.Point(lon, lat).transform(osmprojection, map.getProjectionObject() );
+	//var lonlat = new OpenLayers.Geometry.LonLot(lon, lat).transform(osmprojection, map.getProjectionObject() );
 
-	//var px = map.getViewPortPxFromLonLat(lonlat);
-	//alert(px.x + "=" + px.y);
-	aircraft[callsign] = new OpenLayers.Feature.Vector(point, {
-				angle: heading,
-				poppedup: false
-			});
-	planes.addFeatures([aircraft[callsign]]);
+	//var fid = "callsign_" + callsign;
+
+	//var f = planes.getFeatureBy("callsign", callsign);
+	//var f = planes.getFeatureById(fid);
+	//alert(f);
+	//if(!f){
+		var feature = new OpenLayers.Feature.Vector(point, {
+					angle: heading,
+					poppedup: false
+					//callsign: callsign
+				});
+		//feature.id = fid;
+		//feature.callsign = callsign;
+		planes.addFeatures([feature]);
+	//}else{
+	//	alert(f);
+	//	f.move(point);
+	//}
 	//alert(aircraft);
 }
 
+
+
+//==========================================================
 function focus_aircraft(callsign){
-	alert(callsign);
+	alert(aircraft[callsign].lonlat);
+	//map.setCenter(
+	//	aircraft[callsign].getCenterLonLat().transform(
+	//		osmprojection,
+	//		map.getProjectionObject()
+	//		), 12
+	//);
+	//alert(callsign);
+
 }
 
 
 
+//==========================================================
 function add_marker(mlat, mlon){
-	//var size = new OpenLayers.Size(21,25);
-	//var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-	//var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset);
+
 	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
 	var marker = new OpenLayers.Marker(lonlat);
 	markers.addMarker(marker);
 	//alert("y");
 	return;
+	//var size = new OpenLayers.Size(21,25);
+	//var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+	//var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset);
 	markers.addMarker(new OpenLayers.Marker(
 					new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject() )
 					, icon)
@@ -230,12 +254,13 @@ function add_marker(mlat, mlon){
 	//alert("ere");
 }
 
+
+//==========================================================
 function zoom_to_airport(apt){
 	//alert(markers.getDataExtent());
 	//map.zoomToExtent(aptBounds[apt]);
 	//return;
 	map.setCenter(
-
 		aptBounds[apt].getCenterLonLat().transform(
 			osmprojection,
 			map.getProjectionObject()
