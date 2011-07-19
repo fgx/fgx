@@ -30,6 +30,63 @@
 	
 <script type="text/javascript">
 
+
+
+/*
+ OpenLayers.Control.Hover = OpenLayers.Class(OpenLayers.Control, {                
+	defaultHandlerOptions: {
+		'delay': 500,
+		'pixelTolerance': null,
+		'stopMove': false
+	},
+
+	initialize: function(options) {
+		this.handlerOptions = OpenLayers.Util.extend(
+			{}, this.defaultHandlerOptions
+		);
+		OpenLayers.Control.prototype.initialize.apply(
+			this, arguments
+		); 
+		this.handler = new OpenLayers.Handler.Hover(
+			this,
+			{'pause': this.onPause, 'move': this.onMove},
+			this.handlerOptions
+		);
+	}, 
+
+	onPause: function(evt) {
+		//var output = document.getElementById(this.key + 'Output');
+		//var msg = 'pause ' + evt.xy;
+		//output.value = output.value + msg + "\r\n";
+	},
+
+	onMove: function(evt) {
+		// if this control sent an Ajax request (e.g. GetFeatureInfo) when
+		// the mouse pauses the onMove callback could be used to abort that
+		// request.
+	}
+});
+
+var control = {
+	'long': new OpenLayers.Control.Hover({
+		handlerOptions: {
+			'delay': 2000
+		}
+	})
+}
+
+
+
+
+
+
+*/
+//var Qt;
+
+
+
+
+
 var lon = 0.0;
 var lat = 0.0;
 var zoom = 4;
@@ -55,6 +112,16 @@ pointDefaultStyle.strokeWidth = 1;
 pointDefaultStyle.rotation = 45;
 pointDefaultStyle.strokeLinecap = "butt";
 
+function on_map_click(e){
+	var lonlat = map.getLonLatFromViewPortPx(e.xy);
+	Qt.map_click(lonlat.lat, lonlat.lon);
+}
+
+function on_map_mousemove(e){
+	var lonlat = map.getLonLatFromViewPortPx(e.xy);
+	Qt.map_mouse_move(lonlat.lat, lonlat.lon);
+}
+
 function init(){
 
 	map = new OpenLayers.Map('map');
@@ -74,13 +141,13 @@ function init(){
 			map.getProjectionObject()
 			), zoom
 	);
-
+	//map.addControl(control);
+	//map.addControl(new OpenLayers.Control.MousePosition());
 	//setting vector layer style
 
 
-	// adding point default style
-
-
+	map.events.register("click", map, on_map_click);
+	map.events.register("mousemove", map, on_map_mousemove);
 
 	// adding a vector layer with osm projection
 	vectorLayer = new OpenLayers.Layer.Vector("Glyphs", osmprojection);

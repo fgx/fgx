@@ -54,7 +54,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	toolbar->addWidget(new QLabel("Lat:"));
 	lblLat = new QLabel();
 	//lblLat.setStyleSheet(style)
-	lblLat->setFixedWidth(80);
+	lblLat->setFixedWidth(150);
 	lblLat->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	toolbar->addWidget(lblLat);
 
@@ -63,7 +63,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	toolbar->addWidget(new QLabel("Lon:"));
 	lblLon = new QLabel();
 	//lblLng->setStyleSheet(style);
-	lblLon->setFixedWidth(80);
+	lblLon->setFixedWidth(150);
 	toolbar->addWidget(lblLon);
 
 
@@ -191,6 +191,9 @@ void OpenLayerWidget::add_runway(QString lat1, QString lon1, QString lat2, QStri
 }
 
 
+//================================================
+// Execute Javascript
+//================================================
 void OpenLayerWidget::execute_js(QString js_str){
 	qDebug() << "> js= " << js_str;
 	webView->page()->mainFrame()->evaluateJavaScript(js_str);
@@ -210,11 +213,9 @@ void OpenLayerWidget::map_debug(QVariant mess){
 
 //= JS - map_mouse_move
 // - this is not firing ;-(
-void OpenLayerWidget::map_mouse_move(QVariant dLat, QVariant dLon){
-	//qDebug("YES");
-	//qDebug() << "map_mouse_move" << dLat.toString();
-	lblLat->setText(dLat.toString());
-	lblLon->setText(dLon.toString());
+void OpenLayerWidget::map_mouse_move(QVariant lat, QVariant lon){
+	lblLat->setText(lat.toString());
+	lblLon->setText(QString::number(lon.toFloat()));
 }
 
 
@@ -222,7 +223,7 @@ void OpenLayerWidget::map_mouse_move(QVariant dLat, QVariant dLon){
 void OpenLayerWidget::map_click(QVariant lat, QVariant lon){
 	Q_UNUSED(lat);
 	Q_UNUSED(lon);
-	//qDebug() << "map_click()" << lat << lng;
+	qDebug() << "map_click()" << lat << lon;
 }
 
 //== JS - map_right_click()
