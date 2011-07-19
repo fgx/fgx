@@ -50,7 +50,7 @@ public:
 		CI_WIDTH = 4,
 		CI_LENGTH  = 5,
 		CI_LAT = 6,
-		CI_LNG = 7,
+		CI_LON = 7,
 		CI_ALIGNMNET =8,
 		CI_RUNWAYS = 9
 	};

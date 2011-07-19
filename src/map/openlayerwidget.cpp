@@ -184,13 +184,13 @@ void OpenLayerWidget::setZoom()
     QVariant zoom = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var zoom = 5;");
 }
 
-void OpenLayerWidget::addRunway()
+void OpenLayerWidget::add_runway(QString lat1, QString lon1, QString lat2, QString lon2)
 {
-	
-	QVariant rwyLon1 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLon1 = 5;");
-    QVariant rwyLat1 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLat1 = 40;");
-	QVariant rwyLon2 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLon2 = 6;");
-    QVariant rwyLat2 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLat2 = 41;");
+	QString jstr = QString("add_runway(%1, %2, %3, %4").arg(lat1).arg(lon1).arg(lat2).arg(lon2);
+	//QVariant rwyLon1 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLon1 = 5;");
+	//QVariant rwyLat1 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLat1 = 40;");
+	//QVariant rwyLon2 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLon2 = 6;");
+   //QVariant rwyLat2 = ((QWebView*)sender())->page()->mainFrame()->evaluateJavaScript("var rwyLat2 = 41;");
 }
 
 

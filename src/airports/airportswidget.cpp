@@ -248,7 +248,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	headerItem->setText(CI_WIDTH, tr("Width"));
 	headerItem->setText(CI_LENGTH, tr("Length"));
 	headerItem->setText(CI_LAT, tr("Lat"));
-	headerItem->setText(CI_LNG, tr("Lng"));
+	headerItem->setText(CI_LON, tr("Lng"));
 	headerItem->setText(CI_ALIGNMNET, tr("Alignment"));
 	headerItem->setText(CI_RUNWAYS, tr("R"));
 	treeWidgetAirportInfo->setColumnHidden(CI_TYPE,true);
@@ -618,7 +618,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			tItem0->setIcon(0, QIcon(":/icon/runway"));
 			tItem0->setText(CI_NODE,  nodeRunway.childNodes().at(0).firstChildElement("rwy").text());
 			tItem0->setText(CI_LAT,  nodeRunway.childNodes().at(0).firstChildElement("lat").text());
-			tItem0->setText(CI_LNG,  nodeRunway.childNodes().at(0).firstChildElement("lon").text());
+			tItem0->setText(CI_LON,  nodeRunway.childNodes().at(0).firstChildElement("lon").text());
 			tItem0->setText(CI_TYPE, "runway");
 			tItem0->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(0).firstChildElement("rwy").text()));
@@ -627,12 +627,15 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			tItem1->setIcon(0, QIcon(":/icon/runway"));
 			tItem1->setText(CI_NODE,  nodeRunway.childNodes().at(1).firstChildElement("rwy").text());
 			tItem1->setText(CI_LAT,  nodeRunway.childNodes().at(1).firstChildElement("lat").text());
-			tItem1->setText(CI_LNG,  nodeRunway.childNodes().at(1).firstChildElement("lon").text());
+			tItem1->setText(CI_LON,  nodeRunway.childNodes().at(1).firstChildElement("lon").text());
 			tItem1->setText(CI_TYPE, "runway");
 			tItem1->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()));
 			//nodeRunway.firstChildElement("threshold");
 
+			mapWidget->add_runway(	tItem0->text(CI_LAT), tItem0->text(CI_LON),
+									tItem1->text(CI_LAT), tItem1->text(CI_LON)
+									);
 			//qDebug() << nodeRunway.firstChildElement("rwy").text();
 			//list << thresholdNode.firstChildElement("rwy").text();
 			//list << thresholdNode.firstChildElement("lat").text();

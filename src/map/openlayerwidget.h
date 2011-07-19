@@ -61,7 +61,8 @@ signals:
 	void loadFinished(bool);
 	void setLatLon();
 	void setZoom();
-	void addRunway();
+
+	void add_runway(QString lat1, QString lon1, QString lat2, QString lon2);
 
 	//====================================
 	//== Map Events

@@ -2,7 +2,38 @@
     <qresource prefix="/openlayers">
         <file alias="map.html">openlayers/map.html</file>
     </qresource>
-    <qresource prefix="/lib">
-        <file alias="OpenLayers.js">openlayers/lib/OpenLayers.js</file>
+    <qresource prefix="/themes/default">
+        <file alias="framedCloud.css">openlayers/theme/default/framedCloud.css</file>
+        <file alias="google.css">openlayers/theme/default/google.css</file>
+        <file alias="ie6-style.css">openlayers/theme/default/ie6-style.css</file>
+        <file alias="style.css">openlayers/theme/default/style.css</file>
+    </qresource>
+    <qresource prefix="/img">
+        <file alias="blank.gif">openlayers/img/blank.gif</file>
+        <file alias="cloud-popup-relative.png">openlayers/img/cloud-popup-relative.png</file>
+        <file alias="drag-rectangle-off.png">openlayers/img/drag-rectangle-off.png</file>
+        <file alias="drag-rectangle-on.png">openlayers/img/drag-rectangle-on.png</file>
+        <file alias="east-mini.png">openlayers/img/east-mini.png</file>
+        <file alias="layer-switcher-maximize.png">openlayers/img/layer-switcher-maximize.png</file>
+        <file alias="layer-switcher-minimize.png">openlayers/img/layer-switcher-minimize.png</file>
+        <file alias="marker-blue.png">openlayers/img/marker-blue.png</file>
+        <file alias="marker-gold.png">openlayers/img/marker-gold.png</file>
+        <file alias="marker-green.png">openlayers/img/marker-green.png</file>
+        <file alias="marker.png">openlayers/img/marker.png</file>
+        <file alias="measuring-stick-off.png">openlayers/img/measuring-stick-off.png</file>
+        <file alias="measuring-stick-on.png">openlayers/img/measuring-stick-on.png</file>
+        <file alias="north-mini.png">openlayers/img/north-mini.png</file>
+        <file alias="panning-hand-off.png">openlayers/img/panning-hand-off.png</file>
+        <file alias="panning-hand-on.png">openlayers/img/panning-hand-on.png</file>
+        <file alias="slider.png">openlayers/img/slider.png</file>
+        <file alias="south-mini.png">openlayers/img/south-mini.png</file>
+        <file alias="west-mini.png">openlayers/img/west-mini.png</file>
+        <file alias="zoom-minus-mini.png">openlayers/img/zoom-minus-mini.png</file>
+        <file alias="zoom-plus-mini.png">openlayers/img/zoom-plus-mini.png</file>
+        <file alias="zoom-world-mini.png">openlayers/img/zoom-world-mini.png</file>
+        <file alias="zoombar.png">openlayers/img/zoombar.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file alias="OpenLayers.js">openlayers/OpenLayers.js</file>
     </qresource>
 </RCC>
