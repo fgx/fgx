@@ -216,12 +216,13 @@ function init(){
 
 }
 
-function add_plane(mlat, mlon, angle){
-	var feature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(x, y), {
-				angle: angle,
+function add_aircraft(aircraft, lat, lon){
+	var feature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(0, 0), {
+				angle: 0,
 				poppedup: false
 			});
 	planes.addFeatures([feature]);
+	alert(aircraft);
 }
 
 
