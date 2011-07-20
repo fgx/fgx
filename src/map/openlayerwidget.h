@@ -66,7 +66,7 @@ signals:
 
 
 	//# To map markers and features
-	void add_runway(QString apt, QString lat1, QString lon1, QString lat2, QString lon2);
+	void add_runway(QString apt, QString rwy1, QString rwy2, QString lat1, QString lon1, QString lat2, QString lon2);
 	void zoom_to_airport(QString apt);
 	void zoom_to(QString lat, QString lon, int zoom);
 

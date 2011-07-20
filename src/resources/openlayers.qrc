@@ -32,6 +32,11 @@
         <file alias="zoom-plus-mini.png">openlayers/img/zoom-plus-mini.png</file>
         <file alias="zoom-world-mini.png">openlayers/img/zoom-world-mini.png</file>
         <file alias="zoombar.png">openlayers/img/zoombar.png</file>
+		
+		<file alias="01.png">openlayers/img/01.png</file>
+		<file alias="01L.png">openlayers/img/01L.png</file>
+		<file alias="01R.png">openlayers/img/01R.png</file>
+		
     </qresource>
     <qresource prefix="/">
         <file alias="OpenLayers.js">openlayers/OpenLayers.js</file>

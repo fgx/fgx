@@ -1,9 +1,9 @@
-<!-- author: yves sablonier, zurich -->
+<!-- authors : yves sablonier, pete morgan -->
 <!-- © 2011, GPLv2 and later -->
 
 <html>
 <head>
-<link rel="stylesheet" href="theme/default/style.css" type="text/css" />
+<!--<link rel="stylesheet" href="theme/default/style.css" type="text/css" />-->
 <!-- <link rel="stylesheet" href="style.css" type="text/css" />-->
 
 <!--<script src="http://maps.google.com/maps/api/js?v=3.5&amp;sensor=false"></script> -->
@@ -26,7 +26,17 @@
 	#map {
 		width: 100%;
 		height: 100%;
+		
 	}
+	
+	.olControlAttribution {
+    font-size: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+    right: 3px; 
+    bottom: 3px; 
+    position: absolute; 
+    display: block;
+}
 
 </style>
 	
@@ -63,7 +73,6 @@ pointDefaultStyle.rotation = 45;
 pointDefaultStyle.strokeLinecap = "butt";
 
 
-
 var planeStyleMap = new OpenLayers.StyleMap({
 	externalGraphic: "img/marker-blue.png",
 	graphicWidth: 21,
@@ -72,7 +81,39 @@ var planeStyleMap = new OpenLayers.StyleMap({
 	rotation: "${angle}"
 });
 
-var planes;
+var rwyMarkersStyle = new OpenLayers.StyleMap({
+    
+    "default": {
+        graphicName: "square",
+        pointRadius: 14,
+        strokeColor: "white",
+        strokeWidth: 1,
+        fillColor: "red",
+        fillOpacity: 0.8,
+        
+        
+        fontColor: "white",
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: "bold",
+        //labelAlign: "center",
+        //labelXOffset: 10,
+        //labelYOffset: 10,
+        label : "${name}"
+
+        },
+    
+    "select": {
+        fillColor: "black",
+        strokeColor: "yellow",
+        pointRadius: 12,
+        fillOpacity: 1,
+    }
+
+});
+
+
+var planes, rwymarkers;
 var aircraft = {};
 
 
@@ -89,27 +130,22 @@ function on_map_mousemove(e){
 
 function init(){
 
-	map = new OpenLayers.Map('map');
-	// alert("init");
-	map.addControl(new OpenLayers.Control.LayerSwitcher());
+	map = new OpenLayers.Map('map', {
+				controls:[
+					new OpenLayers.Control.Navigation(),
+					new OpenLayers.Control.Attribution(),
+					] 
+				} 
+			);
+	
+	 var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
+     renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
-	// add OpenStreetMap layer
+
 	layer = new OpenLayers.Layer.OSM("OSM Map");
 	map.addLayer(layer);
 
-	//google = new OpenLayers.Layer.Google(
-    //    "Google Physical",
-    //    {type: google.maps.MapTypeId.TERRAIN}
-    //);
 
-	//map.addLayers([layer, google]);
-
-	//var urlArray = ["http://tilecache.osgeo.org/wms-c/Basic.py",
-	//				"http://tilecache.osgeo.org/wms-c/Basic.py"];
-	//layer = new OpenLayers.Layer.WMS( "OpenLayers WMS", 
-	//									urlArray,
-	//									{layers: 'basic'} );
-	//map.addLayer(layer);
 
 	// set osm projection
 	osmprojection = new OpenLayers.Projection("EPSG:4326");
@@ -122,20 +158,19 @@ function init(){
 			), zoom
 	);
 
-
-
-	//map.addControl(control);
-	//map.addControl(new OpenLayers.Control.MousePosition());
-	//setting vector layer style
-
-
+	// map events
 	map.events.register("click", map, on_map_click);
 	map.events.register("mousemove", map, on_map_mousemove);
-
+	
+	// add default markers
 	markers = new OpenLayers.Layer.Markers( "Markers" );
 	markers.setOpacity(1.0);
 	map.addLayer(markers);
-
+	
+	// add rwy markers
+	rwymarkers = new OpenLayers.Layer.Vector("Runways",	{styleMap:  rwyMarkersStyle});
+	map.addLayer(rwymarkers);
+    
 
 	vectorLayer = new OpenLayers.Layer.Vector("Glyphs", osmprojection);
 	map.addLayer(vectorLayer);
@@ -144,6 +179,8 @@ function init(){
 
 	planes = new OpenLayers.Layer.Vector("Planes",	{styleMap: planeStyleMap});
 	map.addLayer(planes);
+    
+    map.addLayer(boxes);
 
 
 	//alert("init done");
@@ -206,17 +243,42 @@ function add_marker(mlat, mlon){
 	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
 	var marker = new OpenLayers.Marker(lonlat);
 	markers.addMarker(marker);
-	//alert("y");
 	return;
-	//var size = new OpenLayers.Size(21,25);
-	//var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-	//var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset);
-	markers.addMarker(new OpenLayers.Marker(
-					new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject() )
-					, icon)
-	);
-	//alert("ere");
+	
 }
+
+//==========================================================
+function add_rwymarker(mrwy, mlat, mlon){
+
+    var size = new OpenLayers.Size(30,22);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var path = "/img/01L" + ".png";
+    var icon = new OpenLayers.Icon(path, size, offset);
+    
+	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
+	var marker = new OpenLayers.Marker(lonlat,icon);
+    
+	markers.addMarker(marker);
+	return;
+	
+}
+
+//==========================================================
+/*function add_rwymarker(mrwy, mlat, mlon){
+
+
+	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
+		
+	var feature = new OpenLayers.Feature.Vector(point, {
+                name: mrwy
+				});
+                
+
+	rwymarkers.addFeatures([feature]);
+
+	return;
+	
+}*/
 
 
 //==========================================================
@@ -244,7 +306,7 @@ function zoom_to(lat, lon, zoom){
 //======================================================
 // Add_runway
 //======================================================
-function add_runway(apt, lat1, lon1, lat2, lon2){
+function add_runway(apt, rwy1, rwy2, lat1, lon1, lat2, lon2){
 	
 	if( !aptBounds[apt] ){
 		aptBounds[apt] = new OpenLayers.Bounds();
@@ -252,9 +314,9 @@ function add_runway(apt, lat1, lon1, lat2, lon2){
 	}
 	aptBounds[apt].extend( new OpenLayers.LonLat(lon1, lat1) );
 	aptBounds[apt].extend( new OpenLayers.LonLat(lon2, lat2) );
-
-	add_marker(lat1, lon1);
-	add_marker(lat2, lon2);
+    
+	add_rwymarker(rwy1, lat1, lon1);
+	add_rwymarker(rwy2, lat2, lon2);
 	var points = new Array(
 		new OpenLayers.Geometry.Point(lon1, lat1),
 		new OpenLayers.Geometry.Point(lon2, lat2)
@@ -273,7 +335,7 @@ function add_runway(apt, lat1, lon1, lat2, lon2){
 
 
 </head>
-<body onload="init()">
+<body onLoad="init()">
 	<div id="map"></div>
 </body>
 
