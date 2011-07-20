@@ -637,6 +637,8 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 
 
 			mapWidget->add_runway(	airport_code,
+									tItem0->text(CI_NODE),
+									tItem1->text(CI_NODE),
 									tItem0->text(CI_LAT), tItem0->text(CI_LON),
 									tItem1->text(CI_LAT), tItem1->text(CI_LON)
 									);

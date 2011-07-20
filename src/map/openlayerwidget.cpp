@@ -172,16 +172,18 @@ void OpenLayerWidget::closeEvent(QCloseEvent *event)
 
 //================================================
 // Add Runway
-void OpenLayerWidget::add_runway(QString apt, QString lat1, QString lon1, QString lat2, QString lon2)
+void OpenLayerWidget::add_runway(QString apt, QString rwy1, QString rwy2, QString lat1, QString lon1, QString lat2, QString lon2)
 {
-	QString jstr = QString("add_runway('%1', %2, %3, %4, %5);").arg(apt).arg(lat1).arg(lon1).arg(lat2).arg(lon2);
+	QString jstr = QString("add_runway('%1', %2, %3, %4, %5, %6, %7);").arg(apt).arg(rwy1).arg(rwy2).arg(lat1).arg(lon1).arg(lat2).arg(lon2);
 	execute_js(jstr);
+	qDebug() << "add_runway jstr: " << jstr;
 }
 //================================================
 // Zoom Airport
 void OpenLayerWidget::zoom_to_airport(QString apt){
 	QString jstr = QString("zoom_to_airport('%1');").arg(apt);
 	execute_js(jstr);
+	qDebug() << "zoom_to_airport jstr: " << jstr;
 }
 
 
