@@ -134,18 +134,20 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
     
     "default": {
         graphicName: "square",
-        pointRadius: 10,
-        strokeColor: "black",
+        pointRadius: 14,
+        strokeColor: "white",
         strokeWidth: 1,
-        fillColor: "yellow",
+        fillColor: "red",
         fillOpacity: 0.8,
         
-        fontColor: "#000000",
+        
+        fontColor: "white",
         fontSize: "12px",
         fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: "bold",
         //labelAlign: "center",
-        //labelXOffset: "${xOffset}",
-        //labelYOffset: "${yOffset}"
+        //labelXOffset: 10,
+        //labelYOffset: 10,
         label : "${name}"
 
         },
@@ -217,7 +219,7 @@ function init(){
 	// add rwy markers
 	rwymarkers = new OpenLayers.Layer.Vector("Runways",	{styleMap:  rwyMarkersStyle});
 	map.addLayer(rwymarkers);
-
+    
 
 	vectorLayer = new OpenLayers.Layer.Vector("Glyphs", osmprojection);
 	map.addLayer(vectorLayer);
@@ -226,6 +228,8 @@ function init(){
 
 	planes = new OpenLayers.Layer.Vector("Planes",	{styleMap: planeStyleMap});
 	map.addLayer(planes);
+    
+    map.addLayer(boxes);
 
 
 	//alert("init done");
@@ -291,13 +295,26 @@ function add_marker(mlat, mlon){
 //==========================================================
 function add_rwymarker(mrwy, mlat, mlon){
 
-
+    var size = new OpenLayers.Size(30,22);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var path = "/img/01L" + ".png";
+    var icon = new OpenLayers.Icon(path, size, offset);
+    
 	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
+	var marker = new OpenLayers.Marker(lonlat,icon);
+    
+	markers.addMarker(marker);
+	return;
+	
+}
+
+//==========================================================
+/*function add_rwymarker(mrwy, mlat, mlon){
+
 
 	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
 		
 	var feature = new OpenLayers.Feature.Vector(point, {
-                // some attributes
                 name: mrwy
 				});
                 
@@ -306,7 +323,7 @@ function add_rwymarker(mrwy, mlat, mlon){
 
 	return;
 	
-}
+}*/
 
 
 //==========================================================
@@ -340,9 +357,6 @@ function add_runway(apt, rwy1, rwy2, lat1, lon1, lat2, lon2){
 	}
 	aptBounds[apt].extend( new OpenLayers.LonLat(lon1, lat1) );
 	aptBounds[apt].extend( new OpenLayers.LonLat(lon2, lat2) );
-
-    //var rwy1 = "01";
-    //var rwy2 = "02";
     
 	add_rwymarker(rwy1, lat1, lon1);
 	add_rwymarker(rwy2, lat2, lon2);
