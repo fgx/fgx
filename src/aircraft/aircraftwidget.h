@@ -72,7 +72,7 @@ public:
 private:
 	QTreeWidget *treeWidget;
     QStatusBar *statusBarTree;
-    QStatusBar *statusBarAero;
+	QLabel *labelAeroPath;
 
 signals:
 	void setx( QString option, bool enabled,QString value);

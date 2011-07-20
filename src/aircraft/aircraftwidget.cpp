@@ -146,13 +146,17 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	);
 
 
-	statusBarAero = new QStatusBar();
-	treeLayout->addWidget(statusBarAero);
+	statusBarTree = new QStatusBar();
+	treeLayout->addWidget(statusBarTree);
 
-	//** View nested Checkbox
+	//== Path label
+	labelAeroPath = new QLabel();
+	statusBarTree->addPermanentWidget(labelAeroPath, 2);
+
+	//== View nested Checkbox
 	checkViewNested = new QCheckBox();
 	checkViewNested->setText("View folders");
-	statusBarAero->addPermanentWidget(checkViewNested);
+	statusBarTree->addPermanentWidget(checkViewNested, 0);
 	connect(checkViewNested, SIGNAL(clicked()), this, SLOT(load_tree()));
 
 
@@ -162,7 +166,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
 	actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	actionReloadCacheDb->setAutoRaise(true);
-	statusBarAero->addPermanentWidget(actionReloadCacheDb);
+	statusBarTree->addPermanentWidget(actionReloadCacheDb, 0);
 	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
 
@@ -341,10 +345,12 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 //==========================================================================
 void AircraftWidget::on_tree_selection_changed(){
 
-	on_set_aircraft();
+
+
 	QTreeWidgetItem *item = treeWidget->currentItem();
 	if(!item){
             outLog("on_tree_selection_changed: no selected item");
+		labelAeroPath->setText("");
 		return;
 	}
 
@@ -352,12 +358,13 @@ void AircraftWidget::on_tree_selection_changed(){
 	if(item->text(C_AERO).length() == 0){
                 outLog("on_tree_selection_changed: no C_AERO item");
                 aeroImageLabel->clear();
-		//emit setx("--aircraft=", false, "");
+		emit setx("--aircraft=", false, "");
+		labelAeroPath->setText("");
 		return;
 	}
 
-	//mainObject->settings->setValue("aircraft", item->text(C_AERO) );
-	//emit setx("--aircraft=", true, item->text(C_AERO));
+
+	labelAeroPath->setText(item->text(C_DIR));
 
 	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
@@ -378,6 +385,7 @@ void AircraftWidget::on_tree_selection_changed(){
 	}else{
 		aeroImageLabel->setText("No Image");
 	}
+	emit setx("--aircraft=", true, selected_aircraft());
 }
 
 
@@ -419,7 +427,7 @@ QString AircraftWidget::validate(){
 // Rescan airpcarft cache
 void AircraftWidget::on_reload_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
-	statusBarAero->showMessage("Reloading cache");
+	statusBarTree->showMessage("Reloading cache");
 	QProgressDialog progress(this);
 	QSize size(320,100);
 	progress.resize(size);
@@ -491,7 +499,7 @@ void AircraftWidget::load_tree(){
 
 	select_node(mainObject->settings->value("aircraft").toString());
 	QString str = QString("%1 aircraft").arg(c);
-	statusBarAero->showMessage(str);
+	statusBarTree->showMessage(str);
 	outLog("FGx: AircraftWidget::load_tree: with " + str);
 }
 
@@ -504,7 +512,7 @@ void AircraftWidget::initialize(){
 		return;
 	}
 	if (!QFile::exists(mainObject->data_file("aircraft.txt"))){
-		statusBarAero->showMessage("No cached data. Click Import");
+		statusBarTree->showMessage("No cached data. Click Import");
 	}else{
 		load_tree();
 	}
@@ -549,10 +557,10 @@ void AircraftWidget::on_set_aircraft()
 
 	emit setx("use_aircraft", true, QString::number(groupUseAircraft->checkedId()));
 
-	emit setx("--aircraft=",
-			  groupUseAircraft->checkedId() == 1 && selected_aircraft().length() > 0,
-			  selected_aircraft()
-			  );
+	//emit setx("--aircraft=",
+	//		  groupUseAircraft->checkedId() == 1 && selected_aircraft().length() > 0,
+	//		  selected_aircraft()
+	//		  );
 	emit setx("--fg-aircraft=",
 			  groupUseAircraft->checkedId() == 2 && txtAircraftPath->text().length() > 0,
 			  txtAircraftPath->text()
@@ -577,6 +585,7 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 
 	}else if(option == "--aircraft"){
 		//= see tree load
+		select_node(value);
 
 	}else if(option == "--fg-aircraft="){
 
