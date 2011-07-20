@@ -93,8 +93,8 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	connect(pilotsWidget,	SIGNAL(radar(QString,QString,QString, QString, QString)),
 			mapWidget,		SLOT(show_aircraft(QString,QString,QString, QString, QString)));
 
-	connect(pilotsWidget,	SIGNAL(aircraft_selected(QString)),
-			mapWidget,		SLOT(focus_aircraft(QString)));
+	connect(pilotsWidget,	SIGNAL(aircraft_selected(XAero)),
+			this,		SLOT(focus_aero(XAero)));
 
 }
 
@@ -123,6 +123,10 @@ void MpMapXWidget::add_runway(QString airport, QString rwy1, QString lat1, QStri
 	Q_UNUSED(rwy1);
 	Q_UNUSED(rwy2);
 	mapWidget->add_runway(airport, lat1, lng1, lat2, lng2);
+}
+
+void MpMapXWidget::focus_aero(XAero aero){
+	mapWidget->zoom_to(aero.lat, aero.lon, 15);
 }
 
 

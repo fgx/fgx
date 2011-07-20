@@ -26,9 +26,9 @@ class PilotsWidget;
 #include "xobjects/mainobject.h"
 class MainObject;
 
-#include "xobjects/latlng.h"
+//#include "xobjects/latlng.h"
 
-
+#include "aircraft/xaero.h"
 
 
 
@@ -55,6 +55,8 @@ public slots:
 	void add_airport(QString airport);
 	void add_runway(QString airport, QString rwy1, QString lat1, QString lng1, QString rwy2, QString lat2, QString lng2);
 	void show_airport(QString airport);
+
+	void focus_aero(XAero aero);
 };
 
 #endif // MPMAPXWIDGET_H

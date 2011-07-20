@@ -65,15 +65,16 @@ signals:
 
 
 
-	//= markers and features
+	//# To map markers and features
 	void add_runway(QString apt, QString lat1, QString lon1, QString lat2, QString lon2);
 	void zoom_to_airport(QString apt);
+	void zoom_to(QString lat, QString lon, int zoom);
 
 	void show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude);
 	void focus_aircraft(QString callsign);
 
 	//====================================
-	//== Map Events
+	//@<< From Map Events
 	void map_debug(QVariant);
 	void map_mouse_move(QVariant lat, QVariant lon);
 	void map_click(QVariant lat, QVariant lon);

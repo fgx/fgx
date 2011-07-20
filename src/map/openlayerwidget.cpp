@@ -184,6 +184,15 @@ void OpenLayerWidget::zoom_to_airport(QString apt){
 	execute_js(jstr);
 }
 
+
+//================================================
+// Zoom ro
+void OpenLayerWidget::zoom_to( QString lat, QString lon, int zoom)
+{
+	QString jstr = QString("zoom_to(%1, %2, %3);").arg(lat).arg(lon).arg(zoom);
+	execute_js(jstr);
+}
+
 //=================================================
 // Show Aircraft
 void OpenLayerWidget::show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude){

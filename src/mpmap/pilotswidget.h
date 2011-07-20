@@ -19,7 +19,7 @@
 #include "xobjects/mainobject.h"
 class MainObject;
 
-
+#include "aircraft/xaero.h"
 
 class PilotsWidget : public QWidget
 {
@@ -58,7 +58,8 @@ public:
 signals:
 
 	void radar(QString callsign, QString lat, QString lon, QString heading, QString altitude);
-	void aircraft_selected(QString callsign);
+	//void aircraft_selected(QString callsign);
+	void aircraft_selected(XAero aero);
 
 public slots:
 

@@ -20,6 +20,7 @@
 #include "xwidgets/xtreewidgetitem.h"
 #include "pilotswidget.h"
 
+
 PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
     QWidget(parent)
 {
@@ -267,7 +268,11 @@ void PilotsWidget::on_combo_changed(int idx){
 
 void PilotsWidget::on_item_doubled_clicked(QTreeWidgetItem *item, int colidx){
 	Q_UNUSED(colidx);
-	emit aircraft_selected(item->text(C_CALLSIGN));
+	//emit aircraft_selected(item->text(C_CALLSIGN));
+	XAero aero(item->text(C_CALLSIGN));
+	aero.lat = item->text(C_LAT);
+	aero.lon = item->text(C_LON);
+	emit aircraft_selected(aero);
 }
 
 
