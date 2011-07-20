@@ -38,7 +38,7 @@ void TelnetSlave::telnet_connect(QString address, int portt){
 	hostAddress = address;
 	port = portt;
 	socket->connectToHost(hostAddress, port);
-	qDebug() << "open" << hostAddress << port;
+	//qDebug() << "open" << hostAddress << port;
 }
 
 
@@ -49,7 +49,7 @@ void TelnetSlave::telnet_disconnect(){
 
 void TelnetSlave::set_property(QString path, QString value){
     //TODO
-	qDebug() << path << "=" << value;
+	//qDebug() << path << "=" << value;
 	QByteArray command("set ");
 	command.append(path).append(" ").append(value).append("\r\n");
 	//QByteArray cmd(command);
@@ -58,6 +58,10 @@ void TelnetSlave::set_property(QString path, QString value){
 	socket->write( command );
 }
 
+void TelnetSlave::add_que(QString node)
+{
+	//que->
+}
 
 //==========================================================================================
 //== Get Node

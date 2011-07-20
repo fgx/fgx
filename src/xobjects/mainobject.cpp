@@ -215,7 +215,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//== Props tree
 	propertiesBrowser = new PropsTreeWidget(this);
-	propertiesBrowser->show();
+	propertiesBrowser->hide();
 
 	//= MP Map Widget
 	mpMapWidget = new MpMapWidget(this);
@@ -253,7 +253,7 @@ MainObject::~MainObject()
 //============================================================================
 //= Initialize
 void MainObject::initialize(){
-	//on_launcher();
+	on_launcher();
 }
 
 //============================================================================
