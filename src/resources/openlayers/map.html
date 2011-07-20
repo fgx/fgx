@@ -297,7 +297,7 @@ function add_rwymarker(mrwy, mlat, mlon){
 
     var size = new OpenLayers.Size(30,22);
     var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-    var path = "/img/01L" + ".png";
+    var path = "/img/rwy/" + mrwy + ".png";
     var icon = new OpenLayers.Icon(path, size, offset);
     
 	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
