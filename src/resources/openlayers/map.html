@@ -170,6 +170,7 @@ function init(){
 	rwymarkers = new OpenLayers.Layer.Vector("Runways Markers",	{styleMap:  rwyMarkersStyle});
 	map.addLayer(rwymarkers);
 	
+	map.raiseLayer(rwyLayer, 0);
 	map.raiseLayer(rwymarkers, 1);
     
 
