@@ -372,9 +372,9 @@ QStringList XSettingsModel::get_fgfs_args()
 
 
 	//= add Extra args
-	QString extra = getx("extra_args");
-	if (extra.length() > 0) {
-		QStringList parts = extra.split("\n");
+	XOpt opt = get_opt("extra_args");
+	if (opt.enabled and  opt.value.length() > 0) {
+		QStringList parts = opt.value.split("\n");
 		if(parts.count() > 0){
 			for(int i=0; i < parts.count(); i++){
 				QString part = parts.at(i).trimmed();

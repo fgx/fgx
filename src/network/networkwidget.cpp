@@ -344,10 +344,15 @@ void NetworkWidget::on_dns_lookup_callback(const QHostInfo &hostInfo){
 	newItem->setText(C_IP_ADDRESS, hostInfo.addresses().first().toString());
 	newItem->setText(C_PILOTS_COUNT, "-");
 	treeWidget->addTopLevelItem(newItem);
-	if(mainObject->settings->value("mpserver").toString() == hostInfo.hostName()){
-		treeWidget->setCurrentItem(newItem);
+	QString serv = mainObject->X->getx("--multiplay=out");
+	if(serv.indexOf(",") > 0){
+		if(serv.split(",",QString::SkipEmptyParts).at(1) == hostInfo.hostName()){
+			treeWidget->setCurrentItem(newItem);
+		}
 	}
-	return; //######################
+	return;
+
+	// TODO Connect to telnet and get players list
 	MpTelnet *telnet = new MpTelnet(this );
 	telnet->get_info(hostInfo.addresses().first().toString());
 	connect(telnet, SIGNAL(telnet_data(QString, QString)),
@@ -412,7 +417,7 @@ void NetworkWidget::set_mp_server(){
 	in.append(",");
 	in.append(comboLocalIpAddress->currentText());
 	in.append(",").append(comboLocalPort->currentText());
-	qDebug() << "in" << in;
+
 	emit setx("--multiplay=in", grpMpServerIn->isChecked(), in);
 
 
@@ -429,9 +434,7 @@ void NetworkWidget::set_mp_server(){
 	QString out(",");
 	out.append(comboHzOut->currentText());
 	out.append(",");
-	out.append( comboRemoteAddress->itemData(comboRemoteAddress->currentIndex(),Qt::UserRole) == "domain"
-				? item->text(C_DOMAIN)
-				: item->text(C_IP_ADDRESS));
+	out.append(  item->text(C_IP_ADDRESS) );
 	out.append(",").append(comboRemotePort->currentText());
 
 	//=out,10,server.ip.address,5000
@@ -523,23 +526,28 @@ void NetworkWidget::on_upx(QString option, bool enabled, QString value)
 
 
 	if(option == "--multiplay=in" || option == "--multiplay=out"){
-		//return;
+
 		// --multiplay=out,10,server.ip.address,5000
-		QStringList parts;
-		parts = value.split(",",QString::SkipEmptyParts);
+		if(value.contains(",")){
+			QStringList parts;
+			parts = value.split(",",QString::SkipEmptyParts);
 
-		if(option == "--multiplay=in"){
-			grpMpServerIn->setChecked(enabled);
-			Helpers::select_combo(comboLocalIpAddress, parts.at(1));
-			Helpers::select_combo(comboHzIn, parts.at(0));
-			Helpers::select_combo(comboLocalPort, parts.at(2));
+			if(option == "--multiplay=in"){
+				grpMpServerIn->setChecked(enabled);
+				Helpers::select_combo(comboLocalIpAddress, parts.at(1));
+				Helpers::select_combo(comboHzIn, parts.at(0));
+				Helpers::select_combo(comboLocalPort, parts.at(2));
 
-		}else{
-			grpMpServerOut->setChecked(enabled);
-			Helpers::select_combo(comboHzOut, parts.at(0));
-			Helpers::select_combo(comboRemotePort, parts.at(2));
+			}else{
+				grpMpServerOut->setChecked(enabled);
+				Helpers::select_combo(comboHzOut, parts.at(0));
+				Helpers::select_combo(comboRemotePort, parts.at(2));
+				QList<QTreeWidgetItem *> items = treeWidget->findItems(parts.at(1), Qt::MatchExactly, C_IP_ADDRESS);
+				if(items.size() > 0){
+					treeWidget->setCurrentItem(items.at(0));
+				}
+			}
 		}
-
 
 
 	}else if(option == "--fgcom="){

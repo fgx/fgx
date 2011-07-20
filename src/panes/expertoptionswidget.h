@@ -19,6 +19,9 @@ public:
 
 	MainObject *mainObject;
 
+	XGroupVBox *groupBoxArgs;
+	XGroupVBox *groupBoxEnv;
+
 	// Advanced Options
 	QPlainTextEdit *txtExtraArgs;
 	QPlainTextEdit *txtExtraEnv;

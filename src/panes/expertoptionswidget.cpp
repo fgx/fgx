@@ -38,8 +38,10 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	//======================
 	//== Additional Args
-	XGroupVBox *groupBoxArgs = new XGroupVBox(tr("Additional Command Arguments"));
+	groupBoxArgs = new XGroupVBox(tr("Additional Command Arguments"));
+	groupBoxArgs->setCheckable(true);
 	leftLayout->addWidget(groupBoxArgs);
+	connect(groupBoxArgs, SIGNAL(toggled(bool)), this, SLOT(on_extra()));
 
 	txtExtraArgs = new QPlainTextEdit();
 	groupBoxArgs->addWidget(txtExtraArgs);
@@ -48,8 +50,10 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 	//======================
 	//== Environment Variables
-	XGroupVBox *groupBoxEnv = new XGroupVBox(tr("Additional Environment Variables"));
+	groupBoxEnv = new XGroupVBox(tr("Additional Environment Variables"));
+	groupBoxEnv->setCheckable(true);
 	leftLayout->addWidget(groupBoxEnv);
+	connect(groupBoxEnv, SIGNAL(toggled(bool)), this, SLOT(on_env()));
 
 	txtExtraEnv = new QPlainTextEdit();
 	groupBoxEnv->addWidget(txtExtraEnv);
@@ -107,31 +111,6 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 
 
 
-//=================================
-//== Get Env
-/*
-QStringList ExpertOptionsWidget::get_env(){
-
-	QStringList args;
-	//=  Additonal args in text box..
-
-	QString extra = txtExtraEnv->toPlainText().trimmed();
-	if (extra.length() > 0) {
-		QStringList parts = extra.split("\n");
-		if(parts.count() > 0){
-			for(int i=0; i < parts.count(); i++){
-				QString part = parts.at(i).trimmed();
-				if(part.length() > 0){
-					args << part;
-				}
-			}
-		}
-	}
-	return args;
-}
-*/
-
-
 //==========================================================
 //= Events
 //==========================================================
@@ -139,13 +118,13 @@ QStringList ExpertOptionsWidget::get_env(){
 //= Extras Options changed
 void ExpertOptionsWidget::on_extra()
 {
-	emit setx("extra_args", true, txtExtraArgs->toPlainText().trimmed());
+	emit setx("extra_args", groupBoxArgs->isCheckable(), txtExtraArgs->toPlainText().trimmed());
 }
 
 //= Extra Env changed
 void ExpertOptionsWidget::on_env()
 {
-	emit setx("extra_env", true, txtExtraEnv->toPlainText().trimmed());
+	emit setx("extra_env", groupBoxEnv->isChecked(), txtExtraEnv->toPlainText().trimmed());
 }
 
 //= Log level changed
