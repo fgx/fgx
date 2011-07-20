@@ -41,9 +41,14 @@ public:
 	MainObject *mainObject;
 
 
+
+	QButtonGroup *groupUseAircraft;
+	QLineEdit *txtAircraftPath;
+
+
 	QLabel *aeroImageLabel;
-	QCheckBox *tabsView;
-	QCheckBox *checkBoxUseDefault;
+	QCheckBox *checkViewNested;
+
 
 	QLineEdit *txtNav1;
 	QLineEdit *txtNav2;
@@ -74,7 +79,8 @@ signals:
 
 public slots:
 	void load_tree();
-	void on_use_default_clicked();
+	void on_set_aircraft();
+	void on_select_path();
 	void on_tree_selection_changed();
 	void on_reload_cache();
 	void on_use_default_fuel_clicked();

@@ -22,6 +22,8 @@
 #include <QtXml/QDomDocument>
 
 
+#include <QFileDialog>
+
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QGroupBox>
@@ -78,34 +80,42 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 	//** Top Bar Layout
 	QHBoxLayout *treeTopBar = new QHBoxLayout();
+	treeTopBar->setContentsMargins(5,5,5,5);
+	treeTopBar->setSpacing(5);
 	treeLayout->addLayout(treeTopBar);
 
-	//** Use Default Aircraft
-	checkBoxUseDefault = new QCheckBox(this);
-	checkBoxUseDefault->setText("Use default aircraft");
-	treeTopBar->addWidget(checkBoxUseDefault);
-	connect(checkBoxUseDefault, SIGNAL(clicked()), this, SLOT(on_use_default_clicked()));
+	groupUseAircraft = new QButtonGroup(this);
+	groupUseAircraft->setExclusive(true);
+	connect(groupUseAircraft, SIGNAL(buttonClicked(int)), this, SLOT(on_set_aircraft()) );
 
-	treeTopBar->addSpacing(10);
+	//= Use default
+	QRadioButton *radioUseDefault = new QRadioButton();
+	radioUseDefault->setText("Use default aircraft");
+	treeTopBar->addWidget(radioUseDefault);
+	groupUseAircraft->addButton(radioUseDefault, 0);
 
+	//= Use Selected
+	QRadioButton *radioUseTree = new QRadioButton();
+	radioUseTree->setText("Selected below");
+	treeTopBar->addWidget(radioUseTree);
+	groupUseAircraft->addButton(radioUseTree, 1);
+
+
+	//= Use Custom
+	QRadioButton *radioUseCustom = new QRadioButton();
+	radioUseCustom->setText("Selected Path");
+	treeTopBar->addWidget(radioUseCustom);
+	groupUseAircraft->addButton(radioUseCustom, 2);
 	
-	//** View nested Checkbox
-	tabsView = new QCheckBox();
-	tabsView->setText("View nested");
-	treeTopBar->addWidget(tabsView);
-	connect(tabsView, SIGNAL(clicked()), this, SLOT(load_tree()));
+	txtAircraftPath = new QLineEdit();
+	treeTopBar->addWidget(txtAircraftPath);
+
+	QToolButton *buttSelectPath = new QToolButton();
+	buttSelectPath->setText("Select");
+	treeTopBar->addWidget(buttSelectPath);
+	connect(buttSelectPath, SIGNAL(clicked()), this, SLOT(on_select_path()));
 
 
-	treeTopBar->addStretch(20);
-
-	//** Reload aircrafts
-	QToolButton *actionReloadCacheDb = new QToolButton(this);
-	actionReloadCacheDb->setText("Reload aircrafts");
-	actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
-	actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	actionReloadCacheDb->setAutoRaise(true);
-	treeTopBar->addWidget(actionReloadCacheDb);
-	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
 	//===============================================================
 	//= Aircraft Tree
@@ -135,8 +145,39 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 			 SLOT( on_tree_selection_changed() )
 	);
 
+
 	statusBarAero = new QStatusBar();
 	treeLayout->addWidget(statusBarAero);
+
+	//** View nested Checkbox
+	checkViewNested = new QCheckBox();
+	checkViewNested->setText("View folders");
+	statusBarAero->addPermanentWidget(checkViewNested);
+	connect(checkViewNested, SIGNAL(clicked()), this, SLOT(load_tree()));
+
+
+	//== Reload aircrafts
+	QToolButton *actionReloadCacheDb = new QToolButton(this);
+	actionReloadCacheDb->setText("Reload aircrafts");
+	actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
+	actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	actionReloadCacheDb->setAutoRaise(true);
+	statusBarAero->addPermanentWidget(actionReloadCacheDb);
+	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	//================================================================================================
@@ -300,6 +341,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 //==========================================================================
 void AircraftWidget::on_tree_selection_changed(){
 
+	on_set_aircraft();
 	QTreeWidgetItem *item = treeWidget->currentItem();
 	if(!item){
             outLog("on_tree_selection_changed: no selected item");
@@ -310,12 +352,12 @@ void AircraftWidget::on_tree_selection_changed(){
 	if(item->text(C_AERO).length() == 0){
                 outLog("on_tree_selection_changed: no C_AERO item");
                 aeroImageLabel->clear();
-		emit setx("--aircraft=", false, "");
+		//emit setx("--aircraft=", false, "");
 		return;
 	}
 
-	mainObject->settings->setValue("aircraft", item->text(C_AERO) );
-	emit setx("--aircraft=", true, item->text(C_AERO));
+	//mainObject->settings->setValue("aircraft", item->text(C_AERO) );
+	//emit setx("--aircraft=", true, item->text(C_AERO));
 
 	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
@@ -365,7 +407,7 @@ QString AircraftWidget::selected_aircraft(){
 //=============================================================
 // Validate
 QString AircraftWidget::validate(){
-	if(!treeWidget->currentItem() && !checkBoxUseDefault->isChecked()){
+	if(groupUseAircraft->checkedId() == 1 &&  !treeWidget->currentItem()){
 		return QString("Aircraft: No aircraft selected or check [x] Use default");
 		outLog("FGx reports: AircraftWidget::validate() No aircraft selected (maybe no list), and [x] use default not selected. ***");
 	}
@@ -398,7 +440,7 @@ void AircraftWidget::load_tree(){
 	QTreeWidgetItem *parentItem = new QTreeWidgetItem();
 	
 	int view = 0;
-	if (tabsView->isChecked()) {
+	if (checkViewNested->isChecked()) {
 		view = 1;
 	}
 	
@@ -470,10 +512,6 @@ void AircraftWidget::initialize(){
 }
 
 
-void AircraftWidget::on_use_default_clicked(){
-	treeWidget->setEnabled( !checkBoxUseDefault->isChecked() );
-	emit setx("use_default_aircraft", checkBoxUseDefault->isChecked(), "");
-}
 
 
 void AircraftWidget::on_navs_changed()
@@ -506,6 +544,23 @@ void AircraftWidget::on_fuel_changed()
 	
 }
 
+void AircraftWidget::on_set_aircraft()
+{
+
+	emit setx("use_aircraft", true, QString::number(groupUseAircraft->checkedId()));
+
+	emit setx("--aircraft=",
+			  groupUseAircraft->checkedId() == 1 && selected_aircraft().length() > 0,
+			  selected_aircraft()
+			  );
+	emit setx("--fg-aircraft=",
+			  groupUseAircraft->checkedId() == 2 && txtAircraftPath->text().length() > 0,
+			  txtAircraftPath->text()
+			  );
+
+}
+
+
 
 //=====================================================
 void AircraftWidget::on_upx( QString option, bool enabled, QString value)
@@ -513,8 +568,22 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 	Q_UNUSED(enabled);
 	//= NOTE: The --aircraft=. --runway, etc is detected as the tree loads from cache
 
-	//=== tab radio
-	if(option == "--nav1="){
+	if(option == "use_aircraft"){
+
+		int bid = value.toInt();
+		groupUseAircraft->button(bid)->setChecked(true);
+		treeWidget->setEnabled(bid == 1);
+		txtAircraftPath->setEnabled(bid == 2);
+
+	}else if(option == "--aircraft"){
+		//= see tree load
+
+	}else if(option == "--fg-aircraft="){
+
+		txtAircraftPath->setText(value);
+
+	//== tab radio
+	}else if(option == "--nav1="){
 		txtNav1->setText(value);
 
 	}else if(option == "--nav2="){
@@ -536,8 +605,6 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 
 
 	//=== tab fuel
-	}else if(option == "use_default_aircraft"){
-		checkBoxUseDefault->setChecked(enabled);
 		
 	}else if(option == "use_default_fuel"){
 		checkBoxUseDefaultFuel->setChecked(enabled);
@@ -556,3 +623,14 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 	}
 }
 
+
+void AircraftWidget::on_select_path()
+{
+	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Aircraft directory"),
+														 txtAircraftPath->text(), QFileDialog::ShowDirsOnly);
+	if(dirPath.length() > 0){
+		txtAircraftPath->setText(dirPath);
+		on_set_aircraft();
+	}
+
+}

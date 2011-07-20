@@ -114,8 +114,11 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--com2=",false, "", "",3,"","Radio");
 
 	//== Aircraft
+	add_option( "use_aircraft",true,"","0",1,"","Aircraft");
 	add_option( "--aircraft=", false,"", "", 1 ,"Aircraft","Aircraft");
-	add_option( "use_default_aircraft",true,"","",1,"","Aircraft");
+	add_option( "--fg-aircraft=", false,"", "", 1 ,"Custom Aircraft","Aircraft");
+
+
 	
 	//-- Fuel
 	add_option( "use_default_fuel",true,"","",3,"","Aircraft");
