@@ -50,21 +50,6 @@ var markers
 
 
 
-var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
-// opacity
-layer_style.strokeOpacity = 0.8;
-layer_style.fillOpacity = 0.5;
-
-/*var pointDefaultStyle = OpenLayers.Util.extend({}, layer_style);
-pointDefaultStyle.strokeColor = "black";
-pointDefaultStyle.fillColor = "red";
-pointDefaultStyle.graphicName = "star";
-pointDefaultStyle.pointRadius = 10;
-pointDefaultStyle.strokeWidth = 4;
-pointDefaultStyle.rotation = 45;
-pointDefaultStyle.strokeLinecap = "butt";*/
-
-
 var planeStyleMap = new OpenLayers.StyleMap({
 	externalGraphic: "img/marker-blue.png",
 	graphicWidth: 21,
@@ -107,18 +92,17 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
 var rwyLineStyle = new OpenLayers.StyleMap({
     
     "default": {
-        strokeColor: "black",
-        strokeWidth: 4,
-		strokeOpacity: 0.5,
+        strokeColor: "blue",
+        strokeWidth: 8,
+		strokeOpacity: 0.9,
         fillColor: "black",
         fillOpacity: 0.3,
+		strokeLinecap: "butt"
         },
     
     "select": {
         strokeColor: "yellow",
-        strokeWidth: 4,
         fillColor: "yellow",
-        fillOpacity: 0.8,
         }
 
 });
@@ -178,13 +162,18 @@ function init(){
 	markers.setOpacity(1.0);
 	map.addLayer(markers);
 	
+	// add rwy lines
+	runwayLayer = new OpenLayers.Layer.Vector("Runway Lines", {styleMap:  rwyLineStyle});
+	map.addLayer(runwayLayer);
+	
 	// add rwy markers
 	rwymarkers = new OpenLayers.Layer.Vector("Runways Markers",	{styleMap:  rwyMarkersStyle});
 	map.addLayer(rwymarkers);
+	
+	map.raiseLayer(rwymarkers, 1);
     
 
-	runwayLayer = new OpenLayers.Layer.Vector("Runway Lines", {styleMap:  rwyLineStyle});
-	map.addLayer(runwayLayer);
+
 
 
 
@@ -260,7 +249,7 @@ function add_marker(mlat, mlon){
 function add_rwymarker(mrwy, mlat, mlon){
 
     var size = new OpenLayers.Size(30,22);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -(size.h/2));
     var path = "/img/rwy/" + mrwy + ".png";
     var icon = new OpenLayers.Icon(path, size, offset);
     
