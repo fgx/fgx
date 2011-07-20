@@ -215,7 +215,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//== Props tree
 	propertiesBrowser = new PropsTreeWidget(this);
-	propertiesBrowser->hide();
+	propertiesBrowser->show();
 
 	//= MP Map Widget
 	mpMapWidget = new MpMapWidget(this);
@@ -223,7 +223,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//= FGx Map Widget
 	mpMapXWidget = new MpMapXWidget(this);
-	mpMapXWidget->show();
+	mpMapXWidget->hide();
 	
 
 	//= Log Viewer is hidden
@@ -233,7 +233,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//= FGx Debug Widget
 	fgxDebugWidget = new FgxDebugWidget(this);
-	fgxDebugWidget->show();
+	fgxDebugWidget->hide();
 
 
 	launcherWindow = new LauncherWindow(this);

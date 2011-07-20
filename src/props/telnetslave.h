@@ -40,8 +40,8 @@ signals:
     void telnet_error(QAbstractSocket::SocketError, QString);
     void telnet_connected(bool);
 
-    void props_path(QString, QString);
-    void props_node(QString, QString, QString, QString);
+	void props_folder(QString, QString);
+	void props_value(QString, QString, QString, QString);
     //void telnet_data(Q);
 
 public slots:

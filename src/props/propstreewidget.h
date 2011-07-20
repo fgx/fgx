@@ -7,8 +7,11 @@
 #include <QtCore/QStringList>
 
 #include <QtGui/QWidget>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QTreeWidgetItem>
+
+#include <QtGui/QTreeView>
+#include <QtGui/QStandardItemModel>
+#include <QtGui/QStandardItem>
+#include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QStatusBar>
 
 #include <QtGui/QCheckBox>
@@ -42,9 +45,12 @@ public:
     QTimer *timer;
     QStringList refreshList;
 
-    QTreeWidget *treeWidget;
+	QTreeView *tree;
+	QStandardItemModel *model;
+	QSortFilterProxyModel *proxyModel;
 
-	QLineEdit *txtHost;
+
+	QComboBox *comboHost;
 	QLineEdit *txtPort;
 	QAction *actionConnect;
 	QAction *actionDisconnect;
@@ -57,15 +63,16 @@ public:
 	QAction *actionEditProperty;
 
 	void closeEvent(QCloseEvent *event);
-
+	QList<QStandardItem *> make_row(QString node_name, QString node_value, QString node_type, QString full_path, bool is_folder);
 
 signals:
 
 public slots:
     void load_nodes();
 
-    void on_props_path(QString, QString);
-    void on_props_node(QString, QString, QString, QString);
+	void on_props_folder(QString, QString);
+	void on_props_value(QString, QString, QString, QString);
+
     void on_item_expanded(QTreeWidgetItem *);
 	void on_item_double_clicked(QTreeWidgetItem *, int );
 	void on_item_selection_changed();
