@@ -38,7 +38,7 @@ void TelnetSlave::telnet_connect(QString address, int portt){
 	hostAddress = address;
 	port = portt;
 	socket->connectToHost(hostAddress, port);
-	qDebug() << "open" << hostAddress << port;
+	//qDebug() << "open" << hostAddress << port;
 }
 
 
@@ -49,7 +49,7 @@ void TelnetSlave::telnet_disconnect(){
 
 void TelnetSlave::set_property(QString path, QString value){
     //TODO
-	qDebug() << path << "=" << value;
+	//qDebug() << path << "=" << value;
 	QByteArray command("set ");
 	command.append(path).append(" ").append(value).append("\r\n");
 	//QByteArray cmd(command);
@@ -58,10 +58,14 @@ void TelnetSlave::set_property(QString path, QString value){
 	socket->write( command );
 }
 
+void TelnetSlave::add_que(QString node)
+{
+	//que->
+}
 
-//*********************************************************************************************
- //** Get Node
-//********************************************************************************************
+//==========================================================================================
+//== Get Node
+//==========================================================================================
 void TelnetSlave::get_node(QString node_path){
     if( !socket->isOpen() ){
 		// TODO emit error maybe ?
@@ -92,11 +96,14 @@ void TelnetSlave::on_ready_read(){
     for(int i = 0; i < lines.size(); ++i){
         QString line = lines.at(i).trimmed();
        // qDebug() << "line=" << line;
-        //* end line is /> so skip
+
+		//= end line is /> so skip
         if(line == "/>"){
             qDebug("END");
+
         }else if( line.endsWith("/") ){
-            emit props_path(current_node_path, line);
+			emit props_folder(current_node_path, line);
+
         }else{
             if(line.count("chat") > 0){
                  qDebug() << "CHAT=" << line << "=" << line.count("chat") ;
@@ -113,12 +120,12 @@ void TelnetSlave::on_ready_read(){
                 //** the node_name ends with " =" so remove eg "my-node ="
                 QString node_name = val_parts[0].left( val_parts[0].length() - 2 );
 
-                //** node value in enclosed in ' so remove eg "'true'"
+				//== node value in enclosed in ' so remove eg 'true'
                 QString node_value = val_parts.size() == 1 ?
                                      "" :
                                      val_parts[1].replace("'","");
 
-                //** the node_type is encodes in () eg "(double)"
+				//== the node_type is encoded in () eg (double)
                 QString node_type = val_parts.size() == 2 ?
                                     "" :
                                     val_parts[2].mid(1, val_parts[2].length() - 2);
@@ -126,7 +133,7 @@ void TelnetSlave::on_ready_read(){
                // QString node_name = val_parts[0].trimmed();
                 //qDebug() << "VAL=" << node_name << " = " << node_value << "=" << node_type;
                 //qDebug();
-                emit props_node(current_node_path, node_name, node_value, node_type);
+				emit props_value(current_node_path, node_name, node_value, node_type);
             }else{
                 qDebug() << "UMM=" << line << "=" << line.count("=") ;
                  //qDebug() << reply;
@@ -164,6 +171,6 @@ void TelnetSlave::on_error(QAbstractSocket::SocketError socketError){
 
 void TelnetSlave::on_state_changed(QAbstractSocket::SocketState socketState ){
       //qDebug("on_state_changed");
-     // qDebug() << "state=" << socketState;
+	  qDebug() << "state=" << socketState;
 	Q_UNUSED(socketState);
 }

@@ -6,6 +6,8 @@
 <!--<link rel="stylesheet" href="theme/default/style.css" type="text/css" />-->
 <!-- <link rel="stylesheet" href="style.css" type="text/css" />-->
 
+<!--<script src="http://maps.google.com/maps/api/js?v=3.5&amp;sensor=false"></script> -->
+
 <!-- for later improvement: add yahoo api -->
 <!-- <script src="http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=euzuro-openlayers"></script> -->
 
@@ -42,58 +44,6 @@
 
 
 
-/*
- OpenLayers.Control.Hover = OpenLayers.Class(OpenLayers.Control, {                
-	defaultHandlerOptions: {
-		'delay': 500,
-		'pixelTolerance': null,
-		'stopMove': false
-	},
-
-	initialize: function(options) {
-		this.handlerOptions = OpenLayers.Util.extend(
-			{}, this.defaultHandlerOptions
-		);
-		OpenLayers.Control.prototype.initialize.apply(
-			this, arguments
-		); 
-		this.handler = new OpenLayers.Handler.Hover(
-			this,
-			{'pause': this.onPause, 'move': this.onMove},
-			this.handlerOptions
-		);
-	}, 
-
-	onPause: function(evt) {
-		//var output = document.getElementById(this.key + 'Output');
-		//var msg = 'pause ' + evt.xy;
-		//output.value = output.value + msg + "\r\n";
-	},
-
-	onMove: function(evt) {
-		// if this control sent an Ajax request (e.g. GetFeatureInfo) when
-		// the mouse pauses the onMove callback could be used to abort that
-		// request.
-	}
-});
-
-var control = {
-	'long': new OpenLayers.Control.Hover({
-		handlerOptions: {
-			'delay': 2000
-		}
-	})
-}
-
-
-
-
-
-
-*/
-//var Qt;
-
-
 var aptBounds = {};
 
 var zoom = 2;
@@ -101,6 +51,7 @@ var zoom = 2;
 
 var map;
 var layer;
+var google;
 var osmprojection;
 var vectorLayer;
 var markers
@@ -190,11 +141,11 @@ function init(){
 	 var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
      renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
-	// alert("init");
-	
-	// add OpenStreetMap layer
+
 	layer = new OpenLayers.Layer.OSM("OSM Map");
 	map.addLayer(layer);
+
+
 
 	// set osm projection
 	osmprojection = new OpenLayers.Projection("EPSG:4326");
@@ -242,27 +193,31 @@ function init(){
 function show_aircraft(callsign, lat, lon, heading, altitude){
 	
 	var point = new OpenLayers.Geometry.Point(lon, lat).transform(osmprojection, map.getProjectionObject() );
-	//var lonlat = new OpenLayers.Geometry.LonLot(lon, lat).transform(osmprojection, map.getProjectionObject() );
 
-	//var fid = "callsign_" + callsign;
+	var fid = "callsign_" + callsign;
 
 	//var f = planes.getFeatureBy("callsign", callsign);
-	//var f = planes.getFeatureById(fid);
+	var f = planes.getFeatureById(fid);
 	//alert(f);
-	//if(!f){
+
+	if(!f){
+		
 		var feature = new OpenLayers.Feature.Vector(point, {
 					angle: heading,
 					poppedup: false
 					//callsign: callsign
 				});
-		//feature.id = fid;
-		//feature.callsign = callsign;
+		feature.id = fid;
+		feature.callsign = callsign;
 		planes.addFeatures([feature]);
-	//}else{
-	//	alert(f);
-	//	f.move(point);
-	//}
-	//alert(aircraft);
+	}else{
+		
+		f.geometry.movePoint(point);
+		//planes.drawFeature(f);
+		//f.layer.drawFeature(f);
+		//alert(f.point);
+	}
+
 }
 
 
@@ -337,12 +292,14 @@ function zoom_to_airport(apt){
 			map.getProjectionObject()
 			), 12
 	);
+
 }
 
 //==========================================================
 function zoom_to(lat, lon, zoom){
 	var lonlat = new OpenLayers.LonLat(lon, lat).transform(osmprojection, map.getProjectionObject());
 	map.setCenter(lonlat, zoom);
+	//alert("xoom");
 }
 
 

@@ -23,15 +23,18 @@ public:
 
     QString hostAddress;
     int port;
-    QQueue<QString> q;
+	QQueue<QString> que;
 
     QString current_node_path;
+
     bool in_request;
 
 	void telnet_connect(QString address, int port);
 	void telnet_disconnect();
 	void get_node(QString path);
 	void set_property(QString path, QString value);
+
+	void add_que(QString node);
 
 private:
     QTcpSocket *socket;
@@ -40,8 +43,8 @@ signals:
     void telnet_error(QAbstractSocket::SocketError, QString);
     void telnet_connected(bool);
 
-    void props_path(QString, QString);
-    void props_node(QString, QString, QString, QString);
+	void props_folder(QString, QString);
+	void props_value(QString, QString, QString, QString);
     //void telnet_data(Q);
 
 public slots:

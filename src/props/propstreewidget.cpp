@@ -1,5 +1,8 @@
 
 
+#include <QHostAddress>
+#include <QNetworkInterface>
+
 #include <QtCore/QList>
 
 #include <QtGui/QVBoxLayout>
@@ -12,8 +15,8 @@
 #include <QtGui/QFont>
 
 
-#include "propstreewidget.h"
-#include "propeditwidget.h"
+#include "props/propstreewidget.h"
+#include "props/propeditwidget.h"
 
 /*
 
@@ -32,11 +35,11 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
 
 	telnet = new TelnetSlave(this);
 
-	connect(telnet, SIGNAL(props_path(QString, QString)),
-             this, SLOT(on_props_path(QString, QString))
+	connect(telnet, SIGNAL(props_folder(QString, QString)),
+			 this, SLOT(on_props_folder(QString, QString))
     );
-	connect(telnet, SIGNAL(props_node(QString, QString, QString, QString)),
-            this, SLOT(on_props_node(QString, QString, QString, QString))
+	connect(telnet, SIGNAL(props_value(QString, QString, QString, QString)),
+			this, SLOT(on_props_value(QString, QString, QString, QString))
     );
 	connect(telnet, SIGNAL(telnet_connected(bool)),
 			this, SLOT(on_telnet_connected(bool))
@@ -68,8 +71,8 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
     treeLayout->setContentsMargins(0,0,0,0);
     treeLayout->setSpacing(0);
 
-    //*****************************
-    //** Toolbar
+
+	//== Toolbar
     QToolBar *treeToolbar = new QToolBar();
     treeLayout->addWidget(treeToolbar);
     treeToolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -79,15 +82,23 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
 	//===========================================================
 
 	//= Host
-	txtHost = new QLineEdit();
-	txtHost->setMaximumWidth(100);
-	txtHost->setText("localhost");
-	treeToolbar->addWidget(txtHost);
+	comboHost = new QComboBox();
+	comboHost->setMaximumWidth(100);
+	//comboHost->setText("localhost");
+	treeToolbar->addWidget(comboHost);
+	QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
+	for (int i = 0; i < addresses.size(); ++i) {
+		if(addresses.at(i).protocol() == QAbstractSocket::IPv4Protocol){
+			comboHost->addItem( addresses.at(i).toString(), addresses.at(i).toString() );
+		}
+	}
+	comboHost->setCurrentIndex(0);
 
 	//= Port
 	txtPort = new QLineEdit();
 	txtPort->setMaximumWidth(50);
-	txtPort->setText(mainObject->settings->value("telnet_port").toString());
+	//txtPort->setText(mainObject->settings->value("telnet_port").toString());
+	txtPort->setText("6666");
 	treeToolbar->addWidget(txtPort);
 
 	//= Connect
@@ -147,7 +158,7 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
 
 	treeToolbar->addSeparator();
 
-	//** Edit Property Action
+	//== Edit Property Action
 	actionEditProperty = new QAction(this);
 	actionEditProperty->setText("Edit");
 	actionEditProperty->setDisabled(true);
@@ -163,32 +174,48 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
 	actionTest->setVisible(false);
 
 
+	//======================================================
+	//= Models
+	model = new QStandardItemModel(this);
+	model->setColumnCount(4);
+	QStringList headers;
+	headers << "Node" << "Value" << "Type" << "Path";
+	model->setHorizontalHeaderLabels(headers);
+
+
+	proxyModel = new QSortFilterProxyModel(this);
+	proxyModel->setSourceModel(model);
 
 
 	//======================================================
-	//=== Tree Widget
-    treeWidget = new QTreeWidget(this);
-    treeLayout->addWidget(treeWidget);
-    treeWidget->setItemsExpandable(true);
-    treeWidget->setAlternatingRowColors(true);
-    treeWidget->setRootIsDecorated(true);
-    treeWidget->setSortingEnabled(true);
-    treeWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-    treeWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-    treeWidget->setSortingEnabled(true);
-    treeWidget->sortByColumn(0, Qt::AscendingOrder);
+	//=== Tree View
+	tree = new QTreeView(this);
+	treeLayout->addWidget(tree);
+	tree->setModel(model);
 
-    QTreeWidgetItem *headerItem = treeWidget->headerItem();
+	tree->setItemsExpandable(true);
+	tree->setUniformRowHeights(true);
+	tree->setAlternatingRowColors(true);
+	tree->setRootIsDecorated(true);
+	tree->setSelectionMode(QAbstractItemView::SingleSelection);
+	tree->setSelectionBehavior(QAbstractItemView::SelectRows);
+	tree->sortByColumn(C_NODE, Qt::AscendingOrder);
+	tree->setSortingEnabled(true);
+
+	/*
+	QTreeWidgetItem *headerItem = tree->headerItem();
 	headerItem->setText(C_NODE, tr("Property"));
 	headerItem->setText(C_VALUE, tr("Value"));
 	headerItem->setText(C_TYPE, tr("Type"));
 	headerItem->setText(C_PATH, tr("Full Path"));
-    treeWidget->setColumnWidth(0, 200);
+	*/
+	tree->setColumnWidth(C_NODE, 200);
+	tree->setColumnWidth(C_VALUE, 200);
 
-    connect(treeWidget, SIGNAL(itemExpanded(QTreeWidgetItem*)),
+	connect(tree, SIGNAL(itemExpanded(QTreeWidgetItem*)),
              this, SLOT(on_item_expanded(QTreeWidgetItem*))
     );
-	connect(treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+	connect(tree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
 			this, SLOT(on_item_double_clicked(QTreeWidgetItem*,int))
     );
 	//connect(treeWidget, SIGNAL(itemSelectionChanged()),
@@ -209,87 +236,85 @@ void PropsTreeWidget::load_nodes(){
 }
 
 
-//*************************************************************************
-//** On props Node
-//*************************************************************************
-void PropsTreeWidget::on_props_node(QString parent_path, QString node_name,
+//================================
+// make_row - returns a list of standard items
+QList<QStandardItem *> PropsTreeWidget::make_row(QString node_name, QString node_value, QString node_type, QString end_path, bool is_folder)
+{
+	QList<QStandardItem *> items;
+
+	QStandardItem *name = new QStandardItem(node_name);
+	name->setIcon(QIcon(is_folder ? ":/icon/folder" : ":/icon/prop_node"));
+	QStandardItem *value = new QStandardItem(node_value);
+	QStandardItem *type = new QStandardItem(node_type);
+	QStandardItem *path = new QStandardItem(end_path);
+
+	items << name << value << type << path;
+	return items;
+}
+
+
+//=========================================================================
+//== On Props Folder
+//=========================================================================
+void PropsTreeWidget::on_props_folder(QString parent_path, QString path){
+
+	//= Find if actual path end node is already there
+	QString end_path = QString(parent_path).append(path);
+	QList<QStandardItem *> items = model->findItems(end_path, Qt::MatchExactly | Qt::MatchRecursive, C_PATH);
+	if( items.size() > 0){
+	   return; //= node exists so no need to add
+	}
+	//== Find the parent and add child
+	if(parent_path == "/"){
+		//= add top level item
+		model->invisibleRootItem()->appendRow(make_row(path, "","",path, true));
+		//qDebug() << path;
+		//telnet->get_node(path);
+	}else{
+		//= Find parent and append child node
+		QList<QStandardItem *> fitems = model->findItems(path, Qt::MatchExactly | Qt::MatchRecursive, C_PATH);
+		fitems.at(0)->appendRow( make_row(path, "","",path, true) );
+	}
+
+	//telnet->get_node(path);
+}
+
+//========================================================================
+//== On props Value
+//========================================================================
+void PropsTreeWidget::on_props_value(QString parent_path, QString node_name,
                                     QString node_value, QString node_type){
-    //qDebug() << "YES " << parent_path << "=" << node_value;
 
-    //** Find if actual path end node is already there
+	//qDebug() << parent_path << node_name << node_value;
+	//= Find if actual path end node is already there
     QString end_path = QString(parent_path).append(node_name);
-    QList<QTreeWidgetItem *> existing_items = treeWidget->findItems(end_path,
+	QList<QStandardItem *> existing_items = model->findItems(end_path,
                                                            Qt::MatchExactly | Qt::MatchRecursive,
-                                                            3);
+															C_PATH);
     if( existing_items.size() > 0){
-        //qDebug() << "NODE EXISTS";
-        existing_items[0]->setText(1, node_value); //* UPdate existing node
-       return; //* node exists so no need to add
+		//= Node exists so update value
+		existing_items[0]->setText( node_value);
+		return;
     }
-   //QTreeWidgetItem *parent_item;
 
-	//*** TODO refactor this lot to avoif duplicate code, need sfferent parent for node
-    //** Otherwise find the parent and add child
+	//= Find the parent and add child
     if(parent_path == "/"){
-        QTreeWidgetItem *newTopItem = new QTreeWidgetItem();
-		newTopItem->setText(C_NODE, node_name);
-		newTopItem->setText(C_VALUE, node_value);
-		newTopItem->setText(C_TYPE, node_type);
-		newTopItem->setText(C_PATH, end_path );
-		newTopItem->setIcon(0, QIcon(":/icon/prop_node"));
-       treeWidget->addTopLevelItem(newTopItem);
-    }else{
-        QList<QTreeWidgetItem *> items = treeWidget->findItems(parent_path,
-                                                           Qt::MatchExactly | Qt::MatchRecursive,
-                                                            3);
-        QTreeWidgetItem *newNodeItem = new QTreeWidgetItem(items[0]);
+		model->invisibleRootItem()->appendRow( make_row(node_name, node_value, node_type, end_path, false) );
 
-		newNodeItem->setText(C_NODE, node_name);
-		newNodeItem->setText(C_VALUE, node_value);
-		newNodeItem->setText(C_TYPE, node_type);
-		newNodeItem->setText(C_PATH, end_path );
-		newNodeItem->setIcon(0, QIcon(":/icon/prop_node"));
+    }else{
+		QList<QStandardItem *> fitems = model->findItems(parent_path, Qt::MatchExactly | Qt::MatchRecursive, C_PATH);
+		fitems.at(0)->appendRow( make_row(node_name, node_value, node_type, end_path, false) );
     }
 }
-//*************************************************************************
-//** On props Path
-//*************************************************************************
-void PropsTreeWidget::on_props_path(QString parent_path, QString path){
-
-    //** Find if actual path end node is already there
-    QString end_path = QString(parent_path).append(path);
-    QList<QTreeWidgetItem *> end_items = treeWidget->findItems(end_path,
-                                                           Qt::MatchExactly | Qt::MatchRecursive,
-                                                            3);
-    if( end_items.size() > 0){
-       return; //* node exists so no need to add
-    }
 
 
-    //** Otherwise find the parent and add child
-    if(parent_path == "/"){
-        QTreeWidgetItem *newTopItem = new QTreeWidgetItem();
-		newTopItem->setText(C_NODE, path.left(path.length() - 1));
-        newTopItem->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
-		newTopItem->setIcon(C_NODE, QIcon(":/icon/folder")); // folder_closed
-		newTopItem->setText(C_PATH, end_path );
-        treeWidget->addTopLevelItem(newTopItem);
-    }else{
-        QList<QTreeWidgetItem *> items = treeWidget->findItems(parent_path,
-                                                           Qt::MatchExactly | Qt::MatchRecursive,
-                                                            3);
-        QTreeWidgetItem *newNodeItem = new QTreeWidgetItem(items[0]);
-		newNodeItem->setText(C_NODE, path.left(path.length() - 1));
-        newNodeItem->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
-		newNodeItem->setIcon(C_NODE, QIcon(":/icon/folder")); // folder_closed
-		newNodeItem->setText(C_PATH, end_path );
-    }
-}
+
+
 
 void PropsTreeWidget::on_item_expanded(QTreeWidgetItem *item){
    // qDebug() << "ON Expand=" << item->text(3);
    // qDebug() << item->text(3);
-	item->setIcon(0, QIcon(":/icon/folder")); // folder_open
+	//item->setIcon(0, QIcon(":/icon/folder")); // folder_open
 	/*
 	item->setText(1, tr("Refresh"));
     QFont font = item->font(1);
@@ -299,7 +324,7 @@ void PropsTreeWidget::on_item_expanded(QTreeWidgetItem *item){
     item->setForeground(1, color);
     item->setCheckState(1, Qt::Unchecked);
 	*/
-	telnet->get_node(item->text(3));
+	//telnet->get_node(item->text(3));
 }
 
 //*** TODO ???
@@ -313,12 +338,12 @@ void PropsTreeWidget::on_item_double_clicked(QTreeWidgetItem *item, int col){
 
 
 void PropsTreeWidget::on_item_selection_changed(){
-	QTreeWidgetItem *item = treeWidget->currentItem();
-	if(!item){
-		return;
-	}
+	//QTreeWidgetItem *item = treeWidget->currentItem();
+	//if(!item){
+	//	return;
+	//}
 	//** Using the Type column to determine if its a value as there is always a type
-	actionEditProperty->setDisabled(item->text(C_TYPE).length() == 0);
+	//actionEditProperty->setDisabled(item->text(C_TYPE).length() == 0);
 }
 
 
@@ -345,9 +370,10 @@ void PropsTreeWidget::on_set_timer_rate(){
 
 
 void PropsTreeWidget::on_edit_property(){
-	PropEditWidget *propEditWidget = new PropEditWidget(mainObject);
-	propEditWidget->set_from_item(treeWidget->currentItem());
-	propEditWidget->exec();
+	return;
+//	PropEditWidget *propEditWidget = new PropEditWidget(mainObject);
+//	propEditWidget->set_from_item(treeWidget->currentItem());
+//	propEditWidget->exec();
 }
 
 void PropsTreeWidget::on_test_(){
@@ -363,7 +389,7 @@ void PropsTreeWidget::closeEvent(QCloseEvent *event){
 
 
 void PropsTreeWidget::telnet_connect(){
-	telnet->telnet_connect(txtHost->text(), txtPort->text().toInt());
+	telnet->telnet_connect(comboHost->currentText(), txtPort->text().toInt());
 }
 void PropsTreeWidget::telnet_disconnect(){
 	telnet->telnet_disconnect();
@@ -373,4 +399,7 @@ void PropsTreeWidget::on_telnet_connected(bool connected){
 	qDebug()<< "on_connect" << connected;
 	actionConnect->setEnabled(!connected);
 	actionDisconnect->setEnabled(connected);
+	if(connected){
+		telnet->get_node("/");
+	}
 }
