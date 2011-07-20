@@ -502,9 +502,9 @@ void AircraftWidget::load_tree(){
 	treeWidget->setUpdatesEnabled(true);
 
 	select_node(mainObject->settings->value("aircraft").toString());
-	QString str = QString("%1 aircraft").arg(c);
+	QString str = QString("%1 aircraft(s)").arg(c);
 	statusBarTree->showMessage(str);
-	outLog("FGx: AircraftWidget::load_tree: with " + str);
+	outLog("*** FGx: AircraftWidget::load_tree: with " + str);
 }
 
 //=============================================================
@@ -516,7 +516,7 @@ void AircraftWidget::initialize(){
 		return;
 	}
 	if (!QFile::exists(mainObject->data_file("aircraft.txt"))){
-		statusBarTree->showMessage("No cached data. Click Import");
+		statusBarTree->showMessage("*** FGx: No cached data. Use set paths and reload");
 	}else{
 		load_tree();
 	}
@@ -561,10 +561,6 @@ void AircraftWidget::on_set_aircraft()
 
 	emit setx("use_aircraft", true, QString::number(groupUseAircraft->checkedId()));
 
-	//emit setx("--aircraft=",
-	//		  groupUseAircraft->checkedId() == 1 && selected_aircraft().length() > 0,
-	//		  selected_aircraft()
-	//		  );
 	emit setx("--fg-aircraft=",
 			  groupUseAircraft->checkedId() == 2 && txtAircraftPath->text().length() > 0,
 			  txtAircraftPath->text()
