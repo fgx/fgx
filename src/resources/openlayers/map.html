@@ -55,14 +55,14 @@ var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['de
 layer_style.strokeOpacity = 0.8;
 layer_style.fillOpacity = 0.5;
 
-var pointDefaultStyle = OpenLayers.Util.extend({}, layer_style);
-pointDefaultStyle.strokeColor = "red";
+/*var pointDefaultStyle = OpenLayers.Util.extend({}, layer_style);
+pointDefaultStyle.strokeColor = "black";
 pointDefaultStyle.fillColor = "red";
 pointDefaultStyle.graphicName = "star";
 pointDefaultStyle.pointRadius = 10;
 pointDefaultStyle.strokeWidth = 4;
 pointDefaultStyle.rotation = 45;
-pointDefaultStyle.strokeLinecap = "butt";
+pointDefaultStyle.strokeLinecap = "butt";*/
 
 
 var planeStyleMap = new OpenLayers.StyleMap({
@@ -101,6 +101,25 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
         pointRadius: 12,
         fillOpacity: 1,
     }
+
+});
+
+var rwyLineStyle = new OpenLayers.StyleMap({
+    
+    "default": {
+        strokeColor: "black",
+        strokeWidth: 4,
+		strokeOpacity: 0.5,
+        fillColor: "black",
+        fillOpacity: 0.3,
+        },
+    
+    "select": {
+        strokeColor: "yellow",
+        strokeWidth: 4,
+        fillColor: "yellow",
+        fillOpacity: 0.8,
+        }
 
 });
 
@@ -160,19 +179,17 @@ function init(){
 	map.addLayer(markers);
 	
 	// add rwy markers
-	rwymarkers = new OpenLayers.Layer.Vector("Runways",	{styleMap:  rwyMarkersStyle});
+	rwymarkers = new OpenLayers.Layer.Vector("Runways Markers",	{styleMap:  rwyMarkersStyle});
 	map.addLayer(rwymarkers);
     
 
-	vectorLayer = new OpenLayers.Layer.Vector("Glyphs", osmprojection);
-	map.addLayer(vectorLayer);
+	runwayLayer = new OpenLayers.Layer.Vector("Runway Lines", {styleMap:  rwyLineStyle});
+	map.addLayer(runwayLayer);
 
 
 
 	planes = new OpenLayers.Layer.Vector("Planes",	{styleMap: planeStyleMap});
 	map.addLayer(planes);
-    
-    map.addLayer(boxes);
 
 
 	//alert("init done");
@@ -314,8 +331,8 @@ function add_runway(apt, rwy1, rwy2, lat1, lon1, lat2, lon2){
 		new OpenLayers.Geometry.Point(lon2, lat2)
 	);
 	var line = new OpenLayers.Geometry.LineString(points).transform(osmprojection,map.getProjectionObject());
-	var runwayFeature = new OpenLayers.Feature.Vector(line,null, pointDefaultStyle);
-	vectorLayer.addFeatures(runwayFeature);
+	var runwayFeature = new OpenLayers.Feature.Vector(line);
+	runwayLayer.addFeatures(runwayFeature);
 
 
 
