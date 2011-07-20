@@ -135,7 +135,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	treeWidget->headerItem()->setText(C_FDM, "FDM");
 	treeWidget->headerItem()->setText(C_AUTHOR, "Author");
 	treeWidget->header()->setStretchLastSection(true);
-	treeWidget->setColumnHidden(C_XML_SET, true);
+	//treeWidget->setColumnHidden(C_XML_SET, true);
 	treeWidget->setColumnWidth(C_DIR, 60);
 	treeWidget->setColumnWidth(C_FDM, 60);
 	treeWidget->setColumnWidth(C_DESCRIPTION, 200);
@@ -151,12 +151,15 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 	//== Path label
 	labelAeroPath = new QLabel();
-	statusBarTree->addPermanentWidget(labelAeroPath, 2);
+	labelAeroPath->setStyleSheet("font-size: 8pt;");
+	//labelAeroPath->setText("0000000000000000000000000000000000000000");
+	labelAeroPath->setFixedWidth(250);
+	statusBarTree->addPermanentWidget(labelAeroPath);
 
 	//== View nested Checkbox
 	checkViewNested = new QCheckBox();
 	checkViewNested->setText("View folders");
-	statusBarTree->addPermanentWidget(checkViewNested, 0);
+	statusBarTree->addPermanentWidget(checkViewNested);
 	connect(checkViewNested, SIGNAL(clicked()), this, SLOT(load_tree()));
 
 
@@ -166,7 +169,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
 	actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	actionReloadCacheDb->setAutoRaise(true);
-	statusBarTree->addPermanentWidget(actionReloadCacheDb, 0);
+	statusBarTree->addPermanentWidget(actionReloadCacheDb);
 	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
 
@@ -363,13 +366,14 @@ void AircraftWidget::on_tree_selection_changed(){
 		return;
 	}
 
-
-	labelAeroPath->setText(item->text(C_DIR));
+	//qDebug() << item->text(C_DIR);
+	labelAeroPath->setText(mainObject->X->aircraft_path() + "/" + item->text(C_AERO));
 
 	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
                                                                     item->text(C_DIR),
                                                                     item->text(C_AERO));
+
 	if(QFile::exists(thumb_file)){
 		QPixmap aeroImage(thumb_file);
 		if(!aeroImage.isNull()){
