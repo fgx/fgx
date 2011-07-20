@@ -37,7 +37,7 @@ public:
 	MainObject *mainObject;
 
 	XGroupHBox *grpMpServerIn;
-	XGroupHBox *grpMpServerOut;
+	XGroupVBox *grpMpServerOut;
 
 
 	QComboBox *comboLocalIpAddress;
@@ -77,13 +77,9 @@ public slots:
 	void on_dns_lookup_callback(const QHostInfo &hostInfo);
 	void on_telnet_data(QString, QString);
 
-	void on_callsign_changed(QString);
 	void set_mp_server();
-
 	void set_fgcom();
 
-
-	void on_enable_mp(bool);
 	void on_http();
 	void on_telnet();
 	void on_screenshot();

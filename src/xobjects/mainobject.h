@@ -25,7 +25,6 @@ class XProcess;
 class LauncherWindow;
 
 #include "mpmap/mpmapwidget.h"
-#include "map/openlayerwidget.h"
 #include "mpmap/mpmapxwidget.h"
 #include "logs/viewlogswidget.h"
 #include "props/propstreewidget.h"
@@ -36,7 +35,7 @@ class MpMapXWidget;
 class ViewLogsWidget;
 class PropsTreeWidget;
 class FgxDebugWidget;
-class OpenLayerWidget;
+
 
 
 
@@ -89,7 +88,7 @@ public:
 	LauncherWindow *launcherWindow;
 	MpMapWidget *mpMapWidget;
 	MpMapXWidget *mpMapXWidget;
-	OpenLayerWidget *openLayerWidget;
+
 	ViewLogsWidget *viewLogsWidget;
 	PropsTreeWidget *propertiesBrowser;
 	FgxDebugWidget *fgxDebugWidget;
@@ -143,7 +142,7 @@ public slots:
     void on_settings();
 	void on_settings(int);
 	void on_properties_browser();
-    void on_quit();
+
 	void show_setup_wizard();
 
 	void on_view_logs();

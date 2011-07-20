@@ -29,15 +29,25 @@ MainObject::MainObject(QObject *parent) :
 	//= init the LOG file
 	util_setStdLogFile();
 
-	//= XSettings Object
+	//= Prederences Object
     settings = new XSettings();
 	debug_mode = settings->value("DEBUG_MODE","0").toBool();
 
-	//= NEW Settings Model
+	//= Settings Model
 	X = new XSettingsModel(this);
 
 	
 
+	//================================================================
+	//= Processes - the nub..
+	//================================================================
+	processFgFs  = new XProcess(this, "fgfs");
+	processTerraSync  = new XProcess(this, "terrasync");
+	processFgCom  = new XProcess(this, "fgcom");
+
+
+
+	//====================================
 	//= Set GLobal style
 	QApplication::setStyle( QStyleFactory::create(settings->style_current()) );
 	QApplication::setQuitOnLastWindowClosed(false);
@@ -54,7 +64,7 @@ MainObject::MainObject(QObject *parent) :
 	//== File Menu
 	QMenu *menuFile = new QMenu(tr("File"));
 	menuBar->addMenu(menuFile);
-	QAction *actionQuit = menuFile->addAction(QIcon(":/icon/quit"), tr("Quit"), this, SLOT(on_quit()));
+	QAction *actionQuit = menuFile->addAction(QIcon(":/icon/quit"), tr("Quit"), this, SLOT(quit()));
 	actionQuit->setIconVisibleInMenu(true);
 	
 	//==== Window Menu
@@ -64,11 +74,9 @@ MainObject::MainObject(QObject *parent) :
 	QActionGroup *actionGroupWindow = new QActionGroup(this);
 	
 	QAction *winAct = menuWindow->addAction(tr("Show Launcher"));
-	//winAct->on_launcher();
 	actionGroupWindow->addAction(winAct);
 	
 	QAction *logAct = menuWindow->addAction(tr("Show Logs"));
-	//winAct->on_launcher();
 	actionGroupWindow->addAction(logAct);
 	
 	//==== Help Menu
@@ -95,12 +103,6 @@ MainObject::MainObject(QObject *parent) :
 	//TODO menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
 
 
-	//================================================================
-	//= Processes - the nub..
-	//================================================================
-	processFgFs  = new XProcess(this, "fgfs");
-	processTerraSync  = new XProcess(this, "terrasync");
-	processFgCom  = new XProcess(this, "fgcom");
 
 	//============================
 	//== Tray Icon
@@ -204,7 +206,7 @@ MainObject::MainObject(QObject *parent) :
 	//== Quit
 	actionQuit = popupMenu->addAction(QIcon(":/icon/quit"), tr("Quit"));
 	actionQuit->setIconVisibleInMenu(true);
-    connect(actionQuit, SIGNAL(triggered()), this, SLOT(on_quit()));
+	connect(actionQuit, SIGNAL(triggered()), this, SLOT(quit()));
 
 	//==================
     trayIcon->show();
@@ -300,23 +302,17 @@ void MainObject::on_mpxmap(){
 void MainObject::on_properties_browser(){
 	propertiesBrowser->show();
 	propertiesBrowser->setFocus();
-	//propertiesBrowser->raise();
 }
 
 
 
-//=====================================
-//== Quit
-void MainObject::on_quit(){
-    QCoreApplication::instance()->quit();
-}
 
 
 //=================================================
 //== Tray Icon Clicked
 void MainObject::on_tray_icon(QSystemTrayIcon::ActivationReason reason){   
-    //* Right click will show the context Menu above system tray
-    //* Following will popup menu with single click on Top LEFT ??
+	//= Right click will show the context Menu above system tray
+	//= Following will popup menu with single click on Top LEFT ??
     if(reason == QSystemTrayIcon::Trigger){
         QPoint p = QCursor::pos();
         trayIcon->contextMenu()->popup(p);
@@ -330,7 +326,6 @@ void MainObject::on_tray_icon(QSystemTrayIcon::ActivationReason reason){
 void MainObject::show_setup_wizard(){
 	SetupWizard *setupWizard = new SetupWizard(this);
 	if(setupWizard->exec()){
-		qDebug() << "closed";
 		emit(reload_paths());
 	}
 }
@@ -373,21 +368,19 @@ void MainObject::stop_all(){
 //========================================================
 //== Start FGFS
 void MainObject::start_fgfs(){
-	//qDebug() << "start"; //X->get_fgfs_command_string();
 	processFgFs->start(X->get_fgfs_command_string(), X->get_fgfs_env() );
 }
 
 //========================================================
 //== Stars FGFS
 void MainObject::start_terrasync(){
-	qDebug() << "Start";
+
 	QStringList terraargs;
 	terraargs << "-p" << "5505" << "-S" << "-d" << X->terrasync_sync_data_path();
 
 	QString terra_command_line = X->terrasync_exe_path();
 	terra_command_line.append(" ").append( terraargs.join(" ") );
 
-	//qDebug() << terra_command_line;
 	processTerraSync->start(terra_command_line, QStringList());
 }
 
@@ -405,7 +398,7 @@ void MainObject::start_fgcom(){
 
 	QString command_line = X->fgcom_exe_path();
 	command_line.append(" ").append( args.join(" ") );
-	//qDebug() << command_line;
+
 	processFgCom->start(command_line, QStringList() );
 }
 
