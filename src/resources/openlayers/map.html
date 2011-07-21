@@ -46,8 +46,7 @@ var layer;
 var google;
 var osmprojection;
 var vectorLayer;
-var markers
-
+var markers;
 
 
 var planeStyleMap = new OpenLayers.StyleMap({
@@ -55,7 +54,7 @@ var planeStyleMap = new OpenLayers.StyleMap({
 	graphicWidth: 21,
 	graphicHeight: 25,
 	fillOpacity: 0.85,
-	rotation: "${angle}"
+	rotation: "${mheading}"
 });
 
 var rwyMarkersStyle = new OpenLayers.StyleMap({
@@ -100,14 +99,15 @@ var planeMarkersStyle = new OpenLayers.StyleMap({
         fillOpacity: 0.8,
         
         
-        fontColor: "white",
+        fontColor: "black",
         fontSize: "12px",
         fontFamily: "Helvetica, Arial, sans-serif",
         fontWeight: "bold",
         //labelAlign: "center",
         //labelXOffset: 10,
         //labelYOffset: 10,
-        label : "${name}"
+        label : "${callsign}",
+		rotation : "${planerotation}"
 
         },
     
@@ -128,7 +128,7 @@ var rwyLineStyle = new OpenLayers.StyleMap({
         strokeWidth: 8,
 		strokeOpacity: 0.9,
         fillColor: "black",
-        fillOpacity: 0.3,
+        fillOpacity: 0.9,
 		strokeLinecap: "butt"
         },
     
@@ -140,7 +140,7 @@ var rwyLineStyle = new OpenLayers.StyleMap({
 });
 
 
-var planes, rwymarkers;
+var planes;
 var aircraft = {};
 
 
@@ -207,9 +207,13 @@ function init(){
 	rwyMarkers.setOpacity(1.0);
 	
 	// add plane marker
-	planeMarkers = new OpenLayers.Layer.Markers("Plane Markers",	{styleMap:  planeMarkersStyle});
-	map.addLayer(planeMarkers);
-	planeMarkers.setOpacity(1.0);
+	//planeMarkers = new OpenLayers.Layer.Markers("Plane Markers",	{styleMap:  planeMarkersStyle});
+	//map.addLayer(planeMarkers);
+	//planeMarkers.setOpacity(1.0);
+	
+	planeMarkersVec = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeMarkersStyle});
+	map.addLayer(planeMarkersVec);
+	//planeMarkersVec.setOpacity(1.0);
 	
 
 	//planes = new OpenLayers.Layer.Vector("Planes",	{styleMap: planeStyleMap});
@@ -309,7 +313,7 @@ function add_rwymarker(mrwy, mlat, mlon){
 
 
 //==========================================================
-function add_planemarker(callsign, mlat, mlon){
+/*function add_planemarker(callsign, mlat, mlon, mheading){
 
     var size = new OpenLayers.Size(48,48);
     var offset = new OpenLayers.Pixel(-(size.w/2), -(size.h/2));
@@ -318,8 +322,25 @@ function add_planemarker(callsign, mlat, mlon){
     
 	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
 	var marker = new OpenLayers.Marker(lonlat,icon);
+	marker.rotation(90);
     
 	planeMarkers.addMarker(marker);
+	return;
+	
+}*/
+
+//==========================================================
+function show_aircraft(mcallsign, mlat, mlon, mheading, maltitude){
+
+	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
+		
+	var feature = new OpenLayers.Feature.Vector(point, {
+                callsign: mcallsign,
+				planerotation: mheading
+				});            
+	
+	planeMarkersVec.addFeatures([feature]);
+
 	return;
 	
 }

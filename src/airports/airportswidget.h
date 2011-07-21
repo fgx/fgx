@@ -52,7 +52,8 @@ public:
 		CI_LAT = 6,
 		CI_LON = 7,
 		CI_ALIGNMNET =8,
-		CI_RUNWAYS = 9
+		CI_RUNWAYS = 9,
+		CI_HDG = 10
 	};
 
 	enum STARTUP_POSTITION{

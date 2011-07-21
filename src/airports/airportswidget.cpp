@@ -620,6 +620,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			tItem0->setText(CI_NODE,  nodeRunway.childNodes().at(0).firstChildElement("rwy").text());
 			tItem0->setText(CI_LAT,  nodeRunway.childNodes().at(0).firstChildElement("lat").text());
 			tItem0->setText(CI_LON,  nodeRunway.childNodes().at(0).firstChildElement("lon").text());
+			tItem0->setText(CI_HDG,  nodeRunway.childNodes().at(0).firstChildElement("hdg-deg").text());
 			tItem0->setText(CI_TYPE, "runway");
 			tItem0->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(0).firstChildElement("rwy").text()));
@@ -630,6 +631,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			tItem1->setText(CI_NODE,  nodeRunway.childNodes().at(1).firstChildElement("rwy").text());
 			tItem1->setText(CI_LAT,  nodeRunway.childNodes().at(1).firstChildElement("lat").text());
 			tItem1->setText(CI_LON,  nodeRunway.childNodes().at(1).firstChildElement("lon").text());
+			tItem1->setText(CI_HDG,  nodeRunway.childNodes().at(0).firstChildElement("hdg-deg").text());
 			tItem1->setText(CI_TYPE, "runway");
 			tItem1->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()));
@@ -833,8 +835,7 @@ void AirportsWidget::on_coordinates_changed()
 	mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
 							 mainObject->X->getx("--lat="),
 							 mainObject->X->getx("--lon="),
-							 "0",
-							 //mainObject->X->getx("--heading="), --> this we will have later
+							 mainObject->X->getx("--heading="),
 							 "0"
 							 //mainObject->X->getx("--altitude=") --> this we will have later
 							 );
@@ -890,9 +891,10 @@ void AirportsWidget::on_airport_info_selection_changed()
 	//= Its a runway
 	if(item->text(CI_TYPE) == "runway"){
 		emit setx("--runway=", true, item->text(CI_NODE));
+		emit setx("--parking-id=", false,"");
 		emit setx("--lat=", true, item->text(CI_LAT));
 		emit setx("--lon=", true, item->text(CI_LON));
-		emit setx("--parking-id=", false,"");
+		emit setx("--heading=", true, item->text(CI_HDG));
 		return;
 	}
 
@@ -902,6 +904,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 		emit setx("--parking-id=", true, item->text(CI_NODE));
 		emit setx("--lat=", true, item->text(CI_LAT));
 		emit setx("--lon=", true, item->text(CI_LON));
+		emit setx("--heading=", true, item->text(CI_HDG));
 		return;
 	}
 
