@@ -612,7 +612,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 									" - ").append(
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()
 									));
-			treeWidgetAirportInfo->setItemExpanded(rItem, true);
+			//treeWidgetAirportInfo->setItemExpanded(rItem, true);
 			treeWidgetAirportInfo->setFirstItemColumnSpanned(rItem, true);
 
 			//= Runway threshold 0
@@ -732,9 +732,14 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 							pItem->setIcon(0, QIcon(":/icon/stand"));
 							pItem->setText(CI_NODE, stand);
 							pItem->setText(CI_TYPE, "stand");
-							pItem->setText(CI_LAT, Helpers::hms_to_decimal(attribs.namedItem("lat").nodeValue()));
-							pItem->setText(CI_LON, Helpers::hms_to_decimal(attribs.namedItem("lon").nodeValue()));
+							pItem->setText(CI_LAT, Helpers::hmm_to_decimal(attribs.namedItem("lat").nodeValue()));
+							pItem->setText(CI_LON, Helpers::hmm_to_decimal(attribs.namedItem("lon").nodeValue()));
 							pItem->setText(CI_SETTING_KEY, QString(airport_code).append("stand").append(stand));
+							mapWidget->add_stand( airport_code,
+												  stand,
+												  pItem->text(CI_LAT),
+												  pItem->text(CI_LON)
+												 );
 						}
 					}
 				}

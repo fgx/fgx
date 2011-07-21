@@ -335,9 +335,28 @@ function add_rwymarker(mrwy, mlat, mlon){
 	//add to main layer planeMarkersVec at init()
 	rwyMarkers.addFeatures([feature]);
 
-	return;
-	
+	return;	
 }
+
+
+// Add Stand
+//==========================================================
+function add_stand(apt, name, mlat, mlon){
+
+	//add point = coords from airport tab
+	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
+		
+	//draw feature and add callsign label, use rwy heading for orientation
+	var feature = new OpenLayers.Feature.Vector(point, {
+                rwyText: name
+				});            
+	
+	//add to main layer planeMarkersVec at init()
+	rwyMarkers.addFeatures([feature]);
+
+	return;	
+}
+
 
 // Zooms the map to the airport (thanks, Pete!)
 //==========================================================

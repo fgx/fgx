@@ -176,8 +176,17 @@ void OpenLayerWidget::add_runway(QString apt, QString rwy1, QString rwy2, QStrin
 {
 	QString jstr = QString("add_runway('%1', '%2', '%3', %4, %5, %6, %7);").arg(apt).arg(rwy1).arg(rwy2).arg(lat1).arg(lon1).arg(lat2).arg(lon2);
 	execute_js(jstr);
-	qDebug() << "add_runway jstr: " << jstr;
+	//qDebug() << "add_runway jstr: " << jstr;
 }
+//================================================
+// Add Stand
+void OpenLayerWidget::add_stand(QString apt, QString name, QString lat, QString lon)
+{
+	QString jstr = QString("add_stand('%1', '%2', %3, %4);").arg(apt).arg(name).arg(lat).arg(lon);
+	execute_js(jstr);
+	qDebug() << "add_stand jstr: " << jstr;
+}
+
 //================================================
 // Zoom to Airport
 void OpenLayerWidget::zoom_to_airport(QString apt){

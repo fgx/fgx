@@ -14,7 +14,7 @@ public:
 
 	static void select_combo(QComboBox *combo, QString value);
 
-	static QString hms_to_decimal(QString hms);
+	static QString hmm_to_decimal(QString hms);
 };
 
 #endif // HELPERS_H

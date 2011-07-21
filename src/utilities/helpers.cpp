@@ -39,9 +39,9 @@ Degrees Minutes.m to Decimal Degrees
 Decimal Degrees = Degrees + .d
 
 */
-QString Helpers::hms_to_decimal(QString hms)
+QString Helpers::hmm_to_decimal(QString hmm)
 {
-	QStringList parts = hms.split(" ");
+	QStringList parts = hmm.split(" ");
 	QString h = parts.at(0);
 
 	if( h.contains("N") ){
@@ -57,10 +57,6 @@ QString Helpers::hms_to_decimal(QString hms)
 		h.replace("W", "-");
 	}
 
-
-	//QStringList msparts = parts.at(1).split(".");
-	//qDebug() << msparts << msparts.at(1).toFloat() / 60 << msparts.at(0).toFloat();
-	//float ms = ( msparts.at(0).toInt()  + (msparts.at(1).toFloat() / 60) ) / 60;
 	float ms = h.toInt() + parts.at(1).toFloat() / 60;
 
 	return QString("%1").arg(ms);
