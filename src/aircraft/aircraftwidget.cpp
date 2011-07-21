@@ -501,7 +501,7 @@ void AircraftWidget::load_tree(){
 	treeWidget->sortByColumn(view == FOLDER_VIEW ? C_DIR : C_AERO, Qt::AscendingOrder);
 	treeWidget->setUpdatesEnabled(true);
 
-	select_node(mainObject->settings->value("aircraft").toString());
+	select_node(mainObject->X->getx("--aircraft="));
 	QString str = QString("%1 aircraft(s)").arg(c);
 	statusBarTree->showMessage(str);
 	outLog("*** FGx: AircraftWidget::load_tree: with " + str);

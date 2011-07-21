@@ -118,7 +118,7 @@ ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
 //= Extras Options changed
 void ExpertOptionsWidget::on_extra()
 {
-	emit setx("extra_args", groupBoxArgs->isCheckable(), txtExtraArgs->toPlainText().trimmed());
+	emit setx("extra_args", groupBoxArgs->isChecked(), txtExtraArgs->toPlainText().trimmed());
 }
 
 //= Extra Env changed
