@@ -32,6 +32,10 @@
         <file alias="zoom-plus-mini.png">openlayers/img/zoom-plus-mini.png</file>
         <file alias="zoom-world-mini.png">openlayers/img/zoom-world-mini.png</file>
         <file alias="zoombar.png">openlayers/img/zoombar.png</file>
+		
+		<file alias="fgx-plane-green.png">openlayers/img/fgx-plane-green.png</file>
+		<file alias="fgx-plane-gray-dark.png">openlayers/img/fgx-plane-gray-dark.png</file>
+		
 	</qresource>
 	<qresource prefix="/img/rwy">
 		<file alias="01.png">openlayers/img/rwy/01.png</file>

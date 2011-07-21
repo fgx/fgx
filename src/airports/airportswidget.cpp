@@ -829,6 +829,15 @@ void AirportsWidget::on_coordinates_changed()
 	emit setx("--offset-distance=", true, txtOffset->text());
 	emit setx("--altitude=", true, txtAltitude->text());
 	emit setx("--heading=", true, txtHeading->text());
+	
+	mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
+							 mainObject->X->getx("--lat="),
+							 mainObject->X->getx("--lon="),
+							 "0",
+							 //mainObject->X->getx("--heading="), --> this we will have later
+							 "0"
+							 //mainObject->X->getx("--altitude=") --> this we will have later
+							 );
 }
 
 
@@ -881,6 +890,8 @@ void AirportsWidget::on_airport_info_selection_changed()
 	//= Its a runway
 	if(item->text(CI_TYPE) == "runway"){
 		emit setx("--runway=", true, item->text(CI_NODE));
+		emit setx("--lat=", true, item->text(CI_LAT));
+		emit setx("--lon=", true, item->text(CI_LON));
 		emit setx("--parking-id=", false,"");
 		return;
 	}
@@ -889,6 +900,8 @@ void AirportsWidget::on_airport_info_selection_changed()
 	if(item->text(CI_TYPE) == "stand"){
 		emit setx("--runway=", false, "");
 		emit setx("--parking-id=", true, item->text(CI_NODE));
+		emit setx("--lat=", true, item->text(CI_LAT));
+		emit setx("--lon=", true, item->text(CI_LON));
 		return;
 	}
 

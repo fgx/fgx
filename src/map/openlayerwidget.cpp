@@ -200,6 +200,7 @@ void OpenLayerWidget::zoom_to( QString lat, QString lon, int zoom)
 void OpenLayerWidget::show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude){
 	QString jstr = QString("show_aircraft('%1', %2, %3, %4, %5);").arg(callsign).arg(lat).arg(lon).arg(heading).arg(altitude);
 	execute_js(jstr);
+	qDebug() << "show aircraft jstr: " << jstr;
 }
 //=================================================
 // Show Aircraft

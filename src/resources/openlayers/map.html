@@ -89,6 +89,38 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
 
 });
 
+var planeMarkersStyle = new OpenLayers.StyleMap({
+    
+    "default": {
+        graphicName: "square",
+        pointRadius: 14,
+        strokeColor: "lime",
+        strokeWidth: 1,
+        fillColor: "lime",
+        fillOpacity: 0.8,
+        
+        
+        fontColor: "white",
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: "bold",
+        //labelAlign: "center",
+        //labelXOffset: 10,
+        //labelYOffset: 10,
+        label : "${name}"
+
+        },
+    
+    "select": {
+        fillColor: "black",
+        strokeColor: "yellow",
+        pointRadius: 12,
+        fillOpacity: 1,
+    }
+
+});
+
+
 var rwyLineStyle = new OpenLayers.StyleMap({
     
     "default": {
@@ -160,31 +192,28 @@ function init(){
 
 	
 	// add rwy lines
-	runwayLayer = new OpenLayers.Layer.Vector("Runway Lines", {styleMap:  rwyLineStyle});
-	map.addLayer(runwayLayer);
+	runwayLines = new OpenLayers.Layer.Vector("Runway Lines", {styleMap:  rwyLineStyle});
+	map.addLayer(runwayLines);
 	
 	// add default markers
-	markers = new OpenLayers.Layer.Markers( "Markers" );
-	markers.setOpacity(1.0);
-	map.addLayer(markers);
+	//markers = new OpenLayers.Layer.Markers( "Markers" );
+	//markers.setOpacity(1.0);
+	//map.addLayer(markers);
 	
 	
 	// add rwy markers
-	rwymarkers = new OpenLayers.Layer.Markers("Runways Markers",	{styleMap:  rwyMarkersStyle});
-	map.addLayer(rwymarkers);
-	//rwymarkers.setOpacity(0.5);
+	rwyMarkers = new OpenLayers.Layer.Markers("Runways Markers",	{styleMap:  rwyMarkersStyle});
+	map.addLayer(rwyMarkers);
+	rwyMarkers.setOpacity(1.0);
 	
+	// add plane marker
+	planeMarkers = new OpenLayers.Layer.Markers("Plane Markers",	{styleMap:  planeMarkersStyle});
+	map.addLayer(planeMarkers);
+	planeMarkers.setOpacity(1.0);
 	
-	//map.raiseLayer(rwyLayer, 0);
-	//map.raiseLayer(rwymarkers, 1);
-    
 
-
-
-
-
-	planes = new OpenLayers.Layer.Vector("Planes",	{styleMap: planeStyleMap});
-	map.addLayer(planes);
+	//planes = new OpenLayers.Layer.Vector("Planes",	{styleMap: planeStyleMap});
+	//map.addLayer(planes);
 
 
 	//alert("init done");
@@ -196,7 +225,7 @@ function init(){
 //==========================================================
 function show_aircraft(callsign, lat, lon, heading, altitude){
 	
-	var point = new OpenLayers.Geometry.Point(lon, lat).transform(osmprojection, map.getProjectionObject() );
+	/*var point = new OpenLayers.Geometry.Point(lon, lat).transform(osmprojection, map.getProjectionObject() );
 
 	var fid = "callsign_" + callsign;
 
@@ -220,7 +249,18 @@ function show_aircraft(callsign, lat, lon, heading, altitude){
 		//planes.drawFeature(f);
 		//f.layer.drawFeature(f);
 		//alert(f.point);
-	}
+	}*/
+	
+	var size = new OpenLayers.Size(48,48);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -(size.h/2));
+    var path = "/img/fgx-plane-green.png";
+    var icon = new OpenLayers.Icon(path, size, offset);
+    
+	var lonlat = new OpenLayers.LonLat(lon, lat).transform(osmprojection, map.getProjectionObject());
+	var marker = new OpenLayers.Marker(lonlat,icon);
+    
+	planeMarkers.addMarker(marker);
+	return;
 
 }
 
@@ -262,7 +302,24 @@ function add_rwymarker(mrwy, mlat, mlon){
 	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
 	var marker = new OpenLayers.Marker(lonlat,icon);
     
-	markers.addMarker(marker);
+	rwyMarkers.addMarker(marker);
+	return;
+	
+}
+
+
+//==========================================================
+function add_planemarker(callsign, mlat, mlon){
+
+    var size = new OpenLayers.Size(48,48);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -(size.h/2));
+    var path = "/img/fgx-plane-green.png";
+    var icon = new OpenLayers.Icon(path, size, offset);
+    
+	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
+	var marker = new OpenLayers.Marker(lonlat,icon);
+    
+	planeMarkers.addMarker(marker);
 	return;
 	
 }
@@ -327,7 +384,7 @@ function add_runway(apt, rwy1, rwy2, lat1, lon1, lat2, lon2){
 	);
 	var line = new OpenLayers.Geometry.LineString(points).transform(osmprojection,map.getProjectionObject());
 	var runwayFeature = new OpenLayers.Feature.Vector(line);
-	runwayLayer.addFeatures(runwayFeature);
+	runwayLines.addFeatures(runwayFeature);
 
 
 
