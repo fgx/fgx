@@ -91,12 +91,14 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
 var planeMarkersStyle = new OpenLayers.StyleMap({
     
     "default": {
-        graphicName: "square",
-        pointRadius: 14,
+
         strokeColor: "lime",
         strokeWidth: 1,
         fillColor: "lime",
-        fillOpacity: 0.8,
+		
+		externalGraphic: "/img/fgx-plane-green.png",
+		graphicWidth: 48,
+		graphicHeight: 48,
         
         
         fontColor: "black",
@@ -211,9 +213,16 @@ function init(){
 	//map.addLayer(planeMarkers);
 	//planeMarkers.setOpacity(1.0);
 	
+	 //planeMarkersStyle.graphicWidth = 48;
+            //planeMarkersStyle.graphicHeight = 48;
+            //planeMarkersStyle.graphicXOffset = -(style_mark.graphicWidth/2);
+            //planeMarkersStyle.graphicYOffset = -(style_mark.graphicHeight/2);
+            //planeMarkersStyle.externalGraphic = "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/img/marker-gold.png";
+            // graphicTitle only works in Firefox and Internet Explorer
+
+	
 	planeMarkersVec = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeMarkersStyle});
 	map.addLayer(planeMarkersVec);
-	//planeMarkersVec.setOpacity(1.0);
 	
 
 	//planes = new OpenLayers.Layer.Vector("Planes",	{styleMap: planeStyleMap});
@@ -227,9 +236,9 @@ function init(){
 
 
 //==========================================================
-function show_aircraft(callsign, lat, lon, heading, altitude){
+/*function show_aircraft(callsign, lat, lon, heading, altitude){
 	
-	/*var point = new OpenLayers.Geometry.Point(lon, lat).transform(osmprojection, map.getProjectionObject() );
+	var point = new OpenLayers.Geometry.Point(lon, lat).transform(osmprojection, map.getProjectionObject() );
 
 	var fid = "callsign_" + callsign;
 
@@ -253,7 +262,9 @@ function show_aircraft(callsign, lat, lon, heading, altitude){
 		//planes.drawFeature(f);
 		//f.layer.drawFeature(f);
 		//alert(f.point);
-	}*/
+	}
+	
+	//start working part for marker
 	
 	var size = new OpenLayers.Size(48,48);
     var offset = new OpenLayers.Pixel(-(size.w/2), -(size.h/2));
@@ -265,8 +276,10 @@ function show_aircraft(callsign, lat, lon, heading, altitude){
     
 	planeMarkers.addMarker(marker);
 	return;
+	
+	//end working part for marker
 
-}
+}*/
 
 
 
