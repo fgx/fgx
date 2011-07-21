@@ -126,7 +126,7 @@ void MpMapXWidget::add_runway(QString airport, QString rwy1, QString rwy2, QStri
 }
 
 void MpMapXWidget::focus_aero(XAero aero){
-	mapWidget->zoom_to(aero.lat, aero.lon, 15);
+	mapWidget->zoom_to_latlon(aero.lat, aero.lon, 15);
 }
 
 

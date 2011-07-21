@@ -67,8 +67,21 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	toolbar->addWidget(lblLon);
 
 
-
+	//==============================================
+	// middle pane with map
+	QHBoxLayout *midLayout = new QHBoxLayout();
+	mainLayout->addLayout(midLayout);
 	
+	sliderZoom = new QSlider();
+	sliderZoom->setRange(1,16);
+	sliderZoom->setTickPosition(QSlider::TicksLeft);
+	sliderZoom->setTickInterval(1);
+	sliderZoom->setPageStep(1);
+	midLayout->addWidget(sliderZoom);
+	connect(sliderZoom, SIGNAL(valueChanged(int)), SLOT(zoom_to(int)));
+
+
+
 	//=============================================================
 	//== Cache
 	
@@ -79,7 +92,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	
 	//== Browser
 	webView = new QWebView();
-	mainLayout->addWidget(webView,10);
+	midLayout->addWidget(webView,10);
 	webView->page()->networkAccessManager()->setCache(networkDiskCache);
 	//webView->page()->networkAccessManager()->setCookieJar(networkCookieJar);
 	connect(webView, SIGNAL(loadStarted()), this, SLOT(start_progress()));
@@ -187,6 +200,9 @@ void OpenLayerWidget::add_stand(QString apt, QString name, QString lat, QString 
 	qDebug() << "add_stand jstr: " << jstr;
 }
 
+
+
+
 //================================================
 // Zoom to Airport
 void OpenLayerWidget::zoom_to_airport(QString apt){
@@ -198,11 +214,21 @@ void OpenLayerWidget::zoom_to_airport(QString apt){
 
 //================================================
 // Zoom to point
-void OpenLayerWidget::zoom_to( QString lat, QString lon, int zoom)
+void OpenLayerWidget::zoom_to_latlon(QString lat, QString lon, int zoom)
 {
-	QString jstr = QString("zoom_to(%1, %2, %3);").arg(lat).arg(lon).arg(zoom);
+	QString jstr = QString("zoom_to_latlon(%1, %2, %3);").arg(lat).arg(lon).arg(zoom);
 	execute_js(jstr);
 }
+
+//================================================
+// Zoom to point
+void OpenLayerWidget::zoom_to( int zoom)
+{
+	QString jstr = QString("zoom_to(%1);").arg(zoom);
+	execute_js(jstr);
+}
+
+
 
 //=================================================
 // Show Aircraft
@@ -289,21 +315,11 @@ void OpenLayerWidget::marker_unselected(QVariant curr_idx, QVariant mLocationId)
 
 //** JS
 void OpenLayerWidget::map_zoom_changed(QVariant zoom){
-	//qDebug() << "map_zoom_changed" << zoom;
-	return;
-	buttZoom->setText(zoom.toString());
-	int zoomInt = zoom.toInt();
-	QList<QAbstractButton *> buttons = groupZoom->buttons();
-	for (int i = 0; i < buttons.size(); ++i) {
-		if (buttons.at(i)->property("zoom").toInt() == zoomInt){
-			 buttons.at(i)->setChecked(true);
-			 return;
-		}
-	 }
-//    for a in self.groupZoom.actions():
-//            checked = a.property("zoom").toString() == new_zoom_level
-//            a.setChecked(checked)
-	  qDebug("map_zoom_changed()");
+	int z = zoom.toInt();
+	if(z == 0){
+		return; //leave as is
+	}
+	sliderZoom->setValue(z);
 }
 
 

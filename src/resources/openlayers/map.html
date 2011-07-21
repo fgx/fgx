@@ -202,6 +202,10 @@ function on_map_mousemove(e){
 	Qt.map_mouse_move(lonlat.lat, lonlat.lon);
 }
 
+function on_zoom_changed(){
+	alert("ere");
+}
+
 // main function
 function init(){
 
@@ -221,6 +225,13 @@ function init(){
 	layer = new OpenLayers.Layer.OSM("OSM Map");
 	map.addLayer(layer);
 
+	layer.events.on({
+		moveend: function(e) {
+			if (e.zoomChanged) {
+				Qt.map_zoom_changed(map.zoom);
+			}
+		}
+	});
 
 
 	// set osm projection
@@ -237,6 +248,7 @@ function init(){
 	// map events
 	map.events.register("click", map, on_map_click);
 	map.events.register("mousemove", map, on_map_mousemove);
+	map.events.register("zoomin", map, on_zoom_changed);
 	
 
 	
@@ -358,28 +370,32 @@ function add_stand(apt, name, mlat, mlon){
 }
 
 
-// Zooms the map to the airport (thanks, Pete!)
+//=========================================================
+// Zooms to every point you like ...
 //==========================================================
+
+
+//= zoom_to value
+function zoom_to(zoom){
+	map.zoomTo(zoom);
+}
+
+//= zoom to lposition
+function zoom_to_latlon(lat, lon, zoom){
+	var lonlat = new OpenLayers.LonLat(lon, lat).transform(osmprojection, map.getProjectionObject());
+	map.setCenter(lonlat, zoom);
+}
+
+// Zooms the map to the airport (thanks, Pete!)
 function zoom_to_airport(apt){
-	//alert(markers.getDataExtent());
-	//map.zoomToExtent(aptBounds[apt]);
-	//return;
 	map.setCenter(
 		aptBounds[apt].getCenterLonLat().transform(
 			osmprojection,
 			map.getProjectionObject()
 			), 12
 	);
-
 }
 
-// Zooms to every point you like ...
-//==========================================================
-function zoom_to(lat, lon, zoom){
-	var lonlat = new OpenLayers.LonLat(lon, lat).transform(osmprojection, map.getProjectionObject());
-	map.setCenter(lonlat, zoom);
-	//alert("xoom");
-}
 
 
 
