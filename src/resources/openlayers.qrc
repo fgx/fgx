@@ -33,6 +33,8 @@
         <file alias="zoom-world-mini.png">openlayers/img/zoom-world-mini.png</file>
         <file alias="zoombar.png">openlayers/img/zoombar.png</file>
 		
+		<file alias="rwy_sign_back.png">openlayers/img/rwy_sign_back.png</file>
+		
 		<file alias="fgx-plane-green.png">openlayers/img/fgx-plane-green.png</file>
 		<file alias="fgx-plane-gray-dark.png">openlayers/img/fgx-plane-gray-dark.png</file>
 		

@@ -57,7 +57,7 @@ var planeStyleMap = new OpenLayers.StyleMap({
 	rotation: "${mheading}"
 });
 
-var rwyMarkersStyle = new OpenLayers.StyleMap({
+/*var rwyMarkersStyle = new OpenLayers.StyleMap({
     
     "default": {
         graphicName: "square",
@@ -86,7 +86,7 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
         fillOpacity: 1,
     }
 
-});
+});*/
 
 var planeMarkersStyle = new OpenLayers.StyleMap({
     
@@ -110,6 +110,39 @@ var planeMarkersStyle = new OpenLayers.StyleMap({
         //labelYOffset: 10,
         label : "${callsign}",
 		rotation : "${planerotation}",
+
+        },
+    
+    "select": {
+        fillColor: "black",
+        strokeColor: "yellow",
+        pointRadius: 12,
+        fillOpacity: 1,
+    }
+
+});
+
+var rwyMarkersStyle = new OpenLayers.StyleMap({
+    
+    "default": {
+
+        strokeColor: "lime",
+        strokeWidth: 1,
+        fillColor: "lime",
+		
+		externalGraphic: "/img/rwy_sign_back.png",
+		graphicWidth: 30,
+		graphicHeight: 22,
+        
+        
+        fontColor: "white",
+        fontSize: "13px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: "bold",
+        //labelAlign: "center",
+        //labelXOffset: 10,
+        //labelYOffset: 10,
+        label : "${rwyText}",
 
         },
     
@@ -199,9 +232,12 @@ function init(){
 	
 	
 	// add rwy markers
-	rwyMarkers = new OpenLayers.Layer.Markers("Runways Markers",	{styleMap:  rwyMarkersStyle});
+	//rwyMarkers = new OpenLayers.Layer.Markers("Runways Markers",	{styleMap:  rwyMarkersStyle});
+	//map.addLayer(rwyMarkers);
+	//rwyMarkers.setOpacity(1.0);
+	
+	rwyMarkers = new OpenLayers.Layer.Vector("Runway Markers", {styleMap:  rwyMarkersStyle});
 	map.addLayer(rwyMarkers);
-	rwyMarkers.setOpacity(1.0);
 	
 	// add plane vector marker
 	planeMarkersVec = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeMarkersStyle});
@@ -238,25 +274,6 @@ function add_marker(mlat, mlon){
 	
 }
 
-//==========================================================
-function add_rwymarker(mrwy, mlat, mlon){
-
-	// markes are tooo simple, but we can use it for the "rwy signs"
-    var size = new OpenLayers.Size(30,22);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -(size.h/2));
-	
-	// this path points to reference in openlayers.qrc resource file, be aware
-    var path = "/img/rwy/" + mrwy + ".png";
-    var icon = new OpenLayers.Icon(path, size, offset);
-    
-	// we need to transform the projection for the osm layer
-	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
-	var marker = new OpenLayers.Marker(lonlat,icon);
-    
-	rwyMarkers.addMarker(marker);
-	return;
-	
-}
 
 //==========================================================
 function show_aircraft(mcallsign, mlat, mlon, mheading, maltitude){
@@ -275,6 +292,24 @@ function show_aircraft(mcallsign, mlat, mlon, mheading, maltitude){
 	
 	//add to main layer planeMarkersVec at init()
 	planeMarkersVec.addFeatures([feature]);
+
+	return;
+	
+}
+
+//==========================================================
+function add_rwymarker(mrwy, mlat, mlon){
+
+	//add point = coords from airport tab
+	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
+		
+	//draw feature and add callsign label, use rwy heading for orientation
+	var feature = new OpenLayers.Feature.Vector(point, {
+                rwyText: mrwy
+				});            
+	
+	//add to main layer planeMarkersVec at init()
+	rwyMarkers.addFeatures([feature]);
 
 	return;
 	
