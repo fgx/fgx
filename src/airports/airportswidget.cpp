@@ -636,16 +636,19 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			tItem1->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()));
 
-
-
 			mapWidget->add_runway(	airport_code,
-									tItem0->text(CI_NODE),
-									tItem1->text(CI_NODE),
-									tItem0->text(CI_LAT), tItem0->text(CI_LON),
-									tItem1->text(CI_LAT), tItem1->text(CI_LON)
-									);
+								  tItem0->text(CI_NODE),
+								  tItem1->text(CI_NODE),
+								  tItem0->text(CI_LAT), tItem0->text(CI_LON),
+								  tItem1->text(CI_LAT), tItem1->text(CI_LON)
+								  );
+
+			
 		}
 	}
+	
+
+	
 	mapWidget->zoom_to_airport(airport_code);
 
 	return runwaysParent->childCount();
@@ -716,6 +719,9 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 				 QDomNamedNodeMap attribs = parkingNode.attributes();
 				 QString gate(attribs.namedItem("name").nodeValue());
 				 gate.append(attribs.namedItem("number").nodeValue());
+				 gate.append(attribs.namedItem("lat").nodeValue());
+				 gate.append(attribs.namedItem("lon").nodeValue());
+				 gate.append(attribs.namedItem("heading").nodeValue());
 
 				//* Check it doesnt already exist - pete is confused as to multiple entries
 				 if(!listParkingPositions.contains(gate)){

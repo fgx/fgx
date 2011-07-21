@@ -227,7 +227,7 @@ function focus_aircraft(callsign){
 }
 
 
-
+// Standard OpenLayers marker, not in use
 //==========================================================
 function add_marker(mlat, mlon){
 
@@ -241,11 +241,15 @@ function add_marker(mlat, mlon){
 //==========================================================
 function add_rwymarker(mrwy, mlat, mlon){
 
+	// markes are tooo simple, but we can use it for the "rwy signs"
     var size = new OpenLayers.Size(30,22);
     var offset = new OpenLayers.Pixel(-(size.w/2), -(size.h/2));
+	
+	// this path points to reference in openlayers.qrc resource file, be aware
     var path = "/img/rwy/" + mrwy + ".png";
     var icon = new OpenLayers.Icon(path, size, offset);
     
+	// we need to transform the projection for the osm layer
 	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
 	var marker = new OpenLayers.Marker(lonlat,icon);
     
@@ -257,13 +261,19 @@ function add_rwymarker(mrwy, mlat, mlon){
 //==========================================================
 function show_aircraft(mcallsign, mlat, mlon, mheading, maltitude){
 
+	//destroy features first
+	planeMarkersVec.destroyFeatures();
+
+	//add point = coords from airport tab
 	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
 		
+	//draw feature and add callsign label, use rwy heading for orientation
 	var feature = new OpenLayers.Feature.Vector(point, {
                 callsign: mcallsign,
 				planerotation: mheading
 				});            
 	
+	//add to main layer planeMarkersVec at init()
 	planeMarkersVec.addFeatures([feature]);
 
 	return;
