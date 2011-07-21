@@ -631,7 +631,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			tItem1->setText(CI_NODE,  nodeRunway.childNodes().at(1).firstChildElement("rwy").text());
 			tItem1->setText(CI_LAT,  nodeRunway.childNodes().at(1).firstChildElement("lat").text());
 			tItem1->setText(CI_LON,  nodeRunway.childNodes().at(1).firstChildElement("lon").text());
-			tItem1->setText(CI_HDG,  nodeRunway.childNodes().at(0).firstChildElement("hdg-deg").text());
+			tItem1->setText(CI_HDG,  nodeRunway.childNodes().at(1).firstChildElement("hdg-deg").text());
 			tItem1->setText(CI_TYPE, "runway");
 			tItem1->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()));
@@ -904,7 +904,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 		return;
 	}
 
-	//= Its a runway
+	//= Its a stand
 	if(item->text(CI_TYPE) == "stand"){
 		emit setx("--runway=", false, "");
 		emit setx("--parking-id=", true, item->text(CI_NODE));
