@@ -96,9 +96,9 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
     
     "default": {
 
-        strokeColor: "lime",
+        strokeColor: "red",
         strokeWidth: 1,
-        fillColor: "lime",
+        fillColor: "red",
 		
 		externalGraphic: "/img/rwy_sign_back.png",
 		graphicWidth: 30,
@@ -133,18 +133,32 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
 var rwyLineStyle = new OpenLayers.StyleMap({
     
     "default": {
+
         strokeColor: "blue",
         strokeWidth: 8,
-		strokeOpacity: 0.9,
-        fillColor: "black",
-        fillOpacity: 0.9,
-		strokeLinecap: "butt"
+        fillColor: "blue",
+		strokeOpacity: 0.8,
+		strokeLinecap: "butt",
+		
+        
+        
+        fontColor: "white",
+        fontSize: "13px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: "bold",
+
+		graphicOpacity: 1.0,
+		graphicXOffset: -30,
+		graphicYOffset: -30
+
         },
     
     "select": {
+        fillColor: "black",
         strokeColor: "yellow",
-        fillColor: "yellow",
-        }
+        pointRadius: 12,
+        fillOpacity: 1,
+    }
 
 });
 
