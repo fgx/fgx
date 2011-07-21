@@ -57,36 +57,6 @@ var planeStyleMap = new OpenLayers.StyleMap({
 	rotation: "${mheading}"
 });
 
-/*var rwyMarkersStyle = new OpenLayers.StyleMap({
-    
-    "default": {
-        graphicName: "square",
-        pointRadius: 14,
-        strokeColor: "white",
-        strokeWidth: 1,
-        fillColor: "red",
-        fillOpacity: 0.8,
-        
-        
-        fontColor: "white",
-        fontSize: "12px",
-        fontFamily: "Helvetica, Arial, sans-serif",
-        fontWeight: "bold",
-        //labelAlign: "center",
-        //labelXOffset: 10,
-        //labelYOffset: 10,
-        label : "${name}"
-
-        },
-    
-    "select": {
-        fillColor: "black",
-        strokeColor: "yellow",
-        pointRadius: 12,
-        fillOpacity: 1,
-    }
-
-});*/
 
 var planeMarkersStyle = new OpenLayers.StyleMap({
     
@@ -133,6 +103,7 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
 		externalGraphic: "/img/rwy_sign_back.png",
 		graphicWidth: 30,
 		graphicHeight: 22,
+		
         
         
         fontColor: "white",
@@ -140,9 +111,12 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
         fontFamily: "Helvetica, Arial, sans-serif",
         fontWeight: "bold",
         //labelAlign: "center",
-        //labelXOffset: 10,
-        //labelYOffset: 10,
+        labelXOffset: -15,
+        labelYOffset: 18,
         label : "${rwyText}",
+		graphicOpacity: 1.0,
+		graphicXOffset: -30,
+		graphicYOffset: -30
 
         },
     
