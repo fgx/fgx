@@ -78,8 +78,45 @@ var planeMarkersStyle = new OpenLayers.StyleMap({
         //labelAlign: "center",
         //labelXOffset: 10,
         //labelYOffset: 10,
-        label : "${callsign}",
+        //label : "${callsign}",
 		rotation : "${planerotation}",
+
+        },
+    
+    "select": {
+        fillColor: "black",
+        strokeColor: "yellow",
+        pointRadius: 12,
+        fillOpacity: 1,
+    }
+
+});
+
+var planeMarkersLabelStyle = new OpenLayers.StyleMap({
+    
+    "default": {
+
+        strokeColor: "lime",
+        strokeWidth: 1,
+        fillColor: "lime",
+		
+		externalGraphic: "/img/fgx-background-black.png",
+		graphicWidth: 66,
+		graphicHeight: 18,
+		graphicOpacity: 0.9,
+		graphicXOffset: 13,
+		graphicYOffset: 15,
+        
+        
+        fontColor: "white",
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: "bold",
+        labelAlign: "left",
+        labelXOffset: 16,
+        labelYOffset: -24,
+        label : "${callsign}",
+		//rotation : "${planerotation}",
 
         },
     
@@ -103,6 +140,9 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
 		externalGraphic: "/img/rwy_sign_back.png",
 		graphicWidth: 30,
 		graphicHeight: 22,
+		graphicOpacity: 1.0,
+		graphicXOffset: -30,
+		graphicYOffset: -30,
 		
         
         
@@ -114,9 +154,6 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
         labelXOffset: -15,
         labelYOffset: 18,
         label : "${rwyText}",
-		graphicOpacity: 1.0,
-		graphicXOffset: -30,
-		graphicYOffset: -30
 
         },
     
@@ -219,17 +256,17 @@ function init(){
 	map.addLayer(runwayLines);
 	
 	
-	// add rwy markers
-	//rwyMarkers = new OpenLayers.Layer.Markers("Runways Markers",	{styleMap:  rwyMarkersStyle});
-	//map.addLayer(rwyMarkers);
-	//rwyMarkers.setOpacity(1.0);
-	
+	// add rwy markers (labels)
 	rwyMarkers = new OpenLayers.Layer.Vector("Runway Markers", {styleMap:  rwyMarkersStyle});
 	map.addLayer(rwyMarkers);
 	
 	// add plane vector marker
 	planeMarkersVec = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeMarkersStyle});
 	map.addLayer(planeMarkersVec);
+	
+	// add plane label
+	planeMarkersLabel = new OpenLayers.Layer.Vector("Plane Label", {styleMap:  planeMarkersLabelStyle});
+	map.addLayer(planeMarkersLabel);
 
 
 	//alert("init done");
@@ -268,19 +305,28 @@ function show_aircraft(mcallsign, mlat, mlon, mheading, maltitude){
 
 	//destroy features first
 	planeMarkersVec.destroyFeatures();
+	planeMarkersLabel.destroyFeatures();
 
 	//add point = coords from airport tab
 	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
+	var pointLabel = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
 		
 	//draw feature and add callsign label, use rwy heading for orientation
 	var feature = new OpenLayers.Feature.Vector(point, {
-                callsign: mcallsign,
+                //callsign: mcallsign,
 				planerotation: mheading
-				});            
+				}); 
+				
+	// add callsign as separate feature, to have a background color (graphic) with offset
+	var callsignFeature = new OpenLayers.Feature.Vector(pointLabel, {
+                callsign: mcallsign,
+				});
 	
-	//add to main layer planeMarkersVec at init()
+	//add the plane
 	planeMarkersVec.addFeatures([feature]);
-
+	
+	//add the label
+	planeMarkersLabel.addFeatures([callsignFeature]);
 	return;
 	
 }
