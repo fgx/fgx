@@ -109,7 +109,7 @@ var planeMarkersStyle = new OpenLayers.StyleMap({
         //labelXOffset: 10,
         //labelYOffset: 10,
         label : "${callsign}",
-		rotation : "${planerotation}"
+		rotation : "${planerotation}",
 
         },
     
@@ -197,90 +197,20 @@ function init(){
 	runwayLines = new OpenLayers.Layer.Vector("Runway Lines", {styleMap:  rwyLineStyle});
 	map.addLayer(runwayLines);
 	
-	// add default markers
-	//markers = new OpenLayers.Layer.Markers( "Markers" );
-	//markers.setOpacity(1.0);
-	//map.addLayer(markers);
-	
 	
 	// add rwy markers
 	rwyMarkers = new OpenLayers.Layer.Markers("Runways Markers",	{styleMap:  rwyMarkersStyle});
 	map.addLayer(rwyMarkers);
 	rwyMarkers.setOpacity(1.0);
 	
-	// add plane marker
-	//planeMarkers = new OpenLayers.Layer.Markers("Plane Markers",	{styleMap:  planeMarkersStyle});
-	//map.addLayer(planeMarkers);
-	//planeMarkers.setOpacity(1.0);
-	
-	 //planeMarkersStyle.graphicWidth = 48;
-            //planeMarkersStyle.graphicHeight = 48;
-            //planeMarkersStyle.graphicXOffset = -(style_mark.graphicWidth/2);
-            //planeMarkersStyle.graphicYOffset = -(style_mark.graphicHeight/2);
-            //planeMarkersStyle.externalGraphic = "/Users/raoulquittarco/Desktop/fgx/fgx/fgx/src/resources/openlayers/img/marker-gold.png";
-            // graphicTitle only works in Firefox and Internet Explorer
-
-	
+	// add plane vector marker
 	planeMarkersVec = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeMarkersStyle});
 	map.addLayer(planeMarkersVec);
-	
-
-	//planes = new OpenLayers.Layer.Vector("Planes",	{styleMap: planeStyleMap});
-	//map.addLayer(planes);
 
 
 	//alert("init done");
 
 }
-
-
-
-//==========================================================
-/*function show_aircraft(callsign, lat, lon, heading, altitude){
-	
-	var point = new OpenLayers.Geometry.Point(lon, lat).transform(osmprojection, map.getProjectionObject() );
-
-	var fid = "callsign_" + callsign;
-
-	//var f = planes.getFeatureBy("callsign", callsign);
-	var f = planes.getFeatureById(fid);
-	//alert(f);
-
-	if(!f){
-		
-		var feature = new OpenLayers.Feature.Vector(point, {
-					angle: heading,
-					poppedup: false
-					//callsign: callsign
-				});
-		feature.id = fid;
-		feature.callsign = callsign;
-		planes.addFeatures([feature]);
-	}else{
-		
-		f.geometry.movePoint(point);
-		//planes.drawFeature(f);
-		//f.layer.drawFeature(f);
-		//alert(f.point);
-	}
-	
-	//start working part for marker
-	
-	var size = new OpenLayers.Size(48,48);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -(size.h/2));
-    var path = "/img/fgx-plane-green.png";
-    var icon = new OpenLayers.Icon(path, size, offset);
-    
-	var lonlat = new OpenLayers.LonLat(lon, lat).transform(osmprojection, map.getProjectionObject());
-	var marker = new OpenLayers.Marker(lonlat,icon);
-    
-	planeMarkers.addMarker(marker);
-	return;
-	
-	//end working part for marker
-
-}*/
-
 
 
 //==========================================================
@@ -324,24 +254,6 @@ function add_rwymarker(mrwy, mlat, mlon){
 	
 }
 
-
-//==========================================================
-/*function add_planemarker(callsign, mlat, mlon, mheading){
-
-    var size = new OpenLayers.Size(48,48);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -(size.h/2));
-    var path = "/img/fgx-plane-green.png";
-    var icon = new OpenLayers.Icon(path, size, offset);
-    
-	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
-	var marker = new OpenLayers.Marker(lonlat,icon);
-	marker.rotation(90);
-    
-	planeMarkers.addMarker(marker);
-	return;
-	
-}*/
-
 //==========================================================
 function show_aircraft(mcallsign, mlat, mlon, mheading, maltitude){
 
@@ -357,23 +269,6 @@ function show_aircraft(mcallsign, mlat, mlon, mheading, maltitude){
 	return;
 	
 }
-
-//==========================================================
-/*function add_rwymarker(mrwy, mlat, mlon){
-
-
-	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
-		
-	var feature = new OpenLayers.Feature.Vector(point, {
-                name: mrwy
-				});
-                
-
-	rwymarkers.addFeatures([feature]);
-
-	return;
-	
-}*/
 
 
 //==========================================================
