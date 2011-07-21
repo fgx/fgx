@@ -157,21 +157,26 @@ function init(){
 	map.events.register("click", map, on_map_click);
 	map.events.register("mousemove", map, on_map_mousemove);
 	
-	// add default markers
-	markers = new OpenLayers.Layer.Markers( "Markers" );
-	markers.setOpacity(1.0);
-	map.addLayer(markers);
+
 	
 	// add rwy lines
 	runwayLayer = new OpenLayers.Layer.Vector("Runway Lines", {styleMap:  rwyLineStyle});
 	map.addLayer(runwayLayer);
 	
-	// add rwy markers
-	rwymarkers = new OpenLayers.Layer.Vector("Runways Markers",	{styleMap:  rwyMarkersStyle});
-	map.addLayer(rwymarkers);
+	// add default markers
+	markers = new OpenLayers.Layer.Markers( "Markers" );
+	markers.setOpacity(1.0);
+	map.addLayer(markers);
 	
-	map.raiseLayer(rwyLayer, 0);
-	map.raiseLayer(rwymarkers, 1);
+	
+	// add rwy markers
+	rwymarkers = new OpenLayers.Layer.Markers("Runways Markers",	{styleMap:  rwyMarkersStyle});
+	map.addLayer(rwymarkers);
+	//rwymarkers.setOpacity(0.5);
+	
+	
+	//map.raiseLayer(rwyLayer, 0);
+	//map.raiseLayer(rwymarkers, 1);
     
 
 
