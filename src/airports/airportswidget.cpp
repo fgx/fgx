@@ -39,6 +39,7 @@
 #include "airports/airportswidget.h"
 #include "airports/airportsdata.h"
 #include "airports/importairportsdialog.h"
+#include "utilities/helpers.h"
 
 
 AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
@@ -695,7 +696,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 	//* Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
 	QString file_path(airport_dir.append("/").append(airport_code));
 	file_path.append( mainObject->X->terrasync_enabled() ? ".groundnet.xml" : ".parking.xml");
-
+	qDebug() << file_path << QFile::exists(file_path);
 	//* Check parking file exists
 	if(QFile::exists(file_path)){
 
@@ -703,7 +704,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 		QFile ppfile(file_path);
 		ppfile.open(QIODevice::ReadOnly);
 		QString xmlString = ppfile.readAll();
-
+		//qDebug() << xmlString;
 		//* Create domDocument - important - don't pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
 		QDomDocument dom;
 		dom.setContent(xmlString); //* AFTER dom has been created, then set the content from a string from the file
@@ -717,21 +718,23 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 
 				 QDomNode parkingNode = parkingNodes.at(idxd);
 				 QDomNamedNodeMap attribs = parkingNode.attributes();
-				 QString gate(attribs.namedItem("name").nodeValue());
-				 gate.append(attribs.namedItem("number").nodeValue());
-				 gate.append(attribs.namedItem("lat").nodeValue());
-				 gate.append(attribs.namedItem("lon").nodeValue());
-				 gate.append(attribs.namedItem("heading").nodeValue());
+				 QString stand(attribs.namedItem("name").nodeValue());
+				 stand.append(attribs.namedItem("number").nodeValue());
 
-				//* Check it doesnt already exist - pete is confused as to multiple entries
-				 if(!listParkingPositions.contains(gate)){
+				//= Check it doesnt already exist - pete is confused as to multiple entries
+				 if(!listParkingPositions.contains(stand)){
 					 if(attribs.namedItem("type").nodeValue() == "gate"){
 
-						//* Append position to eliminate dupes
-						if(!gate.contains(" ")){
-							listParkingPositions.append(gate);
-						}else{
-							//qDebug() << gate;
+						//= Append position to eliminate dupes
+						if(!stand.contains(" ")){
+							listParkingPositions.append(stand);
+							QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
+							pItem->setIcon(0, QIcon(":/icon/stand"));
+							pItem->setText(CI_NODE, stand);
+							pItem->setText(CI_TYPE, "stand");
+							pItem->setText(CI_LAT, Helpers::hms_to_decimal(attribs.namedItem("lat").nodeValue()));
+							pItem->setText(CI_LON, Helpers::hms_to_decimal(attribs.namedItem("lon").nodeValue()));
+							pItem->setText(CI_SETTING_KEY, QString(airport_code).append("stand").append(stand));
 						}
 					}
 				}
@@ -740,6 +743,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 		}
 
 		//* Create the tree nodes
+		/*
 		if(listParkingPositions.size() == 0){
 			QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
 			pItem->setText(CI_NODE, "None");
@@ -754,6 +758,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 				pItem->setText(CI_SETTING_KEY, QString(airport_code).append("stand").append(listParkingPositions.at(i)));
 			}
 		}
+		*/
 	} /* File Exists */
 
 	//* return the count

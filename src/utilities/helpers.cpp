@@ -1,7 +1,10 @@
 
+#include <QtDebug>
+
 #include <QList>
 #include <QAbstractButton>
 #include <QVariant>
+#include <QStringList>
 
 #include "helpers.h"
 
@@ -26,4 +29,39 @@ void Helpers::select_radio(QButtonGroup *buttonGroup, QString value){
 void Helpers::select_combo(QComboBox *combo, QString value){
 	int idx = combo->findData( value );
 	combo->setCurrentIndex( idx == -1 ? 0 : idx );
+}
+
+/*
+			 lat="N52 18.101"
+			 lon="E04 47.433"
+Degrees Minutes.m to Decimal Degrees
+.d = M.m / 60
+Decimal Degrees = Degrees + .d
+
+*/
+QString Helpers::hms_to_decimal(QString hms)
+{
+	QStringList parts = hms.split(" ");
+	QString h = parts.at(0);
+
+	if( h.contains("N") ){
+		h.replace("N", "");
+
+	}else if(h.contains("S")){
+		h.replace("S", "-");
+
+	}else if(h.contains("E")){
+		h.replace("E", "");
+
+	}else if(h.contains("W")){
+		h.replace("W", "-");
+	}
+
+
+	//QStringList msparts = parts.at(1).split(".");
+	//qDebug() << msparts << msparts.at(1).toFloat() / 60 << msparts.at(0).toFloat();
+	//float ms = ( msparts.at(0).toInt()  + (msparts.at(1).toFloat() / 60) ) / 60;
+	float ms = h.toInt() + parts.at(1).toFloat() / 60;
+
+	return QString("%1").arg(ms);
 }

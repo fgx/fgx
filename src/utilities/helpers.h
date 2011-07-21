@@ -13,6 +13,8 @@ public:
 	static void select_radio(QButtonGroup *button_group, QString value);
 
 	static void select_combo(QComboBox *combo, QString value);
+
+	static QString hms_to_decimal(QString hms);
 };
 
 #endif // HELPERS_H
