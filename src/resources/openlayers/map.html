@@ -5,8 +5,10 @@
 <head>
 <!-- this "theme" comes from openlayers. default edited by accident, so it is now FGx default -->
 <link rel="stylesheet" href="theme/default/style.css" type="text/css" />
+<!--
+<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ'></script>  -->
 
-<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ'></script> 
+<!--<script src="http://maps.google.com/maps/api/js?v=3.5&sensor=false"></script>-->
 
 <!-- THIS is our api - currently 2.10 stable -->
 <script src="OpenLayers.js"></script>
@@ -316,8 +318,29 @@ function init(){
 				} 
 			);
 	
-	 var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
-     renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
+	//=====================
+	//= Map events
+	map.div.oncontextmenu = function noContextMenu(e) {
+		if (OpenLayers.Event.isRightClick(e)){
+			//alert("Right button click"); // Add the right click menu here
+			var lonlat = map.getLonLatFromViewPortPx(e.xy);
+			//Qt.map_rightclick(lonlat.lat, lonlat.lon);
+			
+		}
+        return false; //cancel the right click of brower
+    }; 
+
+	// map events
+	map.events.register("click", map, on_map_click);
+	//map.events.register("rightclick", map, on_map_rightclick);
+	map.events.register("mousemove", map, on_map_mousemove);
+	map.events.register("zoomin", map, on_zoom_changed);
+	
+
+	var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
+    renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
+
+
 
 
 	osmLayer = new OpenLayers.Layer.OSM("OSM Map");
@@ -333,24 +356,22 @@ function init(){
 	});
 
 
+	/*
     googleLayer = new OpenLayers.Layer.Google(
         "Google Satellite",
         {type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 18}
     );
-
+	.. below is v3 */
+	/*
+	googleLayer = new OpenLayers.Layer.Google(
+		"Google Physical",
+		{type: google.maps.MapTypeId.TERRAIN}
+		// used to be {type: G_PHYSICAL_MAP}
+	);
     map.addLayer(googleLayer);
+	*/
 
 
-
-	map.div.oncontextmenu = function noContextMenu(e) {
-		if (OpenLayers.Event.isRightClick(e)){
-			//alert("Right button click"); // Add the right click menu here
-			var lonlat = map.getLonLatFromViewPortPx(e.xy);
-			//Qt.map_rightclick(lonlat.lat, lonlat.lon);
-			
-		}
-        return false; //cancel the right click of brower
-    }; 
 
 
 	// set osm projection
@@ -364,11 +385,7 @@ function init(){
 			), zoom
 	);
 
-	// map events
-	map.events.register("click", map, on_map_click);
-	//map.events.register("rightclick", map, on_map_rightclick);
-	map.events.register("mousemove", map, on_map_mousemove);
-	map.events.register("zoomin", map, on_zoom_changed);
+
 	
 
 
@@ -407,7 +424,7 @@ function init(){
 }
 
 function set_map_type(map_type){
-
+	return;
 	if(map_type == "osm"){
 		map.setBaseLayer(osmLayer)
 
