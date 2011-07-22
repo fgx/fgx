@@ -62,10 +62,6 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
     mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(0);
 
-	QLabel *label_notice = new QLabel();
-	label_notice->setText("This widget is currently work in progress. You need to create fgx/src/DEV_MODE.txt for it to work for now");
-	label_notice->setStyleSheet("background-color: #eeeedd; color: #000099; padding: 5px;");
-	mainLayout->addWidget(label_notice, 0);
 
 	QSplitter *splitter = new QSplitter();
 	mainLayout->addWidget(splitter, 200);

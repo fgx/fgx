@@ -40,11 +40,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
     mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(0);
 	
-	QLabel *label_notice = new QLabel();
-	label_notice->setText("Experimental OpenLayer Widget");
-	label_notice->setStyleSheet("background-color: #eeeedd; color: #000099; padding: 5px;");
-	mainLayout->addWidget(label_notice, 0);
-	
+
 
 	QToolBar *toolbar = new QToolBar();
 	mainLayout->addWidget(toolbar);
@@ -83,24 +79,31 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	QVBoxLayout *layCols = new QVBoxLayout();
 	widgetColsSelecta->setLayout(layCols);
 
-	XGroupVBox *groupBoxRadarCols = new XGroupVBox("Radar");
+
+	XGroupVBox *groupBoxRadarCols = new XGroupVBox("Radar Layer");
 	QButtonGroup *groupRadarCols = new QButtonGroup(this);
 	groupRadarCols->setExclusive(true);
+
+
+	QRadioButton *buttShowRadarNone = new QRadioButton();
+	buttShowRadarNone->setText("Labels Only");
+	groupBoxRadarCols->addWidget(buttShowRadarNone);
+	groupRadarCols->addButton(buttShowRadarNone, 0);
 
 	QRadioButton *buttShowRadarAll = new QRadioButton();
 	buttShowRadarAll->setText("Icons and Labels");
 	groupBoxRadarCols->addWidget(buttShowRadarAll);
-	groupRadarCols->addButton(buttShowRadarAll);
+	groupRadarCols->addButton(buttShowRadarAll, 1);
 
 	QRadioButton *buttShowRadarImg = new QRadioButton();
 	buttShowRadarImg->setText("Icons Only");
 	groupBoxRadarCols->addWidget(buttShowRadarImg);
-	groupRadarCols->addButton(buttShowRadarImg);
+	groupRadarCols->addButton(buttShowRadarImg, 2);
 
 	QRadioButton *buttShowRadarLabels = new QRadioButton();
 	buttShowRadarLabels->setText("Labels Only");
 	groupBoxRadarCols->addWidget(buttShowRadarLabels);
-	groupRadarCols->addButton(buttShowRadarLabels);
+	groupRadarCols->addButton(buttShowRadarLabels, 3);
 
 	QWidgetAction *colsWidgetAction = new QWidgetAction(this);
 	colsWidgetAction->setDefaultWidget(groupBoxRadarCols);
@@ -278,16 +281,27 @@ void OpenLayerWidget::zoom_to( int zoom)
 void OpenLayerWidget::show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude){
 	QString jstr = QString("show_aircraft('%1', %2, %3, %4, %5);").arg(callsign).arg(lat).arg(lon).arg(heading).arg(altitude);
 	execute_js(jstr);
-	qDebug() << "show_aircraft jstr: " << jstr;
+	//qDebug() << "show_aircraft jstr: " << jstr;
 }
 
+
+
+
+//================================================
+// display_radar
+void OpenLayerWidget::display_radar_layer( int viz)
+{
+	QString jstr = QString("display_radar_layer(%1);").arg(viz);
+	execute_js(jstr);
+	qDebug() << jstr;
+}
 
 //=================================================
 // Show Aircraft Radar - this allows more than one aircraft.
 void OpenLayerWidget::show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude){
 	QString jstr = QString("show_radar('%1', %2, %3, %4, %5);").arg(callsign).arg(lat).arg(lon).arg(heading).arg(altitude);
 	execute_js(jstr);
-	qDebug() << "show_radar jstr: " << jstr;
+	//qDebug() << "show_radar jstr: " << jstr;
 }
 
 //=================================================

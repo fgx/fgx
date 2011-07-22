@@ -24,20 +24,17 @@
         <file alias="runway">icons/table_row_delete.png</file>
         <file alias="runways">icons/shape_align_center.png</file>
         <file alias="stand">icons/shape_rotate_clockwise.png</file>
-		
-		/* new fgx icons */
-		<file alias="help">ycons/fgx-help.png</file>
-		<file alias="save">ycons/fgx-save.png</file>
-		<file alias="load">ycons/fgx-load.png</file>
-		<file alias="import">ycons/fgx-import.png</file>
-		<file alias="start">ycons/fgx-start.png</file>
-		<file alias="stop">ycons/fgx-stop.png</file>
-		<file alias="path">ycons/fgx-path.png</file>
-		<file alias="profile">ycons/fgx-profile.png</file>
-		<file alias="list">ycons/fgx-list.png</file>
-		<file alias="list-nested">ycons/fgx-list-nested.png</file>
-		
-		<file alias="mpmap">ycons/fgx-map.png</file>
-		
+        <file alias="help">ycons/fgx-help.png</file>
+        <file alias="save">ycons/fgx-save.png</file>
+        <file alias="load">ycons/fgx-load.png</file>
+        <file alias="import">ycons/fgx-import.png</file>
+        <file alias="start">ycons/fgx-start.png</file>
+        <file alias="stop">ycons/fgx-stop.png</file>
+        <file alias="path">ycons/fgx-path.png</file>
+        <file alias="profile">ycons/fgx-profile.png</file>
+        <file alias="list">ycons/fgx-list.png</file>
+        <file alias="list-nested">ycons/fgx-list-nested.png</file>
+        <file alias="mpmap">ycons/fgx-map.png</file>
+        <file alias="select_cols">icons/text_linespacing.png</file>
     </qresource>
 </RCC>

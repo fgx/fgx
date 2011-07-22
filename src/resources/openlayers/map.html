@@ -341,6 +341,10 @@ function show_aircraft(mcallsign, mlat, mlon, mheading, maltitude){
 	
 }
 
+function display_radar(viz){
+	radarMarkersVectors.display(viz);
+	radarMarkersLabels.display(viz);
+}
 
 
 // Shows aircraft on the RADAR map, with callsign (two features, poor openlayer)
@@ -357,28 +361,27 @@ function show_radar(mcallsign, mlat, mlon, mheading, maltitude){
 		radarMarkersLabels.removeFeatures(existing_lbl);
 	}
 
-	//add point = coords from airport tab
-	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
+	//add point 
+	var pointImg = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
 	var pointLabel = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
 		
-	//draw feature and add callsign label, use rwy heading for orientation
-	var feature = new OpenLayers.Feature.Vector(point, {
-                //callsign: mcallsign,
+	//draw feature and add callsign label, 
+	var imgFeat = new OpenLayers.Feature.Vector(pointImg, {
 				planerotation: mheading
 				}); 
-	feature._callsign = mcallsign;
+	imgFeat._callsign = mcallsign;
 				
 	// add callsign as separate feature, to have a background color (graphic) with offset
-	var callsignFeature = new OpenLayers.Feature.Vector(pointLabel, {
+	var lblFeat = new OpenLayers.Feature.Vector(pointLabel, {
                 callsign: mcallsign,
 				});
-	callsignFeature._callsign = mcallsign;
+	lblFeat._callsign = mcallsign;
 	
 	//add the plane
-	radarMarkersVectors.addFeatures([feature]);
+	radarMarkersVectors.addFeatures([imgFeat]);
 	
 	//add the label
-	radarMarkersLabels.addFeatures([callsignFeature]);
+	radarMarkersLabels.addFeatures([lblFeat]);
 	//alert(mcallsign);
 	return;
 	

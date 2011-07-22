@@ -61,7 +61,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	comboBoxHz = new QComboBox();
 	toolbar->addWidget(comboBoxHz);
 	for(int sex=1; sex < 10; sex++){
-		comboBoxHz->addItem(QString("%1 sec").arg(QString::number(sex)), QString::number(sex * 1000));
+		comboBoxHz->addItem(QString("%1 sec").arg(QString::number(sex)), QString::number(sex));
 	}
 	int cidx = comboBoxHz->findData(mainObject->settings->value("mpxmap_autorefresh_hz").toString());
 	comboBoxHz->setCurrentIndex(cidx == -1 ? 0 : cidx);
@@ -71,6 +71,8 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	// Cols Selector
 	QToolButton *buttShowColumns = new QToolButton(this);
 	buttShowColumns->setText("Show");
+	buttShowColumns->setIcon(QIcon(":/icon/select_cols"));
+	buttShowColumns->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttShowColumns->setPopupMode(QToolButton::InstantPopup);
 	toolbar->addWidget(buttShowColumns);
 
@@ -180,12 +182,12 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	//= Initialize Objects
 	netMan = new QNetworkAccessManager(this);
 
-	timer = new QTimer(this);
-	timer->setInterval(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt());
-	connect(timer, SIGNAL(timeout()), this, SLOT(fetch_pilots()));
+	//timer = new QTimer(this);
+	//timer->setInterval(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt());
+	//connect(timer, SIGNAL(timeout()), this, SLOT(fetch_pilots()));
 	//fetch_pilots();
 	if(checkBoxAutoRefresh->isChecked()){
-		//timer->start();
+		fetch_pilots();
 	}
 }
 
@@ -305,7 +307,7 @@ void PilotsWidget::on_server_read_finished(){
 		tree->invisibleRootItem()->removeChild(items.at(idxr));
 	}
 	if(checkBoxAutoRefresh->isChecked()){
-		QTimer::singleShot( comboBoxHz->currentText().toInt() * 1000, this, SLOT(fetch_pilots()) );
+		QTimer::singleShot( comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000, this, SLOT(fetch_pilots()) );
 	}
 	//= Resize columns the first time (python does not have infunction statics like this ;-( ))
 	/*
@@ -324,16 +326,16 @@ void PilotsWidget::on_check_autorefresh(int checked){
 	mainObject->settings->setValue("mpxmap_autorefresh_enabled", checked);
 	if(checked){
 		fetch_pilots();
-		timer->start();
+		//timer->start();
 	}else{
-		timer->stop();
+		//timer->stop();
 	}
 }
 
 void PilotsWidget::on_combo_changed(int idx){
 	Q_UNUSED(idx);
 	mainObject->settings->setValue("mpxmap_autorefresh_hz", comboBoxHz->itemData(comboBoxHz->currentIndex()).toString());
-	timer->setInterval(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt());
+	//timer->setInterval(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt());
 }
 
 void PilotsWidget::on_item_doubled_clicked(QTreeWidgetItem *item, int colidx){

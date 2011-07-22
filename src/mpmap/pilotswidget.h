@@ -40,7 +40,7 @@ public:
 
 	MainObject *mainObject;
 
-	QTimer *timer;
+	//QTimer *timer;
 
 	QNetworkAccessManager *netMan;
 	QNetworkReply  *reply;
