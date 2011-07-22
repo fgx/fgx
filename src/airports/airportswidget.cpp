@@ -289,13 +289,13 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	int space = 5;
 
-	groupBoxUseCoordinates->addWidget(new QLabel(tr("Latitude (negative is west)")));
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Latitude (negative is south)")));
 	txtLat = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtLat);
 	connect(txtLat, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
 
 	groupBoxUseCoordinates->xLayout->addSpacing(space);
-	groupBoxUseCoordinates->addWidget(new QLabel(tr("Longtitude (negative is south)")));
+	groupBoxUseCoordinates->addWidget(new QLabel(tr("Longtitude (negative is west)")));
 	txtLon = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtLon);
 	connect(txtLon, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
