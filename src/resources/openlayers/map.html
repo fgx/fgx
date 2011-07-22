@@ -199,6 +199,8 @@ function on_map_click(e){
 	Qt.map_click(lonlat.lat, lonlat.lon);
 }
 
+
+
 function on_map_mousemove(e){
 	var lonlat = map.getLonLatFromViewPortPx(e.xy);
 	Qt.map_mouse_move(lonlat.lat, lonlat.lon);
@@ -227,6 +229,7 @@ function init(){
 	layer = new OpenLayers.Layer.OSM("OSM Map");
 	map.addLayer(layer);
 
+	//= Zoom changed
 	layer.events.on({
 		moveend: function(e) {
 			if (e.zoomChanged) {
@@ -234,6 +237,16 @@ function init(){
 			}
 		}
 	});
+
+	map.div.oncontextmenu = function noContextMenu(e) {
+		if (OpenLayers.Event.isRightClick(e)){
+			//alert("Right button click"); // Add the right click menu here
+			var lonlat = map.getLonLatFromViewPortPx(e.xy);
+			//Qt.map_rightclick(lonlat.lat, lonlat.lon);
+			
+		}
+        return false; //cancel the right click of brower
+    }; 
 
 
 	// set osm projection
@@ -249,6 +262,7 @@ function init(){
 
 	// map events
 	map.events.register("click", map, on_map_click);
+	//map.events.register("rightclick", map, on_map_rightclick);
 	map.events.register("mousemove", map, on_map_mousemove);
 	map.events.register("zoomin", map, on_zoom_changed);
 	
