@@ -66,7 +66,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 	//=============================================
 	// Cols Selector
-	QToolButton *buttShowColumns = new QToolButton(this);
+	/*QToolButton *buttShowColumns = new QToolButton(this);
 	buttShowColumns->setText("Show");
 	buttShowColumns->setIcon(QIcon(":/icon/select_cols"));
 	buttShowColumns->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -105,11 +105,11 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 	QWidgetAction *colsWidgetAction = new QWidgetAction(this);
 	colsWidgetAction->setDefaultWidget(groupBoxRadarCols);
-	menuCols->addAction(colsWidgetAction);
+	menuCols->addAction(colsWidgetAction);*/
 
 	//=============================================
 	// Map Type
-	QToolButton *buttMapType = new QToolButton(this);
+	/*QToolButton *buttMapType = new QToolButton(this);
 	buttMapType->setText("Map Type");
 	buttMapType->setIcon(QIcon(":/icon/map_type"));
 	buttMapType->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -133,7 +133,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	actionMapGoogle->setCheckable(true);
 	actionMapGoogle->setProperty("map_type", "google_satellite");
 	actionGroup->addAction(actionMapGoogle);
-	actionMapGoogle->setVisible(false);
+	actionMapGoogle->setVisible(false);*/
 
 
 	//============================================================================
@@ -411,16 +411,6 @@ void OpenLayerWidget::map_zoom_changed(QVariant zoom){
 	}
 	sliderZoom->setValue(z);
 }
-
-
-
-void OpenLayerWidget::on_map_type(QAction *act)
-{
-	QString jstr = QString("set_map_type('%1');").arg(act->property("map_type").toString());
-	execute_js(jstr);
-
-}
-
 
 
 
