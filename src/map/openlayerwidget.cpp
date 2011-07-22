@@ -67,8 +67,51 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	toolbar->addWidget(lblLon);
 
 
-	//==============================================
-	// middle pane with map
+
+	//=============================================
+	// Cols Selector
+	QToolButton *buttShowColumns = new QToolButton(this);
+	buttShowColumns->setText("Show..");
+	buttShowColumns->setPopupMode(QToolButton::InstantPopup);
+	toolbar->addWidget(buttShowColumns);
+
+	QMenu *menuCols = new QMenu();
+	buttShowColumns->setMenu(menuCols);
+
+	//= Cols Widget
+	QWidget *widgetColsSelecta = new QWidget();
+	QVBoxLayout *layCols = new QVBoxLayout();
+	widgetColsSelecta->setLayout(layCols);
+
+	XGroupVBox *groupBoxRadarCols = new XGroupVBox("Radar");
+	QButtonGroup *groupRadarCols = new QButtonGroup(this);
+	groupRadarCols->setExclusive(true);
+
+	QRadioButton *buttShowRadarAll = new QRadioButton();
+	buttShowRadarAll->setText("Icons and Labels");
+	groupBoxRadarCols->addWidget(buttShowRadarAll);
+	groupRadarCols->addButton(buttShowRadarAll);
+
+	QRadioButton *buttShowRadarImg = new QRadioButton();
+	buttShowRadarImg->setText("Icons Only");
+	groupBoxRadarCols->addWidget(buttShowRadarImg);
+	groupRadarCols->addButton(buttShowRadarImg);
+
+	QRadioButton *buttShowRadarLabels = new QRadioButton();
+	buttShowRadarLabels->setText("Labels Only");
+	groupBoxRadarCols->addWidget(buttShowRadarLabels);
+	groupRadarCols->addButton(buttShowRadarLabels);
+
+	QWidgetAction *colsWidgetAction = new QWidgetAction(this);
+	colsWidgetAction->setDefaultWidget(groupBoxRadarCols);
+	menuCols->addAction(colsWidgetAction);
+
+
+
+
+	//============================================================================
+	// Middle pane with map
+	//============================================================================
 	QHBoxLayout *midLayout = new QHBoxLayout();
 	mainLayout->addLayout(midLayout);
 	

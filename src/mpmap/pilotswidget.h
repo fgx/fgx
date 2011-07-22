@@ -28,14 +28,14 @@ public:
 	explicit PilotsWidget(MainObject *mob, QWidget *parent = 0);
 
 	enum COLS{
-		C_CALLSIGN,
-		C_AIRCRAFT,
-		C_ALTITUDE,
-		C_HEADING,
-		C_PITCH,
-		C_LAT,
-		C_LON,
-		C_FLAG
+		C_CALLSIGN = 0,
+		C_AIRCRAFT = 1,
+		C_ALTITUDE =2,
+		C_HEADING = 3,
+		C_PITCH = 4,
+		C_LAT = 5,
+		C_LON = 6,
+		C_FLAG = 7
 	};
 
 	MainObject *mainObject;
@@ -53,7 +53,7 @@ public:
 
 	QStatusBar *statusBar;
 
-
+	QButtonGroup *buttonGroupCols;
 
 signals:
 
@@ -72,6 +72,8 @@ public slots:
 	void on_check_autorefresh(int);
 	void on_combo_changed(int);
 	void on_item_doubled_clicked(QTreeWidgetItem*,int);
+
+	void on_show_cols(QAbstractButton*);
 
 };
 
