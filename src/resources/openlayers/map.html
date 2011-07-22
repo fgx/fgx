@@ -415,25 +415,31 @@ function init(){
 	planeMarkersVec = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeMarkersStyle});
 	map.addLayer(planeMarkersVec);
 	
-	var dragControl = new OpenLayers.Control.DragFeature(planeMarkersVec);
+	//var dragControl = new OpenLayers.Control.DragFeature(planeMarkersVec);
+	var rotationControl = new OpenLayers.Control.ModifyFeature(planeMarkersVec);
 			
 	var selectControl = new OpenLayers.Control.SelectFeature(
                 [planeMarkersVec],
                 {
                     clickout: true, toggle: false,
-                    multiple: false, hover: true,
+                    multiple: false, hover: false,
 					renderIntent: "select"
                 }
             );
 			
 	
-	map.addControl(dragControl);
+			
+	
+	//map.addControl(dragControl);
 	map.addControl(selectControl);
-	dragControl.activate();
-	dragControl.stopDown = false;
+	//dragControl.activate();
+	//dragControl.stopDown = false;
 	//dragControl.stopUp = false;
-	dragControl.stopClick = false;
+	//dragControl.stopClick = false;
 	selectControl.activate();
+	
+	map.addControl(rotationControl);
+	rotationControl.activate();
 
 		
 	// add plane label
