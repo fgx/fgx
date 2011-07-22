@@ -173,7 +173,7 @@ void OpenLayerWidget::init_map(){
 
 
 
-//** Overide the closeEvent
+//= Overide the closeEvent
 void OpenLayerWidget::closeEvent(QCloseEvent *event)
 {
 	mainObject->settings->saveWindow(this);
@@ -189,7 +189,7 @@ void OpenLayerWidget::add_runway(QString apt, QString rwy1, QString rwy2, QStrin
 {
 	QString jstr = QString("add_runway('%1', '%2', '%3', %4, %5, %6, %7);").arg(apt).arg(rwy1).arg(rwy2).arg(lat1).arg(lon1).arg(lat2).arg(lon2);
 	execute_js(jstr);
-	//qDebug() << "add_runway jstr: " << jstr;
+	qDebug() << "add_runway jstr: " << jstr;
 }
 //================================================
 // Add Stand
@@ -197,7 +197,7 @@ void OpenLayerWidget::add_stand(QString apt, QString name, QString lat, QString 
 {
 	QString jstr = QString("add_stand('%1', '%2', %3, %4);").arg(apt).arg(name).arg(lat).arg(lon);
 	execute_js(jstr);
-	qDebug() << "add_stand jstr: " << jstr;
+	//qDebug() << "add_stand jstr: " << jstr;
 }
 
 
@@ -231,14 +231,24 @@ void OpenLayerWidget::zoom_to( int zoom)
 
 
 //=================================================
-// Show Aircraft
+// Show Aircraft - This nukes existing and moves - ONLY ONE ALLOWED
 void OpenLayerWidget::show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude){
 	QString jstr = QString("show_aircraft('%1', %2, %3, %4, %5);").arg(callsign).arg(lat).arg(lon).arg(heading).arg(altitude);
 	execute_js(jstr);
-	qDebug() << "show aircraft jstr: " << jstr;
+	qDebug() << "show_aircraft jstr: " << jstr;
 }
+
+
 //=================================================
-// Show Aircraft
+// Show Aircraft Radar - this allows more than one aircraft.
+void OpenLayerWidget::show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude){
+	QString jstr = QString("show_radar('%1', %2, %3, %4, %5);").arg(callsign).arg(lat).arg(lon).arg(heading).arg(altitude);
+	execute_js(jstr);
+	qDebug() << "show_radar jstr: " << jstr;
+}
+
+//=================================================
+// Focus Aircraft
 void OpenLayerWidget::focus_aircraft(QString callsign){
 	QString jstr = QString("focus_aircraft('%1');").arg(callsign);
 	execute_js(jstr);
@@ -267,22 +277,21 @@ void OpenLayerWidget::map_debug(QVariant mess){
 }
 
 
-//= JS - map_mouse_move
-// - this is not firing ;-(
+//= < JS - map_mouse_move
 void OpenLayerWidget::map_mouse_move(QVariant lat, QVariant lon){
 	lblLat->setText(lat.toString());
 	lblLon->setText(QString::number(lon.toFloat()));
 }
 
 
-//== JS - map_click()
+//= < JS - map_click()
 void OpenLayerWidget::map_click(QVariant lat, QVariant lon){
 	Q_UNUSED(lat);
 	Q_UNUSED(lon);
 	qDebug() << "map_click()" << lat << lon;
 }
 
-//== JS - map_right_click()
+//= < JS - map_right_click()
 void OpenLayerWidget::map_right_click(QVariant lat, QVariant lon){
 	Q_UNUSED(lat);
 	Q_UNUSED(lon);
@@ -313,7 +322,7 @@ void OpenLayerWidget::marker_unselected(QVariant curr_idx, QVariant mLocationId)
 
 
 
-//** JS
+//== < JS - Map zoom changed
 void OpenLayerWidget::map_zoom_changed(QVariant zoom){
 	int z = zoom.toInt();
 	if(z == 0){

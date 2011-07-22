@@ -77,6 +77,8 @@ signals:
 	void show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude);
 	void focus_aircraft(QString callsign);
 
+	void show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude);
+
 	//====================================
 	//@<< From Map Events
 	void map_debug(QVariant);
