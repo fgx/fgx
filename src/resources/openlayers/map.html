@@ -117,6 +117,95 @@ var planeMarkersLabelStyle = new OpenLayers.StyleMap({
 
 });
 
+
+
+
+
+
+//###############################################################
+
+// style for your plane
+var radarMarkersStyle = new OpenLayers.StyleMap({
+    
+    "default": {
+
+        strokeColor: "lime",
+        strokeWidth: 1,
+        fillColor: "lime",
+		
+		externalGraphic: "/img/radar_blip.png",
+		graphicWidth: 6,
+		graphicHeight: 18,
+        graphicOpacity: 1,
+		graphicXOffset: 0,
+		graphicYOffset: -20,
+		//graphicName: "circle",
+        
+        fontColor: "black",
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: "bold",
+        //labelAlign: "center",
+        //labelXOffset: 10,
+        //labelYOffset: 10,
+        //label : "${callsign}",
+		rotation : "${planerotation}",
+
+        },
+    
+    "select": {
+        fillColor: "black",
+        strokeColor: "yellow",
+        pointRadius: 12,
+        fillOpacity: 1,
+    }
+
+});
+
+// style for the marker beside your plane
+var radarMarkersLabelStyle = new OpenLayers.StyleMap({
+    
+    "default": {
+		fill: true,
+		fillOpacity: 1,
+		fillColor: "black",
+        strokeColor: "green",
+        strokeWidth: 1,
+       
+		//backgroundWidth: 100,
+		//backgroundHeight: 100,
+	
+		//graphic: false,
+		
+		externalGraphic: "/img/fgx-background-black.png",
+		graphicWidth: 50,
+		graphicHeight: 12,
+		graphicOpacity: 0.6,
+		graphicXOffset: 0,
+		graphicYOffset: -8,
+		
+        
+        fontColor: "white",
+        fontSize: "10px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: "bold",
+        labelAlign: "left",
+        labelXOffset: 2, //16,
+        labelYOffset: 2, //-24,
+        label : "${callsign}",
+		//rotation : "${planerotation}",
+
+        },
+    
+    "select": {
+        fillColor: "black",
+        strokeColor: "yellow",
+        pointRadius: 12,
+        fillOpacity: 1,
+    }
+
+});
+
 // style for the rwy markers
 var rwyMarkersStyle = new OpenLayers.StyleMap({
     
@@ -268,15 +357,17 @@ function init(){
 	
 
 	
+	//===================================
 	// add rwy lines
 	runwayLines = new OpenLayers.Layer.Vector("Runway Lines", {styleMap:  rwyLineStyle});
 	map.addLayer(runwayLines);
-	
 	
 	// add rwy markers (labels)
 	rwyMarkers = new OpenLayers.Layer.Vector("Runway Markers", {styleMap:  rwyMarkersStyle});
 	map.addLayer(rwyMarkers);
 	
+
+	//===================================
 	// add plane vector marker
 	planeMarkersVec = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeMarkersStyle});
 	map.addLayer(planeMarkersVec);
@@ -285,12 +376,13 @@ function init(){
 	planeMarkersLabel = new OpenLayers.Layer.Vector("Plane Label", {styleMap:  planeMarkersLabelStyle});
 	map.addLayer(planeMarkersLabel);
 
+	//===================================
 	// add Radar vector marker
-	radarMarkersVectors = new OpenLayers.Layer.Vector("Radar Markers", {styleMap:  planeMarkersStyle});
+	radarMarkersVectors = new OpenLayers.Layer.Vector("Radar Markers", {styleMap:  radarMarkersStyle});
 	map.addLayer(radarMarkersVectors);
 	
 	// add Radar label
-	radarMarkersLabels = new OpenLayers.Layer.Vector("Radar Label", {styleMap:  planeMarkersLabelStyle});
+	radarMarkersLabels = new OpenLayers.Layer.Vector("Radar Label", {styleMap:  radarMarkersLabelStyle});
 	map.addLayer(radarMarkersLabels);
 
 	//alert("init done");
