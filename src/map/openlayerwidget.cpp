@@ -67,7 +67,9 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	//=============================================
 	// Cols Selector
 	QToolButton *buttShowColumns = new QToolButton(this);
-	buttShowColumns->setText("Show..");
+	buttShowColumns->setText("Show");
+	buttShowColumns->setIcon(QIcon(":/icon/select_cols"));
+	buttShowColumns->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttShowColumns->setPopupMode(QToolButton::InstantPopup);
 	toolbar->addWidget(buttShowColumns);
 
@@ -80,18 +82,14 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	widgetColsSelecta->setLayout(layCols);
 
 
-	XGroupVBox *groupBoxRadarCols = new XGroupVBox("Radar Layer");
+	XGroupVBox *groupBoxRadarCols = new XGroupVBox("Radar Layer- TODO");
 	QButtonGroup *groupRadarCols = new QButtonGroup(this);
 	groupRadarCols->setExclusive(true);
 
 
-	QRadioButton *buttShowRadarNone = new QRadioButton();
-	buttShowRadarNone->setText("Labels Only");
-	groupBoxRadarCols->addWidget(buttShowRadarNone);
-	groupRadarCols->addButton(buttShowRadarNone, 0);
-
 	QRadioButton *buttShowRadarAll = new QRadioButton();
 	buttShowRadarAll->setText("Icons and Labels");
+	buttShowRadarAll->setChecked(true);
 	groupBoxRadarCols->addWidget(buttShowRadarAll);
 	groupRadarCols->addButton(buttShowRadarAll, 1);
 
@@ -109,7 +107,32 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	colsWidgetAction->setDefaultWidget(groupBoxRadarCols);
 	menuCols->addAction(colsWidgetAction);
 
+	//=============================================
+	// Map Type
+	QToolButton *buttMapType = new QToolButton(this);
+	buttMapType->setText("Map Type");
+	buttMapType->setIcon(QIcon(":/icon/map_type"));
+	buttMapType->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttMapType->setPopupMode(QToolButton::InstantPopup);
+	toolbar->addWidget(buttMapType);
 
+	QMenu *menuMapType = new QMenu();
+	buttMapType->setMenu(menuMapType);
+
+	QActionGroup *actionGroup = new QActionGroup(this);
+	actionGroup->setExclusive(true);
+	connect(actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(on_map_type(QAction*)));
+
+	QAction *actionMapOsm =menuMapType->addAction("Open Street Map");
+	actionMapOsm->setCheckable(true);
+	actionMapOsm->setChecked(true);
+	actionMapOsm->setProperty("map_type", "osm");
+	actionGroup->addAction(actionMapOsm);
+
+	QAction *actionMapGoogle =menuMapType->addAction("Google Satellite");
+	actionMapGoogle->setCheckable(true);
+	actionMapGoogle->setProperty("map_type", "google_satellite");
+	actionGroup->addAction(actionMapGoogle);
 
 
 	//============================================================================
@@ -389,6 +412,13 @@ void OpenLayerWidget::map_zoom_changed(QVariant zoom){
 }
 
 
+
+void OpenLayerWidget::on_map_type(QAction *act)
+{
+	QString jstr = QString("set_map_type('%1');").arg(act->property("map_type").toString());
+	execute_js(jstr);
+
+}
 
 
 

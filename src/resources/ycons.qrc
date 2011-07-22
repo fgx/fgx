@@ -36,5 +36,6 @@
         <file alias="list-nested">ycons/fgx-list-nested.png</file>
         <file alias="mpmap">ycons/fgx-map.png</file>
         <file alias="select_cols">icons/text_linespacing.png</file>
+        <file alias="map_type">icons/map.png</file>
     </qresource>
 </RCC>

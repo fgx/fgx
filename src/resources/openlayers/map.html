@@ -6,8 +6,11 @@
 <!-- this "theme" comes from openlayers. default edited by accident, so it is now FGx default -->
 <link rel="stylesheet" href="theme/default/style.css" type="text/css" />
 
+<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ'></script> 
+
 <!-- THIS is our api - currently 2.10 stable -->
 <script src="OpenLayers.js"></script>
+
 
 
 <style type="text/css">
@@ -35,11 +38,17 @@ var zoom = 2;
 
 // should be improved, setting all the default vars
 var map;
-var layer;
-var google;
 var osmprojection;
+
+
+var osmLayer;
+var googleLayer;
+
 var vectorLayer;
 var markers;
+
+var planeMarkersVec;
+var planeMarkersLabel;
 
 var radarMarkersVectors;
 var radarMarkersLabels;
@@ -311,17 +320,27 @@ function init(){
      renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
 
-	layer = new OpenLayers.Layer.OSM("OSM Map");
-	map.addLayer(layer);
+	osmLayer = new OpenLayers.Layer.OSM("OSM Map");
+	map.addLayer(osmLayer);
 
 	//= Zoom changed
-	layer.events.on({
+	osmLayer.events.on({
 		moveend: function(e) {
 			if (e.zoomChanged) {
 				Qt.map_zoom_changed(map.zoom);
 			}
 		}
 	});
+
+
+    googleLayer = new OpenLayers.Layer.Google(
+        "Google Satellite",
+        {type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 18}
+    );
+
+    map.addLayer(googleLayer);
+
+
 
 	map.div.oncontextmenu = function noContextMenu(e) {
 		if (OpenLayers.Event.isRightClick(e)){
@@ -351,6 +370,8 @@ function init(){
 	map.events.register("mousemove", map, on_map_mousemove);
 	map.events.register("zoomin", map, on_zoom_changed);
 	
+
+
 
 	
 	//===================================
@@ -382,6 +403,17 @@ function init(){
 	map.addLayer(radarMarkersLabels);
 
 	//alert("init done");
+
+}
+
+function set_map_type(map_type){
+
+	if(map_type == "osm"){
+		map.setBaseLayer(osmLayer)
+
+	}else if(map_type == "google_satellite"){
+		map.setBaseLayer(googleLayer)
+	}
 
 }
 
