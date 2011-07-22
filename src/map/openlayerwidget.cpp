@@ -133,6 +133,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	actionMapGoogle->setCheckable(true);
 	actionMapGoogle->setProperty("map_type", "google_satellite");
 	actionGroup->addAction(actionMapGoogle);
+	actionMapGoogle->setVisible(false);
 
 
 	//============================================================================
