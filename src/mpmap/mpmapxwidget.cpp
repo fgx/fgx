@@ -90,7 +90,7 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 			mapWidget,		SLOT(show_radar(QString,QString,QString, QString, QString)));
 
 	connect(pilotsWidget,	SIGNAL(aircraft_selected(XAero)),
-			this,		SLOT(focus_aero(XAero)));
+			this,			SLOT(focus_aero(XAero)));
 
 }
 
