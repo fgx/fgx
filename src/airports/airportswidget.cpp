@@ -62,31 +62,6 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	//connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed()));
 
 
-	//=====================================
-	//** Top Startup Option Buttons
-	/*
-	QHBoxLayout *layoutTop = new QHBoxLayout();
-	mainLayout->addLayout(layoutTop,0,0,1,2);
-
-	buttonGroupUse = new QButtonGroup(this);
-	buttonGroupUse->setExclusive(true);
-	connect(buttonGroupUse, SIGNAL(buttonClicked(int)), this, SLOT(on_buttonGroupUse()));
-
-	QRadioButton *radioButtonUseDefault = new QRadioButton(tr("Default (KSFO)"));
-	radioButtonUseDefault->setChecked(true);
-	layoutTop->addWidget(radioButtonUseDefault);
-	buttonGroupUse->addButton(radioButtonUseDefault, USE_DEFAULT);
-
-	QRadioButton *radioButtonUseAirport = new QRadioButton(tr("Start at Airport"));
-	layoutTop->addWidget(radioButtonUseAirport);
-	buttonGroupUse->addButton(radioButtonUseAirport, USE_AIRPORT);
-
-	QRadioButton *radioButtonUseCoordinates = new QRadioButton(tr("Start at Coordinates"));
-	layoutTop->addWidget(radioButtonUseCoordinates);
-	buttonGroupUse->addButton(radioButtonUseCoordinates, USE_COORDINATES);
-
-	layoutTop->addStretch(10);
-	*/
 
 	//=================================================================================
 	//* Airport Details

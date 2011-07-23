@@ -60,12 +60,11 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	
 	
 	toolbar->addWidget(new QLabel(tr("Heading:")));
-	editHdg = new QDoubleSpinBox();
-	editHdg->setMinimum(0.00);
-	editHdg->setMaximum(359.99);
-	editHdg->setSingleStep(0.50);
-	toolbar->addWidget(editHdg);
-	connect(editHdg, SIGNAL(valueChanged(QString)), this, SLOT(on_coords_changed()));
+	spinHeading = new QSpinBox();
+	spinHeading->setRange(0, 359);
+	spinHeading->setSingleStep(1);
+	toolbar->addWidget(spinHeading);
+	connect(spinHeading, SIGNAL(valueChanged(QString)), this, SLOT(on_coords_changed()));
 	
 	
 
@@ -148,15 +147,30 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	QHBoxLayout *midLayout = new QHBoxLayout();
 	mainLayout->addLayout(midLayout);
 	
+
+	//== Zoom Bar
+	QVBoxLayout *layoutZoom = new QVBoxLayout();
+	midLayout->addLayout(layoutZoom, 0);
+
+	QToolButton *buttZoomIn = new QToolButton();
+	buttZoomIn->setText("+");
+	buttZoomIn->setAutoRaise(true);
+	layoutZoom->addWidget(buttZoomIn, 0);
+	connect(buttZoomIn, SIGNAL(clicked()), this, SLOT(on_zoom_in()));
+
 	sliderZoom = new QSlider();
 	sliderZoom->setRange(1,16);
 	sliderZoom->setTickPosition(QSlider::TicksLeft);
 	sliderZoom->setTickInterval(1);
 	sliderZoom->setPageStep(1);
-	midLayout->addWidget(sliderZoom);
+	layoutZoom->addWidget(sliderZoom, 200);
 	connect(sliderZoom, SIGNAL(valueChanged(int)), SLOT(zoom_to(int)));
 
-
+	QToolButton *buttZoomOut = new QToolButton();
+	buttZoomOut->setText("-");
+	buttZoomOut->setAutoRaise(true);
+	layoutZoom->addWidget(buttZoomOut, 0);
+	connect(buttZoomOut, SIGNAL(clicked()), this, SLOT(on_zoom_out()));
 
 	//=============================================================
 	//== Cache
@@ -289,6 +303,13 @@ void OpenLayerWidget::zoom_to( int zoom)
 	execute_js(jstr);
 }
 
+//== Zoom in out buttons
+void OpenLayerWidget::on_zoom_in(){
+	sliderZoom->setValue(sliderZoom->value() + 1);
+}
+void OpenLayerWidget::on_zoom_out(){
+	sliderZoom->setValue(sliderZoom->value() - 1);
+}
 
 
 //=================================================
@@ -364,9 +385,7 @@ void OpenLayerWidget::map_show_coords(QVariant lat, QVariant lon){
 void OpenLayerWidget::on_coords_changed(){
 	emit setx("--lat=", true, editLat->text());
 	emit setx("--lon=", true, editLon->text());
-	QString hdgValue(QString::number(editHdg->value()));
-	qDebug() << "hdgValue: " << hdgValue;
-	emit setx("--heading=", true, hdgValue);
+	emit setx("--heading=", true, QString::number(spinHeading->value()) );
 	
 	show_aircraft(mainObject->X->getx("--callsign="),
 							 mainObject->X->getx("--lat="),
@@ -393,7 +412,7 @@ void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
 		editLon->setText(value);
 	
 	}else if(option == "--heading="){
-		editHdg->valueFromText(value);
+		spinHeading->setValue(value.toInt());
 	
 	}
 }

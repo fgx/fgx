@@ -16,7 +16,7 @@
 #include <QtGui/QActionGroup>
 #include <QtGui/QToolButton>
 #include <QtGui/QSlider>
-#include <QtGui/QDoubleSpinBox>
+#include <QtGui/QSpinBox>
 
 #include "xobjects/mainobject.h"
 #include "xobjects/latlng.h"
@@ -42,9 +42,6 @@ private:
 	QLineEdit *editLat;
 	QLineEdit *editLon;
 
-	QLabel *lblZoom;
-	QButtonGroup *groupZoom;
-	QToolButton *buttZoom;
 	
 	//QLineEdit *editHdg;
 	//QToolButton *buttTurnRight10;
@@ -52,7 +49,7 @@ private:
 	//QToolButton *buttTurnLeft10;
 	//QToolButton *buttTurnLeft1;
 	
-	QDoubleSpinBox *editHdg;
+	QSpinBox *spinHeading;
 
 	
 	QWebView *webView;
@@ -82,6 +79,9 @@ signals:
 	void zoom_to_airport(QString apt);
 	void zoom_to_latlon(QString lat, QString lon, int zoom);
 	void zoom_to(int zoom);
+
+	void on_zoom_in();
+	void on_zoom_out();
 
 	void show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude);
 	void focus_aircraft(QString callsign);

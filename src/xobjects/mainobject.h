@@ -160,6 +160,8 @@ public slots:
 	void on_view_fgx_debug();
 	void set_debug_mode();
 
+	void on_action_open_url(QAction*);
+
 	void on_about_qt();
 	void on_about_fgx();
 };
