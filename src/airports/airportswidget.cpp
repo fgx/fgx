@@ -288,13 +288,14 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	tabWidget->addTab(groupBoxUseCoordinates, QIcon(":/icon/XXX"), "Start At Position");
 
 	int space = 5;
+	
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
 
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Latitude (negative is south)")));
 	txtLat = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtLat);
 	connect(txtLat, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
-
-	groupBoxUseCoordinates->xLayout->addSpacing(space);
+	
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Longtitude (negative is west)")));
 	txtLon = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtLon);
@@ -840,13 +841,13 @@ void AirportsWidget::on_tab_changed(){
 
 void AirportsWidget::on_coordinates_changed()
 {
-	emit setx("--vor=", true, txtVOR->text());
-	emit setx("--ndb=", true, txtNDB->text());
-	emit setx("--fix=", true, txtFIX->text());
+	//emit setx("--vor=", true, txtVOR->text());
+	//emit setx("--ndb=", true, txtNDB->text());
+	//emit setx("--fix=", true, txtFIX->text());
 	emit setx("--lat=", true, txtLat->text());
 	emit setx("--lon=", true, txtLon->text());
-	emit setx("--offset-distance=", true, txtOffset->text());
-	emit setx("--altitude=", true, txtAltitude->text());
+	//emit setx("--offset-distance=", true, txtOffset->text());
+	//emit setx("--altitude=", true, txtAltitude->text());
 	emit setx("--heading=", true, txtHeading->text());
 	
 	mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
@@ -865,7 +866,7 @@ void AirportsWidget::on_upx(QString option, bool enabled, QString value)
 	Q_UNUSED(enabled);
 	Q_UNUSED(value);
 	
-	if(option == "--vor="){
+	/*if(option == "--vor="){
 		txtVOR->setText(value);
 		
 	}else if(option == "--ndb="){
@@ -888,7 +889,17 @@ void AirportsWidget::on_upx(QString option, bool enabled, QString value)
 		
 	}else if(option == "--heading="){
 		txtHeading->setText(value);
-	}
+	}*/
+	
+	if(option == "--lat="){
+	 txtLat->setText(value);
+	 
+	 }else if(option == "--lon="){
+	 txtLon->setText(value);
+	 
+	 }else if(option == "--heading="){
+	 txtHeading->setText(value);
+	 }
 	
 	
 }
