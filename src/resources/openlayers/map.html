@@ -54,11 +54,12 @@ var radarMarkersLabels;
 // click control handler to get lat, lon --> transform values to wgs84
 OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
                 defaultHandlerOptions: {
-                    'single': true,
-                    'double': false,
+                    'single': false,
+                    'double': true,
                     'pixelTolerance': 0,
                     'stopSingle': false,
-                    'stopDouble': false
+                    'stopDouble': true
+					
                 },
 
                 initialize: function(options) {
@@ -70,7 +71,7 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
                     ); 
                     this.handler = new OpenLayers.Handler.Click(
                         this, {
-                            'click': this.trigger
+                            'dblclick': this.trigger
                         }, this.handlerOptions
                     );
                 }, 
