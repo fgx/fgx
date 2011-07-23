@@ -50,6 +50,40 @@ var planeMarkersLabel;
 var radarMarkersVectors;
 var radarMarkersLabels;
 
+
+// click control handler to get lat, lon --> transform values to wgs84
+OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
+                defaultHandlerOptions: {
+                    'single': true,
+                    'double': false,
+                    'pixelTolerance': 0,
+                    'stopSingle': false,
+                    'stopDouble': false
+                },
+
+                initialize: function(options) {
+                    this.handlerOptions = OpenLayers.Util.extend(
+                        {}, this.defaultHandlerOptions
+                    );
+                    OpenLayers.Control.prototype.initialize.apply(
+                        this, arguments
+                    ); 
+                    this.handler = new OpenLayers.Handler.Click(
+                        this, {
+                            'click': this.trigger
+                        }, this.handlerOptions
+                    );
+                }, 
+
+                trigger: function(e) {
+                    var lonlat = map.getLonLatFromViewPortPx(e.xy);
+					lonlat.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
+					Qt.map_click(lonlat.lat, lonlat.lon);
+                    //alert("You clicked near " + lonlat.lat + " N, " +
+                    //                          + lonlat.lon + " E");
+                }
+            });
+
 // style for your plane
 var planeMarkersStyle = new OpenLayers.StyleMap({
     
@@ -64,12 +98,6 @@ var planeMarkersStyle = new OpenLayers.StyleMap({
     "select": {
 		externalGraphic: "/img/fgx-plane-red.png",
     },
-	
-	"symbolizer": {
-	pointRadius: 20, 
-	fillColor: "red",
-    fillOpacity: 0.7, 
-	strokeColor: "black"},
 
 	
 });
@@ -280,7 +308,7 @@ var aircraft = {};
 	Qt.map_mouse_move(lonlat.lat, lonlat.lon);
 }*/
 
-function on_zoom_changed(){
+/*function on_zoom_changed(){
 	//alert("ere");
 }
 
@@ -303,7 +331,7 @@ function onFeatureUnselect(feature) {
             map.removePopup(feature.popup);
             feature.popup.destroy();
             feature.popup = null;
-        }    
+        } */   
 
 
 // main function
@@ -326,7 +354,7 @@ function init(){
 					new OpenLayers.Control.Navigation(),
 					new OpenLayers.Control.Attribution(),
 					new OpenLayers.Control.LayerSwitcher()
-					] 
+					],
 				} 
 			);
 	
@@ -390,6 +418,12 @@ function init(){
 			map.getProjectionObject()
 			), zoom
 	);
+	
+	
+	// activate click control
+	var click = new OpenLayers.Control.Click();
+                map.addControl(click);
+                click.activate();
 
 
 	
