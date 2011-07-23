@@ -61,6 +61,9 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	
 	toolbar->addWidget(new QLabel(tr("Heading:")));
 	editHdg = new QDoubleSpinBox();
+	editHdg->setMinimum(0.00);
+	editHdg->setMaximum(359.99);
+	editHdg->setSingleStep(0.50);
 	toolbar->addWidget(editHdg);
 	connect(editHdg, SIGNAL(valueChanged(QString)), this, SLOT(on_coords_changed()));
 	
@@ -393,61 +396,7 @@ void OpenLayerWidget::on_coords_changed(){
 	
 }
 
-/*void OpenLayerWidget::on_turn_left5_clicked() {
-	QString hdgintstr(mainObject->X->getx("--heading="));
-	double n5l;
-	if (hdgintstr.toDouble() < 5.00) {
-		n5l = hdgintstr.toDouble() - 5.00 + 360.00;
-	} else {
-		n5l = hdgintstr.toDouble() - 5.00;
-	}
-	//n5l = hdgintstr.toDouble() - 5.00;
-	QString changedValue = QString::number(n5l, 'f', 2);
-	emit setx("--heading=", true, changedValue);
-}
 
-void OpenLayerWidget::on_turn_left05_clicked() {
-	QString hdgintstr(mainObject->X->getx("--heading="));
-	double n05l;
-	if (hdgintstr.toDouble() < 0.50) {
-		n05l = hdgintstr.toDouble() - 0.50 + 360.00;
-	} else {
-		n05l = hdgintstr.toDouble() - 0.50;
-	}
-	QString changedValue = QString::number(n05l, 'f', 2);
-	emit setx("--heading=", true, changedValue);
-}
-
-void OpenLayerWidget::on_turn_right5_clicked() {
-	QString hdgintstr(mainObject->X->getx("--heading="));
-	double n5r;
-	if (hdgintstr.toDouble() > 355.00) {
-		n5r = hdgintstr.toDouble() + 5.00 - 360.00;
-	} else {
-		n5r = hdgintstr.toDouble() + 5.00;
-	}
-	QString changedValue = QString::number(n5r, 'f', 2);
-	emit setx("--heading=", true, changedValue);
-}
-
-void OpenLayerWidget::on_turn_right05_clicked() {
-	QString hdgintstr(mainObject->X->getx("--heading="));
-	double n05r;
-	double north;
-	if (hdgintstr.toDouble() >= 360.00) {
-		north = 0.00;
-	} else {
-		north = hdgintstr.toDouble(); 
-	}
-	if (north > 359.50) {
-		n05r = north + 0.50 - 359.50;
-	}
-	else {
-		n05r = north + 0.50;
-	}
-	QString changedValue = QString::number(n05r, 'f', 2);
-	emit setx("--heading=", true, changedValue);
-}*/
 
 void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
 {
