@@ -16,6 +16,7 @@
 #include <QtGui/QActionGroup>
 #include <QtGui/QToolButton>
 #include <QtGui/QSlider>
+#include <QtGui/QDoubleSpinBox>
 
 #include "xobjects/mainobject.h"
 #include "xobjects/latlng.h"
@@ -45,11 +46,13 @@ private:
 	QButtonGroup *groupZoom;
 	QToolButton *buttZoom;
 	
-	QLineEdit *editHdg;
-	QToolButton *buttTurnRight10;
-	QToolButton *buttTurnRight1;
-	QToolButton *buttTurnLeft10;
-	QToolButton *buttTurnLeft1;
+	//QLineEdit *editHdg;
+	//QToolButton *buttTurnRight10;
+	//QToolButton *buttTurnRight1;
+	//QToolButton *buttTurnLeft10;
+	//QToolButton *buttTurnLeft1;
+	
+	QDoubleSpinBox *editHdg;
 
 	
 	QWebView *webView;
@@ -111,10 +114,10 @@ signals:
 	
 	void on_upx( QString option, bool enabled, QString value);
 	
-	void on_turn_left05_clicked();
-	void on_turn_left5_clicked();
-	void on_turn_right05_clicked();
-	void on_turn_right5_clicked();
+	//void on_turn_left05_clicked();
+	//void on_turn_left5_clicked();
+	//void on_turn_right05_clicked();
+	//void on_turn_right5_clicked();
 	
 };
 

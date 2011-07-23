@@ -59,31 +59,12 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	connect(editLon, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
 	
 	
-	
-	QToolButton *buttTurnLeft10 = new QToolButton();
-	buttTurnLeft10->setText("-5");
-	toolbar->addWidget(buttTurnLeft10);
-	connect(buttTurnLeft10, SIGNAL(clicked()), this, SLOT(on_turn_left5_clicked()));
-	
-	QToolButton *buttTurnLeft1 = new QToolButton();
-	buttTurnLeft1->setText("-0.5");
-	toolbar->addWidget(buttTurnLeft1);
-	connect(buttTurnLeft1, SIGNAL(clicked()), this, SLOT(on_turn_left05_clicked()));
-	
 	toolbar->addWidget(new QLabel(tr("Heading:")));
-	editHdg = new QLineEdit();
+	editHdg = new QDoubleSpinBox();
 	toolbar->addWidget(editHdg);
 	connect(editHdg, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
 	
-	QToolButton *buttTurnRight1 = new QToolButton();
-	buttTurnRight1->setText("+0.5");
-	toolbar->addWidget(buttTurnRight1);
-	connect(buttTurnRight1, SIGNAL(clicked()), this, SLOT(on_turn_right05_clicked()));
 	
-	QToolButton *buttTurnRight10 = new QToolButton();
-	buttTurnRight10->setText("+5");
-	toolbar->addWidget(buttTurnRight10);
-	connect(buttTurnRight10, SIGNAL(clicked()), this, SLOT(on_turn_right5_clicked()));
 
 
 	//=============================================
@@ -398,7 +379,9 @@ void OpenLayerWidget::map_show_coords(QVariant lat, QVariant lon){
 void OpenLayerWidget::on_coords_changed(){
 	emit setx("--lat=", true, editLat->text());
 	emit setx("--lon=", true, editLon->text());
-	emit setx("--heading=", true, editHdg->text());
+	QString hdgValue(QString::number(editHdg->value()));
+	qDebug() << "hdgValue: " << hdgValue;
+	emit setx("--heading=", true, hdgValue);
 	
 	show_aircraft(mainObject->X->getx("--callsign="),
 							 mainObject->X->getx("--lat="),
@@ -410,33 +393,61 @@ void OpenLayerWidget::on_coords_changed(){
 	
 }
 
-void OpenLayerWidget::on_turn_left5_clicked() {
+/*void OpenLayerWidget::on_turn_left5_clicked() {
 	QString hdgintstr(mainObject->X->getx("--heading="));
-	double n = hdgintstr.toDouble() - 5.00;
-	QString changedValue = QString::number(n, 'f', 2);
+	double n5l;
+	if (hdgintstr.toDouble() < 5.00) {
+		n5l = hdgintstr.toDouble() - 5.00 + 360.00;
+	} else {
+		n5l = hdgintstr.toDouble() - 5.00;
+	}
+	//n5l = hdgintstr.toDouble() - 5.00;
+	QString changedValue = QString::number(n5l, 'f', 2);
 	emit setx("--heading=", true, changedValue);
 }
 
 void OpenLayerWidget::on_turn_left05_clicked() {
 	QString hdgintstr(mainObject->X->getx("--heading="));
-	double n = hdgintstr.toDouble() - 0.50;
-	QString changedValue = QString::number(n, 'f', 2);
+	double n05l;
+	if (hdgintstr.toDouble() < 0.50) {
+		n05l = hdgintstr.toDouble() - 0.50 + 360.00;
+	} else {
+		n05l = hdgintstr.toDouble() - 0.50;
+	}
+	QString changedValue = QString::number(n05l, 'f', 2);
 	emit setx("--heading=", true, changedValue);
 }
 
 void OpenLayerWidget::on_turn_right5_clicked() {
 	QString hdgintstr(mainObject->X->getx("--heading="));
-	double n = hdgintstr.toDouble() + 5.00;
-	QString changedValue = QString::number(n, 'f', 2);
+	double n5r;
+	if (hdgintstr.toDouble() > 355.00) {
+		n5r = hdgintstr.toDouble() + 5.00 - 360.00;
+	} else {
+		n5r = hdgintstr.toDouble() + 5.00;
+	}
+	QString changedValue = QString::number(n5r, 'f', 2);
 	emit setx("--heading=", true, changedValue);
 }
 
 void OpenLayerWidget::on_turn_right05_clicked() {
 	QString hdgintstr(mainObject->X->getx("--heading="));
-	double n = hdgintstr.toDouble() + 0.50;
-	QString changedValue = QString::number(n, 'f', 2);
+	double n05r;
+	double north;
+	if (hdgintstr.toDouble() >= 360.00) {
+		north = 0.00;
+	} else {
+		north = hdgintstr.toDouble(); 
+	}
+	if (north > 359.50) {
+		n05r = north + 0.50 - 359.50;
+	}
+	else {
+		n05r = north + 0.50;
+	}
+	QString changedValue = QString::number(n05r, 'f', 2);
 	emit setx("--heading=", true, changedValue);
-}
+}*/
 
 void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
 {
@@ -451,7 +462,7 @@ void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
 		editLon->setText(value);
 	
 	}else if(option == "--heading="){
-		editHdg->setText(value);
+		editHdg->valueFromText(value);
 	
 	}
 }
