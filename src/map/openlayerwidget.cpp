@@ -62,7 +62,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	toolbar->addWidget(new QLabel(tr("Heading:")));
 	editHdg = new QDoubleSpinBox();
 	toolbar->addWidget(editHdg);
-	connect(editHdg, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
+	connect(editHdg, SIGNAL(valueChanged(QString)), this, SLOT(on_coords_changed()));
 	
 	
 
