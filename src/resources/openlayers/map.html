@@ -54,11 +54,6 @@ var radarMarkersLabels;
 var planeMarkersStyle = new OpenLayers.StyleMap({
     
     "default": {
-		//graphicName: "square",
-        //strokeColor: "lime",
-        //strokeWidth: 3,
-        //fillColor: "lime",
-		//pointRadius: 20,
 		externalGraphic: "/img/fgx-plane-green.png",
 		graphicWidth: 48,
 		graphicHeight: 48,
@@ -67,13 +62,15 @@ var planeMarkersStyle = new OpenLayers.StyleMap({
         },
     
     "select": {
-		//graphicName: "square",
-        //strokeColor: "red",
-        //strokeWidth: 3,
-        //fillColor: "yellow",
-		//pointRadius: 20,
 		externalGraphic: "/img/fgx-plane-red.png",
     },
+	
+	"symbolizer": {
+	pointRadius: 20, 
+	fillColor: "red",
+    fillOpacity: 0.7, 
+	strokeColor: "black"},
+
 	
 });
 
@@ -415,31 +412,12 @@ function init(){
 	planeMarkersVec = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeMarkersStyle});
 	map.addLayer(planeMarkersVec);
 	
-	//var dragControl = new OpenLayers.Control.DragFeature(planeMarkersVec);
-	var rotationControl = new OpenLayers.Control.ModifyFeature(planeMarkersVec);
-			
-	var selectControl = new OpenLayers.Control.SelectFeature(
-                [planeMarkersVec],
-                {
-                    clickout: true, toggle: false,
-                    multiple: false, hover: false,
-					renderIntent: "select"
-                }
-            );
-			
+	var modifyFeature = new OpenLayers.Control.ModifyFeature(planeMarkersVec, {
+	mode: OpenLayers.Control.ModifyFeature.DRAG,
+	});
 	
-			
-	
-	//map.addControl(dragControl);
-	map.addControl(selectControl);
-	//dragControl.activate();
-	//dragControl.stopDown = false;
-	//dragControl.stopUp = false;
-	//dragControl.stopClick = false;
-	selectControl.activate();
-	
-	map.addControl(rotationControl);
-	rotationControl.activate();
+	map.addControl(modifyFeature);
+	modifyFeature.activate();
 
 		
 	// add plane label
@@ -458,6 +436,8 @@ function init(){
 	//alert("init done");
 
 }
+
+
 
 
 //==========================================================
