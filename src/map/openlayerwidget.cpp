@@ -18,6 +18,7 @@
 #include <QtGui/QDesktopServices>
 
 #include "map/openlayerwidget.h"
+#include "airports/airportswidget.h"
 
 
 
@@ -46,22 +47,16 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	mainLayout->addWidget(toolbar);
 
 
-	//== Lat Lng Labels
-	toolbar->addWidget(new QLabel("Lat:"));
-	lblLat = new QLabel();
-	//lblLat.setStyleSheet(style)
-	lblLat->setFixedWidth(150);
-	lblLat->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-	toolbar->addWidget(lblLat);
-
-	//QLabel *lblLng = QLabel();
-	//toolbar.addAction("Lng:")
-	toolbar->addWidget(new QLabel("Lon:"));
-	lblLon = new QLabel();
-	//lblLng->setStyleSheet(style);
-	lblLon->setFixedWidth(150);
-	toolbar->addWidget(lblLon);
-
+	
+	toolbar->addWidget(new QLabel(tr("Lat:")));
+	editLat = new QLineEdit();
+	toolbar->addWidget(editLat);
+	connect(editLat, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
+	
+	toolbar->addWidget(new QLabel(tr("Lon:")));
+	editLon = new QLineEdit();
+	toolbar->addWidget(editLon);
+	connect(editLon, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
 
 
 	//=============================================
@@ -203,10 +198,13 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	}
 	*/
 
-
-
 	//=== Initialise
 	init_map();
+	
+	//============================================================================
+	//== Main Settings connection
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
+	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 }
 
 
@@ -364,14 +362,43 @@ void OpenLayerWidget::map_debug(QVariant mess){
 	lblLon->setText(QString::number(lon.toFloat()));
 }*/
 
-//= < JS - map_mouse_move
+//= < JS - map_show_coords()
 void OpenLayerWidget::map_show_coords(QVariant lat, QVariant lon){
-	lblLat->setText(lat.toString());
-	lblLon->setText(QString::number(lon.toFloat()));
+	editLat->setText(lat.toString());
+	editLon->setText(lon.toString());
+}
+
+void OpenLayerWidget::on_coords_changed(){
+	emit setx("--lat=", true, editLat->text());
+	emit setx("--lon=", true, editLon->text());
+	
+	show_aircraft(mainObject->X->getx("--callsign="),
+							 mainObject->X->getx("--lat="),
+							 mainObject->X->getx("--lon="),
+							 mainObject->X->getx("--heading="),
+							 "0"
+							 //mainObject->X->getx("--altitude=") --> this we will have later
+							 );
+	
+}
+
+void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
+{
+	Q_UNUSED(option);
+	Q_UNUSED(enabled);
+	Q_UNUSED(value);
+	
+	if(option == "--lat="){
+		editLat->setText(value);
+		
+	}else if(option == "--lon="){
+		editLon->setText(value);
+	
+	}
 }
 
 
-//= < JS - map_click()
+//= < JS - map_click() get click to log
 void OpenLayerWidget::map_click(QVariant lat, QVariant lon){
 	Q_UNUSED(lat);
 	Q_UNUSED(lon);
@@ -440,3 +467,5 @@ void OpenLayerWidget::end_progress(bool Ok){
 	progressBar->setVisible(false);
 	statusBar->showMessage( webView->url().toString() );
 }
+	
+

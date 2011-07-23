@@ -38,8 +38,8 @@ private:
 	QStatusBar *statusBar;
 	QComboBox *comboServer;
 	
-	QLabel *lblLat;
-	QLabel *lblLon;
+	QLineEdit *editLat;
+	QLineEdit *editLon;
 
 	QLabel *lblZoom;
 	QButtonGroup *groupZoom;
@@ -52,6 +52,8 @@ private:
 	
 signals:
 	
+	void setx(QString option, bool enabled, QString value);
+	
 	public slots:
 
 	//= browser progress
@@ -62,8 +64,6 @@ signals:
 	//= map calls
 	void init_map();
 	void execute_js(QString js_string);
-
-
 
 
 	//# To map markers and features
@@ -88,6 +88,8 @@ signals:
 	void map_right_click(QVariant lat, QVariant lon);
 	
 	void map_show_coords(QVariant lat, QVariant lon);
+	void on_coords_changed();
+	//void on_coords_changed();
 
 
 	void map_zoom_changed(QVariant zoom);
@@ -100,6 +102,8 @@ signals:
 	void closeEvent(QCloseEvent *event);
 
 	//void on_map_type(QAction*);
+	
+	void on_upx( QString option, bool enabled, QString value);
 	
 };
 
