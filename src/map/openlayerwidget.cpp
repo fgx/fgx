@@ -182,6 +182,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
     statusBar = new QStatusBar(this);
     mainLayout->addWidget(statusBar);
     statusBar->showMessage("Idle");
+	statusBar->setSizeGripEnabled(false);
 	
 	//== Progress Bar
     progressBar = new QProgressBar();
@@ -189,25 +190,6 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
     statusBar->addPermanentWidget(progressBar);
 
 
-	//== Zoooomm
-	statusBar->addPermanentWidget(new QLabel("Zoom:"));
-	groupZoom = new QButtonGroup(this);
-	groupZoom->setExclusive(true);
-	//connect(groupZoom, SIGNAL(buttonClicked(QAbstractButton*)),
-	//		this, SLOT(on_zoom_action(QAbstractButton*))
-	//);
-	/*
-	for(int z=1; z < 15; z++){
-		QToolButton *act = new QToolButton(this);
-		act->setText(QString(" %1 ").arg(z));
-		act->setProperty("zoom", QVariant(z));
-		act->setCheckable(true);
-		act->setAutoRaise(true);
-		act->setDown(z == 12);
-		statusBar->addPermanentWidget(act);
-		groupZoom->addButton(act);
-	}
-	*/
 
 	//=== Initialise
 	init_map();
@@ -439,14 +421,14 @@ void OpenLayerWidget::map_error(QVariant err){
 
 void OpenLayerWidget::marker_clicked(QVariant marker, QVariant mId){
 	//qDebug("marker_clicked()");
-		Q_UNUSED(marker);
-			Q_UNUSED(mId);
+	Q_UNUSED(marker);
+	Q_UNUSED(mId);
 }
 
 void OpenLayerWidget::marker_unselected(QVariant curr_idx, QVariant mLocationId){
 	//qDebug("marker_unselected()");
-		Q_UNUSED(curr_idx);
-			Q_UNUSED(mLocationId);
+	Q_UNUSED(curr_idx);
+	Q_UNUSED(mLocationId);
 }
 
 

@@ -59,7 +59,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	//= Tab Widget
 	tabWidget = new QTabWidget();
 	mainLayout->addWidget(tabWidget);
-	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed()));
+	//connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed()));
 
 
 	//=====================================
