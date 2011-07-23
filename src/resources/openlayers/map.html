@@ -292,46 +292,7 @@ var rwyLineStyle = new OpenLayers.StyleMap({
 
 // oh, see on top
 var planes;
-var aircraft = {};
-
-
-// some feedback to qt
-/*function on_map_click(e){
-	var lonlat = map.getLonLatFromViewPortPx(e.xy);
-	Qt.map_click(lonlat.lat, lonlat.lon);
-}*/
-
-
-
-/*function on_map_mousemove(e){
-	var lonlat = map.getLonLatFromViewPortPx(e.xy);
-	Qt.map_mouse_move(lonlat.lat, lonlat.lon);
-}*/
-
-/*function on_zoom_changed(){
-	//alert("ere");
-}
-
-function onPopupClose(evt) {
-            selectControl.unselect(selectedFeature);
-        }
-        
-function onFeatureSelect(feature) {
-            selectedFeature = feature;
-            popup = new OpenLayers.Popup.FramedCloud("popup", 
-                                     feature.geometry.getBounds().getCenterLonLat(),
-                                     null,
-                                     "<div style='font-size:.8em'>Feature: " + feature.id +"<br />Area: " + feature.geometry.getArea()+"</div>",
-                                     null, true, onPopupClose);
-            feature.popup = popup;
-            map.addPopup(popup);
-        }
-		
-function onFeatureUnselect(feature) {
-            map.removePopup(feature.popup);
-            feature.popup.destroy();
-            feature.popup = null;
-        } */   
+var aircraft = {};  
 
 
 // main function

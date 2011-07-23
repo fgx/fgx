@@ -97,7 +97,8 @@ signals:
 	//======================================
 	void closeEvent(QCloseEvent *event);
 
-
+	//void on_map_type(QAction*);
+	
 };
 
 #endif // OPENLAYERWIDGET

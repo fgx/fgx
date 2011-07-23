@@ -412,6 +412,13 @@ void OpenLayerWidget::map_zoom_changed(QVariant zoom){
 	sliderZoom->setValue(z);
 }
 
+/*void OpenLayerWidget::on_map_type(QAction *act)
+	{
+	QString jstr = QString("set_map_type('%1');").arg(act->property("map_type").toString());
+	execute_js(jstr);
+	
+	}*/
+
 
 
 
