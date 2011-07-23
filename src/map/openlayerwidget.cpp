@@ -212,7 +212,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 
 //===========================================================================
-//== Initialisaztion
+//== Initialisation
 //===========================================================================
 void OpenLayerWidget::init_map(){
 
@@ -359,7 +359,13 @@ void OpenLayerWidget::map_debug(QVariant mess){
 
 
 //= < JS - map_mouse_move
-void OpenLayerWidget::map_mouse_move(QVariant lat, QVariant lon){
+/*void OpenLayerWidget::map_mouse_move(QVariant lat, QVariant lon){
+	lblLat->setText(lat.toString());
+	lblLon->setText(QString::number(lon.toFloat()));
+}*/
+
+//= < JS - map_mouse_move
+void OpenLayerWidget::map_show_coords(QVariant lat, QVariant lon){
 	lblLat->setText(lat.toString());
 	lblLon->setText(QString::number(lon.toFloat()));
 }
@@ -378,10 +384,6 @@ void OpenLayerWidget::map_right_click(QVariant lat, QVariant lon){
 	Q_UNUSED(lon);
 	//qDebug() << "map_right_click()" << lat << lng;
 }
-
-
-
-
 
 
 void OpenLayerWidget::map_error(QVariant err){

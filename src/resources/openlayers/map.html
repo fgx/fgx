@@ -79,8 +79,9 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
                     var lonlat = map.getLonLatFromViewPortPx(e.xy);
 					lonlat.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
 					Qt.map_click(lonlat.lat, lonlat.lon);
-                    //alert("You clicked near " + lonlat.lat + " N, " +
-                    //                          + lonlat.lon + " E");
+					Qt.map_show_coords(lonlat.lat, lonlat.lon);
+					//alert("Map click at LAT: " + lonlat.lat + " LON: " +
+                    //                          + lonlat.lon);
                 }
             });
 
