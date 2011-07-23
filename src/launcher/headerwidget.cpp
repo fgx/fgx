@@ -19,7 +19,7 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 	headerLabel = new QLabel("");
 	headerLabel->setFixedHeight(40);
 	headerLabel->setFixedWidth(500);
-	headerLabel->setStyleSheet("QLabel { margin: 0px; border: 0px; background-image: url(:artwork/fgx-logo-flyer); background-repeat: none; font-size: 12px; padding-left: 40px; }");
+	headerLabel->setStyleSheet("QLabel { margin: 0px; border: 0px; background-image: url(:artwork/fgx-logo-flyer); color: #666666; background-repeat: none; font-size: 15px; padding-left: 40px; }");
 	mainLayout->addWidget(headerLabel);
 
 	//===========================================
@@ -42,7 +42,7 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 	popLay->addWidget(popLabel);
 	popWidget->show();
 
-	popWidget->setStyleSheet("QLabel { background-image: url(:artwork/fgx-logo-flyer); background-repeat: none; font-size: 12px; padding-left: 40px; padding-top: 5px; background-color: yellow; }");
+	popWidget->setStyleSheet("QLabel { background-image: url(:artwork/fgx-logo-flyer); background-repeat: none; color: #666666; font-size: 15px; padding-left: 40px; padding-top: 5px; background-color: yellow; }");
 	
 	QTimer::singleShot(3000, popWidget, SLOT(hide()) );
 	
