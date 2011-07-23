@@ -54,57 +54,7 @@ MainObject::MainObject(QObject *parent) :
 
 
 
-
-	//====================================================
-	//== Setup Menus
-	//====================================================
-	QMenuBar *menuBar = new QMenuBar();
-	//outerContainer->addWidget(menuBar);
-	
-	//== File Menu
-	QMenu *menuFile = new QMenu(tr("File"));
-	menuBar->addMenu(menuFile);
-	QAction *actionQuit = menuFile->addAction(QIcon(":/icon/quit"), tr("Quit"), this, SLOT(quit()));
-	actionQuit->setIconVisibleInMenu(true);
-	
-	//==== Window Menu
-	QMenu *menuWindow = new QMenu(tr("Window"));
-	menuBar->addMenu(menuWindow);
-	
-	QActionGroup *actionGroupWindow = new QActionGroup(this);
-	
-	QAction *winAct = menuWindow->addAction(tr("Show Launcher"));
-	actionGroupWindow->addAction(winAct);
-	
-	QAction *logAct = menuWindow->addAction(tr("Show Logs"));
-	actionGroupWindow->addAction(logAct);
-	
-	//==== Help Menu
-	QMenu *menuHelp = new QMenu(tr("Help"));
-	menuBar->addMenu(menuHelp);
-	
-	QActionGroup *actionGroupUrls = new QActionGroup(this);
-	//TODO connect(actionGroupUrls, SIGNAL(triggered(QAction*)), this, SLOT(on_action_open_url(QAction*)));
-	
-	QAction *act = menuHelp->addAction(tr("Project Page"));
-	act->setProperty("url", "http://code.google.com/p/fgx");
-	actionGroupUrls->addAction(act);
-	
-	act = menuHelp->addAction(tr("Bugs and Issues"));
-	act->setProperty("url", "http://code.google.com/p/fgx/issues/list");
-	actionGroupUrls->addAction(act);
-	
-	act = menuHelp->addAction(tr("Source Code"));
-	act->setProperty("url", "https://gitorious.org/fgx/fgx/");
-	actionGroupUrls->addAction(act);
-	
-	menuHelp->addSeparator();
-	//TODO menuHelp->addAction(tr("About FGx"), this, SLOT(on_about_fgx()));
-	//TODO menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
-
-
-
-	//============================
+	//=====================================================================================
 	//== Tray Icon
 	trayIcon = new QSystemTrayIcon(QIcon(":/icon/favicon"), this);
     trayIcon->setToolTip("FlightGear Launcher");
@@ -195,13 +145,56 @@ MainObject::MainObject(QObject *parent) :
 	);
 
 
-
-
 	popupMenu->addSeparator();
 
+	//== Help Menus
 
+	//QMenuBar *menuBar = new QMenuBar();
+	//outerContainer->addWidget(menuBar);
 
+	//== File Menu
+	//QMenu *menuFile = new QMenu(tr("File"));
+	//menuBar->addMenu(menuFile);
+	//QAction *actionQuit = menuFile->addAction(QIcon(":/icon/quit"), tr("Quit"), this, SLOT(quit()));
+	//actionQuit->setIconVisibleInMenu(true);
 
+	//==== Window Menu
+	//QMenu *menuWindow = new QMenu(tr("Window"));
+	//menuBar->addMenu(menuWindow);
+
+	//QActionGroup *actionGroupWindow = new QActionGroup(this);
+
+	//QAction *winAct = menuWindow->addAction(tr("Show Launcher"));
+	//actionGroupWindow->addAction(winAct);
+
+	//QAction *logAct = menuWindow->addAction(tr("Show Logs"));
+	//actionGroupWindow->addAction(logAct);
+
+	//== Web Links
+	QMenu *menuHelp = new QMenu(tr("Web Links"));
+	popupMenu->addMenu(menuHelp);
+
+	QActionGroup *actionGroupUrls = new QActionGroup(this);
+	//TODO connect(actionGroupUrls, SIGNAL(triggered(QAction*)), this, SLOT(on_action_open_url(QAction*)));
+
+	QAction *act = menuHelp->addAction(tr("Project Page"));
+	act->setProperty("url", "http://code.google.com/p/fgx");
+	actionGroupUrls->addAction(act);
+
+	act = menuHelp->addAction(tr("Bugs and Issues"));
+	act->setProperty("url", "http://code.google.com/p/fgx/issues/list");
+	actionGroupUrls->addAction(act);
+
+	act = menuHelp->addAction(tr("Source Code"));
+	act->setProperty("url", "https://gitorious.org/fgx/fgx/");
+	actionGroupUrls->addAction(act);
+
+	//= About
+	QMenu *menuAbout = new QMenu(tr("About"));
+	menuAbout->addAction(tr("FGx"), this, SLOT(on_about_fgx()));
+	menuAbout->addAction(tr("Qt"), this, SLOT(on_about_qt()));
+
+	popupMenu->addSeparator();
 
 	//== Quit
 	actionQuit = popupMenu->addAction(QIcon(":/icon/quit"), tr("Quit"));
@@ -513,7 +506,7 @@ QString MainObject::data_file(QString file_name){
 //=======================================================================================================================
 //* Help Menu Events
 //=======================================================================================================================
-/*
+
 void MainObject::on_about_fgx(){
 	QString txt;
 	txt.append("<html><body><p>FGx FlightGear Launcher</b></p>");
@@ -528,4 +521,3 @@ void MainObject::on_about_qt(){
 	QMessageBox::aboutQt(0, "About Qt");
 }
 
-*/

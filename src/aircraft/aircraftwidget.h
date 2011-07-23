@@ -44,7 +44,7 @@ public:
 
 	QButtonGroup *groupUseAircraft;
 	QLineEdit *txtAircraftPath;
-
+	QToolButton *buttSelectPath;
 
 	QLabel *aeroImageLabel;
 	QCheckBox *checkViewNested;

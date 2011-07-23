@@ -337,7 +337,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	groupBoxUseCoordinates->addWidget(txtHeading);
 	connect(txtHeading, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
 
-	/*groupBoxUseCoordinates->xLayout->addSpacing(space);
+	groupBoxUseCoordinates->xLayout->addSpacing(space);
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Roll")));
 	txtRoll = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtRoll);

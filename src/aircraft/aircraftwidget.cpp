@@ -110,7 +110,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	txtAircraftPath = new QLineEdit();
 	treeTopBar->addWidget(txtAircraftPath);
 
-	QToolButton *buttSelectPath = new QToolButton();
+	buttSelectPath = new QToolButton();
 	buttSelectPath->setText("Select");
 	treeTopBar->addWidget(buttSelectPath);
 	connect(buttSelectPath, SIGNAL(clicked()), this, SLOT(on_select_path()));
@@ -582,6 +582,7 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 		groupUseAircraft->button(bid)->setChecked(true);
 		treeWidget->setEnabled(bid == 1);
 		txtAircraftPath->setEnabled(bid == 2);
+		buttSelectPath->setEnabled(bid == 2);
 
 	}else if(option == "--aircraft"){
 		//= see tree load

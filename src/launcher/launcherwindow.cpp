@@ -53,23 +53,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//outerContainer->setSpacing(0);
 	setLayout(outerContainer);	
 	
-	//====================================================
-	//== Header Banner
-	//====================================================
-	/*
-	QString header_style("padding: 10px 0px 0px 0px; vertical-align: top, background-color: red;");
-    headerLabel = new QLabel(this);
-	headerLabel->setFixedHeight(10);
-	headerLabel->setStyleSheet(header_style);
-	outerContainer->addWidget(headerLabel, 0);
-	*/
-
-
-	//=============================================
-	//=== Top toolbar
-	//QHBoxLayout *toolbarLayout =  new QHBoxLayout();
-	//toolbarLayout->setContentsMargins(10, 0, 10, 0);
-	//outerContainer->addLayout(toolbarLayout);
 	
 	//== Message Label
 	
@@ -87,7 +70,6 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
     tabWidget = new QTabWidget(this);
 	tabWidget->setObjectName("launcher_tabs");
-	//tabWidget->tabBar()->setObjectName("launcher_tab");
 	mainLayout->addWidget(tabWidget);
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed(int)));
 
