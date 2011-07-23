@@ -125,7 +125,7 @@ public slots:
 
 	void on_reload_cache();
 
-	void on_tab_changed();
+	//void on_tab_changed();
 
 	void on_coordinates_changed();
 	

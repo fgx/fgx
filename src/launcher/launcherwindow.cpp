@@ -97,20 +97,19 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	tabWidget->addTab(coreSettingsWidget, tr("Core Settings"));
 	//connect(coreSettingsWidget->groupBoxTerraSync, SIGNAL(clicked()), this, SLOT(on_group_box_terrasync_clicked()));
 
-	//* Time / Weather Widget
-	timeWeatherWidget = new TimeWeatherWidget(mainObject);
-	tabWidget->addTab(timeWeatherWidget, tr("Time and Weather"));
-
 
 	//* Aircraft Widget
 	aircraftWidget = new AircraftWidget(mainObject);
 	tabWidget->addTab(aircraftWidget, tr("Aircraft"));
 	//#connect(aircraftWidget, SIGNAL(set_arg(QString,QString,QString)), this, SLOT(set_arg(QString,QString,QString)));
 
-
-	//** Airports Tab
+	//** Position Tab
 	airportsWidget = new AirportsWidget(mainObject);
-	tabWidget->addTab(  airportsWidget, tr("Airports"));
+	tabWidget->addTab(  airportsWidget, tr("Position"));
+	
+	//* Time / Weather Widget
+	timeWeatherWidget = new TimeWeatherWidget(mainObject);
+	tabWidget->addTab(timeWeatherWidget, tr("Time and Weather"));
 
 
 	//* Network Tab

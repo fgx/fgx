@@ -283,7 +283,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	//** Use Coordinates
 	//====================================================================
 
-	groupBoxUseCoordinates = new XGroupVBox("Coordinates", this);
+	/*groupBoxUseCoordinates = new XGroupVBox("Coordinates", this);
 	groupBoxUseCoordinates->setMaximumWidth(300);
 	tabWidget->addTab(groupBoxUseCoordinates, QIcon(":/icon/XXX"), "Start At Position");
 
@@ -350,7 +350,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	groupBoxUseCoordinates->xLayout->addSpacing(space);
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Airspeed")));
 	txtAirspeed = new QLineEdit();
-	groupBoxUseCoordinates->addWidget(txtAirspeed);*/
+	groupBoxUseCoordinates->addWidget(txtAirspeed);
 
 
 	groupBoxUseCoordinates->xLayout->addStretch(20);
@@ -358,7 +358,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	connect(buttonGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
 			this, SLOT(on_update_airports_filter())
-	);
+	);*/
 
 
 
@@ -811,7 +811,7 @@ QString AirportsWidget::current_airport(){
 QString AirportsWidget::validate(){
 
 	//* Validate Coordinates TODO - other stuff
-	if(mainObject->X->getx("start_postition") == "1"){
+	/*if(mainObject->X->getx("start_postition") == "1"){
 		if(txtLat->text().trimmed().length() == 0){
 			txtLat->setFocus();
 			return QString("Need Latitude");
@@ -819,14 +819,15 @@ QString AirportsWidget::validate(){
 		if(txtLon->text().trimmed().length() == 0){
 			txtLon->setFocus();
 			return QString("Need Longtitude");
-		}
+		}*/
 
 	//* Validate Airport
-	}else{
+	/*}else{
 		if (!treeViewAirports->selectionModel()->hasSelection()){
 			return QString(tr("Airport: No Airport selected or check [x] Use Default;"));
 		}
-	}
+	}*/
+
 
 	return QString("");
 
@@ -834,9 +835,9 @@ QString AirportsWidget::validate(){
 
 
 //==========================================================================
-void AirportsWidget::on_tab_changed(){
+/*void AirportsWidget::on_tab_changed(){
 	emit setx("start_postition", true, QString::number(tabWidget->currentIndex()));
-}
+}*/
 
 
 void AirportsWidget::on_coordinates_changed()
@@ -844,19 +845,19 @@ void AirportsWidget::on_coordinates_changed()
 	//emit setx("--vor=", true, txtVOR->text());
 	//emit setx("--ndb=", true, txtNDB->text());
 	//emit setx("--fix=", true, txtFIX->text());
-	emit setx("--lat=", true, txtLat->text());
-	emit setx("--lon=", true, txtLon->text());
+	//emit setx("--lat=", true, txtLat->text());
+	//emit setx("--lon=", true, txtLon->text());
 	//emit setx("--offset-distance=", true, txtOffset->text());
 	//emit setx("--altitude=", true, txtAltitude->text());
-	emit setx("--heading=", true, txtHeading->text());
+	//emit setx("--heading=", true, txtHeading->text());
 	
-	mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
+	/*mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
 							 mainObject->X->getx("--lat="),
 							 mainObject->X->getx("--lon="),
 							 mainObject->X->getx("--heading="),
 							 "0"
 							 //mainObject->X->getx("--altitude=") --> this we will have later
-							 );
+							 );*/
 }
 
 
@@ -889,7 +890,7 @@ void AirportsWidget::on_upx(QString option, bool enabled, QString value)
 		
 	}else if(option == "--heading="){
 		txtHeading->setText(value);
-	}*/
+	}
 	
 	if(option == "--lat="){
 	 txtLat->setText(value);
@@ -899,7 +900,7 @@ void AirportsWidget::on_upx(QString option, bool enabled, QString value)
 	 
 	 }else if(option == "--heading="){
 	 txtHeading->setText(value);
-	 }
+	 }*/
 	
 	
 }
