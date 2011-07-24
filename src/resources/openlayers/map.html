@@ -375,12 +375,14 @@ function init(){
 	// adds an optional graticule 
 	gridlines = new OpenLayers.Control.Graticule({
                     numPoints: 1, 
-					intervals:[45,30,20,10,5,2,1,0.5,0.2,0.1],
+					intervals:[50,30,20,10,5,2,1,0.5,0.2,0.1],
                     labelled: true,
 					displayInLayerSwitcher: false,
 					labelFormat: "dm",
 					layerName: "Grid",
 					visible: true,
+					lineSymbolizer: {strokeColor: "#aaaaaa", strokeWidth: 1},
+					labelSymbolizer: {fontSize: "10px", fontColor: "black", fontFamily: "sans-serif"}
                 })
 
 	// add the main map object
