@@ -52,18 +52,24 @@ int main( int argc, char* argv[])
 	
 	//=====================================================
 	//== Add fonts to database and set default application font
-	QFontDatabase::addApplicationFont(":/font/logisoso");
+	
+	// This font comes very close to a DIN font, but we do not use yet
+	//QFontDatabase::addApplicationFont(":/font/logisoso");
+	
+	// Default font for the whole application
 	QFontDatabase::addApplicationFont(":/font/freeuniversalregular");
 	QFontDatabase::addApplicationFont(":/font/freeuniversalbold");
 	
+	// Setting a default size too, and spacing, because we need it on screen
 	QFont universal("FreeUniversal", 12);
 	universal.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
 	app.setFont(universal);
 	
 	//=====================================================
-	//== global styles
+	//== Global styles
 	
-	// Colors : yellow: #ffff00, blue: #007eff, light-gray (background): #fffee0
+	// yellow: #ffff00, blue: #007eff, light-gray (default background): #fffee0
+	// darker gray: #999999 (box titles), lightgray #dddddd (lines and borders)
 	
 	QString styles("");
 	styles.append("QWidget, QLabel { font-family: FreeUniversal; font-size: 12px; }");
