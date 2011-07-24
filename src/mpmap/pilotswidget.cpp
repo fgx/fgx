@@ -24,6 +24,8 @@
 #include "pilotswidget.h"
 
 
+
+
 PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
     QWidget(parent)
 {
@@ -285,7 +287,8 @@ void PilotsWidget::on_server_read_finished(){
 			QList<QTreeWidgetItem *> fitems = tree->findItems(attribs.namedItem("callsign").nodeValue(), Qt::MatchExactly, C_CALLSIGN);
 			if(fitems.size() == 0){
 				item = new QTreeWidgetItem(rootItem);
-				item->setText(C_CALLSIGN, attribs.namedItem("callsign").nodeValue());
+				item->setText(C_CALLSIGN, attribs.namedItem("callsign").nodeValue().toUpper());
+				item->setText(C_AIRCRAFT, attribs.namedItem("model").nodeValue());
 				item->setText(C_COUNT, "0");
 
 				tree->addTopLevelItem(item);
@@ -301,7 +304,7 @@ void PilotsWidget::on_server_read_finished(){
 			bool is_tower = tower_names.contains( model.toLower() );
 
 
-			item->setText(C_AIRCRAFT, attribs.namedItem("model").nodeValue());
+
 			item->setText(C_ALTITUDE, QString::number(attribs.namedItem("alt").nodeValue().toFloat(), 'f', 0));
 			item->setTextAlignment(C_ALTITUDE, Qt::AlignRight);
 
@@ -353,7 +356,6 @@ void PilotsWidget::on_server_read_finished(){
 
 	//= Follow selected
 	if(checkBoxFollowSelected->isChecked() && tree->selectionModel()->hasSelection()){
-		qDebug() << "zoom to selected";
 		mapWidget->zoom_to_latlon(tree->currentItem()->text(C_LAT), tree->currentItem()->text(C_LON),12);
 	}
 
