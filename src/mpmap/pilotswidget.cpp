@@ -46,20 +46,19 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	mainLayout->addWidget(toolbar);
 	toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-	//* Refresh
-	QAction *actionRefresh = new QAction(this);
-	actionRefresh->setText("Refresh");
-	actionRefresh->setIcon(QIcon(":/icon/refresh"));
-	toolbar->addAction(actionRefresh);
-	connect(actionRefresh, SIGNAL(triggered()), this, SLOT(fetch_pilots()));
 
-	//* CheckBox AutoRefresh
+	checkBoxFollowSelected = new QCheckBox();
+	checkBoxFollowSelected->setText("Follow Selected");
+	toolbar->addWidget(checkBoxFollowSelected);
+
+
+	//= CheckBox AutoRefresh
 	checkBoxAutoRefresh = new QCheckBox("Auto");
 	toolbar->addWidget(checkBoxAutoRefresh);
 	checkBoxAutoRefresh->setChecked(mainObject->settings->value("mpxmap_autorefresh_enabled").toBool());
 	connect(checkBoxAutoRefresh, SIGNAL(stateChanged(int)), this, SLOT(on_check_autorefresh(int)));
 
-	//* ComboBox HZ
+	//= ComboBox HZ
 	comboBoxHz = new QComboBox();
 	toolbar->addWidget(comboBoxHz);
 	for(int sex=1; sex < 10; sex++){
@@ -69,6 +68,17 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	comboBoxHz->setCurrentIndex(cidx == -1 ? 0 : cidx);
 	connect(comboBoxHz, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_changed(int)));
 
+	//= Refresh
+	QAction *actionRefresh = new QAction(this);
+	//actionRefresh->setText("Refresh");
+	actionRefresh->setIcon(QIcon(":/icon/refresh"));
+	toolbar->addAction(actionRefresh);
+	connect(actionRefresh, SIGNAL(triggered()), this, SLOT(fetch_pilots()));
+
+
+
+	//===================================================
+	// Show cols actiona re created here but added below to status bar
 	//=============================================
 	// Cols Selector
 	QToolButton *buttShowColumns = new QToolButton(this);
@@ -76,7 +86,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	buttShowColumns->setIcon(QIcon(":/icon/select_cols"));
 	buttShowColumns->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	buttShowColumns->setPopupMode(QToolButton::InstantPopup);
-	toolbar->addWidget(buttShowColumns);
+
 
 	QMenu *menuCols = new QMenu();
 	buttShowColumns->setMenu(menuCols);
@@ -124,13 +134,8 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 
 
 
-
-
-
-
-
 	//=========================================================
-	//== Tree ( Coeden )
+	//== Tree
 	tree = new QTreeWidget();
 	mainLayout->addWidget(tree);
 
@@ -176,10 +181,17 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	connect(tree,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
 			this, SLOT(on_item_doubled_clicked(QTreeWidgetItem*,int)));
 
+	//===========================================================================
 	//= Status Bar
 	statusBar = new QStatusBar();
 	mainLayout->addWidget(statusBar);
 	statusBar->showMessage("Click refresh to load");
+
+	statusBar->addPermanentWidget(buttShowColumns);
+
+
+
+
 
 
 	//==========================================================
@@ -244,6 +256,9 @@ void PilotsWidget::on_server_read_finished(){
 	//emit freeze_map(true);
 	mapWidget->clear_radar();
 
+	QStringList tower_names;
+	tower_names << "atc"  << "atc-tower" << "atc-tower2";
+
 	QTreeWidgetItem *rootItem = tree->invisibleRootItem();
 
 	//== Loop all ndes and set flag to 1 - item remaining will b enuked
@@ -282,8 +297,7 @@ void PilotsWidget::on_server_read_finished(){
 			QString model = QString(attribs.namedItem("model").nodeValue());
 
 			//= Need to catch atc models here?
-			QStringList tower_names;
-			tower_names << "atc"  << "atc-tower2";
+
 			bool is_tower = tower_names.contains( model.toLower() );
 
 
@@ -336,7 +350,13 @@ void PilotsWidget::on_server_read_finished(){
 	}
 
 	tree->setUpdatesEnabled(true);
-	//emit freeze_map(false);
+
+	//= Follow selected
+	if(checkBoxFollowSelected->isChecked() && tree->selectionModel()->hasSelection()){
+		qDebug() << "zoom to selected";
+		mapWidget->zoom_to_latlon(tree->currentItem()->text(C_LAT), tree->currentItem()->text(C_LON),12);
+	}
+
 
 	if(checkBoxAutoRefresh->isChecked()){
 		QTimer::singleShot( comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000, this, SLOT(fetch_pilots()) );

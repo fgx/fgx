@@ -48,6 +48,8 @@ public:
 	QNetworkReply  *reply;
 	QString server_string;
 
+	QCheckBox *checkBoxFollowSelected;
+
 	QCheckBox *checkBoxAutoRefresh;
 	QComboBox *comboBoxHz;
 
