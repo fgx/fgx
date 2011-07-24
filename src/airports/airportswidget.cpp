@@ -228,6 +228,8 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	headerItem->setText(CI_LON, tr("Lng"));
 	headerItem->setText(CI_ALIGNMNET, tr("Alignment"));
 	headerItem->setText(CI_RUNWAYS, tr("R"));
+
+	/*
 	treeWidgetAirportInfo->setColumnHidden(CI_TYPE,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_LABEL,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_SETTING_KEY,true);
@@ -235,12 +237,17 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	treeWidgetAirportInfo->setColumnHidden(CI_LENGTH,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_ALIGNMNET,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_RUNWAYS, true);
-
+	*/
 
 	treeWidgetAirportInfo->setColumnWidth(CI_NODE, 120);
 	treeWidgetAirportInfo->header()->setStretchLastSection(true);
 
-	connect(treeWidgetAirportInfo, SIGNAL(itemSelectionChanged()), this, SLOT(on_airport_info_selection_changed()));
+	connect(treeWidgetAirportInfo, SIGNAL(itemSelectionChanged()),
+			this, SLOT(on_airport_info_selection_changed())
+	);
+	connect(treeWidgetAirportInfo, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+			this, SLOT(on_tree_item_double_clicked(QTreeWidgetItem*,int))
+	);
 
 
 	statusBarAirportInfo = new QStatusBar();
@@ -917,4 +924,12 @@ void AirportsWidget::on_airport_info_selection_changed()
 		emit setx("--parking-id=", false,"");
 	}
 
+}
+
+void AirportsWidget::on_tree_item_double_clicked(QTreeWidgetItem *item, int col_idx)
+{
+	qDebug() << item->text(CI_TYPE);
+	if (item->text(CI_TYPE) == "stand"){
+		mapWidget->zoom_to_latlon(item->text(CI_LAT), item->text(CI_LON), 17);
+	}
 }

@@ -123,6 +123,8 @@ public slots:
 	void on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx);
 	void on_airport_info_selection_changed();
 
+	void on_tree_item_double_clicked(QTreeWidgetItem*,int);
+
 	void on_reload_cache();
 
 	//void on_tab_changed();
