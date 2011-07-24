@@ -272,7 +272,6 @@ void OpenLayerWidget::map_initialised()
 														).arg(	buttons.at(idx)->isChecked() ? 1 : 0
 														);
 		execute_js(jstr);
-		qDebug() << jstr;
 	}
 
 }
@@ -422,7 +421,7 @@ void OpenLayerWidget::execute_js(QString js_str){
 // Called from JS
 //===========================================================================
 void OpenLayerWidget::map_debug(QVariant mess){
-	qDebug() << "< " << mess.toString();
+	//qDebug() << "< " << mess.toString();
 }
 
 
@@ -478,7 +477,7 @@ void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
 void OpenLayerWidget::map_click(QVariant lat, QVariant lon){
 	Q_UNUSED(lat);
 	Q_UNUSED(lon);
-	qDebug() << "map_click()" << lat << lon;
+	//qDebug() << "map_click()" << lat << lon;
 }
 
 //= < JS - map_right_click()

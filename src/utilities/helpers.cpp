@@ -43,21 +43,30 @@ QString Helpers::hmm_to_decimal(QString hmm)
 {
 	QStringList parts = hmm.split(" ");
 	QString h = parts.at(0);
+	double deg;
 
 	if( h.contains("N") ){
 		h.replace("N", "");
+		deg = h.toDouble();
 
 	}else if(h.contains("S")){
-		h.replace("S", "-");
+		h.replace("S", "");
+		deg = h.toDouble() * -1;
 
 	}else if(h.contains("E")){
 		h.replace("E", "");
+		deg = h.toDouble();
 
 	}else if(h.contains("W")){
-		h.replace("W", "-");
+		h.replace("W", "");
+		deg = h.toDouble() * -1;
 	}
 
-	float ms = h.toInt() + parts.at(1).toFloat() / 60;
-
+	double ms;
+	if(deg > 0){
+		ms = deg + parts.at(1).toDouble() / 60;
+	}else{
+		ms = deg - parts.at(1).toDouble() / 60;
+	}
 	return QString("%1").arg(ms);
 }

@@ -535,6 +535,9 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 			treeWidgetAirportInfo->scrollToItem(items[0], QAbstractItemView::EnsureVisible);
 		}
 	}
+
+	mapWidget->zoom_to_airport(airport_code);
+
 }
 
 //==============================================================
@@ -645,7 +648,6 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 	
 
 	
-	mapWidget->zoom_to_airport(airport_code);
 
 	return runwaysParent->childCount();
 }
@@ -767,13 +769,13 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 }
 
 //==============================================================
-// Load Stands + Parking
+// Load Tower NOde
 //==============================================================
 int AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
 
 	//* Create the Parkings Node
 	QTreeWidgetItem *towerParent = new QTreeWidgetItem();
-	towerParent->setText(0, "Tower" );
+	towerParent->setText(0, "No Tower" );
 	towerParent->setText(CI_TYPE, "tower");
 	towerParent->setIcon(0, QIcon(":/icon/tower"));
 	treeWidgetAirportInfo->addTopLevelItem(towerParent);
@@ -817,6 +819,7 @@ int AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
 		towerParent->setText(CI_LON, towersNode.at(0).childNodes().at(0).firstChildElement("lon").text());
 
 		mapWidget->add_tower(airport_code, towerParent->text(CI_LAT), towerParent->text(CI_LON));
+		towerParent->setText(0, QString("%1 - Tower").arg(airport_code) );
 
 
 	} /* File Exists */

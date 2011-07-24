@@ -30,7 +30,7 @@
 
 
 
-var aptBounds = {};
+
 
 var zoom = 2;
 
@@ -46,11 +46,18 @@ var planeLabelMarkers;
 
 var radarImageMarkers;
 var radarLabelMarkers;
+
+// = For ATC and tower
 var towerMarkers;
 
+
+//= Airport Markers
 var runwayLines;
 var runwayLabels;
 var standLabels
+
+var airportBounds;
+
 
 //============================================================
 // click control handler to get lat, lon --> transform values to wgs84
@@ -207,7 +214,7 @@ var radarLabelMarkerStyle = new OpenLayers.StyleMap({
 
 
 //=================================================================
-// style for the rwy markers
+// style for the rwy labels
 var runwayLabelMarkerStyle = new OpenLayers.StyleMap({
     
     "default": {
@@ -250,24 +257,14 @@ var runwayLineStyle = new OpenLayers.StyleMap({
     
     "default": {
 
-        strokeColor: "blue",
+        strokeColor: "#000099",
         strokeWidth: 8,
-        fillColor: "blue",
+        fillColor: "#000099",
 		strokeOpacity: 0.8,
 		strokeLinecap: "butt",
 		
-        
-        
-        fontColor: "white",
-        fontSize: "13px",
-        fontFamily: "Helvetica, Arial, sans-serif",
-        fontWeight: "bold",
-
-		graphicOpacity: 1.0,
-		graphicXOffset: -30,
-		graphicYOffset: -30
-
-        },
+		graphic: false
+    },
     
     "select": {
         fillColor: "black",
@@ -492,6 +489,8 @@ function init(){
 	map.addLayer(towerMarkers);
 
 
+	airportBounds = new OpenLayers.Bounds();
+
 	//alert("init done");
 	 Qt.map_initialised();
 
@@ -637,12 +636,17 @@ function zoom_to_latlon(lat, lon, zoom){
 
 // Zooms the map to the airport (thanks, Pete!)
 function zoom_to_airport(apt){
+	//alert("zoom" + airportBounds)
+	//m//ap.zoomToExtent(airportBounds.toArray());
+	
+
 	map.setCenter(
-		aptBounds[apt].getCenterLonLat().transform(
+		airportBounds.getCenterLonLat().transform(
 			osmprojection,
 			map.getProjectionObject()
 			), 12
 	);
+	//*/
 }
 
 
@@ -673,6 +677,8 @@ function clear_map(){
 	runwayLines.removeAllFeatures();
 	runwayLabels.removeAllFeatures();
 	standLabels.removeAllFeatures();
+	//= wtf - there's no clear bounds..!!
+	airportBounds = new OpenLayers.Bounds();
 	//alert("clr all");
 }
 
@@ -681,12 +687,8 @@ function clear_map(){
 //======================================================
 function add_runway(apt, rwy1, rwy2, lat1, lon1, lat2, lon2){
 	
-	if( !aptBounds[apt] ){
-		aptBounds[apt] = new OpenLayers.Bounds();
-		//alert("new bounds");
-	}
-	aptBounds[apt].extend( new OpenLayers.LonLat(lon1, lat1) );
-	aptBounds[apt].extend( new OpenLayers.LonLat(lon2, lat2) );
+	airportBounds.extend( new OpenLayers.LonLat(lon1, lat1) );
+	airportBounds.extend( new OpenLayers.LonLat(lon2, lat2) );
     
 	var points = new Array(
 		new OpenLayers.Geometry.Point(lon1, lat1),
@@ -722,6 +724,8 @@ function add_runway_label(apt, mrwy, mlat, mlon){
 // Add Stand
 function add_stand(apt, name, mlat, mlon){
 
+	airportBounds.extend(new OpenLayers.LonLat(mlon, mlat) );
+
 	//add point = coords from airport tab
 	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
 		
@@ -739,7 +743,8 @@ function add_stand(apt, name, mlat, mlon){
 //================================================================
 //=  Add  Tower
 function add_tower(apt, mlat, mlon){
-	//alert("tower1");
+	
+	airportBounds.extend(new OpenLayers.LonLat(mlon, mlat) );
 	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
 		
 	var feature = new OpenLayers.Feature.Vector(point, {airport: apt});
