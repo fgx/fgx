@@ -718,6 +718,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 							pItem->setText(CI_TYPE, "stand");
 							pItem->setText(CI_LAT, Helpers::hmm_to_decimal(attribs.namedItem("lat").nodeValue()));
 							pItem->setText(CI_LON, Helpers::hmm_to_decimal(attribs.namedItem("lon").nodeValue()));
+							pItem->setText(CI_HEADING, attribs.namedItem("heading").nodeValue());
 							pItem->setText(CI_SETTING_KEY, QString(airport_code).append("stand").append(stand));
 							mapWidget->add_stand( airport_code,
 												  stand,
