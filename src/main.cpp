@@ -91,7 +91,7 @@ int main( int argc, char* argv[])
 	//styles.append("QTabBar::tab {  padding: 6px; border-right: 5px solid #eeeeee }");
 
 
-	//== Laucnher Tabs
+	//== Launcher Tabs
 	styles.append("QTabWidget#launcher_tabs::pane { background-image: url(:/artwork/background-gray-tabbar); border: 0px; padding-top: 20px; }");
 	styles.append("QTabWidget#launcher_tabs > QTabBar { background-color: #b0b0b0 }");
 	styles.append("QTabWidget#launcher_tabs > QTabBar::tab::hover { background-color: #ffffff }");
@@ -107,7 +107,7 @@ int main( int argc, char* argv[])
 	
 	styles.append("ExeControls { background-color: #ffffff; border: 0px; margin-top: 22px; }");
 	styles.append("ExeControls::title { color: #000000; background-color: yellow; margin-top: 0px; margin-left: 0px; }");
-				
+	
 	app.setStyleSheet(styles);
 	
 	//== Start the application here

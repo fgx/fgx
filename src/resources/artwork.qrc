@@ -14,7 +14,7 @@
 		<file alias="boxtop-black-inactive">artwork/boxtop-black-inactive.gif</file>
 		
 		/* group boxes */
-		<file alias="background-gray-tabbar">artwork/background-gray-light.gif</file>
+		<file alias="background-gray-light">artwork/background-gray-light.gif</file>
 		
 		
 		<file alias="fgx-back-click">artwork/fgx-back-click.png</file>

@@ -35,6 +35,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	setWindowIcon(QIcon(":/icon/mpmap"));
 	
 	setProperty("settings_namespace", QVariant("OpenLayerWidget_window"));
+	
 	mainObject->settings->restoreWindow(this);
 
 	//======================================================
@@ -47,8 +48,6 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 	toolbarAirports = new QToolBar();
 	mainLayout->addWidget(toolbarAirports);
-
-
 	
 	toolbarAirports->addWidget(new QLabel(tr("Lat:")));
 	txtLat = new QLineEdit();
@@ -149,7 +148,6 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	QHBoxLayout *midLayout = new QHBoxLayout();
 	mainLayout->addLayout(midLayout);
 	
-
 	//== Zoom Bar
 	QVBoxLayout *layoutZoom = new QVBoxLayout();
 	midLayout->addLayout(layoutZoom, 0);
