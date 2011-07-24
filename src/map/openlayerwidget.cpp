@@ -358,7 +358,7 @@ void OpenLayerWidget::display_radar_layer( int viz)
 {
 	QString jstr = QString("display_radar_layer(%1);").arg(viz);
 	execute_js(jstr);
-	qDebug() << jstr;
+	//qDebug() << jstr;
 }
 
 //=================================================
@@ -441,7 +441,6 @@ void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
 		txtLon->setText(value);
 	
 	}else if(option == "--heading="){
-		qDebug() << "HEAD" << value;
 		spinHeading->setValue(value.toDouble());
 	
 	}

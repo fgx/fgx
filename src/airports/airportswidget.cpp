@@ -246,7 +246,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 			this, SLOT(on_airport_info_selection_changed())
 	);
 	connect(treeWidgetAirportInfo, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-			this, SLOT(on_tree_item_double_clicked(QTreeWidgetItem*,int))
+			this, SLOT(on_airport_info_double_clicked(QTreeWidgetItem*,int))
 	);
 
 
@@ -680,7 +680,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 	//* Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
 	QString file_path(airport_dir.append("/").append(airport_code));
 	file_path.append( mainObject->X->terrasync_enabled() ? ".groundnet.xml" : ".parking.xml");
-	qDebug() << file_path << QFile::exists(file_path);
+	//qDebug() << file_path << QFile::exists(file_path);
 	//* Check parking file exists
 	if(QFile::exists(file_path)){
 
@@ -755,7 +755,94 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 	return parkingParent->childCount();
 }
 
+//==============================================================
+// Load Stands + Parking
+//==============================================================
+int AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
 
+	//* Create the Parkings Node
+	QTreeWidgetItem *towerParent = new QTreeWidgetItem();
+	towerParent->setText(0, "Parking" );
+	towerParent->setIcon(0, QIcon(":/icon/folder"));
+	treeWidgetAirportInfo->addTopLevelItem(towerParent);
+	treeWidgetAirportInfo->setItemExpanded(towerParent, true);
+
+	//=======================================================================
+	// Parse the <groundnet/parking>.threshold.xml file for Parking Postiton
+	//=======================================================================
+	/*
+		<?xml version="1.0"?>
+		<PropertyList>
+		  <tower>
+			<twr>
+			  <lon>4.762789</lon>
+			  <lat>52.307064</lat>
+			  <elev-m>60.96</elev-m>
+			</twr>
+		  </tower>
+		</PropertyList>
+	*/
+
+	//* Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
+	QString file_path(airport_dir.append("/").append(airport_code).append(".twr,xml"));
+	//qDebug() << file_path << QFile::exists(file_path);
+	//= Check tower file exists
+	if(QFile::exists(file_path)){
+
+		//* Open file and read contents to string
+		QFile ppfile(file_path);
+		ppfile.open(QIODevice::ReadOnly);
+		QString xmlString = ppfile.readAll();
+		//qDebug() << xmlString;
+		//* Create domDocument - important - don't pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
+		QDomDocument dom;
+		dom.setContent(xmlString); //* AFTER dom has been created, then set the content from a string from the file
+
+		//* Get <Parking/> nodes and loop thru them and add to list (removing dupes)
+		QDomNodeList towerNode = dom.elementsByTagName("twr");
+		//towerNode.childNodes().at(0).firstChildElement("rwy").text()
+		/*
+		if (towerNode.count() > 0){
+			for(int idxd =0; idxd < parkingNodes.count(); idxd++){
+
+				 QDomNode parkingNode = parkingNodes.at(idxd);
+				 QDomNamedNodeMap attribs = parkingNode.attributes();
+				 QString stand(attribs.namedItem("name").nodeValue());
+				 stand.append(attribs.namedItem("number").nodeValue());
+
+				//= Check it doesnt already exist - pete is confused as to multiple entries
+				 if(!listParkingPositions.contains(stand)){
+					 if(attribs.namedItem("type").nodeValue() == "gate"){
+
+						//= Append position to eliminate dupes
+						if(!stand.contains(" ")){
+							listParkingPositions.append(stand);
+							QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
+							pItem->setIcon(0, QIcon(":/icon/stand"));
+							pItem->setText(CI_NODE, stand);
+							pItem->setText(CI_TYPE, "stand");
+							pItem->setText(CI_LAT, Helpers::hmm_to_decimal(attribs.namedItem("lat").nodeValue()));
+							pItem->setText(CI_LON, Helpers::hmm_to_decimal(attribs.namedItem("lon").nodeValue()));
+							pItem->setText(CI_HEADING, attribs.namedItem("heading").nodeValue());
+							pItem->setText(CI_SETTING_KEY, QString(airport_code).append("stand").append(stand));
+							mapWidget->add_stand( airport_code,
+												  stand,
+												  pItem->text(CI_LAT),
+												  pItem->text(CI_LON)
+												 );
+						}
+					}
+				}
+			}
+
+		}
+		*/
+
+	} /* File Exists */
+
+	//* return the count
+	return towerParent->childCount();
+}
 
 
 void AirportsWidget::on_reload_cache(){
@@ -927,10 +1014,10 @@ void AirportsWidget::on_airport_info_selection_changed()
 
 }
 
-void AirportsWidget::on_tree_item_double_clicked(QTreeWidgetItem *item, int col_idx)
+void AirportsWidget::on_airport_info_double_clicked(QTreeWidgetItem *item, int col_idx)
 {
-	qDebug() << item->text(CI_TYPE);
-	if (item->text(CI_TYPE) == "stand"){
+	//qDebug() << item->text(CI_TYPE);
+	if (item->text(CI_TYPE) == "stand" || item->text(CI_TYPE) == "runway" ){
 		mapWidget->zoom_to_latlon(item->text(CI_LAT), item->text(CI_LON), 17);
 	}
 }

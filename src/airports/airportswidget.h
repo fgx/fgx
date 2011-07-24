@@ -95,6 +95,7 @@ public:
 	void load_info_tree(QString airport_dir, QString airport_code);
 	int load_runways_node(QString airport_dir, QString airport_code);
 	int load_parking_node(QString airport_dir, QString airport_code);
+	int load_tower_node(QString airport_dir, QString airport_code);
 
 	QLineEdit *txtLat;
 	QLineEdit *txtLon;
@@ -123,7 +124,7 @@ public slots:
 	void on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx);
 	void on_airport_info_selection_changed();
 
-	void on_tree_item_double_clicked(QTreeWidgetItem*,int);
+	void on_airport_info_double_clicked(QTreeWidgetItem*,int);
 
 	void on_reload_cache();
 

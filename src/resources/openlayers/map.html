@@ -180,17 +180,17 @@ var radarLabelMarkerStyle = new OpenLayers.StyleMap({
 		graphicWidth: 50,
 		graphicHeight: 12,
 		graphicOpacity: 0.6,
-		graphicXOffset: 0,
-		graphicYOffset: -8,
+		graphicXOffset: "${gxOff}",
+		graphicYOffset: "${gyOff}",
 		
         
         fontColor: "white",
         fontSize: "10px",
-        fontFamily: "Helvetica, Arial, sans-serif",
+        fontFamily: "sans-serif",
         fontWeight: "bold",
         labelAlign: "left",
-        labelXOffset: 2, //16,
-        labelYOffset: 2, //-24,
+        labelXOffset: "${lxOff}", 
+        labelYOffset: "${lyOff}", 
         label : "${callsign}",
 		//rotation : "${planerotation}",
 
@@ -541,6 +541,8 @@ function show_radar(mcallsign, mlat, mlon, mheading, maltitude){
 		radarLabelMarkers.removeFeatures(existing_lbl);
 	}
 
+
+
 	// Add Image
 	var pointImg = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );		
 	var imgFeat = new OpenLayers.Feature.Vector(pointImg, {
@@ -550,10 +552,28 @@ function show_radar(mcallsign, mlat, mlon, mheading, maltitude){
 	radarImageMarkers.addFeatures([imgFeat]);	
 	
 	
+	
+	var gxOff = 4;
+	var gyOff = -8;
+
+	var lxOff = 6;
+	var lyOff = 2;
+	
+	//+ WTF they are different points !!!
+	if(mheading > 0  && mheading < 90){
+		lyOff = lyOff - 15;
+		gyOff = gyOff  + 15 ;
+	}else if( mheading > 90 && mheading < 180){
+		lyOff = lyOff + 5;
+		gyOff = gyOff - 5;
+	}
+
 	// Add callsign label as separate feature, to have a background color (graphic) with offset
 	var pointLabel = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
 	var lblFeat = new OpenLayers.Feature.Vector(pointLabel, {
                 callsign: mcallsign,
+				lxOff: lxOff, lyOff: lyOff,
+				gxOff: gxOff, gyOff: gyOff
 				});
 	lblFeat._callsign = mcallsign;
 	radarLabelMarkers.addFeatures([lblFeat]);	

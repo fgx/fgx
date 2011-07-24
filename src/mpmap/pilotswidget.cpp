@@ -213,6 +213,7 @@ void PilotsWidget::fetch_pilots()
 	connect(reply, SIGNAL( finished()),
 			this, SLOT(on_server_read_finished())
 	);
+	statusBar->showMessage("Request");
 
 }
 
@@ -242,12 +243,12 @@ void PilotsWidget::on_server_ready_read(){
 void PilotsWidget::on_server_read_finished(){
 	//qDebug() << "done"; // << server_string;
 
-
+	statusBar->showMessage("Got Reply");
 	//== Loop all ndes and set flag to 1 - item remaining will b enuked
 	for(int idx=0; idx << tree->invisibleRootItem()->childCount(); idx++){
 		tree->invisibleRootItem()->child(idx)->setText(C_FLAG, "1");
 	}
-
+	tree->setUpdatesEnabled(false);
 
 	//= Create Dom Document
 	QDomDocument dom;
@@ -262,7 +263,7 @@ void PilotsWidget::on_server_read_finished(){
 	if (nodes.count() > 0){
 		for(int idxd =0; idxd < nodes.count(); idxd++){
 			if( mainObject->debug_mode && idxd == 5){
-				return; //DEBUG
+				//return; //DEBUG
 			}
 
 			QDomNode node = nodes.at(idxd);
@@ -292,6 +293,7 @@ void PilotsWidget::on_server_read_finished(){
 
 			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
 			item->setText(C_FLAG, "");
+
 			emit radar(item->text(C_CALLSIGN),
 					   item->text(C_LAT),
 					   item->text(C_LON),
@@ -306,8 +308,14 @@ void PilotsWidget::on_server_read_finished(){
 	for(int idxr=0; idxr << items.count(); idxr++){
 		tree->invisibleRootItem()->removeChild(items.at(idxr));
 	}
+	tree->setUpdatesEnabled(true);
+
+
 	if(checkBoxAutoRefresh->isChecked()){
 		QTimer::singleShot( comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000, this, SLOT(fetch_pilots()) );
+		statusBar->showMessage(QString("Waiting %1").arg(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt()));
+	}else{
+		statusBar->showMessage("Idle");
 	}
 	//= Resize columns the first time (python does not have infunction statics like this ;-( ))
 	/*
