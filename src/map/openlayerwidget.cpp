@@ -200,6 +200,11 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	midLayout->addWidget(webView,10);
 	webView->page()->networkAccessManager()->setCache(networkDiskCache);
 	//webView->page()->networkAccessManager()->setCookieJar(networkCookieJar);
+
+	webInspector = new QWebInspector();
+	webInspector->hide();
+	//midLayout->addWidget(webInspector);
+
 	connect(webView, SIGNAL(loadStarted()), this, SLOT(start_progress()));
 	connect(webView, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
 	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));
@@ -227,6 +232,11 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 			this,					SLOT(on_display_layer(QAbstractButton*))
 	);
 	mainObject->settings->beginGroup("map_display_layers");
+
+	QToolButton *buttDebug = new QToolButton();
+	buttDebug->setText("Debug");
+	statusBar->addPermanentWidget(buttDebug);
+	connect(buttDebug, SIGNAL(clicked()), this, SLOT(on_show_debugger()));
 
 	chkViewStands = new QCheckBox();
 	chkViewStands->setText("Stands");
@@ -276,7 +286,9 @@ void OpenLayerWidget::load_map(QString m_typ)
 	webView->setHtml(contents, QUrl("qrc:///")); // This prefix does not work with src:///openlayers/ .. help.. Geoff.. gral.?
 	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 
+	webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled,true);
 
+	webInspector->setPage(webView->page());
 
 	//= Show Hide widgets
 	bool is_airport = map_type == "airport";
@@ -584,3 +596,8 @@ void OpenLayerWidget::end_progress(bool Ok){
 }
 	
 
+void OpenLayerWidget::on_show_debugger()
+{
+	webInspector->show();
+	webInspector->setMinimumWidth(500);
+}

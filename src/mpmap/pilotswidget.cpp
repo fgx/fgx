@@ -316,7 +316,7 @@ void PilotsWidget::on_server_read_finished(){
 
 
 	if(checkBoxAutoRefresh->isChecked()){
-		qDebug() << "=" << comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000;
+		//qDebug() << "=" << comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000;
 
 		QTimer::singleShot( comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000, this, SLOT(fetch_pilots()) );
 		statusBar->showMessage(QString("Waiting %1").arg(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt()));

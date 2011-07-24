@@ -80,18 +80,30 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
 		); 
 		this.handler = new OpenLayers.Handler.Click(
 			this, {
-				'dblclick': this.trigger
+				'dblclick': this.trigger,
+                'rightclick': this.on_right
 			}, this.handlerOptions
 		);
 	}, 
 
 	trigger: function(e) {
-		var lonlat = map.getLonLatFromViewPortPx(e.xy);
-		lonlat.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
-		Qt.map_click(lonlat.lat, lonlat.lon);
-		Qt.map_show_coords(lonlat.lat, lonlat.lon);
+		
+		if(map_type == "airport"){
+			var lonlat = map.getLonLatFromViewPortPx(e.xy);
+			lonlat.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
+			Qt.map_click(lonlat.lat, lonlat.lon);
+			Qt.map_show_coords(lonlat.lat, lonlat.lon);
+		}else{
+			var lonlat = map.getLonLatFromViewPortPx(e.xy);
+			// WTF !!
+			map.setCenter(lonlat, 6, false, true);
+
+		}
 		//alert("Map click at LAT: " + lonlat.lat + " LON: " +
 		//                          + lonlat.lon);
+	},
+	on_right: function(e){
+		alert(e);
 	}
 });
 

@@ -5,6 +5,7 @@
 #include <QtCore/QString>
 
 #include <QtWebKit/QWebView>
+#include <QWebInspector>
 #include <QtNetwork/QNetworkDiskCache>
 #include <QtNetwork/QNetworkCookieJar>
 
@@ -64,6 +65,7 @@ private:
 
 	
 	QWebView *webView;
+	QWebInspector *webInspector;
 	QNetworkDiskCache *networkDiskCache;
 	QNetworkCookieJar *networkCookieJar;
 	
@@ -139,7 +141,7 @@ public slots:
 	//void on_turn_left5_clicked();
 	//void on_turn_right05_clicked();
 	//void on_turn_right5_clicked();
-	
+	void on_show_debugger();
 };
 
 #endif // OPENLAYERWIDGET
