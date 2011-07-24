@@ -253,8 +253,6 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	mainObject->settings->endGroup();
 
 
-	//=== Initialise
-	load_map();
 	
 	//============================================================================
 	//== Main Settings connection
@@ -267,20 +265,27 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 //===========================================================================
 //== Initialisation
 //===========================================================================
-void OpenLayerWidget::load_map()
+void OpenLayerWidget::load_map(QString m_typ)
 {
+	this->map_type = m_typ;
 	QFile file(":/openlayers/map.html");
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-		qDebug() << "MAP: could not open file" << file.fileName();
+		//qDebug() << "MAP: could not open file" << file.fileName();
 		return;
 	}
 	QByteArray contents = file.readAll();
 	webView->setHtml(contents, QUrl("qrc:///")); // This prefix does not work with src:///openlayers/ .. help.. Geoff.. gral.?
 	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
+
+	chkViewRunwayLines->setVisible(map_type == "airport");
+	chkViewRunwayLabels->setVisible(map_type == "airport");
+	chkViewStands->setVisible(map_type == "airport");
 }
 
 void OpenLayerWidget::map_initialised()
 {
+	QString js_mtype = QString("set_map_type('%1');").arg(map_type);
+	execute_js(js_mtype);
 	//qDebug() << "map initialised";
 	QList<QAbstractButton *> buttons = buttonGroupViewLayers->buttons();
 	for(int idx = 0; idx < buttons.size(); idx++){
@@ -291,6 +296,8 @@ void OpenLayerWidget::map_initialised()
 	}
 
 }
+
+
 
 //= Overide the closeEvent
 void OpenLayerWidget::closeEvent(QCloseEvent *event)

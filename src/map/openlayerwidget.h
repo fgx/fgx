@@ -36,6 +36,8 @@ public:
 	QSlider *sliderZoom;
 	QLCDNumber *lcdZoom;
 
+	QString map_type;
+
 private:
 
 	QProgressBar *progressBar;
@@ -67,7 +69,7 @@ signals:
 	
 	void setx(QString option, bool enabled, QString value);
 	
-	public slots:
+public slots:
 
 	//= browser progress
     void start_progress();
@@ -75,7 +77,7 @@ signals:
     void end_progress(bool Ok);
 	
 	//= map calls
-	void load_map();
+	void load_map(QString map_type);
 	void execute_js(QString js_string);
 
 
@@ -125,8 +127,6 @@ signals:
 
 	//======================================
 	void closeEvent(QCloseEvent *event);
-
-	//void on_map_type(QAction*);
 	
 	void on_upx( QString option, bool enabled, QString value);
 	

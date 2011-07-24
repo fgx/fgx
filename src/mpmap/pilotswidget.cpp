@@ -161,8 +161,8 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	tree->setColumnHidden(C_LAT, !chkShowLatLon->isChecked());
 	tree->setColumnHidden(C_LON, !chkShowLatLon->isChecked());
 
-	tree->setColumnWidth(C_CALLSIGN, 80);
-	tree->setColumnWidth(C_AIRCRAFT, 80);
+	tree->setColumnWidth(C_CALLSIGN, 100);
+	tree->setColumnWidth(C_AIRCRAFT, 100);
 	tree->setColumnWidth(C_ALTITUDE, 50);
 	tree->setColumnWidth(C_HEADING, 50);
 
@@ -281,11 +281,11 @@ void PilotsWidget::on_server_read_finished(){
 
 			//== Check for atc
 			QString model = QString(attribs.namedItem("model").nodeValue());
-			bool tower = false;
+
 			//= Need to catch atc models here?
-			if(model.toLower() == "atc" || model.toLower() == "atc2"){
-				tower = true;
-			}
+			QStringList tower_names;
+			tower_names << "atc"  << "atc-tower2";
+			bool is_tower = tower_names.contains( model.toLower() );
 
 
 			item->setText(C_AIRCRAFT, attribs.namedItem("model").nodeValue());
@@ -308,7 +308,7 @@ void PilotsWidget::on_server_read_finished(){
 					   item->text(C_LON),
 					   item->text(C_HEADING),
 					   item->text(C_ALTITUDE),
-					   tower
+					   is_tower
 				);
 		}
 	}

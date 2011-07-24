@@ -231,13 +231,14 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	treeWidgetAirportInfo->setAlternatingRowColors(true);
 	treeWidgetAirportInfo->setRootIsDecorated(true);
 	treeWidgetAirportInfo->setUniformRowHeights(true);
+	treeWidgetAirportInfo->setExpandsOnDoubleClick(false);
 
 	QTreeWidgetItem *headerItem = treeWidgetAirportInfo->headerItem();
 	headerItem->setText(CI_NODE, tr(""));
 	headerItem->setText(CI_WIDTH, tr("Width"));
 	headerItem->setText(CI_LENGTH, tr("Length"));
 	headerItem->setText(CI_LAT, tr("Lat"));
-	headerItem->setText(CI_LON, tr("Lng"));
+	headerItem->setText(CI_LON, tr("Lon"));
 	headerItem->setText(CI_HEADING, tr("Heading"));
 	headerItem->setText(CI_RUNWAYS, tr("R"));
 
@@ -364,6 +365,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	mapWidget = new OpenLayerWidget(mainObject);
 	mapWidget->setMinimumWidth(400);
 	mainLayout->addWidget(mapWidget);
+	mapWidget->load_map("airport");
 
 
 	//============================================================================
@@ -731,11 +733,9 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 		//= Get Frequencies
 		QTreeWidgetItem *towerItem = treeWidgetAirportInfo->findItems("tower", Qt::MatchExactly, CI_TYPE).at(0);
 		QDomNodeList nodeFreqs = dom.elementsByTagName("frequencies");
-		qDebug() << "FREQss" << nodeFreqs.count();
-		for(int idxf =0; idxf < nodeFreqs.at(0).childNodes().count(); idxf++){
-			qDebug() << "FREQ" << nodeFreqs.at(0).childNodes().at(idxf).firstChild().nodeValue();
-			double freq = nodeFreqs.at(0).childNodes().at(idxf).firstChild().nodeValue().toDouble() / 100;
 
+		for(int idxf =0; idxf < nodeFreqs.at(0).childNodes().count(); idxf++){
+			double freq = nodeFreqs.at(0).childNodes().at(idxf).firstChild().nodeValue().toDouble() / 100;
 			QTreeWidgetItem *freqItem = new QTreeWidgetItem(towerItem);
 			freqItem->setText(CI_NODE,
 							  QString("%1 - %2").arg(	nodeFreqs.at(0).childNodes().at(idxf).nodeName()
@@ -748,7 +748,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 		//== Parking Positions
 		QStringList listParkingPositions;
 
-		//* Get <Parking/> nodes and loop thru them and add to list (removing dupes)
+		//= Get <Parking/> nodes and loop thru them and add to list (removing dupes)
 		QDomNodeList parkingNodes = dom.elementsByTagName("Parking");
 		if (parkingNodes.count() > 0){
 			for(int idxd =0; idxd < parkingNodes.count(); idxd++){
@@ -785,25 +785,14 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 
 		}
 
-		//* Create the tree nodes
-		/*
-		if(listParkingPositions.size() == 0){
-			QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
-			pItem->setText(CI_NODE, "None");
-			return 0;
-		}else{
-			listParkingPositions.sort();
-			for(int i =0; i < listParkingPositions.size(); i++){
-				QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
-				pItem->setIcon(0, QIcon(":/icon/stand"));
-				pItem->setText(CI_NODE, listParkingPositions.at(i));
-				pItem->setText(CI_TYPE, "stand");
-				pItem->setText(CI_SETTING_KEY, QString(airport_code).append("stand").append(listParkingPositions.at(i)));
-			}
-		}
-		*/
-	} /* File Exists */
 
+	} //= File Exists
+
+	if(parkingParent->childCount() == 0){
+		QTreeWidgetItem *pItem = new QTreeWidgetItem(parkingParent);
+		pItem->setText(CI_NODE, "None");
+		return 0;
+	}
 	//* return the count
 	return parkingParent->childCount();
 }

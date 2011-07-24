@@ -29,7 +29,7 @@
 <script type="text/javascript">
 
 
-
+var map_type;
 
 
 var zoom = 2;
@@ -62,38 +62,38 @@ var airportBounds;
 //============================================================
 // click control handler to get lat, lon --> transform values to wgs84
 OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
-                defaultHandlerOptions: {
-                    'single': false,
-                    'double': true,
-                    'pixelTolerance': 0,
-                    'stopSingle': false,
-                    'stopDouble': true
-					
-                },
+	defaultHandlerOptions: {
+		'single': false,
+		'double': true,
+		'pixelTolerance': 0,
+		'stopSingle': false,
+		'stopDouble': true
+		
+	},
 
-                initialize: function(options) {
-                    this.handlerOptions = OpenLayers.Util.extend(
-                        {}, this.defaultHandlerOptions
-                    );
-                    OpenLayers.Control.prototype.initialize.apply(
-                        this, arguments
-                    ); 
-                    this.handler = new OpenLayers.Handler.Click(
-                        this, {
-                            'dblclick': this.trigger
-                        }, this.handlerOptions
-                    );
-                }, 
+	initialize: function(options) {
+		this.handlerOptions = OpenLayers.Util.extend(
+			{}, this.defaultHandlerOptions
+		);
+		OpenLayers.Control.prototype.initialize.apply(
+			this, arguments
+		); 
+		this.handler = new OpenLayers.Handler.Click(
+			this, {
+				'dblclick': this.trigger
+			}, this.handlerOptions
+		);
+	}, 
 
-                trigger: function(e) {
-                    var lonlat = map.getLonLatFromViewPortPx(e.xy);
-					lonlat.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
-					Qt.map_click(lonlat.lat, lonlat.lon);
-					Qt.map_show_coords(lonlat.lat, lonlat.lon);
-					//alert("Map click at LAT: " + lonlat.lat + " LON: " +
-                    //                          + lonlat.lon);
-                }
-            });
+	trigger: function(e) {
+		var lonlat = map.getLonLatFromViewPortPx(e.xy);
+		lonlat.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
+		Qt.map_click(lonlat.lat, lonlat.lon);
+		Qt.map_show_coords(lonlat.lat, lonlat.lon);
+		//alert("Map click at LAT: " + lonlat.lat + " LON: " +
+		//                          + lonlat.lon);
+	}
+});
 
 //=================================================================
 // Style for your aeroplane
@@ -494,6 +494,10 @@ function init(){
 	//alert("init done");
 	 Qt.map_initialised();
 
+} // = end init
+
+function set_map_type(mt){
+	map_type = mt;
 }
 
 //==========================================================
@@ -681,7 +685,7 @@ function clear_map(){
 	standLabels.removeAllFeatures();
 	//= wtf - there's no clear bounds..!!
 	airportBounds = new OpenLayers.Bounds();
-	//alert("clr all");
+	//alert("clear_map()");
 }
 
 //===============================================================

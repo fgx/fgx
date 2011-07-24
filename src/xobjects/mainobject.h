@@ -164,6 +164,8 @@ public slots:
 
 	void on_about_qt();
 	void on_about_fgx();
+
+	void on_upx(QString option, bool enabled, QString value);
 };
 
 

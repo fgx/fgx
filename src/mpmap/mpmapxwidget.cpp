@@ -71,6 +71,7 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	//= Map
 	mapWidget = new OpenLayerWidget(mainObject);
 	splitter->addWidget(mapWidget);
+	mapWidget->load_map("radar");
 
 
 	//================================================================================
@@ -95,7 +96,10 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 }
 
 void MpMapXWidget::initialize(){
-	//mapWidget->init_map();
+	//TODO make this cleaner
+	if(pilotsWidget->checkBoxAutoRefresh->isChecked()){
+		pilotsWidget->fetch_pilots();
+	}
 }
 
 //= window close

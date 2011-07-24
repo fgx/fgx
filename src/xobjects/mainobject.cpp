@@ -35,7 +35,9 @@ MainObject::MainObject(QObject *parent) :
 
 	//= Settings Model
 	X = new XSettingsModel(this);
-
+	connect(X, SIGNAL(upx(QString,bool,QString)),
+			this, SLOT(on_upx(QString,bool,QString))
+	);
 	
 
 	//================================================================
@@ -508,4 +510,13 @@ void MainObject::on_action_open_url(QAction *act)
 {
 	QUrl url(act->property("url").toString());
 	QDesktopServices::openUrl( url );
+}
+
+
+void MainObject::on_upx(QString option, bool enabled, QString value)
+{
+	Q_UNUSED(enabled);
+	if(option == "--callsign="){
+		lblCallsign->setText(value);
+	}
 }
