@@ -57,6 +57,8 @@ public slots:
 	void show_airport(QString airport);
 
 	void focus_aero(XAero aero);
+
+	void on_freeze_map(bool freeze);
 };
 
 #endif // MPMAPXWIDGET_H

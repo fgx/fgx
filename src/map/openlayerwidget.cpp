@@ -193,17 +193,15 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	networkDiskCache = new QNetworkDiskCache(this);
 	networkDiskCache->setCacheDirectory(QDesktopServices::storageLocation(QDesktopServices::CacheLocation));
 	
-	networkCookieJar = new QNetworkCookieJar(this);
 	
 	//== Browser
 	webView = new QWebView();
 	midLayout->addWidget(webView,10);
 	webView->page()->networkAccessManager()->setCache(networkDiskCache);
-	//webView->page()->networkAccessManager()->setCookieJar(networkCookieJar);
 
 	webInspector = new QWebInspector();
 	webInspector->hide();
-	//midLayout->addWidget(webInspector);
+
 
 	connect(webView, SIGNAL(loadStarted()), this, SLOT(start_progress()));
 	connect(webView, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
@@ -267,8 +265,9 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 	mainObject->settings->endGroup();
 
-	QToolButton *buttDebug = new QToolButton();
+	buttDebug = new QToolButton();
 	buttDebug->setText("Debug");
+	buttDebug->setVisible(mainObject->debug_mode == true);
 	statusBar->addPermanentWidget(buttDebug);
 	connect(buttDebug, SIGNAL(clicked()), this, SLOT(on_show_debugger()));
 
@@ -278,6 +277,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	//== Main Settings connection
 	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+	connect(mainObject, SIGNAL(on_debug_mode(bool)), this, SLOT(on_debug_mode(bool)));
 }
 
 
@@ -297,7 +297,7 @@ void OpenLayerWidget::load_map(QString m_typ)
 	webView->setHtml(contents, QUrl("qrc:///")); // This prefix does not work with src:///openlayers/ .. help.. Geoff.. gral.?
 	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 
-	webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled,true);
+	webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, mainObject->debug_mode);
 
 	webInspector->setPage(webView->page());
 
@@ -614,4 +614,11 @@ void OpenLayerWidget::on_show_debugger()
 {
 	webInspector->show();
 	webInspector->setMinimumWidth(500);
+}
+
+
+void OpenLayerWidget::on_debug_mode(bool debug_mode)
+{
+	webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, debug_mode);
+	buttDebug->setVisible(debug_mode == true);
 }

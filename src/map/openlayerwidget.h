@@ -7,7 +7,6 @@
 #include <QtWebKit/QWebView>
 #include <QWebInspector>
 #include <QtNetwork/QNetworkDiskCache>
-#include <QtNetwork/QNetworkCookieJar>
 
 
 #include <QtGui/QStatusBar>
@@ -41,6 +40,8 @@ public:
 	QString map_type;
 	QToolBar *toolbarAirports;
 
+	QWebView *webView;
+
 private:
 
 	QProgressBar *progressBar;
@@ -66,10 +67,11 @@ private:
 	QDoubleSpinBox *spinHeading;
 
 	
-	QWebView *webView;
+	QToolButton *buttDebug;
 	QWebInspector *webInspector;
+
 	QNetworkDiskCache *networkDiskCache;
-	QNetworkCookieJar *networkCookieJar;
+	//QNetworkCookieJar *networkCookieJar;
 	
 signals:
 	
@@ -144,6 +146,7 @@ public slots:
 	//void on_turn_right05_clicked();
 	//void on_turn_right5_clicked();
 	void on_show_debugger();
+	void on_debug_mode(bool);
 };
 
 #endif // OPENLAYERWIDGET

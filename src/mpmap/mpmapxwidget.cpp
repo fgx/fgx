@@ -93,6 +93,8 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	connect(pilotsWidget,	SIGNAL(aircraft_selected(XAero)),
 			this,			SLOT(focus_aero(XAero)));
 
+	connect(pilotsWidget,	SIGNAL(freeze_map(bool)), this, SLOT(on_freeze_map(bool)));
+
 }
 
 void MpMapXWidget::initialize(){
@@ -108,7 +110,11 @@ void MpMapXWidget::closeEvent(QCloseEvent *event){
 	event->accept();
 }
 
-
+void MpMapXWidget::on_freeze_map(bool freeze)
+{
+	//mapWidget->webView->setUpdatesEnabled(freeze);
+	//qDebug() << "freeze=" << freeze;
+}
 
 
 void MpMapXWidget::add_airport(QString airport){
@@ -120,8 +126,6 @@ void MpMapXWidget::show_airport(QString airport){
 	mapWidget->zoom_to_airport(airport);
 }
 void MpMapXWidget::add_runway(QString airport, QString rwy1, QString rwy2, QString lat1, QString lng1, QString lat2, QString lng2){
-	Q_UNUSED(rwy1);
-	Q_UNUSED(rwy2);
 	mapWidget->add_runway(airport, rwy1, rwy2, lat1, lng1, lat2, lng2);
 }
 

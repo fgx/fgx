@@ -612,10 +612,13 @@ function show_radar(mcallsign, mlat, mlon, mheading, maltitude){
 		radarLabelMarkers.removeFeatures(existing_lbl);
 	}
 
-
+	var pointImg = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );	
+	if(!map.getExtent().containsPixel(pointImg, false)){
+		return; //alert(map.getExtent().containsLonLat(pointImg, false));
+	}
 
 	// Add Image
-	var pointImg = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );		
+		
 	var imgFeat = new OpenLayers.Feature.Vector(pointImg, {
 				planerotation: mheading
 				}); 

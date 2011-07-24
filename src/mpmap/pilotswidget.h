@@ -1,13 +1,11 @@
 #ifndef PILOTSWIDGET_H
 #define PILOTSWIDGET_H
 
-#include <QtCore/QTimer>
-
 
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
-
+#include <QDomDocument>
 
 #include <QtGui/QWidget>
 #include <QtGui/QTreeWidget>
@@ -41,6 +39,7 @@ public:
 
 	MainObject *mainObject;
 
+	QDomDocument dom;
 
 	QNetworkAccessManager *netMan;
 	QNetworkReply  *reply;
@@ -60,6 +59,7 @@ signals:
 	void radar(QString callsign, QString lat, QString lon, QString heading, QString altitude, bool is_tower);
 	//void aircraft_selected(QString callsign);
 	void aircraft_selected(XAero aero);
+	void freeze_map(bool freeze);
 
 public slots:
 

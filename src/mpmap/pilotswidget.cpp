@@ -1,8 +1,8 @@
 
 #include <QtDebug>
 
+#include <QtCore/QTimer>
 
-#include <QtXml/QDomDocument>
 #include <QtXml/QDomNodeList>
 #include <QtXml/QDomNamedNodeMap>
 
@@ -238,14 +238,19 @@ void PilotsWidget::on_server_read_finished(){
 	statusBar->showMessage("Got Reply");
 
 	tree->setUpdatesEnabled(false);
+	emit freeze_map(true);
+
+	QTreeWidgetItem *rootItem = tree->invisibleRootItem();
+
 	//== Loop all ndes and set flag to 1 - item remaining will b enuked
-	for(int idx=0; idx << tree->invisibleRootItem()->childCount(); idx++){
-		tree->invisibleRootItem()->child(idx)->setText(C_FLAG, "1");
+	qDebug() << "kids=" << rootItem->childCount();
+	for(int idx=0; idx < rootItem->childCount(); idx++){
+		rootItem->child(idx)->setText(C_FLAG, "1");
+		//qDebug() << "idx" << idx;
 	}
 
 
 	//= Create Dom Document
-	QDomDocument dom;
 	dom.setContent(server_string);
 
 	//= get the <fg_server> node
@@ -266,9 +271,10 @@ void PilotsWidget::on_server_read_finished(){
 			// = check if pilot in list or update
 			QList<QTreeWidgetItem *> fitems = tree->findItems(attribs.namedItem("callsign").nodeValue(), Qt::MatchExactly, C_CALLSIGN);
 			if(fitems.size() == 0){
-				item = new QTreeWidgetItem(tree);
+				item = new QTreeWidgetItem(rootItem);
 				item->setText(C_CALLSIGN, attribs.namedItem("callsign").nodeValue());
 				item->setText(C_COUNT, "0");
+
 				tree->addTopLevelItem(item);
 			}else{
 				item = fitems.at(0);
@@ -310,13 +316,15 @@ void PilotsWidget::on_server_read_finished(){
 	}
 
 	//= remove the flagged items
-	QList<QTreeWidgetItem *> items = tree->findItems("0", Qt::MatchExactly, C_FLAG);
-	for(int idxr=0; idxr << items.count(); idxr++){
+	QList<QTreeWidgetItem *> items = tree->findItems("1", Qt::MatchExactly, C_FLAG);
+	for(int idxr=0; idxr < items.count(); idxr++){
+		qDebug() << idxr;
 		//tree->invisibleRootItem()->removeChild(items.at(idxr));
 		items.at(idxr)->setText( C_COUNT, QString::number(items.at(idxr)->text(C_COUNT).toInt() + 1) );
 	}
-	tree->setUpdatesEnabled(true);
 
+	tree->setUpdatesEnabled(true);
+	emit freeze_map(false);
 
 	if(checkBoxAutoRefresh->isChecked()){
 		//qDebug() << "=" << comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000;
