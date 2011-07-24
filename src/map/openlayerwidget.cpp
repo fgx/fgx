@@ -196,7 +196,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	
 	//== Browser
 	webView = new QWebView();
-	midLayout->addWidget(webView,10);
+	midLayout->addWidget(webView, 10);
 	webView->page()->networkAccessManager()->setCache(networkDiskCache);
 
 	webInspector = new QWebInspector();
@@ -414,12 +414,12 @@ void OpenLayerWidget::show_aircraft(QString callsign, QString lat, QString lon, 
 
 //================================================
 // display_radar
-void OpenLayerWidget::display_radar_layer( int viz)
+/*void OpenLayerWidget::display_radar_layer( int viz)
 {
 	QString jstr = QString("display_radar_layer(%1);").arg(viz);
 	execute_js(jstr);
 	//qDebug() << jstr;
-}
+}*/
 
 //=================================================
 // Show Aircraft Radar - this allows more than one aircraft.
@@ -432,6 +432,11 @@ void OpenLayerWidget::show_radar(QString callsign, QString lat, QString lon, QSt
 	}
 	execute_js(jstr);
 	//qDebug() << "show_radar jstr: " << jstr;
+}
+
+void OpenLayerWidget::clear_radar()
+{
+	execute_js("clear_radar();");
 }
 
 //=================================================

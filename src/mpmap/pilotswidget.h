@@ -57,7 +57,7 @@ public:
 signals:
 
 	void radar(QString callsign, QString lat, QString lon, QString heading, QString altitude, bool is_tower);
-	//void aircraft_selected(QString callsign);
+	void clear_radar();
 	void aircraft_selected(XAero aero);
 	void freeze_map(bool freeze);
 

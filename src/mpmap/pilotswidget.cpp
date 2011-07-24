@@ -239,14 +239,13 @@ void PilotsWidget::on_server_read_finished(){
 
 	tree->setUpdatesEnabled(false);
 	emit freeze_map(true);
+	emit clear_radar();
 
 	QTreeWidgetItem *rootItem = tree->invisibleRootItem();
 
 	//== Loop all ndes and set flag to 1 - item remaining will b enuked
-	qDebug() << "kids=" << rootItem->childCount();
 	for(int idx=0; idx < rootItem->childCount(); idx++){
 		rootItem->child(idx)->setText(C_FLAG, "1");
-		//qDebug() << "idx" << idx;
 	}
 
 
@@ -255,7 +254,6 @@ void PilotsWidget::on_server_read_finished(){
 
 	//= get the <fg_server> node
 	QDomNodeList nodes = dom.elementsByTagName("marker");
-	QStringList list;
 
 	QTreeWidgetItem *item;
 
@@ -318,9 +316,13 @@ void PilotsWidget::on_server_read_finished(){
 	//= remove the flagged items
 	QList<QTreeWidgetItem *> items = tree->findItems("1", Qt::MatchExactly, C_FLAG);
 	for(int idxr=0; idxr < items.count(); idxr++){
-		qDebug() << idxr;
 		//tree->invisibleRootItem()->removeChild(items.at(idxr));
-		items.at(idxr)->setText( C_COUNT, QString::number(items.at(idxr)->text(C_COUNT).toInt() + 1) );
+		int count = items.at(idxr)->text(C_COUNT).toInt();
+		if(count == 5){
+			items.at(idxr)->parent()->removeChild( items.at(idxr) );
+		}else{
+			items.at(idxr)->setText( C_COUNT, QString::number(count + 1) );
+		}
 	}
 
 	tree->setUpdatesEnabled(true);

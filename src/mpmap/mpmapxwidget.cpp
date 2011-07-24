@@ -89,11 +89,15 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 
 	connect(pilotsWidget,	SIGNAL(radar(QString,QString,QString, QString, QString, bool)),
 			mapWidget,		SLOT(show_radar(QString,QString,QString, QString, QString, bool)));
+	connect(pilotsWidget, SIGNAL(clear_radar()),
+			mapWidget, SLOT(clear_radar())
+	);
 
 	connect(pilotsWidget,	SIGNAL(aircraft_selected(XAero)),
 			this,			SLOT(focus_aero(XAero)));
 
 	connect(pilotsWidget,	SIGNAL(freeze_map(bool)), this, SLOT(on_freeze_map(bool)));
+
 
 }
 

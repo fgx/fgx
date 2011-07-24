@@ -43,6 +43,7 @@
         <file alias="fgx-plane-green-light.png">openlayers/img/fgx-plane-green-light.png</file>
         <file alias="radar_blip.png">openlayers/img/radar_blip.png</file>
         <file alias="stand_label_back.png">openlayers/img/stand_label_back.png</file>
+        <file alias="radar_blip2.png">openlayers/img/radar_blip2.png</file>
     </qresource>
     <qresource prefix="/">
         <file alias="OpenLayers.js">openlayers/OpenLayers.js</file>

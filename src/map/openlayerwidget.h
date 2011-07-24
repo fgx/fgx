@@ -101,7 +101,8 @@ public slots:
 	void focus_aircraft(QString callsign);
 
 	void show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude, bool is_tower);
-	void display_radar_layer( int viz);
+	//void display_radar_layer( int viz);
+	void clear_radar();
 
 
 	void zoom_to_airport(QString apt);
@@ -124,7 +125,6 @@ public slots:
 	
 	void map_show_coords(QVariant lat, QVariant lon);
 	void on_coords_changed();
-	//void on_coords_changed();
 
 
 	void map_zoom_changed(QVariant zoom);
