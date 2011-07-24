@@ -176,21 +176,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	statusBarTree->addPermanentWidget(actionReloadCacheDb);
 	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
 	//================================================================================================
 	//= Right
 	//================================================================================================
@@ -239,41 +225,35 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	fuelWidget->setLayout(layoutFuelPane);
 	int rowFuel = 1;
 	
-	//** Use Default Aircraft
-	checkBoxUseDefaultFuel = new QCheckBox(this);
-	checkBoxUseDefaultFuel->setText("Use default fuel load");
-	layoutFuelPane->addWidget(checkBoxUseDefaultFuel);
-	connect(checkBoxUseDefaultFuel, SIGNAL(clicked()), this, SLOT(on_use_default_fuel_clicked()));
-	
 	// Enable fuel freeze
 	rowFuel++;
 	checkBoxFuelFreeze = new QCheckBox(this);
 	checkBoxFuelFreeze->setText("Enable fuel freeze");
-	layoutFuelPane->addWidget(checkBoxFuelFreeze);
+	layoutFuelPane->addWidget(checkBoxFuelFreeze, 0, 1, 1, Qt::AlignLeft);
 	connect(checkBoxFuelFreeze, SIGNAL(clicked()), this, SLOT(on_enable_fuel_freeze_clicked()));
 	
 	//* Tank 1
 	rowFuel++;
-	layoutFuelPane->addWidget(new QLabel(tr("Tank 1")), rowFuel, 0, 1, 1, Qt::AlignLeft);
+	layoutFuelPane->addWidget(new QLabel(tr("Tank 1")), rowFuel, 0, 1, 1, Qt::AlignRight);
 	txtTank1 = new QLineEdit();
-	txtTank1->setValidator(new QDoubleValidator(0, 200, 1, this));
-	layoutFuelPane->addWidget(txtTank1,rowFuel, 1, 1, 1, Qt::AlignLeft);
+	txtTank1->setValidator(new QDoubleValidator(0, 200, 2, this));
+	layoutFuelPane->addWidget(txtTank1,rowFuel, 1, 1, 1);
 	connect(txtTank1, SIGNAL(textChanged(QString)), this, SLOT(on_fuel_changed()));
 	
 	//* Tank 2
 	rowFuel++;
-	layoutFuelPane->addWidget(new QLabel(tr("Tank 2")), rowFuel, 0, 1, 1, Qt::AlignLeft);
+	layoutFuelPane->addWidget(new QLabel(tr("Tank 2")), rowFuel, 0, 1, 1, Qt::AlignRight);
 	txtTank2 = new QLineEdit();
-	txtTank2->setValidator(new QDoubleValidator(0, 200, 1, this));
-	layoutFuelPane->addWidget(txtTank2,rowFuel, 1, 1, 1, Qt::AlignLeft);
+	txtTank2->setValidator(new QDoubleValidator(0, 200, 2, this));
+	layoutFuelPane->addWidget(txtTank2,rowFuel, 1, 1, 1);
 	connect(txtTank2, SIGNAL(textChanged(QString)), this, SLOT(on_fuel_changed()));
 	
 	//* Tank 3
 	rowFuel++;
-	layoutFuelPane->addWidget(new QLabel(tr("Tank 3")), rowFuel, 0, 1, 1, Qt::AlignLeft);
+	layoutFuelPane->addWidget(new QLabel(tr("Tank 3")), rowFuel, 0, 1, 1, Qt::AlignRight);
 	txtTank3 = new QLineEdit();
-	txtTank3->setValidator(new QDoubleValidator(0, 200, 1, this));
-	layoutFuelPane->addWidget(txtTank3, rowFuel, 1, 1, 1, Qt::AlignLeft);
+	txtTank3->setValidator(new QDoubleValidator(0, 200, 2, this));
+	layoutFuelPane->addWidget(txtTank3, rowFuel, 1, 1, 1);
 	connect(txtTank3, SIGNAL(textChanged(QString)), this, SLOT(on_fuel_changed()));
 	
 	layoutFuelPane->setRowStretch(rowFuel + 1, 20); // stretch end
@@ -542,13 +522,6 @@ void AircraftWidget::on_navs_changed()
 	emit setx("--com1=", true, txtCom1->text());
 	emit setx("--com2=", true, txtCom2->text());
 
-}
-
-void AircraftWidget::on_use_default_fuel_clicked(){
-	txtTank1->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
-	txtTank2->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
-	txtTank3->setEnabled( !checkBoxUseDefaultFuel->isChecked() );
-	emit setx("use_default_fuel", checkBoxUseDefaultFuel->isChecked(), "");
 }
 
 void AircraftWidget::on_enable_fuel_freeze_clicked(){

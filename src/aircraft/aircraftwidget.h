@@ -84,7 +84,7 @@ public slots:
 	void on_select_path();
 	void on_tree_selection_changed();
 	void on_reload_cache();
-	void on_use_default_fuel_clicked();
+
 	void on_enable_fuel_freeze_clicked();
 
 	void on_navs_changed();

@@ -121,7 +121,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 	
 	//-- Fuel
-	add_option( "use_default_fuel",true,"","",3,"","Aircraft");
+	//add_option( "use_default_fuel",true,"","",3,"","Aircraft");
 	add_option( "--enable-fuel-freeze",false,"","",3,"","Aircraft");
 	add_option( "--prop:/consumables/fuels/tank[1]/level-gal=",false, "", "",9,"","Fuel");
 	add_option( "--prop:/consumables/fuels/tank[2]/level-gal=",false, "", "",9,"","Fuel");
