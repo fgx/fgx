@@ -260,13 +260,9 @@ var radarLabelMarkerStyle = new OpenLayers.StyleMap({
 var runwayLabelMarkerStyle = new OpenLayers.StyleMap({
     
     "default": {
-
-        strokeColor: "red",
-        strokeWidth: 1,
-        fillColor: "red",
 		
-		externalGraphic: "/img/rwy_sign_back.png",
-		graphicWidth: 25,
+		externalGraphic: "/img/fgx-sign-rwy.png",
+		graphicWidth: 28,
 		graphicHeight: 20,
 		graphicOpacity: 1.0,
 		graphicXOffset: -30,
@@ -279,20 +275,43 @@ var runwayLabelMarkerStyle = new OpenLayers.StyleMap({
         fontFamily: "sans-serif",
         fontWeight: "bold",
         //labelAlign: "center",
-        labelXOffset: -15,
-        labelYOffset: 18,
+        labelXOffset: -16,
+        labelYOffset: 19,
         label : "${rwyText}",
 
         },
-    
-    "select": {
-        fillColor: "black",
-        strokeColor: "yellow",
-        pointRadius: 12,
-        fillOpacity: 1,
-    }
 
 });
+
+//=================================================================
+// style for the stand labels
+var standLabelMarkerStyle = new OpenLayers.StyleMap({
+    
+    "default": {
+		
+		externalGraphic: "/img/fgx-sign-stand.png",
+		graphicWidth: 28,
+		graphicHeight: 20,
+		graphicOpacity: 1.0,
+		graphicXOffset: -30,
+		graphicYOffset: -30,
+		
+        
+        
+        fontColor: "black",
+        fontSize: "11px",
+        fontFamily: "sans-serif",
+        fontWeight: "normal",
+        //labelAlign: "center",
+        labelXOffset: -15,
+        labelYOffset: 20,
+        label : "${standText}",
+
+        },
+
+});
+
+
 
 // style for the rwy lines
 var runwayLineStyle = new OpenLayers.StyleMap({
@@ -308,45 +327,6 @@ var runwayLineStyle = new OpenLayers.StyleMap({
     
     "select": {
         strokeColor: "yellow",
-    }
-
-});
-
-//=================================================================
-// Style for the Stand markers
-var standLabelMarkerStyle = new OpenLayers.StyleMap({
-    
-    "default": {
-
-        strokeColor: "red",
-        strokeWidth: 1,
-        fillColor: "red",
-		
-		externalGraphic: "/img/stand_label_back.png",
-		graphicWidth: 30,
-		graphicHeight: 14,
-		graphicOpacity: 0.7,
-		graphicXOffset: -16,
-		graphicYOffset: -7,
-		
-        
-        
-        fontColor: "black",
-        fontSize: "10px",
-        fontFamily: "sans-serif",
-        fontWeight: "bold",
-        labelAlign: "center",
-        labelXOffset: 0,
-        labelYOffset: 0,
-        label : "${standText}",
-
-        },
-    
-    "select": {
-        fillColor: "black",
-        strokeColor: "yellow",
-        pointRadius: 12,
-        fillOpacity: 1,
     }
 
 });
@@ -778,7 +758,7 @@ function add_runway_label(apt, mrwy, mlat, mlon){
 
 //==================================================================================
 // Add Stand
-function add_stand(apt, name, mlat, mlon){
+function add_stand(apt, mstand, mlat, mlon){
 
 	airportBounds.extend(new OpenLayers.LonLat(mlon, mlat) );
 
@@ -787,7 +767,7 @@ function add_stand(apt, name, mlat, mlon){
 		
 	//draw feature and add callsign label, use rwy heading for orientation
 	var feature = new OpenLayers.Feature.Vector(point, {
-                standText: name
+                standText: mstand
 				});            
     feature._airport = apt;
 	//add to main layer planeMarkersVec at init()

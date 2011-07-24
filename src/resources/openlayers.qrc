@@ -34,7 +34,8 @@
         <file alias="zoombar.png">openlayers/img/zoombar.png</file>
 		
 		
-        <file alias="rwy_sign_back.png">openlayers/img/rwy_sign_back.png</file>
+        <file alias="fgx-sign-rwy.png">openlayers/img/fgx-sign-rwy.png</file>
+		<file alias="fgx-sign-stand.png">openlayers/img/fgx-sign-stand.png</file>
         <file alias="fgx-background-black.png">openlayers/img/fgx-background-black.png</file>
         <file alias="fgx-airport-with-tower.png">openlayers/img/fgx-airport-with-tower.png</file>
 		
