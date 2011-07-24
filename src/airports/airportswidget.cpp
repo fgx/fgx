@@ -90,7 +90,9 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	//** Filter Buttons - TODO
 	buttonGroupFilter = new QButtonGroup(this);
 	buttonGroupFilter->setExclusive(true);
-
+	connect(	buttonGroupFilter, SIGNAL(buttonClicked(QAbstractButton*)),
+				this, SLOT(on_update_airports_filter())
+	);
 
 	//** Aiport Code Filter
     QRadioButton *buttCode = new QRadioButton();
@@ -482,6 +484,8 @@ void AirportsWidget::on_update_airports_filter(){
 void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx){
 	Q_UNUSED(previousIdx);
 
+	txtAirportsFilter->setFocus();
+
 	//= Clear the Runways tree
 	treeWidgetAirportInfo->model()->removeRows(0, treeWidgetAirportInfo->model()->rowCount());
 
@@ -509,10 +513,12 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 	QString count_label;
+	mapWidget->setUpdatesEnabled(false);
 
 	//== Clear the existing airport
 	//mapWidget->clear_airport(airport_code);
 	mapWidget->clear_map();
+	treeWidgetAirportInfo->setUpdatesEnabled(false);
 
 	
 	// Load Tower
@@ -572,6 +578,9 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 	}
 
 	mapWidget->zoom_to_airport(airport_code);
+
+	mapWidget->setUpdatesEnabled(true);
+	treeWidgetAirportInfo->setUpdatesEnabled(true);
 
 }
 
@@ -1007,6 +1016,8 @@ void AirportsWidget::on_upx(QString option, bool enabled, QString value)
 
 void AirportsWidget::on_airport_info_selection_changed()
 {
+
+
 	//= No Selection
 	if(treeWidgetAirportInfo->selectionModel()->hasSelection() == false){
 		emit setx("--runway=", false, "");
