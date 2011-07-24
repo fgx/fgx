@@ -295,6 +295,7 @@ void OpenLayerWidget::add_runway(QString apt, QString rwy1, QString rwy2, QStrin
 	execute_js(jstr);
 	//qDebug() << "add_runway jstr: " << jstr;
 }
+
 //================================================
 // Add Stand
 void OpenLayerWidget::add_stand(QString apt, QString name, QString lat, QString lon)
@@ -305,7 +306,14 @@ void OpenLayerWidget::add_stand(QString apt, QString name, QString lat, QString 
 }
 
 
-
+//================================================
+// Add Tower
+void OpenLayerWidget::add_tower(QString apt, QString lat, QString lon)
+{
+	QString jstr = QString("add_tower('%1', %2, %3);").arg(apt).arg(lat).arg(lon);
+	execute_js(jstr);
+	qDebug() << "add_tower " << jstr;
+}
 
 //================================================
 // Zoom to Airport
@@ -382,7 +390,7 @@ void OpenLayerWidget::focus_aircraft(QString callsign){
 //================================================
 void OpenLayerWidget::execute_js(QString js_str){
 	if(mainObject->debug_mode){
-		qDebug() << "> js= " << js_str;
+		//qDebug() << "> js= " << js_str;
 	}
 	webView->page()->mainFrame()->evaluateJavaScript(js_str);
 }

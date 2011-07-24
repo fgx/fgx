@@ -37,5 +37,6 @@
         <file alias="mpmap">ycons/fgx-map.png</file>
         <file alias="select_cols">icons/text_linespacing.png</file>
         <file alias="map_type">icons/map.png</file>
+        <file alias="tower">icons/building.png</file>
     </qresource>
 </RCC>

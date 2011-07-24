@@ -46,6 +46,7 @@ var planeLabelMarkers;
 
 var radarImageMarkers;
 var radarLabelMarkers;
+var towerMarkers;
 
 var runwayLines;
 var runwayLabels;
@@ -316,6 +317,33 @@ var standLabelMarkerStyle = new OpenLayers.StyleMap({
 
 });
 
+//=====================================================
+//= Tower Style
+var towerMarkerStyle = new OpenLayers.StyleMap({
+	"default": {
+		graphicName: "circle",
+		pointRadius: 6,
+		strokeColor: "#000000",
+		strokeWidth: 2,
+		fillColor: "#000099",
+		fillOpacity: 0.6,
+		
+        fontColor: "black",
+        fontSize: "10px",
+        fontFamily: "sans-serif",
+        fontWeight: "bold",
+		label : "${airport}",
+        labelAlign: "center",
+        labelXOffset: 0,
+        labelYOffset: +12,
+	},
+	"select": {
+		pointRadius: 20,
+		fillOpacity: 1,
+		rotation: 45
+	}
+});
+
 
 // oh, see on top
 var planes;
@@ -456,6 +484,13 @@ function init(){
 	// add Radar label
 	radarLabelMarkers = new OpenLayers.Layer.Vector("Radar Label", {styleMap:  radarLabelMarkerStyle});
 	map.addLayer(radarLabelMarkers);
+
+
+	towerMarkers = new OpenLayers.Layer.Vector("Towers", {
+        styleMap: towerMarkerStyle
+    });
+	map.addLayer(towerMarkers);
+
 
 	//alert("init done");
 	 Qt.map_initialised();
@@ -669,6 +704,18 @@ function add_stand(apt, name, mlat, mlon){
 
 	return;	
 }
+
+//================================================================
+//=  Add  Tower
+function add_tower(apt, mlat, mlon){
+	//alert("tower1");
+	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
+		
+	var feature = new OpenLayers.Feature.Vector(point, {airport: apt});            
+	towerMarkers.addFeatures([feature]);
+	//alert("tower");
+}
+
 </script>
 
 <!-- This is all we need, init the map and set only one div, to get fullscreen map -->

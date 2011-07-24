@@ -197,7 +197,7 @@ MainObject::MainObject(QObject *parent) :
 
 	//= FGx Map Widget
 	mpMapXWidget = new MpMapXWidget(this);
-	mpMapXWidget->show();
+	mpMapXWidget->hide();
 	
 
 	//= Log Viewer is hidden
@@ -227,7 +227,7 @@ MainObject::~MainObject()
 //============================================================================
 //= Initialize
 void MainObject::initialize(){
-	//on_launcher();
+	on_launcher();
 }
 
 //============================================================================

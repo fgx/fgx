@@ -153,7 +153,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	tree->headerItem()->setTextAlignment(C_LON, Qt::AlignRight);
 
 	tree->setColumnHidden(C_PITCH, true);
-	tree->setColumnHidden(C_FLAG, true);
+	//tree->setColumnHidden(C_FLAG, true);
 
 	tree->setColumnHidden(C_AIRCRAFT, !chkShowModel->isChecked());
 	tree->setColumnHidden(C_HEADING, !chkShowHdg->isChecked());
@@ -187,7 +187,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	//connect(timer, SIGNAL(timeout()), this, SLOT(fetch_pilots()));
 	//fetch_pilots();
 	if(checkBoxAutoRefresh->isChecked()){
-		fetch_pilots();
+		//fetch_pilots();
 	}
 }
 
@@ -279,6 +279,14 @@ void PilotsWidget::on_server_read_finished(){
 				item = fitems.at(0);
 			}
 
+			//_ check for atc
+			QString model = QString(attribs.namedItem("model").nodeValue());
+			bool tower = false;
+			if(model.toLower() == "atc"){
+				tower = true;
+			}
+
+
 			item->setText(C_AIRCRAFT, attribs.namedItem("model").nodeValue());
 			item->setText(C_ALTITUDE, QString::number(attribs.namedItem("alt").nodeValue().toFloat(), 'f', 0));
 			item->setTextAlignment(C_ALTITUDE, Qt::AlignRight);
@@ -292,7 +300,7 @@ void PilotsWidget::on_server_read_finished(){
 			item->setTextAlignment(C_LON, Qt::AlignRight);
 
 			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
-			item->setText(C_FLAG, "");
+			item->setText(C_FLAG, "0");
 
 			emit radar(item->text(C_CALLSIGN),
 					   item->text(C_LAT),
