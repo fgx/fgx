@@ -212,12 +212,13 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
 	tree->setColumnWidth(C_NODE, 200);
 	tree->setColumnWidth(C_VALUE, 200);
 
+	/*
 	connect(tree, SIGNAL(itemExpanded(QTreeWidgetItem*)),
              this, SLOT(on_item_expanded(QTreeWidgetItem*))
     );
 	connect(tree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
 			this, SLOT(on_item_double_clicked(QTreeWidgetItem*,int))
-    );
+	); */
 	//connect(treeWidget, SIGNAL(itemSelectionChanged()),
 	//		this, SLOT(on_on_aiport_selection_changedselection_changed())
 	//);

@@ -37,20 +37,22 @@ var zoom = 2;
 // should be improved, setting all the default vars
 var map;
 var osmprojection;
-
-
 var osmLayer;
 
 var vectorLayer;
 var markers;
 
-var planeMarkersVec;
-var planeMarkersLabel;
+var planeImageMarkers;
+var planeLabelMarkers;
 
-var radarMarkersVectors;
-var radarMarkersLabels;
+var radarImageMarkers;
+var radarLabelMarkers;
 
+var runwayLines;
+var runwayLabels;
+var standLabels
 
+//============================================================
 // click control handler to get lat, lon --> transform values to wgs84
 OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
                 defaultHandlerOptions: {
@@ -86,29 +88,26 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
                 }
             });
 
-// style for your plane
-var planeMarkersStyle = new OpenLayers.StyleMap({
+//=================================================================
+// Style for your aeroplane
+var planeImageMarkerStyle = new OpenLayers.StyleMap({
     
     "default": {
 		externalGraphic: "/img/fgx-plane-green.png",
 		graphicWidth: 100,
 		graphicHeight: 100,
-		rotation : "${planerotation}",
-
-        },
+		rotation : "${planerotation}"
+	},
     
     "select": {
 		externalGraphic: "/img/fgx-plane-red.png",
-    },
-
-	
+    }	
 });
 
-// style for the marker beside your plane
-var planeMarkersLabelStyle = new OpenLayers.StyleMap({
+// Style for the callsign label beside your plane
+var planeLabelMarkerStyle = new OpenLayers.StyleMap({
     
     "default": {
-
         strokeColor: "lime",
         strokeWidth: 1,
         fillColor: "lime",
@@ -120,7 +119,6 @@ var planeMarkersLabelStyle = new OpenLayers.StyleMap({
 		graphicXOffset: 13,
 		graphicYOffset: 15,
         
-        
         fontColor: "white",
         fontSize: "12px",
         fontFamily: "Helvetica, Arial, sans-serif",
@@ -130,21 +128,18 @@ var planeMarkersLabelStyle = new OpenLayers.StyleMap({
         labelYOffset: -24,
         label : "${callsign}",
 		//rotation : "${planerotation}",
-
-        },
-    
+     },
     "select": {
         fillColor: "black",
         strokeColor: "yellow",
         pointRadius: 12,
-        fillOpacity: 1,
+        fillOpacity: 1
     }
-
 });
 
-
-// style for radar plane
-var radarMarkersStyle = new OpenLayers.StyleMap({
+//=================================================================
+// style for radar Image
+var radarImageMarkerStyle = new OpenLayers.StyleMap({
     
     "default": {
 
@@ -158,31 +153,23 @@ var radarMarkersStyle = new OpenLayers.StyleMap({
         graphicOpacity: 1,
 		graphicXOffset: 0,
 		graphicYOffset: -20,
-		//graphicName: "circle",
         
         fontColor: "black",
         fontSize: "12px",
         fontFamily: "Helvetica, Arial, sans-serif",
         fontWeight: "bold",
-        //labelAlign: "center",
-        //labelXOffset: 10,
-        //labelYOffset: 10,
-        //label : "${callsign}",
 		rotation : "${planerotation}",
-
-        },
-    
+    },
     "select": {
         fillColor: "black",
         strokeColor: "yellow",
         pointRadius: 12,
         fillOpacity: 1,
     }
-
 });
 
 // style for the marker beside your plane on radar
-var radarMarkersLabelStyle = new OpenLayers.StyleMap({
+var radarLabelMarkerStyle = new OpenLayers.StyleMap({
     
     "default": {
 		fill: true,
@@ -211,7 +198,6 @@ var radarMarkersLabelStyle = new OpenLayers.StyleMap({
 		//rotation : "${planerotation}",
 
     },
-    
     "select": {
         fillColor: "black",
         strokeColor: "yellow",
@@ -222,7 +208,7 @@ var radarMarkersLabelStyle = new OpenLayers.StyleMap({
 });
 
 // style for the rwy markers
-var rwyMarkersStyle = new OpenLayers.StyleMap({
+var runwayLabelMarkerStyle = new OpenLayers.StyleMap({
     
     "default": {
 
@@ -260,7 +246,7 @@ var rwyMarkersStyle = new OpenLayers.StyleMap({
 });
 
 // style for the rwy lines
-var rwyLineStyle = new OpenLayers.StyleMap({
+var runwayLineStyle = new OpenLayers.StyleMap({
     
     "default": {
 
@@ -385,52 +371,55 @@ function init(){
 	
 	// activate click control
 	var click = new OpenLayers.Control.Click();
-                map.addControl(click);
-                click.activate();
+    map.addControl(click);
+    click.activate();
 
 
 	
 
 
-
-	
-	//===================================
-	// add rwy lines
-	runwayLines = new OpenLayers.Layer.Vector("Runway Lines", {styleMap:  rwyLineStyle});
+	//=======================================================
+	//= add rwy lines
+	runwayLines = new OpenLayers.Layer.Vector("Runway Lines", {styleMap:  runwayLineStyle});
 	map.addLayer(runwayLines);
 	
-	// add rwy markers (labels)
-	rwyMarkers = new OpenLayers.Layer.Vector("Runway Markers", {styleMap:  rwyMarkersStyle});
-	map.addLayer(rwyMarkers);
+	//= add rwy labels
+	runwayLabels = new OpenLayers.Layer.Vector("Runway Markers", {styleMap:  runwayLabelMarkerStyle});
+	map.addLayer(runwayLabels);
 	
+	//=  add Stand Labels
+	standLabels = new OpenLayers.Layer.Vector("Stand Markers", {styleMap:  runwayLabelMarkerStyle});
+	map.addLayer(standLabels);
 
-	//===================================
+
+	//=============================================================
 	// add plane vector marker
-	planeMarkersVec = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeMarkersStyle});
-	map.addLayer(planeMarkersVec);
-	
+	planeImageMarkers = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeImageMarkerStyle});
+	map.addLayer(planeImageMarkers);
+
 	/*var modifyFeature = new OpenLayers.Control.ModifyFeature(planeMarkersVec, {
 	mode: OpenLayers.Control.ModifyFeature.DRAG,
 	});
 	
 	map.addControl(modifyFeature);
 	modifyFeature.activate();*/
-
-		
+	
 	// add plane label
-	planeMarkersLabel = new OpenLayers.Layer.Vector("Plane Label", {styleMap:  planeMarkersLabelStyle});
-	map.addLayer(planeMarkersLabel);
+	planeLabelMarkers = new OpenLayers.Layer.Vector("Plane Label", {styleMap:  planeLabelMarkerStyle});
+	map.addLayer(planeLabelMarkers);
 
-	//===================================
+
+	//==================================================================
 	// add Radar vector marker
-	radarMarkersVectors = new OpenLayers.Layer.Vector("Radar Markers", {styleMap:  radarMarkersStyle});
-	map.addLayer(radarMarkersVectors);
+	radarImageMarkers = new OpenLayers.Layer.Vector("Radar Markers", {styleMap:  radarImageMarkerStyle});
+	map.addLayer(radarImageMarkers);
 	
 	// add Radar label
-	radarMarkersLabels = new OpenLayers.Layer.Vector("Radar Label", {styleMap:  radarMarkersLabelStyle});
-	map.addLayer(radarMarkersLabels);
+	radarLabelMarkers = new OpenLayers.Layer.Vector("Radar Label", {styleMap:  radarLabelMarkerStyle});
+	map.addLayer(radarLabelMarkers);
 
 	//alert("init done");
+	// Qt.map_initialised();
 
 }
 
@@ -467,8 +456,8 @@ function add_marker(mlat, mlon){
 function show_aircraft(mcallsign, mlat, mlon, mheading, maltitude){
 
 	//destroy features first
-	planeMarkersVec.destroyFeatures();
-	planeMarkersLabel.destroyFeatures();
+	planeImageMarkers.destroyFeatures();
+	planeLabelMarkers.destroyFeatures();
 
 	//add point = coords from airport tab
 	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
@@ -486,17 +475,21 @@ function show_aircraft(mcallsign, mlat, mlon, mheading, maltitude){
 				});
 	
 	//add the plane
-	planeMarkersVec.addFeatures([feature]);
+	planeImageMarkers.addFeatures([feature]);
 	
 	//add the label
-	planeMarkersLabel.addFeatures([callsignFeature]);
+	planeLabelMarkers.addFeatures([callsignFeature]);
 	return;
 	
 }
 
-function display_radar(viz){
-	radarMarkersVectors.display(viz);
-	radarMarkersLabels.display(viz);
+function display_layer(layer_name, is_visible){
+
+	if(layer_name == "stands"){
+		standLabels.display(is_visible);
+	}
+	radarImageMarkers.display(is_visible);
+	radarLabelMarkers.display(is_visible);
 }
 
 
@@ -504,78 +497,37 @@ function display_radar(viz){
 //==========================================================
 function show_radar(mcallsign, mlat, mlon, mheading, maltitude){
 
-
-	var existing_img = radarMarkersVectors.getFeatureBy("_callsign", mcallsign);
+	// remove xisting iamge/label if exist
+	var existing_img = radarImageMarkers.getFeatureBy("_callsign", mcallsign);
 	if(existing_img){
-		radarMarkersVectors.removeFeatures(existing_img);
+		radarImageMarkers.removeFeatures(existing_img);
 	}
-	var existing_lbl  = radarMarkersLabels.getFeatureBy("_callsign", mcallsign);
+	var existing_lbl  = radarLabelMarkers.getFeatureBy("_callsign", mcallsign);
 	if(existing_lbl){
-		radarMarkersLabels.removeFeatures(existing_lbl);
+		radarLabelMarkers.removeFeatures(existing_lbl);
 	}
 
-	//add point 
-	var pointImg = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
-	var pointLabel = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
-		
-	//draw feature and add callsign label, 
+	// Add Image
+	var pointImg = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );		
 	var imgFeat = new OpenLayers.Feature.Vector(pointImg, {
 				planerotation: mheading
 				}); 
 	imgFeat._callsign = mcallsign;
-				
-	// add callsign as separate feature, to have a background color (graphic) with offset
+	radarImageMarkers.addFeatures([imgFeat]);	
+	
+	
+	// Add callsign label as separate feature, to have a background color (graphic) with offset
+	var pointLabel = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
 	var lblFeat = new OpenLayers.Feature.Vector(pointLabel, {
                 callsign: mcallsign,
 				});
 	lblFeat._callsign = mcallsign;
-	
-	//add the plane
-	radarMarkersVectors.addFeatures([imgFeat]);
-	
-	//add the label
-	radarMarkersLabels.addFeatures([lblFeat]);
-	//alert(mcallsign);
-	return;
+	radarLabelMarkers.addFeatures([lblFeat]);	
 	
 }
 
-// Shows available runways
-//==========================================================
-function add_rwymarker(mrwy, mlat, mlon){
-
-	//add point = coords from airport tab
-	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
-		
-	//draw feature and add callsign label, use rwy heading for orientation
-	var feature = new OpenLayers.Feature.Vector(point, {
-                rwyText: mrwy
-				});            
-	
-	//add to main layer planeMarkersVec at init()
-	rwyMarkers.addFeatures([feature]);
-
-	return;	
-}
 
 
-// Add Stand
-//==========================================================
-function add_stand(apt, name, mlat, mlon){
-
-	//add point = coords from airport tab
-	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
-		
-	//draw feature and add callsign label, use rwy heading for orientation
-	var feature = new OpenLayers.Feature.Vector(point, {
-                rwyText: name
-				});            
-	
-	//add to main layer planeMarkersVec at init()
-	rwyMarkers.addFeatures([feature]);
-
-	return;	
-}
 
 
 //=========================================================
@@ -606,8 +558,8 @@ function zoom_to_airport(apt){
 
 
 
-
-// Adds runways (line) and markers (point features)
+//===============================================================
+//= Adds runway
 //======================================================
 function add_runway(apt, rwy1, rwy2, lat1, lon1, lat2, lon2){
 	
@@ -618,8 +570,6 @@ function add_runway(apt, rwy1, rwy2, lat1, lon1, lat2, lon2){
 	aptBounds[apt].extend( new OpenLayers.LonLat(lon1, lat1) );
 	aptBounds[apt].extend( new OpenLayers.LonLat(lon2, lat2) );
     
-	add_rwymarker(rwy1, lat1, lon1);
-	add_rwymarker(rwy2, lat2, lon2);
 	var points = new Array(
 		new OpenLayers.Geometry.Point(lon1, lat1),
 		new OpenLayers.Geometry.Point(lon2, lat2)
@@ -628,12 +578,44 @@ function add_runway(apt, rwy1, rwy2, lat1, lon1, lat2, lon2){
 	var runwayFeature = new OpenLayers.Feature.Vector(line);
 	runwayLines.addFeatures(runwayFeature);
 
+	add_runway_label(rwy1, lat1, lon1);
+	add_runway_label(rwy2, lat2, lon2);	
+}
 
+//=  Add Runway Label
+//==========================================================
+function add_runway_label(mrwy, mlat, mlon){
 
-	//alert("add_runway");
+	if(mrwy < 10){
+		var s = new String(mrwy);
+		mrwy = "0" + s.toString(); // NOT WORK.. think the leadin ) is tyope cast in openlayers
+	}
+	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
+		
+	var feature = new OpenLayers.Feature.Vector(point, {
+                rwyText: mrwy
+				});            
+	runwayLabels.addFeatures([feature]);
 }
 
 
+// Add Stand
+//==========================================================
+function add_stand(apt, name, mlat, mlon){
+
+	//add point = coords from airport tab
+	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
+		
+	//draw feature and add callsign label, use rwy heading for orientation
+	var feature = new OpenLayers.Feature.Vector(point, {
+                rwyText: name
+				});            
+	
+	//add to main layer planeMarkersVec at init()
+	standLabels.addFeatures([feature]);
+
+	return;	
+}
 </script>
 
 <!-- This is all we need, init the map and set only one div, to get fullscreen map -->

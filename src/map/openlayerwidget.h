@@ -39,9 +39,13 @@ private:
 	QStatusBar *statusBar;
 	QComboBox *comboServer;
 	
-	QLineEdit *editLat;
-	QLineEdit *editLon;
+	QLineEdit *txtLat;
+	QLineEdit *txtLon;
 
+	QButtonGroup *buttonGroupViewLayers;
+	QCheckBox *chkViewStands;
+	QCheckBox *chkViewRunwayLabels;
+	QCheckBox *chkViewRunwayLines;
 	
 	//QLineEdit *editHdg;
 	//QToolButton *buttTurnRight10;
@@ -114,6 +118,9 @@ signals:
 	
 	void on_upx( QString option, bool enabled, QString value);
 	
+	void on_display_layer(QAbstractButton*);
+
+
 	//void on_turn_left05_clicked();
 	//void on_turn_left5_clicked();
 	//void on_turn_right05_clicked();

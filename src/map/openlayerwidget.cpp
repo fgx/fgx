@@ -49,14 +49,14 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 	
 	toolbar->addWidget(new QLabel(tr("Lat:")));
-	editLat = new QLineEdit();
-	toolbar->addWidget(editLat);
-	connect(editLat, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
+	txtLat = new QLineEdit();
+	toolbar->addWidget(txtLat);
+	connect(txtLat, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
 	
 	toolbar->addWidget(new QLabel(tr("Lon:")));
-	editLon = new QLineEdit();
-	toolbar->addWidget(editLon);
-	connect(editLon, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
+	txtLon = new QLineEdit();
+	toolbar->addWidget(txtLon);
+	connect(txtLon, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
 	
 	
 	toolbar->addWidget(new QLabel(tr("Heading:")));
@@ -204,7 +204,37 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
     statusBar->addPermanentWidget(progressBar);
 
 
+	//===================================================
+	//= View Layers
+	buttonGroupViewLayers = new QButtonGroup(this);
+	buttonGroupViewLayers->setExclusive(false);
+	connect(buttonGroupViewLayers,	SIGNAL(buttonClicked(QAbstractButton*)),
+			this,					SLOT(on_display_layer(QAbstractButton*))
+	);
+	mainObject->settings->beginGroup("map_display_layers");
 
+	chkViewStands = new QCheckBox();
+	chkViewStands->setText("Stands");
+	chkViewStands->setProperty("layer","stands");
+	statusBar->addPermanentWidget(chkViewStands);
+	chkViewStands->setChecked(mainObject->settings->value("stands", "1").toBool());
+	buttonGroupViewLayers->addButton(chkViewStands);
+
+	chkViewRunwayLabels = new QCheckBox();
+	chkViewRunwayLabels->setText("Runway Labels");
+	chkViewRunwayLabels->setProperty("layer","runway_labels");
+	statusBar->addPermanentWidget(chkViewRunwayLabels);
+	chkViewRunwayLabels->setChecked(mainObject->settings->value("runway_labels", "1").toBool());
+	buttonGroupViewLayers->addButton(chkViewRunwayLabels);
+
+	chkViewRunwayLines = new QCheckBox();
+	chkViewRunwayLines->setText("Runway Lines");
+	chkViewRunwayLines->setProperty("layer","runway_lines");
+	statusBar->addPermanentWidget(chkViewRunwayLines);
+	chkViewRunwayLines->setChecked(mainObject->settings->value("runway_lines", "1").toBool());
+	buttonGroupViewLayers->addButton(chkViewRunwayLines);
+
+	mainObject->settings->endGroup();
 	//=== Initialise
 	init_map();
 	
@@ -378,13 +408,13 @@ void OpenLayerWidget::map_debug(QVariant mess){
 
 //= < JS - map_show_coords()
 void OpenLayerWidget::map_show_coords(QVariant lat, QVariant lon){
-	editLat->setText(lat.toString());
-	editLon->setText(lon.toString());
+	txtLat->setText(lat.toString());
+	txtLon->setText(lon.toString());
 }
 
 void OpenLayerWidget::on_coords_changed(){
-	emit setx("--lat=", true, editLat->text());
-	emit setx("--lon=", true, editLon->text());
+	emit setx("--lat=", true, txtLat->text());
+	emit setx("--lon=", true, txtLon->text());
 	emit setx("--heading=", true, QString::number(spinHeading->value()) );
 	
 	show_aircraft(mainObject->X->getx("--callsign="),
@@ -406,10 +436,10 @@ void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
 	Q_UNUSED(value);
 	
 	if(option == "--lat="){
-		editLat->setText(value);
+		txtLat->setText(value);
 		
 	}else if(option == "--lon="){
-		editLon->setText(value);
+		txtLon->setText(value);
 	
 	}else if(option == "--heading="){
 		spinHeading->setValue(value.toInt());
@@ -469,7 +499,17 @@ void OpenLayerWidget::map_zoom_changed(QVariant zoom){
 	}*/
 
 
-
+void OpenLayerWidget::on_display_layer(QAbstractButton *chkBox)
+{
+	QString jstr = QString("display_layer('%1', %2);").arg(	chkBox->property("layer").toString()
+													).arg(	chkBox->isChecked() ? 1 : 0
+													);
+	qDebug() << "show_layer" << jstr;
+	execute_js(jstr);
+	mainObject->settings->beginGroup("map_display_layers");
+	mainObject->settings->setValue(chkBox->property("layer").toString(), chkBox->isChecked());
+	mainObject->settings->endGroup();
+}
 
 
 //============================================================================================
