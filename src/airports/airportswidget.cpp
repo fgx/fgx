@@ -10,7 +10,7 @@
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomNodeList>
 
-
+#include <QDesktopServices>
 #include <QtGui/QMessageBox>
 #include <QtGui/QSizePolicy>
 #include <QtGui/QFont>
@@ -196,12 +196,24 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 			 this, SLOT( on_airport_tree_selected(QModelIndex, QModelIndex) )
 	);
 
-	//* StatusBar for Airports
+	//================================
+	// StatusBar for Airports
 	statusBarAirports = new QStatusBar();
 	statusBarAirports->setSizeGripEnabled(false);
 	airportsLayout->addWidget(statusBarAirports);
 	statusBarAirports->showMessage("Idle");
 
+	//= Label Airports Folder - HIDDEN
+	labelAirportsFolder = new QLabel();
+	statusBarAirports->addPermanentWidget(labelAirportsFolder);
+	labelAirportsFolder->hide();
+
+	//= Open Airports Folder
+	buttonOpenAirportsFolder = new QToolButton();
+	buttonOpenAirportsFolder->setAutoRaise(true);
+	buttonOpenAirportsFolder->setIcon(QIcon(":/icon/folder"));
+	statusBarAirports->addPermanentWidget(buttonOpenAirportsFolder);
+	connect(buttonOpenAirportsFolder, SIGNAL(clicked()), this, SLOT(on_open_airports_folder()));
 
 	//========================================================
 	//** Airport Info Widget
@@ -229,15 +241,16 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	headerItem->setText(CI_HEADING, tr("Heading"));
 	headerItem->setText(CI_RUNWAYS, tr("R"));
 
-	/*
+
 	treeWidgetAirportInfo->setColumnHidden(CI_TYPE,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_LABEL,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_SETTING_KEY,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_WIDTH,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_LENGTH,true);
-	treeWidgetAirportInfo->setColumnHidden(CI_ALIGNMNET,true);
+	treeWidgetAirportInfo->setColumnHidden(CI_HEADING,true);
 	treeWidgetAirportInfo->setColumnHidden(CI_RUNWAYS, true);
-	*/
+	treeWidgetAirportInfo->setColumnHidden(CI_LAT, true);
+	treeWidgetAirportInfo->setColumnHidden(CI_LON, true);
 
 	treeWidgetAirportInfo->setColumnWidth(CI_NODE, 120);
 	treeWidgetAirportInfo->header()->setStretchLastSection(true);
@@ -428,6 +441,8 @@ void AirportsWidget::load_airports_tree(){
 		treeViewAirports->selectionModel()->select(proxIdx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
 		treeViewAirports->scrollTo(proxIdx, QAbstractItemView::PositionAtCenter);
 		load_info_tree( model->item(srcIdx.row(), CA_DIR)->text(), model->item(srcIdx.row(), CA_CODE)->text() );
+		labelAirportsFolder->setText( model->item(srcIdx.row(), CA_DIR)->text());
+		buttonOpenAirportsFolder->setToolTip(labelAirportsFolder->text());
 	}
 	treeViewAirports->setUpdatesEnabled(true);
 }
@@ -484,7 +499,9 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 	
 	// Load Tower
-	int foo = load_tower_node(airport_dir, airport_code);
+	load_tower_node(airport_dir, airport_code);
+	labelAirportsFolder->setText( airport_dir );
+	buttonOpenAirportsFolder->setToolTip(airport_dir);
 
 	//= Load Runways
 	int runways_count = load_runways_node(airport_dir, airport_code);
@@ -593,6 +610,8 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 	QDomDocument dom;
 	dom.setContent(xmlThresholdString); //* AFTER dom has been created, then set the content from a string from the file
 
+
+	//==================================
 	//= Get <runway> nodes
 	QDomNodeList nodeRunways = dom.elementsByTagName("runway");
 
@@ -623,7 +642,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			tItem0->setText(CI_TYPE, "runway");
 			tItem0->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(0).firstChildElement("rwy").text()));
-			qDebug() << nodeRunway.childNodes().at(0).firstChildElement("hdg-deg").text();
+
 			//= Runway  threshold 1
 			QTreeWidgetItem *tItem1 = new QTreeWidgetItem(rItem);
 			tItem1->setIcon(0, QIcon(":/icon/runway"));
@@ -706,6 +725,27 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 		QDomDocument dom;
 		dom.setContent(xmlString); //* AFTER dom has been created, then set the content from a string from the file
 
+
+
+		//===================================
+		//= Get Frequencies
+		QTreeWidgetItem *towerItem = treeWidgetAirportInfo->findItems("tower", Qt::MatchExactly, CI_TYPE).at(0);
+		QDomNodeList nodeFreqs = dom.elementsByTagName("frequencies");
+		qDebug() << "FREQss" << nodeFreqs.count();
+		for(int idxf =0; idxf < nodeFreqs.at(0).childNodes().count(); idxf++){
+			qDebug() << "FREQ" << nodeFreqs.at(0).childNodes().at(idxf).firstChild().nodeValue();
+			double freq = nodeFreqs.at(0).childNodes().at(idxf).firstChild().nodeValue().toDouble() / 100;
+
+			QTreeWidgetItem *freqItem = new QTreeWidgetItem(towerItem);
+			freqItem->setText(CI_NODE,
+							  QString("%1 - %2").arg(	nodeFreqs.at(0).childNodes().at(idxf).nodeName()
+														).arg( QString::number(freq, 'f', 2)
+								));
+
+		}
+
+
+		//== Parking Positions
 		QStringList listParkingPositions;
 
 		//* Get <Parking/> nodes and loop thru them and add to list (removing dupes)
@@ -769,9 +809,9 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 }
 
 //==============================================================
-// Load Tower NOde
+// Load Tower Node
 //==============================================================
-int AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
+void AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
 
 	//* Create the Parkings Node
 	QTreeWidgetItem *towerParent = new QTreeWidgetItem();
@@ -779,10 +819,10 @@ int AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
 	towerParent->setText(CI_TYPE, "tower");
 	towerParent->setIcon(0, QIcon(":/icon/tower"));
 	treeWidgetAirportInfo->addTopLevelItem(towerParent);
-	treeWidgetAirportInfo->setItemExpanded(towerParent, true);
+	treeWidgetAirportInfo->setItemExpanded(towerParent, false);
 
 	//=======================================================================
-	// Parse the <groundnet/parking>.threshold.xml file for Parking Postiton
+	// Parse the ICAO.twr.xml file for Tower Postiton
 	//=======================================================================
 	/*
 		<?xml version="1.0"?>
@@ -797,9 +837,9 @@ int AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
 		</PropertyList>
 	*/
 
-	//* Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
+	//= Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
 	QString file_path(airport_dir.append("/").append(airport_code).append(".twr.xml"));
-	//qDebug() << file_path << QFile::exists(file_path);
+
 	//= Check tower file exists
 	if(QFile::exists(file_path)){
 
@@ -807,12 +847,12 @@ int AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
 		QFile ppfile(file_path);
 		ppfile.open(QIODevice::ReadOnly);
 		QString xmlString = ppfile.readAll();
-		//qDebug() << xmlString;
-		//* Create domDocument - important - don't pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
+
+		//= Create domDocument - important - don't pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
 		QDomDocument dom;
 		dom.setContent(xmlString); //* AFTER dom has been created, then set the content from a string from the file
 
-		//* Get <tower> nodes
+		//= Get <tower> nodes
 		QDomNodeList towersNode = dom.elementsByTagName("tower");
 
 		towerParent->setText(CI_LAT, towersNode.at(0).childNodes().at(0).firstChildElement("lat").text());
@@ -825,7 +865,7 @@ int AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
 	} /* File Exists */
 
 	//* return the count
-	return towerParent->childCount();
+	return;
 }
 
 
@@ -851,7 +891,7 @@ void AirportsWidget::on_reload_cache(){
 //====================================================================
 
 QString AirportsWidget::current_airport(){
-	qDebug() << "curr_apt"; 
+	//qDebug() << "curr_apt";
 	if(treeViewAirports->selectionModel()->selectedIndexes().size() == 0){
 		return "";
 	}
@@ -1005,4 +1045,14 @@ void AirportsWidget::on_airport_info_double_clicked(QTreeWidgetItem *item, int c
 	if (typ == "stand" || typ == "runway" || typ == "tower"){
 		mapWidget->zoom_to_latlon(item->text(CI_LAT), item->text(CI_LON), 16);
 	}
+}
+
+
+void AirportsWidget::on_open_airports_folder()
+{
+	if(labelAirportsFolder->text().length() == 0){
+		return;
+	}
+	QUrl url( QString("file://%1").arg(labelAirportsFolder->text()) );
+	QDesktopServices::openUrl(url);
 }

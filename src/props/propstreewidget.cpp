@@ -313,6 +313,7 @@ void PropsTreeWidget::on_props_value(QString parent_path, QString node_name,
 
 
 void PropsTreeWidget::on_item_expanded(QTreeWidgetItem *item){
+	Q_UNUSED(item);
    // qDebug() << "ON Expand=" << item->text(3);
    // qDebug() << item->text(3);
 	//item->setIcon(0, QIcon(":/icon/folder")); // folder_open

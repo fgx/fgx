@@ -82,6 +82,8 @@ public:
 
 	QPushButton *buttonRefreshTree;
 	QStatusBar *statusBarAirports;
+	QToolButton *buttonOpenAirportsFolder;
+	QLabel *labelAirportsFolder;
 
 	QTreeWidget *treeWidgetAirportInfo;
 	QStatusBar *statusBarAirportInfo;
@@ -93,9 +95,10 @@ public:
 	void load_airports_tree();
 
 	void load_info_tree(QString airport_dir, QString airport_code);
+	void load_tower_node(QString airport_dir, QString airport_code);
 	int load_runways_node(QString airport_dir, QString airport_code);
 	int load_parking_node(QString airport_dir, QString airport_code);
-	int load_tower_node(QString airport_dir, QString airport_code);
+
 
 	QLineEdit *txtLat;
 	QLineEdit *txtLon;
@@ -125,6 +128,7 @@ public slots:
 	void on_airport_info_selection_changed();
 
 	void on_airport_info_double_clicked(QTreeWidgetItem*,int);
+	void on_open_airports_folder();
 
 	void on_reload_cache();
 

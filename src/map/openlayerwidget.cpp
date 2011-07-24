@@ -323,11 +323,11 @@ void OpenLayerWidget::add_stand(QString apt, QString name, QString lat, QString 
 
 //================================================
 // Add Tower
-void OpenLayerWidget::add_tower(QString apt, QString lat, QString lon)
+void OpenLayerWidget::add_tower(QString name, QString lat, QString lon)
 {
-	QString jstr = QString("add_tower('%1', %2, %3);").arg(apt).arg(lat).arg(lon);
+	QString jstr = QString("add_tower('%1', %2, %3);").arg(name).arg(lat).arg(lon);
 	execute_js(jstr);
-	qDebug() << "add_tower " << jstr;
+	//qDebug() << "add_tower " << jstr;
 }
 
 //================================================
