@@ -35,7 +35,8 @@ public:
 	MainObject *mainObject;
 	QString *mpmapFollowCallsign;
 	QSlider *sliderZoom;
-	QLCDNumber *lcdZoom;
+	//QLCDNumber *lcdZoom;
+	QLabel *lcdZoom;
 
 	QString map_type;
 	QToolBar *toolbarAirports;
