@@ -62,20 +62,20 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 
 	//= Tab Widget
-	tabWidget = new QTabWidget();
-	mainLayout->addWidget(tabWidget);
+	//tabWidget = new QTabWidget();
+	//mainLayout->addWidget(tabWidget);
 	//connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed()));
 
 
 
 	//=================================================================================
 	//* Airport Details
-	groupBoxAirport = new XGroupVBox("Airport Details");
-	tabWidget->addTab(groupBoxAirport, QIcon(":/icon/XXX"), tr("Start At Aiport"));
+	groupBoxAirport = new XGroupVBox("Start at airport");
+	//tabWidget->addTab(groupBoxAirport, QIcon(":/icon/XXX"), tr("Start At Aiport"));
 
 	groupBoxAirport->xLayout->setContentsMargins(10,10,10,10);
 	groupBoxAirport->xLayout->setSpacing(0);
-
+	mainLayout->addWidget(groupBoxAirport);
 
 	//==================================================================
 	//** Airports Filter and Actions Top Bar
