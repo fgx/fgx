@@ -28,7 +28,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 
 	mainObject = mob;
 
-	setMinimumWidth(400);
+	setMinimumWidth(300);
 
 
 	QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -52,7 +52,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	connect(actionRefresh, SIGNAL(triggered()), this, SLOT(fetch_pilots()));
 
 	//* CheckBox AutoRefresh
-	checkBoxAutoRefresh = new QCheckBox("Auto Refresh");
+	checkBoxAutoRefresh = new QCheckBox("Auto");
 	toolbar->addWidget(checkBoxAutoRefresh);
 	checkBoxAutoRefresh->setChecked(mainObject->settings->value("mpxmap_autorefresh_enabled").toBool());
 	connect(checkBoxAutoRefresh, SIGNAL(stateChanged(int)), this, SLOT(on_check_autorefresh(int)));
@@ -146,6 +146,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	tree->headerItem()->setText(C_LAT, "Lat");
 	tree->headerItem()->setText(C_LON, "Lon");
 	tree->headerItem()->setText(C_FLAG, "Flag");
+	tree->headerItem()->setText(C_COUNT, "Count");
 
 	tree->headerItem()->setTextAlignment(C_ALTITUDE, Qt::AlignRight);
 	tree->headerItem()->setTextAlignment(C_HEADING, Qt::AlignRight);
@@ -182,27 +183,17 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	//= Initialize Objects
 	netMan = new QNetworkAccessManager(this);
 
-	//timer = new QTimer(this);
-	//timer->setInterval(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt());
-	//connect(timer, SIGNAL(timeout()), this, SLOT(fetch_pilots()));
-	//fetch_pilots();
-	if(checkBoxAutoRefresh->isChecked()){
-		//fetch_pilots();
-	}
+
 }
 
 void PilotsWidget::fetch_pilots()
 {
+	qDebug() << "fetch_pilots";
 	server_string = "";
 	QUrl url("http://mpmap01.flightgear.org/fg_server_xml.cgi?mpserver01.flightgear.org:5001");
 	QNetworkRequest request;
 	request.setUrl(url );
 
-	//TODO we need to check if already in a request.. ?
-	//if(reply && reply->isRunning()){
-	//	qDebug() << "request already running???";
-	//	return;
-	//}
 	reply = netMan->get(request);
 	connect(reply, SIGNAL( error(QNetworkReply::NetworkError)),
 			this, SLOT(on_server_error(QNetworkReply::NetworkError))
@@ -222,8 +213,9 @@ void PilotsWidget::fetch_pilots()
 //= Server Events
 //==========================================================
 void PilotsWidget::on_server_error(QNetworkReply::NetworkError error){
-	qDebug() << "error" << error;
-	outLog("FGx: PilotsWidget::on_server_error()");
+	//qDebug() << "error" << error;
+	Q_UNUSED(error);
+	//outLog("FGx: PilotsWidget::on_server_error()");
 }
 
 void PilotsWidget::on_server_ready_read(){
@@ -302,6 +294,7 @@ void PilotsWidget::on_server_read_finished(){
 
 			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
 			item->setText(C_FLAG, "0");
+			item->setText(C_COUNT, "0");
 
 			emit radar(item->text(C_CALLSIGN),
 					   item->text(C_LAT),
@@ -314,14 +307,17 @@ void PilotsWidget::on_server_read_finished(){
 	}
 
 	//= remove the flagged items
-	QList<QTreeWidgetItem *> items = tree->findItems("1", Qt::MatchExactly, C_FLAG);
+	QList<QTreeWidgetItem *> items = tree->findItems("0", Qt::MatchExactly, C_FLAG);
 	for(int idxr=0; idxr << items.count(); idxr++){
-		tree->invisibleRootItem()->removeChild(items.at(idxr));
+		//tree->invisibleRootItem()->removeChild(items.at(idxr));
+		items.at(idxr)->setText( C_COUNT, QString::number(items.at(idxr)->text(C_COUNT).toInt() + 1) );
 	}
 	tree->setUpdatesEnabled(true);
 
 
 	if(checkBoxAutoRefresh->isChecked()){
+		qDebug() << "=" << comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000;
+
 		QTimer::singleShot( comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000, this, SLOT(fetch_pilots()) );
 		statusBar->showMessage(QString("Waiting %1").arg(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt()));
 	}else{

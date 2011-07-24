@@ -35,12 +35,12 @@ public:
 		C_PITCH = 4,
 		C_LAT = 5,
 		C_LON = 6,
-		C_FLAG = 7
+		C_FLAG = 7,
+		C_COUNT = 8
 	};
 
 	MainObject *mainObject;
 
-	//QTimer *timer;
 
 	QNetworkAccessManager *netMan;
 	QNetworkReply  *reply;
