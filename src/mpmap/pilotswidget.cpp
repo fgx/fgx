@@ -236,11 +236,13 @@ void PilotsWidget::on_server_read_finished(){
 	//qDebug() << "done"; // << server_string;
 
 	statusBar->showMessage("Got Reply");
+
+	tree->setUpdatesEnabled(false);
 	//== Loop all ndes and set flag to 1 - item remaining will b enuked
 	for(int idx=0; idx << tree->invisibleRootItem()->childCount(); idx++){
 		tree->invisibleRootItem()->child(idx)->setText(C_FLAG, "1");
 	}
-	tree->setUpdatesEnabled(false);
+
 
 	//= Create Dom Document
 	QDomDocument dom;
@@ -266,6 +268,7 @@ void PilotsWidget::on_server_read_finished(){
 			if(fitems.size() == 0){
 				item = new QTreeWidgetItem(tree);
 				item->setText(C_CALLSIGN, attribs.namedItem("callsign").nodeValue());
+				item->setText(C_COUNT, "0");
 				tree->addTopLevelItem(item);
 			}else{
 				item = fitems.at(0);
@@ -294,7 +297,7 @@ void PilotsWidget::on_server_read_finished(){
 
 			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
 			item->setText(C_FLAG, "0");
-			item->setText(C_COUNT, "0");
+
 
 			emit radar(item->text(C_CALLSIGN),
 					   item->text(C_LAT),

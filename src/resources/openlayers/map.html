@@ -38,6 +38,7 @@ var zoom = 2;
 var map;
 var osmprojection;
 var osmLayer;
+var gridlines;
 
 var vectorLayer;
 
@@ -89,14 +90,23 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
 	trigger: function(e) {
 		
 		if(map_type == "airport"){
+			//OpenLayers.Event.stop(e, true); 
 			var lonlat = map.getLonLatFromViewPortPx(e.xy);
 			lonlat.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
 			Qt.map_click(lonlat.lat, lonlat.lon);
 			Qt.map_show_coords(lonlat.lat, lonlat.lon);
+			
 		}else{
 			var lonlat = map.getLonLatFromViewPortPx(e.xy);
 			// WTF !!
-			map.setCenter(lonlat, 6, false, true);
+			var zoom = map.getZoom();
+			if(zoom < 6){
+				zoom = 6;
+			}else{
+				zoom += 1;
+			}
+			
+			map.setCenter(lonlat, zoom, false, true);
 
 		}
 		//alert("Map click at LAT: " + lonlat.lat + " LON: " +
@@ -363,25 +373,25 @@ var aircraft = {};
 function init(){
 
 	// adds an optional graticule 
-	graticule = new OpenLayers.Control.Graticule({
-                    numPoints: 2, 
+	gridlines = new OpenLayers.Control.Graticule({
+                    numPoints: 1, 
+					intervals:[45,30,20,10,5,2,1,0.5,0.2,0.1],
                     labelled: true,
-					displayInLayerSwitcher: true,
+					displayInLayerSwitcher: false,
 					labelFormat: "dm",
 					layerName: "Grid",
-					visible: false,
+					visible: true,
                 })
 
 	// add the main map object
 	map = new OpenLayers.Map('map', {
-				controls:[
-					graticule,
-					new OpenLayers.Control.Navigation(),
-					new OpenLayers.Control.Attribution(),
-					new OpenLayers.Control.LayerSwitcher()
-					],
-				} 
-			);
+			controls:[
+				gridlines,
+				new OpenLayers.Control.Navigation(),
+				new OpenLayers.Control.Attribution(),
+				//, new OpenLayers.Control.LayerSwitcher()
+			],
+	});
 	
 	//=====================
 	//= Map events
@@ -525,7 +535,16 @@ function display_layer(layer_name, is_visible){
 	if(layer_name == "runway_labels"){
 		runwayLabels.display(is_visible);
 	}
-	
+
+	if(layer_name == "grid_lines"){
+		if(is_visible){
+			gridlines.activate();
+		}else{
+			gridlines.deactivate();
+		}
+		//alert(is_visible);
+	}	
+
 }
 
 

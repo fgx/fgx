@@ -54,6 +54,8 @@ private:
 	QCheckBox *chkViewStands;
 	QCheckBox *chkViewRunwayLabels;
 	QCheckBox *chkViewRunwayLines;
+
+	QCheckBox *chkViewGridLines;
 	
 	//QLineEdit *editHdg;
 	//QToolButton *buttTurnRight10;

@@ -224,6 +224,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
     statusBar->addPermanentWidget(progressBar);
 
 
+
 	//===================================================
 	//= View Layers
 	buttonGroupViewLayers = new QButtonGroup(this);
@@ -233,10 +234,15 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	);
 	mainObject->settings->beginGroup("map_display_layers");
 
-	QToolButton *buttDebug = new QToolButton();
-	buttDebug->setText("Debug");
-	statusBar->addPermanentWidget(buttDebug);
-	connect(buttDebug, SIGNAL(clicked()), this, SLOT(on_show_debugger()));
+
+	chkViewGridLines = new QCheckBox();
+	chkViewGridLines->setText("Grid Lines");
+	chkViewGridLines->setProperty("layer","grid_lines");
+	chkViewGridLines->setChecked(mainObject->settings->value("grid_lines", "0").toBool());
+	statusBar->addPermanentWidget(chkViewGridLines);
+	buttonGroupViewLayers->addButton(chkViewGridLines);
+
+
 
 	chkViewStands = new QCheckBox();
 	chkViewStands->setText("Stands");
@@ -260,6 +266,11 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	buttonGroupViewLayers->addButton(chkViewRunwayLines);
 
 	mainObject->settings->endGroup();
+
+	QToolButton *buttDebug = new QToolButton();
+	buttDebug->setText("Debug");
+	statusBar->addPermanentWidget(buttDebug);
+	connect(buttDebug, SIGNAL(clicked()), this, SLOT(on_show_debugger()));
 
 
 	
@@ -481,6 +492,9 @@ void OpenLayerWidget::map_show_coords(QVariant lat, QVariant lon){
 }
 
 void OpenLayerWidget::on_coords_changed(){
+	if(map_type == "radar"){
+		return;
+	}
 	emit setx("--lat=", true, txtLat->text());
 	emit setx("--lon=", true, txtLon->text());
 	emit setx("--heading=", true, QString::number(spinHeading->value()) );
