@@ -156,6 +156,10 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	labelAeroPath->setFixedWidth(250);
 	statusBarTree->addPermanentWidget(labelAeroPath);
 
+	buttonAeroPath = new QToolButton();
+	buttonAeroPath->setIcon(QIcon(":/icon/folder"));
+	statusBarTree->addPermanentWidget(buttonAeroPath);
+
 	//== View nested Checkbox
 	checkViewNested = new QCheckBox();
 	checkViewNested->setText("View folders");
@@ -354,6 +358,7 @@ void AircraftWidget::on_tree_selection_changed(){
 	if(!item){
             outLog("on_tree_selection_changed: no selected item");
 		labelAeroPath->setText("");
+		buttonAeroPath->setDisabled(true);
 		return;
 	}
 
@@ -363,11 +368,13 @@ void AircraftWidget::on_tree_selection_changed(){
                 aeroImageLabel->clear();
 		emit setx("--aircraft=", false, "");
 		labelAeroPath->setText("");
+		buttonAeroPath->setDisabled(true);
 		return;
 	}
 
 	//qDebug() << item->text(C_DIR);
 	labelAeroPath->setText(mainObject->X->aircraft_path() + "/" + item->text(C_AERO));
+	buttonAeroPath->setDisabled(false);
 
 	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->X->aircraft_path(),

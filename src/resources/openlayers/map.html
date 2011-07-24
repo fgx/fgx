@@ -598,7 +598,7 @@ function show_radar(mcallsign, mlat, mlon, mheading, maltitude){
 	if(mheading > 0  && mheading < 90){
 		lyOff = lyOff - 15;
 		gyOff = gyOff  + 15 ;
-	}else if( mheading > 90 && mheading < 180){
+	}else if( mheading > 90 && mheading < 150){
 		lyOff = lyOff + 5;
 		gyOff = gyOff - 5;
 	}
@@ -648,6 +648,35 @@ function zoom_to_airport(apt){
 
 
 //===============================================================
+//= Clear airprots
+//======================================================
+function clear_airport(apt){
+// TODO
+	alert("clr");
+	var runways = runwayLines.getFeatureBy("_airport", apt);
+	if(runways){
+		runwayLines.removeFeatures(runways);
+	}
+	alert("clr");
+	var towers = towerMarkers.getFeatureBy("_airport", apt);
+	if(towers){
+		towerMarkers.removeFeatures(towers);
+	}
+	alert("clr all");
+}
+
+//===============================================================
+//= Clear Map
+//======================================================
+function clear_map(){
+	towerMarkers.removeAllFeatures();
+	runwayLines.removeAllFeatures();
+	runwayLabels.removeAllFeatures();
+	standLabels.removeAllFeatures();
+	//alert("clr all");
+}
+
+//===============================================================
 //= Adds runway
 //======================================================
 function add_runway(apt, rwy1, rwy2, lat1, lon1, lat2, lon2){
@@ -665,14 +694,15 @@ function add_runway(apt, rwy1, rwy2, lat1, lon1, lat2, lon2){
 	);
 	var line = new OpenLayers.Geometry.LineString(points).transform(osmprojection,map.getProjectionObject());
 	var runwayFeature = new OpenLayers.Feature.Vector(line);
+	runwayFeature._airport = apt;
 	runwayLines.addFeatures(runwayFeature);
 
-	add_runway_label(rwy1, lat1, lon1);
-	add_runway_label(rwy2, lat2, lon2);	
+	add_runway_label(apt, rwy1, lat1, lon1);
+	add_runway_label(apt, rwy2, lat2, lon2);	
 }
 
 //=  Add Runway Label
-function add_runway_label(mrwy, mlat, mlon){
+function add_runway_label(apt, mrwy, mlat, mlon){
 
 	if(mrwy < 10){
 		var s = new String(mrwy);
@@ -682,7 +712,8 @@ function add_runway_label(mrwy, mlat, mlon){
 		
 	var feature = new OpenLayers.Feature.Vector(point, {
                 rwyText: mrwy
-				});            
+				});
+    feature._airport = apt;
 	runwayLabels.addFeatures([feature]);
 }
 
@@ -698,7 +729,7 @@ function add_stand(apt, name, mlat, mlon){
 	var feature = new OpenLayers.Feature.Vector(point, {
                 standText: name
 				});            
-	
+    feature._airport = apt;
 	//add to main layer planeMarkersVec at init()
 	standLabels.addFeatures([feature]);
 
@@ -711,7 +742,8 @@ function add_tower(apt, mlat, mlon){
 	//alert("tower1");
 	var point = new OpenLayers.Geometry.Point(mlon, mlat).transform(osmprojection, map.getProjectionObject() );
 		
-	var feature = new OpenLayers.Feature.Vector(point, {airport: apt});            
+	var feature = new OpenLayers.Feature.Vector(point, {airport: apt});
+    feature._airport = apt;            
 	towerMarkers.addFeatures([feature]);
 	//alert("tower");
 }

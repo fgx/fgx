@@ -73,6 +73,7 @@ private:
 	QTreeWidget *treeWidget;
     QStatusBar *statusBarTree;
 	QLabel *labelAeroPath;
+	QToolButton *buttonAeroPath;
 
 signals:
 	void setx( QString option, bool enabled,QString value);

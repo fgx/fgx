@@ -279,10 +279,11 @@ void PilotsWidget::on_server_read_finished(){
 				item = fitems.at(0);
 			}
 
-			//_ check for atc
+			//== Check for atc
 			QString model = QString(attribs.namedItem("model").nodeValue());
 			bool tower = false;
-			if(model.toLower() == "atc"){
+			//= Need to catch atc models here?
+			if(model.toLower() == "atc" || model.toLower() == "atc2"){
 				tower = true;
 			}
 
@@ -306,7 +307,8 @@ void PilotsWidget::on_server_read_finished(){
 					   item->text(C_LAT),
 					   item->text(C_LON),
 					   item->text(C_HEADING),
-					   item->text(C_ALTITUDE)
+					   item->text(C_ALTITUDE),
+					   tower
 				);
 		}
 	}

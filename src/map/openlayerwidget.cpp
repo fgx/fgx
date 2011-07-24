@@ -371,8 +371,13 @@ void OpenLayerWidget::display_radar_layer( int viz)
 
 //=================================================
 // Show Aircraft Radar - this allows more than one aircraft.
-void OpenLayerWidget::show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude){
-	QString jstr = QString("show_radar('%1', %2, %3, %4, %5);").arg(callsign).arg(lat).arg(lon).arg(heading).arg(altitude);
+void OpenLayerWidget::show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude, bool is_tower){
+	QString jstr;
+	if(is_tower){
+		add_tower(callsign, lat, lon);
+	}else{
+		jstr = QString("show_radar('%1', %2, %3, %4, %5);").arg(callsign).arg(lat).arg(lon).arg(heading).arg(altitude);
+	}
 	execute_js(jstr);
 	//qDebug() << "show_radar jstr: " << jstr;
 }
@@ -384,6 +389,20 @@ void OpenLayerWidget::focus_aircraft(QString callsign){
 	execute_js(jstr);
 }
 
+//= Clear Airport Markers
+void OpenLayerWidget::clear_airport(QString apt)
+{
+	QString jstr = QString("clear_airport('%1');").arg(apt);
+	execute_js(jstr);
+	qDebug() << "clear prt" << jstr;
+}
+
+void OpenLayerWidget::clear_map()
+{
+	QString jstr = QString("clear_map();");
+	execute_js(jstr);
+	qDebug() << "clear map" << jstr;
+}
 
 //================================================
 // Execute Javascript

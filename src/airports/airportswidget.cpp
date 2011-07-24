@@ -478,6 +478,11 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 	QString count_label;
 
+	//== Clear the existing airport
+	//mapWidget->clear_airport(airport_code);
+	mapWidget->clear_map();
+
+	
 	// Load Tower
 	int foo = load_tower_node(airport_dir, airport_code);
 
@@ -992,7 +997,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 
 void AirportsWidget::on_airport_info_double_clicked(QTreeWidgetItem *item, int col_idx)
 {
-	//qDebug() << item->text(CI_TYPE);
+	Q_UNUSED(col_idx);
 	QString typ = item->text(CI_TYPE);
 	if (typ == "stand" || typ == "runway" || typ == "tower"){
 		mapWidget->zoom_to_latlon(item->text(CI_LAT), item->text(CI_LON), 16);

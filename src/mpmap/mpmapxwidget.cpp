@@ -86,8 +86,8 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	splitter->setStretchFactor(1, 1);
 
 
-	connect(pilotsWidget,	SIGNAL(radar(QString,QString,QString, QString, QString)),
-			mapWidget,		SLOT(show_radar(QString,QString,QString, QString, QString)));
+	connect(pilotsWidget,	SIGNAL(radar(QString,QString,QString, QString, QString, bool)),
+			mapWidget,		SLOT(show_radar(QString,QString,QString, QString, QString, bool)));
 
 	connect(pilotsWidget,	SIGNAL(aircraft_selected(XAero)),
 			this,			SLOT(focus_aero(XAero)));

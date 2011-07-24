@@ -77,6 +77,9 @@ signals:
 
 
 	//# To map markers and features
+	void clear_airport(QString apt);
+	void clear_map();
+
 	void add_runway(QString apt, QString rwy1, QString rwy2, QString lat1, QString lon1, QString lat2, QString lon2);
 	void add_stand(QString apt, QString name, QString lat, QString lon);
 	void add_tower(QString apt, QString lat, QString lon);
@@ -84,7 +87,7 @@ signals:
 	void show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude);
 	void focus_aircraft(QString callsign);
 
-	void show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude);
+	void show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude, bool is_tower);
 	void display_radar_layer( int viz);
 
 
