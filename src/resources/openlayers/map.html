@@ -422,6 +422,7 @@ function init(){
 	osmLayer = new OpenLayers.Layer.OSM("OSM Map");
 	map.addLayer(osmLayer);
 
+
 	//= Zoom changed
 	osmLayer.events.on({
 		moveend: function(e) {
@@ -516,6 +517,9 @@ function init(){
 
 } // = end init
 
+
+//===============================================
+//= Set map type
 function set_map_type(mt){
 	map_type = mt;
 
@@ -524,6 +528,12 @@ function set_map_type(mt){
 		var click = new OpenLayers.Control.Click();
 		map.addControl(click);
 		click.activate();
+		osmLayer.setOpacity(1.0);
+		document.body.style.background = "white";
+
+	}else if(map_type == "radar"){
+		osmLayer.setOpacity(0.6);
+		document.body.style.background = "black";
 	}
 }
 

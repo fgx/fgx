@@ -1,5 +1,5 @@
 
-#include <QtDebug>
+//#include <QtDebug>
 
 #include <QtCore/QTimer>
 
@@ -154,7 +154,8 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 	tree->headerItem()->setTextAlignment(C_LON, Qt::AlignRight);
 
 	tree->setColumnHidden(C_PITCH, true);
-	//tree->setColumnHidden(C_FLAG, true);
+	tree->setColumnHidden(C_FLAG, true);
+	tree->setColumnHidden(C_COUNT, true);
 
 	tree->setColumnHidden(C_AIRCRAFT, !chkShowModel->isChecked());
 	tree->setColumnHidden(C_HEADING, !chkShowHdg->isChecked());
@@ -188,7 +189,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 
 void PilotsWidget::fetch_pilots()
 {
-	qDebug() << "fetch_pilots";
+
 	server_string = "";
 	QUrl url("http://mpmap01.flightgear.org/fg_server_xml.cgi?mpserver01.flightgear.org:5001");
 	QNetworkRequest request;
@@ -235,7 +236,7 @@ void PilotsWidget::on_server_ready_read(){
 void PilotsWidget::on_server_read_finished(){
 	//qDebug() << "done"; // << server_string;
 
-	statusBar->showMessage("Got Reply");
+	statusBar->showMessage("Processing data");
 
 	tree->setUpdatesEnabled(false);
 	emit freeze_map(true);
@@ -259,9 +260,6 @@ void PilotsWidget::on_server_read_finished(){
 
 	if (nodes.count() > 0){
 		for(int idxd =0; idxd < nodes.count(); idxd++){
-			if( mainObject->debug_mode && idxd == 5){
-				//return; //DEBUG
-			}
 
 			QDomNode node = nodes.at(idxd);
 			QDomNamedNodeMap attribs =  node.attributes();
@@ -313,16 +311,23 @@ void PilotsWidget::on_server_read_finished(){
 		}
 	}
 
-	//= remove the flagged items
+	//= Inc the flagged count items
+	int idxr;
 	QList<QTreeWidgetItem *> items = tree->findItems("1", Qt::MatchExactly, C_FLAG);
-	for(int idxr=0; idxr < items.count(); idxr++){
+	qDebug() << "-----------------------------";
+	for(idxr=0; idxr < items.count(); idxr++){
 		//tree->invisibleRootItem()->removeChild(items.at(idxr));
+
 		int count = items.at(idxr)->text(C_COUNT).toInt();
-		if(count == 5){
-			items.at(idxr)->parent()->removeChild( items.at(idxr) );
-		}else{
-			items.at(idxr)->setText( C_COUNT, QString::number(count + 1) );
-		}
+		qDebug() << "inc" << idxr << count;
+		items.at(idxr)->setText( C_COUNT, QString::number(count + 1) );
+	}
+	//== Remove dead
+	items = tree->findItems("2", Qt::MatchExactly, C_COUNT);
+	for( idxr=0; idxr < items.count(); idxr++){
+		//qDebug() << "remove" << idxr << items.count();
+		//items.at(items.count() -1)->parent()->removeChild( items.at(items.count() -1) );
+		//items.removeAt(items.count() - 1);
 	}
 
 	tree->setUpdatesEnabled(true);
