@@ -14,8 +14,11 @@
 #include <QtGui/QLabel>
 #include <QtGui/QSplitter>
 
+
 #include <QtWebKit/QWebFrame>
 #include <QtGui/QDesktopServices>
+
+
 
 #include "map/openlayerwidget.h"
 #include "airports/airportswidget.h"
@@ -152,9 +155,12 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	QVBoxLayout *layoutZoom = new QVBoxLayout();
 	midLayout->addLayout(layoutZoom, 0);
 
+	QString zbstyle("font-weight: bold; font-size: 10pt; color: black; padding: 0px; margin: 0px;");
+
 	QToolButton *buttZoomIn = new QToolButton();
 	buttZoomIn->setText("+");
 	buttZoomIn->setAutoRaise(true);
+	buttZoomIn->setStyleSheet(zbstyle);
 	layoutZoom->addWidget(buttZoomIn, 0);
 	connect(buttZoomIn, SIGNAL(clicked()), this, SLOT(on_zoom_in()));
 
@@ -169,8 +175,18 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	QToolButton *buttZoomOut = new QToolButton();
 	buttZoomOut->setText("-");
 	buttZoomOut->setAutoRaise(true);
+	buttZoomOut->setStyleSheet(zbstyle);
 	layoutZoom->addWidget(buttZoomOut, 0);
 	connect(buttZoomOut, SIGNAL(clicked()), this, SLOT(on_zoom_out()));
+
+	lcdZoom = new QLCDNumber();
+	lcdZoom->setMode(QLCDNumber::Dec);
+	lcdZoom->setDigitCount(2);
+	lcdZoom->setSmallDecimalPoint(false);
+	lcdZoom->setSegmentStyle(QLCDNumber::Flat);
+	lcdZoom->setStyleSheet("border: none; font-size: 8pt; margin: 0px; padding: 0px;");
+	lcdZoom->setFixedWidth(20);
+	layoutZoom->addWidget(lcdZoom);
 
 	//=============================================================
 	//== Cache
@@ -265,7 +281,7 @@ void OpenLayerWidget::load_map()
 
 void OpenLayerWidget::map_initialised()
 {
-	qDebug() << "map initialised";
+	//qDebug() << "map initialised";
 	QList<QAbstractButton *> buttons = buttonGroupViewLayers->buttons();
 	for(int idx = 0; idx < buttons.size(); idx++){
 		QString jstr = QString("display_layer('%1', %2);").arg(	buttons.at(idx)->property("layer").toString()
@@ -337,6 +353,7 @@ void OpenLayerWidget::zoom_to( int zoom)
 {
 	QString jstr = QString("zoom_to(%1);").arg(zoom);
 	execute_js(jstr);
+	lcdZoom->display(QString("%1").arg(zoom));
 }
 
 //== Zoom in out buttons
@@ -388,7 +405,7 @@ void OpenLayerWidget::focus_aircraft(QString callsign){
 	execute_js(jstr);
 }
 
-//= Clear Airport Markers
+//= TODO later Clear Airport Markers
 void OpenLayerWidget::clear_airport(QString apt)
 {
 	QString jstr = QString("clear_airport('%1');").arg(apt);
@@ -400,7 +417,7 @@ void OpenLayerWidget::clear_map()
 {
 	QString jstr = QString("clear_map();");
 	execute_js(jstr);
-	qDebug() << "clear map" << jstr;
+	//qDebug() << "clear map" << jstr;
 }
 
 //================================================
@@ -422,6 +439,7 @@ void OpenLayerWidget::execute_js(QString js_str){
 //===========================================================================
 void OpenLayerWidget::map_debug(QVariant mess){
 	//qDebug() << "< " << mess.toString();
+	Q_UNUSED(mess);
 }
 
 

@@ -637,14 +637,16 @@ function zoom_to_latlon(lat, lon, zoom){
 // Zooms the map to the airport (thanks, Pete!)
 function zoom_to_airport(apt){
 	//alert("zoom" + airportBounds)
-	//map.zoomToExtent(airportBounds, true);
-	
+
+	// WTF! this not work
+	//map.zoomToExtent(airportBounds);
+	//return;
 	//return;
 	map.setCenter(
 		airportBounds.getCenterLonLat().transform(
 			osmprojection,
 			map.getProjectionObject()
-			), 13
+			), 14
 	);
 	//*/
 }

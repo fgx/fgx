@@ -21,7 +21,7 @@
 #include <QtXmlPatterns/QXmlQuery>
 #include <QtXml/QDomDocument>
 
-
+#include <QDesktopServices>
 #include <QFileDialog>
 
 #include <QtGui/QVBoxLayout>
@@ -650,4 +650,14 @@ void AircraftWidget::on_select_path()
 		on_set_aircraft();
 	}
 
+}
+
+
+void AircraftWidget::on_open_aircraft_path()
+{
+	if(labelAeroPath->text().length() == 0){
+		return;
+	}
+	QUrl url(QString("file://%1").arg(labelAeroPath->text()));
+	QDesktopServices::openUrl(url);
 }

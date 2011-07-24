@@ -91,6 +91,7 @@ public slots:
 	void on_fuel_changed();
 
 	void on_upx(QString option, bool enabled, QString value);
+	void on_open_aircraft_path();
 };
 
 #endif // AIRCRAFTWIDGET_H

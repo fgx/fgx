@@ -17,6 +17,7 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QSlider>
 #include <QtGui/QDoubleSpinBox>
+#include <QLCDNumber>
 
 #include "xobjects/mainobject.h"
 #include "xobjects/latlng.h"
@@ -33,6 +34,8 @@ public:
 	MainObject *mainObject;
 	QString *mpmapFollowCallsign;
 	QSlider *sliderZoom;
+	QLCDNumber *lcdZoom;
+
 private:
 
 	QProgressBar *progressBar;
