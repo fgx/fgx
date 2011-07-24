@@ -79,14 +79,14 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	//================================================================================
 	pilotsWidget = new PilotsWidget(mainObject);
 	splitter->addWidget(pilotsWidget);
-
+	pilotsWidget->set_map_widget(mapWidget);
 
 	//====================================================================
 
 	splitter->setStretchFactor(0, 2);
 	splitter->setStretchFactor(1, 1);
 
-
+	/*
 	connect(pilotsWidget,	SIGNAL(radar(QString,QString,QString, QString, QString, bool)),
 			mapWidget,		SLOT(show_radar(QString,QString,QString, QString, QString, bool)));
 	connect(pilotsWidget, SIGNAL(clear_radar()),
@@ -97,7 +97,7 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 			this,			SLOT(focus_aero(XAero)));
 
 	connect(pilotsWidget,	SIGNAL(freeze_map(bool)), this, SLOT(on_freeze_map(bool)));
-
+	*/
 
 }
 

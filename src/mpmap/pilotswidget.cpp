@@ -3,6 +3,8 @@
 
 #include <QtCore/QTimer>
 
+#include <QListIterator>
+
 #include <QtXml/QDomNodeList>
 #include <QtXml/QDomNamedNodeMap>
 
@@ -239,8 +241,8 @@ void PilotsWidget::on_server_read_finished(){
 	statusBar->showMessage("Processing data");
 
 	tree->setUpdatesEnabled(false);
-	emit freeze_map(true);
-	emit clear_radar();
+	//emit freeze_map(true);
+	mapWidget->clear_radar();
 
 	QTreeWidgetItem *rootItem = tree->invisibleRootItem();
 
@@ -300,7 +302,13 @@ void PilotsWidget::on_server_read_finished(){
 			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
 			item->setText(C_FLAG, "0");
 
-
+			mapWidget->show_radar( item->text(C_CALLSIGN),
+								   item->text(C_LAT),
+								   item->text(C_LON),
+								   item->text(C_HEADING),
+								   item->text(C_ALTITUDE),
+								   is_tower);
+			/*
 			emit radar(item->text(C_CALLSIGN),
 					   item->text(C_LAT),
 					   item->text(C_LON),
@@ -308,30 +316,31 @@ void PilotsWidget::on_server_read_finished(){
 					   item->text(C_ALTITUDE),
 					   is_tower
 				);
+			*/
 		}
 	}
 
 	//= Inc the flagged count items
 	int idxr;
 	QList<QTreeWidgetItem *> items = tree->findItems("1", Qt::MatchExactly, C_FLAG);
-	qDebug() << "-----------------------------";
+	//qDebug() << "-----------------------------";
 	for(idxr=0; idxr < items.count(); idxr++){
-		//tree->invisibleRootItem()->removeChild(items.at(idxr));
-
 		int count = items.at(idxr)->text(C_COUNT).toInt();
 		qDebug() << "inc" << idxr << count;
 		items.at(idxr)->setText( C_COUNT, QString::number(count + 1) );
 	}
+
 	//== Remove dead
-	items = tree->findItems("2", Qt::MatchExactly, C_COUNT);
-	for( idxr=0; idxr < items.count(); idxr++){
-		//qDebug() << "remove" << idxr << items.count();
-		//items.at(items.count() -1)->parent()->removeChild( items.at(items.count() -1) );
-		//items.removeAt(items.count() - 1);
+	items = tree->findItems("1", Qt::MatchExactly, C_COUNT);
+	QListIterator<QTreeWidgetItem *> it(items);
+	while (it.hasNext()){
+		QTreeWidgetItem *rItem = it.next();
+		qDebug() << "removed" << rItem->text(C_CALLSIGN);
+		tree->invisibleRootItem()->removeChild( rItem );
 	}
 
 	tree->setUpdatesEnabled(true);
-	emit freeze_map(false);
+	//emit freeze_map(false);
 
 	if(checkBoxAutoRefresh->isChecked()){
 		//qDebug() << "=" << comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000;
@@ -392,4 +401,10 @@ void PilotsWidget::on_show_cols(QAbstractButton *button)
 	mainObject->settings->setValue(QString::number(col_idx), button->isChecked());
 	mainObject->settings->endGroup();
 	mainObject->settings->sync();
+}
+
+
+void PilotsWidget::set_map_widget(OpenLayerWidget *mWidget)
+{
+	this->mapWidget = mWidget;
 }

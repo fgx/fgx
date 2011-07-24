@@ -17,6 +17,8 @@
 #include "xobjects/mainobject.h"
 class MainObject;
 
+#include "map/openlayerwidget.h"
+
 #include "aircraft/xaero.h"
 
 class PilotsWidget : public QWidget
@@ -39,6 +41,7 @@ public:
 
 	MainObject *mainObject;
 
+	OpenLayerWidget *mapWidget;
 	QDomDocument dom;
 
 	QNetworkAccessManager *netMan;
@@ -53,6 +56,8 @@ public:
 	QStatusBar *statusBar;
 
 	QButtonGroup *buttonGroupCols;
+
+	void set_map_widget(OpenLayerWidget *mapWidget);
 
 signals:
 

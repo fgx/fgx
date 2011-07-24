@@ -532,7 +532,7 @@ function set_map_type(mt){
 		document.body.style.background = "white";
 
 	}else if(map_type == "radar"){
-		osmLayer.setOpacity(0.6);
+		osmLayer.setOpacity(0.5);
 		document.body.style.background = "black";
 	}
 }
@@ -661,6 +661,10 @@ function show_radar(mcallsign, mlat, mlon, mheading, maltitude){
 	}else if( mheading > 90 && mheading < 150){
 		lyOff = lyOff + 5;
 		gyOff = gyOff - 5;
+	}else if( mheading > 270 && mheading < 360){
+		lyOff = lyOff - 10;
+		gyOff = gyOff  + 10;
+		
 	}
 
 	// Add callsign label as separate feature, to have a background color (graphic) with offset
