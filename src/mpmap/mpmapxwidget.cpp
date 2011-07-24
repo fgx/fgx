@@ -14,7 +14,6 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QMenu>
 #include <QtGui/QLabel>
-#include <QtGui/QSplitter>
 
 #include <QtWebKit/QWebFrame>
 #include <QtGui/QDesktopServices>
@@ -22,33 +21,14 @@
 #include "mpmap/mpmapxwidget.h"
 
 
-/*
-QList<int, int> zoomLevelMap
 
-zoomLevelMap[5000] = 1;
-zoomLevelMap[1500] = 2;
-zoomLevelMap[2000] = 3;
-zoomLevelMap[1000] = 4;
-zoomLevelMap[500] = 5;
-zoomLevelMap[200] = 6;
-zoomLevelMap[100] = 7;
-zoomLevelMap[100] = 8;
-zoomLevelMap[100] = 9;
-zoomLevelMap[100] = 10;
-zoomLevelMap[100] = 11;
-
-zoomLevelMap[100] = 12;
-zoomLevelMap[100] = 13;
-zoomLevelMap[100] = 14;
-
-*/
 MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
     QWidget(parent)
 {
 
 	mainObject  = mob,
 
-    setWindowTitle(tr("FGx Map"));
+	setWindowTitle(tr("FGx Multiplayer Map"));
 	setWindowIcon(QIcon(":/icon/mpmap"));
 
 
@@ -63,7 +43,7 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
     mainLayout->setSpacing(0);
 
 
-	QSplitter *splitter = new QSplitter();
+	splitter = new QSplitter();
 	mainLayout->addWidget(splitter, 200);
 
 
@@ -85,6 +65,8 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 
 	splitter->setStretchFactor(0, 2);
 	splitter->setStretchFactor(1, 1);
+	splitter->restoreState(mainObject->settings->value("mpmapxwidget_splitter").toByteArray());
+	connect(splitter, SIGNAL(splitterMoved(int,int)), this, SLOT(on_splitter_moved()));
 
 	/*
 	connect(pilotsWidget,	SIGNAL(radar(QString,QString,QString, QString, QString, bool)),
@@ -96,7 +78,6 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	connect(pilotsWidget,	SIGNAL(aircraft_selected(XAero)),
 			this,			SLOT(focus_aero(XAero)));
 
-	connect(pilotsWidget,	SIGNAL(freeze_map(bool)), this, SLOT(on_freeze_map(bool)));
 	*/
 
 }
@@ -114,11 +95,11 @@ void MpMapXWidget::closeEvent(QCloseEvent *event){
 	event->accept();
 }
 
-void MpMapXWidget::on_freeze_map(bool freeze)
-{
+//void MpMapXWidget::on_freeze_map(bool freeze)
+//{
 	//mapWidget->webView->setUpdatesEnabled(freeze);
 	//qDebug() << "freeze=" << freeze;
-}
+//}
 
 
 void MpMapXWidget::add_airport(QString airport){
@@ -138,3 +119,7 @@ void MpMapXWidget::focus_aero(XAero aero){
 }
 
 
+void MpMapXWidget::on_splitter_moved()
+{
+	mainObject->settings->setValue("mpmapxwidget_splitter", splitter->saveState());
+}

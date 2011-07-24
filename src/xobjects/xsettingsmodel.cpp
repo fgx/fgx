@@ -244,7 +244,6 @@ QString XSettingsModel::getx(QString option, QString default_string)
 bool XSettingsModel::get_ena(QString option)
 {
 	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
-	//#qDebug() << "opts" << items;
 
 	// Get the item in the same row in the enabled field
 	QStandardItem *xItem = item(items[0]->row(),C_ENABLED);
@@ -391,12 +390,11 @@ QStringList XSettingsModel::get_fgfs_args()
 	//== FgRoot
 	args <<  QString("--fg-root=").append(fgroot());
 
-
-	//args << QString("--fg-scenery=").append(settings->terrasync_sync_data_path()).append(":").append(settings->scenery_path());
-	//args << QString("--atlas=socket,out,5,localhost,5505,udp");
-	//	args << QString ("--geometry=").append(settings->value("screen_size").toString());
-
-	//
+	//= Terrasync
+	if(terrasync_enabled()){
+		args << QString("--fg-scenery=").append(terrasync_sync_data_path()).append(":").append(scenery_path());
+		args << QString("--atlas=socket,out,5,localhost,5505,udp");
+	}
 
 	return args;
 }

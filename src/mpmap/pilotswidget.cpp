@@ -321,12 +321,9 @@ void PilotsWidget::on_server_read_finished(){
 	}
 
 	//= Inc the flagged count items
-	int idxr;
 	QList<QTreeWidgetItem *> items = tree->findItems("1", Qt::MatchExactly, C_FLAG);
-	//qDebug() << "-----------------------------";
-	for(idxr=0; idxr < items.count(); idxr++){
+	for(int idxr=0; idxr < items.count(); idxr++){
 		int count = items.at(idxr)->text(C_COUNT).toInt();
-		qDebug() << "inc" << idxr << count;
 		items.at(idxr)->setText( C_COUNT, QString::number(count + 1) );
 	}
 
@@ -335,7 +332,6 @@ void PilotsWidget::on_server_read_finished(){
 	QListIterator<QTreeWidgetItem *> it(items);
 	while (it.hasNext()){
 		QTreeWidgetItem *rItem = it.next();
-		qDebug() << "removed" << rItem->text(C_CALLSIGN);
 		tree->invisibleRootItem()->removeChild( rItem );
 	}
 
@@ -343,23 +339,12 @@ void PilotsWidget::on_server_read_finished(){
 	//emit freeze_map(false);
 
 	if(checkBoxAutoRefresh->isChecked()){
-		//qDebug() << "=" << comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000;
-
 		QTimer::singleShot( comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000, this, SLOT(fetch_pilots()) );
 		statusBar->showMessage(QString("Waiting %1").arg(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt()));
+
 	}else{
 		statusBar->showMessage("Idle");
 	}
-	//= Resize columns the first time (python does not have infunction statics like this ;-( ))
-	/*
-	static bool first_time_resize = false;
-	if (first_time_resize == false){
-		for(int cidx =0; cidx < tree->columnCount(); cidx++){
-			tree->resizeColumnToContents(cidx);
-		}
-		first_time_resize = true;
-	}
-	*/
 }
 
 

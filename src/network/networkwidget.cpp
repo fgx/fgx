@@ -458,7 +458,7 @@ void NetworkWidget::set_fgcom(){
 //=====================================
 // Setup Combo Hz
 void NetworkWidget::populate_combo_hz(QComboBox *combo){
-	for(int i=5; i < 31; i++){
+	for(int i=5; i < 15; i++){
 		combo->addItem(QString("%1").arg(i), QString("%1").arg(i));
 	}
 	combo->setCurrentIndex(4);

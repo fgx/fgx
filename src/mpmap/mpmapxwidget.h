@@ -8,7 +8,7 @@
 #include <QtNetwork/QNetworkDiskCache>
 #include <QtNetwork/QNetworkCookieJar>
 
-
+#include <QtGui/QSplitter>
 #include <QtGui/QStatusBar>
 #include <QtGui/QProgressBar>
 #include <QtGui/QLabel>
@@ -44,6 +44,7 @@ public:
 	OpenLayerWidget *mapWidget;
 	PilotsWidget *pilotsWidget;
 
+	QSplitter *splitter;
 
 	void closeEvent(QCloseEvent *event);
 signals:
@@ -58,7 +59,8 @@ public slots:
 
 	void focus_aero(XAero aero);
 
-	void on_freeze_map(bool freeze);
+	//void on_freeze_map(bool freeze);
+	void on_splitter_moved();
 };
 
 #endif // MPMAPXWIDGET_H
