@@ -48,6 +48,11 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	mainObject = mOb;
 
+	//= Metar widget
+	metarWidget = new MetarWidget(mainObject);
+	metarWidget->hide();
+
+
     //* Main Layout
 	QHBoxLayout *mainLayout = new QHBoxLayout();
     setLayout(mainLayout);
@@ -202,6 +207,16 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	statusBarAirports->setSizeGripEnabled(false);
 	airportsLayout->addWidget(statusBarAirports);
 	statusBarAirports->showMessage("Idle");
+
+	//= Open Airports Folder
+	QToolButton *buttonShowMetar = new QToolButton();
+	buttonShowMetar->setAutoRaise(true);
+	buttonShowMetar->setIcon(QIcon(":/icon/metar"));
+	buttonShowMetar->setText("Metar");
+	buttonShowMetar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	statusBarAirports->addPermanentWidget(buttonShowMetar);
+	connect(buttonShowMetar, SIGNAL(clicked()), this, SLOT(on_show_metar()));
+
 
 	//= Label Airports Folder - HIDDEN
 	labelAirportsFolder = new QLabel();
@@ -501,6 +516,7 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 	
 	// Load Tower
+	metarWidget->load_metar(airport_code);
 	load_tower_node(airport_dir, airport_code);
 	labelAirportsFolder->setText( airport_dir );
 	buttonOpenAirportsFolder->setToolTip(airport_dir);
@@ -1044,4 +1060,10 @@ void AirportsWidget::on_open_airports_folder()
 	}
 	QUrl url( QString("file://%1").arg(labelAirportsFolder->text()) );
 	QDesktopServices::openUrl(url);
+}
+
+
+void AirportsWidget::on_show_metar()
+{
+	metarWidget->show();
 }

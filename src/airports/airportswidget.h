@@ -29,6 +29,9 @@ class MainObject;
 #include "map/openlayerwidget.h"
 class OpenLayerWidget;
 
+#include "airports/metarwidget.h"
+class MetarWidget;
+
 
 
 class AirportsWidget : public QWidget
@@ -69,6 +72,7 @@ public:
 
 	QTabWidget *tabWidget;
 	OpenLayerWidget *mapWidget;
+	MetarWidget *metarWidget;
 
 	XGroupVBox *groupBoxAirport;
 	XGroupVBox *groupBoxUseCoordinates;
@@ -129,6 +133,7 @@ public slots:
 
 	void on_airport_info_double_clicked(QTreeWidgetItem*,int);
 	void on_open_airports_folder();
+	void on_show_metar();
 
 	void on_reload_cache();
 
