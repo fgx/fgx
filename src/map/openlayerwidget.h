@@ -72,13 +72,20 @@ signals:
     void end_progress(bool Ok);
 	
 	//= map calls
-	void init_map();
+	void load_map();
 	void execute_js(QString js_string);
 
 
 	//# To map markers and features
 	void add_runway(QString apt, QString rwy1, QString rwy2, QString lat1, QString lon1, QString lat2, QString lon2);
 	void add_stand(QString apt, QString name, QString lat, QString lon);
+
+	void show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude);
+	void focus_aircraft(QString callsign);
+
+	void show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude);
+	void display_radar_layer( int viz);
+
 
 	void zoom_to_airport(QString apt);
 	void zoom_to_latlon(QString lat, QString lon, int zoom);
@@ -87,15 +94,13 @@ signals:
 	void on_zoom_in();
 	void on_zoom_out();
 
-	void show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude);
-	void focus_aircraft(QString callsign);
-
-	void show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude);
-	void display_radar_layer( int viz);
 
 	//====================================
 	//@<< From Map Events
+	void map_initialised();
+
 	void map_debug(QVariant);
+
 	//void map_mouse_move(QVariant lat, QVariant lon);
 	void map_click(QVariant lat, QVariant lon);
 	void map_right_click(QVariant lat, QVariant lon);

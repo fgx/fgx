@@ -40,7 +40,6 @@ var osmprojection;
 var osmLayer;
 
 var vectorLayer;
-var markers;
 
 var planeImageMarkers;
 var planeLabelMarkers;
@@ -140,13 +139,11 @@ var planeLabelMarkerStyle = new OpenLayers.StyleMap({
 //=================================================================
 // style for radar Image
 var radarImageMarkerStyle = new OpenLayers.StyleMap({
-    
     "default": {
-
         strokeColor: "lime",
         strokeWidth: 1,
         fillColor: "lime",
-		
+
 		externalGraphic: "/img/radar_blip.png",
 		graphicWidth: 6,
 		graphicHeight: 18,
@@ -207,6 +204,8 @@ var radarLabelMarkerStyle = new OpenLayers.StyleMap({
 
 });
 
+
+//=================================================================
 // style for the rwy markers
 var runwayLabelMarkerStyle = new OpenLayers.StyleMap({
     
@@ -277,6 +276,46 @@ var runwayLineStyle = new OpenLayers.StyleMap({
     }
 
 });
+
+//=================================================================
+// Style for the Stand markers
+var standLabelMarkerStyle = new OpenLayers.StyleMap({
+    
+    "default": {
+
+        strokeColor: "red",
+        strokeWidth: 1,
+        fillColor: "red",
+		
+		externalGraphic: "/img/stand_label_back.png",
+		graphicWidth:20,
+		graphicHeight: 12,
+		graphicOpacity: 0.7,
+		graphicXOffset: -8,
+		graphicYOffset: -5,
+		
+        
+        
+        fontColor: "white",
+        fontSize: "10px",
+        fontFamily: "sans-serif",
+        fontWeight: "bold",
+        labelAlign: "center",
+        labelXOffset: 0,
+        labelYOffset: 0,
+        label : "${standText}",
+
+        },
+    
+    "select": {
+        fillColor: "black",
+        strokeColor: "yellow",
+        pointRadius: 12,
+        fillOpacity: 1,
+    }
+
+});
+
 
 // oh, see on top
 var planes;
@@ -388,7 +427,7 @@ function init(){
 	map.addLayer(runwayLabels);
 	
 	//=  add Stand Labels
-	standLabels = new OpenLayers.Layer.Vector("Stand Markers", {styleMap:  runwayLabelMarkerStyle});
+	standLabels = new OpenLayers.Layer.Vector("Stand Markers", {styleMap:  standLabelMarkerStyle});
 	map.addLayer(standLabels);
 
 
@@ -419,11 +458,25 @@ function init(){
 	map.addLayer(radarLabelMarkers);
 
 	//alert("init done");
-	// Qt.map_initialised();
+	 Qt.map_initialised();
 
 }
 
+//==========================================================
+// Display hide a layer
+function display_layer(layer_name, is_visible){
 
+	if(layer_name == "stands"){
+		standLabels.display(is_visible);
+	}
+	if(layer_name == "runway_lines"){
+		runwayLines.display(is_visible);
+	}
+	if(layer_name == "runway_labels"){
+		runwayLabels.display(is_visible);
+	}
+	
+}
 
 
 //==========================================================
@@ -439,17 +492,6 @@ function focus_aircraft(callsign){
 
 }
 
-
-// Standard OpenLayers marker, not in use
-//==========================================================
-function add_marker(mlat, mlon){
-
-	var lonlat = new OpenLayers.LonLat(mlon, mlat).transform(osmprojection, map.getProjectionObject());
-	var marker = new OpenLayers.Marker(lonlat);
-	markers.addMarker(marker);
-	return;
-	
-}
 
 // Shows your aircraft on the map, with callsign (two features, poor openlayer)
 //==========================================================
@@ -483,14 +525,6 @@ function show_aircraft(mcallsign, mlat, mlon, mheading, maltitude){
 	
 }
 
-function display_layer(layer_name, is_visible){
-
-	if(layer_name == "stands"){
-		standLabels.display(is_visible);
-	}
-	radarImageMarkers.display(is_visible);
-	radarLabelMarkers.display(is_visible);
-}
 
 
 // Shows aircraft on the RADAR map, with callsign (two features, poor openlayer)
@@ -583,7 +617,6 @@ function add_runway(apt, rwy1, rwy2, lat1, lon1, lat2, lon2){
 }
 
 //=  Add Runway Label
-//==========================================================
 function add_runway_label(mrwy, mlat, mlon){
 
 	if(mrwy < 10){
@@ -599,8 +632,8 @@ function add_runway_label(mrwy, mlat, mlon){
 }
 
 
+//==================================================================================
 // Add Stand
-//==========================================================
 function add_stand(apt, name, mlat, mlon){
 
 	//add point = coords from airport tab
@@ -608,7 +641,7 @@ function add_stand(apt, name, mlat, mlon){
 		
 	//draw feature and add callsign label, use rwy heading for orientation
 	var feature = new OpenLayers.Feature.Vector(point, {
-                rwyText: name
+                standText: name
 				});            
 	
 	//add to main layer planeMarkersVec at init()

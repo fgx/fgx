@@ -235,8 +235,10 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	buttonGroupViewLayers->addButton(chkViewRunwayLines);
 
 	mainObject->settings->endGroup();
+
+
 	//=== Initialise
-	init_map();
+	load_map();
 	
 	//============================================================================
 	//== Main Settings connection
@@ -249,34 +251,31 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 //===========================================================================
 //== Initialisation
 //===========================================================================
-void OpenLayerWidget::init_map(){
-
-	//static bool map_initialized = false;
-	//if(map_initialized == false){
-		//= Read file if in dev_mode() - no need to "recompile" the resource file
-		QFile file(
-						QFile::exists("/home/ffs/SPETE_PC.txt")
-						? "/home/ffs/fgx/src/resources/openlayers/map.html"
-						: ":/openlayers/map.html"
-					);
-		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-			qDebug() << "MAP: could not open file" << file.fileName();
-			return;
-		}
-
-
-		QByteArray contents = file.readAll();
-		//qDebug() << "contents OK";
-		//webView->setHtml("<html><head><title>FOO</title></head><body><h1>HELP</h1><h1>HELP</h1><h1>HELP</h1><h1>HELP</h1></body></html>");
-		webView->setHtml(contents, QUrl("qrc:///"));
-		webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
-		//qDebug() << webView->title();
-
-	//}
-	//map_initialized = true;
+void OpenLayerWidget::load_map()
+{
+	QFile file(":/openlayers/map.html");
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+		qDebug() << "MAP: could not open file" << file.fileName();
+		return;
+	}
+	QByteArray contents = file.readAll();
+	webView->setHtml(contents, QUrl("qrc:///")); // This prefix does not work with src:///openlayers/ .. help.. Geoff.. gral.?
+	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 }
 
+void OpenLayerWidget::map_initialised()
+{
+	qDebug() << "map initialised";
+	QList<QAbstractButton *> buttons = buttonGroupViewLayers->buttons();
+	for(int idx = 0; idx < buttons.size(); idx++){
+		QString jstr = QString("display_layer('%1', %2);").arg(	buttons.at(idx)->property("layer").toString()
+														).arg(	buttons.at(idx)->isChecked() ? 1 : 0
+														);
+		execute_js(jstr);
+		qDebug() << jstr;
+	}
 
+}
 
 //= Overide the closeEvent
 void OpenLayerWidget::closeEvent(QCloseEvent *event)
@@ -294,7 +293,7 @@ void OpenLayerWidget::add_runway(QString apt, QString rwy1, QString rwy2, QStrin
 {
 	QString jstr = QString("add_runway('%1', '%2', '%3', %4, %5, %6, %7);").arg(apt).arg(rwy1).arg(rwy2).arg(lat1).arg(lon1).arg(lat2).arg(lon2);
 	execute_js(jstr);
-	qDebug() << "add_runway jstr: " << jstr;
+	//qDebug() << "add_runway jstr: " << jstr;
 }
 //================================================
 // Add Stand
@@ -504,7 +503,6 @@ void OpenLayerWidget::on_display_layer(QAbstractButton *chkBox)
 	QString jstr = QString("display_layer('%1', %2);").arg(	chkBox->property("layer").toString()
 													).arg(	chkBox->isChecked() ? 1 : 0
 													);
-	qDebug() << "show_layer" << jstr;
 	execute_js(jstr);
 	mainObject->settings->beginGroup("map_display_layers");
 	mainObject->settings->setValue(chkBox->property("layer").toString(), chkBox->isChecked());

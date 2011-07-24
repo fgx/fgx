@@ -32,10 +32,8 @@
         <file alias="zoom-plus-mini.png">openlayers/img/zoom-plus-mini.png</file>
         <file alias="zoom-world-mini.png">openlayers/img/zoom-world-mini.png</file>
         <file alias="zoombar.png">openlayers/img/zoombar.png</file>
-
         <file alias="rwy_sign_back.png">openlayers/img/rwy_sign_back.png</file>
         <file alias="fgx-background-black.png">openlayers/img/fgx-background-black.png</file>
-
         <file alias="fgx-plane-green.png">openlayers/img/fgx-plane-green.png</file>
         <file alias="fgx-plane-blue.png">openlayers/img/fgx-plane-blue.png</file>
         <file alias="fgx-plane-yellow.png">openlayers/img/fgx-plane-yellow.png</file>
@@ -43,8 +41,8 @@
         <file alias="fgx-plane-gray-light.png">openlayers/img/fgx-plane-gray-light.png</file>
         <file alias="fgx-plane-gray-dark.png">openlayers/img/fgx-plane-gray-dark.png</file>
         <file alias="fgx-plane-green-light.png">openlayers/img/fgx-plane-green-light.png</file>
-        
-	<file alias="radar_blip.png">openlayers/img/radar_blip.png</file>
+        <file alias="radar_blip.png">openlayers/img/radar_blip.png</file>
+        <file alias="stand_label_back.png">openlayers/img/stand_label_back.png</file>
     </qresource>
     <qresource prefix="/">
         <file alias="OpenLayers.js">openlayers/OpenLayers.js</file>
