@@ -200,6 +200,8 @@ bool ConfirmPage::validatePage()
 	if(cancelled == false && checkBoxImportAircaft->isChecked()){
 		AircraftData::import(progress, mainObject);
 	}
+	mainObject->X->write_ini();
+
 	return true;
 }
 
