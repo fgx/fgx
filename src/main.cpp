@@ -61,7 +61,7 @@ int main( int argc, char* argv[])
 	QFontDatabase::addApplicationFont(":/font/freeuniversalbold");
 	
 	// Setting a default size too, and spacing, because we need it on screen
-	QFont universal("FreeUniversal", 12);
+	QFont universal("FreeUniversal", 14);
 	universal.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
 	app.setFont(universal);
 	

@@ -117,6 +117,27 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
 });
 
 //=================================================================
+// Style for Airport with Tower
+var towerMarkerStyle = new OpenLayers.StyleMap({
+    
+    "default": {
+		externalGraphic: "/img/fgx-airport-with-tower.png",
+		graphicWidth: 20,
+		graphicHeight: 20,
+		fontColor: "black",
+        fontSize: "12px",
+        fontFamily: "sans-serif",
+        fontWeight: "bold",
+		label : "${airport}",
+        labelAlign: "center",
+        labelXOffset: 0,
+        labelYOffset: 16
+	},
+    
+});
+
+
+//=================================================================
 // Style for your aeroplane
 var planeImageMarkerStyle = new OpenLayers.StyleMap({
     
@@ -328,33 +349,6 @@ var standLabelMarkerStyle = new OpenLayers.StyleMap({
         fillOpacity: 1,
     }
 
-});
-
-//=====================================================
-//= Tower Style
-var towerMarkerStyle = new OpenLayers.StyleMap({
-	"default": {
-		graphicName: "circle",
-		pointRadius: 6,
-		strokeColor: "#000000",
-		strokeWidth: 2,
-		fillColor: "#000099",
-		fillOpacity: 0.6,
-		
-        fontColor: "black",
-        fontSize: "10px",
-        fontFamily: "sans-serif",
-        fontWeight: "bold",
-		label : "${airport}",
-        labelAlign: "center",
-        labelXOffset: 0,
-        labelYOffset: +12,
-	},
-	"select": {
-		pointRadius: 20,
-		fillOpacity: 1,
-		rotation: 45
-	}
 });
 
 

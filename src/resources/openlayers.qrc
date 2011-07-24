@@ -32,9 +32,13 @@
         <file alias="zoom-plus-mini.png">openlayers/img/zoom-plus-mini.png</file>
         <file alias="zoom-world-mini.png">openlayers/img/zoom-world-mini.png</file>
         <file alias="zoombar.png">openlayers/img/zoombar.png</file>
+		
+		
         <file alias="rwy_sign_back.png">openlayers/img/rwy_sign_back.png</file>
         <file alias="fgx-background-black.png">openlayers/img/fgx-background-black.png</file>
-        <file alias="fgx-plane-green.png">openlayers/img/fgx-plane-green.png</file>
+        <file alias="fgx-airport-with-tower.png">openlayers/img/fgx-airport-with-tower.png</file>
+		
+		<file alias="fgx-plane-green.png">openlayers/img/fgx-plane-green.png</file>
         <file alias="fgx-plane-blue.png">openlayers/img/fgx-plane-blue.png</file>
         <file alias="fgx-plane-yellow.png">openlayers/img/fgx-plane-yellow.png</file>
         <file alias="fgx-plane-red.png">openlayers/img/fgx-plane-red.png</file>
