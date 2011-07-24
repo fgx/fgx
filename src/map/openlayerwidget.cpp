@@ -60,9 +60,9 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	
 	
 	toolbar->addWidget(new QLabel(tr("Heading:")));
-	spinHeading = new QSpinBox();
-	spinHeading->setRange(0, 359);
-	spinHeading->setSingleStep(1);
+	spinHeading = new QDoubleSpinBox();
+	spinHeading->setRange(0.0, 359.99);
+	spinHeading->setSingleStep(0.1);
 	toolbar->addWidget(spinHeading);
 	connect(spinHeading, SIGNAL(valueChanged(QString)), this, SLOT(on_coords_changed()));
 	
@@ -441,7 +441,8 @@ void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
 		txtLon->setText(value);
 	
 	}else if(option == "--heading="){
-		spinHeading->setValue(value.toInt());
+		qDebug() << "HEAD" << value;
+		spinHeading->setValue(value.toDouble());
 	
 	}
 }

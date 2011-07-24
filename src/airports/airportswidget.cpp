@@ -226,7 +226,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	headerItem->setText(CI_LENGTH, tr("Length"));
 	headerItem->setText(CI_LAT, tr("Lat"));
 	headerItem->setText(CI_LON, tr("Lng"));
-	headerItem->setText(CI_ALIGNMNET, tr("Alignment"));
+	headerItem->setText(CI_HEADING, tr("Heading"));
 	headerItem->setText(CI_RUNWAYS, tr("R"));
 
 	/*
@@ -605,18 +605,18 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			tItem0->setText(CI_NODE,  nodeRunway.childNodes().at(0).firstChildElement("rwy").text());
 			tItem0->setText(CI_LAT,  nodeRunway.childNodes().at(0).firstChildElement("lat").text());
 			tItem0->setText(CI_LON,  nodeRunway.childNodes().at(0).firstChildElement("lon").text());
-			tItem0->setText(CI_HDG,  nodeRunway.childNodes().at(0).firstChildElement("hdg-deg").text());
+			tItem0->setText(CI_HEADING,  nodeRunway.childNodes().at(0).firstChildElement("hdg-deg").text());
 			tItem0->setText(CI_TYPE, "runway");
 			tItem0->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(0).firstChildElement("rwy").text()));
-
+			qDebug() << nodeRunway.childNodes().at(0).firstChildElement("hdg-deg").text();
 			//= Runway  threshold 1
 			QTreeWidgetItem *tItem1 = new QTreeWidgetItem(rItem);
 			tItem1->setIcon(0, QIcon(":/icon/runway"));
 			tItem1->setText(CI_NODE,  nodeRunway.childNodes().at(1).firstChildElement("rwy").text());
 			tItem1->setText(CI_LAT,  nodeRunway.childNodes().at(1).firstChildElement("lat").text());
 			tItem1->setText(CI_LON,  nodeRunway.childNodes().at(1).firstChildElement("lon").text());
-			tItem1->setText(CI_HDG,  nodeRunway.childNodes().at(1).firstChildElement("hdg-deg").text());
+			tItem1->setText(CI_HEADING,  nodeRunway.childNodes().at(1).firstChildElement("hdg-deg").text());
 			tItem1->setText(CI_TYPE, "runway");
 			tItem1->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()));
@@ -905,7 +905,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 		emit setx("--parking-id=", false,"");
 		emit setx("--lat=", true, item->text(CI_LAT));
 		emit setx("--lon=", true, item->text(CI_LON));
-		emit setx("--heading=", true, item->text(CI_HDG));
+		emit setx("--heading=", true, item->text(CI_HEADING));
 		return;
 	}
 
@@ -915,7 +915,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 		emit setx("--parking-id=", true, item->text(CI_NODE));
 		emit setx("--lat=", true, item->text(CI_LAT));
 		emit setx("--lon=", true, item->text(CI_LON));
-		emit setx("--heading=", true, item->text(CI_HDG));
+		emit setx("--heading=", true, item->text(CI_HEADING));
 		return;
 	}
 

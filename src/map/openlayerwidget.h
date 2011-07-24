@@ -16,7 +16,7 @@
 #include <QtGui/QActionGroup>
 #include <QtGui/QToolButton>
 #include <QtGui/QSlider>
-#include <QtGui/QSpinBox>
+#include <QtGui/QDoubleSpinBox>
 
 #include "xobjects/mainobject.h"
 #include "xobjects/latlng.h"
@@ -53,7 +53,7 @@ private:
 	//QToolButton *buttTurnLeft10;
 	//QToolButton *buttTurnLeft1;
 	
-	QSpinBox *spinHeading;
+	QDoubleSpinBox *spinHeading;
 
 	
 	QWebView *webView;
