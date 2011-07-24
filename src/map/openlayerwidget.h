@@ -18,6 +18,7 @@
 #include <QtGui/QSlider>
 #include <QtGui/QDoubleSpinBox>
 #include <QLCDNumber>
+#include <QToolBar>
 
 #include "xobjects/mainobject.h"
 #include "xobjects/latlng.h"
@@ -37,6 +38,7 @@ public:
 	QLCDNumber *lcdZoom;
 
 	QString map_type;
+	QToolBar *toolbarAirports;
 
 private:
 

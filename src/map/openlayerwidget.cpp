@@ -6,7 +6,6 @@
 
 
 #include <QtGui/QVBoxLayout>
-#include <QtGui/QToolBar>
 #include <QtGui/QAction>
 #include <QtGui/QActionGroup>
 #include <QtGui/QToolButton>
@@ -46,27 +45,27 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	
 
 
-	QToolBar *toolbar = new QToolBar();
-	mainLayout->addWidget(toolbar);
+	toolbarAirports = new QToolBar();
+	mainLayout->addWidget(toolbarAirports);
 
 
 	
-	toolbar->addWidget(new QLabel(tr("Lat:")));
+	toolbarAirports->addWidget(new QLabel(tr("Lat:")));
 	txtLat = new QLineEdit();
-	toolbar->addWidget(txtLat);
+	toolbarAirports->addWidget(txtLat);
 	connect(txtLat, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
 	
-	toolbar->addWidget(new QLabel(tr("Lon:")));
+	toolbarAirports->addWidget(new QLabel(tr("Lon:")));
 	txtLon = new QLineEdit();
-	toolbar->addWidget(txtLon);
+	toolbarAirports->addWidget(txtLon);
 	connect(txtLon, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
 	
 	
-	toolbar->addWidget(new QLabel(tr("Heading:")));
+	toolbarAirports->addWidget(new QLabel(tr("Heading:")));
 	spinHeading = new QDoubleSpinBox();
 	spinHeading->setRange(0.0, 359.99);
 	spinHeading->setSingleStep(0.1);
-	toolbar->addWidget(spinHeading);
+	toolbarAirports->addWidget(spinHeading);
 	connect(spinHeading, SIGNAL(valueChanged(QString)), this, SLOT(on_coords_changed()));
 	
 	
@@ -263,7 +262,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 
 //===========================================================================
-//== Initialisation
+//== Load Map
 //===========================================================================
 void OpenLayerWidget::load_map(QString m_typ)
 {
@@ -277,16 +276,23 @@ void OpenLayerWidget::load_map(QString m_typ)
 	webView->setHtml(contents, QUrl("qrc:///")); // This prefix does not work with src:///openlayers/ .. help.. Geoff.. gral.?
 	webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 
-	chkViewRunwayLines->setVisible(map_type == "airport");
-	chkViewRunwayLabels->setVisible(map_type == "airport");
-	chkViewStands->setVisible(map_type == "airport");
+
+
+	//= Show Hide widgets
+	bool is_airport = map_type == "airport";
+	chkViewRunwayLines->setVisible(is_airport);
+	chkViewRunwayLabels->setVisible(is_airport);
+	chkViewStands->setVisible(is_airport);
+
+	toolbarAirports->setVisible(is_airport);
+
 }
 
 void OpenLayerWidget::map_initialised()
 {
 	QString js_mtype = QString("set_map_type('%1');").arg(map_type);
 	execute_js(js_mtype);
-	//qDebug() << "map initialised";
+
 	QList<QAbstractButton *> buttons = buttonGroupViewLayers->buttons();
 	for(int idx = 0; idx < buttons.size(); idx++){
 		QString jstr = QString("display_layer('%1', %2);").arg(	buttons.at(idx)->property("layer").toString()
