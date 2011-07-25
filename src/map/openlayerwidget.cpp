@@ -176,25 +176,16 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	layoutZoom->addWidget(buttZoomOut, 0);
 	connect(buttZoomOut, SIGNAL(clicked()), this, SLOT(on_zoom_out()));
 
-	/*lcdZoom = new QLCDNumber();
-	lcdZoom->setMode(QLCDNumber::Dec);
-	lcdZoom->setDigitCount(2);
-	lcdZoom->setSmallDecimalPoint(false);
-	lcdZoom->setSegmentStyle(QLCDNumber::Flat);
-	lcdZoom->setStyleSheet("border: none; font-size: 8pt; margin: 0px; padding: 0px;");
-	lcdZoom->setFixedWidth(20);
-	layoutZoom->addWidget(lcdZoom);*/
 	
-	lcdZoom = new QLabel();
-	lcdZoom->setFixedWidth(20);
-	lcdZoom->setStyleSheet(zbstyle);
-	layoutZoom->addWidget(lcdZoom);
+	lblZoom = new QLabel();
+	lblZoom->setFixedWidth(20);
+	lblZoom->setStyleSheet(zbstyle);
+	layoutZoom->addWidget(lblZoom);
 	
 	
 
 	//=============================================================
 	//== Cache
-	
 	networkDiskCache = new QNetworkDiskCache(this);
 	networkDiskCache->setCacheDirectory(QDesktopServices::storageLocation(QDesktopServices::CacheLocation));
 	
@@ -394,7 +385,7 @@ void OpenLayerWidget::zoom_to( int zoom)
 {
 	QString jstr = QString("zoom_to(%1);").arg(zoom);
 	execute_js(jstr);
-	lcdZoom->setText(QString::number(zoom));
+	lblZoom->setText(QString::number(zoom));
 }
 
 //== Zoom in out buttons

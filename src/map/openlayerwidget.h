@@ -17,7 +17,6 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QSlider>
 #include <QtGui/QDoubleSpinBox>
-#include <QLCDNumber>
 #include <QToolBar>
 
 #include "xobjects/mainobject.h"
@@ -35,8 +34,7 @@ public:
 	MainObject *mainObject;
 	QString *mpmapFollowCallsign;
 	QSlider *sliderZoom;
-	//QLCDNumber *lcdZoom;
-	QLabel *lcdZoom;
+	QLabel *lblZoom;
 
 	QString map_type;
 	QToolBar *toolbarAirports;
