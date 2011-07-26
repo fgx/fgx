@@ -357,7 +357,7 @@ div.olControlSaveFeaturesItemInactive {
     position: absolute;
     top: 25px;
     right: 0px;
-    width: 20em;
+    width: 15em;
     font-family: sans-serif;
     font-weight: bold;
     margin-top: 3px;
@@ -372,15 +372,15 @@ div.olControlSaveFeaturesItemInactive {
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 5px;
-    padding-right: 75px;
-    background-color: darkblue;
+    padding-right: 20px;
+    background-color: #666666;
     width: 100%;
     height: 100%;
 }
 
 .olControlLayerSwitcher .layersDiv .baseLbl,
 .olControlLayerSwitcher .layersDiv .dataLbl {
-    margin-top: 3px;
+    margin-top: 10px;
     margin-left: 3px;
     margin-bottom: 3px;
 }
