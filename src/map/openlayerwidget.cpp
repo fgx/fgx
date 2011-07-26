@@ -229,35 +229,35 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	mainObject->settings->beginGroup("map_display_layers");
 
 
-	chkViewGridLines = new QCheckBox();
+	/*chkViewGridLines = new QCheckBox();
 	chkViewGridLines->setText("Grid Lines");
 	chkViewGridLines->setProperty("layer","grid_lines");
 	chkViewGridLines->setChecked(mainObject->settings->value("grid_lines", "0").toBool());
 	statusBar->addPermanentWidget(chkViewGridLines);
-	buttonGroupViewLayers->addButton(chkViewGridLines);
+	buttonGroupViewLayers->addButton(chkViewGridLines);*/
 
 
 
-	chkViewStands = new QCheckBox();
+	/*chkViewStands = new QCheckBox();
 	chkViewStands->setText("Stands");
 	chkViewStands->setProperty("layer","stands");
 	statusBar->addPermanentWidget(chkViewStands);
 	chkViewStands->setChecked(mainObject->settings->value("stands", "1").toBool());
-	buttonGroupViewLayers->addButton(chkViewStands);
+	buttonGroupViewLayers->addButton(chkViewStands);*/
 
-	chkViewRunwayLabels = new QCheckBox();
+	/*chkViewRunwayLabels = new QCheckBox();
 	chkViewRunwayLabels->setText("Runway Labels");
 	chkViewRunwayLabels->setProperty("layer","runway_labels");
 	statusBar->addPermanentWidget(chkViewRunwayLabels);
 	chkViewRunwayLabels->setChecked(mainObject->settings->value("runway_labels", "1").toBool());
-	buttonGroupViewLayers->addButton(chkViewRunwayLabels);
+	buttonGroupViewLayers->addButton(chkViewRunwayLabels);*/
 
-	chkViewRunwayLines = new QCheckBox();
+	/*chkViewRunwayLines = new QCheckBox();
 	chkViewRunwayLines->setText("Runway Lines");
 	chkViewRunwayLines->setProperty("layer","runway_lines");
 	statusBar->addPermanentWidget(chkViewRunwayLines);
 	chkViewRunwayLines->setChecked(mainObject->settings->value("runway_lines", "1").toBool());
-	buttonGroupViewLayers->addButton(chkViewRunwayLines);
+	buttonGroupViewLayers->addButton(chkViewRunwayLines);*/
 
 	mainObject->settings->endGroup();
 
@@ -299,9 +299,9 @@ void OpenLayerWidget::load_map(QString m_typ)
 
 	//= Show Hide widgets
 	bool is_airport = map_type == "airport";
-	chkViewRunwayLines->setVisible(is_airport);
-	chkViewRunwayLabels->setVisible(is_airport);
-	chkViewStands->setVisible(is_airport);
+	//chkViewRunwayLines->setVisible(is_airport);
+	//chkViewRunwayLabels->setVisible(is_airport);
+	//chkViewStands->setVisible(is_airport);
 
 	toolbarAirports->setVisible(is_airport);
 
