@@ -88,9 +88,9 @@ MainObject::MainObject(QObject *parent) :
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));*/
 
 	//= MpMapX action
-	QAction *actionMpXMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open XMap (experimental)..."));
+	/*QAction *actionMpXMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open XMap (experimental)..."));
 	actionMpXMap->setIconVisibleInMenu(true);
-	connect(actionMpXMap, SIGNAL(triggered()), this, SLOT(on_mpxmap()));
+	connect(actionMpXMap, SIGNAL(triggered()), this, SLOT(on_mpxmap()));*/
 	//actionMpXMap->setVisible(false);
 
 	//= Settings Action
@@ -194,12 +194,12 @@ MainObject::MainObject(QObject *parent) :
 	propertiesBrowser->hide();
 
 	//= MP Map Widget
-	mpMapWidget = new MpMapWidget(this);
-	mpMapWidget->hide();
+	//mpMapWidget = new MpMapWidget(this);
+	//mpMapWidget->hide();
 
 	//= FGx Map Widget
-	mpMapXWidget = new MpMapXWidget(this);
-	mpMapXWidget->hide();
+	//mpMapXWidget = new MpMapXWidget(this);
+	//mpMapXWidget->hide();
 	
 
 	//= Log Viewer is hidden
@@ -256,18 +256,18 @@ void MainObject::on_settings(int idx){
 
 //****************************************************************************
 //** Map
-void MainObject::on_mpmap(){
+/*void MainObject::on_mpmap(){
 	mpMapWidget->show();
 	mpMapWidget->setFocus();
-}
+}*/
 
 //============================================================================
 //** MpMap
-void MainObject::on_mpxmap(){
+/*void MainObject::on_mpxmap(){
 	mpMapXWidget->show();
 	mpMapXWidget->setFocus();
 	mpMapXWidget->initialize();
-}
+}*/
 
 //======================================
 //== Propertes Browser

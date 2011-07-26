@@ -30,8 +30,8 @@ class LauncherWindow;
 #include "props/propstreewidget.h"
 #include "xwidgets/fgxdebugwidget.h"
 
-class MpMapWidget;
-class MpMapXWidget;
+//class MpMapWidget;
+//class MpMapXWidget;
 class ViewLogsWidget;
 class PropsTreeWidget;
 class FgxDebugWidget;
@@ -86,8 +86,8 @@ public:
 
 
 	LauncherWindow *launcherWindow;
-	MpMapWidget *mpMapWidget;
-	MpMapXWidget *mpMapXWidget;
+	//MpMapWidget *mpMapWidget;
+	//MpMapXWidget *mpMapXWidget;
 
 	ViewLogsWidget *viewLogsWidget;
 	PropsTreeWidget *propertiesBrowser;
@@ -137,8 +137,8 @@ public slots:
     void on_tray_icon(QSystemTrayIcon::ActivationReason reason);
 
     void on_launcher();
-    void on_mpmap();
-	void on_mpxmap();
+    //void on_mpmap();
+	//void on_mpxmap();
     void on_settings();
 	void on_settings(int);
 	void on_properties_browser();
