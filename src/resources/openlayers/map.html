@@ -41,6 +41,7 @@ var gridlines;
 
 var vectorLayer;
 
+var planeRootLayer;
 var planeImageMarkers;
 var planeLabelMarkers;
 
@@ -267,14 +268,12 @@ var runwayLabelMarkerStyle = new OpenLayers.StyleMap({
 		graphicOpacity: 1.0,
 		graphicXOffset: -30,
 		graphicYOffset: -30,
-		
-        
         
         fontColor: "white",
         fontSize: "11px",
         fontFamily: "sans-serif",
         fontWeight: "bold",
-        //labelAlign: "center",
+        labelAlign: "center",
         labelXOffset: -16,
         labelYOffset: 19,
         label : "${rwyText}",
@@ -363,31 +362,11 @@ function init(){
 			],
 	});
 	
-	//=====================
-	//= Map events
-	/*map.div.oncontextmenu = function noContextMenu(e) {
-		if (OpenLayers.Event.isRightClick(e)){
-			//alert("Right button click"); // Add the right click menu here
-			var lonlat = map.getLonLatFromViewPortPx(e.xy);
-			//Qt.map_rightclick(lonlat.lat, lonlat.lon);
-			
-		}
-        return false; //cancel the right click of brower
-    }; */
-
-	// map events
-	//map.events.register("click", map, on_map_click);
-	//map.events.register("rightclick", map, on_map_rightclick);
-	//map.events.register("mousemove", map, on_map_mousemove);
-	//map.events.register("zoomin", map, on_zoom_changed);
-	
 
 	var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
     renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
-
-
-
+	// adding osm base layer
 	osmLayer = new OpenLayers.Layer.OSM("OSM Map");
 	map.addLayer(osmLayer);
 
@@ -417,7 +396,7 @@ function init(){
 	osmprojection = new OpenLayers.Projection("EPSG:4326");
     
 
-	//map.addLayer(layer);
+	// set map center
 	map.setCenter(
 		new OpenLayers.LonLat(0, 0).transform(
 			osmprojection,
@@ -425,12 +404,6 @@ function init(){
 			), zoom
 	);
 	
-	
-
-
-
-	
-
 
 	//=======================================================
 	//= add rwy lines
@@ -449,19 +422,19 @@ function init(){
 
 	//=============================================================
 	// add plane vector marker
-	planeImageMarkers = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeImageMarkerStyle});
-	map.addLayer(planeImageMarkers);
-
-	/*var modifyFeature = new OpenLayers.Control.ModifyFeature(planeMarkersVec, {
-	mode: OpenLayers.Control.ModifyFeature.DRAG,
-	});
 	
-	map.addControl(modifyFeature);
-	modifyFeature.activate();*/
+	planeImageMarkers = new OpenLayers.Layer.Vector("Plane Markers", {styleMap:  planeImageMarkerStyle, displayInLayerSwitcher: false});
+	map.addLayer(planeImageMarkers);
 	
 	// add plane label
-	planeLabelMarkers = new OpenLayers.Layer.Vector("Plane Label", {styleMap:  planeLabelMarkerStyle});
+	planeLabelMarkers = new OpenLayers.Layer.Vector("Plane Label", {styleMap:  planeLabelMarkerStyle, displayInLayerSwitcher: false});
 	map.addLayer(planeLabelMarkers);
+	
+	/*planeRootlayer = new OpenLayers.Layer.Vector.RootContainer("Your plane", {
+		layers: [planeImageMarkers, planeLabelMarkers]
+		});
+		
+	map.addLayers([planeImageMarkers, planeLabelMarkers, planeRootLayer]);*/
 
 
 	//==================================================================
