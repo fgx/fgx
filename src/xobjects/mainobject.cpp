@@ -361,12 +361,24 @@ void MainObject::start_terrasync(){
 void MainObject::start_fgcom(){
 
 	QStringList args;
+	QString arg;
+	QString cmd;
 
-	args << QString("-p");
-	args << settings->value("fgcom_port").toString();
-
-	args << QString("-S");
-	args << settings->value("fgcom_no").toString();
+	cmd = settings->value("fgcom_port").toString();
+	cmd = cmd.simplified();
+		if (cmd.size()) {
+			arg = "-p";
+			arg.append(cmd);
+			args << arg;
+		}
+  
+	cmd = settings->value("fgcom_no").toString();
+	cmd = cmd.simplified();
+		if (cmd.size()) {
+			arg = "-S";
+			arg.append(cmd);
+			args << arg;
+		}
 
 	QString command_line = X->fgcom_exe_path();
 	command_line.append(" ").append( args.join(" ") );
