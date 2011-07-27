@@ -55,6 +55,8 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 	add_option("runtime", false,"","",0,"","expert");
 	add_option("--log-level=", false,"","",0,"","expert");
+	
+	add_option("first_launcher_close", false, "", "", 0, "Check for launcher window close", "Launcher Window");
 
 	//==
 

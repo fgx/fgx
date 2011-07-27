@@ -84,7 +84,8 @@ public:
 
     void closeEvent(QCloseEvent *event);
 
-
+signals:
+	void setx(QString option, bool enabled, QString value);
 
 public slots:
 

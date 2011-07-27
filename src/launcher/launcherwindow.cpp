@@ -241,6 +241,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
 	//headerWidget->setText("Callsign - KSFO - AIRPORT");
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 	connect(mainObject, SIGNAL(on_debug_mode(bool)), this, SLOT(on_debug_mode()));
 
@@ -427,11 +428,11 @@ void LauncherWindow::on_quit(){
 
 //= window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
-	if(mainObject->settings->value("first_launcher_close", "").toBool() == false){
+	if(mainObject->X->get_ena("first_launcher_close") == false){
 		QMessageBox::information(this, "Minimize Notice",
 								 "Fgx does not quit when this window closes, instead minimize to taskbar. You can open this window again.",
 								 QMessageBox::Ok);
-		mainObject->settings->setValue("first_launcher_close", true);
+		emit setx("first_launcher_close", true, "");
 	}
 
 	save_settings();
