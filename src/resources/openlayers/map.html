@@ -432,12 +432,6 @@ function init(){
 	// add plane label
 	planeLabelMarkers = new OpenLayers.Layer.Vector("Plane Label", {styleMap:  planeLabelMarkerStyle, displayInLayerSwitcher: false});
 	map.addLayer(planeLabelMarkers);
-	
-	/*planeRootlayer = new OpenLayers.Layer.Vector.RootContainer("Your plane", {
-		layers: [planeImageMarkers, planeLabelMarkers]
-		});
-		
-	map.addLayers([planeImageMarkers, planeLabelMarkers, planeRootLayer]);*/
 
 
 	//==================================================================
@@ -468,12 +462,6 @@ function init(){
             }
         }
         });
-		
-	layer.events.on({
-    'featureselected': onFeatureSelect,
-    'featureunselected': onFeatureUnselect
-	});
-	selectControl = new OpenLayers.Control.SelectFeature(layer);
 
 
 	//alert("init done");
