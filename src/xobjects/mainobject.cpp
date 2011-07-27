@@ -270,8 +270,11 @@ void MainObject::on_settings(int idx){
 //** Borwser Map
 void MainObject::on_browsermap(){
  	QUrl mapUrl(X->getx("show_mpmap"));
-	mapUrl.addQueryItem("follow", X->getx("--callsign="));
-	QDesktopServices::openUrl(mapUrl);
+	if (X->get_ena("show_mpmap")) {
+		mapUrl.addQueryItem("follow", X->getx("--callsign="));
+		QDesktopServices::openUrl(mapUrl);
+		outLog("Opening browser map: "+mapUrl.toString());
+	}
 }
 
 //============================================================================
@@ -354,10 +357,11 @@ void MainObject::stop_all(){
 //== Start FGFS
 void MainObject::start_fgfs(){
 	processFgFs->start(X->get_fgfs_command_string(), X->get_fgfs_env() );
+	on_browsermap();
 }
 
 //========================================================
-//== Stars FGFS
+//== Stars TerraSync
 void MainObject::start_terrasync(){
 
 	QStringList terraargs;
