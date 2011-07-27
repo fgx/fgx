@@ -27,6 +27,8 @@
 
 #include "setupwizard/setupwizard.h"
 
+#include "xobjects/xsettingsmodel.h"
+
 
 LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	: QWidget(parent)
@@ -435,6 +437,7 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 		emit setx("first_launcher_close", true, "");
 	}
 
+	mainObject->X->write_ini();
 	save_settings();
 	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();

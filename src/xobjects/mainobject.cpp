@@ -406,6 +406,7 @@ void MainObject::start_fgcom(){
 
 void MainObject::quit(){
 	stop_all();
+	
 	QApplication::quit();
 }
 
