@@ -115,6 +115,7 @@ public:
 	QAction *actionViewLogs;
 	QAction *actionViewFgxDebug;
 	QAction *actionDebugMode;
+	QAction *actionBrowserMap;
 
     QAction *actionQuit;
 
@@ -139,6 +140,7 @@ public slots:
     void on_launcher();
     //void on_mpmap();
 	//void on_mpxmap();
+	void on_browsermap();
     void on_settings();
 	void on_settings(int);
 	void on_properties_browser();

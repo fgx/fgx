@@ -86,6 +86,11 @@ MainObject::MainObject(QObject *parent) :
 	/*actionMpMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Map..."));
 	actionMpMap->setIconVisibleInMenu(true);
     connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));*/
+	
+	//= Browser MpMap action
+	actionBrowserMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Browser Map ..."));
+	actionBrowserMap->setIconVisibleInMenu(true);
+	connect(actionBrowserMap, SIGNAL(triggered()), this, SLOT(on_browsermap()));
 
 	//= MpMapX action
 	/*QAction *actionMpXMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open XMap (experimental)..."));
@@ -260,6 +265,14 @@ void MainObject::on_settings(int idx){
 	mpMapWidget->show();
 	mpMapWidget->setFocus();
 }*/
+
+//****************************************************************************
+//** Borwser Map
+void MainObject::on_browsermap(){
+ 	QUrl mapUrl(X->getx("show_mpmap"));
+	mapUrl.addQueryItem("follow", X->getx("--callsign="));
+	QDesktopServices::openUrl(mapUrl);
+}
 
 //============================================================================
 //** MpMap
