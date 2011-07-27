@@ -38,6 +38,13 @@ void MetarWidget::load_metar(QString apt)
     QString error_result;
     QDir d;
     metarPath = "metar";
+	
+	// for environment output, deactivated
+	/*QStringList environment = QProcess::systemEnvironment();
+	for (int i=0; i < environment.count(); i++) {
+		outLog("Env: "+environment[i]);
+	}*/
+	
 	args << "-r" << "-v" << apt;
     if ( ! mainObject->X->fgroot_use_default() ) {
         int ind, siz;
