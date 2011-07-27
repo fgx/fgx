@@ -454,6 +454,14 @@ function init(){
 	
 	// add zoom level filter for stands
 	map.events.on({ "zoomend": function (e) {
+	
+			if (this.getZoom() >= 14) {
+                runwayLabels.setVisibility(true);
+            }
+            else {
+                runwayLabels.setVisibility(false);
+            }
+			
             if (this.getZoom() >= 16) {
                 standLabels.setVisibility(true);
             }
