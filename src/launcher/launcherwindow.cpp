@@ -437,11 +437,38 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 		emit setx("first_launcher_close", true, "");
 	}
 
-	mainObject->X->write_ini();
-	save_settings();
-	mainObject->settings->saveWindow(this);
-	mainObject->settings->sync();
-	event->accept();
+	QMessageBox msgBox;
+	msgBox.setText("Profile and Settings:");
+	msgBox.setInformativeText("Do you want to save your changes?");
+	msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+	msgBox.setDefaultButton(QMessageBox::Save);
+	int ret = msgBox.exec();
+	
+	switch (ret) {
+		case QMessageBox::Save:
+			mainObject->X->write_ini();
+			save_settings();
+			mainObject->settings->saveWindow(this);
+			mainObject->settings->sync();
+			event->accept();
+			break;
+		case QMessageBox::Discard:
+			event->accept();
+			break;
+		case QMessageBox::Cancel:
+			event->ignore();
+			break;
+		default:
+			mainObject->X->write_ini();
+			save_settings();
+			mainObject->settings->saveWindow(this);
+			mainObject->settings->sync();
+			event->accept();
+			break;
+	}
+	
+	
+	
 }
 
 

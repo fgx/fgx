@@ -361,7 +361,7 @@ void MainObject::start_fgfs(){
 }
 
 //========================================================
-//== Stars TerraSync
+//== Start TerraSync
 void MainObject::start_terrasync(){
 
 	QStringList terraargs;
@@ -412,7 +412,7 @@ void MainObject::quit(){
 
 
 //==========================================================
-//== Deug Related
+//== Debug Related
 //==========================================================
 void MainObject::on_view_fgx_debug(){
 	fgxDebugWidget->show();
