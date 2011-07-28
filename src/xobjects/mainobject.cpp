@@ -367,7 +367,7 @@ void MainObject::start_terrasync(){
 	QStringList terraargs;
 	terraargs << "-p" << "5505" << "-S" << "-d" << X->terrasync_sync_data_path();
 
-	QString terra_command_line = X->terrasync_exe_path();
+	QString terra_command_line = X->getx("terrasync_exe_path");
 	terra_command_line.append(" ").append( terraargs.join(" ") );
 
 	processTerraSync->start(terra_command_line, QStringList());
