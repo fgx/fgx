@@ -38,6 +38,7 @@ void MetarWidget::load_metar(QString apt)
     QString error_result;
     QDir d;
     metarPath = "metar";
+	args << "-r" << "-v" << apt;
 	
 	// for environment output, deactivated
 	/*QStringList environment = QProcess::systemEnvironment();
@@ -45,7 +46,11 @@ void MetarWidget::load_metar(QString apt)
 		outLog("Env: "+environment[i]);
 	}*/
 	
-	args << "-r" << "-v" << apt;
+#ifdef Q_OS_MAC
+	metarPath = mainObject->X->fgfs_path();
+	metarPath.chop(4);
+	metarPath.append("metar");
+#else
     if ( ! mainObject->X->fgroot_use_default() ) {
         int ind, siz;
         tmp = mainObject->X->fgfs_path();
@@ -65,7 +70,7 @@ void MetarWidget::load_metar(QString apt)
             }
         }
     }
-
+#endif
 	txtMetar->setPlainText( QString("Loading..\n\nmetar %1").arg(apt) );
     outLog("Running: ["+metarPath+" "+args.join(" ")+"]");
     process.start(metarPath, args, QIODevice::ReadOnly);
