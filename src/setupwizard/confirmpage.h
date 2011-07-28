@@ -30,6 +30,7 @@ public:
 
 	QLabel *lblUsingTerraSync;
 	QLabel *lblTerraSyncPath;
+	QLabel *lblTerraSyncExePath;
 
 	QCheckBox *checkBoxImportAirports;
 	QRadioButton *radioIcaoOnly;

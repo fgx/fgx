@@ -59,6 +59,8 @@ ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
 	grpTerrasync->addWidget(lblUsingTerraSync);
 	lblTerraSyncPath = new QLabel();
 	grpTerrasync->addWidget(lblTerraSyncPath);
+	lblTerraSyncExePath = new QLabel();
+	grpTerrasync->addWidget(lblTerraSyncExePath);
 
 
 
@@ -131,6 +133,7 @@ void ConfirmPage::initializePage()
 	if(field("terrasync_enabled").toBool()){
 		lblUsingTerraSync->setText("Using Terrasync");
 		lblTerraSyncPath->setText(field("terrasync_path").toString());
+		lblTerraSyncExePath->setText(field("terrasync_exe_path").toString());
 	}else{
 		lblUsingTerraSync->setText("No Terrasync");
 		lblTerraSyncPath->setText("");
@@ -181,6 +184,8 @@ bool ConfirmPage::validatePage()
 
 	//emit setx("terrasync_enabled", field("terrasync_enabled").toBool(), "");
 	emit setx("terrasync_path", field("terrasync_enabled").toBool() == true, field("terrasync_path").toString());
+	
+	emit setx("terrasync_exe_path", field("terrasync_enabled").toBool() == true, field("terrasync_exe_path").toString());
 
 	mainObject->settings->setValue("last_import_icao_checked", radioIcaoOnly->isChecked());
 

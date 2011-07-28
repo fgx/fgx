@@ -18,17 +18,24 @@ public:
 
 	MainObject *mainObject;
 	QCheckBox *checkBoxUseTerrasync;
-	QToolButton *buttSelectPath;
+	QToolButton *buttSelectDataPath;
+	QToolButton *buttSelectExePath;
+	QLabel *terraSyncPathLabel;
 	QLineEdit *txtTerraSyncPath;
+	QLabel *terraSyncExePathLabel;
+	QLineEdit *txtTerraSyncExePath;
 	QLabel *lblHelp;
+	QLabel *lblHelpExe;
 
 
 signals:
 
 public slots:
 	void on_checkbox_clicked();
-	void on_select_path();
-	void check_paths();
+	void on_select_data_path();
+	void on_select_exe_path();
+	void check_data_paths();
+	void check_exe_paths();
 
 	void initializePage();
 	bool validatePage();

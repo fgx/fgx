@@ -64,9 +64,9 @@ QString Helpers::hmm_to_decimal(QString hmm)
 
 	double ms;
 	if(deg > 0){
-		ms = deg + parts.at(1).toDouble() / 60;
+		ms = deg + parts.at(1).toDouble() / 60000000 * 1000000;
 	}else{
-		ms = deg - parts.at(1).toDouble() / 60;
+		ms = deg - parts.at(1).toDouble() / 60000000 * 1000000;
 	}
 	return QString("%1").arg(ms);
 }
