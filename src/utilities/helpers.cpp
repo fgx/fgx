@@ -63,10 +63,13 @@ QString Helpers::hmm_to_decimal(QString hmm)
 	}
 
 	double ms;
+	double calc = 60.0;
+	double partsone = parts.at(1).toDouble();
 	if(deg > 0){
-		ms = deg + parts.at(1).toDouble() / 60000000 * 1000000;
+		ms = deg + partsone / calc;
 	}else{
-		ms = deg - parts.at(1).toDouble() / 60000000 * 1000000;
+		ms = deg - partsone / calc;
 	}
-	return QString("%1").arg(ms);
+	QString nn = QString::number ( ms, 'g', 12 );
+	return nn;
 }
