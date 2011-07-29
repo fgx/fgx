@@ -23,7 +23,7 @@
 
 
 XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
-    QStandardItemModel(parent)
+	QStandardItemModel(parent)
 {
 	mainObject = mob;
 
@@ -57,7 +57,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 	add_option("runtime", false,"","",0,"","expert");
 	add_option("--log-level=", false,"","",0,"","expert");
-	
+
 	add_option("first_launcher_close", false, "", "", 0, "Check for launcher window close", "Launcher Window");
 
 	//==
@@ -123,14 +123,14 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--fg-aircraft=", false,"", "", 1 ,"Custom Aircraft","Aircraft");
 
 
-	
+
 	//-- Fuel
 	//add_option( "use_default_fuel",true,"","",3,"","Aircraft");
 	add_option( "--enable-fuel-freeze",false,"","",3,"","Aircraft");
 	add_option( "--prop:/consumables/fuels/tank[1]/level-gal=",false, "", "",9,"","Fuel");
 	add_option( "--prop:/consumables/fuels/tank[2]/level-gal=",false, "", "",9,"","Fuel");
 	add_option( "--prop:/consumables/fuels/tank[3]/level-gal=",false, "", "",9,"","Fuel");
-	
+
 	//= Airport Tab
 	add_option( "start_postition", true, "","0",0,"Start Location", "Airport");
 	add_option( "--airport=", false,"", "", 1 ,"Airport","Airport");
@@ -285,7 +285,7 @@ QString XSettingsModel::ini_file_path()
 void XSettingsModel::write_ini()
 {
 	//= create ini settings object
-	
+
 	// TODO LATER
 	//QString fileName =
 	//QFileDialog::getSaveFileName(0, "Save Profiles", ini_file_path(), "Profile files (*.ini)" );
@@ -317,10 +317,10 @@ void XSettingsModel::read_ini()
 	//TODO later
 	//QString fileName =
 	//QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
-	
+
 	//QSettings settings(fileName, QSettings::IniFormat);
 	QSettings settings(ini_file_path(),QSettings::IniFormat);
-	
+
 	bool ena;
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
 		//= loop rows and load each "option" as an [ini section] with enabled, value as values
@@ -483,42 +483,20 @@ QString XSettingsModel::fgfs_default_path(){
 }
 
 QString XSettingsModel::terrasync_default_path(){
-	
-	QString terraExePath;
-    QString tmp;
-    QDir d;
-	terraExePath = "terrasync";
-	
-#ifdef Q_OS_MAC
-		int ind, siz;
-        tmp = mainObject->X->fgfs_path();
-        ind = tmp.indexOf(QChar('/'));
-        siz = 0;
-        // march to last '/' in path
-        while (ind >= 0) {
-            tmp = tmp.mid(ind + 1);
-            siz = tmp.size();
-            ind = tmp.indexOf(QChar('/'));
-        }
-        if (siz > 0) {
-            tmp = mainObject->X->fgfs_path();
-            tmp.chop(siz);
-            if (d.exists(tmp)) {
-                terraExePath = tmp + terraExePath;
-            }
-        }
-	
-	return terraExePath;
-		
-#elif Q_OS_LINUX
-		return QString("/usr/local/bin/terrasync");
-		
-		
-#elif Q_OS_WINDOWS
+
+	if(mainObject->runningOs() == MainObject::MAC ){
+		QDir dir(mainObject->X->fgfs_path());
+		return  dir.absolutePath().append("terrasync");
+
+	}else if(mainObject->runningOs() == MainObject::LINUX){
+		return QString("terrasync");
+
+	}else if(mainObject->runningOs() == MainObject::WINDOWS){
 		return QString("C:/Program Files/FlightGear/bin/win32/terrasync.exe");
-#else
-	return QString("UNKNOW OS in terrasync_exe_path()");
-#endif
+
+	}else{
+		return QString("UNKNOW OS in terrasync_exe_path()");
+	}
 }
 
 
@@ -666,25 +644,25 @@ QString XSettingsModel::terrasync_exe_path(){
 	if (mainObject->runningOs() == MainObject::MAC) {
 
 		int ind, siz;
-        tmp = mainObject->X->fgfs_path();
-        ind = tmp.indexOf(QChar('/'));
-        siz = 0;
-        // march to last '/' in path
-        while (ind >= 0) {
-            tmp = tmp.mid(ind + 1);
-            siz = tmp.size();
-            ind = tmp.indexOf(QChar('/'));
-        }
-        if (siz > 0) {
-            tmp = mainObject->X->fgfs_path();
-            tmp.chop(siz);
-            if (d.exists(tmp)) {
-                tspath = tmp + tspath;
-            }
-        }
-		
+		tmp = mainObject->X->fgfs_path();
+		ind = tmp.indexOf(QChar('/'));
+		siz = 0;
+		// march to last '/' in path
+		while (ind >= 0) {
+			tmp = tmp.mid(ind + 1);
+			siz = tmp.size();
+			ind = tmp.indexOf(QChar('/'));
+		}
+		if (siz > 0) {
+			tmp = mainObject->X->fgfs_path();
+			tmp.chop(siz);
+			if (d.exists(tmp)) {
+				tspath = tmp + tspath;
+			}
+		}
+
 		return tspath;
-		
+
 
 	}else if(mainObject->runningOs() == MainObject::LINUX){
 		return QString("terrasync");
