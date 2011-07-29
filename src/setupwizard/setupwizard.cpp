@@ -5,7 +5,7 @@
 
 
 SetupWizard::SetupWizard(MainObject *mOb, QWidget *parent) :
-    QWizard(parent)
+	QWizard(parent)
 {
 	mainObject = mOb;
 
@@ -23,6 +23,9 @@ SetupWizard::SetupWizard(MainObject *mOb, QWidget *parent) :
 	terraSyncPage = new TerraSyncPage(mainObject);
 	addPage(terraSyncPage);
 
+	otherPage = new OtherPage(mainObject);
+	addPage(otherPage);
+
 	confirmPage = new ConfirmPage(mainObject);
 	addPage(confirmPage);
 
@@ -36,4 +39,4 @@ SetupWizard::SetupWizard(MainObject *mOb, QWidget *parent) :
 
 
 
- 
+

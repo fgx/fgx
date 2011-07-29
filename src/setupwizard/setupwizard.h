@@ -7,6 +7,7 @@
 #include "setupwizard/fgexepage.h"
 #include "setupwizard/fgrootpage.h"
 #include "setupwizard/terrasyncpage.h"
+#include "setupwizard/otherpage.h"
 #include "setupwizard/confirmpage.h"
 #include "setupwizard/completedpage.h"
 
@@ -22,6 +23,7 @@ public:
 	QWizardPage *fgExePage;
 	QWizardPage *fgRootPage;
 	QWizardPage *terraSyncPage;
+	QWizardPage *otherPage;
 	QWizardPage *confirmPage;
 	QWizardPage *completedPage;
 

@@ -69,7 +69,8 @@ HEADERS += xobjects/xsettings.h \
     xwidgets/xdebugtreewidget.h \
     map/openlayerwidget.h \
     aircraft/xaero.h \
-    airports/metarwidget.h
+    airports/metarwidget.h \
+    setupwizard/otherpage.h
 SOURCES += main.cpp \
     xobjects/xsettings.cpp \
     settings/settingsdialog.cpp \
@@ -132,7 +133,8 @@ SOURCES += main.cpp \
     xwidgets/xdebugtreewidget.cpp \
     map/openlayerwidget.cpp \
     aircraft/xaero.cpp \
-    airports/metarwidget.cpp
+    airports/metarwidget.cpp \
+    setupwizard/otherpage.cpp
 RESOURCES += resources/ycons.qrc \
     resources/artwork.qrc \
     resources/fonts.qrc \
