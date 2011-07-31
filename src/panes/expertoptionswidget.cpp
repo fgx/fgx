@@ -14,7 +14,7 @@
 #include "utilities/utilities.h"
 
 ExpertOptionsWidget::ExpertOptionsWidget(MainObject *mOb, QWidget *parent) :
-    QWidget(parent)
+	QWidget(parent)
 {
 	mainObject = mOb;
 
@@ -158,11 +158,13 @@ void ExpertOptionsWidget::on_upx(QString option, bool enabled, QString value)
 		if(value != txtExtraArgs->toPlainText()){
 			txtExtraArgs->setPlainText(value);
 		}
+		groupBoxArgs->setChecked(enabled);
 
 	}else if(option == "extra_env"){
 		if(value != txtExtraEnv->toPlainText()){
 			txtExtraEnv->setPlainText(value);
 		}
+		groupBoxEnv->setChecked(enabled);
 
 	}else if(option == "runtime"){
 		txtRuntime->setText(value);
