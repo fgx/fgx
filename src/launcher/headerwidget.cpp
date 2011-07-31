@@ -15,74 +15,67 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 
 	mainObject = mob;
 
-	//= Init Label
+
 	QGridLayout *mainLayout = new QGridLayout();
 	mainLayout->setSpacing(2);
 	setLayout(mainLayout);
 
+	//= Fgx Logo
 	QLabel *iconLabel = new QLabel("");
 	iconLabel->setFixedHeight(40);
 	iconLabel->setFixedWidth(40);
 	iconLabel->setStyleSheet("QLabel { margin: 0px; background-image: url(:artwork/fgx-logo-flyer);  background-repeat: none;}");
 	mainLayout->addWidget(iconLabel, 0, 0, 2, 1);
 
+	//= Main header
 	headerLabel = new QLabel("");
 	headerLabel->setStyleSheet("QLabel { margin: 0px; color: #666666; font-size: 15px;}");
 	mainLayout->addWidget(headerLabel, 0, 1, 1, 1);
 
+	//= Callsing Full words
 	callsignLabel = new QLabel("");
 	callsignLabel->setStyleSheet("QLabel { margin: 0px; color: #888888; font-size: 10px;}");
 	mainLayout->addWidget(callsignLabel, 1, 1, 1, 1);
 
 
-	//===========================================
-	//= Popup Message
-
-	/*
-	//= Popup Widget/Window
-	popWidget = new QWidget(this);
-	popWidget->hide();
-	popWidget->setFixedHeight(50);
-	popWidget->setFixedWidth(500);
-	popWidget->show();
-
-	//= Popup Layout
-	QVBoxLayout *popLay = new QVBoxLayout();
-	popWidget->setLayout(popLay);
-
-	//= Popup Label with content and style
-	popLabel = new QLabel();
-	popLabel->setText("FGx started.");
-	popLay->addWidget(popLabel);
-	popWidget->show();
-
-	popWidget->setStyleSheet("QLabel { background-image: url(:artwork/fgx-logo-flyer); background-repeat: none; color: #666666; font-size: 15px; padding-left: 40px; padding-top: 5px; background-color: yellow; }");
-
-	QTimer::singleShot(3000, popWidget, SLOT(hide()) );
-	*/
+	//= Message Label
+	messageLabel = new QLabel();
+	messageLabel->setText("FGx started.");
+	mainLayout->addWidget(messageLabel, 0, 2,2,1);
 
 }
 
+//========================================================================
+//= Show Message
 void HeaderWidget::showMessage(QString message){
-	showMessage(message, 3000);
+	showMessage(message, 5000);
 }
 
 void HeaderWidget::showMessage(QString message, int timeout){
-	return;
 
-	popLabel->setText(message);
-	popWidget->show();
-	return;
+	messageLabel->setStyleSheet("QLabel { color: #666666; font-size: 15px; padding: 5px 0px 0px 10px;  background-color: yellow; }");
+	messageLabel->setText(message);
 
-	QTimer::singleShot(timeout, popWidget, SLOT(hide()) );
+	QTimer::singleShot(timeout, this, SLOT(cancel_message()) );
+}
+
+//== Cancel message
+void HeaderWidget::cancel_message()
+{
+	messageLabel->setStyleSheet("");
+	messageLabel->setText("");
 }
 
 
+//========================================================================
+//= Set Header
 void HeaderWidget::setHeader(QString text)
 {
 	headerLabel->setText(text);
 
 }
+
+//= Set Callsing Sentence
 void HeaderWidget::setCallsign(QString text)
 {
 	text = text.toUpper();

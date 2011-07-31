@@ -22,12 +22,12 @@ public:
 
 	//QTimer *fadeTimer;
 
-	QWidget *headerWidget;
+	//QWidget *headerWidget;
 	QLabel *headerLabel;
 	QLabel *callsignLabel;
 
-	QWidget *popWidget;
-	QLabel *popLabel;
+	//QWidget *popWidget;
+	QLabel *messageLabel;
 
 	void setHeader(QString text);
 	void setCallsign(QString text);
@@ -40,6 +40,7 @@ public slots:
 
 	void showMessage(QString message, int timeout);
 	void showMessage(QString message);
+	void cancel_message();
 
 };
 

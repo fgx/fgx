@@ -242,7 +242,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	initializing = false;
 	QTimer::singleShot(300, this, SLOT(initialize()));
 
-	//headerWidget->setText("Callsign - KSFO - AIRPORT");
+
 	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 	connect(mainObject, SIGNAL(on_debug_mode(bool)), this, SLOT(on_debug_mode()));
