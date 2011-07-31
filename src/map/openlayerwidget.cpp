@@ -65,11 +65,11 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 
 	toolbarAirports->addWidget(new QLabel(tr("Heading:")));
-	spinHeading = new QDoubleSpinBox();
-	spinHeading->setRange(0.0, 359.99);
-	spinHeading->setSingleStep(0.1);
+	spinHeading = new QSpinBox();
+	spinHeading->setRange(0, 359);
+	spinHeading->setSingleStep(1);
 	toolbarAirports->addWidget(spinHeading);
-	connect(spinHeading, SIGNAL(valueChanged(QString)), this, SLOT(on_coords_changed()));
+	connect(spinHeading, SIGNAL(valueChanged(int)), this, SLOT(on_spin(int)));
 
 
 	dialHeading = new QDial();
@@ -510,33 +510,17 @@ void OpenLayerWidget::map_set_coords(QVariant lat, QVariant lon){
 	emit map_double_clicked(lat.toString(), lon.toString(), spinHeading->text());
 }
 
-/*
-void OpenLayerWidget::on_coords_changed(){
-	if(map_type == "radar"){
-		return;
-	}
-	qDebug() << "on coords";
-	return;
-	emit setv("--lat=", txtLat->text());
-	emit setv("--lon=", txtLon->text());
-	emit setv("--heading=", QString::number(spinHeading->value()) );
-
-
-	return;
-	show_aircraft(mainObject->X->getx("--callsign="),
-							 mainObject->X->getx("--lat="),
-							 mainObject->X->getx("--lon="),
-							 mainObject->X->getx("--heading="),
-							 "0"
-							 //mainObject->X->getx("--altitude=") --> this we will have later
-							 );
-	qDebug() << "Show Aircraft";
-}
-*/
+//=== On Dial
 void OpenLayerWidget::on_dial(int val)
 {
-	//int i = val;
+
 	spinHeading->setValue(val);
+}
+
+//=== On Spin
+void OpenLayerWidget::on_spin(int val)
+{
+	emit setv("--heading=", QString::number(val));
 }
 
 void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
@@ -552,10 +536,8 @@ void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
 		txtLon->setText(value);
 
 	}else if(option == "--heading="){
-		spinHeading->setValue(value.toDouble());
+		//spinHeading->setValue(value.toDouble());
 		double d = value.toDouble() * 100;
-		//int i =  d / 100;
-		//qDebug() << "head=" << value << value.toInt() << i;
 		dialHeading->setValue(d / 100);
 
 	}

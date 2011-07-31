@@ -50,7 +50,7 @@ private:
 
 	QLineEdit *txtLat;
 	QLineEdit *txtLon;
-	QDoubleSpinBox *spinHeading;
+	QSpinBox *spinHeading;
 	QDial *dialHeading;
 
 
@@ -139,10 +139,7 @@ public slots:
 	void on_display_layer(QAbstractButton*);
 
 	void on_dial(int val);
-	//void on_turn_left05_clicked();
-	//void on_turn_left5_clicked();
-	//void on_turn_right05_clicked();
-	//void on_turn_right5_clicked();
+	void on_spin(int val);
 	void on_show_debugger();
 	void on_debug_mode(bool);
 };
