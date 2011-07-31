@@ -168,26 +168,26 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	//==============================================
 	//==  TreeView aiports
-	treeViewAirports = new QTreeView(this);
-	airportsLayout->addWidget(treeViewAirports, 1, 0);
-	treeViewAirports->setModel(proxyModel);
+	treeAirports = new QTreeView(this);
+	airportsLayout->addWidget(treeAirports, 1, 0);
+	treeAirports->setModel(proxyModel);
 
-	treeViewAirports->setUniformRowHeights(true);
-	treeViewAirports->setAlternatingRowColors(true);
-	treeViewAirports->setRootIsDecorated(false);
-	treeViewAirports->setSortingEnabled(true);
-	treeViewAirports->sortByColumn(CA_NAME, Qt::AscendingOrder);
-	treeViewAirports->setSelectionMode(QAbstractItemView::SingleSelection);
-	treeViewAirports->setSelectionBehavior(QAbstractItemView::SelectRows);
-	treeViewAirports->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	treeAirports->setUniformRowHeights(true);
+	treeAirports->setAlternatingRowColors(true);
+	treeAirports->setRootIsDecorated(false);
+	treeAirports->setSortingEnabled(true);
+	treeAirports->sortByColumn(CA_NAME, Qt::AscendingOrder);
+	treeAirports->setSelectionMode(QAbstractItemView::SingleSelection);
+	treeAirports->setSelectionBehavior(QAbstractItemView::SelectRows);
+	treeAirports->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	//* Headers and columns
-	treeViewAirports->header()->setStretchLastSection(true);
-	treeViewAirports->setColumnWidth(CA_CODE, 80);
-	treeViewAirports->setColumnWidth(CA_NAME, 50);
-	treeViewAirports->setColumnHidden(CA_DIR, true);
+	treeAirports->header()->setStretchLastSection(true);
+	treeAirports->setColumnWidth(CA_CODE, 80);
+	treeAirports->setColumnWidth(CA_NAME, 50);
+	treeAirports->setColumnHidden(CA_DIR, true);
 
-	connect( treeViewAirports->selectionModel(),
+	connect( treeAirports->selectionModel(),
 			 SIGNAL( currentChanged(QModelIndex,QModelIndex)),
 			 this, SLOT( on_airport_tree_selected(QModelIndex, QModelIndex) )
 	);
@@ -232,14 +232,14 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 	//=========================================================
 	//* Airport Info TreeWidget
-	treeWidgetAirportInfo = new QTreeWidget();
-	airportInfoLayout->addWidget(treeWidgetAirportInfo, 3);
-	treeWidgetAirportInfo->setAlternatingRowColors(true);
-	treeWidgetAirportInfo->setRootIsDecorated(true);
-	treeWidgetAirportInfo->setUniformRowHeights(true);
-	treeWidgetAirportInfo->setExpandsOnDoubleClick(false);
+	treeAptInfo = new QTreeWidget();
+	airportInfoLayout->addWidget(treeAptInfo, 3);
+	treeAptInfo->setAlternatingRowColors(true);
+	treeAptInfo->setRootIsDecorated(true);
+	treeAptInfo->setUniformRowHeights(true);
+	treeAptInfo->setExpandsOnDoubleClick(false);
 
-	QTreeWidgetItem *headerItem = treeWidgetAirportInfo->headerItem();
+	QTreeWidgetItem *headerItem = treeAptInfo->headerItem();
 	headerItem->setText(CI_NODE, tr(""));
 	headerItem->setText(CI_WIDTH, tr("Width"));
 	headerItem->setText(CI_LENGTH, tr("Length"));
@@ -249,23 +249,23 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	headerItem->setText(CI_RUNWAYS, tr("R"));
 
 
-	treeWidgetAirportInfo->setColumnHidden(CI_TYPE,true);
-	treeWidgetAirportInfo->setColumnHidden(CI_LABEL,true);
-	treeWidgetAirportInfo->setColumnHidden(CI_SETTING_KEY,true);
-	treeWidgetAirportInfo->setColumnHidden(CI_WIDTH,true);
-	treeWidgetAirportInfo->setColumnHidden(CI_LENGTH,true);
-	treeWidgetAirportInfo->setColumnHidden(CI_HEADING,true);
-	treeWidgetAirportInfo->setColumnHidden(CI_RUNWAYS, true);
-	treeWidgetAirportInfo->setColumnHidden(CI_LAT, true);
-	treeWidgetAirportInfo->setColumnHidden(CI_LON, true);
+	treeAptInfo->setColumnHidden(CI_TYPE,true);
+	treeAptInfo->setColumnHidden(CI_LABEL,true);
+	treeAptInfo->setColumnHidden(CI_SETTING_KEY,true);
+	treeAptInfo->setColumnHidden(CI_WIDTH,true);
+	treeAptInfo->setColumnHidden(CI_LENGTH,true);
+	treeAptInfo->setColumnHidden(CI_HEADING,true);
+	treeAptInfo->setColumnHidden(CI_RUNWAYS, true);
+	treeAptInfo->setColumnHidden(CI_LAT, true);
+	treeAptInfo->setColumnHidden(CI_LON, true);
 
-	treeWidgetAirportInfo->setColumnWidth(CI_NODE, 120);
-	treeWidgetAirportInfo->header()->setStretchLastSection(true);
+	treeAptInfo->setColumnWidth(CI_NODE, 120);
+	treeAptInfo->header()->setStretchLastSection(true);
 
-	connect(treeWidgetAirportInfo, SIGNAL(itemSelectionChanged()),
+	connect(treeAptInfo, SIGNAL(itemSelectionChanged()),
 			this, SLOT(on_airport_info_selection_changed())
 	);
-	connect(treeWidgetAirportInfo, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+	connect(treeAptInfo, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
 			this, SLOT(on_airport_info_double_clicked(QTreeWidgetItem*,int))
 	);
 
@@ -392,7 +392,7 @@ void AirportsWidget::on_map_double_clicked(QVariant lat, QVariant lon)
 	qDebug() << "MAP DOUBLE";
 	emit set_ena("--runway=", false);
 	emit set_ena("--parking-id=", false);
-	treeWidgetAirportInfo->selectionModel()->clear();
+	treeAptInfo->selectionModel()->clear();
 	emit set_ena("--lat=", true);
 	emit set_ena("--lon=", true);
 	emit set_ena("--heading=", true);
@@ -432,12 +432,12 @@ void AirportsWidget::load_airports_tree(){
 	qDebug() << "------------\nLoad Tree";
 	//= Clear existing tree and inhibit updates till end
 	model->removeRows(0, model->rowCount());
-	treeViewAirports->setUpdatesEnabled(false);
+	treeAirports->setUpdatesEnabled(false);
 
 	//= Airports Cache File
 	QFile dataFile(mainObject->data_file(("airports.txt")));
 	if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
-			treeViewAirports->setUpdatesEnabled(true);
+			treeAirports->setUpdatesEnabled(true);
 		   return;
 	}
 	QTextStream in(&dataFile);
@@ -471,15 +471,15 @@ void AirportsWidget::load_airports_tree(){
 		qDebug() << "Restre selected node"  ;
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
 		QModelIndex proxIdx = proxyModel->mapFromSource(srcIdx);
-		treeViewAirports->selectionModel()->select(proxIdx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
-		treeViewAirports->scrollTo(proxIdx, QAbstractItemView::PositionAtCenter);
-		treeViewAirports->selectionModel()->setCurrentIndex(proxIdx, QItemSelectionModel::Rows);
+		treeAirports->selectionModel()->select(proxIdx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
+		treeAirports->scrollTo(proxIdx, QAbstractItemView::PositionAtCenter);
+		treeAirports->selectionModel()->setCurrentIndex(proxIdx, QItemSelectionModel::Rows);
 
 		//load_info_tree( model->item(srcIdx.row(), CA_DIR)->text(), model->item(srcIdx.row(), CA_CODE)->text() );
 		labelAirportsFolder->setText( model->item(srcIdx.row(), CA_DIR)->text());
 		buttonOpenAirportsFolder->setToolTip(labelAirportsFolder->text());
 	}
-	treeViewAirports->setUpdatesEnabled(true);
+	treeAirports->setUpdatesEnabled(true);
 }
 
 
@@ -504,7 +504,7 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 	txtAirportsFilter->setFocus();
 
 	//= Clear the Info tree
-	treeWidgetAirportInfo->model()->removeRows(0, treeWidgetAirportInfo->model()->rowCount());
+	treeAptInfo->model()->removeRows(0, treeAptInfo->model()->rowCount());
 	mapWidget->clear_map();
 
 	//= No selection -eg a filter removing a selected node
@@ -542,7 +542,7 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 	//== Clear the existing airport
 	//mapWidget->clear_airport(airport_code);
 	//mapWidget->clear_map();
-	//treeWidgetAirportInfo->setUpdatesEnabled(false);
+	//treeAptInfo->setUpdatesEnabled(false);
 
 
 	//=== Load Tower
@@ -580,13 +580,13 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 	//==== Restore Runway node from settings
 	XOpt optRunway = mainObject->X->get_opt("--runway=");
 	if(optRunway.enabled){
-		QList<QTreeWidgetItem *> items = treeWidgetAirportInfo->findItems(
+		QList<QTreeWidgetItem *> items = treeAptInfo->findItems(
 														optRunway.value,
 														Qt::MatchExactly | Qt::MatchRecursive,
 														CI_NODE);
 		if(items.size() > 0){
-			treeWidgetAirportInfo->setCurrentItem(items[0]);
-			treeWidgetAirportInfo->scrollToItem(items[0], QAbstractItemView::EnsureVisible);
+			treeAptInfo->setCurrentItem(items[0]);
+			treeAptInfo->scrollToItem(items[0], QAbstractItemView::EnsureVisible);
 			qDebug() << "set Runway";
 			return;
 		}
@@ -595,13 +595,13 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 	//= Restore Stand node from settings
 	XOpt optStand = mainObject->X->get_opt("--parking-id=");
 	if(optStand.enabled){
-		QList<QTreeWidgetItem *> items = treeWidgetAirportInfo->findItems(
+		QList<QTreeWidgetItem *> items = treeAptInfo->findItems(
 														optStand.value,
 														Qt::MatchExactly | Qt::MatchRecursive,
 														CI_NODE);
 		if(items.size() > 0){
-			treeWidgetAirportInfo->setCurrentItem(items[0]);
-			treeWidgetAirportInfo->scrollToItem(items[0], QAbstractItemView::EnsureVisible);
+			treeAptInfo->setCurrentItem(items[0]);
+			treeAptInfo->scrollToItem(items[0], QAbstractItemView::EnsureVisible);
 			qDebug() << "set Stand";
 			return;
 		}
@@ -609,7 +609,7 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 
 
-	//treeWidgetAirportInfo->setUpdatesEnabled(true);
+	//treeAptInfo->setUpdatesEnabled(true);
 
 }
 
@@ -622,9 +622,9 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 	QTreeWidgetItem *runwaysParent = new QTreeWidgetItem();
 	runwaysParent->setText(0, "Runways" );
 	runwaysParent->setIcon(0, QIcon(":/icon/folder"));
-	treeWidgetAirportInfo->addTopLevelItem(runwaysParent);
-	treeWidgetAirportInfo->setItemExpanded(runwaysParent, true);
-	treeWidgetAirportInfo->setFirstItemColumnSpanned(runwaysParent, true);
+	treeAptInfo->addTopLevelItem(runwaysParent);
+	treeAptInfo->setItemExpanded(runwaysParent, true);
+	treeAptInfo->setFirstItemColumnSpanned(runwaysParent, true);
 
 
 	//==============================================================
@@ -685,8 +685,8 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 									" - ").append(
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()
 									));
-			//treeWidgetAirportInfo->setItemExpanded(rItem, true);
-			treeWidgetAirportInfo->setFirstItemColumnSpanned(rItem, true);
+			//treeAptInfo->setItemExpanded(rItem, true);
+			treeAptInfo->setFirstItemColumnSpanned(rItem, true);
 
 			//= Runway threshold 0
 			QTreeWidgetItem *tItem0 = new QTreeWidgetItem(rItem);
@@ -736,8 +736,8 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 	QTreeWidgetItem *parkingParent = new QTreeWidgetItem();
 	parkingParent->setText(0, "Parking" );
 	parkingParent->setIcon(0, QIcon(":/icon/folder"));
-	treeWidgetAirportInfo->addTopLevelItem(parkingParent);
-	treeWidgetAirportInfo->setItemExpanded(parkingParent, true);
+	treeAptInfo->addTopLevelItem(parkingParent);
+	treeAptInfo->setItemExpanded(parkingParent, true);
 
 	//=======================================================================
 	// Parse the <groundnet/parking>.threshold.xml file for Parking Postiton
@@ -785,7 +785,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 
 		//===================================
 		//= Get Frequencies
-		QTreeWidgetItem *towerItem = treeWidgetAirportInfo->findItems("tower", Qt::MatchExactly, CI_TYPE).at(0);
+		QTreeWidgetItem *towerItem = treeAptInfo->findItems("tower", Qt::MatchExactly, CI_TYPE).at(0);
 		QDomNodeList nodeFreqs = dom.elementsByTagName("frequencies");
 
 		for(int idxf =0; idxf < nodeFreqs.at(0).childNodes().count(); idxf++){
@@ -861,8 +861,8 @@ void AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
 	towerParent->setText(0, "No Tower" );
 	towerParent->setText(CI_TYPE, "tower");
 	towerParent->setIcon(0, QIcon(":/icon/tower"));
-	treeWidgetAirportInfo->addTopLevelItem(towerParent);
-	treeWidgetAirportInfo->setItemExpanded(towerParent, false);
+	treeAptInfo->addTopLevelItem(towerParent);
+	treeAptInfo->setItemExpanded(towerParent, false);
 
 	//=======================================================================
 	// Parse the ICAO.twr.xml file for Tower Postiton
@@ -935,10 +935,10 @@ void AirportsWidget::on_reload_cache(){
 
 QString AirportsWidget::current_airport(){
 	//qDebug() << "curr_apt";
-	if(treeViewAirports->selectionModel()->selectedIndexes().size() == 0){
+	if(treeAirports->selectionModel()->selectedIndexes().size() == 0){
 		return "";
 	}
-	QModelIndex index = proxyModel->index(treeViewAirports->selectionModel()->selectedIndexes().at(0).row(), CA_CODE);
+	QModelIndex index = proxyModel->index(treeAirports->selectionModel()->selectedIndexes().at(0).row(), CA_CODE);
 	QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(index));
 	return item->text();
 }
@@ -960,7 +960,7 @@ QString AirportsWidget::validate(){
 
 	//* Validate Airport
 	/*}else{
-		if (!treeViewAirports->selectionModel()->hasSelection()){
+		if (!treeAirports->selectionModel()->hasSelection()){
 			return QString(tr("Airport: No Airport selected or check [x] Use Default;"));
 		}
 	}*/
@@ -1048,14 +1048,14 @@ void AirportsWidget::on_airport_info_selection_changed()
 
 
 	//= No Selection
-	if(treeWidgetAirportInfo->selectionModel()->hasSelection() == false){
+	if(treeAptInfo->selectionModel()->hasSelection() == false){
 		emit set_ena("--runway=", false);
 		emit set_ena("--parking-id=", false);
 		qDebug() << "no selection";
 		return;
 	}
 
-	QTreeWidgetItem *item = treeWidgetAirportInfo->currentItem();
+	QTreeWidgetItem *item = treeAptInfo->currentItem();
 
 	//= Its a runway ro stand
 	if(item->text(CI_TYPE) == "runway" || item->text(CI_TYPE) == "stand"){
@@ -1081,7 +1081,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 								 "0");
 	}
 	//return;
-	//if(treeWidgetAirportInfo->indexOfTopLevelItem(item) != -1){
+	//if(treeAptInfo->indexOfTopLevelItem(item) != -1){
 	//	emit setx("--runway=", false, "");
 	//	emit setx("--parking-id=", false,"");
 	//}

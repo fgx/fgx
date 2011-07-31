@@ -82,14 +82,14 @@ public:
 
 	QStandardItemModel *model;
 	QSortFilterProxyModel *proxyModel;
-	QTreeView *treeViewAirports;
+	QTreeView *treeAirports;
 
 	QPushButton *buttonRefreshTree;
 	QStatusBar *statusBarAirports;
 	QToolButton *buttonOpenAirportsFolder;
 	QLabel *labelAirportsFolder;
 
-	QTreeWidget *treeWidgetAirportInfo;
+	QTreeWidget *treeAptInfo;
 	QStatusBar *statusBarAirportInfo;
 
 
