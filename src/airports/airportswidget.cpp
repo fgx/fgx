@@ -693,7 +693,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 								  tItem0->text(CI_LAT), tItem0->text(CI_LON),
 								  tItem1->text(CI_LAT), tItem1->text(CI_LON)
 								  );
-			qDebug() <<  " > " << tItem0->text(CI_NODE) <<  tItem1->text(CI_NODE);
+			//qDebug() <<  " > " << tItem0->text(CI_NODE) <<  tItem1->text(CI_NODE);
 
 		}
 	}
@@ -1026,33 +1026,36 @@ void AirportsWidget::on_airport_info_selection_changed()
 
 	//= No Selection
 	if(treeWidgetAirportInfo->selectionModel()->hasSelection() == false){
-		emit setx("--runway=", false, "");
-		emit setx("--parking-id=", false,"");
+		emit set_ena("--runway=", false);
+		emit set_ena("--parking-id=", false);
 		return;
 	}
 
 	QTreeWidgetItem *item = treeWidgetAirportInfo->currentItem();
 
-	//= Its a runway
-	if(item->text(CI_TYPE) == "runway"){
-		emit setx("--runway=", true, item->text(CI_NODE));
-		emit setx("--parking-id=", false,"");
-		emit setx("--lat=", true, item->text(CI_LAT));
-		emit setx("--lon=", true, item->text(CI_LON));
-		emit setx("--heading=", true, item->text(CI_HEADING));
-		return;
-	}
+	//= Its a runway ro stand
+	if(item->text(CI_TYPE) == "runway" || item->text(CI_TYPE) == "stand"){
 
-	//= Its a stand
-	if(item->text(CI_TYPE) == "stand"){
-		emit setx("--runway=", false, "");
-		emit setx("--parking-id=", true, item->text(CI_NODE));
-		emit setx("--lat=", true, item->text(CI_LAT));
-		emit setx("--lon=", true, item->text(CI_LON));
-		emit setx("--heading=", true, item->text(CI_HEADING));
-		return;
-	}
+		if(item->text(CI_TYPE) == "runway"){
+			emit setx("--runway=", true, item->text(CI_NODE));
+			emit set_ena("--parking-id=", false);
+			emit setx("--lat=", false, item->text(CI_LAT));
+			emit setx("--lon=", false, item->text(CI_LON));
+			emit setx("--heading=", false, item->text(CI_HEADING));
 
+		}else{ // its a stand
+			emit set_ena("--runway=", false);
+			emit setx("--parking-id=", true, item->text(CI_NODE));
+			emit setx("--lat=", false, item->text(CI_LAT));
+			emit setx("--lon=", false, item->text(CI_LON));
+			emit setx("--heading=", false, item->text(CI_HEADING));
+		}
+		mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
+								 item->text(CI_LAT), item->text(CI_LON),
+								 item->text(CI_HEADING),
+								 "0");
+	}
+	return;
 	if(treeWidgetAirportInfo->indexOfTopLevelItem(item) != -1){
 		emit setx("--runway=", false, "");
 		emit setx("--parking-id=", false,"");

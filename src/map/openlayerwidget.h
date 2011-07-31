@@ -18,9 +18,10 @@
 #include <QtGui/QSlider>
 #include <QtGui/QDoubleSpinBox>
 #include <QToolBar>
+#include <QDial>
 
 #include "xobjects/mainobject.h"
-#include "xobjects/latlng.h"
+
 
 class MainObject;
 QT_FORWARD_DECLARE_CLASS(QNetworkDiskCache)
@@ -46,9 +47,12 @@ private:
 	QProgressBar *progressBar;
 	QStatusBar *statusBar;
 	QComboBox *comboServer;
-	
+
 	QLineEdit *txtLat;
 	QLineEdit *txtLon;
+	QDoubleSpinBox *spinHeading;
+	QDial *dialHeading;
+
 
 	QButtonGroup *buttonGroupViewLayers;
 	QCheckBox *chkViewStands;
@@ -56,33 +60,25 @@ private:
 	QCheckBox *chkViewRunwayLines;
 
 	QCheckBox *chkViewGridLines;
-	
-	//QLineEdit *editHdg;
-	//QToolButton *buttTurnRight10;
-	//QToolButton *buttTurnRight1;
-	//QToolButton *buttTurnLeft10;
-	//QToolButton *buttTurnLeft1;
-	
-	QDoubleSpinBox *spinHeading;
 
-	
+
 	QToolButton *buttDebug;
 	QWebInspector *webInspector;
 
 	QNetworkDiskCache *networkDiskCache;
 	//QNetworkCookieJar *networkCookieJar;
-	
+
 signals:
-	
+
 	void setx(QString option, bool enabled, QString value);
-	
+
 public slots:
 
 	//= browser progress
-    void start_progress();
-    void update_progress(int progress);
-    void end_progress(bool Ok);
-	
+	void start_progress();
+	void update_progress(int progress);
+	void end_progress(bool Ok);
+
 	//= map calls
 	void load_map(QString map_type);
 	void execute_js(QString js_string);
@@ -121,7 +117,7 @@ public slots:
 	//void map_mouse_move(QVariant lat, QVariant lon);
 	void map_click(QVariant lat, QVariant lon);
 	void map_right_click(QVariant lat, QVariant lon);
-	
+
 	void map_show_coords(QVariant lat, QVariant lon);
 	void on_coords_changed();
 
@@ -134,12 +130,12 @@ public slots:
 
 	//======================================
 	void closeEvent(QCloseEvent *event);
-	
+
 	void on_upx( QString option, bool enabled, QString value);
-	
+
 	void on_display_layer(QAbstractButton*);
 
-
+	void on_dial(int val);
 	//void on_turn_left05_clicked();
 	//void on_turn_left5_clicked();
 	//void on_turn_right05_clicked();

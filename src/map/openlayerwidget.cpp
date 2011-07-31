@@ -20,54 +20,60 @@
 
 
 #include "map/openlayerwidget.h"
-#include "airports/airportswidget.h"
-
 
 
 
 OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
-    QWidget(parent)
+	QWidget(parent)
 {
 
 	mainObject = mob;
-	
+
 	setWindowTitle(tr("FGx OpenLayer Map"));
 	setWindowIcon(QIcon(":/icon/mpmap"));
-	
+
 	setProperty("settings_namespace", QVariant("OpenLayerWidget_window"));
-	
+
 	mainObject->settings->restoreWindow(this);
 
 	//======================================================
 	//= Main Layout and Splitter
 	QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(0,0,0,0);
-    mainLayout->setSpacing(0);
-	
+	mainLayout->setContentsMargins(0,0,0,0);
+	mainLayout->setSpacing(0);
+
 
 
 	toolbarAirports = new QToolBar();
 	mainLayout->addWidget(toolbarAirports);
-	
+
 	toolbarAirports->addWidget(new QLabel(tr("Lat:")));
 	txtLat = new QLineEdit();
 	toolbarAirports->addWidget(txtLat);
 	connect(txtLat, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
-	
+
 	toolbarAirports->addWidget(new QLabel(tr("Lon:")));
 	txtLon = new QLineEdit();
 	toolbarAirports->addWidget(txtLon);
 	connect(txtLon, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
-	
-	
+
+
 	toolbarAirports->addWidget(new QLabel(tr("Heading:")));
 	spinHeading = new QDoubleSpinBox();
 	spinHeading->setRange(0.0, 359.99);
 	spinHeading->setSingleStep(0.1);
 	toolbarAirports->addWidget(spinHeading);
 	connect(spinHeading, SIGNAL(valueChanged(QString)), this, SLOT(on_coords_changed()));
-	
-	
+
+
+	dialHeading = new QDial();
+	dialHeading->setFixedSize(30, 30);
+	dialHeading->setWrapping(true);
+	dialHeading->setRange(0, 359);
+	dialHeading->setPageStep(30);
+	dialHeading->setNotchesVisible(true);
+	toolbarAirports->addWidget(dialHeading);
+	connect(dialHeading, SIGNAL(valueChanged(int)), this, SLOT(on_dial(int)));
 
 
 	//=============================================
@@ -147,7 +153,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	//============================================================================
 	QHBoxLayout *midLayout = new QHBoxLayout();
 	mainLayout->addLayout(midLayout);
-	
+
 	//== Zoom Bar
 	QVBoxLayout *layoutZoom = new QVBoxLayout();
 	midLayout->addLayout(layoutZoom, 0);
@@ -176,20 +182,20 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	layoutZoom->addWidget(buttZoomOut, 0);
 	connect(buttZoomOut, SIGNAL(clicked()), this, SLOT(on_zoom_out()));
 
-	
+
 	lblZoom = new QLabel();
 	lblZoom->setFixedWidth(20);
 	lblZoom->setStyleSheet(zbstyle);
 	layoutZoom->addWidget(lblZoom);
-	
-	
+
+
 
 	//=============================================================
 	//== Cache
 	networkDiskCache = new QNetworkDiskCache(this);
 	networkDiskCache->setCacheDirectory(QDesktopServices::storageLocation(QDesktopServices::CacheLocation));
-	
-	
+
+
 	//== Browser
 	webView = new QWebView();
 	midLayout->addWidget(webView, 10);
@@ -202,20 +208,20 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	connect(webView, SIGNAL(loadStarted()), this, SLOT(start_progress()));
 	connect(webView, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
 	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));
-	
-	
+
+
 	//============================================================
 	//== Status Bar
 	//============================================================
-    statusBar = new QStatusBar(this);
-    mainLayout->addWidget(statusBar);
-    statusBar->showMessage("Idle");
+	statusBar = new QStatusBar(this);
+	mainLayout->addWidget(statusBar);
+	statusBar->showMessage("Idle");
 	statusBar->setSizeGripEnabled(false);
-	
+
 	//== Progress Bar
-    progressBar = new QProgressBar();
-    progressBar->setVisible(false);
-    statusBar->addPermanentWidget(progressBar);
+	progressBar = new QProgressBar();
+	progressBar->setVisible(false);
+	statusBar->addPermanentWidget(progressBar);
 
 
 
@@ -268,7 +274,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	connect(buttDebug, SIGNAL(clicked()), this, SLOT(on_show_debugger()));
 
 
-	
+
 	//============================================================================
 	//== Main Settings connection
 	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
@@ -499,7 +505,9 @@ void OpenLayerWidget::on_coords_changed(){
 	emit setx("--lat=", true, txtLat->text());
 	emit setx("--lon=", true, txtLon->text());
 	emit setx("--heading=", true, QString::number(spinHeading->value()) );
-	
+
+
+	return;
 	show_aircraft(mainObject->X->getx("--callsign="),
 							 mainObject->X->getx("--lat="),
 							 mainObject->X->getx("--lon="),
@@ -507,26 +515,34 @@ void OpenLayerWidget::on_coords_changed(){
 							 "0"
 							 //mainObject->X->getx("--altitude=") --> this we will have later
 							 );
-	
+	qDebug() << "Show Aircraft";
 }
 
-
+void OpenLayerWidget::on_dial(int val)
+{
+	//int i = val;
+	spinHeading->setValue(val);
+}
 
 void OpenLayerWidget::on_upx(QString option, bool enabled, QString value)
 {
 	Q_UNUSED(option);
 	Q_UNUSED(enabled);
 	Q_UNUSED(value);
-	
+
 	if(option == "--lat="){
 		txtLat->setText(value);
-		
+
 	}else if(option == "--lon="){
 		txtLon->setText(value);
-	
+
 	}else if(option == "--heading="){
 		spinHeading->setValue(value.toDouble());
-	
+		double d = value.toDouble() * 100;
+		//int i =  d / 100;
+		//qDebug() << "head=" << value << value.toInt() << i;
+		dialHeading->setValue(d / 100);
+
 	}
 }
 
@@ -578,7 +594,7 @@ void OpenLayerWidget::map_zoom_changed(QVariant zoom){
 	{
 	QString jstr = QString("set_map_type('%1');").arg(act->property("map_type").toString());
 	execute_js(jstr);
-	
+
 	}*/
 
 
@@ -609,7 +625,7 @@ void OpenLayerWidget::end_progress(bool Ok){
 	progressBar->setVisible(false);
 	statusBar->showMessage( webView->url().toString() );
 }
-	
+
 
 void OpenLayerWidget::on_show_debugger()
 {
