@@ -527,19 +527,38 @@ void LauncherWindow::on_debug_mode()
 void LauncherWindow::on_upx(QString option, bool enabled, QString value)
 {
 	Q_UNUSED(enabled);
-	Q_UNUSED(value);
+	//Q_UNUSED(value);
 
-	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
-		QString header = QString("<font color=#ff0000>%1</font> with Aircraft <b>%2</b> at <b>%3</b>"
+	if(option == "--callsign=" ){
+		headerWidget->setCallsign( value );
+	}
+
+	QStringList keys;
+	keys << "--callsign="  <<  "--aircraft=" << "--airport="  << "--runway=" << "--parking-id=";
+	if(keys.contains(option)){
+		QString header = QString("<font color=#ff0000>%1</font> : <b>%2</b>"
 									).arg( mainObject->X->getx("--callsign=")
 									).arg( mainObject->X->getx("--aircraft=")
-									).arg( mainObject->X->getx("--airport="));
+								);
+		XOpt apt = mainObject->X->get_opt("--airport=");
+		if(apt.enabled){
+			header.append(" @ ").append(apt.value);
+
+			XOpt rwy = mainObject->X->get_opt("--runway=");
+			if(rwy.enabled){
+				header.append(" RWY ").append(rwy.value);
+			}else{
+				XOpt stand = mainObject->X->get_opt("--parking-id=");
+				if(stand.enabled){
+					header.append(" Stand: ").append(stand.value);
+				}
+			}
+		}
+
 		headerWidget->setHeader( header );
 
 
 	}
 
-	if(option == "--callsign=" ){
-		headerWidget->setCallsign( value );
-	}
+
 }

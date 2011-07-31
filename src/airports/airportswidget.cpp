@@ -579,6 +579,8 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 		if(items.size() > 0){
 			treeWidgetAirportInfo->setCurrentItem(items[0]);
 			treeWidgetAirportInfo->scrollToItem(items[0], QAbstractItemView::EnsureVisible);
+			qDebug() << "set Stand";
+			return;
 		}
 	}
 
