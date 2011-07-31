@@ -1010,6 +1010,13 @@ void AirportsWidget::on_upx(QString option, bool enabled, QString value)
 	Q_UNUSED(enabled);
 	Q_UNUSED(value);
 
+	QStringList items;
+	items << "--lat=" << "--lon=" << "--heading=";
+
+	if(items.contains(option)){
+		qDebug() << "yes" << option << enabled << value;
+	}
+
 	/*if(option == "--vor="){
 		txtVOR->setText(value);
 

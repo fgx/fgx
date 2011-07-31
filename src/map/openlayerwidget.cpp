@@ -17,6 +17,7 @@
 #include <QtWebKit/QWebFrame>
 #include <QtGui/QDesktopServices>
 
+#include <QDoubleValidator>
 
 
 #include "map/openlayerwidget.h"
@@ -47,15 +48,20 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	toolbarAirports = new QToolBar();
 	mainLayout->addWidget(toolbarAirports);
 
+
 	toolbarAirports->addWidget(new QLabel(tr("Lat:")));
 	txtLat = new QLineEdit();
+	QDoubleValidator *validateLat = new QDoubleValidator(this);
+	txtLat->setValidator(validateLat);
 	toolbarAirports->addWidget(txtLat);
-	connect(txtLat, SIGNAL(textChanged(QString)), this, SLOT(on_lat_changed(QString)));
+	connect(txtLat, SIGNAL(textEdited(QString)), this, SLOT(on_lat_changed(QString)));
 
 	toolbarAirports->addWidget(new QLabel(tr("Lon:")));
 	txtLon = new QLineEdit();
+	QDoubleValidator *validateLon = new QDoubleValidator(this);
+	txtLon->setValidator(validateLon);
 	toolbarAirports->addWidget(txtLon);
-	connect(txtLon, SIGNAL(textChanged(QString)), this, SLOT(on_lon_changed(QString)));
+	connect(txtLon, SIGNAL(textEdited(QString)), this, SLOT(on_lon_changed(QString)));
 
 
 	toolbarAirports->addWidget(new QLabel(tr("Heading:")));
@@ -285,6 +291,8 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 
 
 
+
+
 //===========================================================================
 //== Load Map
 //===========================================================================
@@ -496,12 +504,13 @@ void OpenLayerWidget::map_debug(QVariant mess){
 //= < JS - map_show_coords()
 void OpenLayerWidget::map_set_coords(QVariant lat, QVariant lon){
 
-	qDebug() << "map_show_coords";
+	qDebug() << "map_set_coords";
 	txtLat->setText(lat.toString());
 	txtLon->setText(lon.toString());
 	emit map_double_clicked(lat.toString(), lon.toString(), spinHeading->text());
 }
 
+/*
 void OpenLayerWidget::on_coords_changed(){
 	if(map_type == "radar"){
 		return;
@@ -523,7 +532,7 @@ void OpenLayerWidget::on_coords_changed(){
 							 );
 	qDebug() << "Show Aircraft";
 }
-
+*/
 void OpenLayerWidget::on_dial(int val)
 {
 	//int i = val;
@@ -644,4 +653,16 @@ void OpenLayerWidget::on_debug_mode(bool debug_mode)
 {
 	webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, debug_mode);
 	buttDebug->setVisible(debug_mode == true);
+}
+
+
+void OpenLayerWidget::on_lat_changed(QString lat)
+{
+	emit setv("--lat=", lat);
+}
+
+
+void OpenLayerWidget::on_lon_changed(QString lon)
+{
+	emit setv("--lon=", lon);
 }

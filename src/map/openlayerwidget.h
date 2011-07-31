@@ -121,7 +121,8 @@ public slots:
 	void map_right_click(QVariant lat, QVariant lon);
 
 	void map_set_coords(QVariant lat, QVariant lon);
-	void on_coords_changed();
+	void on_lat_changed(QString);
+	void on_lon_changed(QString);
 
 
 	void map_zoom_changed(QVariant zoom);
