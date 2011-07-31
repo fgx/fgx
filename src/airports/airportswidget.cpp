@@ -1006,51 +1006,26 @@ void AirportsWidget::on_coordinates_changed()
 
 void AirportsWidget::on_upx(QString option, bool enabled, QString value)
 {
-	Q_UNUSED(option);
 	Q_UNUSED(enabled);
 	Q_UNUSED(value);
 
+
+	//== This is a nasty hack where we have to move the aircraft if a new lat/lon/heading
 	QStringList items;
 	items << "--lat=" << "--lon=" << "--heading=";
 
 	if(items.contains(option)){
-		qDebug() << "yes" << option << enabled << value;
+
+		XOpt lat = mainObject->X->get_opt("--lat=");
+		if(lat.enabled){ // Lat enabled is used to hold "custom postion" and not a runway or parking
+			mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
+									 mainObject->X->getx("--lat="),
+									 mainObject->X->getx("--lon="),
+									 mainObject->X->getx("--heading="),
+									 "0"
+									 );
+		}
 	}
-
-	/*if(option == "--vor="){
-		txtVOR->setText(value);
-
-	}else if(option == "--ndb="){
-		txtNDB->setText(value);
-
-	}else if(option == "--fix="){
-		txtFIX->setText(value);
-
-	}else if(option == "--lat="){
-		txtLat->setText(value);
-
-	}else if(option == "--lon="){
-		txtLon->setText(value);
-
-	}else if(option == "--offset-distance="){
-		txtOffset->setText(value);
-
-	}else if(option == "--altitude="){
-		txtAltitude->setText(value);
-
-	}else if(option == "--heading="){
-		txtHeading->setText(value);
-	}
-
-	if(option == "--lat="){
-	 txtLat->setText(value);
-
-	 }else if(option == "--lon="){
-	 txtLon->setText(value);
-
-	 }else if(option == "--heading="){
-	 txtHeading->setText(value);
-	 }*/
 
 
 }
@@ -1069,7 +1044,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 
 	QTreeWidgetItem *item = treeAptInfo->currentItem();
 
-	//= Its a runway ro stand
+	//= Its a runway or stand
 	if(item->text(CI_TYPE) == "runway" || item->text(CI_TYPE) == "stand"){
 
 		if(item->text(CI_TYPE) == "runway"){

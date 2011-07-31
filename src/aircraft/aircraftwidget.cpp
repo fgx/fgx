@@ -53,29 +53,29 @@
 
 
 AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
-    QWidget(parent)
+	QWidget(parent)
 {
 
 	mainObject = mOb;
 
-    //* Main Layout
-    QVBoxLayout *mainLayout = new QVBoxLayout();
-    setLayout(mainLayout);
-    mainLayout->setSpacing(0);
-    mainLayout->setContentsMargins(0,0,0,0);
+	//* Main Layout
+	QVBoxLayout *mainLayout = new QVBoxLayout();
+	setLayout(mainLayout);
+	mainLayout->setSpacing(0);
+	mainLayout->setContentsMargins(0,0,0,0);
 
-    QSplitter *splitter = new QSplitter(this);
-    mainLayout->addWidget(splitter);
+	QSplitter *splitter = new QSplitter(this);
+	mainLayout->addWidget(splitter);
 
 	//===============================================================================
-    //** Left
-    QWidget *leftWidget = new QWidget();
-    splitter->addWidget(leftWidget);
+	//** Left
+	QWidget *leftWidget = new QWidget();
+	splitter->addWidget(leftWidget);
 	splitter->setContentsMargins(10,10,10,10);
-    QVBoxLayout *treeLayout = new QVBoxLayout();
-    leftWidget->setLayout(treeLayout);
-    treeLayout->setContentsMargins(0,0,0,0);
-    treeLayout->setSpacing(0);
+	QVBoxLayout *treeLayout = new QVBoxLayout();
+	leftWidget->setLayout(treeLayout);
+	treeLayout->setContentsMargins(0,0,0,0);
+	treeLayout->setSpacing(0);
 
 
 	//** Top Bar Layout
@@ -106,7 +106,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	radioUseCustom->setText("Selected Path");
 	treeTopBar->addWidget(radioUseCustom);
 	groupUseAircraft->addButton(radioUseCustom, 2);
-	
+
 	txtAircraftPath = new QLineEdit();
 	treeTopBar->addWidget(txtAircraftPath);
 
@@ -124,7 +124,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	treeWidget->setAlternatingRowColors(true);
 	treeWidget->setRootIsDecorated(true);
 	treeWidget->setUniformRowHeights(true);
-	treeWidget->setSortingEnabled(true);	
+	treeWidget->setSortingEnabled(true);
 	treeWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 	treeWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -147,12 +147,12 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 
 	statusBarTree = new QStatusBar();
+	statusBarTree->setSizeGripEnabled(false);
 	treeLayout->addWidget(statusBarTree);
 
 	//== Path label
 	labelAeroPath = new QLabel();
 	labelAeroPath->setStyleSheet("font-size: 8pt;");
-	//labelAeroPath->setText("0000000000000000000000000000000000000000");
 	labelAeroPath->setFixedWidth(250);
 	statusBarTree->addPermanentWidget(labelAeroPath);
 
@@ -176,22 +176,22 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	statusBarTree->addPermanentWidget(actionReloadCacheDb);
 	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
-	
+
 	//================================================================================================
 	//= Right
 	//================================================================================================
 
 
-    QGroupBox *grpAero = new QGroupBox();
-    splitter->addWidget(grpAero);
-    grpAero->setDisabled(false);
-    grpAero->setTitle(tr("Preview, Radio, Fuel"));
+	QGroupBox *grpAero = new QGroupBox();
+	splitter->addWidget(grpAero);
+	grpAero->setDisabled(false);
+	grpAero->setTitle(tr("Preview, Radio, Fuel"));
 
 
-    QVBoxLayout *aeroLayout = new QVBoxLayout();
-    grpAero->setLayout(aeroLayout);
+	QVBoxLayout *aeroLayout = new QVBoxLayout();
+	grpAero->setLayout(aeroLayout);
 
-    //**********************************************8
+	//**********************************************8
 	//** Aero Panel
 	QGroupBox *grpAeroPanel = new QGroupBox();
 	grpAeroPanel->setStyleSheet("background-image: url(:/artwork/background-gray-tabbar); border-top: 0px;");
@@ -210,28 +210,28 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	imgBox->addWidget(aeroImageLabel);
 
 
-    //******************************************************8
+	//******************************************************8
    //** Tab Widgets
-    QTabWidget *aeroTabs = new QTabWidget();
-    aeroLayout->addWidget(aeroTabs, 120);
+	QTabWidget *aeroTabs = new QTabWidget();
+	aeroLayout->addWidget(aeroTabs, 120);
 
-    QWidget *aeroControlWidget = new QWidget();
+	QWidget *aeroControlWidget = new QWidget();
 	QWidget *fuelWidget = new QWidget();
 	aeroTabs->addTab(aeroControlWidget, tr("Radio"));
 	aeroTabs->addTab(fuelWidget, tr("Fuel"));
-	
+
 	//** Fuel Widget
 	QGridLayout *layoutFuelPane = new QGridLayout();
 	fuelWidget->setLayout(layoutFuelPane);
 	int rowFuel = 1;
-	
+
 	// Enable fuel freeze
 	rowFuel++;
 	checkBoxFuelFreeze = new QCheckBox(this);
 	checkBoxFuelFreeze->setText("Enable fuel freeze");
 	layoutFuelPane->addWidget(checkBoxFuelFreeze, 0, 1, 1, Qt::AlignLeft);
 	connect(checkBoxFuelFreeze, SIGNAL(clicked()), this, SLOT(on_enable_fuel_freeze_clicked()));
-	
+
 	//* Tank 1
 	rowFuel++;
 	layoutFuelPane->addWidget(new QLabel(tr("Tank 1")), rowFuel, 0, 1, 1, Qt::AlignRight);
@@ -239,7 +239,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	txtTank1->setValidator(new QDoubleValidator(0, 200, 2, this));
 	layoutFuelPane->addWidget(txtTank1,rowFuel, 1, 1, 1);
 	connect(txtTank1, SIGNAL(textChanged(QString)), this, SLOT(on_fuel_changed()));
-	
+
 	//* Tank 2
 	rowFuel++;
 	layoutFuelPane->addWidget(new QLabel(tr("Tank 2")), rowFuel, 0, 1, 1, Qt::AlignRight);
@@ -247,7 +247,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	txtTank2->setValidator(new QDoubleValidator(0, 200, 2, this));
 	layoutFuelPane->addWidget(txtTank2,rowFuel, 1, 1, 1);
 	connect(txtTank2, SIGNAL(textChanged(QString)), this, SLOT(on_fuel_changed()));
-	
+
 	//* Tank 3
 	rowFuel++;
 	layoutFuelPane->addWidget(new QLabel(tr("Tank 3")), rowFuel, 0, 1, 1, Qt::AlignRight);
@@ -255,10 +255,10 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	txtTank3->setValidator(new QDoubleValidator(0, 200, 2, this));
 	layoutFuelPane->addWidget(txtTank3, rowFuel, 1, 1, 1);
 	connect(txtTank3, SIGNAL(textChanged(QString)), this, SLOT(on_fuel_changed()));
-	
+
 	layoutFuelPane->setRowStretch(rowFuel + 1, 20); // stretch end
-	
-	
+
+
 	//** Aero Control Widget
 	QGridLayout *layoutAeroPane = new QGridLayout();
 	aeroControlWidget->setLayout(layoutAeroPane);
@@ -336,7 +336,7 @@ void AircraftWidget::on_tree_selection_changed(){
 
 	QTreeWidgetItem *item = treeWidget->currentItem();
 	if(!item){
-            outLog("on_tree_selection_changed: no selected item");
+			outLog("on_tree_selection_changed: no selected item");
 		labelAeroPath->setText("");
 		buttonAeroPath->setDisabled(true);
 		return;
@@ -344,8 +344,8 @@ void AircraftWidget::on_tree_selection_changed(){
 
 	//= Check there is item and its a model
 	if(item->text(C_AERO).length() == 0){
-                outLog("on_tree_selection_changed: no C_AERO item");
-                aeroImageLabel->clear();
+				outLog("on_tree_selection_changed: no C_AERO item");
+				aeroImageLabel->clear();
 		emit setx("--aircraft=", false, "");
 		labelAeroPath->setText("");
 		buttonAeroPath->setDisabled(true);
@@ -358,8 +358,8 @@ void AircraftWidget::on_tree_selection_changed(){
 
 	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
-                                                                    item->text(C_DIR),
-                                                                    item->text(C_AERO));
+																	item->text(C_DIR),
+																	item->text(C_AERO));
 
 	if(QFile::exists(thumb_file)){
 		QPixmap aeroImage(thumb_file);
@@ -437,12 +437,12 @@ void AircraftWidget::load_tree(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 
 	QTreeWidgetItem *parentItem = new QTreeWidgetItem();
-	
+
 	int view = 0;
 	if (checkViewNested->isChecked()) {
 		view = 1;
 	}
-	
+
 	treeWidget->setColumnHidden(C_DIR, view == LIST_VIEW);
 	treeWidget->setRootIsDecorated(view == FOLDER_VIEW);
 
@@ -533,7 +533,7 @@ void AircraftWidget::on_fuel_changed()
 	emit setx("--prop:/consumables/fuels/tank[1]/level-gal=", true, txtTank1->text());
 	emit setx("--prop:/consumables/fuels/tank[2]/level-gal=", true, txtTank2->text());
 	emit setx("--prop:/consumables/fuels/tank[3]/level-gal=", true, txtTank3->text());
-	
+
 }
 
 void AircraftWidget::on_set_aircraft()
@@ -595,19 +595,19 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 
 
 	//=== tab fuel
-		
+
 	}else if(option == "use_default_fuel"){
 		checkBoxUseDefaultFuel->setChecked(enabled);
-		
+
 	}else if(option == "--enable-fuel-freeze"){
 		checkBoxFuelFreeze->setChecked(enabled);
-	
+
 	}else if(option == "--prop:/consumables/fuels/tank[1]/level-gal="){
 		txtTank1->setText(value);
-		
+
 	}else if(option == "--prop:/consumables/fuels/tank[2]/level-gal="){
 		txtTank2->setText(value);
-		
+
 	}else if(option == "--prop:/consumables/fuels/tank[3]/level-gal="){
 		txtTank3->setText(value);
 	}
