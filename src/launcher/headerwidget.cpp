@@ -6,6 +6,9 @@
 
 #include "launcher/headerwidget.h"
 
+#include "utilities/utilities.h"
+
+
 HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 	QWidget(parent)
 {
@@ -13,18 +16,33 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 	mainObject = mob;
 
 	//= Init Label
-	QVBoxLayout *mainLayout = new QVBoxLayout();
+	QGridLayout *mainLayout = new QGridLayout();
+	mainLayout->setSpacing(2);
 	setLayout(mainLayout);
-	
+
+	QLabel *iconLabel = new QLabel("");
+	iconLabel->setFixedHeight(40);
+	iconLabel->setFixedWidth(40);
+	iconLabel->setStyleSheet("QLabel { margin: 0px; background-image: url(:artwork/fgx-logo-flyer);  background-repeat: none;}");
+	mainLayout->addWidget(iconLabel, 0, 0, 2, 1);
+
 	headerLabel = new QLabel("");
-	headerLabel->setFixedHeight(40);
-	headerLabel->setFixedWidth(500);
-	headerLabel->setStyleSheet("QLabel { margin: 0px; border: 0px; background-image: url(:artwork/fgx-logo-flyer); color: #666666; background-repeat: none; font-size: 15px; padding-left: 40px; }");
-	mainLayout->addWidget(headerLabel);
+	//headerLabel->setFixedHeight(40);
+	//headerLabel->setFixedWidth(500);
+	headerLabel->setStyleSheet("QLabel { margin: 0px; color: #666666; font-size: 15px;}");
+	mainLayout->addWidget(headerLabel, 0, 1, 1, 1);
+
+	callsignLabel = new QLabel("");
+	//headerLabel->setFixedHeight(40);
+	//headerLabel->setFixedWidth(500);
+	callsignLabel->setStyleSheet("QLabel { margin: 0px; color: #888888; font-size: 10px;}");
+	mainLayout->addWidget(callsignLabel, 1, 1, 1, 1);
+
 
 	//===========================================
 	//= Popup Message
 
+	/*
 	//= Popup Widget/Window
 	popWidget = new QWidget(this);
 	popWidget->hide();
@@ -43,9 +61,9 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 	popWidget->show();
 
 	popWidget->setStyleSheet("QLabel { background-image: url(:artwork/fgx-logo-flyer); background-repeat: none; color: #666666; font-size: 15px; padding-left: 40px; padding-top: 5px; background-color: yellow; }");
-	
+
 	QTimer::singleShot(3000, popWidget, SLOT(hide()) );
-	
+	*/
 
 }
 
@@ -64,8 +82,18 @@ void HeaderWidget::showMessage(QString message, int timeout){
 }
 
 
-void HeaderWidget::setText(QString text)
+void HeaderWidget::setHeader(QString text)
 {
 	headerLabel->setText(text);
+
+}
+void HeaderWidget::setCallsign(QString text)
+{
+	text = text.toUpper();
+	QStringList words;
+	for (int i = 0; i < text.size(); ++i) {
+		words << abc_to_telephony(text.at(i).toLatin1());
+	}
+	callsignLabel->setText(words.join(" "));
 
 }

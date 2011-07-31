@@ -24,11 +24,13 @@ public:
 
 	QWidget *headerWidget;
 	QLabel *headerLabel;
+	QLabel *callsignLabel;
 
 	QWidget *popWidget;
 	QLabel *popLabel;
 
-	void setText(QString text);
+	void setHeader(QString text);
+	void setCallsign(QString text);
 
 
 
@@ -36,10 +38,9 @@ signals:
 
 public slots:
 
-
 	void showMessage(QString message, int timeout);
 	void showMessage(QString message);
-	
+
 };
 
 #endif // XHEADERWIDGET_H

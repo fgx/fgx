@@ -33,12 +33,12 @@
 LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	: QWidget(parent)
 {
-	
-	
+
+
 
 	initializing = true;
-    mainObject = mainOb;
-	
+	mainObject = mainOb;
+
 
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	mainObject->settings->restoreWindow(this);
@@ -53,15 +53,15 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	QVBoxLayout *outerContainer = new QVBoxLayout();
 	outerContainer->setContentsMargins(0, 0, 0, 0);
 	//outerContainer->setSpacing(0);
-	setLayout(outerContainer);	
-	
-	
+	setLayout(outerContainer);
+
+
 	//== Message Label
-	
+
 	headerWidget = new HeaderWidget(mainObject);
 	outerContainer->addWidget(headerWidget,0);
-	
-	
+
+
 	QVBoxLayout *mainLayout = new QVBoxLayout();
 	mainLayout->setContentsMargins(10, 0, 10, 10);
 	outerContainer->addLayout(mainLayout);
@@ -70,7 +70,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//====================================================
 	//** Main TabWidget with Widgets
 	//====================================================
-    tabWidget = new QTabWidget(this);
+	tabWidget = new QTabWidget(this);
 	tabWidget->setObjectName("launcher_tabs");
 	mainLayout->addWidget(tabWidget);
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab_changed(int)));
@@ -90,7 +90,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//** Position Tab
 	airportsWidget = new AirportsWidget(mainObject);
 	tabWidget->addTab(  airportsWidget, tr("Position"));
-	
+
 	//* Time / Weather Widget
 	timeWeatherWidget = new TimeWeatherWidget(mainObject);
 	tabWidget->addTab(timeWeatherWidget, tr("Time and Weather"));
@@ -115,17 +115,17 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//========================================================================================
 	//**Bottom Bar
 	//========================================================================================
-	
+
 	//* Show bottom bar
 	QHBoxLayout *bottomActionLayout = new QHBoxLayout();
 	bottomActionLayout->setAlignment( Qt::AlignTop );
 	mainLayout->addLayout(bottomActionLayout);
-	
+
 	XGroupHBox *toolBox = new XGroupHBox(tr("Settings"));
 	bottomActionLayout->addWidget(toolBox);
-	
+
 	toolBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: yellow }");
-	
+
 	//== Show setup wizard
 	QToolButton *buttonShowWizard = new QToolButton();
 	buttonShowWizard->setText("Set Paths");
@@ -135,7 +135,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	buttonShowWizard->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	toolBox->addWidget(buttonShowWizard);
 	connect(buttonShowWizard, SIGNAL(clicked()), mainObject, SLOT(show_setup_wizard()));
-	
+
 	//= Load Settings
 	QToolButton *buttonLoadSettings = new QToolButton(this);
 	buttonLoadSettings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -167,13 +167,13 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	);
 
 	bottomActionLayout->addStretch(20);
-	
-	
+
+
 	//== Help Box
 	XGroupHBox *helpBox = new XGroupHBox(tr("Help"));
 	helpBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: #ffff00 }");
 	bottomActionLayout->addWidget(helpBox);
-	
+
 	//= Whats this button
 	buttonWhatsThis = new QToolButton();
 	buttonWhatsThis->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -183,7 +183,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	buttonWhatsThis->setStyleSheet("padding: 0px;");
 	helpBox->addWidget(buttonWhatsThis);
 	connect(buttonWhatsThis, SIGNAL(clicked()), this, SLOT(on_whats_this()));
-	
+
 	bottomActionLayout->addStretch(100);
 
 	//=============================================================
@@ -328,12 +328,12 @@ void LauncherWindow::save_settings()
 	QString message("Settings saved.");
 	headerWidget->showMessage(message);
 
-    mainObject->settings->saveWindow(this);
+	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	outLog("FGx: LauncherWindow::save_settings() saved ***");
-	
-	
-	
+
+
+
 }
 
 //================================================================================
@@ -341,13 +341,13 @@ void LauncherWindow::save_settings()
 //================================================================================
 void LauncherWindow::load_settings()
 {
-	
+
 
 	QString message("Settings loaded.");
 	headerWidget->showMessage(message);
-	
+
 	outLog("FGx: Settings loaded in LauncherWIndow::load_settings()");
-	
+
 
 }
 
@@ -419,7 +419,7 @@ bool LauncherWindow::validate(){
 //=======================================================================================================================
 //* Misc Events
 //=======================================================================================================================
-	
+
 //= quit
 void LauncherWindow::on_quit(){
 	save_settings(); // message save needed
@@ -443,7 +443,7 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 	msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 	msgBox.setDefaultButton(QMessageBox::Save);
 	int ret = msgBox.exec();
-	
+
 	switch (ret) {
 		case QMessageBox::Save:
 			mainObject->X->write_ini();
@@ -466,9 +466,9 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 			event->accept();
 			break;
 	}
-	
-	
-	
+
+
+
 }
 
 
@@ -478,6 +478,10 @@ void LauncherWindow::on_tab_changed(int tab_idx){
 		return;
 	}
 
+	/* if(tab_idx == tabWidget->indexOf(airportsWidget)){
+		airportsWidget->treeWidgetAirportInfo->update();
+		airportsWidget->mapWidget->update();
+	} */
 
 	if(tab_idx == tabWidget->indexOf(expertOptionsWidget)){
 		//on_command_preview();
@@ -499,13 +503,18 @@ void LauncherWindow::on_whats_this() {
 void LauncherWindow::on_upx(QString option, bool enabled, QString value)
 {
 	Q_UNUSED(enabled);
-	Q_UNUSED(value);	
-	
+	Q_UNUSED(value);
+
 	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
 		QString header = QString("<font color=#ff0000>%1</font> with Aircraft <b>%2</b> at Airport <b>%3</b>").arg( mainObject->X->getx("--callsign=")
 									).arg( mainObject->X->getx("--aircraft=")
 									).arg( mainObject->X->getx("--airport="));
-		headerWidget->setText( header );
+		headerWidget->setHeader( header );
+
+		if(option == "--callsign=" ){
+			headerWidget->setCallsign( value );
+		}
+
 	}
 }
 

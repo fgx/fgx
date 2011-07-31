@@ -41,5 +41,18 @@ extern QString util_getDateTimestg(void); // "yyyy/MM/dd HH:mm:ss"
 extern QString util_getTimestg(void);     // "HH:mm:ss"
 
 
+
+//===================================================================
+//= ICAO Radio
+extern char * abc_to_morse(char ch);
+extern char * abc_to_telephony(char ch);
+extern char * abc_to_phonetic(char ch);
+extern char telephony_to_abc(char * pch);
+extern char *telephony_to_morse(char * pch);
+extern char *telephony_to_phonetic(char * pch);
+
+
+
+
 #endif // FGX_UTILITIES_H
 // eof - utilities.h
