@@ -406,14 +406,15 @@ void AirportsWidget::initialize(){
 //== Load Airports Tree
 //============================================================================
 void AirportsWidget::load_airports_tree(){
-
-	//* Clear existing tree and inhibit updates till end
+	qDebug() << "------------\nLoad Tree";
+	//= Clear existing tree and inhibit updates till end
 	model->removeRows(0, model->rowCount());
 	treeViewAirports->setUpdatesEnabled(false);
 
-	//* Airports Cache File
+	//= Airports Cache File
 	QFile dataFile(mainObject->data_file(("airports.txt")));
 	if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+			treeViewAirports->setUpdatesEnabled(true);
 		   return;
 	}
 	QTextStream in(&dataFile);
@@ -444,11 +445,14 @@ void AirportsWidget::load_airports_tree(){
 	//= Restore previous airport from settings.. if found
 	QList<QStandardItem *> items = model->findItems( mainObject->X->getx("--airport=", "KSFO"), Qt::MatchExactly, CA_CODE);
 	if(items.count() > 0){
+		qDebug() << "Restre selected node"  ;
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
 		QModelIndex proxIdx = proxyModel->mapFromSource(srcIdx);
 		treeViewAirports->selectionModel()->select(proxIdx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
 		treeViewAirports->scrollTo(proxIdx, QAbstractItemView::PositionAtCenter);
-		load_info_tree( model->item(srcIdx.row(), CA_DIR)->text(), model->item(srcIdx.row(), CA_CODE)->text() );
+		treeViewAirports->selectionModel()->setCurrentIndex(proxIdx, QItemSelectionModel::Rows);
+
+		//load_info_tree( model->item(srcIdx.row(), CA_DIR)->text(), model->item(srcIdx.row(), CA_CODE)->text() );
 		labelAirportsFolder->setText( model->item(srcIdx.row(), CA_DIR)->text());
 		buttonOpenAirportsFolder->setToolTip(labelAirportsFolder->text());
 	}
@@ -473,26 +477,33 @@ void AirportsWidget::on_update_airports_filter(){
 void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx){
 	Q_UNUSED(previousIdx);
 
+	qDebug() << "tree selected" << currentIdx.row() << previousIdx.row();
 	txtAirportsFilter->setFocus();
 
-	//= Clear the Runways tree
+	//= Clear the Info tree
 	treeWidgetAirportInfo->model()->removeRows(0, treeWidgetAirportInfo->model()->rowCount());
+	mapWidget->clear_map();
 
 	//= No selection -eg a filter removing a selected node
 	if(!currentIdx.isValid()){
-		emit setx("--airport=", false, "");
-		emit setx("--runway=", false, "");
-		emit setx("--parking-id=", false,"");
+		emit set_ena("--airport=", false);
+		emit set_ena("--runway=", false);
+		emit set_ena("--parking-id=", false);
 		return;
 	}
+
+	//== We have an Airport..
 	//= Get the airport code forn source model
 	QModelIndex srcIndex = proxyModel->mapToSource(currentIdx);
 	QString airport_code = model->item(srcIndex.row(), CA_CODE)->text();
 	QString airport_dir = model->item(srcIndex.row(), CA_DIR)->text();
+
 	emit setx("--airport=", true, airport_code);
-	emit setx("--runway=", false, "");
-	emit setx("--parking-id=", false,"");
+	emit set_ena("--runway=", false);
+	emit set_ena("--parking-id=", false );
+
 	load_info_tree(airport_dir, airport_code);
+	mapWidget->zoom_to_airport(airport_code);
 
 }
 
@@ -501,22 +512,23 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 //==============================================================
 void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
+	qDebug() << "load info tree" << airport_code;
 	QString count_label;
-	mapWidget->setUpdatesEnabled(false);
+	//mapWidget->setUpdatesEnabled(false);
 
 	//== Clear the existing airport
 	//mapWidget->clear_airport(airport_code);
-	mapWidget->clear_map();
-	treeWidgetAirportInfo->setUpdatesEnabled(false);
+	//mapWidget->clear_map();
+	//treeWidgetAirportInfo->setUpdatesEnabled(false);
 
 
-	// Load Tower
+	//=== Load Tower
 	metarWidget->load_metar(airport_code);
 	load_tower_node(airport_dir, airport_code);
 	labelAirportsFolder->setText( airport_dir );
 	buttonOpenAirportsFolder->setToolTip(airport_dir);
 
-	//= Load Runways
+	//=== Load Runways
 	int runways_count = load_runways_node(airport_dir, airport_code);
 	if(runways_count == 0){
 		count_label.append(tr("No runway"));
@@ -528,7 +540,7 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 	count_label.append(" / ");
 
-	//= Load Stands
+	//==== Load Stands
 	int stands_count =  load_parking_node(airport_dir, airport_code);
 	if(stands_count == 0){
 		count_label.append(tr("No stands"));
@@ -540,7 +552,9 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 	statusBarAirportInfo->showMessage(count_label);
 
-	//= Restore Runway node from settings
+
+	qDebug() << "pre restore";
+	//==== Restore Runway node from settings
 	XOpt optRunway = mainObject->X->get_opt("--runway=");
 	if(optRunway.enabled){
 		QList<QTreeWidgetItem *> items = treeWidgetAirportInfo->findItems(
@@ -550,8 +564,10 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 		if(items.size() > 0){
 			treeWidgetAirportInfo->setCurrentItem(items[0]);
 			treeWidgetAirportInfo->scrollToItem(items[0], QAbstractItemView::EnsureVisible);
+			qDebug() << "set Runway";
+			return;
 		}
-		return; //= dontbother with stand below as we found runway
+		//return; //= dontbother with stand below as we found runway
 	}
 	//= Restore Stand node from settings
 	XOpt optStand = mainObject->X->get_opt("--parking-id=");
@@ -566,10 +582,9 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 		}
 	}
 
-	mapWidget->zoom_to_airport(airport_code);
 
-	mapWidget->setUpdatesEnabled(true);
-	treeWidgetAirportInfo->setUpdatesEnabled(true);
+
+	//treeWidgetAirportInfo->setUpdatesEnabled(true);
 
 }
 
@@ -676,7 +691,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 								  tItem0->text(CI_LAT), tItem0->text(CI_LON),
 								  tItem1->text(CI_LAT), tItem1->text(CI_LON)
 								  );
-
+			qDebug() <<  " > " << tItem0->text(CI_NODE) <<  tItem1->text(CI_NODE);
 
 		}
 	}

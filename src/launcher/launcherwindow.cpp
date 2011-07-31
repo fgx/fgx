@@ -491,38 +491,55 @@ void LauncherWindow::on_tab_changed(int tab_idx){
 	}
 }
 
+
+//============================================
+//= ?? is this used
+/*
 void LauncherWindow::on_action_open_url(QAction *act){
 	QUrl url(act->property("url").toString());
 	QDesktopServices::openUrl(url);
 }
+*/
 
+//============================================
+//=
 void LauncherWindow::on_whats_this() {
 	QWhatsThis::enterWhatsThisMode();
 }
 
-void LauncherWindow::on_upx(QString option, bool enabled, QString value)
-{
-	Q_UNUSED(enabled);
-	Q_UNUSED(value);
-
-	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
-		QString header = QString("<font color=#ff0000>%1</font> with Aircraft <b>%2</b> at Airport <b>%3</b>").arg( mainObject->X->getx("--callsign=")
-									).arg( mainObject->X->getx("--aircraft=")
-									).arg( mainObject->X->getx("--airport="));
-		headerWidget->setHeader( header );
-
-		if(option == "--callsign=" ){
-			headerWidget->setCallsign( value );
-		}
-
-	}
-}
 
 
+
+//============================================
+//= Set Widgets on  Debug Mode
 void LauncherWindow::on_debug_mode()
 {
 	exeFgfs->setVisible(mainObject->debug_mode == true);
 	exeFgCom->setVisible(mainObject->debug_mode == true);
 	exeTerraSync->setVisible(mainObject->debug_mode == true);
 	exeAll->setVisible(mainObject->debug_mode == false);
+}
+
+
+
+//============================================
+//= Update Settings
+void LauncherWindow::on_upx(QString option, bool enabled, QString value)
+{
+	Q_UNUSED(enabled);
+	Q_UNUSED(value);
+
+	if(option == "--callsign=" || option == "--airport=" || option == "--aircraft="){
+		QString header = QString("<font color=#ff0000>%1</font> with Aircraft <b>%2</b> at <b>%3</b>"
+									).arg( mainObject->X->getx("--callsign=")
+									).arg( mainObject->X->getx("--aircraft=")
+									).arg( mainObject->X->getx("--airport="));
+		headerWidget->setHeader( header );
+
+
+	}
+
+	if(option == "--callsign=" ){
+		headerWidget->setCallsign( value );
+	}
 }

@@ -44,25 +44,25 @@ class HeaderWidget;
 
 class LauncherWindow : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
 
-    LauncherWindow(MainObject *mainOb, QWidget *parent = 0);
-	
-    ~LauncherWindow();
+	LauncherWindow(MainObject *mainOb, QWidget *parent = 0);
 
-    MainObject *mainObject;
+	~LauncherWindow();
+
+	MainObject *mainObject;
 	bool initializing;
 
 	HeaderWidget *headerWidget;
-	
+
 	XGroupHBox *toolBox;
-	
+
 	QToolButton *buttonWhatsThis;
 
 	QActionGroup *actionGroupStyle;
-    QTabWidget *tabWidget;
+	QTabWidget *tabWidget;
 
 	CoreSettingsWidget *coreSettingsWidget;
 	TimeWeatherWidget *timeWeatherWidget;
@@ -82,7 +82,7 @@ public:
 	StatusBar *statusBar;
 	MessageBox *messageBox;
 
-    void closeEvent(QCloseEvent *event);
+	void closeEvent(QCloseEvent *event);
 
 signals:
 	void setx(QString option, bool enabled, QString value);
@@ -100,7 +100,7 @@ public slots:
 	//* Actions
 	void on_quit();
 	//void on_action_style(QAction *act);
-	void on_action_open_url(QAction *act);
+	//void on_action_open_url(QAction *act);
 	void on_whats_this();
 
 	//* Functions

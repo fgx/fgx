@@ -43,7 +43,7 @@ public:
 		CA_CODE = 0,
 		CA_NAME = 1,
 		CA_DIR = 2
-    };
+	};
 
 	enum AIRPORT_INFO_TREE_COLS{
 		CI_NODE = 0,
@@ -78,7 +78,7 @@ public:
 	XGroupVBox *groupBoxUseCoordinates;
 
 	QButtonGroup *buttonGroupFilter;
-    QLineEdit *txtAirportsFilter;
+	QLineEdit *txtAirportsFilter;
 
 	QStandardItemModel *model;
 	QSortFilterProxyModel *proxyModel;
@@ -119,8 +119,9 @@ public:
 
 
 signals:
-	
+
 	void setx(QString option, bool enabled, QString value);
+	void set_ena(QString option, bool enabled);
 
 public slots:
 
@@ -140,9 +141,9 @@ public slots:
 	//void on_tab_changed();
 
 	void on_coordinates_changed();
-	
+
 	void on_upx( QString option, bool enabled, QString value);
-	
+
 };
 
 #endif // AIRPORTSWIDGET_H
