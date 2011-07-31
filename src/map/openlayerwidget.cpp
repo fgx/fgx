@@ -506,6 +506,7 @@ void OpenLayerWidget::on_coords_changed(){
 		return;
 	}
 	qDebug() << "on coords";
+	return;
 	emit setv("--lat=", txtLat->text());
 	emit setv("--lon=", txtLon->text());
 	emit setv("--heading=", QString::number(spinHeading->value()) );

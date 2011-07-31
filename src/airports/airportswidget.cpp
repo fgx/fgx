@@ -509,6 +509,7 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 
 	//= No selection -eg a filter removing a selected node
 	if(!currentIdx.isValid()){
+		qDebug() << "no airport";
 		emit set_ena("--airport=", false);
 		emit set_ena("--runway=", false);
 		emit set_ena("--parking-id=", false);
@@ -522,8 +523,8 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 	QString airport_dir = model->item(srcIndex.row(), CA_DIR)->text();
 
 	emit setx("--airport=", true, airport_code);
-	emit set_ena("--runway=", false);
-	emit set_ena("--parking-id=", false );
+	//emit set_ena("--runway=", false);
+	//emit set_ena("--parking-id=", false );
 
 	load_info_tree(airport_dir, airport_code);
 	mapWidget->zoom_to_airport(airport_code);
@@ -592,6 +593,7 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 		}
 		//return; //= dontbother with stand below as we found runway
 	}
+
 	//= Restore Stand node from settings
 	XOpt optStand = mainObject->X->get_opt("--parking-id=");
 	if(optStand.enabled){
@@ -1051,7 +1053,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 	if(treeAptInfo->selectionModel()->hasSelection() == false){
 		emit set_ena("--runway=", false);
 		emit set_ena("--parking-id=", false);
-		qDebug() << "no selection";
+		qDebug() << "no Airport selection";
 		return;
 	}
 
@@ -1061,6 +1063,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 	if(item->text(CI_TYPE) == "runway" || item->text(CI_TYPE) == "stand"){
 
 		if(item->text(CI_TYPE) == "runway"){
+			qDebug() << "runway";
 			emit setx("--runway=", true, item->text(CI_NODE));
 			emit set_ena("--parking-id=", false);
 			emit setx("--lat=", false, item->text(CI_LAT));
