@@ -527,7 +527,7 @@ void LauncherWindow::on_debug_mode()
 void LauncherWindow::on_upx(QString option, bool enabled, QString value)
 {
 	Q_UNUSED(enabled);
-	//Q_UNUSED(value);
+	Q_UNUSED(value);
 
 	if(option == "--callsign=" ){
 		headerWidget->setCallsign( value );

@@ -10,6 +10,7 @@ QT += network \
 	xmlpatterns \
 	webkit
 
+
 # Input
 HEADERS += xobjects/xsettings.h \
 	settings/settingsdialog.h \
