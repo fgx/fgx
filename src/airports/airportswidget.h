@@ -125,7 +125,7 @@ signals:
 
 public slots:
 
-	void on_map_double_clicked(QVariant lat, QVariant lon);
+	void on_map_double_clicked(QString lat, QString lon, QString heading);
 
 	void initialize();
 

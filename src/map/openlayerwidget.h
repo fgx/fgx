@@ -72,7 +72,7 @@ signals:
 
 	void setx(QString option, bool enabled, QString value);
 	void setv(QString option, QString value);
-	void map_coords_changed(QVariant lat, QVariant lon);
+	void map_double_clicked(QString lat, QString lon, QString heading);
 
 public slots:
 

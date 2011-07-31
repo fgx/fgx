@@ -372,7 +372,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	mapWidget->setMinimumWidth(400);
 	mainLayout->addWidget(mapWidget);
 	mapWidget->load_map("airport");
-	connect(mapWidget, SIGNAL(map_coords_changed(QVariant,QVariant)), this, SLOT(on_map_double_clicked(QVariant, QVariant)));
+	connect(mapWidget, SIGNAL(map_double_clicked(QString,QString, QString)), this, SLOT(on_map_double_clicked(QString, QString, QString)));
 
 
 	//============================================================================
@@ -387,22 +387,23 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 //================================================================
 //== Map Double Clicked
-void AirportsWidget::on_map_double_clicked(QVariant lat, QVariant lon)
+void AirportsWidget::on_map_double_clicked(QString lat, QString lon, QString heading)
 {
-	qDebug() << "MAP DOUBLE";
+	// disable runway/parking - clear tree
 	emit set_ena("--runway=", false);
 	emit set_ena("--parking-id=", false);
 	treeAptInfo->selectionModel()->clear();
-	emit set_ena("--lat=", true);
-	emit set_ena("--lon=", true);
-	emit set_ena("--heading=", true);
+
+	//- Set position
+	emit setx("--lat=", true, lat);
+	emit setx("--lon=", true, lon);
+	emit setx("--heading=", true, heading);
 	mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
-							 mainObject->X->getx("--lat="),
-							 mainObject->X->getx("--lon="),
-							 mainObject->X->getx("--heading="),
+							 lat,
+							 lon,
+							 heading,
 							 "0"
 							 );
-	//emit setx()
 }
 
 
@@ -429,7 +430,7 @@ void AirportsWidget::initialize(){
 //== Load Airports Tree
 //============================================================================
 void AirportsWidget::load_airports_tree(){
-	qDebug() << "------------\nLoad Tree";
+
 	//= Clear existing tree and inhibit updates till end
 	model->removeRows(0, model->rowCount());
 	treeAirports->setUpdatesEnabled(false);
@@ -468,7 +469,7 @@ void AirportsWidget::load_airports_tree(){
 	//= Restore previous airport from settings.. if found
 	QList<QStandardItem *> items = model->findItems( mainObject->X->getx("--airport=", "KSFO"), Qt::MatchExactly, CA_CODE);
 	if(items.count() > 0){
-		qDebug() << "Restre selected node"  ;
+		// restore selected node
 		QModelIndex srcIdx = model->indexFromItem(items[0]);
 		QModelIndex proxIdx = proxyModel->mapFromSource(srcIdx);
 		treeAirports->selectionModel()->select(proxIdx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
@@ -484,7 +485,7 @@ void AirportsWidget::load_airports_tree(){
 
 
 //==============================================================
-//*** Update Filters
+//== Update Filters
 void AirportsWidget::on_update_airports_filter(){
 
 	mainObject->settings->setValue("airports_button_filter", buttonGroupFilter->checkedId());
@@ -496,11 +497,10 @@ void AirportsWidget::on_update_airports_filter(){
 
 
 //==============================================================
-//*** Airport Clicked
+//== Airport Clicked
 void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx){
 	Q_UNUSED(previousIdx);
 
-	qDebug() << "tree selected" << currentIdx.row() << previousIdx.row();
 	txtAirportsFilter->setFocus();
 
 	//= Clear the Info tree
@@ -509,7 +509,6 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 
 	//= No selection -eg a filter removing a selected node
 	if(!currentIdx.isValid()){
-		qDebug() << "no airport";
 		emit set_ena("--airport=", false);
 		emit set_ena("--runway=", false);
 		emit set_ena("--parking-id=", false);
@@ -523,8 +522,7 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 	QString airport_dir = model->item(srcIndex.row(), CA_DIR)->text();
 
 	emit setx("--airport=", true, airport_code);
-	//emit set_ena("--runway=", false);
-	//emit set_ena("--parking-id=", false );
+
 
 	load_info_tree(airport_dir, airport_code);
 	mapWidget->zoom_to_airport(airport_code);
@@ -536,7 +534,6 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 //==============================================================
 void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
-	qDebug() << "load info tree" << airport_code;
 	QString count_label;
 	//mapWidget->setUpdatesEnabled(false);
 
@@ -577,7 +574,7 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 	statusBarAirportInfo->showMessage(count_label);
 
 
-	qDebug() << "pre restore";
+
 	//==== Restore Runway node from settings
 	XOpt optRunway = mainObject->X->get_opt("--runway=");
 	if(optRunway.enabled){
@@ -588,7 +585,6 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 		if(items.size() > 0){
 			treeAptInfo->setCurrentItem(items[0]);
 			treeAptInfo->scrollToItem(items[0], QAbstractItemView::EnsureVisible);
-			qDebug() << "set Runway";
 			return;
 		}
 		//return; //= dontbother with stand below as we found runway
@@ -604,14 +600,23 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 		if(items.size() > 0){
 			treeAptInfo->setCurrentItem(items[0]);
 			treeAptInfo->scrollToItem(items[0], QAbstractItemView::EnsureVisible);
-			qDebug() << "set Stand";
 			return;
 		}
 	}
 
 
+	//= Were using --lat's enabled flag to scheckif positin is enabled terrible hack
+	XOpt latopt = mainObject->X->get_opt("--lat=");
+	if(latopt.enabled){
+		mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
+								 mainObject->X->getx("--lat="),
+								 mainObject->X->getx("--lon="),
+								 mainObject->X->getx("--heading="),
+								 "0"
+								 );
+	}
 
-	//treeAptInfo->setUpdatesEnabled(true);
+
 
 }
 
@@ -718,7 +723,6 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 								  tItem0->text(CI_LAT), tItem0->text(CI_LON),
 								  tItem1->text(CI_LAT), tItem1->text(CI_LON)
 								  );
-			//qDebug() <<  " > " << tItem0->text(CI_NODE) <<  tItem1->text(CI_NODE);
 
 		}
 	}
@@ -770,7 +774,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 	//* Files in terrasync are named "groundnet.xml"; in scenery their "parking.xml" -- Why asks pete??
 	QString file_path(airport_dir.append("/").append(airport_code));
 	file_path.append( mainObject->X->terrasync_enabled() ? ".groundnet.xml" : ".parking.xml");
-	//qDebug() << file_path << QFile::exists(file_path);
+
 	//* Check parking file exists
 	if(QFile::exists(file_path)){
 
@@ -778,7 +782,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 		QFile ppfile(file_path);
 		ppfile.open(QIODevice::ReadOnly);
 		QString xmlString = ppfile.readAll();
-		//qDebug() << xmlString;
+
 		//* Create domDocument - important - don't pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
 		QDomDocument dom;
 		dom.setContent(xmlString); //* AFTER dom has been created, then set the content from a string from the file
@@ -936,7 +940,7 @@ void AirportsWidget::on_reload_cache(){
 //====================================================================
 
 QString AirportsWidget::current_airport(){
-	//qDebug() << "curr_apt";
+
 	if(treeAirports->selectionModel()->selectedIndexes().size() == 0){
 		return "";
 	}
@@ -1053,7 +1057,6 @@ void AirportsWidget::on_airport_info_selection_changed()
 	if(treeAptInfo->selectionModel()->hasSelection() == false){
 		emit set_ena("--runway=", false);
 		emit set_ena("--parking-id=", false);
-		qDebug() << "no Airport selection";
 		return;
 	}
 
@@ -1063,7 +1066,6 @@ void AirportsWidget::on_airport_info_selection_changed()
 	if(item->text(CI_TYPE) == "runway" || item->text(CI_TYPE) == "stand"){
 
 		if(item->text(CI_TYPE) == "runway"){
-			qDebug() << "runway";
 			emit setx("--runway=", true, item->text(CI_NODE));
 			emit set_ena("--parking-id=", false);
 			emit setx("--lat=", false, item->text(CI_LAT));
@@ -1071,7 +1073,6 @@ void AirportsWidget::on_airport_info_selection_changed()
 			emit setx("--heading=", false, item->text(CI_HEADING));
 
 		}else{ // its a stand
-			qDebug() << "stand";
 			emit set_ena("--runway=", false);
 			emit setx("--parking-id=", true, item->text(CI_NODE));
 			emit setx("--lat=", false, item->text(CI_LAT));
@@ -1083,11 +1084,6 @@ void AirportsWidget::on_airport_info_selection_changed()
 								 item->text(CI_HEADING),
 								 "0");
 	}
-	//return;
-	//if(treeAptInfo->indexOfTopLevelItem(item) != -1){
-	//	emit setx("--runway=", false, "");
-	//	emit setx("--parking-id=", false,"");
-	//}
 
 }
 

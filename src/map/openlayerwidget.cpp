@@ -50,12 +50,12 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	toolbarAirports->addWidget(new QLabel(tr("Lat:")));
 	txtLat = new QLineEdit();
 	toolbarAirports->addWidget(txtLat);
-	connect(txtLat, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
+	connect(txtLat, SIGNAL(textChanged(QString)), this, SLOT(on_lat_changed(QString)));
 
 	toolbarAirports->addWidget(new QLabel(tr("Lon:")));
 	txtLon = new QLineEdit();
 	toolbarAirports->addWidget(txtLon);
-	connect(txtLon, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
+	connect(txtLon, SIGNAL(textChanged(QString)), this, SLOT(on_lon_changed(QString)));
 
 
 	toolbarAirports->addWidget(new QLabel(tr("Heading:")));
@@ -495,10 +495,11 @@ void OpenLayerWidget::map_debug(QVariant mess){
 
 //= < JS - map_show_coords()
 void OpenLayerWidget::map_set_coords(QVariant lat, QVariant lon){
+
 	qDebug() << "map_show_coords";
 	txtLat->setText(lat.toString());
 	txtLon->setText(lon.toString());
-	emit map_coords_changed(lat, lon);
+	emit map_double_clicked(lat.toString(), lon.toString(), spinHeading->text());
 }
 
 void OpenLayerWidget::on_coords_changed(){
