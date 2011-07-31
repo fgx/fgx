@@ -221,7 +221,41 @@ void XSettingsModel::set_enabled(QString option, bool enabled)
 	//= Get/update the "enabled" item in the same row
 	QStandardItem *eItem = item(items[0]->row(),C_ENABLED);
 	eItem->setText(enabled ? "1" : "0");
+
+	set_row_bg(items[0]->row(), enabled ? QColor(200,255,200) : QColor(240,240,240));
+
+	QStandardItem *vItem = item(items[0]->row(),C_VALUE);
+
+	emit upx(option, enabled, vItem->text());
+	emit updated(get_fgfs_list());
 }
+
+//==================================================
+// == Set An Option's  Value
+void XSettingsModel::set_value(QString option, QString value)
+{
+	//qDebug() << "set " << option << _loading;
+	if(_loading){
+		return;
+	}
+	//= Find item matching the "option"
+	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
+	//qDebug() << "opts" << items;
+
+	//TODO handle error if not found
+
+	//= Get/update the "enabled" item in the same row
+	QStandardItem *vItem = item(items[0]->row(),C_VALUE);
+	vItem->setText(value);
+
+	QStandardItem *eItem = item(items[0]->row(),C_ENABLED);
+
+
+
+	emit upx(option, eItem->text() == "1",  value);
+	emit updated(get_fgfs_list());
+}
+
 
 
 QModelIndex XSettingsModel::get_index(QString option)

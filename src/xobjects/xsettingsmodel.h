@@ -90,6 +90,7 @@ public slots:
 
 	void set_option(QString option, bool enabled, QString value);
 	void set_enabled(QString option, bool enabled);
+	void set_value(QString option, QString value);
 
 	QString ini_file_path();
 	void write_ini();

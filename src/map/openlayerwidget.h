@@ -71,6 +71,8 @@ private:
 signals:
 
 	void setx(QString option, bool enabled, QString value);
+	void setv(QString option, QString value);
+	void map_coords_changed(QVariant lat, QVariant lon);
 
 public slots:
 
@@ -118,7 +120,7 @@ public slots:
 	void map_click(QVariant lat, QVariant lon);
 	void map_right_click(QVariant lat, QVariant lon);
 
-	void map_show_coords(QVariant lat, QVariant lon);
+	void map_set_coords(QVariant lat, QVariant lon);
 	void on_coords_changed();
 
 

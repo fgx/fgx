@@ -278,6 +278,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	//============================================================================
 	//== Main Settings connection
 	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
+	connect(this, SIGNAL(setv(QString,QString)), mainObject->X, SLOT(set_value(QString,QString)) );
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 	connect(mainObject, SIGNAL(on_debug_mode(bool)), this, SLOT(on_debug_mode(bool)));
 }
@@ -493,18 +494,21 @@ void OpenLayerWidget::map_debug(QVariant mess){
 }*/
 
 //= < JS - map_show_coords()
-void OpenLayerWidget::map_show_coords(QVariant lat, QVariant lon){
+void OpenLayerWidget::map_set_coords(QVariant lat, QVariant lon){
+	qDebug() << "map_show_coords";
 	txtLat->setText(lat.toString());
 	txtLon->setText(lon.toString());
+	emit map_coords_changed(lat, lon);
 }
 
 void OpenLayerWidget::on_coords_changed(){
 	if(map_type == "radar"){
 		return;
 	}
-	emit setx("--lat=", true, txtLat->text());
-	emit setx("--lon=", true, txtLon->text());
-	emit setx("--heading=", true, QString::number(spinHeading->value()) );
+	qDebug() << "on coords";
+	emit setv("--lat=", txtLat->text());
+	emit setv("--lon=", txtLon->text());
+	emit setv("--heading=", QString::number(spinHeading->value()) );
 
 
 	return;

@@ -372,16 +372,39 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	mapWidget->setMinimumWidth(400);
 	mainLayout->addWidget(mapWidget);
 	mapWidget->load_map("airport");
+	connect(mapWidget, SIGNAL(map_coords_changed(QVariant,QVariant)), this, SLOT(on_map_double_clicked(QVariant, QVariant)));
 
 
 	//============================================================================
 	//== Main Settings connection
 	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
+	connect(this, SIGNAL(set_ena(QString,bool)), mainObject->X, SLOT(set_enabled(QString,bool)) );
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 
 
 }
+
+//================================================================
+//== Map Double Clicked
+void AirportsWidget::on_map_double_clicked(QVariant lat, QVariant lon)
+{
+	qDebug() << "MAP DOUBLE";
+	emit set_ena("--runway=", false);
+	emit set_ena("--parking-id=", false);
+	treeWidgetAirportInfo->selectionModel()->clear();
+	emit set_ena("--lat=", true);
+	emit set_ena("--lon=", true);
+	emit set_ena("--heading=", true);
+	mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
+							 mainObject->X->getx("--lat="),
+							 mainObject->X->getx("--lon="),
+							 mainObject->X->getx("--heading="),
+							 "0"
+							 );
+	//emit setx()
+}
+
 
 //==============================================
 //== Initialize
@@ -1028,6 +1051,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 	if(treeWidgetAirportInfo->selectionModel()->hasSelection() == false){
 		emit set_ena("--runway=", false);
 		emit set_ena("--parking-id=", false);
+		qDebug() << "no selection";
 		return;
 	}
 
@@ -1044,6 +1068,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 			emit setx("--heading=", false, item->text(CI_HEADING));
 
 		}else{ // its a stand
+			qDebug() << "stand";
 			emit set_ena("--runway=", false);
 			emit setx("--parking-id=", true, item->text(CI_NODE));
 			emit setx("--lat=", false, item->text(CI_LAT));
@@ -1055,11 +1080,11 @@ void AirportsWidget::on_airport_info_selection_changed()
 								 item->text(CI_HEADING),
 								 "0");
 	}
-	return;
-	if(treeWidgetAirportInfo->indexOfTopLevelItem(item) != -1){
-		emit setx("--runway=", false, "");
-		emit setx("--parking-id=", false,"");
-	}
+	//return;
+	//if(treeWidgetAirportInfo->indexOfTopLevelItem(item) != -1){
+	//	emit setx("--runway=", false, "");
+	//	emit setx("--parking-id=", false,"");
+	//}
 
 }
 

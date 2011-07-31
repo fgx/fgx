@@ -125,6 +125,8 @@ signals:
 
 public slots:
 
+	void on_map_double_clicked(QVariant lat, QVariant lon);
+
 	void initialize();
 
 	void on_update_airports_filter();
