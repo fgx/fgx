@@ -22,7 +22,7 @@
 
 
 MainObject::MainObject(QObject *parent) :
-    QObject(parent)
+	QObject(parent)
 {
 
 	//TODO Geoff to change this to object even static
@@ -30,7 +30,7 @@ MainObject::MainObject(QObject *parent) :
 	util_setStdLogFile();
 
 	//= Prederences Object
-    settings = new XSettings();
+	settings = new XSettings();
 	debug_mode = settings->value("DEBUG_MODE","0").toBool();
 
 	//= Settings Model
@@ -38,7 +38,7 @@ MainObject::MainObject(QObject *parent) :
 	connect(X, SIGNAL(upx(QString,bool,QString)),
 			this, SLOT(on_upx(QString,bool,QString))
 	);
-	
+
 
 	//================================================================
 	//= Processes - the nub..
@@ -59,22 +59,22 @@ MainObject::MainObject(QObject *parent) :
 	//=====================================================================================
 	//== Tray Icon
 	trayIcon = new QSystemTrayIcon(QIcon(":/icon/favicon"), this);
-    trayIcon->setToolTip("FlightGear Launcher");
-    trayIcon->setVisible(true);
-    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-            this, SLOT(on_tray_icon(QSystemTrayIcon::ActivationReason)));
+	trayIcon->setToolTip("FlightGear Launcher");
+	trayIcon->setVisible(true);
+	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+			this, SLOT(on_tray_icon(QSystemTrayIcon::ActivationReason)));
 
 
 	//== Tray Menu and actions
-    popupMenu = new QMenu();
-    trayIcon->setContextMenu(popupMenu);
+	popupMenu = new QMenu();
+	trayIcon->setContextMenu(popupMenu);
 
 	//== Callsign - label in a widget..
-    actionCallsign = new QWidgetAction(this);
-    lblCallsign = new QLabel();
-    lblCallsign->setText("(your callsign)");
+	actionCallsign = new QWidgetAction(this);
+	lblCallsign = new QLabel();
+	lblCallsign->setText("(your callsign)");
 	lblCallsign->setStyleSheet("color: #000099; padding: 4px; font-weight: bold; background-color: white; border: 1px outset #cccccc;");
-    actionCallsign->setDefaultWidget(lblCallsign);
+	actionCallsign->setDefaultWidget(lblCallsign);
 	popupMenu->addAction(actionCallsign);
 
 	//= Launcher Action
@@ -85,8 +85,8 @@ MainObject::MainObject(QObject *parent) :
 	//= MpMap action
 	/*actionMpMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Map..."));
 	actionMpMap->setIconVisibleInMenu(true);
-    connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));*/
-	
+	connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));*/
+
 	//= Browser MpMap action
 	actionBrowserMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Browser Map ..."));
 	actionBrowserMap->setIconVisibleInMenu(true);
@@ -106,7 +106,7 @@ MainObject::MainObject(QObject *parent) :
 	popupMenu->addAction(actionSetupWizard);
 	connect(actionSetupWizard, SIGNAL(triggered()),
 			this, SLOT(show_setup_wizard())
-    );
+	);
 
 	//== Properties browseer
 	actionPropsBrowser = new QAction(this);
@@ -118,7 +118,7 @@ MainObject::MainObject(QObject *parent) :
 			this, SLOT(on_properties_browser())
 	);
 
-    popupMenu->addSeparator();
+	popupMenu->addSeparator();
 
 
 	//== View Logs
@@ -190,7 +190,7 @@ MainObject::MainObject(QObject *parent) :
 	connect(actionQuit, SIGNAL(triggered()), this, SLOT(quit()));
 
 	//==================
-    trayIcon->show();
+	trayIcon->show();
 
 	connect(this, SIGNAL(show_settings(int)), this, SLOT(on_settings(int)));
 
@@ -205,7 +205,7 @@ MainObject::MainObject(QObject *parent) :
 	//= FGx Map Widget
 	//mpMapXWidget = new MpMapXWidget(this);
 	//mpMapXWidget->hide();
-	
+
 
 	//= Log Viewer is hidden
 	viewLogsWidget = new ViewLogsWidget(this);
@@ -214,7 +214,9 @@ MainObject::MainObject(QObject *parent) :
 
 	//= FGx Debug Widget
 	fgxDebugWidget = new FgxDebugWidget(this);
-	fgxDebugWidget->hide();
+	if(settings->value("fgx_debug_show_on_startup",0).toBool()){
+		fgxDebugWidget->show();
+	}
 
 
 	launcherWindow = new LauncherWindow(this);
@@ -228,7 +230,7 @@ MainObject::MainObject(QObject *parent) :
 
 MainObject::~MainObject()
 {
-    outLog(util_getDateTimestg()+" - Application close");
+	outLog(util_getDateTimestg()+" - Application close");
 }
 
 //============================================================================
@@ -269,7 +271,7 @@ void MainObject::on_settings(int idx){
 //****************************************************************************
 //** Borwser Map
 void MainObject::on_browsermap(){
- 	QUrl mapUrl(X->getx("show_mpmap"));
+	QUrl mapUrl(X->getx("show_mpmap"));
 	if (X->get_ena("show_mpmap")) {
 		mapUrl.addQueryItem("follow", X->getx("--callsign="));
 		QDesktopServices::openUrl(mapUrl);
@@ -298,13 +300,13 @@ void MainObject::on_properties_browser(){
 
 //=================================================
 //== Tray Icon Clicked
-void MainObject::on_tray_icon(QSystemTrayIcon::ActivationReason reason){   
+void MainObject::on_tray_icon(QSystemTrayIcon::ActivationReason reason){
 	//= Right click will show the context Menu above system tray
 	//= Following will popup menu with single click on Top LEFT ??
-    if(reason == QSystemTrayIcon::Trigger){
-        QPoint p = QCursor::pos();
-        trayIcon->contextMenu()->popup(p);
-    }
+	if(reason == QSystemTrayIcon::Trigger){
+		QPoint p = QCursor::pos();
+		trayIcon->contextMenu()->popup(p);
+	}
 }
 
 
@@ -388,7 +390,7 @@ void MainObject::start_fgcom(){
 			arg.append(cmd);
 			args << arg;
 		}
-  
+
 	cmd = settings->value("fgcom_no").toString();
 	cmd = cmd.simplified();
 		if (cmd.size()) {
@@ -406,7 +408,7 @@ void MainObject::start_fgcom(){
 
 void MainObject::quit(){
 	stop_all();
-	
+
 	QApplication::quit();
 }
 

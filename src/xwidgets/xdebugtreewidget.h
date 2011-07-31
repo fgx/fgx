@@ -4,6 +4,7 @@
 
 #include <QWidget>
 #include <QActionGroup>
+#include <QLineEdit>
 #include <QSortFilterProxyModel>
 
 #include "xobjects/mainobject.h"
@@ -20,17 +21,20 @@ public:
 
 	MainObject *mainObject;
 
-	QActionGroup *groupFilter;
+	QButtonGroup *groupFilter;
 
 	QSortFilterProxyModel *proxyModel;
 
 	QTreeView *tree;
 
+	QLineEdit *txtFilter;
+
 signals:
 
 
 public slots:
-	void on_filter(QAction*);
+	void on_filter_button(QAbstractButton *button);
+	void on_filter_text_changed(QString);
 	void on_select_a_node(QString option, bool enabled, QString value);
 };
 
