@@ -43,7 +43,7 @@
 
 
 AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
-    QWidget(parent)
+	QWidget(parent)
 {
 
 	mainObject = mOb;
@@ -53,9 +53,9 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	metarWidget->hide();
 
 
-    //* Main Layout
+	//* Main Layout
 	QHBoxLayout *mainLayout = new QHBoxLayout();
-    setLayout(mainLayout);
+	setLayout(mainLayout);
 	mainLayout->setSpacing(10);
 	int m = 10;
 	mainLayout->setContentsMargins(m,m,m,m);
@@ -84,7 +84,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	layoutAptTopBar->setSpacing(10);
 	groupBoxAirport->addLayout(layoutAptTopBar);
 
-    //** Filter Code
+	//** Filter Code
 	layoutAptTopBar->addWidget(new QLabel(tr("Filter").append(":")));
 
 	//** Filter Buttons - TODO
@@ -95,41 +95,30 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	);
 
 	//** Aiport Code Filter
-    QRadioButton *buttCode = new QRadioButton();
-    buttCode->setText("Code");
+	QRadioButton *buttCode = new QRadioButton();
+	buttCode->setText("Code");
 	buttCode->setProperty("filter_column_idx", QVariant(CA_CODE));
 	buttCode->setChecked(true);
 	layoutAptTopBar->addWidget(buttCode);
 	buttonGroupFilter->addButton(buttCode, 0);
 
 	//** Airport Name Filter
-    QRadioButton *buttName = new QRadioButton();
-    buttName->setText("Name");
+	QRadioButton *buttName = new QRadioButton();
+	buttName->setText("Name");
 	buttName->setProperty("filter_column_idx", QVariant(CA_NAME));
 	layoutAptTopBar->addWidget(buttName);
 	buttonGroupFilter->addButton(buttName, 1);
 
 	//** Find Airport Text
-    txtAirportsFilter = new QLineEdit();
+	txtAirportsFilter = new QLineEdit();
 	layoutAptTopBar->addWidget(txtAirportsFilter);
-    txtAirportsFilter->setFixedWidth(100);
+	txtAirportsFilter->setFixedWidth(100);
 	connect(	txtAirportsFilter, SIGNAL(textChanged(QString)),
 				this, SLOT(on_update_airports_filter())
 	);
 
 	layoutAptTopBar->addStretch(20);
 
-	/*
-	buttonViewMap = new QToolButton(this);
-	layoutAptTopBar->addWidget(buttonViewMap);
-	buttonViewMap->setText("View Map");
-	buttonViewMap->setToolTip("View airport in map");
-	buttonViewMap->setIcon(QIcon(":/icon/mpmap"));
-	buttonViewMap->setAutoRaise(true);
-	buttonViewMap->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	connect(buttonViewMap, SIGNAL(clicked()), this, SLOT(on_view_map()) );
-	//buttonViewMap->setVisible(false); // NOt to confuse anyone
-	*/
 
 	QToolButton *buttonReloadCache = new QToolButton(this);
 	layoutAptTopBar->addWidget(buttonReloadCache);
@@ -141,8 +130,8 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	connect(buttonReloadCache, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
 
-	//*==============================================================================
-	//** Airports/Runways Splitter
+	//==============================================================================
+	//== Airports/Runways Splitter
 	QSplitter *splitter = new QSplitter(this);
 	groupBoxAirport->addWidget(splitter);
 
@@ -164,21 +153,21 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	*/
 
 	//==============================================
-	//** Airport Models
-    model = new QStandardItemModel(this);
+	//== Airport Models
+	model = new QStandardItemModel(this);
 	model->setColumnCount(2);
-    QStringList headerLabelsList;
+	QStringList headerLabelsList;
 	headerLabelsList << tr("Code") << tr("Name") << "Dir";
-    model->setHorizontalHeaderLabels(headerLabelsList);
+	model->setHorizontalHeaderLabels(headerLabelsList);
 
-    proxyModel = new QSortFilterProxyModel(this);
-    proxyModel->setSourceModel(model);
-    proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-    proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+	proxyModel = new QSortFilterProxyModel(this);
+	proxyModel->setSourceModel(model);
+	proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+	proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
 	proxyModel->setFilterKeyColumn( CA_NAME );
 
 	//==============================================
-	//**  TreeView aiports
+	//==  TreeView aiports
 	treeViewAirports = new QTreeView(this);
 	airportsLayout->addWidget(treeViewAirports, 1, 0);
 	treeViewAirports->setModel(proxyModel);
@@ -301,37 +290,37 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	tabWidget->addTab(groupBoxUseCoordinates, QIcon(":/icon/XXX"), "Start At Position");
 
 	int space = 5;
-	
+
 	groupBoxUseCoordinates->xLayout->addSpacing(space);
 
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Latitude (negative is south)")));
 	txtLat = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtLat);
 	connect(txtLat, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
-	
+
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Longtitude (negative is west)")));
 	txtLon = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtLon);
 	connect(txtLon, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
-	
+
 	groupBoxUseCoordinates->xLayout->addSpacing(space);
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Start at VOR")));
 	txtVOR = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtVOR);
 	connect(txtVOR, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
-	
+
 	groupBoxUseCoordinates->xLayout->addSpacing(space);
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Start at NDB")));
 	txtNDB = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtNDB);
 	connect(txtNDB, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
-	
+
 	groupBoxUseCoordinates->xLayout->addSpacing(space);
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Start at FIX")));
 	txtFIX = new QLineEdit();
 	groupBoxUseCoordinates->addWidget(txtFIX);
 	connect(txtFIX, SIGNAL(textChanged(QString)), this, SLOT(on_coordinates_changed()));
-	
+
 	groupBoxUseCoordinates->xLayout->addSpacing(space);
 	groupBoxUseCoordinates->addWidget(new QLabel(tr("Offset distance")));
 	txtOffset = new QLineEdit();
@@ -480,7 +469,7 @@ void AirportsWidget::on_update_airports_filter(){
 
 
 //==============================================================
-//*** Airport Clicked 
+//*** Airport Clicked
 void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelIndex previousIdx){
 	Q_UNUSED(previousIdx);
 
@@ -520,7 +509,7 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 	mapWidget->clear_map();
 	treeWidgetAirportInfo->setUpdatesEnabled(false);
 
-	
+
 	// Load Tower
 	metarWidget->load_metar(airport_code);
 	load_tower_node(airport_dir, airport_code);
@@ -688,12 +677,12 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 								  tItem1->text(CI_LAT), tItem1->text(CI_LON)
 								  );
 
-			
+
 		}
 	}
-	
 
-	
+
+
 
 	return runwaysParent->childCount();
 }
@@ -958,7 +947,7 @@ void AirportsWidget::on_coordinates_changed()
 	//emit setx("--offset-distance=", true, txtOffset->text());
 	//emit setx("--altitude=", true, txtAltitude->text());
 	//emit setx("--heading=", true, txtHeading->text());
-	
+
 	/*mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
 							 mainObject->X->getx("--lat="),
 							 mainObject->X->getx("--lon="),
@@ -974,43 +963,43 @@ void AirportsWidget::on_upx(QString option, bool enabled, QString value)
 	Q_UNUSED(option);
 	Q_UNUSED(enabled);
 	Q_UNUSED(value);
-	
+
 	/*if(option == "--vor="){
 		txtVOR->setText(value);
-		
+
 	}else if(option == "--ndb="){
 		txtNDB->setText(value);
-		
+
 	}else if(option == "--fix="){
 		txtFIX->setText(value);
-		
+
 	}else if(option == "--lat="){
 		txtLat->setText(value);
-		
+
 	}else if(option == "--lon="){
 		txtLon->setText(value);
-		
+
 	}else if(option == "--offset-distance="){
 		txtOffset->setText(value);
-		
+
 	}else if(option == "--altitude="){
 		txtAltitude->setText(value);
-		
+
 	}else if(option == "--heading="){
 		txtHeading->setText(value);
 	}
-	
+
 	if(option == "--lat="){
 	 txtLat->setText(value);
-	 
+
 	 }else if(option == "--lon="){
 	 txtLon->setText(value);
-	 
+
 	 }else if(option == "--heading="){
 	 txtHeading->setText(value);
 	 }*/
-	
-	
+
+
 }
 
 

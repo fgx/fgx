@@ -27,14 +27,10 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 	mainLayout->addWidget(iconLabel, 0, 0, 2, 1);
 
 	headerLabel = new QLabel("");
-	//headerLabel->setFixedHeight(40);
-	//headerLabel->setFixedWidth(500);
 	headerLabel->setStyleSheet("QLabel { margin: 0px; color: #666666; font-size: 15px;}");
 	mainLayout->addWidget(headerLabel, 0, 1, 1, 1);
 
 	callsignLabel = new QLabel("");
-	//headerLabel->setFixedHeight(40);
-	//headerLabel->setFixedWidth(500);
 	callsignLabel->setStyleSheet("QLabel { margin: 0px; color: #888888; font-size: 10px;}");
 	mainLayout->addWidget(callsignLabel, 1, 1, 1, 1);
 

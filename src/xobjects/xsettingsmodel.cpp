@@ -204,6 +204,26 @@ void XSettingsModel::set_option(QString option, bool enabled, QString value)
 	emit updated(get_fgfs_list());
 }
 
+//==================================================
+// == Set An Option Enabled or Disabled
+void XSettingsModel::set_enabled(QString option, bool enabled)
+{
+	//qDebug() << "set " << option << _loading;
+	if(_loading){
+		return;
+	}
+	//= Find item matching the "option"
+	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
+	//qDebug() << "opts" << items;
+
+	//TODO handle error if not found
+
+	//= Get/update the "enabled" item in the same row
+	QStandardItem *eItem = item(items[0]->row(),C_ENABLED);
+	eItem->setText(enabled ? "1" : "0");
+}
+
+
 QModelIndex XSettingsModel::get_index(QString option)
 {
 	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);

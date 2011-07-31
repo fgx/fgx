@@ -8,7 +8,7 @@
 #include "xobjects/xsettingsmodel.h"
 
 FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
-    QWidget(parent)
+	QWidget(parent)
 {
 
 	mainObject = mob;
@@ -28,17 +28,24 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 
 	//== Debug Tree == Coeden in welsh
 	debugTreeWidget = new XDebugTreeWidget(mainObject);
-	tabWidget->addTab(debugTreeWidget, QIcon(":/icon/debug"), "TREEEE View");
+	tabWidget->addTab(debugTreeWidget, QIcon(":/icon/debug"), "Model View");
 
 	//== Command Preview and Output
 	commandPreviewWidget = new XCommandPrevieWidget(mainObject);
-	tabWidget->addTab(commandPreviewWidget, QIcon(":/icon/debug"), "Command View");
+	tabWidget->addTab(commandPreviewWidget, QIcon(":/icon/debug"), "Command Line");
 
 
 	//========================================================
 	//= Bottom TEST Buttons
 	QHBoxLayout *bottBox = new QHBoxLayout();
 	mainLayout->addLayout(bottBox);
+
+	QCheckBox *chkOpenOnStartup = new QCheckBox();
+	bottBox->addWidget(chkOpenOnStartup);
+	chkOpenOnStartup->setText("Open this windows at startup");
+
+
+
 	bottBox->addStretch(10);
 
 	QPushButton *buttLoad = new QPushButton();
@@ -53,16 +60,16 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 
 
 	//========================================================
-	//= Save last tab
+	//= Restore and Connect
 	tabWidget->setCurrentIndex(mainObject->settings->value("fgx_debug_last_tab",0).toInt());
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tab(int)));
 
+	chkOpenOnStartup->setChecked(mainObject->settings->value("fgx_debug_show_on_startup",0).toBool());
+	connect(chkOpenOnStartup, SIGNAL(clicked(bool)), this, SLOT(on_open_at_startup(bool)));
+
 }
 
-void FgxDebugWidget::on_tab(int idx)
-{
-	mainObject->settings->setValue("fgx_debug_last_tab", idx);
-}
+
 
 //= window close
 void FgxDebugWidget::closeEvent(QCloseEvent *event){
@@ -70,5 +77,17 @@ void FgxDebugWidget::closeEvent(QCloseEvent *event){
 	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
 	event->accept();
+}
+
+//= On Tab
+void FgxDebugWidget::on_tab(int idx)
+{
+	mainObject->settings->setValue("fgx_debug_last_tab", idx);
+}
+
+//= On Chk Startup
+void FgxDebugWidget::on_open_at_startup(bool checked)
+{
+	mainObject->settings->setValue("fgx_debug_show_on_startup", checked);
 }
 

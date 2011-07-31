@@ -89,6 +89,7 @@ signals:
 public slots:
 
 	void set_option(QString option, bool enabled, QString value);
+	void set_enabled(QString option, bool enabled);
 
 	QString ini_file_path();
 	void write_ini();
