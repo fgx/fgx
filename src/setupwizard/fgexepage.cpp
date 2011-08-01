@@ -230,7 +230,7 @@ void FgExePage::on_default_toggled(bool state){
 	buttExecutable->setDisabled( def);
 	if(def == false){
 		if(txtFgfs->text().length() == 0){
-			lblCustom->setText("Select path to exacutable");
+            lblCustom->setText("Select path to executable");
 		}
 		txtFgfs->setFocus();
 	}

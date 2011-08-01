@@ -9,8 +9,7 @@
 
 
 #include "xobjects/xsettingsmodel.h"
-
-
+#include "utilities/utilities.h"
 
 
 /*! \class XSettingsModel
@@ -49,7 +48,8 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option("terrasync_enabled", false,"","",0,"","paths");
 	add_option("terrasync_path", false,"","",0,"","paths");
 	add_option("terrasync_exe_path", false, "", "", 0, "", "paths");
-	add_option("fgcom_exe_path", false, "", "", 0, "", "paths");
+    add_option("fgcom_exe_path", false, "", "fgcom", 0, "", "paths");
+    add_option("jsdemo_exe_path", false, "", "js_demo", 0, "", "paths");
 
 
 	add_option("extra_args", false,"","",0,"","expert");
@@ -60,7 +60,18 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 	add_option("first_launcher_close", false, "", "", 0, "Check for launcher window close", "Launcher Window");
 
-	//==
+    // Coordinates
+    add_option( "use_coordinates",false, "", "",3,"","Coordinates");
+    add_option( "--vor=",false, "", "",3,"","Coordinates");
+    add_option( "--ndb=",false, "", "",3,"","Coordinates");
+    add_option( "--fix=",false, "", "",3,"","Coordinates");
+    add_option( "--lat=",false, "", "",3,"","Coordinates");
+    add_option( "--lon=",false, "", "",3,"","Coordinates");
+    add_option( "--offset-distance=",false, "", "",3,"","Coordinates");
+    add_option( "--altitude=",false, "", "",3,"","Coordinates");
+    add_option( "--heading=",false, "", "",3,"","Coordinates");
+
+    //==
 
 
 	add_option( "show_mpmap", false, "", "",10,"Follow in MpMap","Map");
@@ -138,17 +149,6 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--parking-id=", false,"", "", 1 ,"Parking","Airport");
 	add_option("runway_stand", false, "", "",1,"Flag to whether runway or stand", "Airport" );
 
-	// Coordinates
-	add_option( "use_coordinates",false, "", "",3,"","Coordinates");
-	add_option( "--vor=",false, "", "",3,"","Coordinates");
-	add_option( "--ndb=",false, "", "",3,"","Coordinates");
-	add_option( "--fix=",false, "", "",3,"","Coordinates");
-	add_option( "--lat=",false, "", "",3,"","Coordinates");
-	add_option( "--lon=",false, "", "",3,"","Coordinates");
-	add_option( "--offset-distance=",false, "", "",3,"","Coordinates");
-	add_option( "--altitude=",false, "", "",3,"","Coordinates");
-	add_option( "--heading=",false, "", "",3,"","Coordinates");
-
 
 
 }
@@ -187,6 +187,10 @@ void XSettingsModel::set_option(QString option, bool enabled, QString value)
 	//qDebug() << "opts" << items;
 
 	//TODO handle error if not found
+    if (items.size() == 0) {
+        outLog("set_option:setx called with INVALID option ["+option+"]");
+        return;
+    }
 
 	//= Get/update the "enabled" item in the same row
 	QStandardItem *eItem = item(items[0]->row(),C_ENABLED);
@@ -736,21 +740,26 @@ QString XSettingsModel::terrasync_sync_data_path(){
 
 
 
-QString XSettingsModel::fgcom_exe_path(){
-	if (mainObject->runningOs() == MainObject::MAC) {
+QString XSettingsModel::fgcom_exe_path()
+{
+    // see if we have a USER setting
+    QString fgcom = getx("fgcom_exe_path");
+    QString defexe = "fgcom"; // establish a DEFAULT
+    if (fgcom.length() == 0) {
+        if (mainObject->runningOs() == MainObject::MAC) {
 			// Default fgcomx installation with fgcom installer by gral
 			// Will change with fgcom coming in app bundle
-			return QString("/usr/local/bin/fgcom");
+            defexe = "/usr/local/bin/fgcom";
 		}
 		else if(mainObject->runningOs() == MainObject::LINUX){
-			return QString("fgcom");
+            defexe = "fgcom"; // what else could be chosen?
 		}
-
 		else if(mainObject->runningOs() == MainObject::WINDOWS){
-			return QString("fgcom"); // TODO!
+            defexe = "fgcom"; // what else could be chosen?
 		}
-
-	return "fgcom";
+        fgcom = defexe; // since no User setting, use DEFAULT!
+    }
+    return fgcom; // "fgcom";
 }
 
 

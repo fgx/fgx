@@ -33,6 +33,7 @@ public:
 
 
 signals:
+    void setx(QString option, bool enabled, QString value);
 
 public slots:
 	//void on_checkbox_clicked();
@@ -42,8 +43,12 @@ public slots:
 	void on_fgcom_autodetect();
 	void on_joystick_autodetect();
 
+    bool check_fgcom(QString exe);
+    bool check_jsdemo(QString exe);
 	void check_paths();
-	//void check_exe_paths();
+    void on_fgcom();
+    void on_jsdemo();
+    //void check_exe_paths();
 
 	void initializePage();
 	bool validatePage();
