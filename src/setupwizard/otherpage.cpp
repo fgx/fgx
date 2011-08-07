@@ -11,7 +11,7 @@ QWizardPage(parent)
 	mainObject = mob;
 	
 	setTitle("Setup other paths");
-	setSubTitle("Setup paths to other optional binaries");
+	setSubTitle("Setup paths to optional utilities and add-ons");
 	
 	QGridLayout *gridLayout = new QGridLayout();
 	setLayout(gridLayout);
@@ -21,7 +21,7 @@ QWizardPage(parent)
 	checkBoxUseFGCom = new QCheckBox();
 	checkBoxUseFGCom->setText("Use FGCom for voice communication");
 	gridLayout->addWidget(checkBoxUseFGCom, row, 0, 1, 3);
-	connect(checkBoxUseFGCom, SIGNAL(clicked()), this, SLOT(on_checkbox_clicked()));
+	connect(checkBoxUseFGCom, SIGNAL(clicked()), this, SLOT(on_checkbox_fgcom_clicked()));
 	
 	//= FGCom Exe Path
 	row++;
@@ -32,14 +32,14 @@ QWizardPage(parent)
 	txtFGComExePath = new QLineEdit("");
 	gridLayout->addWidget(txtFGComExePath, row, 1, 1, 1);
 	txtFGComExePath->setDisabled(true);
-	connect(txtFGComExePath, SIGNAL(textChanged(QString)), this, SLOT(check_exe_paths()));
+	connect(txtFGComExePath, SIGNAL(textChanged(QString)), this, SLOT(check_fgcom_exe_paths()));
 	
 	//= Select path button
 	buttSelectFGComExePath = new QToolButton();
 	gridLayout->addWidget(buttSelectFGComExePath, row, 2);
 	buttSelectFGComExePath->setIcon(QIcon(":/icon/black"));
 	buttSelectFGComExePath->setDisabled(true);
-	connect(buttSelectFGComExePath, SIGNAL(clicked()), this, SLOT(on_select_exe_path()));
+	connect(buttSelectFGComExePath, SIGNAL(clicked()), this, SLOT(on_select_fgcom_exe_path()));
 	
 	//= help fgcom exe label
 	row++;
@@ -50,9 +50,9 @@ QWizardPage(parent)
 	//= JSDemo enabled
 	row++;
 	checkBoxUseJSDemo = new QCheckBox();
-	checkBoxUseJSDemo->setText("Use JSDemo for joystick detection");
+	checkBoxUseJSDemo->setText("Use JSDemo for FGx joystick detection");
 	gridLayout->addWidget(checkBoxUseJSDemo, row, 0, 1, 3);
-	connect(checkBoxUseJSDemo, SIGNAL(clicked()), this, SLOT(on_checkbox_clicked()));
+	connect(checkBoxUseJSDemo, SIGNAL(clicked()), this, SLOT(on_checkbox_jsdemo_clicked()));
 	
 	//= JSDemo Exe Path
 	row++;
@@ -63,14 +63,14 @@ QWizardPage(parent)
 	txtJSDemoExePath = new QLineEdit("");
 	gridLayout->addWidget(txtJSDemoExePath, row, 1, 1, 1);
 	txtJSDemoExePath->setDisabled(true);
-	connect(txtJSDemoExePath, SIGNAL(textChanged(QString)), this, SLOT(check_exe_paths()));
+	connect(txtJSDemoExePath, SIGNAL(textChanged(QString)), this, SLOT(check_jsdemo_exe_paths()));
 	
 	//= Select path button
 	buttSelectJSDemoExePath = new QToolButton();
 	gridLayout->addWidget(buttSelectJSDemoExePath, row, 2);
 	buttSelectJSDemoExePath->setIcon(QIcon(":/icon/black"));
 	buttSelectJSDemoExePath->setDisabled(true);
-	connect(buttSelectJSDemoExePath, SIGNAL(clicked()), this, SLOT(on_select_exe_path()));
+	connect(buttSelectJSDemoExePath, SIGNAL(clicked()), this, SLOT(on_select_jsdemo_exe_path()));
 	
 	//= help fgcom exe label
 	row++;

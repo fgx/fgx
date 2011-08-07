@@ -182,11 +182,12 @@ bool ConfirmPage::validatePage()
 
 	emit setx("fgroot_custom_path", field("fgroot_use_custom").toBool(), field("fgroot_custom_path").toString());
 
-	//emit setx("terrasync_enabled", field("terrasync_enabled").toBool(), "");
 	emit setx("terrasync_path", field("terrasync_enabled").toBool() == true, field("terrasync_path").toString());
-	
 	emit setx("terrasync_exe_path", field("terrasync_enabled").toBool() == true, field("terrasync_exe_path").toString());
 
+	emit setx("fgcom_exe_path", field("fgcom_enabled").toBool() == true, field("fgcom_exe_path").toString());
+	emit setx("jsdemo_exe_path", field("jsdemo_enabled").toBool() == true, field("jsdemo_exe_path").toString());
+	
 	mainObject->settings->setValue("last_import_icao_checked", radioIcaoOnly->isChecked());
 
 	mainObject->settings->sync();
