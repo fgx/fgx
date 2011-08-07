@@ -29,12 +29,12 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 
 	//= Main header
 	headerLabel = new QLabel("");
-	headerLabel->setStyleSheet("QLabel { margin: 0px; color: #666666; font-size: 15px;}");
+	headerLabel->setStyleSheet("QLabel { margin: 0px; color: #666666; font-size: 16px;}");
 	mainLayout->addWidget(headerLabel, 0, 1, 1, 1);
 
 	//= Callsing Full words
 	callsignLabel = new QLabel("");
-	callsignLabel->setStyleSheet("QLabel { margin: 0px; color: #888888; font-size: 10px;}");
+	callsignLabel->setStyleSheet("QLabel { margin: 0px; color: #888888; font-size: 11px;}");
 	mainLayout->addWidget(callsignLabel, 1, 1, 1, 1);
 
 
@@ -53,7 +53,7 @@ void HeaderWidget::showMessage(QString message){
 
 void HeaderWidget::showMessage(QString message, int timeout){
 
-	messageLabel->setStyleSheet("QLabel { color: #666666; font-size: 15px; padding: 5px 0px 0px 10px;  background-color: yellow; }");
+	messageLabel->setStyleSheet("QLabel { color: #666666; font-size: 16px; padding-left: 5px; background-color: yellow; }");
 	messageLabel->setText(message);
 
 	QTimer::singleShot(timeout, this, SLOT(cancel_message()) );
