@@ -26,14 +26,19 @@ public:
 
 	bool validatePage();
 	void initializePage();
+	void write_settings();
 
 signals:
+	void setx(QString option, bool enabled, QString value);
 
 public slots:
 	void on_default_toggled(bool);
 	void on_fgfs_autodetect();
 	void on_select_fgfs_path();
 	void check_paths();
+	
+
+	
 };
 
 #endif // FGEXEPAGE_H

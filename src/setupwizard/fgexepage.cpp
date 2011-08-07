@@ -86,6 +86,8 @@ FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
 	registerField("fgfs_use_default", radioDefault);
 	registerField("fgfs_use_custom", radioCustom);
 	registerField("fgfs_custom_path", txtFgfs);
+	
+	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
 
 }
 
@@ -201,6 +203,7 @@ bool FgExePage::validatePage()
 		if(QFile::exists(exFile)){
 			QFileInfo fInfo(exFile);
 			if(fInfo.isFile() && fInfo.isExecutable()){
+				write_settings();
 				return true;
 			}else{
 				return false;
@@ -213,6 +216,7 @@ bool FgExePage::validatePage()
 	if(QFile::exists(txtFgfs->text())){
 		// TODO - check its executable
 		//perms = QFile::permissions(txtFgfs->text())
+		write_settings();
 		return true;
 	}else{
 		txtFgfs->setFocus();
@@ -236,4 +240,14 @@ void FgExePage::on_default_toggled(bool state){
 	}
 
 	check_paths();
+}
+
+//================================================================================
+// Write Settings
+//================================================================================
+void FgExePage::write_settings()
+{
+	emit setx("fgfs_custom_path", field("fgfs_use_custom").toBool(), field("fgfs_custom_path").toString());
+	mainObject->X->write_ini();
+	
 }

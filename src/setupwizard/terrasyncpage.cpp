@@ -156,6 +156,7 @@ void TerraSyncPage::check_exe_paths()
 //= InitializePage
 void TerraSyncPage::initializePage()
 {
+	
 	XOpt optData = mainObject->X->get_opt("terrasync_path");
 	XOpt optExe = mainObject->X->get_opt("terrasync_exe_path");
 	checkBoxUseTerrasync->setChecked( optData.enabled );
