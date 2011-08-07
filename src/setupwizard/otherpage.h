@@ -12,46 +12,37 @@
 
 class OtherPage : public QWizardPage
 {
-Q_OBJECT
-public:
-	explicit OtherPage(MainObject *mob, QWidget *parent = 0);
-
-	MainObject *mainObject;
-
-	//QToolButton *buttFgComPath;
-
-	QLabel *lblFgCom;
-	QLineEdit *txtFgCom;
-
-	QLabel *lblJoystickDemo;
-	QLineEdit *txtJoystickDemo;
-
-	//QLabel *terraSyncExePathLabel;
-	//QLineEdit *txtTerraSyncExePath;
-	//QLabel *lblHelp;
-	//QLabel *lblHelpExe;
-
-
-signals:
-    void setx(QString option, bool enabled, QString value);
-
-public slots:
-	//void on_checkbox_clicked();
-	void on_select_fgcom_path();
-	void on_select_joystick_path();
-
-	void on_fgcom_autodetect();
-	void on_joystick_autodetect();
-
-    bool check_fgcom(QString exe);
-    bool check_jsdemo(QString exe);
-	void check_paths();
-    void on_fgcom();
-    void on_jsdemo();
-    //void check_exe_paths();
-
-	void initializePage();
-	bool validatePage();
+	Q_OBJECT
+	public:
+		explicit OtherPage(MainObject *mob, QWidget *parent = 0);
+		
+		MainObject *mainObject;
+		QCheckBox *checkBoxUseFGCom;
+		QCheckBox *checkBoxUseJSDemo;
+		QToolButton *buttSelectFGComExePath;
+		QToolButton *buttSelectJSDemoExePath;
+		QLabel *FGComPathLabel;
+		QLabel *JSDemoPathLabel;
+		QLabel *FGComExePathLabel;
+		QLabel *JSDemoExePathLabel;
+		QLineEdit *txtFGComExePath;
+		QLineEdit *txtJSDemoExePath;
+		QLabel *lblHelpFGComExe;
+		QLabel *lblHelpJSDemoExe;
+		
+		
+	signals:
+		
+		public slots:
+		void on_checkbox_fgcom_clicked();
+		void on_select_fgcom_exe_path();
+		void check_fgcom_exe_paths();
+		void on_checkbox_jsdemo_clicked();
+		void on_select_jsdemo_exe_path();
+		void check_jsdemo_exe_paths();
+		
+		void initializePage();
+		bool validatePage();
 };
-
+	
 #endif // OTHERPAGE_H

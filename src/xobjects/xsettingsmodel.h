@@ -52,6 +52,7 @@ public:
 	bool fgfs_use_default();
 	QString fgfs_default_path();
 	QString terrasync_default_path();
+	QString fgcom_default_path();
 	QString fgfs_path();
 	QString fgfs_custom_path();
 
@@ -74,6 +75,7 @@ public:
 	QString terrasync_sync_data_path();
 
 	QString fgcom_exe_path();
+	QString jsdemo_exe_path();
 
 
 	bool paths_sane();

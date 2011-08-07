@@ -1,249 +1,205 @@
-
-
-
 #include <QGridLayout>
 #include <QFileDialog>
 
 #include "setupwizard/otherpage.h"
 #include "xobjects/xopt.h"
-#include "xwidgets/xgroupboxes.h"
-#include "utilities/utilities.h"
 
 OtherPage::OtherPage(MainObject *mob, QWidget *parent) :
-	QWizardPage(parent)
+QWizardPage(parent)
 {
-
+	
 	mainObject = mob;
-
-	setTitle("Utility Paths");
-    setSubTitle("Setup paths to other executables");
-
-	QVBoxLayout *mainLayout = new QVBoxLayout();
-	setLayout(mainLayout);
-
-	//==================================================
-	// FgCom path
-	XGroupGBox *grpFgcom = new XGroupGBox("FgCom executable");
-	mainLayout->addWidget(grpFgcom);
-
+	
+	setTitle("Setup other paths");
+	setSubTitle("Setup paths to other optional binaries");
+	
+	QGridLayout *gridLayout = new QGridLayout();
+	setLayout(gridLayout);
+	
+	//= FGCom enabled
 	int row = 0;
-	txtFgCom = new QLineEdit("");
-	grpFgcom->addWidget(txtFgCom, row, 0, 1, 1);
-    //connect(txtFgCom, SIGNAL(textChanged(QString)), this, SLOT(check_paths()) );
-    connect(txtFgCom, SIGNAL(textEdited(QString)), this, SLOT(on_fgcom()));
-	//= Dropdown button for path
-	QToolButton *buttFgCom = new QToolButton();
-	grpFgcom->addWidget(buttFgCom, row, 1, 1, 1);
-	buttFgCom->setIcon(QIcon(":/icon/black"));
-	buttFgCom->setPopupMode(QToolButton::InstantPopup);
-
-	QMenu *menuFgCom = new QMenu();
-	buttFgCom->setMenu(menuFgCom);
-
-	QAction *actionFgComSelectPath = new QAction(menuFgCom);
-	menuFgCom->addAction(actionFgComSelectPath);
-	actionFgComSelectPath->setText(tr("Select path ..."));
-	connect(actionFgComSelectPath, SIGNAL(triggered()), this, SLOT(on_select_fgcom_path()));
-
-	// does not work for win/osx
-    // then why in these boxes have code that does NOTHING?
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
-    if(mainObject->runningOs() == XSettings::LINUX){
-		QAction *actionFgComAutoSelect = new QAction(menuFgCom);
-		menuFgCom->addAction(actionFgComAutoSelect);
-		actionFgComAutoSelect->setText(tr("Autodetect"));
-		connect(actionFgComAutoSelect, SIGNAL(triggered()), this, SLOT(on_fgcom_autodetect()));
-		//actionFgfsAutoSelect->setVisible( mainObject->settings->runningOs() != XSettings::WINDOWS );
-	}
-#endif
-
+	checkBoxUseFGCom = new QCheckBox();
+	checkBoxUseFGCom->setText("Use FGCom for voice communication");
+	gridLayout->addWidget(checkBoxUseFGCom, row, 0, 1, 3);
+	connect(checkBoxUseFGCom, SIGNAL(clicked()), this, SLOT(on_checkbox_clicked()));
+	
+	//= FGCom Exe Path
 	row++;
-    lblFgCom = new QLabel("FGCom untested");
-	grpFgcom->addWidget(lblFgCom, row, 0, 1, 2);
-
-	//==================================================
-	// Joystick Demo path
-	XGroupGBox *grpJoystick = new XGroupGBox("Joystick executable");
-	mainLayout->addWidget(grpJoystick);
-
-	row = 0;
-	txtJoystickDemo = new QLineEdit("");
-	grpJoystick->addWidget(txtJoystickDemo, row, 0, 1, 1);
-    //connect(txtJoystickDemo, SIGNAL(txtJoystickDemo(QString)), this, SLOT(check_paths()) );
-
-	//= Dropdown button for path
-	QToolButton *buttJoystick = new QToolButton();
-	grpJoystick->addWidget(buttJoystick, row, 1, 1, 1);
-	buttJoystick->setIcon(QIcon(":/icon/black"));
-	buttJoystick->setPopupMode(QToolButton::InstantPopup);
-
-	QMenu *menuJoystick = new QMenu();
-	buttJoystick->setMenu(menuJoystick);
-
-	QAction *actionJoystickSelectPath = new QAction(menuFgCom);
-	menuJoystick->addAction(actionJoystickSelectPath);
-	actionJoystickSelectPath->setText(tr("Select path ..."));
-	connect(actionJoystickSelectPath, SIGNAL(triggered()), this, SLOT(on_select_joystick_path()));
-
-	// does not work for win/osx
-    // then why in these boxes have code that does NOTHING?
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
-	if(mainObject->runningOs() == XSettings::LINUX){
-		QAction *actionJoystickAutoSelect = new QAction(menuJoystick);
-		menuJoystick->addAction(actionJoystickAutoSelect);
-		actionJoystickAutoSelect->setText(tr("Autodetect"));
-		connect(actionJoystickAutoSelect, SIGNAL(triggered()), this, SLOT(on_joystick_autodetect()));
-		//actionFgfsAutoSelect->setVisible( mainObject->settings->runningOs() != XSettings::WINDOWS );
-	}
-#endif
-
+	FGComExePathLabel = new QLabel("Select FGCom executable path (no change needed by default)");
+	gridLayout->addWidget(FGComExePathLabel, row, 1, 1, 1);
+	
 	row++;
-    lblJoystickDemo = new QLabel("js_demo untested");
-	grpJoystick->addWidget(lblJoystickDemo, row, 0, 1, 2);
-
-
-    //============================================================================
-    //== Main Settings connection
-    connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
-
-    registerField("fgcom_exe_path", txtFgCom);
-    registerField("jsdemo_exe_path", txtJoystickDemo);
-
+	txtFGComExePath = new QLineEdit("");
+	gridLayout->addWidget(txtFGComExePath, row, 1, 1, 1);
+	txtFGComExePath->setDisabled(true);
+	connect(txtFGComExePath, SIGNAL(textChanged(QString)), this, SLOT(check_exe_paths()));
+	
+	//= Select path button
+	buttSelectFGComExePath = new QToolButton();
+	gridLayout->addWidget(buttSelectFGComExePath, row, 2);
+	buttSelectFGComExePath->setIcon(QIcon(":/icon/black"));
+	buttSelectFGComExePath->setDisabled(true);
+	connect(buttSelectFGComExePath, SIGNAL(clicked()), this, SLOT(on_select_exe_path()));
+	
+	//= help fgcom exe label
+	row++;
+	lblHelpFGComExe = new QLabel("");
+	gridLayout->addWidget(lblHelpFGComExe, row, 1, 1, 2);
+	
+	
+	//= JSDemo enabled
+	row++;
+	checkBoxUseJSDemo = new QCheckBox();
+	checkBoxUseJSDemo->setText("Use JSDemo for joystick detection");
+	gridLayout->addWidget(checkBoxUseJSDemo, row, 0, 1, 3);
+	connect(checkBoxUseJSDemo, SIGNAL(clicked()), this, SLOT(on_checkbox_clicked()));
+	
+	//= JSDemo Exe Path
+	row++;
+	JSDemoExePathLabel = new QLabel("Select JSDemo executable path (no change needed by default)");
+	gridLayout->addWidget(JSDemoExePathLabel, row, 1, 1, 1);
+	
+	row++;
+	txtJSDemoExePath = new QLineEdit("");
+	gridLayout->addWidget(txtJSDemoExePath, row, 1, 1, 1);
+	txtJSDemoExePath->setDisabled(true);
+	connect(txtJSDemoExePath, SIGNAL(textChanged(QString)), this, SLOT(check_exe_paths()));
+	
+	//= Select path button
+	buttSelectJSDemoExePath = new QToolButton();
+	gridLayout->addWidget(buttSelectJSDemoExePath, row, 2);
+	buttSelectJSDemoExePath->setIcon(QIcon(":/icon/black"));
+	buttSelectJSDemoExePath->setDisabled(true);
+	connect(buttSelectJSDemoExePath, SIGNAL(clicked()), this, SLOT(on_select_exe_path()));
+	
+	//= help fgcom exe label
+	row++;
+	lblHelpJSDemoExe = new QLabel("");
+	gridLayout->addWidget(lblHelpJSDemoExe, row, 1, 1, 2);
+	
+	
+	
+	registerField("fgcom_enabled", checkBoxUseFGCom);
+	registerField("fgcom_exe_path", txtFGComExePath);
+	
+	registerField("jsdemo_enabled", checkBoxUseJSDemo);
+	registerField("jsdemo_exe_path", txtJSDemoExePath);
+	
 }
 
-bool OtherPage::check_fgcom(QString filePath)
+void OtherPage::on_select_fgcom_exe_path()
 {
-    bool result = false;
-    if(filePath.length() > 0){
-        testExe * pe = new testExe(filePath);
-        pe->finds << "a communication radio based on VoIP";
-        pe->args << "--help";
-        if (pe->runTest()) {
-            txtFgCom->setText(filePath);
-            lblFgCom->setText("ok");
-            lblFgCom->setStyleSheet("color:#009900;");
-            result = true;
-        } else {
-            lblFgCom->setText(pe->stgResult);
-            lblFgCom->setStyleSheet("color:#990000;");
-        }
-        outLog("TEST:fgcom: "+pe->stgResult);
-        delete pe;
-    }
-    return result;
+	QString filePath = QFileDialog::getOpenFileName(this, tr("Select FGCom binary"),
+													txtFGComExePath->text());
+	if(filePath.length() > 0){
+		txtFGComExePath->setText(filePath);
+	}
+	check_fgcom_exe_paths();
 }
 
-void OtherPage::on_select_fgcom_path()
+void OtherPage::on_select_jsdemo_exe_path()
 {
-    QString def = txtFgCom->text();
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Select FGCom binary"),
-                                                         def);
-    if(filePath.length() > 0){
-        if (check_fgcom(filePath))
-            on_fgcom();
-    }
+	QString filePath = QFileDialog::getOpenFileName(this, tr("Select FGCom binary"),
+													txtJSDemoExePath->text());
+	if(filePath.length() > 0){
+		txtJSDemoExePath->setText(filePath);
+	}
+	check_jsdemo_exe_paths();
 }
 
-bool OtherPage::check_jsdemo(QString filePath)
+
+void OtherPage::on_checkbox_fgcom_clicked(){
+	bool ena = checkBoxUseFGCom->isChecked();
+	txtFGComExePath->setEnabled(ena);
+	buttSelectFGComExePath->setEnabled(ena);
+	if(ena){
+		txtFGComExePath->setFocus();
+	}
+	check_fgcom_exe_paths();
+}
+
+void OtherPage::on_checkbox_jsdemo_clicked(){
+	bool ena = checkBoxUseJSDemo->isChecked();
+	txtJSDemoExePath->setEnabled(ena);
+	buttSelectJSDemoExePath->setEnabled(ena);
+	if(ena){
+		txtJSDemoExePath->setFocus();
+	}
+	check_jsdemo_exe_paths();
+}
+
+//===============================================================
+//= check_paths() - does not return value but colours help labels
+
+void OtherPage::check_fgcom_exe_paths()
 {
-    bool result = false;
-    if(filePath.length() > 0){
-        testExe * pe = new testExe(filePath);
-        pe->finds << "Joystick test program";
-        pe->timeOut = 1;
-        if (pe->runTest()) {
-            result = true;
-            txtJoystickDemo->setText(filePath);
-            lblJoystickDemo->setText("ok");
-            lblJoystickDemo->setStyleSheet("color:#009900;");
-            result = true;
-        } else {
-            lblJoystickDemo->setText(pe->stgResult);
-            lblJoystickDemo->setStyleSheet("color:#990000;");
-        }
-        outLog("TEST:js_demo: "+pe->stgResult);
-        delete pe;
-    }
-    return result;
-}
+	QString exePath(txtFGComExePath->text());
+	bool custom_exists = QFile::exists(exePath);
+	lblHelpFGComExe->setText(custom_exists ? "Ok" : "Not found");
+	lblHelpFGComExe->setStyleSheet(custom_exists ?  "color: green;" : "color:#990000;");
+	if(custom_exists){
+		QFileInfo fInfo(exePath);
+		if(fInfo.isDir()){
+			lblHelpFGComExe->setText("Need a file path, not a directory");
+			lblHelpFGComExe->setStyleSheet("color:#990000;");
+		}else{
+			if(!fInfo.isExecutable()){
+				lblHelpFGComExe->setText("Not executable");
+				lblHelpFGComExe->setStyleSheet("color:#990000;");
+			}
+		}
+	}
+}		
 
-
-void OtherPage::on_select_joystick_path()
+void OtherPage::check_jsdemo_exe_paths()
 {
-    QString def = txtJoystickDemo->text();
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Select JS demo binary"),
-                                                         def);
-    if(filePath.length() > 0){
-        if (check_jsdemo(filePath))
-            on_jsdemo();
-    }
-}
-
-void OtherPage::on_fgcom_autodetect(){
-
-}
-
-void OtherPage::on_joystick_autodetect(){
-
-}
-
-void OtherPage::check_paths()
-{
-    QString comdef = txtFgCom->text();
-    check_fgcom(comdef);
-    QString jsdef = txtJoystickDemo->text();
-    check_jsdemo(jsdef);
-}
-
-void OtherPage::on_fgcom()
-{
-    bool enab = false;
-    QString fgcom = txtFgCom->text();
-    fgcom = fgcom.trimmed();
-    if (fgcom.length() > 0) {
-        enab = true;
-    } else {
-        enab = false;
-    }
-    //outLog("Set FGCOM EXE: "+fgcom);
-    emit setx("fgcom_exe_path", enab, fgcom);
-}
-
-void OtherPage::on_jsdemo()
-{
-    bool enable = false;
-    QString jsdemo_exe = txtJoystickDemo->text().trimmed();
-    if (jsdemo_exe.length())
-        enable = true;
-    emit setx("jsdemo_exe_path", enable, jsdemo_exe);
+	QString exePath(txtJSDemoExePath->text());
+	bool custom_exists = QFile::exists(exePath);
+	lblHelpJSDemoExe->setText(custom_exists ? "Ok" : "Not found");
+	lblHelpJSDemoExe->setStyleSheet(custom_exists ?  "color: green;" : "color:#990000;");
+	if(custom_exists){
+		QFileInfo fInfo(exePath);
+		if(fInfo.isDir()){
+			lblHelpJSDemoExe->setText("Need a file path, not a directory");
+			lblHelpJSDemoExe->setStyleSheet("color:#990000;");
+		}else{
+			if(!fInfo.isExecutable()){
+				lblHelpJSDemoExe->setText("Not executable");
+				lblHelpJSDemoExe->setStyleSheet("color:#990000;");
+			}
+		}
+	}
 }
 
 //===================================================
 //= InitializePage
 void OtherPage::initializePage()
 {
-    XOpt optFgCom = mainObject->X->get_opt("fgcom_exe_path");
-    txtFgCom->setText(optFgCom.value);
-    XOpt optJsDemo = mainObject->X->get_opt("jsdemo_exe_path");
-    txtJoystickDemo->setText(optJsDemo.value);
-    check_paths();
+	
+	XOpt optExeFGCom = mainObject->X->get_opt("fgcom_exe_path");
+	XOpt optExeJSDemo = mainObject->X->get_opt("jsdemo_exe_path");
+	checkBoxUseFGCom->setChecked( optExeFGCom.enabled );
+	checkBoxUseJSDemo->setChecked( optExeJSDemo.enabled );
+	txtFGComExePath->setText( mainObject->X->fgcom_exe_path() );
+	txtJSDemoExePath->setText( mainObject->X->jsdemo_exe_path() );
+	on_checkbox_fgcom_clicked();
+	on_checkbox_jsdemo_clicked();
 }
 
 //====================================================
 //= ValidatePage
 bool OtherPage::validatePage()
 {
-	//check_data_paths();
-	//check_exe_paths();
-
-	//if(checkBoxUseTerrasync->isChecked()){
-	//	if(QFile::exists(txtTerraSyncPath->text())){
-	//		// TODO - check its writable
-	//		return true;
-	//	}else{
-	//		txtTerraSyncPath->setFocus();
-	//		return false;
-	//	}
-	//}
+	check_fgcom_exe_paths();
+	
+	if(checkBoxUseFGCom->isChecked()){
+		if(QFile::exists(txtFGComExePath->text())){
+			// TODO - check its writable
+			return true;
+		}else{
+			txtFGComExePath->setFocus();
+			return false;
+		}
+	}
 	return true;
 }

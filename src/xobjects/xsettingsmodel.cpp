@@ -585,6 +585,96 @@ QString XSettingsModel::terrasync_default_path(){
 	}
 }
 
+QString XSettingsModel::fgcom_exe_path(){
+	
+	// PLEASE DO NOT TOUCH THIS PART --- START
+	
+	if(mainObject->runningOs() == MainObject::MAC ){
+		
+		QString fgcomExePath;
+		QString tmp;
+		QDir d;
+		fgcomExePath = "fgcom";
+		
+		int ind, siz;
+		tmp = mainObject->X->fgfs_path();
+		ind = tmp.indexOf(QChar('/'));
+		siz = 0;
+		// march to last '/' in path
+		while (ind >= 0) {
+			tmp = tmp.mid(ind + 1);
+			siz = tmp.size();
+			ind = tmp.indexOf(QChar('/'));
+		}
+		if (siz > 0) {
+			tmp = mainObject->X->fgfs_path();
+			tmp.chop(siz);
+			if (d.exists(tmp)) {
+				fgcomExePath = tmp + fgcomExePath;
+			}
+		}
+		
+		return fgcomExePath;
+		
+		// PLEASE DO NOT TOUCH THIS PART --- END
+		
+		
+	}else if(mainObject->runningOs() == MainObject::LINUX){
+		return QString("fgcom");
+		
+	}else if(mainObject->runningOs() == MainObject::WINDOWS){
+		return QString("C:/Program Files/FlightGear/bin/win32/fgcom.exe");
+		
+	}else{
+		return QString("UNKNOW OS in fgcom_exe_path()");
+	}
+}
+
+QString XSettingsModel::jsdemo_exe_path(){
+	
+	// PLEASE DO NOT TOUCH THIS PART --- START
+	
+	if(mainObject->runningOs() == MainObject::MAC ){
+		
+		QString jsDemoExePath;
+		QString tmp;
+		QDir d;
+		jsDemoExePath = "js_demo";
+		
+		int ind, siz;
+		tmp = mainObject->X->fgfs_path();
+		ind = tmp.indexOf(QChar('/'));
+		siz = 0;
+		// march to last '/' in path
+		while (ind >= 0) {
+			tmp = tmp.mid(ind + 1);
+			siz = tmp.size();
+			ind = tmp.indexOf(QChar('/'));
+		}
+		if (siz > 0) {
+			tmp = mainObject->X->fgfs_path();
+			tmp.chop(siz);
+			if (d.exists(tmp)) {
+				jsDemoExePath = tmp + jsDemoExePath;
+			}
+		}
+		
+		return jsDemoExePath;
+		
+		// PLEASE DO NOT TOUCH THIS PART --- END
+		
+		
+	}else if(mainObject->runningOs() == MainObject::LINUX){
+		return QString("js_demo");
+		
+	}else if(mainObject->runningOs() == MainObject::WINDOWS){
+		return QString("C:/Program Files/FlightGear/bin/win32/js_demo.exe");
+		
+	}else{
+		return QString("UNKNOW OS in jsdemo_default_path()");
+	}
+}
+
 
 
 //===========================================================================
@@ -768,7 +858,7 @@ QString XSettingsModel::terrasync_sync_data_path(){
 
 
 
-QString XSettingsModel::fgcom_exe_path()
+/*QString XSettingsModel::fgcom_exe_path()
 {
     // see if we have a USER setting
     QString fgcom = getx("fgcom_exe_path");
@@ -788,7 +878,7 @@ QString XSettingsModel::fgcom_exe_path()
         fgcom = defexe; // since no User setting, use DEFAULT!
     }
     return fgcom; // "fgcom";
-}
+}*/
 
 
 
