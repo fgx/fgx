@@ -541,10 +541,38 @@ QString XSettingsModel::fgfs_default_path(){
 }
 
 QString XSettingsModel::terrasync_default_path(){
+	
+	// PLEASE DO NOT TOUCH THIS PART --- START
 
 	if(mainObject->runningOs() == MainObject::MAC ){
-		QDir dir(mainObject->X->fgfs_path());
-		return  dir.absolutePath().append("terrasync");
+		
+		QString terraExePath;
+		QString tmp;
+		QDir d;
+		terraExePath = "terrasync";
+		
+		int ind, siz;
+		tmp = mainObject->X->fgfs_path();
+		ind = tmp.indexOf(QChar('/'));
+		siz = 0;
+		// march to last '/' in path
+		while (ind >= 0) {
+			tmp = tmp.mid(ind + 1);
+			siz = tmp.size();
+			ind = tmp.indexOf(QChar('/'));
+		}
+		if (siz > 0) {
+			tmp = mainObject->X->fgfs_path();
+			tmp.chop(siz);
+			if (d.exists(tmp)) {
+				terraExePath = tmp + terraExePath;
+			}
+		}
+	
+		return terraExePath;
+		
+	// PLEASE DO NOT TOUCH THIS PART --- END
+		
 
 	}else if(mainObject->runningOs() == MainObject::LINUX){
 		return QString("terrasync");
