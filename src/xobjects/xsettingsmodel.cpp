@@ -623,7 +623,7 @@ QString XSettingsModel::fgcom_exe_path(){
 		return QString("fgcom");
 		
 	}else if(mainObject->runningOs() == MainObject::WINDOWS){
-		return QString("C:/Program Files/FlightGear/bin/win32/fgcom.exe");
+        return QString("\"C:/Program Files/FlightGear/bin/win32/fgcom.exe\"");
 		
 	}else{
 		return QString("UNKNOW OS in fgcom_exe_path()");
