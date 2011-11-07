@@ -144,6 +144,19 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpFgPaths->addWidget(labelTerraSyncDataPath);
 
 	labelTerraSyncDataPath->setText( mainObject->X->terrasync_sync_data_path() );
+	
+	
+	//----------------------------------------------
+	//= Custom Scenery Directory
+	
+	labelCustomSceneInfo = new QLabel(tr("Custom scenery path:"));
+	grpFgPaths->addWidget(labelCustomSceneInfo, 1);
+	
+	labelCustomScenePath = new QLabel("");
+	labelCustomScenePath->setStyleSheet(style_paths);
+	grpFgPaths->addWidget(labelCustomScenePath);
+	
+	labelCustomScenePath->setText( mainObject->X->custom_scenery_path() );
 
 	//= Connect Mainobject (after paths wizard)
 	//connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
