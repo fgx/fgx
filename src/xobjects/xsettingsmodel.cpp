@@ -37,7 +37,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 
 	//=================================================================================
-	// This list wil be the main issue and debates for a long time probably, said pete
+	// This list will be the main issue and debates for a long time probably, said pete
 	//=================================================================================
 
 
@@ -47,6 +47,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option("fgroot_custom_path", false,"","",0,"","paths");
 	add_option("terrasync_enabled", false,"","",0,"","paths");
 	add_option("terrasync_path", false,"","",0,"","paths");
+	add_option("custom_scenery_path", false,"","",0,"","paths");
 	add_option("terrasync_exe_path", false, "", "", 0, "", "paths");
     add_option("fgcom_exe_path", false, "", "fgcom", 0, "", "paths");
     add_option("jsdemo_exe_path", false, "", "js_demo", 0, "", "paths");
@@ -795,6 +796,13 @@ QString XSettingsModel::airports_path(){
 QString XSettingsModel::scenery_path(){
 
 	return fgroot("/Scenery");
+}
+
+//===========================================================================
+//** Custom scenery
+//===========================================================================
+QString XSettingsModel::custom_scenery_path(){
+	return getx("custom_scenery_path");
 }
 
 //===========================================================================
