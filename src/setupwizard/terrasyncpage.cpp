@@ -109,6 +109,7 @@ TerraSyncPage::TerraSyncPage(MainObject *mob, QWidget *parent) :
 	registerField("terrasync_enabled", checkBoxUseTerrasync);
 	registerField("terrasync_path", txtTerraSyncPath);
 	registerField("terrasync_exe_path", txtTerraSyncExePath);
+	registerField("custom_scenery_enabled", checkBoxUseCustomScenery);
 	registerField("custom_scenery_path", txtCustomScenePath);
 
 }
@@ -126,7 +127,7 @@ void TerraSyncPage::on_select_exe_path()
 void TerraSyncPage::on_select_customscene_data_path()
 {
 	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select TerraSync directory"),
-														txtTerraSyncPath->text(), QFileDialog::ShowDirsOnly);
+														txtCustomScenePath->text(), QFileDialog::ShowDirsOnly);
 	if(dirPath.length() > 0){
 		txtCustomScenePath->setText(dirPath);
 	}
@@ -165,7 +166,7 @@ void TerraSyncPage::on_checkbox_scenery_clicked(){
 	if(ena){
 		txtCustomScenePath->setFocus();
 	}
-	check_data_paths();
+	check_custom_data_paths();
 }
 
 //===============================================================
@@ -229,8 +230,9 @@ void TerraSyncPage::initializePage()
 	checkBoxUseCustomScenery->setChecked( optCust.enabled );
 	txtTerraSyncPath->setText( optData.value );
 	txtTerraSyncExePath->setText( mainObject->X->terrasync_default_path() );
-	txtCustomScenePath->setText( mainObject->X->custom_scenery_path() );
+	txtCustomScenePath->setText( optCust.value );
 	on_checkbox_clicked();
+	on_checkbox_scenery_clicked();
 }
 
 //====================================================
@@ -239,6 +241,7 @@ bool TerraSyncPage::validatePage()
 {
 	check_data_paths();
 	check_exe_paths();
+	check_custom_data_paths();
 
 	if(checkBoxUseTerrasync->isChecked()){
 		if(QFile::exists(txtTerraSyncPath->text())){
@@ -246,6 +249,17 @@ bool TerraSyncPage::validatePage()
 			return true;
 		}else{
 			txtTerraSyncPath->setFocus();
+			return false;
+		}
+	}
+	return true;
+	
+	if(checkBoxUseCustomScenery->isChecked()){
+		if(QFile::exists(txtCustomScenePath->text())){
+			// TODO - check its writable
+			return true;
+		}else{
+			txtCustomScenePath->setFocus();
 			return false;
 		}
 	}

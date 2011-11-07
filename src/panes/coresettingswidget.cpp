@@ -351,5 +351,11 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 	}else if(option == "terrasync_path"){
 
 		labelTerraSyncDataPath->setText(enabled ? value : mainObject->X->terrasync_sync_data_path());
+	
+	
+	//= custom scenery
+	}else if(option == "custom_scenery_path"){
+	
+	labelCustomScenePath->setText(enabled ? value : mainObject->X->custom_scenery_path());
 	}
 }

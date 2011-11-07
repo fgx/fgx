@@ -47,6 +47,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option("fgroot_custom_path", false,"","",0,"","paths");
 	add_option("terrasync_enabled", false,"","",0,"","paths");
 	add_option("terrasync_path", false,"","",0,"","paths");
+	add_option("custom_scenery_enabled", false,"","",0,"","paths");
 	add_option("custom_scenery_path", false,"","",0,"","paths");
 	add_option("terrasync_exe_path", false, "", "", 0, "", "paths");
     add_option("fgcom_exe_path", false, "", "fgcom", 0, "", "paths");

@@ -61,6 +61,14 @@ ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
 	grpTerrasync->addWidget(lblTerraSyncPath);
 	lblTerraSyncExePath = new QLabel();
 	grpTerrasync->addWidget(lblTerraSyncExePath);
+	
+	//= Custom Scenery
+	XGroupVBox *grpCustomScene = new XGroupVBox("Custom Scenery");
+	mainLayout->addWidget(grpCustomScene);
+	lblUsingCustomScene = new QLabel();
+	grpCustomScene->addWidget(lblUsingCustomScene);
+	lblCustomScenePath = new QLabel();
+	grpCustomScene->addWidget(lblCustomScenePath);
 
 
 
@@ -138,6 +146,15 @@ void ConfirmPage::initializePage()
 		lblUsingTerraSync->setText("No Terrasync");
 		lblTerraSyncPath->setText("");
 	}
+	
+	if(field("custom_scenery_enabled").toBool()){
+		lblUsingCustomScene->setText("Using Custom Scenery");
+		lblCustomScenePath->setText(field("custom_scenery_path").toString());
+	}else{
+		lblUsingCustomScene->setText("No custom scenery");
+		lblCustomScenePath->setText("");
+	}
+	
 
 	//= Check is an airport update is required ie fg root has changed
 	bool airports_update = false;
@@ -184,6 +201,8 @@ bool ConfirmPage::validatePage()
 
 	emit setx("terrasync_path", field("terrasync_enabled").toBool() == true, field("terrasync_path").toString());
 	emit setx("terrasync_exe_path", field("terrasync_enabled").toBool() == true, field("terrasync_exe_path").toString());
+	
+	emit setx("custom_scenery_path", field("custom_scenery_enabled").toBool() == true, field("custom_scenery_path").toString());
 
 	emit setx("fgcom_exe_path", field("fgcom_enabled").toBool() == true, field("fgcom_exe_path").toString());
 	emit setx("jsdemo_exe_path", field("jsdemo_enabled").toBool() == true, field("jsdemo_exe_path").toString());
