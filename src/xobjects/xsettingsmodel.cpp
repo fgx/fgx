@@ -454,11 +454,25 @@ QStringList XSettingsModel::get_fgfs_args()
 	//== FgRoot
 	args <<  QString("--fg-root=").append(fgroot());
 
-	//= Terrasync
-	if(terrasync_enabled()){
+	//= Terrasync and custom scenery path
+	if (terrasync_enabled()) {
 		args << QString("--fg-scenery=").append(terrasync_sync_data_path()).append(":").append(scenery_path());
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
-	}
+		}
+	// STIMMT NOCH ÜBERHAUPT NICHT NATÜRLICH, GRAL
+	if (custom_scenery_enabled()) {
+		args << QString("--fg-scenery=").append(custom_scenery_path()).append(":").append(scenery_path());
+		}
+	
+		/*if (custom_scenery_enabled() && terrasync_enabled()) {
+		args << QString("--fg-scenery=").append(custom_scenery_path()).append(":").append(terrasync_sync_data_path()).append(":").append(scenery_path());
+		args << QString("--atlas=socket,out,5,localhost,5505,udp");
+		}
+		else {
+		args << QString("--fg-scenery=").append(scenery_path());
+		}*/
+
+	
 
 	return args;
 }
@@ -773,14 +787,15 @@ QString XSettingsModel::airports_path(){
 	QString rpath;
 	//= Using terrasync
 	if(terrasync_enabled()){
-		if(mainObject->runningOs() == MainObject::MAC){
-			rpath = QDir::homePath();
-			rpath.append("/Documents/TerrasyncScenery");
-		}else{
+		//if(mainObject->runningOs() == MainObject::MAC){   // what the h. says gral to himself
+		//	rpath = QDir::homePath();
+		//	rpath.append("/Documents/TerrasyncScenery");
+		//}else{
 			// Use the terra sync path
-			rpath = terrasync_sync_data_path().append("/Airports");
+		rpath = terrasync_sync_data_path().append("/Airports");
 		}
-	} else{ // Otherwise return the FG_ROOT airports/
+	
+	else{ // Otherwise return the FG_ROOT airports/
 		rpath = fgroot().append("/Scenery/Airports");
 	}
 	//outLog("*** FGx settings: Airports path: " + rpath + " ***");
@@ -804,6 +819,10 @@ QString XSettingsModel::scenery_path(){
 //===========================================================================
 QString XSettingsModel::custom_scenery_path(){
 	return getx("custom_scenery_path");
+}
+
+bool XSettingsModel::custom_scenery_enabled(){
+	return get_ena("custom_scenery_path");
 }
 
 //===========================================================================

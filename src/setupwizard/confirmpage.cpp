@@ -50,7 +50,14 @@ ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
 	grpFgRoot->addWidget(lblFgRootUsingDefault);
 	lblFgRootPath = new QLabel();
 	grpFgRoot->addWidget(lblFgRootPath);
-
+	
+	//= Custom Scenery
+	XGroupVBox *grpCustomScene = new XGroupVBox("Custom Scenery");
+	mainLayout->addWidget(grpCustomScene);
+	lblUsingCustomScene = new QLabel();
+	grpCustomScene->addWidget(lblUsingCustomScene);
+	lblCustomScenePath = new QLabel();
+	grpCustomScene->addWidget(lblCustomScenePath);
 
 	//= Terrasync
 	XGroupVBox *grpTerrasync = new XGroupVBox("TerraSync");
@@ -62,15 +69,6 @@ ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
 	lblTerraSyncExePath = new QLabel();
 	grpTerrasync->addWidget(lblTerraSyncExePath);
 	
-	//= Custom Scenery
-	XGroupVBox *grpCustomScene = new XGroupVBox("Custom Scenery");
-	mainLayout->addWidget(grpCustomScene);
-	lblUsingCustomScene = new QLabel();
-	grpCustomScene->addWidget(lblUsingCustomScene);
-	lblCustomScenePath = new QLabel();
-	grpCustomScene->addWidget(lblCustomScenePath);
-
-
 
 	//= Import Cache Data ============
 	XGroupGBox *grpImports = new XGroupGBox("Reload cached data");
@@ -166,7 +164,12 @@ void ConfirmPage::initializePage()
 			 field("fgroot_custom_path").toString() != mainObject->X->getx("fgroot_custom_path")){
 		// custom path has changed
 		airports_update = true;
+	
+	}else if(field("use_custom_scenery").toBool()){
+		// custom scenery is checked
+		airports_update = true;
 	}
+	
 	checkBoxImportAirports->setText(airports_update ? "Import Airports - recommended" : "Import Airports");
 	checkBoxImportAirports->setChecked(airports_update);
 

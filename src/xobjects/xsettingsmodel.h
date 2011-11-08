@@ -74,6 +74,7 @@ public:
 	QString terrasync_exe_path();
 	QString terrasync_sync_data_path();
 	
+	bool custom_scenery_enabled();
 	QString custom_scenery_path();
 
 	QString fgcom_exe_path();
