@@ -47,6 +47,8 @@
 #ifdef _MSC_VER
 #  include <io.h>
 #  define vsnprintf _vsnprintf
+#else
+#include <unistd.h>
 #endif
 
 #ifndef local
