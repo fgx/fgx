@@ -465,16 +465,14 @@ QStringList XSettingsModel::get_fgfs_args()
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}
 
-	if (custom_scenery_enabled() && !terrasync_enabled()) {
+	else if (!terrasync_enabled() && custom_scenery_enabled())  {
 		args << QString("--fg-scenery=").append(custom_scenery_path()).append(":").append(scenery_path());
-		}
+	}
 	
-	else {
+	else if (!terrasync_enabled() && !custom_scenery_enabled())  {
 		args << QString("--fg-scenery=").append(scenery_path());
 	}
-
 	
-
 	return args;
 }
 
