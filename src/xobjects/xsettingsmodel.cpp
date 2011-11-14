@@ -114,7 +114,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 	//= FGCom Related
 	add_option( "--fgcom=",false, "", "fgcom.flightgear.org.uk:16661",3,"FgCom","FgCom");
-	add_option( "fgcom_generic_socket", false, "", "",10,"FgCom Socket","FgCom");
+	add_option( "fgcom_enabled", false, "", "",10,"FgCom Socket","FgCom");
 
 	//= Local Servers
 	add_option( "--telnet=",false, "", "",3,"Enable Telnet","servers");
@@ -428,14 +428,15 @@ QStringList XSettingsModel::get_fgfs_args()
 			}
 
 
-			// Process Unique Items
-			if(op == "--fgcom="){
-				args << getx("fgcom_generic_socket");
-			}
+			
 
 		}
 	}
-
+	
+	// Process unique items, like fgcom
+	if(fgcom_enabled()){
+		args << getx("fgcom_enabled");
+	}
 
 	//= add Extra args
 	XOpt opt = get_opt("extra_args");
@@ -822,6 +823,14 @@ QString XSettingsModel::custom_scenery_path(){
 
 bool XSettingsModel::custom_scenery_enabled(){
 	return get_ena("custom_scenery_path");
+}
+
+//===========================================================================
+//** FGCom enabled
+//===========================================================================
+
+bool XSettingsModel::fgcom_enabled(){
+	return get_ena("fgcom_enabled");
 }
 
 //===========================================================================

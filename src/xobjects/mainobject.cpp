@@ -341,16 +341,30 @@ void MainObject::add_log(QString log_name, QString data){
 //== Start All
 void MainObject::start_all(){
 	start_fgfs();
+	
+	// Does not need to start when not checked in settings
+	if (X->terrasync_enabled()){
 	start_terrasync();
+	}
+	
+	if (X->fgcom_enabled()){
 	start_fgcom();
+	}
 }
 
 //========================================================
 //== Stop All
 void MainObject::stop_all(){
 	processFgFs->stop();
+	
+	// Stop only processes enabled
+	if (X->fgcom_enabled()){
 	processFgCom->stop();
+	}
+	
+	if (X->terrasync_enabled()){
 	processTerraSync->stop();
+	}
 }
 
 
@@ -529,8 +543,9 @@ void MainObject::on_about_fgx()
 	txt.append("<html><body><p>FGx FlightGear Launcher</b></p>");
 	txt.append("<p>&copy; 2011 Yves Sablonier, Pete Morgan, Geoff McLane</p>");
 	txt.append("<p><a href='http://www.gnu.org/licenses/gpl-2.0.txt'>GPLv2 and later</a></p>");
-	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear Wiki</a></p>");
-	txt.append("<pre>rock on and avoid mountauns near Zurich, Near geoff at PARID and pete at EGFF..</pre></body></html>");
+	txt.append("<p><a href='http://wiki.flightgear.org'>FlightGear Wiki/Help</a></p>");
+	txt.append("<p><a href='http://www.flightgear.org/forums'>FlightGear Forums</a></p>");
+	txt.append("<pre>\"Rock on and avoid mountains near Zurich, Paris and EGFF ...\", said Pete.</pre></body></html>");
 	QMessageBox::about(0, "About FGx", txt);
 }
 

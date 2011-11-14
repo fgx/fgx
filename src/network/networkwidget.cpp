@@ -448,7 +448,7 @@ void NetworkWidget::set_mp_server(){
 // Setup fgCom
 void NetworkWidget::set_fgcom(){
 	//emit setx( "--fgcom=", grpFgCom->isChecked(), txtFgComNo->text().append(":").append( txtFgComPort->text() ) );
-	emit setx( "fgcom_generic_socket",
+	emit setx( "fgcom_enabled",
 				grpFgCom->isChecked(),
 				QString("--generic=socket,out,10,localhost,%1,udp,fgcom").arg(txtFgComPort->text())
 			);

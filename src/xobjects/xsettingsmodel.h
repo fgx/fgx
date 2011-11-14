@@ -76,6 +76,8 @@ public:
 	
 	bool custom_scenery_enabled();
 	QString custom_scenery_path();
+	
+	bool fgcom_enabled();
 
 	QString fgcom_exe_path();
 	QString jsdemo_exe_path();
