@@ -50,8 +50,8 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option("custom_scenery_enabled", false,"","",0,"","paths");
 	add_option("custom_scenery_path", false,"","",0,"","paths");
 	add_option("terrasync_exe_path", false, "", "", 0, "", "paths");
-    add_option("fgcom_exe_path", false, "", "fgcom", 0, "", "paths");
-    add_option("jsdemo_exe_path", false, "", "js_demo", 0, "", "paths");
+    add_option("fgcom_exe_path", false, "", "", 0, "", "paths");
+    add_option("jsdemo_exe_path", false, "", "", 0, "", "paths");
 
 
 	add_option("extra_args", false,"","",0,"","expert");
@@ -650,7 +650,7 @@ QString XSettingsModel::jsdemo_exe_path(){
 	
 	// PLEASE DO NOT TOUCH THIS PART --- START
 	
-	if(mainObject->runningOs() == MainObject::MAC ){
+	if(mainObject->runningOs() == MainObject::MAC && mainObject->X->get_ena("jsdemo_exe_path") == true){
 		
 		QString jsDemoExePath;
 		QString tmp;
@@ -687,7 +687,7 @@ QString XSettingsModel::jsdemo_exe_path(){
 		return QString("C:/Program Files/FlightGear/bin/win32/js_demo.exe");
 		
 	}else{
-		return QString("UNKNOW OS in jsdemo_default_path()");
+		return QString("");
 	}
 }
 

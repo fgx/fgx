@@ -99,7 +99,7 @@ void OtherPage::on_select_fgcom_exe_path()
 
 void OtherPage::on_select_jsdemo_exe_path()
 {
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Select FGCom binary"),
+	QString filePath = QFileDialog::getOpenFileName(this, tr("Select js_demo binary"),
 													txtJSDemoExePath->text());
 	if(filePath.length() > 0){
 		txtJSDemoExePath->setText(filePath);
@@ -124,7 +124,55 @@ void OtherPage::on_checkbox_jsdemo_clicked(){
 	buttSelectJSDemoExePath->setEnabled(ena);
 	if(ena){
 		txtJSDemoExePath->setFocus();
-	}
+		
+		// Aiiiiiiii, said Yves
+		if (mainObject->X->getx("jsdemo_exe_path", true) != "") {
+		txtJSDemoExePath->setText(mainObject->X->getx("jsdemo_exe_path", true));
+		} else {
+			if(mainObject->runningOs() == MainObject::MAC){
+				
+				QString jsDemoExePath;
+				QString tmp;
+				QDir d;
+				jsDemoExePath = "js_demo";
+				
+				int ind, siz;
+				tmp = mainObject->X->fgfs_path();
+				ind = tmp.indexOf(QChar('/'));
+				siz = 0;
+				// march to last '/' in path
+				while (ind >= 0) {
+					tmp = tmp.mid(ind + 1);
+					siz = tmp.size();
+					ind = tmp.indexOf(QChar('/'));
+				}
+				if (siz > 0) {
+					tmp = mainObject->X->fgfs_path();
+					tmp.chop(siz);
+					if (d.exists(tmp)) {
+						jsDemoExePath = tmp + jsDemoExePath;
+					}
+				}
+				
+				txtJSDemoExePath->setText(jsDemoExePath);
+				
+				// PLEASE DO NOT TOUCH THIS PART --- END
+				
+				
+			}else if(mainObject->runningOs() == MainObject::LINUX){
+				txtJSDemoExePath->setText(QString("js_demo"));
+				
+			}else if(mainObject->runningOs() == MainObject::WINDOWS){
+				txtJSDemoExePath->setText(QString("C:/Program Files/FlightGear/bin/win32/js_demo.exe"));
+				
+			}else{
+				txtJSDemoExePath->setText(QString("UNKNOW OS in jsdemo_default_path()"));
+			}
+		}
+
+			 
+		}
+	
 	check_jsdemo_exe_paths();
 }
 
