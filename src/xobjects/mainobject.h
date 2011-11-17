@@ -75,6 +75,7 @@ public:
 	static QString log_file_path();
 
 	QString data_file(QString file_name);
+	QString default_file(QString file_name);
 
 	static QString temp_dir();
 	static QString temp_dir(QString append_path);

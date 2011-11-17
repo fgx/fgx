@@ -105,7 +105,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
 	grpFgPaths->setStyleSheet("XGroupVBox::title { color: #000000; background-color: #eeeeee }");
 	layoutPaths->addWidget(grpFgPaths);
-	grpFgPaths->setWhatsThis("<b>FlightGear Paths</b><br><br>Use \"Set Paths\" button to change this settings."); 
+	grpFgPaths->setWhatsThis("<b>FlightGear Paths</b><br><br>Use \"Settings\" button to change this settings."); 
 
 	QString style_paths("font-family: Andale mono, Lucida Console, monospace; font-size: 12px; padding: 3px; background-color: #ffffff; border: 1px solid #dddddd ");
 
@@ -166,7 +166,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//==================================================================
 	//= Controls
 	
-	XGroupVBox *grpBoxControls = new XGroupVBox(tr("Controls"));
+	XGroupVBox *grpBoxControls = new XGroupVBox(tr("FGx Controls Pre-check"));
 	grpBoxControls->setStyleSheet("XGroupVBox::title { color: #000000; background-color: #eeeeee }");
 	layoutPaths->addWidget(grpBoxControls);
 	grpBoxControls->addWidget(new QLabel("Joystick:"));
@@ -174,7 +174,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelInputs = new QLabel("");
 	labelInputs->setStyleSheet(style_paths);
 	grpBoxControls->addWidget(labelInputs);
-	grpBoxControls->setWhatsThis("<b>Controls</b><br><br>FlightGear use auto-detection to detect your input devices. This is just a preview what FlightGear will see.");
+	grpBoxControls->setWhatsThis("<b>Controls</b><br><br>FlightGear use auto-detection to detect your input devices. This is just a pre-check of what FlightGear will see.");
 	
 	layoutPaths->addStretch(20);
 
@@ -205,7 +205,7 @@ void CoreSettingsWidget::initialize(){
 //==============================================
 //== Load Joysticks
 void CoreSettingsWidget::load_joysticks(){
-	labelInputs->setText("none");
+	labelInputs->setText("");
 	QString find = "Joystick ";
 	QString none = "not detected";
 	QString results;
@@ -213,20 +213,14 @@ void CoreSettingsWidget::load_joysticks(){
 	int count = 0;
     QString startJSDemoPath;
     QStringList args;
-    startJSDemoPath = "js_demo";
+    startJSDemoPath = "";
 
 	// TODO Fix this macro
 #ifdef Q_OS_MAC
-    startJSDemoPath = mainObject->X->fgfs_path();
-	startJSDemoPath.chop(4);
-	startJSDemoPath.append("js_demo");
-    process.start(startJSDemoPath, QStringList(), QIODevice::ReadOnly);
+    startJSDemoPath = mainObject->X->getx("jsdemo_exe_path");
+	outLog("*** FGx Joystick Pre-Check jsdemo OSX-path defined: "+startJSDemoPath);
 #elif defined(Q_OS_UNIX)
-	if ( ! mainObject->X->fgroot_use_default() ) {
-		startJSDemoPath = mainObject->X->fgfs_path();
-        startJSDemoPath.chop(4);
-        startJSDemoPath.append("js_demo");
-    }
+	startJSDemoPath = mainObject->X->getx("jsdemo_exe_path");
 	QStringList extra_env = mainObject->X->get_fgfs_env();
     if (extra_env.size()) {
         //= append new env vars
@@ -240,6 +234,10 @@ void CoreSettingsWidget::load_joysticks(){
 		process.waitForFinished(3000);
 		QString ok_result = process.readAllStandardOutput();
 		QString error_result = process.readAllStandardError();
+		outLog("*** FGx jsdemo joystick pre-check result: "+ok_result);
+		if (error_result > 0) {
+		outLog("*** FGx jsdemo error results: "+error_result);
+		}
 		Q_UNUSED(error_result);
 		//* take result and split into parts
 		QStringList entries = ok_result.trimmed().split("\n");
@@ -262,9 +260,10 @@ void CoreSettingsWidget::load_joysticks(){
 	} else {
 		results = "FGx Error: Unable to run 'js_demo' to get Joystick list!\n";
 	}
-	outLog("*** FGx reports: Joystick detection results\n"+results+" ***",0); // show results in LOG
+	//outLog("*** FGx reports: Joystick detection results\n"+results+" ***",0); // show results in LOG
 	if (count == 0) {
 		labelInputs->setEnabled(false);
+		labelInputs->setText("No Joystick detected. Check logs");
 	}
 }
 

@@ -99,10 +99,10 @@ void OtherPage::on_select_fgcom_exe_path()
 
 void OtherPage::on_select_jsdemo_exe_path()
 {
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Select js_demo binary"),
+	QString filePathJsDemo = QFileDialog::getOpenFileName(this, tr("Select js_demo binary"),
 													txtJSDemoExePath->text());
-	if(filePath.length() > 0){
-		txtJSDemoExePath->setText(filePath);
+	if(filePathJsDemo.length() > 0){
+		txtJSDemoExePath->setText(filePathJsDemo);
 	}
 	check_jsdemo_exe_paths();
 }
@@ -114,7 +114,54 @@ void OtherPage::on_checkbox_fgcom_clicked(){
 	buttSelectFGComExePath->setEnabled(ena);
 	if(ena){
 		txtFGComExePath->setFocus();
+		if (mainObject->X->getx("fgcom_exe_path") != "") {
+			txtFGComExePath->setText(mainObject->X->getx("fgcom_exe_path", true));
+		} else {
+			
+			// PLEASE DO NOT TOUCH THIS PART --- START
+			
+			if(mainObject->runningOs() == MainObject::MAC ){
+				
+				QString fgcomExePath;
+				QString tmp;
+				QDir d;
+				fgcomExePath = "fgcom";
+				
+				int ind, siz;
+				tmp = mainObject->X->fgfs_path();
+				ind = tmp.indexOf(QChar('/'));
+				siz = 0;
+				// march to last '/' in path
+				while (ind >= 0) {
+					tmp = tmp.mid(ind + 1);
+					siz = tmp.size();
+					ind = tmp.indexOf(QChar('/'));
+				}
+				if (siz > 0) {
+					tmp = mainObject->X->fgfs_path();
+					tmp.chop(siz);
+					if (d.exists(tmp)) {
+						fgcomExePath = tmp + fgcomExePath;
+					}
+				}
+				
+				txtFGComExePath->setText(fgcomExePath);
+				
+				// PLEASE DO NOT TOUCH THIS PART --- END
+				
+				
+			}else if(mainObject->runningOs() == MainObject::LINUX){
+				txtFGComExePath->setText("fgcom");
+				
+			}else if(mainObject->runningOs() == MainObject::WINDOWS){
+				txtFGComExePath->setText("\"C:/Program Files/FlightGear/bin/win32/fgcom.exe\"");
+				
+			}else{
+				txtFGComExePath->setText("UNKNOW OS in fgcom_exe_path()");
+			}
+		}
 	}
+	
 	check_fgcom_exe_paths();
 }
 
@@ -126,7 +173,7 @@ void OtherPage::on_checkbox_jsdemo_clicked(){
 		txtJSDemoExePath->setFocus();
 		
 		// Aiiiiiiii, said Yves
-		if (mainObject->X->getx("jsdemo_exe_path", true) != "") {
+		if (mainObject->X->getx("jsdemo_exe_path") != "") {
 		txtJSDemoExePath->setText(mainObject->X->getx("jsdemo_exe_path", true));
 		} else {
 			if(mainObject->runningOs() == MainObject::MAC){
@@ -225,11 +272,11 @@ void OtherPage::initializePage()
 {
 	
 	XOpt optExeFGCom = mainObject->X->get_opt("fgcom_exe_path");
+	bool optFGComEna = mainObject->X->get_ena("fgcom_enabled");
+	bool optJSDemoEna = mainObject->X->get_ena("jsdemo_enabled");
 	XOpt optExeJSDemo = mainObject->X->get_opt("jsdemo_exe_path");
-	checkBoxUseFGCom->setChecked( optExeFGCom.enabled );
-	checkBoxUseJSDemo->setChecked( optExeJSDemo.enabled );
-	txtFGComExePath->setText( mainObject->X->fgcom_exe_path() );
-	txtJSDemoExePath->setText( mainObject->X->jsdemo_exe_path() );
+	checkBoxUseFGCom->setChecked( optFGComEna );
+	checkBoxUseJSDemo->setChecked( optJSDemoEna );
 	on_checkbox_fgcom_clicked();
 	on_checkbox_jsdemo_clicked();
 }

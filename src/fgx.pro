@@ -139,5 +139,6 @@ SOURCES += main.cpp \
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \
-	resources/openlayers.qrc
+	resources/openlayers.qrc \
+	resources/default.qrc
 CONFIG += console

@@ -128,7 +128,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 	//== Show setup wizard
 	QToolButton *buttonShowWizard = new QToolButton();
-	buttonShowWizard->setText("Set Paths");
+	buttonShowWizard->setText("Settings");
 	buttonShowWizard->setAutoRaise(true);
 	buttonShowWizard->setIcon(QIcon(":/icon/path"));
 	buttonShowWizard->setStyleSheet("padding: 0px;");

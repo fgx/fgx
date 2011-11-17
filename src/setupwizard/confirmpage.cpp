@@ -165,7 +165,7 @@ void ConfirmPage::initializePage()
 		// custom path has changed
 		airports_update = true;
 	
-	}else if(field("use_custom_scenery").toBool()){
+	}else if(field("custom_scenery_enabled").toBool()){
 		// custom scenery is checked
 		airports_update = true;
 	}
@@ -208,7 +208,10 @@ bool ConfirmPage::validatePage()
 	emit setx("custom_scenery_path", field("custom_scenery_enabled").toBool() == true, field("custom_scenery_path").toString());
 
 	emit setx("fgcom_exe_path", field("fgcom_enabled").toBool() == true, field("fgcom_exe_path").toString());
+	emit setx("fgcom_enabled", field("fgcom_enabled").toBool() == true, field("").toString());
+	
 	emit setx("jsdemo_exe_path", field("jsdemo_enabled").toBool() == true, field("jsdemo_exe_path").toString());
+	emit setx("jsdemo_enabled", field("jsdemo_enabled").toBool() == true, field("").toString());
 	
 	mainObject->settings->setValue("last_import_icao_checked", radioIcaoOnly->isChecked());
 

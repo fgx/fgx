@@ -39,6 +39,8 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	//=================================================================================
 	// This list will be the main issue and debates for a long time probably, said pete
 	//=================================================================================
+	// Yes, said Yves //
+	//===================
 
 
 	//==================
@@ -51,6 +53,8 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option("custom_scenery_path", false,"","",0,"","paths");
 	add_option("terrasync_exe_path", false, "", "", 0, "", "paths");
     add_option("fgcom_exe_path", false, "", "", 0, "", "paths");
+	add_option("fgcom_enabled", false, "", "", 0, "", "paths");
+	add_option("jsdemo_enabled", false, "", "", 0, "", "paths");
     add_option("jsdemo_exe_path", false, "", "", 0, "", "paths");
 
 
@@ -329,13 +333,23 @@ XOpt XSettingsModel::get_opt(QString option)
 //==================================================
 //= File Functions
 //==================================================
-/** \brief Return current profile.ini.. THIS is subject to MAJOR CHANGE
+/** \brief Return current profile.ini
  *
-  * \return The absolute path to the ini file
+  * \return or default ini at first startup/clicking reset settings
  */
 QString XSettingsModel::ini_file_path()
-{
-	return mainObject->data_file("profile.ini");
+{	
+	//if (mainObject->data_file("profile.ini")) {
+	bool direxist = QFile(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).exists();
+
+	if(direxist)  {
+		outLog("*** There is a profile probably ***");
+		return mainObject->data_file("profile.ini");
+	}
+	
+	else {
+		return QString(":/default/osx_default.ini");
+	}
 }
 
 //=============================================
@@ -433,9 +447,9 @@ QStringList XSettingsModel::get_fgfs_args()
 		}
 	}
 	
-	// Process unique items, like fgcom
+	// Process unique items, like fgcom socket
 	if(fgcom_enabled()){
-		args << getx("fgcom_enabled");
+		args << "--generic=socket,out,10,localhost,16661,udp,fgcom";
 	}
 
 	//= add Extra args
@@ -647,48 +661,8 @@ QString XSettingsModel::fgcom_exe_path(){
 }
 
 QString XSettingsModel::jsdemo_exe_path(){
+		//nothing
 	
-	// PLEASE DO NOT TOUCH THIS PART --- START
-	
-	if(mainObject->runningOs() == MainObject::MAC && mainObject->X->get_ena("jsdemo_exe_path") == true){
-		
-		QString jsDemoExePath;
-		QString tmp;
-		QDir d;
-		jsDemoExePath = "js_demo";
-		
-		int ind, siz;
-		tmp = mainObject->X->fgfs_path();
-		ind = tmp.indexOf(QChar('/'));
-		siz = 0;
-		// march to last '/' in path
-		while (ind >= 0) {
-			tmp = tmp.mid(ind + 1);
-			siz = tmp.size();
-			ind = tmp.indexOf(QChar('/'));
-		}
-		if (siz > 0) {
-			tmp = mainObject->X->fgfs_path();
-			tmp.chop(siz);
-			if (d.exists(tmp)) {
-				jsDemoExePath = tmp + jsDemoExePath;
-			}
-		}
-		
-		return jsDemoExePath;
-		
-		// PLEASE DO NOT TOUCH THIS PART --- END
-		
-		
-	}else if(mainObject->runningOs() == MainObject::LINUX){
-		return QString("js_demo");
-		
-	}else if(mainObject->runningOs() == MainObject::WINDOWS){
-		return QString("C:/Program Files/FlightGear/bin/win32/js_demo.exe");
-		
-	}else{
-		return QString("");
-	}
 }
 
 
@@ -891,32 +865,6 @@ QString XSettingsModel::terrasync_exe_path(){
 QString XSettingsModel::terrasync_sync_data_path(){
 	return getx("terrasync_path");
 }
-
-
-
-/*QString XSettingsModel::fgcom_exe_path()
-{
-    // see if we have a USER setting
-    QString fgcom = getx("fgcom_exe_path");
-    QString defexe = "fgcom"; // establish a DEFAULT
-    if (fgcom.length() == 0) {
-        if (mainObject->runningOs() == MainObject::MAC) {
-			// Default fgcomx installation with fgcom installer by gral
-			// Will change with fgcom coming in app bundle
-            defexe = "/usr/local/bin/fgcom";
-		}
-		else if(mainObject->runningOs() == MainObject::LINUX){
-            defexe = "fgcom"; // what else could be chosen?
-		}
-		else if(mainObject->runningOs() == MainObject::WINDOWS){
-            defexe = "fgcom"; // what else could be chosen?
-		}
-        fgcom = defexe; // since no User setting, use DEFAULT!
-    }
-    return fgcom; // "fgcom";
-}*/
-
-
 
 
 void XSettingsModel::set_row_bg(int row_idx, QColor  bg_color)

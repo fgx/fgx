@@ -185,9 +185,7 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	// FgCom Box
 	grpFgCom = new XGroupGBox(tr("FGCom - Voice Communications"));
 	rightLayout->addWidget(grpFgCom, 2);
-	grpFgCom->setCheckable(true);
-	grpFgCom->setChecked(false);
-	connect(grpFgCom, SIGNAL(clicked(bool)), this, SLOT(set_fgcom()));
+	//grpFgCom->setCheckable(true);
 
 	QString style("font-size: 8pt; color: #666666;");
 
@@ -196,7 +194,13 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	grpFgCom->addWidget(new QLabel("Server"), row, 0, 1, 1, Qt::AlignRight);
 	txtFgComNo = new QLineEdit();
 	grpFgCom->addWidget(txtFgComNo, row, 1, 1, 1);
-	connect(txtFgComNo, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
+	if (mainObject->X->get_ena("fgcom_enabled")){
+		txtFgComNo->setEnabled(true);
+		connect(txtFgComNo, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
+	} else {
+		txtFgComNo->setEnabled(false);
+	}
+
 
 	row++;
 	QLabel *lblHelp1 = new QLabel("eg: fgcom.flightgear.org.uk");
@@ -209,7 +213,13 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	txtFgComPort = new QLineEdit();
 	txtFgComPort->setMaximumWidth(100);
 	grpFgCom->addWidget(txtFgComPort, row, 1, 1, 1);
-	connect(txtFgComPort, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
+	if (mainObject->X->get_ena("fgcom_enabled")){
+		txtFgComPort->setEnabled(true);
+		connect(txtFgComPort, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
+	}else {
+		txtFgComPort->setEnabled(false);
+	}
+
 
 	row++;
 	QLabel *lblHelp2 = new QLabel("eg: 16661");
