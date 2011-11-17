@@ -1,0 +1,5 @@
+<RCC>
+<qresource prefix="/default" >
+	<file alias="osx_default.ini">default/osx_default.ini</file>
+</qresource>
+</RCC>
