@@ -340,10 +340,10 @@ XOpt XSettingsModel::get_opt(QString option)
 QString XSettingsModel::ini_file_path()
 {	
 	//if (mainObject->data_file("profile.ini")) {
-	bool direxist = QFile(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).exists();
+	bool direxist = QFile(QDesktopServices::storageLocation(QDesktopServices::DataLocation).append("profile.ini")).exists();
 
 	if(direxist)  {
-		outLog("*** There is a profile probably ***");
+		outLog("*** There is a profile ! ***");
 		return mainObject->data_file("profile.ini");
 	}
 	
@@ -417,6 +417,11 @@ void XSettingsModel::read_ini()
 	_loading = false;
 	//qDebug() << "Read ini";
 	emit updated(get_fgfs_list());
+	
+	//update fgfs path first startup and reset
+	QString fgfsPath = QDir::currentPath().append("/").append(getx("fgfs_custom_path"));
+	emit upx("fgfs_custom_path", true, fgfsPath);
+	
 }
 
 
@@ -530,18 +535,15 @@ QStringList XSettingsModel::get_fgfs_env(){
 }
 
 
-
-
-
 //===========================================================================
 //== fgfs Executable
 //===========================================================================
 /** \brief Path to fgfs executable
  */
 QString XSettingsModel::fgfs_path(){
-	if(fgfs_use_default()){
-		return fgfs_default_path();
-	}
+	//if(fgfs_use_default()){
+	//	return fgfs_default_path();
+	//}
 	return getx("fgfs_custom_path");
 }
 

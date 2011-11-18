@@ -105,7 +105,7 @@ ConfirmPage::ConfirmPage(MainObject *mob, QWidget *parent) :
 	grpImports->gridLayout->setColumnStretch(1, 10);
 
 	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
-	connect(mainObject->X, SIGNAL(on_upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+	//connect(mainObject->X, SIGNAL(on_upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 }
 

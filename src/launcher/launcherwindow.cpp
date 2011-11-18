@@ -346,7 +346,8 @@ void LauncherWindow::load_settings()
 	QString message("Settings loaded.");
 	headerWidget->showMessage(message);
 
-	outLog("FGx: Settings loaded in LauncherWIndow::load_settings()");
+	//this is a bit dusty here, said yves
+	outLog("FGx: LauncherWindow::load_settings() executed, message only");
 
 
 }

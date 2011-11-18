@@ -27,15 +27,15 @@ FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
 
 	//= Default Path
 	int row = 0;
-	radioDefault = new QRadioButton();
+	/*radioDefault = new QRadioButton();
 	radioDefault->setText("Use default path");
 	layoutExe->addWidget(radioDefault, row, 0, 1, 3);
-	connect(radioDefault, SIGNAL(toggled(bool)), this, SLOT(on_default_toggled(bool)));
+	connect(radioDefault, SIGNAL(toggled(bool)), this, SLOT(on_default_toggled(bool)));*/
 
 	//= default help label
-	row++;
+	/*row++;
 	lblDefault = new QLabel("--");
-	layoutExe->addWidget(lblDefault, row, 1, 1, 2);
+	layoutExe->addWidget(lblDefault, row, 1, 1, 2);*/
 
 	//= Custom path
 	row++;
@@ -83,7 +83,7 @@ FgExePage::FgExePage(MainObject *mob, QWidget *parent) :
 	layoutExe->setColumnStretch(1,6);
 	layoutExe->setColumnStretch(2,0);
 
-	registerField("fgfs_use_default", radioDefault);
+	//registerField("fgfs_use_default", radioDefault);
 	registerField("fgfs_use_custom", radioCustom);
 	registerField("fgfs_custom_path", txtFgfs);
 	
@@ -134,19 +134,19 @@ void FgExePage::on_select_fgfs_path(){
 void FgExePage::check_paths()
 {
 	//= Check the default path
-	QString default_path = mainObject->X->fgfs_default_path();
-	bool default_exists = QFile::exists(default_path);
-	QString lbl_default(default_path);
-	lbl_default.append( default_exists ? " - Ok" : " - Not Found" );
-	QString style_default("");
+	//QString default_path = mainObject->X->fgfs_default_path();
+	//bool default_exists = QFile::exists(default_path);
+	//QString lbl_default(default_path);
+	//lbl_default.append( default_exists ? " - Ok" : " - Not Found" );
+	//QString style_default("");
 
-	if(radioDefault->isChecked()){
-		style_default.append(default_exists ? "color:green;" : "color:#990000;");
-	}else{
-		style_default.append("color:#444444;");
-	}
-	lblDefault->setText(lbl_default);
-	lblDefault->setStyleSheet(style_default);
+	//if(radioDefault->isChecked()){
+		//style_default.append(default_exists ? "color:green;" : "color:#990000;");
+	//}else{
+		//style_default.append("color:#444444;");
+	//}
+	//lblDefault->setText(lbl_default);
+	//lblDefault->setStyleSheet(style_default);
 
 	//= Check Custom Path
 	if(radioCustom->isChecked()){
@@ -183,10 +183,10 @@ void FgExePage::check_paths()
 void FgExePage::initializePage()
 {
 	XOpt opt = mainObject->X->get_opt("fgfs_custom_path");
-	radioDefault->setChecked( opt.enabled == false );
+	//radioDefault->setChecked( opt.enabled == false );
 	radioCustom->setChecked( opt.enabled == true );
 
-	lblDefault->setText( QString("Default: ").append(mainObject->X->fgfs_default_path()) );
+	//lblDefault->setText( QString("Default: ").append(mainObject->X->fgfs_default_path()) );
 	txtFgfs->setText( opt.value );
 	check_paths();
 }
@@ -197,7 +197,7 @@ void FgExePage::initializePage()
 //= ValidatePage
 bool FgExePage::validatePage()
 {
-	check_paths();
+	/*check_paths();
 	if(radioDefault->isChecked()){
 		QString exFile = mainObject->X->fgfs_default_path();
 		if(QFile::exists(exFile)){
@@ -211,7 +211,7 @@ bool FgExePage::validatePage()
 		}else{
 			return false;
 		}
-	}
+	}*/
 
 	if(QFile::exists(txtFgfs->text())){
 		// TODO - check its executable
@@ -225,7 +225,7 @@ bool FgExePage::validatePage()
 }
 
 
-void FgExePage::on_default_toggled(bool state){
+/*void FgExePage::on_default_toggled(bool state){
 	Q_UNUSED(state);
 
 	bool def = radioDefault->isChecked();
@@ -240,7 +240,7 @@ void FgExePage::on_default_toggled(bool state){
 	}
 
 	check_paths();
-}
+}*/
 
 //================================================================================
 // Write Settings
