@@ -105,9 +105,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
 	grpFgPaths->setStyleSheet("XGroupVBox::title { color: #000000; background-color: #eeeeee }");
 	layoutPaths->addWidget(grpFgPaths);
-	grpFgPaths->setWhatsThis("<b>FlightGear Paths</b><br><br>Use \"Settings\" button to change this settings."); 
+	//grpFgPaths->setWhatsThis("<b>FlightGear Paths</b><br><br>Use \"Settings\" button to change this settings."); 
 
-	QString style_paths("font-family: Andale mono, Lucida Console, monospace; font-size: 12px; padding: 3px; background-color: #ffffff; border: 1px solid #dddddd ");
+	QString style_paths("font-family: Andale mono, Lucida Console, monospace; font-size: 10px; padding: 3px; background-color: #ffffff; border: 1px solid #dddddd ");
 
 	//----------------------------------------------
 	//= FlightGear executable
@@ -336,14 +336,12 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 		comboMpMapServer->setCurrentIndex(comboMpMapServer->findData(value));
 
 	//= Fgfs Path
-	}else if(option == "fgfs_custom_path"){
-		labelFgFsInfo->setText(enabled ? "Using custom path" : "Using default path");
-		labelFgFsPath->setText(enabled ? value : mainObject->X->fgfs_default_path());
+	labelFgFsInfo->setText("Using FlightGear path (fgfs)");
+	labelFgFsPath->setText(mainObject->X->fgfs_path());
 
 	//= fgroot path
-	}else if(option == "fgroot_custom_path"){
-		labelFgRootInfo->setText(enabled ? "Using custom path" : "Using default path");
-		labelFgRootPath->setText(enabled ? value : mainObject->X->fgroot_default_path());
+	labelFgRootInfo->setText("Using fgroot path");
+	labelFgRootPath->setText(mainObject->X->fgroot_path());
 
 	//= terrasync
 	}else if(option == "terrasync_path"){

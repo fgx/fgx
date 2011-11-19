@@ -139,14 +139,8 @@ public slots:
     void on_tray_icon(QSystemTrayIcon::ActivationReason reason);
 
     void on_launcher();
-    //void on_mpmap();
-	//void on_mpxmap();
 	void on_browsermap();
-    void on_settings();
-	void on_settings(int);
 	void on_properties_browser();
-
-	void show_setup_wizard();
 
 	void on_view_logs();
 	void clear_log(QString log_name);

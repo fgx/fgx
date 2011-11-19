@@ -29,14 +29,8 @@ HEADERS += xobjects/xsettings.h \
 	utilities/utilities.h \
 	utilities/messagebox.h \
 	airports/importairportsdialog.h \
-	setupwizard/fgrootpage.h \
-	setupwizard/fgexepage.h \
-	setupwizard/setupwizard.h \
-	setupwizard/terrasyncpage.h \
-	setupwizard/confirmpage.h \
 	airports/airportsdata.h \
 	aircraft/aircraftdata.h \
-	setupwizard/completedpage.h \
 	panes/viewlogwidget.h \
 	utilities/zlib/inftrees.h \
 	utilities/zlib/inflate.h \
@@ -70,8 +64,7 @@ HEADERS += xobjects/xsettings.h \
 	xwidgets/xdebugtreewidget.h \
 	map/openlayerwidget.h \
 	aircraft/xaero.h \
-	airports/metarwidget.h \
-	setupwizard/otherpage.h
+	airports/metarwidget.h 
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -89,14 +82,8 @@ SOURCES += main.cpp \
 	utilities/utilities.cpp \
 	utilities/messagebox.cpp \
 	airports/importairportsdialog.cpp \
-	setupwizard/setupwizard.cpp \
-	setupwizard/fgrootpage.cpp \
-	setupwizard/fgexepage.cpp \
-	setupwizard/terrasyncpage.cpp \
-	setupwizard/confirmpage.cpp \
 	airports/airportsdata.cpp \
 	aircraft/aircraftdata.cpp \
-	setupwizard/completedpage.cpp \
 	panes/viewlogwidget.cpp \
 	utilities/zlib/uncompr.c \
 	utilities/zlib/trees.c \
@@ -134,11 +121,10 @@ SOURCES += main.cpp \
 	xwidgets/xdebugtreewidget.cpp \
 	map/openlayerwidget.cpp \
 	aircraft/xaero.cpp \
-	airports/metarwidget.cpp \
-	setupwizard/otherpage.cpp
+	airports/metarwidget.cpp 
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \
 	resources/openlayers.qrc \
-	resources/default.qrc
+	resources/default.qrc 
 CONFIG += console

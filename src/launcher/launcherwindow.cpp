@@ -25,8 +25,6 @@
 #include "utilities/utilities.h"
 #include "utilities/messagebox.h"
 
-#include "setupwizard/setupwizard.h"
-
 #include "xobjects/xsettingsmodel.h"
 
 
@@ -121,20 +119,10 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	bottomActionLayout->setAlignment( Qt::AlignTop );
 	mainLayout->addLayout(bottomActionLayout);
 
-	XGroupHBox *toolBox = new XGroupHBox(tr("Settings"));
+	XGroupHBox *toolBox = new XGroupHBox(tr("Profiles"));
 	bottomActionLayout->addWidget(toolBox);
 
 	toolBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: yellow }");
-
-	//== Show setup wizard
-	QToolButton *buttonShowWizard = new QToolButton();
-	buttonShowWizard->setText("Settings");
-	buttonShowWizard->setAutoRaise(true);
-	buttonShowWizard->setIcon(QIcon(":/icon/path"));
-	buttonShowWizard->setStyleSheet("padding: 0px;");
-	buttonShowWizard->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	toolBox->addWidget(buttonShowWizard);
-	connect(buttonShowWizard, SIGNAL(clicked()), mainObject, SLOT(show_setup_wizard()));
 
 	//= Load Settings
 	QToolButton *buttonLoadSettings = new QToolButton(this);
@@ -268,7 +256,7 @@ void LauncherWindow::initialize(){
 
 	//= check paths are sane
 	if(!mainObject->X->paths_sane()){
-		mainObject->show_setup_wizard();
+		//mainObject->show_setup_wizard();
 	}
 
 	//* Paths are sane so we can initialize;

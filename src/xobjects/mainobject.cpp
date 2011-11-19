@@ -17,7 +17,6 @@
 
 #include "settings/settingsdialog.h"
 #include "utilities/utilities.h"
-#include "setupwizard/setupwizard.h"
 
 
 
@@ -82,31 +81,11 @@ MainObject::MainObject(QObject *parent) :
 	actionLauncher->setIconVisibleInMenu(true);
 	connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
 
-	//= MpMap action
-	/*actionMpMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Map..."));
-	actionMpMap->setIconVisibleInMenu(true);
-	connect(actionMpMap, SIGNAL(triggered()), this, SLOT(on_mpmap()));*/
-
 	//= Browser MpMap action
 	actionBrowserMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Browser Map ..."));
 	actionBrowserMap->setIconVisibleInMenu(true);
 	connect(actionBrowserMap, SIGNAL(triggered()), this, SLOT(on_browsermap()));
 
-	//= MpMapX action
-	/*QAction *actionMpXMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open XMap (experimental)..."));
-	actionMpXMap->setIconVisibleInMenu(true);
-	connect(actionMpXMap, SIGNAL(triggered()), this, SLOT(on_mpxmap()));*/
-	//actionMpXMap->setVisible(false);
-
-	//= Settings Action
-	QAction *actionSetupWizard= new QAction(this);
-	actionSetupWizard->setIcon(QIcon(":/icon/path"));
-	actionSetupWizard->setText(tr("Set paths"));
-	actionSetupWizard->setIconVisibleInMenu(true);
-	popupMenu->addAction(actionSetupWizard);
-	connect(actionSetupWizard, SIGNAL(triggered()),
-			this, SLOT(show_setup_wizard())
-	);
 
 	//== Properties browseer
 	actionPropsBrowser = new QAction(this);
@@ -198,14 +177,6 @@ MainObject::MainObject(QObject *parent) :
 	propertiesBrowser = new PropsTreeWidget(this);
 	propertiesBrowser->hide();
 
-	//= MP Map Widget
-	//mpMapWidget = new MpMapWidget(this);
-	//mpMapWidget->hide();
-
-	//= FGx Map Widget
-	//mpMapXWidget = new MpMapXWidget(this);
-	//mpMapXWidget->hide();
-
 
 	//= Log Viewer is hidden
 	viewLogsWidget = new ViewLogsWidget(this);
@@ -249,25 +220,6 @@ void MainObject::on_launcher(){
 }
 
 
-//============================================================================
-//** Settings Dialog - THESE ARE DEAD FOR NOW
-void MainObject::on_settings(){
-	on_settings(0);
-}
-void MainObject::on_settings(int idx){
-	SettingsDialog *dialog = new SettingsDialog(this);
-	dialog->tabWidget->setCurrentIndex(idx);
-	dialog->exec();
-}
-
-
-//****************************************************************************
-//** Map
-/*void MainObject::on_mpmap(){
-	mpMapWidget->show();
-	mpMapWidget->setFocus();
-}*/
-
 //****************************************************************************
 //** Borwser Map
 void MainObject::on_browsermap(){
@@ -279,23 +231,12 @@ void MainObject::on_browsermap(){
 	}
 }
 
-//============================================================================
-//** MpMap
-/*void MainObject::on_mpxmap(){
-	mpMapXWidget->show();
-	mpMapXWidget->setFocus();
-	mpMapXWidget->initialize();
-}*/
-
 //======================================
 //== Propertes Browser
 void MainObject::on_properties_browser(){
 	propertiesBrowser->show();
 	propertiesBrowser->setFocus();
 }
-
-
-
 
 
 //=================================================
@@ -306,17 +247,6 @@ void MainObject::on_tray_icon(QSystemTrayIcon::ActivationReason reason){
 	if(reason == QSystemTrayIcon::Trigger){
 		QPoint p = QCursor::pos();
 		trayIcon->contextMenu()->popup(p);
-	}
-}
-
-
-
-//=================================================
-//== Show Setup Wizard
-void MainObject::show_setup_wizard(){
-	SetupWizard *setupWizard = new SetupWizard(this);
-	if(setupWizard->exec()){
-		emit(reload_paths());
 	}
 }
 

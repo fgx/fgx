@@ -99,8 +99,6 @@ public slots:
 
 	//* Actions
 	void on_quit();
-	//void on_action_style(QAction *act);
-	//void on_action_open_url(QAction *act);
 	void on_whats_this();
 
 	//* Functions

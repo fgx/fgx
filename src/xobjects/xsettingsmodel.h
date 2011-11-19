@@ -49,19 +49,15 @@ public:
 	QString get_fgfs_command_string();
 	QStringList get_fgfs_env();
 
-	bool fgfs_use_default();
-	QString fgfs_default_path();
 	QString terrasync_default_path();
 	QString fgcom_default_path();
 	QString fgfs_path();
-	QString fgfs_custom_path();
 
 
 	QString fgroot();
 	QString fgroot(QString append_path);
 	bool fgroot_use_default();
-	QString fgroot_default_path();
-	QString fgroot_custom_path();
+	QString fgroot_path();
 
 	QString aircraft_path();
 	QString aircraft_path(QString dir);

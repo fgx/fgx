@@ -44,9 +44,8 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 
 	//==================
-	add_option("fgfs_use_default", false,"","",0,"","paths");
-	add_option("fgfs_custom_path", false,"","",0,"","paths");
-	add_option("fgroot_custom_path", false,"","",0,"","paths");
+	add_option("fgfs_path", false,"","",0,"","paths");
+	add_option("fgroot_path", false,"","",0,"","paths");
 	add_option("terrasync_enabled", false,"","",0,"","paths");
 	add_option("terrasync_path", false,"","",0,"","paths");
 	add_option("custom_scenery_enabled", false,"","",0,"","paths");
@@ -419,8 +418,8 @@ void XSettingsModel::read_ini()
 	emit updated(get_fgfs_list());
 	
 	//update fgfs path first startup and reset
-	QString fgfsPath = QDir::currentPath().append("/").append(getx("fgfs_custom_path"));
-	emit upx("fgfs_custom_path", true, fgfsPath);
+	QString fgfsPath = QDir::currentPath().append("/").append(getx("fgfs_path"));
+	emit upx("fgfs_path", true, fgfsPath);
 	
 }
 
@@ -544,32 +543,8 @@ QString XSettingsModel::fgfs_path(){
 	//if(fgfs_use_default()){
 	//	return fgfs_default_path();
 	//}
-	return getx("fgfs_custom_path");
-}
-
-/** \brief true is the default path is being used
- */
-
-bool XSettingsModel::fgfs_use_default(){
-	return get_ena("fgfs_custom_path") == false;
-}
-
-/** \brief absolute default path for the fgfs executable
- */
-QString XSettingsModel::fgfs_default_path(){
-
-	if(mainObject->runningOs() == MainObject::MAC){
-		return QDir::currentPath().append("/fgx.app/Contents/MacOS/fgfs");
-
-	}else if(mainObject->runningOs() == MainObject::LINUX){
-		return QString("/usr/local/bin/fgfs");
-
-
-	}else if(mainObject->runningOs() == MainObject::WINDOWS){
-		return QString("C:/Program Files/FlightGear/bin/win32/fgfs.exe");
-	}
-
-	return QString("UNKNOW OS in default_fgfs_path()");
+	return getx("fgfs_path");
+	//return QString("Hier der neue Pfad");
 }
 
 QString XSettingsModel::terrasync_default_path(){
@@ -674,13 +649,7 @@ QString XSettingsModel::jsdemo_exe_path(){
 //===========================================================================
 /** \return The absolute path to FG_ROOT ie /fgdata directory */
 QString XSettingsModel::fgroot(){
-	if(fgroot_use_default()){
-		return fgroot_default_path();
-	}
-	return getx("fgroot_custom_path");
-}
-bool XSettingsModel::fgroot_use_default(){
-	return get_ena("fgroot_custom_path") == false;
+	return getx("fgroot_path");
 }
 
 /** \brief Path to FG_ROOT with appended path
@@ -699,7 +668,7 @@ QString XSettingsModel::fgroot(QString append_path){
  *
   * \return The absolute path to FG_ROOT
  */
-QString XSettingsModel::fgroot_default_path(){
+QString XSettingsModel::fgroot_path(){
 
 	if(mainObject->runningOs() == MainObject::MAC){
 		return QDir::currentPath().append("/fgx.app/Contents/Resources/fgx-fgdata");
