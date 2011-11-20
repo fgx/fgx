@@ -45,19 +45,22 @@ public:
 	XGroupHBox *groupBoxFgFs;
 	XGroupHBox *groupBoxFgRoot;
 
-	QLabel *labelFgFsPath;
-	QLabel *labelFgRootPath;
+	QLineEdit *lineEditFgFsPath;
+	QLineEdit *lineEditFgRootPath;
 	QLabel *labelFgFsInfo;
 	QLabel *labelFgRootInfo;
 
 	QLabel *labelTerraSyncInfo;
-	QLabel *labelTerraSyncDataPath;
+	QLineEdit *lineEditTerraSyncDataPath;
 	
 	QLabel *labelTerraSyncExeInfo;
-	QLabel *labelTerraSyncExePath;
+	QLineEdit *lineEditTerraSyncExePath;
 	
 	QLabel *labelCustomSceneInfo;
-	QLabel *labelCustomScenePath;
+	QLineEdit *lineEditCustomScenePath;
+	
+	QLabel *labelFGComExeInfo;
+	QLineEdit *lineEditFGComExePath;
 	
 	//* Controls
 	QLabel *labelInputs;

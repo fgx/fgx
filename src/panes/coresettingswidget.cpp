@@ -93,7 +93,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpMapFeatures->addWidget(comboMpMapServer);
 	connect(comboMpMapServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_show_mp_map()));
 
-
 	layoutLeft->addStretch(20);
 
 
@@ -107,73 +106,89 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	layoutPaths->addWidget(grpFgPaths);
 	//grpFgPaths->setWhatsThis("<b>FlightGear Paths</b><br><br>Use \"Settings\" button to change this settings."); 
 
-	QString style_paths("font-family: Andale mono, Lucida Console, monospace; font-size: 10px; padding: 3px; background-color: #ffffff; border: 1px solid #dddddd ");
+	QString style_paths("font-family: Andale mono, Lucida Console, monospace; font-size: 11px; padding: 3px; background-color: #ffffff; border: 1px solid #dddddd ");
 
 	//----------------------------------------------
-	//= FlightGear executable
+	//= FlightGear executable (fgfs)
 
 	labelFgFsInfo = new QLabel(tr("FlightGear Executable (fgfs):"));
 	grpFgPaths->addWidget(labelFgFsInfo, 1);
 
-	labelFgFsPath = new QLabel(" ");
-	labelFgFsPath->setStyleSheet(style_paths);
-	grpFgPaths->addWidget(labelFgFsPath);
-	labelFgFsPath->setText( mainObject->X->fgfs_path() );
+	lineEditFgFsPath = new QLineEdit("");
+	lineEditFgFsPath->setStyleSheet(style_paths);
+	lineEditFgFsPath->setFixedSize(QSize(300,20));
+	grpFgPaths->addWidget(lineEditFgFsPath);
+	lineEditFgFsPath->setText( mainObject->X->fgfs_path() );
 
 
 	//----------------------------------------------
-	//= FG ROOT Data Directory
+	//= FlightGear Root Data Directory (/fgdata)
 
 	labelFgRootInfo = new QLabel(tr("FlightGear Data Directory (fgdata):"));
 	grpFgPaths->addWidget(labelFgRootInfo, 1);
 
-	labelFgRootPath = new QLabel(" ");
-	labelFgRootPath->setStyleSheet(style_paths);
-	grpFgPaths->addWidget(labelFgRootPath);
-	labelFgRootPath->setText( mainObject->X->fgroot() );
+	lineEditFgRootPath = new QLineEdit("");
+	lineEditFgRootPath->setStyleSheet(style_paths);
+	lineEditFgRootPath->setFixedSize(QSize(300,20));
+	grpFgPaths->addWidget(lineEditFgRootPath);
+	lineEditFgRootPath->setText( mainObject->X->fgroot() );
 	
 	//----------------------------------------------
-	//= Terrasync Executable
+	//= Terrasync Executable (terrasync)
 	
 	labelTerraSyncExeInfo = new QLabel(tr("Terrasync executable (terrasync):"));
 	grpFgPaths->addWidget(labelTerraSyncExeInfo, 1);
 	
-	labelTerraSyncExePath = new QLabel("");
-	labelTerraSyncExePath->setStyleSheet(style_paths);
-	grpFgPaths->addWidget(labelTerraSyncExePath);
+	lineEditTerraSyncExePath = new QLineEdit("");
+	lineEditTerraSyncExePath->setStyleSheet(style_paths);
+	lineEditTerraSyncExePath->setFixedSize(QSize(300,20));
+	grpFgPaths->addWidget(lineEditTerraSyncExePath);
 	
-	labelTerraSyncExePath->setText("No");
+	lineEditTerraSyncExePath->setText( mainObject->X->terrasync_exe_path() );
 	
 	
 	//----------------------------------------------
-	//= Terrasync Directory
+	//= Terrasync Directory (Custom, but set by default)
 	
 	labelTerraSyncInfo = new QLabel(tr("Terrasync Data path:"));
 	grpFgPaths->addWidget(labelTerraSyncInfo, 1);
 	
-	labelTerraSyncDataPath = new QLabel("");
-	labelTerraSyncDataPath->setStyleSheet(style_paths);
-	grpFgPaths->addWidget(labelTerraSyncDataPath);
+	lineEditTerraSyncDataPath = new QLineEdit("");
+	lineEditTerraSyncDataPath->setStyleSheet(style_paths);
+	lineEditTerraSyncDataPath->setFixedSize(QSize(300,20));
+	grpFgPaths->addWidget(lineEditTerraSyncDataPath);
 	
-	labelTerraSyncDataPath->setText( mainObject->X->terrasync_data_path() );
+	lineEditTerraSyncDataPath->setText( mainObject->X->terrasync_data_path() );
 	
 	
 	
 	//----------------------------------------------
-	//= Custom Scenery Directory
+	//= Custom Scenery Directory (always custom)
 	
 	labelCustomSceneInfo = new QLabel(tr("Custom scenery path:"));
 	grpFgPaths->addWidget(labelCustomSceneInfo, 1);
 	
-	labelCustomScenePath = new QLabel("");
-	labelCustomScenePath->setStyleSheet(style_paths);
-	grpFgPaths->addWidget(labelCustomScenePath);
+	lineEditCustomScenePath = new QLineEdit("");
+	lineEditCustomScenePath->setFixedSize(QSize(300,20));
+	lineEditCustomScenePath->setStyleSheet(style_paths);
+	grpFgPaths->addWidget(lineEditCustomScenePath);
 	
-	labelCustomScenePath->setText( mainObject->X->custom_scenery_path() );
+	lineEditCustomScenePath->setText( mainObject->X->custom_scenery_path() );
+	
+	
+	//----------------------------------------------
+	//= FGCom Executable (fgcom)
+	
+	labelFGComExeInfo = new QLabel(tr("FGCom executable (fgcom):"));
+	grpFgPaths->addWidget(labelFGComExeInfo, 1);
+	
+	lineEditFGComExePath = new QLineEdit("");
+	lineEditFGComExePath->setStyleSheet(style_paths);
+	lineEditFGComExePath->setFixedSize(QSize(300,20));
+	grpFgPaths->addWidget(lineEditFGComExePath);
+	
+	lineEditFGComExePath->setText(mainObject->X->fgcom_exe_path());
 
-	
-
-	
 
 	
 	//==================================================================
@@ -350,19 +365,25 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 
 	//= Fgfs Path
 	labelFgFsInfo->setText("Using FlightGear path (fgfs)");
-	labelFgFsPath->setText(mainObject->X->fgfs_path());
+	lineEditFgFsPath->setText(mainObject->X->fgfs_path());
 
 	//= fgroot path
 	labelFgRootInfo->setText("Using fgroot path");
-	labelFgRootPath->setText(mainObject->X->fgroot());
+	lineEditFgRootPath->setText(mainObject->X->fgroot());
+		
+	//= terrasync exe path
+	lineEditTerraSyncExePath->setText(mainObject->X->terrasync_exe_path());
 
 	//= terrasync data path
-	labelTerraSyncDataPath->setText(mainObject->X->terrasync_data_path());
+	lineEditTerraSyncDataPath->setText(mainObject->X->terrasync_data_path());
+		
+	//= terrasync data path
+	lineEditFGComExePath->setText(mainObject->X->fgcom_exe_path());
 	
 	
 	//= custom scenery
 	}else if(option == "custom_scenery_path"){
 	
-	labelCustomScenePath->setText(enabled ? value : mainObject->X->custom_scenery_path());
+	lineEditCustomScenePath->setText(enabled ? value : mainObject->X->custom_scenery_path());
 	}
 }

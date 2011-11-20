@@ -104,6 +104,8 @@ public slots:
 	//* Functions
 	void load_settings();
 	void save_settings();
+	void load_profile();
+	void save_profile();
 	void initialize();
 	bool validate();
 

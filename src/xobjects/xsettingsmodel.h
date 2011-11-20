@@ -67,14 +67,13 @@ public:
 	QString scenery_path();
 
 	bool terrasync_enabled();
-	QString terrasync_path();
+	QString terrasync_exe_path();
 	QString terrasync_data_path();
 	
 	bool custom_scenery_enabled();
 	QString custom_scenery_path();
 	
 	bool fgcom_enabled();
-
 	QString fgcom_exe_path();
 	QString jsdemo_exe_path();
 
@@ -98,6 +97,8 @@ public slots:
 	QString ini_file_path();
 	void write_ini();
 	void read_ini();
+	void load_profile();
+	void save_profile();
 };
 
 #endif // XSETTINGSMODEL_H

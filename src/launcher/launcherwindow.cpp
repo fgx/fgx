@@ -133,11 +133,8 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	buttonLoadSettings->setStyleSheet("padding: 0px;");
 	toolBox->addWidget(buttonLoadSettings);
 	connect(buttonLoadSettings, SIGNAL(clicked()),
-			this, SLOT(load_settings())
+			this, SLOT(load_profile())
 			);
-	connect(buttonLoadSettings, SIGNAL(clicked()),
-			mainObject->X, SLOT(read_ini())
-	);
 
 	//= Save Settings
 	QToolButton *buttonSaveSettings = new QToolButton(this);
@@ -148,12 +145,8 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	buttonSaveSettings->setStyleSheet("padding: 0px;");
 	toolBox->addWidget(buttonSaveSettings);
 	connect(buttonSaveSettings, SIGNAL(clicked()),
-			this, SLOT(save_settings())
+			this, SLOT(save_profile())
 			);
-	connect(buttonSaveSettings, SIGNAL(clicked()),
-			mainObject->X, SLOT(write_ini())
-	);
-
 	bottomActionLayout->addStretch(20);
 
 
@@ -329,7 +322,7 @@ void LauncherWindow::save_settings()
 //================================================================================
 void LauncherWindow::load_settings()
 {
-
+	mainObject->X->read_ini();
 
 	QString message("Settings loaded.");
 	headerWidget->showMessage(message);
@@ -338,6 +331,32 @@ void LauncherWindow::load_settings()
 	outLog("FGx: LauncherWindow::load_settings() executed, message only");
 
 
+}
+
+//================================================================================
+// Load Profile
+//================================================================================
+void LauncherWindow::load_profile()
+{
+	mainObject->X->load_profile();
+	
+	QString message("Profile loaded.");
+	headerWidget->showMessage(message);
+	
+	
+}
+
+//================================================================================
+// Save Profile
+//================================================================================
+void LauncherWindow::save_profile()
+{
+	mainObject->X->save_profile();
+	
+	QString message("Profile saved.");
+	headerWidget->showMessage(message);
+	
+	
 }
 
 

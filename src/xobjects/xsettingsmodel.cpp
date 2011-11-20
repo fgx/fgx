@@ -39,14 +39,13 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	//=================================================================================
 	// This list will be the main issue and debates for a long time probably, said pete
 	//=================================================================================
-	// Yes, said Yves //
-	//===================
 
 
 	//==================
 	add_option("fgfs_path", false,"","",0,"","paths");
 	add_option("fgroot_path", false,"","",0,"","paths");
-	add_option("terrasync_path", false,"","",0,"","paths");
+	add_option("terrasync_enabled", false,"","",0,"","paths");
+	add_option("terrasync_exe_path", false,"","",0,"","paths");
 	add_option("terrasync_data_path", false,"","",0,"","paths");
 	add_option("custom_scenery_enabled", false,"","",0,"","paths");
 	add_option("custom_scenery_path", false,"","",0,"","paths");
@@ -341,11 +340,12 @@ QString XSettingsModel::ini_file_path()
 	bool direxist = QFile(QDesktopServices::storageLocation(QDesktopServices::DataLocation).append("profile.ini")).exists();
 
 	if(direxist)  {
-		outLog("*** There is a profile ! ***");
+		outLog("*** There is a profile ! I will read it. ***");
 		return mainObject->data_file("profile.ini");
 	}
 	
 	else {
+		outLog("*** I will read default.ini, there is no profile.ini yet ***");
 		return QString(":/default/osx_default.ini");
 	}
 }
@@ -358,11 +358,6 @@ void XSettingsModel::write_ini()
 {
 	//= create ini settings object
 
-	// TODO LATER
-	//QString fileName =
-	//QFileDialog::getSaveFileName(0, "Save Profiles", ini_file_path(), "Profile files (*.ini)" );
-
-	//QSettings settings(fileName, QSettings::IniFormat);
 	QSettings settings(ini_file_path(),QSettings::IniFormat);
 
 	//= loop rows and save each "option" as an [ini section] with enabled, value as values
@@ -385,12 +380,6 @@ void XSettingsModel::read_ini()
 {
 	_loading = true;
 
-	//= Create ini settings object
-	//TODO later
-	//QString fileName =
-	//QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
-
-	//QSettings settings(fileName, QSettings::IniFormat);
 	QSettings settings(ini_file_path(),QSettings::IniFormat);
 
 	bool ena;
@@ -417,6 +406,66 @@ void XSettingsModel::read_ini()
 	emit updated(get_fgfs_list());
 	
 }
+
+//=============================================
+// == Load Profile
+/** \brief Opens Profile Dialog for loading a .ini File
+ */
+
+void XSettingsModel::load_profile()
+{
+	_loading = true;
+	
+	QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
+	QSettings settings(ini_file_path(),QSettings::IniFormat);
+	
+	bool ena;
+	for(int row_idx=0; row_idx < rowCount(); row_idx++){
+		//= loop rows and load each "option" as an [ini section] with enabled, value as values
+		settings.beginGroup(item(row_idx, C_OPTION)->text());
+		ena = settings.value("enabled").toBool() ;
+		item(row_idx, C_ENABLED)->setText( ena ? "1" : "0");
+		QString val = settings.value("value").toString();
+		if(val == ""){
+			val = item(row_idx, C_DEFAULT)->text();
+		}
+		item(row_idx, C_VALUE)->setText(val );
+		set_row_bg(row_idx, ena ? QColor(200,255,200) : QColor(240,240,240));
+		//= Broadcast changes
+		emit upx(item(row_idx, C_OPTION)->text(),
+				 item(row_idx, C_ENABLED)->text() == "1",
+				 item(row_idx, C_VALUE)->text()
+				 );
+		settings.endGroup();
+	}
+	_loading = false;
+	emit updated(get_fgfs_list());
+	
+}
+
+//=============================================
+// == Save Profile
+/** \brief Opens Profile Dialog for loading a .ini File
+ */
+
+void XSettingsModel::save_profile()
+{
+	
+	QFileDialog::getSaveFileName(0, "Save Profiles", "myprofile.ini", "Profile files (*.ini)" );
+	QSettings settings("myprofile.ini",QSettings::IniFormat);
+	
+	//= loop rows and save each "option" as an [ini section] with enabled, value as values
+	for(int row_idx=0; row_idx < rowCount(); row_idx++){
+		settings.beginGroup(item(row_idx, C_OPTION)->text());
+		settings.setValue( "enabled", item(row_idx, C_ENABLED)->text());
+		settings.setValue( "value", item(row_idx, C_VALUE)->text());
+		settings.endGroup();
+	}
+	qDebug() << "Profile written to disk.";
+	//emit updated(get_fgfs_list());
+	
+}
+
 
 
 
@@ -535,8 +584,18 @@ QStringList XSettingsModel::get_fgfs_env(){
 /** \brief Path to fgfs executable
  */
 QString XSettingsModel::fgfs_path(){
-	return QDir::currentPath().append(getx("fgfs_path"));
+	return QDir::currentPath().append("/").append(getx("fgfs_path"));
 
+}
+
+//===========================================================================
+//== terrasync enabled/disabled
+//===========================================================================
+/** \brief Sert terrasync enabled/disabled
+ */
+bool XSettingsModel::terrasync_enabled(){
+	return get_ena("terrasync_enabled");
+	
 }
 
 
@@ -545,8 +604,8 @@ QString XSettingsModel::fgfs_path(){
 //===========================================================================
 /** \brief Path to terrasync executable
  */
-QString XSettingsModel::terrasync_path(){
-	return QDir::currentPath().append(getx("terrasync_path"));
+QString XSettingsModel::terrasync_exe_path(){
+	return QDir::currentPath().append("/").append(getx("terrasync_exe_path"));
 	
 }
 
@@ -560,56 +619,27 @@ QString XSettingsModel::terrasync_data_path(){
 }
 
 //===========================================================================
+//** Return FGCom enabled/disabled
+//===========================================================================
+
+bool XSettingsModel::fgcom_enabled(){
+	return get_ena("fgcom_enabled");
+}
+
+//===========================================================================
 //== fgcom Executable
 //===========================================================================
 /** \brief Path to terrasync executable
  */
 
 QString XSettingsModel::fgcom_exe_path(){
-	
-	// PLEASE DO NOT TOUCH THIS PART --- START
-	
-	if(mainObject->runningOs() == MainObject::MAC ){
-		
-		QString fgcomExePath;
-		QString tmp;
-		QDir d;
-		fgcomExePath = "fgcom";
-		
-		int ind, siz;
-		tmp = mainObject->X->fgfs_path();
-		ind = tmp.indexOf(QChar('/'));
-		siz = 0;
-		// march to last '/' in path
-		while (ind >= 0) {
-			tmp = tmp.mid(ind + 1);
-			siz = tmp.size();
-			ind = tmp.indexOf(QChar('/'));
-		}
-		if (siz > 0) {
-			tmp = mainObject->X->fgfs_path();
-			tmp.chop(siz);
-			if (d.exists(tmp)) {
-				fgcomExePath = tmp + fgcomExePath;
-			}
-		}
-		
-		return fgcomExePath;
-		
-		// PLEASE DO NOT TOUCH THIS PART --- END
-		
-		
-	}else if(mainObject->runningOs() == MainObject::LINUX){
-		return QString("fgcom");
-		
-	}else if(mainObject->runningOs() == MainObject::WINDOWS){
-        return QString("\"C:/Program Files/FlightGear/bin/win32/fgcom.exe\"");
-		
-	}else{
-		return QString("UNKNOW OS in fgcom_exe_path()");
-	}
+	return QDir::currentPath().append("/").append(getx("fgcom_exe_path"));
 }
 
+	
+	
+	
+	
 QString XSettingsModel::jsdemo_exe_path(){
 		//nothing
 	
@@ -622,7 +652,7 @@ QString XSettingsModel::jsdemo_exe_path(){
 //===========================================================================
 /** \return The absolute path to FG_ROOT ie /fgdata directory */
 QString XSettingsModel::fgroot(){
-	return QDir::currentPath().append(getx("fgroot_path"));
+	return QDir::currentPath().append("/").append(getx("fgroot_path"));
 }
 
 /** \brief Path to FG_ROOT with appended path
@@ -724,24 +754,6 @@ bool XSettingsModel::custom_scenery_enabled(){
 	return get_ena("custom_scenery_path");
 }
 
-//===========================================================================
-//** FGCom enabled
-//===========================================================================
-
-bool XSettingsModel::fgcom_enabled(){
-	return get_ena("fgcom_enabled");
-}
-
-//===========================================================================
-//** TerraSync
-//===========================================================================
-/** \brief  Using terrasync for scenery
- *
- * \return true if using terrasync
- */
-bool XSettingsModel::terrasync_enabled(){
-	return get_ena("terrasync_path");
-}
 
 
 
