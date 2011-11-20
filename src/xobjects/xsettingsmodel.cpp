@@ -46,11 +46,10 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	//==================
 	add_option("fgfs_path", false,"","",0,"","paths");
 	add_option("fgroot_path", false,"","",0,"","paths");
-	add_option("terrasync_enabled", false,"","",0,"","paths");
 	add_option("terrasync_path", false,"","",0,"","paths");
+	add_option("terrasync_data_path", false,"","",0,"","paths");
 	add_option("custom_scenery_enabled", false,"","",0,"","paths");
 	add_option("custom_scenery_path", false,"","",0,"","paths");
-	add_option("terrasync_exe_path", false, "", "", 0, "", "paths");
     add_option("fgcom_exe_path", false, "", "", 0, "", "paths");
 	add_option("fgcom_enabled", false, "", "", 0, "", "paths");
 	add_option("jsdemo_enabled", false, "", "", 0, "", "paths");
@@ -471,12 +470,12 @@ QStringList XSettingsModel::get_fgfs_args()
 
 	//= Terrasync and custom scenery path
 	if (terrasync_enabled() && !custom_scenery_enabled()) {
-		args << QString("--fg-scenery=").append(terrasync_sync_data_path()).append(":").append(scenery_path());
+		args << QString("--fg-scenery=").append(terrasync_data_path()).append(":").append(scenery_path());
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 		}
 	
 	if (terrasync_enabled() && custom_scenery_enabled()) {
-		args << QString("--fg-scenery=").append(custom_scenery_path()).append(":").append(terrasync_sync_data_path()).append(":").append(scenery_path());
+		args << QString("--fg-scenery=").append(custom_scenery_path()).append(":").append(terrasync_data_path()).append(":").append(scenery_path());
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}
 
@@ -546,49 +545,18 @@ QString XSettingsModel::fgfs_path(){
 //===========================================================================
 /** \brief Path to terrasync executable
  */
-QString XSettingsModel::terrasync_default_path(){
+QString XSettingsModel::terrasync_path(){
+	return QDir::currentPath().append(getx("terrasync_path"));
 	
-	// PLEASE DO NOT TOUCH THIS PART --- START
+}
 
-	if(mainObject->runningOs() == MainObject::MAC ){
-		
-		QString terraExePath;
-		QString tmp;
-		QDir d;
-		terraExePath = "terrasync";
-		
-		int ind, siz;
-		tmp = mainObject->X->fgfs_path();
-		ind = tmp.indexOf(QChar('/'));
-		siz = 0;
-		// march to last '/' in path
-		while (ind >= 0) {
-			tmp = tmp.mid(ind + 1);
-			siz = tmp.size();
-			ind = tmp.indexOf(QChar('/'));
-		}
-		if (siz > 0) {
-			tmp = mainObject->X->fgfs_path();
-			tmp.chop(siz);
-			if (d.exists(tmp)) {
-				terraExePath = tmp + terraExePath;
-			}
-		}
-	
-		return terraExePath;
-		
-	// PLEASE DO NOT TOUCH THIS PART --- END
-		
-
-	}else if(mainObject->runningOs() == MainObject::LINUX){
-		return QString("terrasync");
-
-	}else if(mainObject->runningOs() == MainObject::WINDOWS){
-		return QString("C:/Program Files/FlightGear/bin/win32/terrasync.exe");
-
-	}else{
-		return QString("UNKNOW OS in terrasync_exe_path()");
-	}
+//===========================================================================
+//== terrasync Data Path
+//===========================================================================
+/** \brief Path to terrasync executable
+ */
+QString XSettingsModel::terrasync_data_path(){
+	return QString(getx("terrasync_data_path"));
 }
 
 //===========================================================================
@@ -723,7 +691,7 @@ QString XSettingsModel::airports_path(){
 		//	rpath.append("/Documents/TerrasyncScenery");
 		//}else{
 			// Use the terra sync path
-		rpath = terrasync_sync_data_path().append("/Airports");
+		rpath = terrasync_data_path().append("/Airports");
 		}
 	
 	else{ // Otherwise return the FG_ROOT airports/
@@ -774,54 +742,7 @@ bool XSettingsModel::fgcom_enabled(){
 bool XSettingsModel::terrasync_enabled(){
 	return get_ena("terrasync_path");
 }
-/** \brief terrasync executable
- *
-  * \return path to terrasync executable
-  * \todo Windows path
- */
-QString tspath;
-QString tmp;
-QDir d;
 
-QString XSettingsModel::terrasync_exe_path(){
-	if (mainObject->runningOs() == MainObject::MAC) {
-
-		int ind, siz;
-		tmp = mainObject->X->fgfs_path();
-		ind = tmp.indexOf(QChar('/'));
-		siz = 0;
-		// march to last '/' in path
-		while (ind >= 0) {
-			tmp = tmp.mid(ind + 1);
-			siz = tmp.size();
-			ind = tmp.indexOf(QChar('/'));
-		}
-		if (siz > 0) {
-			tmp = mainObject->X->fgfs_path();
-			tmp.chop(siz);
-			if (d.exists(tmp)) {
-				tspath = tmp + tspath;
-			}
-		}
-
-		return tspath;
-
-
-	}else if(mainObject->runningOs() == MainObject::LINUX){
-		return QString("terrasync");
-
-	}else if(mainObject->runningOs() == MainObject::WINDOWS){
-		return QString("c:/Program Files/FlightGear/bin/terrasync.exe");
-	}
-	return QString("TODO - terrasync");
-}
-/** \brief terrasync data path
- *
-  * \return path to where terrasync will store files downloaded.
- */
-QString XSettingsModel::terrasync_sync_data_path(){
-	return getx("terrasync_path");
-}
 
 
 void XSettingsModel::set_row_bg(int row_idx, QColor  bg_color)

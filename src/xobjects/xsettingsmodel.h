@@ -67,8 +67,8 @@ public:
 	QString scenery_path();
 
 	bool terrasync_enabled();
-	QString terrasync_exe_path();
-	QString terrasync_sync_data_path();
+	QString terrasync_path();
+	QString terrasync_data_path();
 	
 	bool custom_scenery_enabled();
 	QString custom_scenery_path();

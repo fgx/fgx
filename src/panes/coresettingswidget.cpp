@@ -132,6 +132,32 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpFgPaths->addWidget(labelFgRootPath);
 	labelFgRootPath->setText( mainObject->X->fgroot() );
 	
+	//----------------------------------------------
+	//= Terrasync Executable
+	
+	labelTerraSyncExeInfo = new QLabel(tr("Terrasync executable (terrasync):"));
+	grpFgPaths->addWidget(labelTerraSyncExeInfo, 1);
+	
+	labelTerraSyncExePath = new QLabel("");
+	labelTerraSyncExePath->setStyleSheet(style_paths);
+	grpFgPaths->addWidget(labelTerraSyncExePath);
+	
+	labelTerraSyncExePath->setText("No");
+	
+	
+	//----------------------------------------------
+	//= Terrasync Directory
+	
+	labelTerraSyncInfo = new QLabel(tr("Terrasync Data path:"));
+	grpFgPaths->addWidget(labelTerraSyncInfo, 1);
+	
+	labelTerraSyncDataPath = new QLabel("");
+	labelTerraSyncDataPath->setStyleSheet(style_paths);
+	grpFgPaths->addWidget(labelTerraSyncDataPath);
+	
+	labelTerraSyncDataPath->setText( mainObject->X->terrasync_data_path() );
+	
+	
 	
 	//----------------------------------------------
 	//= Custom Scenery Directory
@@ -145,20 +171,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	labelCustomScenePath->setText( mainObject->X->custom_scenery_path() );
 
-	//= Connect Mainobject (after paths wizard)
-	//connect(mainObject, SIGNAL(reload_paths()), this, SLOT(load_settings()));
 	
-	//----------------------------------------------
-	//= Terrasync Directory
-	
-	labelTerraSyncInfo = new QLabel(tr("Terrasync scenery path:"));
-	grpFgPaths->addWidget(labelTerraSyncInfo, 1);
-	
-	labelTerraSyncDataPath = new QLabel("");
-	labelTerraSyncDataPath->setStyleSheet(style_paths);
-	grpFgPaths->addWidget(labelTerraSyncDataPath);
-	
-	labelTerraSyncDataPath->setText( mainObject->X->terrasync_sync_data_path() );
 
 	
 
@@ -343,10 +356,8 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 	labelFgRootInfo->setText("Using fgroot path");
 	labelFgRootPath->setText(mainObject->X->fgroot());
 
-	//= terrasync
-	}else if(option == "terrasync_path"){
-
-		labelTerraSyncDataPath->setText(enabled ? value : mainObject->X->terrasync_sync_data_path());
+	//= terrasync data path
+	labelTerraSyncDataPath->setText(mainObject->X->terrasync_data_path());
 	
 	
 	//= custom scenery

@@ -53,6 +53,9 @@ public:
 	QLabel *labelTerraSyncInfo;
 	QLabel *labelTerraSyncDataPath;
 	
+	QLabel *labelTerraSyncExeInfo;
+	QLabel *labelTerraSyncExePath;
+	
 	QLabel *labelCustomSceneInfo;
 	QLabel *labelCustomScenePath;
 	

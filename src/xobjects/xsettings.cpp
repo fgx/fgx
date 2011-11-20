@@ -18,19 +18,6 @@
  * The general idea of the class is to  provide one central place to access settings. It is
  * for this reason that methods are created to hide some of the completities, such as aircraft_path().
  *
- *
- * === Path Settings ===
- *
- * The essential path settings stored in the ini are:
- * - "fgfs_use_default" - whether to use the default installed fgfs binary
- * - "fgfs_custom_path" - the custom path to the fgfs executable
- * - "fgroot_use_default" - whether to use the default FG_ROOT path
- * - "fgroot_custom_path" - the custom path to fgdata/ eg a git checkout
- * - "terrasync_enabled" - whether terrasync is enabled
- * - "terrasync_path" - the path to the terrasync data directory
- *
- * The essential path settings abovar are written out on ConfirmPage of the SetupWizard
- *
  * @author: Peter Morgan
  * @author: Yves Sablonier
  */
@@ -112,11 +99,12 @@ bool XSettings::dev_mode(){
 	return QFile::exists(curr);
 }
 
+// this should be used, yves
 QString XSettings::fgx_current_dir(){
 	return QDir::current().absolutePath();
 }
 
-
+// and this too, hrmbl !
 QString XSettings::cache_dir(){
 	return QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
 }
