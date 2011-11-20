@@ -341,7 +341,7 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 
 	//= fgroot path
 	labelFgRootInfo->setText("Using fgroot path");
-	labelFgRootPath->setText(mainObject->X->fgroot_path());
+	labelFgRootPath->setText(mainObject->X->fgroot());
 
 	//= terrasync
 	}else if(option == "terrasync_path"){

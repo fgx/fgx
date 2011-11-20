@@ -417,10 +417,6 @@ void XSettingsModel::read_ini()
 	//qDebug() << "Read ini";
 	emit updated(get_fgfs_list());
 	
-	//update fgfs path first startup and reset
-	QString fgfsPath = QDir::currentPath().append("/").append(getx("fgfs_path"));
-	emit upx("fgfs_path", true, fgfsPath);
-	
 }
 
 
@@ -540,13 +536,16 @@ QStringList XSettingsModel::get_fgfs_env(){
 /** \brief Path to fgfs executable
  */
 QString XSettingsModel::fgfs_path(){
-	//if(fgfs_use_default()){
-	//	return fgfs_default_path();
-	//}
-	return getx("fgfs_path");
-	//return QString("Hier der neue Pfad");
+	return QDir::currentPath().append(getx("fgfs_path"));
+
 }
 
+
+//===========================================================================
+//== terrasync Executable
+//===========================================================================
+/** \brief Path to terrasync executable
+ */
 QString XSettingsModel::terrasync_default_path(){
 	
 	// PLEASE DO NOT TOUCH THIS PART --- START
@@ -591,6 +590,12 @@ QString XSettingsModel::terrasync_default_path(){
 		return QString("UNKNOW OS in terrasync_exe_path()");
 	}
 }
+
+//===========================================================================
+//== fgcom Executable
+//===========================================================================
+/** \brief Path to terrasync executable
+ */
 
 QString XSettingsModel::fgcom_exe_path(){
 	
@@ -649,7 +654,7 @@ QString XSettingsModel::jsdemo_exe_path(){
 //===========================================================================
 /** \return The absolute path to FG_ROOT ie /fgdata directory */
 QString XSettingsModel::fgroot(){
-	return getx("fgroot_path");
+	return QDir::currentPath().append(getx("fgroot_path"));
 }
 
 /** \brief Path to FG_ROOT with appended path
@@ -662,25 +667,6 @@ QString XSettingsModel::fgroot(){
 
 QString XSettingsModel::fgroot(QString append_path){
 	return this->fgroot().append(append_path);
-}
-
-/** \brief Platform specific default path for the FG_ROOT dir
- *
-  * \return The absolute path to FG_ROOT
- */
-QString XSettingsModel::fgroot_path(){
-
-	if(mainObject->runningOs() == MainObject::MAC){
-		return QDir::currentPath().append("/fgx.app/Contents/Resources/fgx-fgdata");
-
-	}else if(mainObject->runningOs() == MainObject::LINUX){
-		return QString("/usr/share/games/FlightGear");
-
-	}else if(mainObject->runningOs() == MainObject::WINDOWS){
-		return QString("C:/Program Files/FlightGear/data");
-	}
-
-	return QString("Your system is not handled for default fgdata path");
 }
 
 //===========================================================================
