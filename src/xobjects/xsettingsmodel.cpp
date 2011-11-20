@@ -416,8 +416,8 @@ void XSettingsModel::load_profile()
 {
 	_loading = true;
 	
-	QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
-	QSettings settings(ini_file_path(),QSettings::IniFormat);
+	QString filename = QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
+	QSettings settings(filename,QSettings::IniFormat);
 	
 	bool ena;
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
@@ -440,6 +440,7 @@ void XSettingsModel::load_profile()
 	}
 	_loading = false;
 	emit updated(get_fgfs_list());
+	outLog("*** Profile loaded: "+filename);
 	
 }
 
@@ -461,8 +462,7 @@ void XSettingsModel::save_profile()
 		settings.setValue( "value", item(row_idx, C_VALUE)->text());
 		settings.endGroup();
 	}
-	qDebug() << "Profile written to disk.";
-	//emit updated(get_fgfs_list());
+	outLog("*** Profile written to disk: "+filename);
 	
 }
 
