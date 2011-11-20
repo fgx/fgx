@@ -243,9 +243,24 @@ void LauncherWindow::initialize(){
 	//= retorelast tab
 	tabWidget->setCurrentIndex( mainObject->settings->value("launcher_last_tab", 0).toInt() );
 
-	//= First load the settings
-	load_settings();
-	mainObject->X->read_ini();
+	//= First load the profiles
+	
+	QSettings firstsettings;
+	
+	if (!firstsettings.value("firststartup").toBool()) {
+		outLog("*** Looks like first startup without profile, reading default values. ***");
+		mainObject->X->read_default_ini();
+		QMessageBox::warning(this, tr("FGx First Startup - Settings Reset"),
+									   tr("Welcome to FGx. You need to save this Settings Profile first. Choose a writable location in next dialog and click \"Save\"."),
+									   QMessageBox::Ok);
+		mainObject->X->save_profile();
+		firstsettings.setValue("firststartup", "true");
+		firstsettings.setValue("lastprofile", mainObject->X->getx("profile"));
+		firstsettings.sync();
+	} else {
+		mainObject->X->load_last_profile(firstsettings.value("lastprofile").toString());
+	}
+
 
 	//= check paths are sane
 	if(!mainObject->X->paths_sane()){
@@ -253,7 +268,6 @@ void LauncherWindow::initialize(){
 	}
 
 	//* Paths are sane so we can initialize;
-	//TODO setup wizard to import data first time
 	aircraftWidget->initialize();
 	airportsWidget->initialize();
 	coreSettingsWidget->initialize();
@@ -311,24 +325,8 @@ void LauncherWindow::save_settings()
 
 	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
-	outLog("FGx: LauncherWindow::save_settings() saved ***");
+	outLog("FGx: LauncherWindow widget says: settings saved ***");
 
-
-
-}
-
-//================================================================================
-// Load Settings
-//================================================================================
-void LauncherWindow::load_settings()
-{
-	mainObject->X->read_ini();
-
-	QString message("Settings loaded.");
-	headerWidget->showMessage(message);
-
-	//this is a bit dusty here, said yves
-	outLog("FGx: LauncherWindow::load_settings() executed, message only");
 
 
 }
@@ -342,8 +340,6 @@ void LauncherWindow::load_profile()
 	
 	QString message("Profile loaded.");
 	headerWidget->showMessage(message);
-	
-	
 }
 
 //================================================================================
@@ -355,11 +351,7 @@ void LauncherWindow::save_profile()
 	
 	QString message("Profile saved.");
 	headerWidget->showMessage(message);
-	
-	
 }
-
-
 
 
 //==============================================
@@ -369,7 +361,6 @@ void LauncherWindow::on_command_preview(){
 		return;
 	}
 	save_settings();
-	//outputPreviewWidget->preview();
 }
 
 
@@ -454,7 +445,7 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 
 	switch (ret) {
 		case QMessageBox::Save:
-			mainObject->X->write_ini();
+			//mainObject->X->write_ini();
 			save_settings();
 			mainObject->settings->saveWindow(this);
 			mainObject->settings->sync();
@@ -467,7 +458,7 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 			event->ignore();
 			break;
 		default:
-			mainObject->X->write_ini();
+			//mainObject->X->write_ini();
 			save_settings();
 			mainObject->settings->saveWindow(this);
 			mainObject->settings->sync();

@@ -94,9 +94,9 @@ public slots:
 	void set_enabled(QString option, bool enabled);
 	void set_value(QString option, QString value);
 
-	QString ini_file_path();
-	void write_ini();
-	void read_ini();
+	QString profile();
+	void read_default_ini();
+	void load_last_profile(QString profile);
 	void load_profile();
 	void save_profile();
 };

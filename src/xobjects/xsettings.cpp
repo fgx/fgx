@@ -49,8 +49,6 @@ QString XSettings::fgx_path(){
 	return QDir::currentPath().append("/fgx.app/Contents/MacOS");
 }
 
-
-
 //===========================================================================
 //** Save/Restore Window
 //===========================================================================

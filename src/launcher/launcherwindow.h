@@ -6,6 +6,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QActionGroup>
 #include <QtGui/QPushButton>
+#include <QtGui/QMessageBox>
 
 
 #include "panes/coresettingswidget.h"
@@ -81,6 +82,8 @@ public:
 
 	StatusBar *statusBar;
 	MessageBox *messageBox;
+	
+	QMessageBox *NativeMessageBox;
 
 	void closeEvent(QCloseEvent *event);
 
@@ -102,7 +105,6 @@ public slots:
 	void on_whats_this();
 
 	//* Functions
-	void load_settings();
 	void save_settings();
 	void load_profile();
 	void save_profile();

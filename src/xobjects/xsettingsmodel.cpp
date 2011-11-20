@@ -42,6 +42,9 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 
 	//==================
+	add_option("profile", false, "", "", 0, "", "profiles");
+	
+	//==================
 	add_option("fgfs_path", false,"","",0,"","paths");
 	add_option("fgroot_path", false,"","",0,"","paths");
 	add_option("terrasync_enabled", false,"","",0,"","paths");
@@ -277,13 +280,13 @@ QModelIndex XSettingsModel::get_index(QString option)
 QString XSettingsModel::getx(QString option)
 {
 	QList<QStandardItem *>items = findItems(option, Qt::MatchExactly,C_OPTION);
-	//#qDebug() << "opts" << items;
 
 	// Get the item in the same row in the enabled field
 	QStandardItem *xItem = item(items[0]->row(),C_VALUE);
 	return xItem->text();
 
 }
+
 QString XSettingsModel::getx(QString option, bool return_default)
 {
 	//=PETE - I dont think this is being used...
@@ -294,6 +297,7 @@ QString XSettingsModel::getx(QString option, bool return_default)
 	}
 	return opt.value;
 }
+
 QString XSettingsModel::getx(QString option, QString default_string)
 {
 	QString v = getx(option);
@@ -328,59 +332,29 @@ XOpt XSettingsModel::get_opt(QString option)
 
 
 //==================================================
-//= File Functions
-//==================================================
-/** \brief Return current profile.ini
- *
-  * \return or default ini at first startup/clicking reset settings
- */
-QString XSettingsModel::ini_file_path()
-{	
-	//if (mainObject->data_file("profile.ini")) {
-	bool direxist = QFile(QDesktopServices::storageLocation(QDesktopServices::DataLocation).append("profile.ini")).exists();
-
-	if(direxist)  {
-		outLog("*** There is a profile ! I will read it. ***");
-		return mainObject->data_file("profile.ini");
-	}
-	
-	else {
-		outLog("*** I will read default.ini, there is no profile.ini yet ***");
-		return QString(":/default/osx_default.ini");
-	}
-}
-
-//=============================================
-// == Write Ini
-/** \brief Write out values to ini
- */
-void XSettingsModel::write_ini()
-{
-	//= create ini settings object
-
-	QSettings settings(ini_file_path(),QSettings::IniFormat);
-
-	//= loop rows and save each "option" as an [ini section] with enabled, value as values
-	for(int row_idx=0; row_idx < rowCount(); row_idx++){
-		settings.beginGroup(item(row_idx, C_OPTION)->text());
-			settings.setValue( "enabled", item(row_idx, C_ENABLED)->text());
-			settings.setValue( "value", item(row_idx, C_VALUE)->text());
-		settings.endGroup();
-	}
-	qDebug() << "Written ini";
-}
-
-
-//=============================================
-// == Read Ini
+// == Read Default Ini File: First Startup and Reset
 /** \brief Read Values from ini
  */
 
-void XSettingsModel::read_ini()
+void XSettingsModel::read_default_ini()
 {
-	_loading = true;
-
-	QSettings settings(ini_file_path(),QSettings::IniFormat);
+	QString defaultSettings("");
+	switch (mainObject->runningOs()) {
+		case MainObject::MAC:
+			defaultSettings = ":/default/osx_default.ini";
+			break;
+		case MainObject::WINDOWS:
+			defaultSettings = ":/default/win_default.ini";
+			break;
+		case MainObject::LINUX:
+			defaultSettings = ":/default/x_default.ini";
+			break;
+		default:
+			outLog("*** FGx shout: No default settings for this system");
+			break;
+	}
+	
+	QSettings settings(defaultSettings,QSettings::IniFormat);
 
 	bool ena;
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
@@ -401,8 +375,45 @@ void XSettingsModel::read_ini()
 					 );
 		settings.endGroup();
 	}
-	_loading = false;
 	//qDebug() << "Read ini";
+	emit updated(get_fgfs_list());
+	
+}
+
+//=============================================
+// == Load Last Profile
+/** \brief Opens last used profile
+ */
+
+void XSettingsModel::load_last_profile(QString profile)
+{
+	_loading = true;
+	
+	QString filename = profile;
+	QSettings settings(filename,QSettings::IniFormat);
+	
+	outLog("*** FGx loading last used profile:"+filename);
+	
+	bool ena;
+	for(int row_idx=0; row_idx < rowCount(); row_idx++){
+		//= loop rows and load each "option" as an [ini section] with enabled, value as values
+		settings.beginGroup(item(row_idx, C_OPTION)->text());
+		ena = settings.value("enabled").toBool() ;
+		item(row_idx, C_ENABLED)->setText( ena ? "1" : "0");
+		QString val = settings.value("value").toString();
+		if(val == ""){
+			val = item(row_idx, C_DEFAULT)->text();
+		}
+		item(row_idx, C_VALUE)->setText(val );
+		set_row_bg(row_idx, ena ? QColor(200,255,200) : QColor(240,240,240));
+		//= Broadcast changes
+		emit upx(item(row_idx, C_OPTION)->text(),
+				 item(row_idx, C_ENABLED)->text() == "1",
+				 item(row_idx, C_VALUE)->text()
+				 );
+		settings.endGroup();
+	}
+	_loading = false;
 	emit updated(get_fgfs_list());
 	
 }
@@ -416,7 +427,7 @@ void XSettingsModel::load_profile()
 {
 	_loading = true;
 	
-	QString filename = QFileDialog::getOpenFileName(0,  "Load Profiles",  ini_file_path(), "Profile files (*.ini)" );
+	QString filename = QFileDialog::getOpenFileName(0,  "Load Profiles",  profile(), "Profile files (*.ini)" );
 	QSettings settings(filename,QSettings::IniFormat);
 	
 	bool ena;
@@ -452,8 +463,11 @@ void XSettingsModel::load_profile()
 void XSettingsModel::save_profile()
 {
 	
-	QString filename = QFileDialog::getSaveFileName(0, "Save Profiles", "MyProfile.ini", "Profile files (*.ini)" );
+	QString filename = QFileDialog::getSaveFileName(0, "Save Profiles", "NewProfile.ini", "Profile files (*.ini)" );
 	QSettings settings(filename,QSettings::IniFormat);
+	
+	// selected profile filename will be stored in settings
+	set_option("profile", true, filename);
 	
 	//= loop rows and save each "option" as an [ini section] with enabled, value as values
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
@@ -462,6 +476,9 @@ void XSettingsModel::save_profile()
 		settings.setValue( "value", item(row_idx, C_VALUE)->text());
 		settings.endGroup();
 	}
+	
+	
+	
 	outLog("*** Profile written to disk: "+filename);
 	
 }
@@ -575,6 +592,16 @@ QStringList XSettingsModel::get_fgfs_env(){
 		}
 	}
 	return args;
+}
+
+//===========================================================================
+//== Get recent profile
+//===========================================================================
+/** \brief Path to fgfs executable
+ */
+QString XSettingsModel::profile(){
+	return QString(getx("profile"));
+	
 }
 
 

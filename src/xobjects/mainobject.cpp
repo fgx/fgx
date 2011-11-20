@@ -171,7 +171,7 @@ MainObject::MainObject(QObject *parent) :
 	//==================
 	trayIcon->show();
 
-	connect(this, SIGNAL(show_settings(int)), this, SLOT(on_settings(int)));
+	//connect(this, SIGNAL(show_settings(int)), this, SLOT(on_settings(int)));
 
 	//== Props tree
 	propertiesBrowser = new PropsTreeWidget(this);
@@ -188,8 +188,7 @@ MainObject::MainObject(QObject *parent) :
 	if(settings->value("fgx_debug_show_on_startup",0).toBool()){
 		fgxDebugWidget->show();
 	}
-
-
+	
 	launcherWindow = new LauncherWindow(this);
 	launcherWindow->hide();
 

@@ -13,6 +13,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QFontDatabase>
+#include <QSettings>
 
 
 #include "xobjects/mainobject.h"
@@ -112,6 +113,8 @@ int main( int argc, char* argv[])
 	
 	//== Start the application here
 	MainObject mainObject;
+	
+	QSettings startsettings;
 
 	//* check for dev_mode, install message handler
 	if( XSettings::dev_mode() == false ){
