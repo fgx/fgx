@@ -110,6 +110,9 @@ public slots:
 	void save_profile();
 	void initialize();
 	bool validate();
+	
+	//* Header messages
+	void header_show_message(QString message);
 
 
 	//* Ouput Buttons

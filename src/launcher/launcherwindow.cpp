@@ -18,6 +18,7 @@
 #include <QtGui/QStyleFactory>
 #include <QtGui/QMessageBox>
 #include <QtGui/QToolBar>
+#include <QtGui/QFileDialog>
 
 #include "xwidgets/xgroupboxes.h"
 
@@ -257,8 +258,13 @@ void LauncherWindow::initialize(){
 		firstsettings.setValue("firststartup", "true");
 		firstsettings.setValue("lastprofile", mainObject->X->getx("profile"));
 		firstsettings.sync();
+		header_show_message("Profile saved.");
 	} else {
 		mainObject->X->load_last_profile(firstsettings.value("lastprofile").toString());
+		QString tmp = firstsettings.value("lastprofile").toString();
+		QFileInfo fi(tmp);
+		QString name = fi.fileName();
+		header_show_message("Last use profile loaded: "+name);
 	}
 
 
@@ -413,6 +419,15 @@ bool LauncherWindow::validate(){
 }
 
 
+//=======================================================================================================================
+//* Message Event
+//=======================================================================================================================
+
+void LauncherWindow::header_show_message(QString message)
+
+{
+	headerWidget->showMessage(message);
+}
 
 
 //=======================================================================================================================
@@ -431,7 +446,7 @@ void LauncherWindow::on_quit(){
 void LauncherWindow::closeEvent(QCloseEvent *event){
 	if(mainObject->X->get_ena("first_launcher_close") == false){
 		QMessageBox::information(this, "Minimize Notice",
-								 "Fgx does not quit when this window closes, instead minimize to taskbar. You can open this window again.",
+								 "FGx does probably not quit when this window closes on Windows/Linux, instead minimize to taskbar. You can open this window again.",
 								 QMessageBox::Ok);
 		emit setx("first_launcher_close", true, "");
 	}
@@ -445,7 +460,7 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 
 	switch (ret) {
 		case QMessageBox::Save:
-			//mainObject->X->write_ini();
+			mainObject->X->save_profile();
 			save_settings();
 			mainObject->settings->saveWindow(this);
 			mainObject->settings->sync();
@@ -458,7 +473,7 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 			event->ignore();
 			break;
 		default:
-			//mainObject->X->write_ini();
+			mainObject->X->save_profile();
 			save_settings();
 			mainObject->settings->saveWindow(this);
 			mainObject->settings->sync();
@@ -489,16 +504,6 @@ void LauncherWindow::on_tab_changed(int tab_idx){
 		mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
 	}
 }
-
-
-//============================================
-//= ?? is this used
-/*
-void LauncherWindow::on_action_open_url(QAction *act){
-	QUrl url(act->property("url").toString());
-	QDesktopServices::openUrl(url);
-}
-*/
 
 //============================================
 //=
