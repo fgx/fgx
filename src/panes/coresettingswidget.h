@@ -47,16 +47,24 @@ public:
 
 	QLineEdit *lineEditFgFsPath;
 	QLineEdit *lineEditFgRootPath;
-	QLabel *labelFgFsInfo;
-	QLabel *labelFgRootInfo;
-
-	QLabel *labelTerraSyncInfo;
-	QLineEdit *lineEditTerraSyncDataPath;
 	
-	QLabel *labelTerraSyncExeInfo;
+	QLabel *labelFgfsProgram;
+	QLabel *labelFgfsCheck;
+	
+	QLabel *labelFgRootData;
+	QLabel *labelFgRootCheck;
+
+	QLabel *labelTerrasyncProgram;
+	QLabel *labelTerrasyncCheck;
+	
+	QLabel *labelTerrasyncData;
+	QLabel *labelTerrasyncDataCheck;
+	
+	QLineEdit *lineEditTerraSyncDataPath;
 	QLineEdit *lineEditTerraSyncExePath;
 	
-	QLabel *labelCustomSceneInfo;
+	QLabel *labelCustomScene;
+	QLabel *labelCustomSceneCheck;
 	QLineEdit *lineEditCustomScenePath;
 	
 	QLabel *labelFGComExeInfo;

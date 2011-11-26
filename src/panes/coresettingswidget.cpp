@@ -30,6 +30,12 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	QVBoxLayout *layoutLeft = new QVBoxLayout();
 	mainLayout->addLayout(layoutLeft, 1);
 	
+	QVBoxLayout *layoutMiddle = new QVBoxLayout();
+	mainLayout->addLayout(layoutMiddle, 1);
+	
+	QVBoxLayout *layoutRight = new QVBoxLayout();
+	mainLayout->addLayout(layoutRight, 1);
+	
 
 	//==================================================================
 	//= Callsign
@@ -99,95 +105,119 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//===========================================================================
 	//= Paths
 	QVBoxLayout *layoutPaths = new QVBoxLayout();
-	mainLayout->addLayout(layoutPaths, 2);
-
-	XGroupVBox *grpFgPaths = new XGroupVBox("FlightGear Paths");
-	grpFgPaths->setStyleSheet("XGroupVBox::title { color: #000000; background-color: #eeeeee }");
-	layoutPaths->addWidget(grpFgPaths);
-	//grpFgPaths->setWhatsThis("<b>FlightGear Paths</b><br><br>Use \"Settings\" button to change this settings."); 
-
-	QString style_paths("font-family: Andale mono, Lucida Console, monospace; font-size: 11px; padding: 3px; background-color: #ffffff; border: 1px solid #dddddd ");
-
+	layoutMiddle->addLayout(layoutPaths);
+	
+	//----------------------------------------------
+	//= FlightGear box
+	
+	XGroupVBox *grpFgfs = new XGroupVBox("FlightGear program and data");
+	layoutPaths->addWidget(grpFgfs,2);
+	
 	//----------------------------------------------
 	//= FlightGear executable (fgfs)
-
-	labelFgFsInfo = new QLabel(tr("FlightGear Executable (fgfs):"));
-	grpFgPaths->addWidget(labelFgFsInfo, 1);
-
+	
+	labelFgfsProgram = new QLabel("Path to fgfs program: ");
+	labelFgfsCheck = new QLabel("Ready.");
 	lineEditFgFsPath = new QLineEdit("");
-	lineEditFgFsPath->setStyleSheet(style_paths);
-	lineEditFgFsPath->setFixedSize(QSize(300,20));
-	grpFgPaths->addWidget(lineEditFgFsPath);
+	lineEditFgFsPath->setFixedSize(QSize(280,20));
+	grpFgfs->addWidget(labelFgfsProgram);
+	
+	QHBoxLayout *fgfsPathBox = new QHBoxLayout();
+	fgfsPathBox->addWidget(lineEditFgFsPath);
+	fgfsPathBox->addWidget(labelFgfsCheck);
+	grpFgfs->addLayout(fgfsPathBox);
 	lineEditFgFsPath->setText( mainObject->X->fgfs_path() );
-
 
 	//----------------------------------------------
 	//= FlightGear Root Data Directory (/fgdata)
 
-	labelFgRootInfo = new QLabel(tr("FlightGear Data Directory (fgdata):"));
-	grpFgPaths->addWidget(labelFgRootInfo, 1);
-
+	labelFgRootData = new QLabel("Path to FlightGear data directory: ");
+	labelFgRootCheck = new QLabel("Ready.");
 	lineEditFgRootPath = new QLineEdit("");
-	lineEditFgRootPath->setStyleSheet(style_paths);
-	lineEditFgRootPath->setFixedSize(QSize(300,20));
-	grpFgPaths->addWidget(lineEditFgRootPath);
+	lineEditFgRootPath->setFixedSize(QSize(280,20));
+	grpFgfs->addWidget(labelFgRootData);
+	
+	QHBoxLayout *fgfsRootBox = new QHBoxLayout();
+	fgfsRootBox->addWidget(lineEditFgRootPath);
+	fgfsRootBox->addWidget(labelFgRootCheck);
+	grpFgfs->addLayout(fgfsRootBox);
 	lineEditFgRootPath->setText( mainObject->X->fgroot() );
+	
+	//----------------------------------------------
+	//= Scenery box
+	
+	XGroupVBox *grpScene = new XGroupVBox("Scenery program and data");
+	layoutPaths->addWidget(grpScene,2);
 	
 	//----------------------------------------------
 	//= Terrasync Executable (terrasync)
 	
-	labelTerraSyncExeInfo = new QLabel(tr("Terrasync executable (terrasync):"));
-	grpFgPaths->addWidget(labelTerraSyncExeInfo, 1);
-	
+	labelTerrasyncProgram = new QLabel("Path to scenery download program (terrasync): ");
+	labelTerrasyncCheck = new QLabel("Ready.");
 	lineEditTerraSyncExePath = new QLineEdit("");
-	lineEditTerraSyncExePath->setStyleSheet(style_paths);
-	lineEditTerraSyncExePath->setFixedSize(QSize(300,20));
-	grpFgPaths->addWidget(lineEditTerraSyncExePath);
+	lineEditTerraSyncExePath->setFixedSize(QSize(280,20));
+	grpScene->addWidget(labelTerrasyncProgram);
 	
+	QHBoxLayout *terraProgramBox = new QHBoxLayout();
+	terraProgramBox->addWidget(lineEditTerraSyncExePath);
+	terraProgramBox->addWidget(labelTerrasyncCheck);
+	grpScene->addLayout(terraProgramBox);
 	lineEditTerraSyncExePath->setText( mainObject->X->terrasync_exe_path() );
 	
 	
 	//----------------------------------------------
-	//= Terrasync Directory (Custom, but set by default)
+	//= Terrasync Directory (custom, but set by default)
 	
-	labelTerraSyncInfo = new QLabel(tr("Terrasync Data path:"));
-	grpFgPaths->addWidget(labelTerraSyncInfo, 1);
-	
+	labelTerrasyncData = new QLabel("Path to terrasync scenery: ");
+	labelTerrasyncDataCheck = new QLabel("Ready.");
 	lineEditTerraSyncDataPath = new QLineEdit("");
-	lineEditTerraSyncDataPath->setStyleSheet(style_paths);
-	lineEditTerraSyncDataPath->setFixedSize(QSize(300,20));
-	grpFgPaths->addWidget(lineEditTerraSyncDataPath);
+	lineEditTerraSyncDataPath->setFixedSize(QSize(280,20));
+	grpScene->addWidget(labelTerrasyncData);
+	
+	QHBoxLayout *terraDataBox = new QHBoxLayout();
+	terraDataBox->addWidget(lineEditTerraSyncDataPath);
+	terraDataBox->addWidget(labelTerrasyncDataCheck);
+	grpScene->addLayout(terraDataBox);
 	
 	lineEditTerraSyncDataPath->setText( mainObject->X->terrasync_data_path() );
 	
+	layoutMiddle->addStretch(20);
 	
 	
 	//----------------------------------------------
 	//= Custom Scenery Directory (always custom)
 	
-	labelCustomSceneInfo = new QLabel(tr("Custom scenery path:"));
-	grpFgPaths->addWidget(labelCustomSceneInfo, 1);
-	
+	labelCustomScene = new QLabel("Path to other custom scenery:");
+	labelCustomSceneCheck = new QLabel("Ready.");
 	lineEditCustomScenePath = new QLineEdit("");
-	lineEditCustomScenePath->setFixedSize(QSize(300,20));
-	lineEditCustomScenePath->setStyleSheet(style_paths);
-	grpFgPaths->addWidget(lineEditCustomScenePath);
+	lineEditCustomScenePath->setFixedSize(QSize(280,20));
+	grpScene->addWidget(labelCustomScene);
+	
+	QHBoxLayout *customSceneBox = new QHBoxLayout();
+	customSceneBox->addWidget(lineEditCustomScenePath);
+	customSceneBox->addWidget(labelCustomSceneCheck);
+	grpScene->addLayout(customSceneBox);
 	
 	lineEditCustomScenePath->setText( mainObject->X->custom_scenery_path() );
 	
 	
+	//===========================================================================
+	//= Input
+	QVBoxLayout *layoutInput = new QVBoxLayout();
+	layoutRight->addLayout(layoutInput);
+	
 	//----------------------------------------------
 	//= FGCom Executable (fgcom)
 	
-	labelFGComExeInfo = new QLabel(tr("FGCom executable (fgcom):"));
-	grpFgPaths->addWidget(labelFGComExeInfo, 1);
+	//labelFGComExeInfo = new QLabel(tr("FGCom executable (fgcom):"));
+	//grpFgPaths->addWidget(labelFGComExeInfo, 1);
 	
-	lineEditFGComExePath = new QLineEdit("");
-	lineEditFGComExePath->setStyleSheet(style_paths);
-	lineEditFGComExePath->setFixedSize(QSize(300,20));
-	grpFgPaths->addWidget(lineEditFGComExePath);
+	//lineEditFGComExePath = new QLineEdit("");
+	//lineEditFGComExePath->setStyleSheet(style_paths);
+	//lineEditFGComExePath->setFixedSize(QSize(280,20));
+	//grpFgPaths->addWidget(lineEditFGComExePath);
 	
-	lineEditFGComExePath->setText(mainObject->X->fgcom_exe_path());
+	//lineEditFGComExePath->setText(mainObject->X->fgcom_exe_path());
 
 
 	
@@ -196,15 +226,15 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	XGroupVBox *grpBoxControls = new XGroupVBox(tr("FGx Controls Pre-check"));
 	grpBoxControls->setStyleSheet("XGroupVBox::title { color: #000000; background-color: #eeeeee }");
-	layoutPaths->addWidget(grpBoxControls);
+	layoutInput->addWidget(grpBoxControls);
 	grpBoxControls->addWidget(new QLabel("Joystick:"));
 	
 	labelInputs = new QLabel("");
-	labelInputs->setStyleSheet(style_paths);
+	//labelInputs->setStyleSheet(style_paths);
 	grpBoxControls->addWidget(labelInputs);
 	grpBoxControls->setWhatsThis("<b>Controls</b><br><br>FlightGear use auto-detection to detect your input devices. This is just a pre-check of what FlightGear will see.");
 	
-	layoutPaths->addStretch(20);
+	layoutInput->addStretch(20);
 
 	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
@@ -364,11 +394,11 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 		comboMpMapServer->setCurrentIndex(comboMpMapServer->findData(value));
 
 	//= Fgfs Path
-	labelFgFsInfo->setText("Using FlightGear path (fgfs)");
+	//labelFgFsInfo->setText("Using FlightGear path (fgfs)");
 	lineEditFgFsPath->setText(mainObject->X->fgfs_path());
 
 	//= fgroot path
-	labelFgRootInfo->setText("Using fgroot path");
+	//labelFgRootInfo->setText("Using fgroot path");
 	lineEditFgRootPath->setText(mainObject->X->fgroot());
 		
 	//= terrasync exe path
@@ -378,7 +408,7 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 	lineEditTerraSyncDataPath->setText(mainObject->X->terrasync_data_path());
 		
 	//= terrasync data path
-	lineEditFGComExePath->setText(mainObject->X->fgcom_exe_path());
+	//lineEditFGComExePath->setText(mainObject->X->fgcom_exe_path());
 	
 	
 	//= custom scenery
