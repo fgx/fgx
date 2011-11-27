@@ -464,6 +464,10 @@ void XSettingsModel::save_profile()
 	// selected profile filename will be stored in settings
 	set_option("profile", true, filename);
 	
+	// saved profile will be used in settings to load as last used profile
+	QSettings lastused;
+	lastused.setValue("lastprofile", filename);
+	
 	//= loop rows and save each "option" as an [ini section] with enabled, value as values
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
 		settings.beginGroup(item(row_idx, C_OPTION)->text());

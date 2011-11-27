@@ -261,7 +261,7 @@ void LauncherWindow::initialize(){
 		header_show_message("Profile saved.");
 	}
 	
-	// Sorry, this we do everytime, solves a lot of problems loading the first saved profile
+	// This we do everytime, solves a lot of problems loading the first saved profile
 	mainObject->X->load_last_profile(firstsettings.value("lastprofile").toString());
 	QString tmp = firstsettings.value("lastprofile").toString();
 	QFileInfo fi(tmp);
