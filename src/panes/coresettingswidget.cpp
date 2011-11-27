@@ -117,7 +117,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= FlightGear executable (fgfs)
 	
 	labelFgfsProgram = new QLabel("Path to FlightGear program (fgfs): ");
-	labelFgfsCheck = new QLabel("Ready.");
+	labelFgfsCheck = new QLabel("");
 	lineEditFgFsPath = new QLineEdit("");
 	lineEditFgFsPath->setFixedSize(QSize(280,20));
 	grpFgfs->addWidget(labelFgfsProgram);
@@ -127,12 +127,15 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	fgfsPathBox->addWidget(labelFgfsCheck);
 	grpFgfs->addLayout(fgfsPathBox);
 	lineEditFgFsPath->setText( mainObject->X->fgfs_path() );
+	
+	//Check if path exists and set pixmap
+	connect(lineEditFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(fgfs_check_path()));
 
 	//----------------------------------------------
 	//= FlightGear Root Data Directory (/fgdata)
 
 	labelFgRootData = new QLabel("Path to FlightGear data directory (fgdata): ");
-	labelFgRootCheck = new QLabel("Ready.");
+	labelFgRootCheck = new QLabel("");
 	lineEditFgRootPath = new QLineEdit("");
 	lineEditFgRootPath->setFixedSize(QSize(280,20));
 	grpFgfs->addWidget(labelFgRootData);
@@ -142,6 +145,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	fgfsRootBox->addWidget(labelFgRootCheck);
 	grpFgfs->addLayout(fgfsRootBox);
 	lineEditFgRootPath->setText( mainObject->X->fgroot() );
+	
+	//Check if path exists and set pixmap
+	connect(lineEditFgRootPath, SIGNAL(textChanged(QString)), this, SLOT(fgroot_check_path()));
 	
 	//----------------------------------------------
 	//= Scenery box
@@ -166,6 +172,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpScene->addLayout(terraProgramBox);
 	lineEditTerraSyncExePath->setText( mainObject->X->terrasync_exe_path() );
 	
+	//Check if path exists and set pixmap
+	connect(lineEditTerraSyncExePath, SIGNAL(textChanged(QString)), this, SLOT(terrasync_exe_check_path()));
+	
 	
 	//----------------------------------------------
 	//= Terrasync Directory (custom, but set by default)
@@ -182,6 +191,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpScene->addLayout(terraDataBox);
 	
 	lineEditTerraSyncDataPath->setText( mainObject->X->terrasync_data_path() );
+	
+	//Check if path exists and set pixmap
+	connect(lineEditTerraSyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(terrasync_data_check_path()));
 	
 	layoutMiddle->addStretch(20);
 	
@@ -205,6 +217,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpScene->addLayout(customSceneBox);
 	
 	lineEditCustomScenePath->setText( mainObject->X->custom_scenery_path() );
+	
+	//Check if path exists and set pixmap
+	connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(custom_scenery_check_path()));
 	
 	
 	//===========================================================================
@@ -436,4 +451,67 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 	
 	lineEditCustomScenePath->setText(enabled ? value : mainObject->X->custom_scenery_path());
 	}
+}
+
+//======================================================================
+// Check paths and give some feedback
+//======================================================================
+
+void CoreSettingsWidget::fgfs_check_path()
+{
+	bool fgfs_exists = QFile::exists(lineEditFgFsPath->text());
+	if (fgfs_exists) {
+		labelFgfsCheck->setPixmap(QPixmap(":/icon/ok"));
+	} else {
+		labelFgfsCheck->setPixmap(QPixmap(":/icon/not-ok"));
+	}
+	
+}
+
+void CoreSettingsWidget::fgroot_check_path()
+{
+	bool fgroot_exists = QFile::exists(lineEditFgRootPath->text());
+	if (fgroot_exists) {
+		labelFgRootCheck->setPixmap(QPixmap(":/icon/ok"));
+	} else {
+		labelFgRootCheck->setPixmap(QPixmap(":/icon/not-ok"));
+	}
+
+}
+
+void CoreSettingsWidget::terrasync_exe_check_path()
+{
+	bool terrasync_exe_exists = QFile::exists(lineEditTerraSyncExePath->text());
+	if (terrasync_exe_exists) {
+		labelTerrasyncCheck->setPixmap(QPixmap(":/icon/ok"));
+	} else {
+		labelTerrasyncCheck->setPixmap(QPixmap(":/icon/not-ok"));
+	}
+	
+}
+
+
+// Path check special case, not full path is used in settings, base dir is $HOME
+// So this checks against $HOME/path/to/terrasync/data
+void CoreSettingsWidget::terrasync_data_check_path()
+{
+	QString homepath(QDir::homePath());
+	bool terrasync_data_exists = QFile::exists(homepath.append(lineEditTerraSyncDataPath->text()));
+	if (terrasync_data_exists) {
+		labelTerrasyncDataCheck->setPixmap(QPixmap(":/icon/ok"));
+	} else {
+		labelTerrasyncDataCheck->setPixmap(QPixmap(":/icon/not-ok"));
+	}
+	
+}
+
+void CoreSettingsWidget::custom_scenery_check_path()
+{
+	bool custom_scenery_exists = QFile::exists(lineEditCustomScenePath->text());
+	if (custom_scenery_exists) {
+		labelCustomSceneCheck->setPixmap(QPixmap(":/icon/ok"));
+	} else {
+		labelCustomSceneCheck->setPixmap(QPixmap(":/icon/not-ok"));
+	}
+	
 }

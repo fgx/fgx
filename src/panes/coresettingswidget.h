@@ -99,6 +99,14 @@ public slots:
 	void load_joysticks();
 
 	void on_upx(QString option, bool enabled, QString value);
+	
+	// Checks
+	void fgfs_check_path();
+	void fgroot_check_path();
+	void terrasync_exe_check_path();
+	void terrasync_data_check_path();
+	void custom_scenery_check_path();
+	
 };
 
 #endif // CORESETTINGSWIDGET_H

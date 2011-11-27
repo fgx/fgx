@@ -39,5 +39,7 @@
         <file alias="map_type">icons/map.png</file>
         <file alias="tower">icons/building.png</file>
         <file alias="metar">icons/weather_rain.png</file>
+		<file alias="ok">ycons/fgx-ok-green.png</file>
+		<file alias="not-ok">ycons/fgx-not-ok-red.png</file>
     </qresource>
 </RCC>
