@@ -99,7 +99,9 @@ public slots:
 	void on_show_mp_map();
 	
 	void on_terrasync_enabled();
+	void terrasync_enabled_checkstate();
 	void on_custom_scenery_enabled();
+	void custom_scenery_enabled_checkstate();
 
 	void load_joysticks();
 

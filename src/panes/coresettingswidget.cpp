@@ -445,6 +445,11 @@ void CoreSettingsWidget::on_show_mp_map(){
 void CoreSettingsWidget::on_terrasync_enabled()
 {
 	emit( setx("terrasync_enabled", checkBoxUseTerrasync->isChecked(), ""));
+	terrasync_enabled_checkstate();
+}
+
+void CoreSettingsWidget::terrasync_enabled_checkstate()
+{
 	lineEditTerraSyncExePath->setEnabled(checkBoxUseTerrasync->checkState());
 	lineEditTerraSyncDataPath->setEnabled(checkBoxUseTerrasync->checkState());
 	buttonSetTerrasyncExePath->setEnabled(checkBoxUseTerrasync->checkState());
@@ -458,6 +463,11 @@ void CoreSettingsWidget::on_terrasync_enabled()
 void CoreSettingsWidget::on_custom_scenery_enabled()
 {
 	emit( setx("custom_scenery_enabled", checkBoxUseCustomScenery->isChecked(), ""));
+	custom_scenery_enabled_checkstate();
+}
+
+void CoreSettingsWidget::custom_scenery_enabled_checkstate()
+{
 	lineEditCustomScenePath->setEnabled(checkBoxUseCustomScenery->checkState());
 	buttonSetCustomSceneryPath->setEnabled(checkBoxUseCustomScenery->checkState());
 	labelCustomSceneCheck->setEnabled(checkBoxUseCustomScenery->checkState());
@@ -491,7 +501,6 @@ void CoreSettingsWidget::customscenery_set_path() {
 
 void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 {
-	//qDebug() << "op_upx";
 	if(option == "--callsign="){
 		txtCallSign->setText(value);
 
@@ -502,33 +511,32 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 	}else if(option == "--disable-splash-screen"){
 		checkBoxDisableSplashScreen->setChecked(enabled);
 
-
 	}else if(option == "show_mpmap"){
 		checkBoxShowMpMap->setChecked(enabled);
 		comboMpMapServer->setCurrentIndex(comboMpMapServer->findData(value));
-
-	//= Fgfs Path
-	//labelFgFsInfo->setText("Using FlightGear path (fgfs)");
-	lineEditFgFsPath->setText(mainObject->X->fgfs_path());
-
-	//= fgroot path
-	//labelFgRootInfo->setText("Using fgroot path");
-	lineEditFgRootPath->setText(mainObject->X->fgroot());
-		
-	//= terrasync exe path
-	lineEditTerraSyncExePath->setText(mainObject->X->terrasync_exe_path());
-
-	//= terrasync data path
-	lineEditTerraSyncDataPath->setText(mainObject->X->terrasync_data_path());
-		
-	//= terrasync data path
-	//lineEditFGComExePath->setText(mainObject->X->fgcom_exe_path());
 	
+	}else if(option == "fgfs_path"){
+		lineEditFgFsPath->setText(mainObject->X->fgfs_path());
 	
-	//= custom scenery
+	}else if(option == "fgroot_path"){
+		lineEditFgRootPath->setText(mainObject->X->fgroot());
+		
+	}else if (option == "terrasync_enabled") {
+		checkBoxUseTerrasync->setChecked(enabled);
+		terrasync_enabled_checkstate();
+	
+	}else if (option == "custom_scenery_enabled") {
+		checkBoxUseCustomScenery->setChecked(enabled);
+		custom_scenery_enabled_checkstate();
+		
+	}else if(option == "terrasync_exe_path"){
+		lineEditTerraSyncExePath->setText(mainObject->X->terrasync_exe_path());
+
+	}else if(option == "terrasync_data_path"){
+		lineEditTerraSyncDataPath->setText(mainObject->X->terrasync_data_path());
+	
 	}else if(option == "custom_scenery_path"){
-	
-	lineEditCustomScenePath->setText(enabled ? value : mainObject->X->custom_scenery_path());
+		lineEditCustomScenePath->setText(enabled ? value : mainObject->X->custom_scenery_path());
 	}
 }
 
@@ -599,7 +607,7 @@ void CoreSettingsWidget::custom_scenery_check_path()
 }
 
 //======================================================================
-// Set paths via Buttons
+// Set paths with buttons
 //======================================================================
 
 void CoreSettingsWidget::on_select_fgfsbutton()
@@ -617,7 +625,7 @@ void CoreSettingsWidget::on_select_fgfsbutton()
 void CoreSettingsWidget::on_select_fgrootbutton()
 
 {
-	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select FlightGear data folder"),
+	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select FlightGear data directory (fgdata)"),
 	lineEditFgRootPath->text(), QFileDialog::ShowDirsOnly);
 	
 	if(dirPath.length() > 0){
@@ -629,7 +637,7 @@ void CoreSettingsWidget::on_select_fgrootbutton()
 void CoreSettingsWidget::on_select_terrasyncexebutton()
 
 {
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Select FlightGear binary (fgfs)"),
+	QString filePath = QFileDialog::getOpenFileName(this, tr("Select Terrasync binary (terrasync)"),
 													lineEditTerraSyncExePath->text());
 	if(filePath.length() > 0){
 		lineEditTerraSyncExePath->setText(filePath);
@@ -641,7 +649,7 @@ void CoreSettingsWidget::on_select_terrasyncexebutton()
 void CoreSettingsWidget::on_select_terrasyncdatabutton()
 
 {
-	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Terrasync binary path (terrasync)"),
+	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Terrasync data directory"),
 														lineEditTerraSyncDataPath->text(), QFileDialog::ShowDirsOnly);
 	
 	if(dirPath.length() > 0){
@@ -653,7 +661,7 @@ void CoreSettingsWidget::on_select_terrasyncdatabutton()
 void CoreSettingsWidget::on_select_customscenerybutton()
 
 {
-	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Terrasync binary path (terrasync)"),
+	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select custom scenery data directory"),
 														lineEditCustomScenePath->text(), QFileDialog::ShowDirsOnly);
 	
 	if(dirPath.length() > 0){
