@@ -259,13 +259,15 @@ void LauncherWindow::initialize(){
 		firstsettings.setValue("lastprofile", mainObject->X->getx("profile"));
 		firstsettings.sync();
 		header_show_message("Profile saved.");
-	} else {
-		mainObject->X->load_last_profile(firstsettings.value("lastprofile").toString());
-		QString tmp = firstsettings.value("lastprofile").toString();
-		QFileInfo fi(tmp);
-		QString name = fi.fileName();
-		header_show_message("Last use profile loaded: "+name);
 	}
+	
+	// Sorry, this we do everytime, solves a lot of problems loading the first saved profile
+	mainObject->X->load_last_profile(firstsettings.value("lastprofile").toString());
+	QString tmp = firstsettings.value("lastprofile").toString();
+	QFileInfo fi(tmp);
+	QString name = fi.fileName();
+	header_show_message("Last used profile loaded: "+name);
+
 
 
 	//= check paths are sane

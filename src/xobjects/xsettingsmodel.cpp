@@ -16,7 +16,7 @@
  * \brief The XSettingsModel is an extended QStandardItemModel, and the main "setting and state" for FGx
  *
  *
- * @author: Peter Morgan
+ * @authors: Peter Morgan
  */
 
 
@@ -93,11 +93,6 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 
 	add_option( "--callsign=", true,"", "fgx001", 1 ,"Your Callsign","Core");
-
-
-
-
-
 
 	//= Season
 	add_option("--season=", false,"","summer",1,"Season", "time");
@@ -611,7 +606,13 @@ QString XSettingsModel::profile(){
 /** \brief Path to fgfs executable
  */
 QString XSettingsModel::fgfs_path(){
-	return QDir::currentPath().append("/").append(getx("fgfs_path"));
+	QSettings firstsettings;
+	if(!firstsettings.value("firststartup").toBool()){
+		return QDir::currentPath().append("/").append(getx("fgfs_path"));
+	}else {
+		return QString(getx("fgfs_path"));
+	}
+
 
 }
 
@@ -632,7 +633,12 @@ bool XSettingsModel::terrasync_enabled(){
 /** \brief Path to terrasync executable
  */
 QString XSettingsModel::terrasync_exe_path(){
-	return QDir::currentPath().append("/").append(getx("terrasync_exe_path"));
+	QSettings firstsettings;
+	if(!firstsettings.value("firststartup").toBool()){
+		return QDir::currentPath().append("/").append(getx("terrasync_exe_path"));
+	}else{
+		return QString(getx("terrasync_exe_path"));
+	}
 	
 }
 
@@ -660,8 +666,14 @@ bool XSettingsModel::fgcom_enabled(){
  */
 
 QString XSettingsModel::fgcom_exe_path(){
-	return QDir::currentPath().append("/").append(getx("fgcom_exe_path"));
+	QSettings firstsettings;
+	if(!firstsettings.value("firststartup").toBool()){
+		return QDir::currentPath().append("/").append(getx("fgcom_exe_path"));
+	}else {
+		return QString(getx("fgcom_exe_path"));
+	}
 }
+
 
 	
 	
@@ -679,8 +691,14 @@ QString XSettingsModel::jsdemo_exe_path(){
 //===========================================================================
 /** \return The absolute path to FG_ROOT ie /fgdata directory */
 QString XSettingsModel::fgroot(){
-	return QDir::currentPath().append("/").append(getx("fgroot_path"));
+	QSettings firstsettings;
+	if(!firstsettings.value("firststartup").toBool()){
+		return QDir::currentPath().append("/").append(getx("fgroot_path"));
+	}else {
+		return QString(getx("fgroot_path"));
+	}
 }
+
 
 /** \brief Path to FG_ROOT with appended path
  *
