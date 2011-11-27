@@ -53,7 +53,8 @@ public:
 	
 	QLabel *labelFgRootData;
 	QLabel *labelFgRootCheck;
-
+	
+	QCheckBox *checkBoxUseTerrasync;
 	QLabel *labelTerrasyncProgram;
 	QLabel *labelTerrasyncCheck;
 	
@@ -63,6 +64,7 @@ public:
 	QLineEdit *lineEditTerraSyncDataPath;
 	QLineEdit *lineEditTerraSyncExePath;
 	
+	QCheckBox *checkBoxUseCustomScenery;
 	QLabel *labelCustomScene;
 	QLabel *labelCustomSceneCheck;
 	QLineEdit *lineEditCustomScenePath;
@@ -90,6 +92,9 @@ public slots:
 	void on_checkbox_splash_screen();
 
 	void on_show_mp_map();
+	
+	void on_terrasync_enabled();
+	void on_custom_scenery_enabled();
 
 	void load_joysticks();
 

@@ -60,7 +60,6 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	QVBoxLayout *leftLayout = new QVBoxLayout();
 	middleLayout->addLayout(leftLayout, 1);
 
-
 	grpMpServerIn = new XGroupHBox("MultiPlayer In");
 	grpMpServerIn->setCheckable(true);
 	leftLayout->addWidget(grpMpServerIn);

@@ -116,7 +116,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//----------------------------------------------
 	//= FlightGear executable (fgfs)
 	
-	labelFgfsProgram = new QLabel("Path to fgfs program: ");
+	labelFgfsProgram = new QLabel("Path to FlightGear program (fgfs): ");
 	labelFgfsCheck = new QLabel("Ready.");
 	lineEditFgFsPath = new QLineEdit("");
 	lineEditFgFsPath->setFixedSize(QSize(280,20));
@@ -131,7 +131,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//----------------------------------------------
 	//= FlightGear Root Data Directory (/fgdata)
 
-	labelFgRootData = new QLabel("Path to FlightGear data directory: ");
+	labelFgRootData = new QLabel("Path to FlightGear data directory (fgdata): ");
 	labelFgRootCheck = new QLabel("Ready.");
 	lineEditFgRootPath = new QLineEdit("");
 	lineEditFgRootPath->setFixedSize(QSize(280,20));
@@ -152,11 +152,13 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//----------------------------------------------
 	//= Terrasync Executable (terrasync)
 	
-	labelTerrasyncProgram = new QLabel("Path to scenery download program (terrasync): ");
+	checkBoxUseTerrasync = new QCheckBox("Use online scenery download (terrasync)");
+	grpScene->addWidget(checkBoxUseTerrasync);
+	connect(checkBoxUseTerrasync, SIGNAL(clicked()), this, SLOT(on_terrasync_enabled()));
+	
 	labelTerrasyncCheck = new QLabel("Ready.");
 	lineEditTerraSyncExePath = new QLineEdit("");
 	lineEditTerraSyncExePath->setFixedSize(QSize(280,20));
-	grpScene->addWidget(labelTerrasyncProgram);
 	
 	QHBoxLayout *terraProgramBox = new QHBoxLayout();
 	terraProgramBox->addWidget(lineEditTerraSyncExePath);
@@ -187,7 +189,11 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//----------------------------------------------
 	//= Custom Scenery Directory (always custom)
 	
-	labelCustomScene = new QLabel("Path to other custom scenery:");
+	checkBoxUseCustomScenery = new QCheckBox("Use custom scenery");
+	grpScene->addWidget(checkBoxUseCustomScenery);
+	connect(checkBoxUseCustomScenery, SIGNAL(clicked()), this, SLOT(on_custom_scenery_enabled()));
+	
+	labelCustomScene = new QLabel("Path to custom scenery directory:");
 	labelCustomSceneCheck = new QLabel("Ready.");
 	lineEditCustomScenePath = new QLineEdit("");
 	lineEditCustomScenePath->setFixedSize(QSize(280,20));
@@ -368,6 +374,20 @@ void CoreSettingsWidget::on_show_mp_map(){
 				checkBoxShowMpMap->isChecked(),
 				comboMpMapServer->itemData(comboMpMapServer->currentIndex()).toString()
 				);
+}
+
+//=====================================
+// Terrasync enabled
+void CoreSettingsWidget::on_terrasync_enabled()
+{
+	emit( setx("terrasync_enabled", checkBoxUseTerrasync->isChecked(), ""));
+}
+
+//=====================================
+// Custom Scenery enabled
+void CoreSettingsWidget::on_custom_scenery_enabled()
+{
+	emit( setx("custom_scenery_enabled", checkBoxUseCustomScenery->isChecked(), ""));
 }
 
 
