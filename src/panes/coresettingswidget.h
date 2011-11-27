@@ -8,6 +8,7 @@
 #include <QtGui/QGroupBox>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QRadioButton>
+#include <QToolButton>
 
 #include "xobjects/mainobject.h"
 #include "xwidgets/xgroupboxes.h"
@@ -47,7 +48,8 @@ public:
 
 	QLineEdit *lineEditFgFsPath;
 	QLineEdit *lineEditFgRootPath;
-	
+	QToolButton *buttonSetFgfsPath;
+	QToolButton *buttonSetFgRootPath;
 	QLabel *labelFgfsProgram;
 	QLabel *labelFgfsCheck;
 	
@@ -57,6 +59,8 @@ public:
 	QCheckBox *checkBoxUseTerrasync;
 	QLabel *labelTerrasyncProgram;
 	QLabel *labelTerrasyncCheck;
+	QToolButton *buttonSetTerrasyncExePath;
+	QToolButton *buttonSetTerrasyncDataPath;
 	
 	QLabel *labelTerrasyncData;
 	QLabel *labelTerrasyncDataCheck;
@@ -68,6 +72,7 @@ public:
 	QLabel *labelCustomScene;
 	QLabel *labelCustomSceneCheck;
 	QLineEdit *lineEditCustomScenePath;
+	QToolButton *buttonSetCustomSceneryPath;
 	
 	QLabel *labelFGComExeInfo;
 	QLineEdit *lineEditFGComExePath;
@@ -100,12 +105,19 @@ public slots:
 
 	void on_upx(QString option, bool enabled, QString value);
 	
-	// Checks
+	// Path checks
 	void fgfs_check_path();
 	void fgroot_check_path();
 	void terrasync_exe_check_path();
 	void terrasync_data_check_path();
 	void custom_scenery_check_path();
+	
+	// "Set" buttons
+	void on_select_fgfsbutton();
+	void on_select_fgrootbutton();
+	void on_select_terrasyncexebutton();
+	void on_select_terrasyncdatabutton();
+	void on_select_customscenerybutton();
 	
 };
 

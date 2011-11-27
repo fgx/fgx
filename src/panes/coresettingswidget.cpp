@@ -120,13 +120,20 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelFgfsCheck = new QLabel("");
 	lineEditFgFsPath = new QLineEdit("");
 	lineEditFgFsPath->setFixedSize(QSize(280,20));
+	buttonSetFgfsPath = new QToolButton();
+	buttonSetFgfsPath->setFixedSize(20,20);
+	buttonSetFgfsPath->setIcon(QIcon(":/icon/path"));
 	grpFgfs->addWidget(labelFgfsProgram);
 	
 	QHBoxLayout *fgfsPathBox = new QHBoxLayout();
 	fgfsPathBox->addWidget(lineEditFgFsPath);
 	fgfsPathBox->addWidget(labelFgfsCheck);
+	fgfsPathBox->addWidget(buttonSetFgfsPath);
 	grpFgfs->addLayout(fgfsPathBox);
 	lineEditFgFsPath->setText( mainObject->X->fgfs_path() );
+	
+	// "Set" clicked
+	connect( buttonSetFgfsPath, SIGNAL(clicked()),this, SLOT(on_select_fgfsbutton()) );
 	
 	//Check if path exists and set pixmap
 	connect(lineEditFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(fgfs_check_path()));
@@ -138,13 +145,20 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelFgRootCheck = new QLabel("");
 	lineEditFgRootPath = new QLineEdit("");
 	lineEditFgRootPath->setFixedSize(QSize(280,20));
+	buttonSetFgRootPath = new QToolButton();
+	buttonSetFgRootPath->setFixedSize(20,20);
+	buttonSetFgRootPath->setIcon(QIcon(":/icon/path"));
 	grpFgfs->addWidget(labelFgRootData);
 	
 	QHBoxLayout *fgfsRootBox = new QHBoxLayout();
 	fgfsRootBox->addWidget(lineEditFgRootPath);
 	fgfsRootBox->addWidget(labelFgRootCheck);
+	fgfsRootBox->addWidget(buttonSetFgRootPath);
 	grpFgfs->addLayout(fgfsRootBox);
 	lineEditFgRootPath->setText( mainObject->X->fgroot() );
+	
+	// "Set" clicked
+	connect( buttonSetFgRootPath, SIGNAL(clicked()),this, SLOT(on_select_fgrootbutton()) );
 	
 	//Check if path exists and set pixmap
 	connect(lineEditFgRootPath, SIGNAL(textChanged(QString)), this, SLOT(fgroot_check_path()));
@@ -165,12 +179,19 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelTerrasyncCheck = new QLabel("Ready.");
 	lineEditTerraSyncExePath = new QLineEdit("");
 	lineEditTerraSyncExePath->setFixedSize(QSize(280,20));
+	buttonSetTerrasyncExePath = new QToolButton();
+	buttonSetTerrasyncExePath->setFixedSize(20,20);
+	buttonSetTerrasyncExePath->setIcon(QIcon(":/icon/path"));
 	
 	QHBoxLayout *terraProgramBox = new QHBoxLayout();
 	terraProgramBox->addWidget(lineEditTerraSyncExePath);
 	terraProgramBox->addWidget(labelTerrasyncCheck);
+	terraProgramBox->addWidget(buttonSetTerrasyncExePath);
 	grpScene->addLayout(terraProgramBox);
 	lineEditTerraSyncExePath->setText( mainObject->X->terrasync_exe_path() );
+	
+	// "Set" clicked
+	connect( buttonSetTerrasyncExePath, SIGNAL(clicked()),this, SLOT(on_select_terrasyncexebutton()) );
 	
 	//Check if path exists and set pixmap
 	connect(lineEditTerraSyncExePath, SIGNAL(textChanged(QString)), this, SLOT(terrasync_exe_check_path()));
@@ -183,14 +204,21 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelTerrasyncDataCheck = new QLabel("Ready.");
 	lineEditTerraSyncDataPath = new QLineEdit("");
 	lineEditTerraSyncDataPath->setFixedSize(QSize(280,20));
+	buttonSetTerrasyncDataPath = new QToolButton();
+	buttonSetTerrasyncDataPath->setFixedSize(20,20);
+	buttonSetTerrasyncDataPath->setIcon(QIcon(":/icon/path"));
 	grpScene->addWidget(labelTerrasyncData);
 	
 	QHBoxLayout *terraDataBox = new QHBoxLayout();
 	terraDataBox->addWidget(lineEditTerraSyncDataPath);
 	terraDataBox->addWidget(labelTerrasyncDataCheck);
+	terraDataBox->addWidget(buttonSetTerrasyncDataPath);
 	grpScene->addLayout(terraDataBox);
 	
 	lineEditTerraSyncDataPath->setText( mainObject->X->terrasync_data_path() );
+	
+	// "Set" clicked
+	connect( buttonSetTerrasyncDataPath, SIGNAL(clicked()),this, SLOT(on_select_terrasyncdatabutton()) );
 	
 	//Check if path exists and set pixmap
 	connect(lineEditTerraSyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(terrasync_data_check_path()));
@@ -209,14 +237,21 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelCustomSceneCheck = new QLabel("Ready.");
 	lineEditCustomScenePath = new QLineEdit("");
 	lineEditCustomScenePath->setFixedSize(QSize(280,20));
+	buttonSetCustomSceneryPath = new QToolButton();
+	buttonSetCustomSceneryPath->setFixedSize(20,20);
+	buttonSetCustomSceneryPath->setIcon(QIcon(":/icon/path"));
 	grpScene->addWidget(labelCustomScene);
 	
 	QHBoxLayout *customSceneBox = new QHBoxLayout();
 	customSceneBox->addWidget(lineEditCustomScenePath);
 	customSceneBox->addWidget(labelCustomSceneCheck);
+	customSceneBox->addWidget(buttonSetCustomSceneryPath);
 	grpScene->addLayout(customSceneBox);
 	
 	lineEditCustomScenePath->setText( mainObject->X->custom_scenery_path() );
+	
+	// "Set" clicked
+	connect( buttonSetCustomSceneryPath, SIGNAL(clicked()),this, SLOT(on_select_customscenerybutton()) );
 	
 	//Check if path exists and set pixmap
 	connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(custom_scenery_check_path()));
@@ -514,4 +549,68 @@ void CoreSettingsWidget::custom_scenery_check_path()
 		labelCustomSceneCheck->setPixmap(QPixmap(":/icon/not-ok"));
 	}
 	
+}
+
+//======================================================================
+// Set paths via Buttons
+//======================================================================
+
+void CoreSettingsWidget::on_select_fgfsbutton()
+
+{
+	QString filePath = QFileDialog::getOpenFileName(this, tr("Select FlightGear binary (fgfs)"),
+	lineEditFgFsPath->text());
+		if(filePath.length() > 0){
+			lineEditFgFsPath->setText(filePath);
+		}
+		
+	fgfs_check_path();
+}
+
+void CoreSettingsWidget::on_select_fgrootbutton()
+
+{
+	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select FlightGear data folder"),
+	lineEditFgRootPath->text(), QFileDialog::ShowDirsOnly);
+	
+	if(dirPath.length() > 0){
+		lineEditFgRootPath->setText(dirPath);
+	}
+	fgroot_check_path();
+}
+
+void CoreSettingsWidget::on_select_terrasyncexebutton()
+
+{
+	QString filePath = QFileDialog::getOpenFileName(this, tr("Select FlightGear binary (fgfs)"),
+													lineEditTerraSyncExePath->text());
+	if(filePath.length() > 0){
+		lineEditTerraSyncExePath->setText(filePath);
+	}
+	
+	terrasync_exe_check_path();
+}
+
+void CoreSettingsWidget::on_select_terrasyncdatabutton()
+
+{
+	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Terrasync binary path (terrasync)"),
+														lineEditTerraSyncDataPath->text(), QFileDialog::ShowDirsOnly);
+	
+	if(dirPath.length() > 0){
+		lineEditTerraSyncDataPath->setText(dirPath);
+	}
+	terrasync_data_check_path();
+}
+
+void CoreSettingsWidget::on_select_customscenerybutton()
+
+{
+	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Terrasync binary path (terrasync)"),
+														lineEditCustomScenePath->text(), QFileDialog::ShowDirsOnly);
+	
+	if(dirPath.length() > 0){
+		lineEditCustomScenePath->setText(dirPath);
+	}
+	custom_scenery_check_path();
 }
