@@ -135,9 +135,10 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	// "Set" clicked
 	connect( buttonSetFgfsPath, SIGNAL(clicked()),this, SLOT(on_select_fgfsbutton()) );
 	
-	//Check if path exists and set pixmap
+	//Check if path exists, set pixmap, emit setting
 	connect(lineEditFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(fgfs_check_path()));
-	connect(lineEditFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(fgfs_set_path()));
+	connect(lineEditFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(on_fgfs_path(QString)));
+	connect(buttonSetFgfsPath, SIGNAL(clicked()), this, SLOT(fgfs_set_path()));
 
 	//----------------------------------------------
 	//= FlightGear Root Data Directory (/fgdata)
@@ -163,7 +164,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	//Check if path exists and set pixmap
 	connect(lineEditFgRootPath, SIGNAL(textChanged(QString)), this, SLOT(fgroot_check_path()));
-	connect(lineEditFgRootPath, SIGNAL(textChanged(QString)), this, SLOT(fgroot_set_path()));
+	connect(lineEditFgRootPath, SIGNAL(textChanged(QString)), this, SLOT(on_fgroot_path(QString)));
+	connect(buttonSetFgRootPath, SIGNAL(clicked()), this, SLOT(fgroot_set_path()));
+	
 	
 	//----------------------------------------------
 	//= Scenery box
@@ -200,7 +203,8 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	//Check if path exists and set pixmap
 	connect(lineEditTerraSyncExePath, SIGNAL(textChanged(QString)), this, SLOT(terrasync_exe_check_path()));
-	connect(lineEditTerraSyncExePath, SIGNAL(textChanged(QString)), this, SLOT(terrasyncexe_set_path()));
+	connect(lineEditTerraSyncExePath, SIGNAL(textChanged(QString)), this, SLOT(on_terrasync_path(QString)));
+	connect(buttonSetTerrasyncExePath, SIGNAL(textChanged(QString)), this, SLOT(terrasyncexe_set_path()));
 	
 	
 	//----------------------------------------------
@@ -231,7 +235,8 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	//Check if path exists and set pixmap
 	connect(lineEditTerraSyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(terrasync_data_check_path()));
-	connect(lineEditTerraSyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(terrasyncdata_set_path()));
+	connect(lineEditTerraSyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(on_terrasync_data_path(QString)));
+	connect(buttonSetTerrasyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(terrasyncdata_set_path()));
 	
 	layoutMiddle->addStretch(20);
 	
@@ -268,7 +273,8 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	//Check if path exists and set pixmap
 	connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(custom_scenery_check_path()));
-	connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(customscenery_set_path()));
+	connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(on_custom_scenery_path(QString)));
+	connect(buttonSetCustomSceneryPath, SIGNAL(textChanged(QString)), this, SLOT(customscenery_set_path()));
 	
 	
 	//===========================================================================
@@ -441,6 +447,43 @@ void CoreSettingsWidget::on_show_mp_map(){
 }
 
 //=====================================
+// Emit fgfs path
+void CoreSettingsWidget::on_fgfs_path(QString txt)
+{
+	emit( mainObject->X->set_option("fgfs_path", true, txt));
+	outLog("Hey, set fgfs path: "+txt);
+}
+
+//=====================================
+// Emit fgroot path
+void CoreSettingsWidget::on_fgroot_path(QString txt)
+{
+	emit( setx("fgroot_path", true, txt));
+}
+
+//=====================================
+// Emit terrasync path
+void CoreSettingsWidget::on_terrasync_path(QString txt)
+{
+	emit( setx("terrasync_exe_path", true, txt));
+}
+
+//=====================================
+// Emit terrasync data path
+void CoreSettingsWidget::on_terrasync_data_path(QString txt)
+{
+	emit( setx("terrasync_data_path", true, txt));
+}
+
+//=====================================
+// Emit Custom Scenery path
+void CoreSettingsWidget::on_custom_scenery_path(QString txt)
+{
+	emit( setx("custom_scenery_path", true, txt));
+}
+
+
+//=====================================
 // Terrasync enabled
 void CoreSettingsWidget::on_terrasync_enabled()
 {
@@ -481,6 +524,7 @@ void CoreSettingsWidget::custom_scenery_enabled_checkstate()
 
 void CoreSettingsWidget::fgfs_set_path() {
 	emit setx("fgfs_path", true, lineEditFgFsPath->text());
+	outLog("fgfs path emitted");
 }
 
 void CoreSettingsWidget::fgroot_set_path() {
@@ -613,10 +657,10 @@ void CoreSettingsWidget::custom_scenery_check_path()
 void CoreSettingsWidget::on_select_fgfsbutton()
 
 {
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Select FlightGear binary (fgfs)"),
+	QString filePathFgfs = QFileDialog::getOpenFileName(this, tr("Select FlightGear binary (fgfs)"),
 	lineEditFgFsPath->text());
-		if(filePath.length() > 0){
-			lineEditFgFsPath->setText(filePath);
+		if(filePathFgfs.length() > 0){
+			lineEditFgFsPath->setText(filePathFgfs);
 		}
 		
 	fgfs_check_path();
@@ -625,11 +669,11 @@ void CoreSettingsWidget::on_select_fgfsbutton()
 void CoreSettingsWidget::on_select_fgrootbutton()
 
 {
-	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select FlightGear data directory (fgdata)"),
+	QString dirPathFgRoot = QFileDialog::getExistingDirectory(this, tr("Select FlightGear data directory (fgdata)"),
 	lineEditFgRootPath->text(), QFileDialog::ShowDirsOnly);
 	
-	if(dirPath.length() > 0){
-		lineEditFgRootPath->setText(dirPath);
+	if(dirPathFgRoot.length() > 0){
+		lineEditFgRootPath->setText(dirPathFgRoot);
 	}
 	fgroot_check_path();
 }
@@ -637,10 +681,10 @@ void CoreSettingsWidget::on_select_fgrootbutton()
 void CoreSettingsWidget::on_select_terrasyncexebutton()
 
 {
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Select Terrasync binary (terrasync)"),
+	QString filePathTerrasync = QFileDialog::getOpenFileName(this, tr("Select Terrasync binary (terrasync)"),
 													lineEditTerraSyncExePath->text());
-	if(filePath.length() > 0){
-		lineEditTerraSyncExePath->setText(filePath);
+	if(filePathTerrasync.length() > 0){
+		lineEditTerraSyncExePath->setText(filePathTerrasync);
 	}
 	
 	terrasync_exe_check_path();
@@ -649,11 +693,11 @@ void CoreSettingsWidget::on_select_terrasyncexebutton()
 void CoreSettingsWidget::on_select_terrasyncdatabutton()
 
 {
-	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Terrasync data directory"),
+	QString dirPathTerrasyncData = QFileDialog::getExistingDirectory(this, tr("Select Terrasync data directory"),
 														lineEditTerraSyncDataPath->text(), QFileDialog::ShowDirsOnly);
 	
-	if(dirPath.length() > 0){
-		lineEditTerraSyncDataPath->setText(dirPath);
+	if(dirPathTerrasyncData.length() > 0){
+		lineEditTerraSyncDataPath->setText(dirPathTerrasyncData);
 	}
 	terrasync_data_check_path();
 }
@@ -661,11 +705,11 @@ void CoreSettingsWidget::on_select_terrasyncdatabutton()
 void CoreSettingsWidget::on_select_customscenerybutton()
 
 {
-	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select custom scenery data directory"),
+	QString dirPathCustomScenery = QFileDialog::getExistingDirectory(this, tr("Select custom scenery data directory"),
 														lineEditCustomScenePath->text(), QFileDialog::ShowDirsOnly);
 	
-	if(dirPath.length() > 0){
-		lineEditCustomScenePath->setText(dirPath);
+	if(dirPathCustomScenery.length() > 0){
+		lineEditCustomScenePath->setText(dirPathCustomScenery);
 	}
 	custom_scenery_check_path();
 }

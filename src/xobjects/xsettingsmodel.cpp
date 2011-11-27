@@ -210,7 +210,7 @@ void XSettingsModel::set_option(QString option, bool enabled, QString value)
 	set_row_bg(items[0]->row(), enabled ? QColor(200,255,200) : QColor(240,240,240));
 
 	//= Announce the change
-	emit upx(option, enabled,  value);
+	//emit upx(option, enabled,  value);
 	emit updated(get_fgfs_list());
 }
 
