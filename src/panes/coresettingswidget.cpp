@@ -137,6 +137,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	//Check if path exists and set pixmap
 	connect(lineEditFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(fgfs_check_path()));
+	connect(lineEditFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(fgfs_set_path()));
 
 	//----------------------------------------------
 	//= FlightGear Root Data Directory (/fgdata)
@@ -162,6 +163,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	//Check if path exists and set pixmap
 	connect(lineEditFgRootPath, SIGNAL(textChanged(QString)), this, SLOT(fgroot_check_path()));
+	connect(lineEditFgRootPath, SIGNAL(textChanged(QString)), this, SLOT(fgroot_set_path()));
 	
 	//----------------------------------------------
 	//= Scenery box
@@ -172,16 +174,19 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//----------------------------------------------
 	//= Terrasync Executable (terrasync)
 	
-	checkBoxUseTerrasync = new QCheckBox("Use online scenery download (terrasync)");
+	checkBoxUseTerrasync = new QCheckBox("Use online scenery download tool (Terrasync)");
 	grpScene->addWidget(checkBoxUseTerrasync);
 	connect(checkBoxUseTerrasync, SIGNAL(clicked()), this, SLOT(on_terrasync_enabled()));
 	
-	labelTerrasyncCheck = new QLabel("Ready.");
+	labelTerrasyncCheck = new QLabel("");
+	labelTerrasyncCheck->setEnabled(false);
 	lineEditTerraSyncExePath = new QLineEdit("");
 	lineEditTerraSyncExePath->setFixedSize(QSize(280,20));
+	lineEditTerraSyncExePath->setEnabled(false);
 	buttonSetTerrasyncExePath = new QToolButton();
 	buttonSetTerrasyncExePath->setFixedSize(20,20);
 	buttonSetTerrasyncExePath->setIcon(QIcon(":/icon/path"));
+	buttonSetTerrasyncExePath->setEnabled(false);
 	
 	QHBoxLayout *terraProgramBox = new QHBoxLayout();
 	terraProgramBox->addWidget(lineEditTerraSyncExePath);
@@ -195,18 +200,22 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	//Check if path exists and set pixmap
 	connect(lineEditTerraSyncExePath, SIGNAL(textChanged(QString)), this, SLOT(terrasync_exe_check_path()));
+	connect(lineEditTerraSyncExePath, SIGNAL(textChanged(QString)), this, SLOT(terrasyncexe_set_path()));
 	
 	
 	//----------------------------------------------
 	//= Terrasync Directory (custom, but set by default)
 	
 	labelTerrasyncData = new QLabel("Path to terrasync scenery: ");
-	labelTerrasyncDataCheck = new QLabel("Ready.");
+	labelTerrasyncDataCheck = new QLabel("");
+	labelTerrasyncDataCheck->setEnabled(false);
 	lineEditTerraSyncDataPath = new QLineEdit("");
 	lineEditTerraSyncDataPath->setFixedSize(QSize(280,20));
+	lineEditTerraSyncDataPath->setEnabled(false);
 	buttonSetTerrasyncDataPath = new QToolButton();
 	buttonSetTerrasyncDataPath->setFixedSize(20,20);
 	buttonSetTerrasyncDataPath->setIcon(QIcon(":/icon/path"));
+	buttonSetTerrasyncDataPath->setEnabled(false);
 	grpScene->addWidget(labelTerrasyncData);
 	
 	QHBoxLayout *terraDataBox = new QHBoxLayout();
@@ -222,6 +231,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	//Check if path exists and set pixmap
 	connect(lineEditTerraSyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(terrasync_data_check_path()));
+	connect(lineEditTerraSyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(terrasyncdata_set_path()));
 	
 	layoutMiddle->addStretch(20);
 	
@@ -234,12 +244,15 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	connect(checkBoxUseCustomScenery, SIGNAL(clicked()), this, SLOT(on_custom_scenery_enabled()));
 	
 	labelCustomScene = new QLabel("Path to custom scenery directory:");
-	labelCustomSceneCheck = new QLabel("Ready.");
+	labelCustomSceneCheck = new QLabel("");
+	labelCustomSceneCheck->setEnabled(false);
 	lineEditCustomScenePath = new QLineEdit("");
 	lineEditCustomScenePath->setFixedSize(QSize(280,20));
+	lineEditCustomScenePath->setEnabled(false);
 	buttonSetCustomSceneryPath = new QToolButton();
 	buttonSetCustomSceneryPath->setFixedSize(20,20);
 	buttonSetCustomSceneryPath->setIcon(QIcon(":/icon/path"));
+	buttonSetCustomSceneryPath->setEnabled(false);
 	grpScene->addWidget(labelCustomScene);
 	
 	QHBoxLayout *customSceneBox = new QHBoxLayout();
@@ -255,6 +268,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	//Check if path exists and set pixmap
 	connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(custom_scenery_check_path()));
+	connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(customscenery_set_path()));
 	
 	
 	//===========================================================================
@@ -431,6 +445,12 @@ void CoreSettingsWidget::on_show_mp_map(){
 void CoreSettingsWidget::on_terrasync_enabled()
 {
 	emit( setx("terrasync_enabled", checkBoxUseTerrasync->isChecked(), ""));
+	lineEditTerraSyncExePath->setEnabled(checkBoxUseTerrasync->checkState());
+	lineEditTerraSyncDataPath->setEnabled(checkBoxUseTerrasync->checkState());
+	buttonSetTerrasyncExePath->setEnabled(checkBoxUseTerrasync->checkState());
+	buttonSetTerrasyncDataPath->setEnabled(checkBoxUseTerrasync->checkState());
+	labelTerrasyncCheck->setEnabled(checkBoxUseTerrasync->checkState());
+	labelTerrasyncDataCheck->setEnabled(checkBoxUseTerrasync->checkState());
 }
 
 //=====================================
@@ -438,6 +458,9 @@ void CoreSettingsWidget::on_terrasync_enabled()
 void CoreSettingsWidget::on_custom_scenery_enabled()
 {
 	emit( setx("custom_scenery_enabled", checkBoxUseCustomScenery->isChecked(), ""));
+	lineEditCustomScenePath->setEnabled(checkBoxUseCustomScenery->checkState());
+	buttonSetCustomSceneryPath->setEnabled(checkBoxUseCustomScenery->checkState());
+	labelCustomSceneCheck->setEnabled(checkBoxUseCustomScenery->checkState());
 }
 
 
@@ -445,6 +468,27 @@ void CoreSettingsWidget::on_custom_scenery_enabled()
 //======================================================================
 // Update Settings
 //======================================================================
+
+void CoreSettingsWidget::fgfs_set_path() {
+	emit setx("fgfs_path", true, lineEditFgFsPath->text());
+}
+
+void CoreSettingsWidget::fgroot_set_path() {
+	emit setx("fgroot_path", true, lineEditFgRootPath->text());
+}
+
+void CoreSettingsWidget::terrasyncexe_set_path() {
+	emit setx("terrasync_exe_path", true, lineEditTerraSyncExePath->text());
+}
+
+void CoreSettingsWidget::terrasyncdata_set_path() {
+	emit setx("terrasync_data_path", true, lineEditTerraSyncDataPath->text());
+}
+
+void CoreSettingsWidget::customscenery_set_path() {
+	emit setx("custom_scenery_path", true, lineEditCustomScenePath->text());
+}
+
 void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 {
 	//qDebug() << "op_upx";
@@ -530,8 +574,10 @@ void CoreSettingsWidget::terrasync_exe_check_path()
 // So this checks against $HOME/path/to/terrasync/data
 void CoreSettingsWidget::terrasync_data_check_path()
 {
-	QString homepath(QDir::homePath());
-	bool terrasync_data_exists = QFile::exists(homepath.append(lineEditTerraSyncDataPath->text()));
+	QDir homepath(QDir::homePath());
+	QString homepathString(QDir::homePath());
+	homepathString.append(lineEditTerraSyncDataPath->text());
+	bool terrasync_data_exists = homepath.exists(homepathString);
 	if (terrasync_data_exists) {
 		labelTerrasyncDataCheck->setPixmap(QPixmap(":/icon/ok"));
 	} else {
@@ -541,8 +587,9 @@ void CoreSettingsWidget::terrasync_data_check_path()
 }
 
 void CoreSettingsWidget::custom_scenery_check_path()
-{
-	bool custom_scenery_exists = QFile::exists(lineEditCustomScenePath->text());
+{	
+	QDir custom_scenery_dir(lineEditCustomScenePath->text());
+	bool custom_scenery_exists = custom_scenery_dir.exists();
 	if (custom_scenery_exists) {
 		labelCustomSceneCheck->setPixmap(QPixmap(":/icon/ok"));
 	} else {
