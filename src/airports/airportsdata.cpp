@@ -20,7 +20,7 @@
 //{
 //}
 
-bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, bool import_icao_only){
+bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
 
 
 	QHash<QString, QString> airports;

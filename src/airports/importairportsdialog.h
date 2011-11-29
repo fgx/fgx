@@ -17,19 +17,8 @@ Q_OBJECT
 public:
 	explicit ImportAirportsDialog(QWidget *parent = 0);
 
-
-    QRadioButton *buttAllAiports;
-    QRadioButton *buttIcaoOnly;
-    QCheckBox *chkImportSeaports;
-    QCheckBox *chkImportHeliports;
-    QCheckBox *chkBoxAdditionalAirports;
-
     QPushButton *buttImport;
     QPushButton *buttCancelImport;
-
-	//QProgressDialog *progress;
-
-
 
 signals:
 

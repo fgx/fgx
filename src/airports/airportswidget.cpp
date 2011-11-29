@@ -926,10 +926,8 @@ void AirportsWidget::on_reload_cache(){
 		return;
 	}
 
-	bool icao_only = widget->buttIcaoOnly->isChecked();
-
 	QProgressDialog progress(this);
-	AirportsData::import(progress, mainObject, icao_only);
+	AirportsData::import(progress, mainObject);
 	load_airports_tree();
 }
 
