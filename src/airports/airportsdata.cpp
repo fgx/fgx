@@ -22,138 +22,28 @@
 
 bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, bool import_icao_only){
 
-	//====================================
-	// Step 1: Get a hash map of aircraft descriptions from aptdat
-	int estimated_lines = 1510000;
-	qDebug() << "IMPORT";
-	progress.setValue(0);
-	progress.setWindowTitle("Importing Apt Dat");
-	progress.setRange(0, estimated_lines);
-	progress.repaint();
 
 	QHash<QString, QString> airports;
     QString msg;
     QTime tm;
     int   ms;
 
-	QString zf = mainObject->X->fgroot("/Airports/apt.dat.gz");
-    fgx_gzHandle gzf; // opaque file gz handle
-    QFile f;
-    if (!f.exists(zf)) {
-
-        outLog("ERROR: Failed to find ["+zf+"! NO AIRPORT FILE DATA!");
-		return true;
-    }
-    tm.start();
-    gzf = fgx_gzOpen(zf);
-    if (!gzf) {
-        outLog("ERROR: Failed to open ["+zf+"]");
-		return true;
-    }
-    outLog("Processing file ["+zf+"]");
-
-    int air_count = 0;
-	int line_counter = 0;
-
-	QRegExp rxICAOAirport("[A-Z]{4}");
-
-
-
-	//* ignore first line
-    fgx_gzReadline(gzf);
-    QString credits = fgx_gzReadline(gzf);
-
-    int version = 999;
-	if(credits.startsWith("810 Version")){
-		version = 810;
-	}
-
-	 QString airport_code;
-	 QString airport_name;
-	 QString elevation;
-	 QString tower;
-
-
-     while ( ! fgx_gzEof(gzf)) {
-         QString line = fgx_gzReadline(gzf);
-
-		//qDebug() << line;
-		QString row_code = line.section(' ',0, 0);
-		//qDebug() << row_code;
-		QStringList parts = line.split(" ", QString::SkipEmptyParts);
-
-		//**********************************************************************
-		//*** Airport
-		if(row_code == "1"){
-
-			// http://data.x-plane.com/file_specs/Apt715.htm
-			// 0 = airport code
-			//  1 = elevation
-			// 2 = has tower
-			// 3 = not approp
-			// 4 = code
-			// 5+ description
-
-			airport_code = parts[4];
-			elevation = parts[1];
-			tower =  parts[2] == "1" ? "1" : "";
-			airport_name.clear();
-			for(int p = 5; p < parts.size(); p++){ //** TODO WTF ?
-				airport_name.append(parts[p]).append(" ");
-			}
-			if(import_icao_only){
-				if( rxICAOAirport.exactMatch(airport_code) ){
-						airports[airport_code] = airport_name;
-                        air_count++;
-					}
-			}else{
-					airports[airport_code] = airport_name;
-                    air_count++;
-			} /* if(is_icao) */
-
-		} /* if(row_code == "1") airport */
-
-
-
-		if (progress.wasCanceled()){
-			progress.hide();
-            fgx_gzClose(gzf);
-            outLog("User abort of airport imports!");
-            return true;
-
-		}
-		line_counter++;
-		if(line_counter % 1000 == 0){
-			progress.setValue(line_counter);
-			QString prog_text = QString("%1 of approx %2").arg(line_counter).arg(estimated_lines);
-			progress.setLabelText(prog_text);
-
-			progress.repaint();
-		}
-
-
-
-	} /* end while readline */
-
-
-    fgx_gzClose(gzf);
-
-    msg.sprintf("Done %d lines, found %d airport entries",line_counter,air_count);
-    outLog(msg+", in "+getElapTimeStg(tm.elapsed()));
-
-
-	//===================================================
-	// Step Two - walk the xml sets
-
 	progress.setValue(0);
 	progress.setWindowTitle("Scanning Airport Directories");
-	progress.setRange(0, 20000);
+	progress.setRange(0, 50000);
 
 
 	int c = 0;
 	int found = 0;
     int air_added = 0;
     ms = tm.restart();
+	
+	// Removing cache file, if exists()
+	if (QFile::exists(mainObject->data_file("airports.txt"))) {
+		outLog("*** FGx airportsdata reload: cache file exists!");
+		QFile::remove(mainObject->data_file("airports.txt"));
+		outLog("*** FGx airportsdata reload: REMOVED AIRPORTS CACHE FILE");
+	}
 
 	//= Cache File
 	QFile cacheFile( mainObject->data_file("airports.txt") );
@@ -170,59 +60,11 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 	QDirIterator loopAirportsFiles( mainObject->X->airports_path(), QDirIterator::Subdirectories );
 	QString xFileName;
 
-    msg = "Scanning XML files";
+    msg = "*** FGx airportsdata reload: Scanning XML files in "+mainObject->X->airports_path();
     outLog(msg);
     progress.setWindowTitle(msg);
-	progress.setRange(0, 20000);
+	progress.setRange(0, 50000);
 
-	while (loopAirportsFiles.hasNext()) {
-
-		//= Get file handle if there is one
-		xFileName = loopAirportsFiles.next();
-
-		//= Check if file entry is a *.threshold.xml - cos this is what we want
-		if(xFileName.endsWith(".threshold.xml") ){
-
-			//= Split out "CODE.threshold.xml" with a "."
-			QFileInfo fileInfoThreshold(xFileName);
-			QString airport_code = fileInfoThreshold.fileName().split(".").at(0);
-
-			//* Update progress
-			if(c % 100 == 0){
-				progress.setValue(c);
-				progress.setLabelText(xFileName);
-				progress.repaint();
-			}
-
-			QString airport_name("");
-			if(airports.contains(airport_code)){
-				airport_name = airports.value(airport_code);
-			}
-
-			QStringList cols; // missing in middle is description ??
-			cols << airport_code << airport_name << fileInfoThreshold.absoluteDir().absolutePath();
-
-			if( import_icao_only){
-				if( rxICAOAirport.exactMatch(airport_code) ){
-					out << cols.join("\t").append("\n");
-                    air_added++;
-				}
-			}else{
-				out << cols.join("\t").append("\n");
-                air_added++;
-			}
-
-			found++;
-		}
-
-		if(progress.wasCanceled()){
-			progress.hide();
-			return true;
-		}
-		c++;
-	}
-
-    // Step 3 - any MORE xml files to walk?
     // Check the fgfs additional argument list,
     // and/or any additional scenery path inputs
     // *** take care NOT to duplicate ***
@@ -235,6 +77,8 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 #else
     QChar psep(':');
 #endif
+	
+	// AIIIIII, found the doubler !, said yves very very loud
     for (i = 0; i < fgfs_args.size(); i++) {
         msg = fgfs_args.at(i);
         ind = msg.indexOf(QChar('"'));
@@ -247,8 +91,10 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
             if (ind == 0)
                 msg = msg.mid(1,msg.length()-2);
             QStringList path_list = msg.split(psep);
+			int pathnumber = 0;
             for( QStringList::ConstIterator entry = path_list.begin(); entry != path_list.end(); entry++) {
                 path = *entry;
+				pathnumber = pathnumber + 1;
                 if (d.exists(path)) {
                     // we have a PATH to check, but we are ONLY checking 'Airports'
                     if ( !(path.indexOf(QChar('/')) == (path.size()-1)) &&
@@ -283,17 +129,11 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
                             }
 
                             QStringList cols; // missing in middle is description ??
-                            cols << airport_code << airport_name << fileInfoThreshold.absoluteDir().absolutePath();
+                            cols << airport_code << airport_name << fileInfoThreshold.absoluteDir().absolutePath() << QString::number(pathnumber);
 
-                            if( import_icao_only){
-                                if( rxICAOAirport.exactMatch(airport_code) ){
-                                    out << cols.join("\t").append("\n");
-                                    air_added++;
-                                }
-                            }else{
-                                out << cols.join("\t").append("\n");
-                                air_added++;
-                            }
+							out << cols.join("\t").append("\n");
+							air_added++;
+
 
                             found++;
                         }
@@ -312,7 +152,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject, boo
 
 	cacheFile.close();
 
-    msg.sprintf("Walked %d files, found %d threshold.xml, appended %d to cache",
+    msg.sprintf("*** FGx airportsdata reload: Walked %d files, found %d threshold.xml, appended %d to cache",
                 c, found, air_added);
     outLog(msg+", in "+getElapTimeStg(tm.elapsed()));
 	progress.hide();
