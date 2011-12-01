@@ -95,11 +95,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	screenSizeBox->addWidget(lineEditScreenSizeW, 1);
 	screenSizeBox->addWidget(lineEditScreenSizeHLabel, 1);
 	screenSizeBox->addWidget(lineEditScreenSizeH, 1);
-	
 	grpBoxScreen->addLayout(screenSizeBox);
-	
-	
-
 	
 	//= Full Screen
 	checkBoxFullScreenStartup = new QCheckBox(tr("Fullscreen mode"));
@@ -129,7 +125,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	comboMpMapServer->setCurrentIndex(0);
 	grpMapFeatures->addWidget(comboMpMapServer);
 	connect(comboMpMapServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_show_mp_map()));
-
 	layoutLeft->addStretch(20);
 
 
@@ -562,7 +557,6 @@ void CoreSettingsWidget::custom_scenery_enabled_checkstate()
 
 void CoreSettingsWidget::fgfs_set_path() {
 	emit setx("fgfs_path", true, lineEditFgFsPath->text());
-	outLog("fgfs path emitted");
 }
 
 void CoreSettingsWidget::fgroot_set_path() {

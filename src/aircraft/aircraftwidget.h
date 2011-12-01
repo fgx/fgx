@@ -82,6 +82,8 @@ public slots:
 	void load_tree();
 	void on_set_aircraft();
 	void on_select_path();
+	void on_set_default_hangar_path();
+	void on_set_custom_hangar_path();
 	void on_tree_selection_changed();
 	void on_reload_cache();
 

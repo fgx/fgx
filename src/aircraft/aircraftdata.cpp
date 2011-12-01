@@ -12,6 +12,9 @@
 
 #include "aircraft/aircraftdata.h"
 
+#include "utilities/utilities.h"
+#include "utilities/messagebox.h"
+
 //AircraftData::AircraftData()
 //{
 //}
@@ -25,6 +28,13 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 	progress.setWindowTitle("Scanning Aircraft Directories");
 	progress.show();
 	progress.repaint();
+	
+	// Removing cache file, if exists()
+	if (QFile::exists(mainObject->data_file("aircrafts.txt"))) {
+		outLog("*** FGx aircrafts/hangar data reload: cache file exists!");
+		QFile::remove(mainObject->data_file("airports.txt"));
+		outLog("*** FGx aircrafts/hangar data reload: REMOVED AIRPORTS CACHE FILE");
+	}
 
 	//= Cache File
 	QFile cacheFile( mainObject->data_file("aircraft.txt") );

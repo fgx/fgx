@@ -1,10 +1,7 @@
 
 /**
 	Started apr 2011 by: pete at freeflightsim.org
-	then ..
-
 	TODO: Convert QTreeWidget to QTreeView with A filterSortProxy Model
-
 */
 
 
@@ -77,7 +74,6 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	treeLayout->setContentsMargins(0,0,0,0);
 	treeLayout->setSpacing(0);
 
-
 	//** Top Bar Layout
 	QHBoxLayout *treeTopBar = new QHBoxLayout();
 	treeTopBar->setContentsMargins(5,5,5,5);
@@ -88,24 +84,20 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	groupUseAircraft->setExclusive(true);
 	connect(groupUseAircraft, SIGNAL(buttonClicked(int)), this, SLOT(on_set_aircraft()) );
 
-	//= Use default
-	/*QRadioButton *radioUseDefault = new QRadioButton();
-	radioUseDefault->setText("Use default aircraft");
-	treeTopBar->addWidget(radioUseDefault);
-	groupUseAircraft->addButton(radioUseDefault, 0);*/
-
-	//= Use Selected
+	//= Use Default Selected
 	QRadioButton *radioUseTree = new QRadioButton();
-	radioUseTree->setText("Selected below");
+	radioUseTree->setText("Default Hangar");
 	treeTopBar->addWidget(radioUseTree);
-	groupUseAircraft->addButton(radioUseTree, 1);
+	groupUseAircraft->addButton(radioUseTree, 0);
+	connect(radioUseTree, SIGNAL(clicked()), this, SLOT(on_set_default_hangar_path()) );
 
 
-	//= Use Custom
+	//= Use Custom Hangar (Aircraft Directory)
 	QRadioButton *radioUseCustom = new QRadioButton();
-	radioUseCustom->setText("Selected Path");
+	radioUseCustom->setText("Set path to Hangar (Aircraft directory): ");
 	treeTopBar->addWidget(radioUseCustom);
-	groupUseAircraft->addButton(radioUseCustom, 2);
+	groupUseAircraft->addButton(radioUseCustom, 1);
+	connect(radioUseCustom, SIGNAL(clicked()), this, SLOT(on_set_custom_hangar_path()) );
 
 	txtAircraftPath = new QLineEdit();
 	treeTopBar->addWidget(txtAircraftPath);
@@ -379,6 +371,23 @@ void AircraftWidget::on_tree_selection_changed(){
 	emit setx("--aircraft=", true, selected_aircraft());
 }
 
+//============================================
+//== Select an hangar path (default or custom)
+void AircraftWidget::on_set_default_hangar_path() {
+	// TODO check path
+		on_reload_cache();
+}	
+
+
+void AircraftWidget::on_set_custom_hangar_path() {
+	emit setx("--fg-aircraft=",
+			  groupUseAircraft->checkedId() == 1 && txtAircraftPath->text().length() > 0,
+			  txtAircraftPath->text()
+			  );
+	if (txtAircraftPath->text() != "") {
+		on_reload_cache();
+	}
+}
 
 //==============================
 //== Select an aircraft in tree
@@ -415,7 +424,7 @@ QString AircraftWidget::validate(){
 
 
 //=============================================================
-// Rescan airpcarft cache
+// Rescan aircraft cache
 void AircraftWidget::on_reload_cache(){
 	treeWidget->model()->removeRows(0, treeWidget->model()->rowCount());
 	statusBarTree->showMessage("Reloading cache");
@@ -542,7 +551,7 @@ void AircraftWidget::on_set_aircraft()
 	emit setx("use_aircraft", true, QString::number(groupUseAircraft->checkedId()));
 
 	emit setx("--fg-aircraft=",
-			  groupUseAircraft->checkedId() == 2 && txtAircraftPath->text().length() > 0,
+			  groupUseAircraft->checkedId() == 1 && txtAircraftPath->text().length() > 0,
 			  txtAircraftPath->text()
 			  );
 
@@ -561,8 +570,8 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 		int bid = value.toInt();
 		groupUseAircraft->button(bid)->setChecked(true);
 		treeWidget->setEnabled(bid == 1);
-		txtAircraftPath->setEnabled(bid == 2);
-		buttSelectPath->setEnabled(bid == 2);
+		txtAircraftPath->setEnabled(bid == 1);
+		buttSelectPath->setEnabled(bid == 1);
 
 	}else if(option == "--aircraft"){
 		//= see tree load
@@ -616,12 +625,14 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 
 void AircraftWidget::on_select_path()
 {
-	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Aircraft directory"),
+	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Hangar (Aircraft directory)"),
 														 txtAircraftPath->text(), QFileDialog::ShowDirsOnly);
 	if(dirPath.length() > 0){
 		txtAircraftPath->setText(dirPath);
 		on_set_aircraft();
 	}
+	
+	on_reload_cache();
 
 }
 

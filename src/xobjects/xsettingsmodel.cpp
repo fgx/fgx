@@ -739,10 +739,15 @@ bool XSettingsModel::paths_sane(){
 //===========================================================================
 /** \brief The path to the /Aircraft directory
  *
-  * \return absolute path.
+  * \return fgroot/Aircraft absolute path --fg-aircraft path in case
  */
 QString XSettingsModel::aircraft_path(){
-	return fgroot().append("/Aircraft");
+	
+	if (!mainObject->X->get_ena("--fg-aircraft=")) {
+		return fgroot().append("/Aircraft");
+	}else{
+		return mainObject->X->getx("--fg-aircraft=");
+	}
 }
 
 /** \brief Path to the /Aircraft directory with a dir appended.
