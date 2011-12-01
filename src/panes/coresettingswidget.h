@@ -34,6 +34,13 @@ public:
 	QComboBox *comboScreenSize;
 	QCheckBox *checkBoxDisableSplashScreen;
 	QCheckBox *checkBoxFullScreenStartup;
+	
+	QHBoxLayout *screenSizeBox;
+	QLineEdit *lineEditScreenSizeW;
+	QLineEdit *lineEditScreenSizeH;
+	QLabel *lineEditScreenSizeWLabel;
+	QLabel *lineEditScreenSizeHLabel;
+	
 
 
 	//* MpMap
@@ -94,6 +101,7 @@ public slots:
 	void on_callsign_changed(QString);
 
 	void on_screensize();
+	void on_screensize_changed(QString);
 	void on_checkbox_splash_screen();
 
 	void on_show_mp_map();

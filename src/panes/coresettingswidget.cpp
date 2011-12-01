@@ -68,6 +68,31 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	connect(comboScreenSize, SIGNAL(currentIndexChanged(int)),
 			this, SLOT(on_screensize())
 	);
+	
+	// set screen size manually, set input mask to 4 digits and numbers only
+	QHBoxLayout *screenSizeBox = new QHBoxLayout();
+	lineEditScreenSizeWLabel = new QLabel("Width: ");
+	lineEditScreenSizeW = new QLineEdit(this);
+	lineEditScreenSizeW->setText("");
+	lineEditScreenSizeW->setMaxLength(4);
+	lineEditScreenSizeW->setInputMask("9999");
+	connect(lineEditScreenSizeW, SIGNAL(textChanged(QString)), this, SLOT(on_screensize_changed(QString)) );
+	
+	lineEditScreenSizeHLabel = new QLabel("Height: ");
+	lineEditScreenSizeH = new QLineEdit(this);
+	lineEditScreenSizeH->setText("");
+	lineEditScreenSizeH->setMaxLength(4);
+	lineEditScreenSizeH->setInputMask("9999");
+	connect(lineEditScreenSizeH, SIGNAL(textChanged(QString)), this, SLOT(on_screensize_changed(QString)) );
+	
+	screenSizeBox->addWidget(lineEditScreenSizeWLabel, 1);
+	screenSizeBox->addWidget(lineEditScreenSizeW, 1);
+	screenSizeBox->addWidget(lineEditScreenSizeHLabel, 1);
+	screenSizeBox->addWidget(lineEditScreenSizeH, 1);
+	
+	grpBoxScreen->addLayout(screenSizeBox);
+	
+	
 
 	
 	//= Full Screen
@@ -426,6 +451,17 @@ void CoreSettingsWidget::on_screensize()
 	emit setx( "--full-screen", checkBoxFullScreenStartup->isChecked(), "");
 }
 
+//=====================================
+// ScreenSize changed
+void CoreSettingsWidget::on_screensize_changed(QString)
+{
+	emit setx( "--geometry=",
+				checkBoxFullScreenStartup->isChecked() == false,
+				lineEditScreenSizeW->text().append("x").append(lineEditScreenSizeH->text()));
+	
+	emit setx( "--full-screen", checkBoxFullScreenStartup->isChecked(), "");
+}
+
 
 //=====================================
 // SplashScreen Changed
@@ -545,12 +581,21 @@ void CoreSettingsWidget::customscenery_set_path() {
 
 void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 {
+	QString valueLeft(""), valueRight("");
+	
 	if(option == "--callsign="){
 		txtCallSign->setText(value);
 
 	}else if(option == "--full-screen"){
 		checkBoxFullScreenStartup->setChecked(enabled);
 		comboScreenSize->setDisabled(enabled);
+		
+	}else if(option == "--geometry="){
+		comboScreenSize->setCurrentIndex(comboScreenSize->findData(value));
+		valueLeft = value.section('x', 0);
+		valueRight = value.section('x', 1);
+		lineEditScreenSizeW->setText(valueLeft);
+		lineEditScreenSizeH->setText(valueRight);
 
 	}else if(option == "--disable-splash-screen"){
 		checkBoxDisableSplashScreen->setChecked(enabled);
