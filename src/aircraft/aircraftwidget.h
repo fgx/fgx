@@ -25,7 +25,7 @@ public:
 	enum COLS{
 		C_DIR = 0,
 		C_AERO,
-		C_XML_SET,
+		C_RATING,
 		C_DESCRIPTION,
 		C_FDM,
 		C_AUTHOR,
@@ -39,12 +39,13 @@ public:
 	explicit AircraftWidget(MainObject *mOb, QWidget *parent = 0);
 
 	MainObject *mainObject;
-
-
+	
+	QCheckBox *checkBoxUseCustomHangar;
 
 	QButtonGroup *groupUseAircraft;
 	QLineEdit *txtAircraftPath;
 	QToolButton *buttSelectPath;
+	
 
 	QLabel *aeroImageLabel;
 	QCheckBox *checkViewNested;
@@ -82,8 +83,7 @@ public slots:
 	void load_tree();
 	void on_set_aircraft();
 	void on_select_path();
-	void on_set_default_hangar_path();
-	void on_set_custom_hangar_path();
+	void on_custom_hangar_path();
 	void on_tree_selection_changed();
 	void on_reload_cache();
 

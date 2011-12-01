@@ -58,6 +58,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
     add_option("jsdemo_exe_path", false, "", "", 0, "", "paths");
 
 
+
 	add_option("extra_args", false,"","",0,"","expert");
 	add_option("extra_env", false,"","",0,"","expert");
 
@@ -130,9 +131,9 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--com2=",false, "", "",3,"","Radio");
 
 	//== Aircraft
-	add_option( "use_aircraft",true,"","0",1,"","Aircraft");
 	add_option( "--aircraft=", false,"", "", 1 ,"Aircraft","Aircraft");
-	add_option( "--fg-aircraft=", false,"", "", 1 ,"Custom Aircraft","Aircraft");
+	add_option( "--fg-aircraft=", false,"", "", 1 ,"Custom Aircraft Folder","Aircraft");
+	add_option( "custom_hangar_enabled",false, "", "",1,"Custom Hangar Checked","Aircraft");
 
 
 
@@ -743,7 +744,7 @@ bool XSettingsModel::paths_sane(){
  */
 QString XSettingsModel::aircraft_path(){
 	
-	if (!mainObject->X->get_ena("--fg-aircraft=")) {
+	if (!mainObject->X->get_ena("custom_hangar_enabled")) {
 		return fgroot().append("/Aircraft");
 	}else{
 		return mainObject->X->getx("--fg-aircraft=");

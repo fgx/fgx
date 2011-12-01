@@ -47,6 +47,7 @@
 #include "aircraft/aircraftdata.h"
 #include "xwidgets/xtreewidgetitem.h"
 #include "utilities/utilities.h"
+#include "utilities/messagebox.h"
 
 
 AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
@@ -80,24 +81,21 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	treeTopBar->setSpacing(5);
 	treeLayout->addLayout(treeTopBar);
 
-	groupUseAircraft = new QButtonGroup(this);
-	groupUseAircraft->setExclusive(true);
-	connect(groupUseAircraft, SIGNAL(buttonClicked(int)), this, SLOT(on_set_aircraft()) );
+	//groupUseAircraft = new QButtonGroup(this);
+	//groupUseAircraft->setExclusive(true);
+	//connect(groupUseAircraft, SIGNAL(buttonClicked(int)), this, SLOT(on_set_aircraft()) );
 
 	//= Use Default Selected
-	QRadioButton *radioUseTree = new QRadioButton();
-	radioUseTree->setText("Default Hangar");
-	treeTopBar->addWidget(radioUseTree);
-	groupUseAircraft->addButton(radioUseTree, 0);
-	connect(radioUseTree, SIGNAL(clicked()), this, SLOT(on_set_default_hangar_path()) );
+	//QLabel *labelDefaultHangar = new QLabel();
+	//labelDefaultHangar->setText("Default Hangar");
+	//treeTopBar->addWidget(labelDefaultHangar);
+	//connect(checkBoxUseDefaultHangar, SIGNAL(clicked()), this, SLOT(on_set_default_hangar_path()) );
 
 
 	//= Use Custom Hangar (Aircraft Directory)
-	QRadioButton *radioUseCustom = new QRadioButton();
-	radioUseCustom->setText("Set path to Hangar (Aircraft directory): ");
-	treeTopBar->addWidget(radioUseCustom);
-	groupUseAircraft->addButton(radioUseCustom, 1);
-	connect(radioUseCustom, SIGNAL(clicked()), this, SLOT(on_set_custom_hangar_path()) );
+	checkBoxUseCustomHangar = new QCheckBox("Use Custom Hangar (Custom aircraft directory):");
+	treeTopBar->addWidget(checkBoxUseCustomHangar);
+	connect(checkBoxUseCustomHangar, SIGNAL(clicked()), this, SLOT(on_custom_hangar_path()) );
 
 	txtAircraftPath = new QLineEdit();
 	treeTopBar->addWidget(txtAircraftPath);
@@ -121,13 +119,13 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	treeWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 
 	treeWidget->headerItem()->setText(C_DIR, "Dir");
-	treeWidget->headerItem()->setText(C_XML_SET, "xml");
+	treeWidget->headerItem()->setText(C_RATING, "Rating");
 	treeWidget->headerItem()->setText(C_AERO, "Aircraft");
 	treeWidget->headerItem()->setText(C_DESCRIPTION, "Description");
 	treeWidget->headerItem()->setText(C_FDM, "FDM");
 	treeWidget->headerItem()->setText(C_AUTHOR, "Author");
 	treeWidget->header()->setStretchLastSection(true);
-	//treeWidget->setColumnHidden(C_XML_SET, true);
+	treeWidget->setColumnHidden(C_RATING, true);
 	treeWidget->setColumnWidth(C_DIR, 60);
 	treeWidget->setColumnWidth(C_FDM, 60);
 	treeWidget->setColumnWidth(C_DESCRIPTION, 200);
@@ -144,13 +142,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 	//== Path label
 	labelAeroPath = new QLabel();
-	labelAeroPath->setStyleSheet("font-size: 8pt;");
-	labelAeroPath->setFixedWidth(250);
 	statusBarTree->addPermanentWidget(labelAeroPath);
-
-	buttonAeroPath = new QToolButton();
-	buttonAeroPath->setIcon(QIcon(":/icon/folder"));
-	statusBarTree->addPermanentWidget(buttonAeroPath);
 
 	//== View nested Checkbox
 	checkViewNested = new QCheckBox();
@@ -158,10 +150,9 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	statusBarTree->addPermanentWidget(checkViewNested);
 	connect(checkViewNested, SIGNAL(clicked()), this, SLOT(load_tree()));
 
-
 	//== Reload aircrafts
 	QToolButton *actionReloadCacheDb = new QToolButton(this);
-	actionReloadCacheDb->setText("Reload aircrafts");
+	actionReloadCacheDb->setText("Reload");
 	actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
 	actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	actionReloadCacheDb->setAutoRaise(true);
@@ -330,7 +321,7 @@ void AircraftWidget::on_tree_selection_changed(){
 	if(!item){
 			outLog("on_tree_selection_changed: no selected item");
 		labelAeroPath->setText("");
-		buttonAeroPath->setDisabled(true);
+		//buttonAeroPath->setDisabled(true);
 		return;
 	}
 
@@ -340,13 +331,13 @@ void AircraftWidget::on_tree_selection_changed(){
 				aeroImageLabel->clear();
 		emit setx("--aircraft=", false, "");
 		labelAeroPath->setText("");
-		buttonAeroPath->setDisabled(true);
+		//buttonAeroPath->setDisabled(true);
 		return;
 	}
 
 	//qDebug() << item->text(C_DIR);
 	labelAeroPath->setText(mainObject->X->aircraft_path() + "/" + item->text(C_AERO));
-	buttonAeroPath->setDisabled(false);
+	//buttonAeroPath->setDisabled(false);
 
 	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
@@ -372,20 +363,18 @@ void AircraftWidget::on_tree_selection_changed(){
 }
 
 //============================================
-//== Select an hangar path (default or custom)
-void AircraftWidget::on_set_default_hangar_path() {
-	emit setx("--fg-aircraft=", false, "");
-	on_reload_cache();
-}	
+//== Select an hangar/custom aircraft directory path	
 
-
-void AircraftWidget::on_set_custom_hangar_path() {
-	emit setx("--fg-aircraft=",
-			  groupUseAircraft->checkedId() == 1 && txtAircraftPath->text().length() > 0,
-			  txtAircraftPath->text()
-			  );
+void AircraftWidget::on_custom_hangar_path() {
+	emit setx("custom_hangar_enabled", checkBoxUseCustomHangar->isChecked(), "");
+	emit setx("--fg-aircraft=", checkBoxUseCustomHangar->isChecked(), txtAircraftPath->text());
+	
 	if (txtAircraftPath->text() != "") {
 		on_reload_cache();
+	}else {
+		QMessageBox::warning(this, tr("Custom Aircraft Directory"),
+			tr("Click on \"select\" and set a valid path to an aircraft directory containing one or more aircrafts."),
+			QMessageBox::Ok);
 	}
 }
 
@@ -483,8 +472,8 @@ void AircraftWidget::load_tree(){
 		}
 
 		XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
-		QString xml_path = QString("%1/%2").arg(cols.at(C_DIR)).arg(C_XML_SET);
-		aeroItem->setText(C_XML_SET, xml_path);
+		//QString xml_path = QString("%1/%2").arg(cols.at(C_DIR)).arg(C_XML_SET);
+		//aeroItem->setText(C_XML_SET, xml_path);
 		aeroItem->setText(C_AERO, cols.at(C_AERO));
 		aeroItem->setIcon(C_AERO, QIcon(":/icon/aircraft"));
 		aeroItem->setText(C_DESCRIPTION, cols.at(C_DESCRIPTION));
@@ -546,15 +535,9 @@ void AircraftWidget::on_fuel_changed()
 }
 
 void AircraftWidget::on_set_aircraft()
-{
-
-	emit setx("use_aircraft", true, QString::number(groupUseAircraft->checkedId()));
-
-	emit setx("--fg-aircraft=",
-			  groupUseAircraft->checkedId() == 1 && txtAircraftPath->text().length() > 0,
-			  txtAircraftPath->text()
-			  );
-
+{	
+	//emit setx("custom_hangar_enabled",checkBoxUseCustomHangar->isChecked(),"");
+	//emit setx("--fg-aircraft=",checkBoxUseCustomHangar->isChecked(),txtAircraftPath->text());
 }
 
 
@@ -565,20 +548,14 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 	Q_UNUSED(enabled);
 	//= NOTE: The --aircraft=. --runway, etc is detected as the tree loads from cache
 
-	if(option == "use_aircraft"){
-
-		int bid = value.toInt();
-		groupUseAircraft->button(bid)->setChecked(true);
-		treeWidget->setEnabled(bid == 1);
-		txtAircraftPath->setEnabled(bid == 1);
-		buttSelectPath->setEnabled(bid == 1);
-
-	}else if(option == "--aircraft"){
+	if(option == "--aircraft"){
 		//= see tree load
 		select_node(value);
+		
+	}else if(option == "custom_hangar_enabled"){
+		checkBoxUseCustomHangar->setChecked(enabled);
 
 	}else if(option == "--fg-aircraft="){
-
 		txtAircraftPath->setText(value);
 
 	//== tab radio
@@ -632,7 +609,7 @@ void AircraftWidget::on_select_path()
 		on_set_aircraft();
 	}
 	
-	on_reload_cache();
+	on_custom_hangar_path();
 
 }
 
