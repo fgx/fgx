@@ -89,10 +89,10 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	connect(groupUseAircraft, SIGNAL(buttonClicked(int)), this, SLOT(on_set_aircraft()) );
 
 	//= Use default
-	QRadioButton *radioUseDefault = new QRadioButton();
+	/*QRadioButton *radioUseDefault = new QRadioButton();
 	radioUseDefault->setText("Use default aircraft");
 	treeTopBar->addWidget(radioUseDefault);
-	groupUseAircraft->addButton(radioUseDefault, 0);
+	groupUseAircraft->addButton(radioUseDefault, 0);*/
 
 	//= Use Selected
 	QRadioButton *radioUseTree = new QRadioButton();

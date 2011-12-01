@@ -59,10 +59,17 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpBoxScreen->addWidget(new QLabel("Initial Screen Size"));
 	comboScreenSize = new QComboBox();
 	comboScreenSize->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-	comboScreenSize->addItem("800 x 600", "800x600");
-	comboScreenSize->addItem("1024 x 768", "1024x768");
-	comboScreenSize->addItem("1280 x 1024", "1280x1024");
-	comboScreenSize->addItem("1600 x 900", "1600x900");
+	comboScreenSize->addItem("800 x 600 (4:3)", "800x600");
+	comboScreenSize->addItem("1024 x 768 (4:3)", "1024x768");
+	comboScreenSize->addItem("1280 x 720 (16:9)", "1280x720");
+	comboScreenSize->addItem("1280 x 800 (16:10)", "1280x800");
+	comboScreenSize->addItem("1280 x 960 (4:3)", "1280x960");
+	comboScreenSize->addItem("1280 x 1024 (5:4)", "1280x1024");
+	comboScreenSize->addItem("1366 x 768 (16:9)", "1366x768");
+	comboScreenSize->addItem("1440 x 900 (16:10)", "1440x900");
+	comboScreenSize->addItem("1600 x 900 (16:9)", "1600x900");
+	comboScreenSize->addItem("1680 x 1050 (16:10)", "1680x1050");
+	comboScreenSize->addItem("1920 x 1200 (16:10)", "1920x1200");
 	grpBoxScreen->addWidget(comboScreenSize);
 	connect(comboScreenSize, SIGNAL(currentIndexChanged(int)),
 			this, SLOT(on_screensize())
