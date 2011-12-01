@@ -374,8 +374,8 @@ void AircraftWidget::on_tree_selection_changed(){
 //============================================
 //== Select an hangar path (default or custom)
 void AircraftWidget::on_set_default_hangar_path() {
-	// TODO check path
-		on_reload_cache();
+	emit setx("--fg-aircraft=", false, "");
+	on_reload_cache();
 }	
 
 
