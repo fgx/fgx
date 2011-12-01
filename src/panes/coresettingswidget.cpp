@@ -59,7 +59,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpBoxScreen->addWidget(new QLabel("Initial Screen Size"));
 	comboScreenSize = new QComboBox();
 	comboScreenSize->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-	comboScreenSize->addItem("-- Default --", "default");
 	comboScreenSize->addItem("800 x 600", "800x600");
 	comboScreenSize->addItem("1024 x 768", "1024x768");
 	comboScreenSize->addItem("1280 x 1024", "1280x1024");
@@ -437,18 +436,15 @@ void CoreSettingsWidget::on_callsign_changed(QString txt)
 
 
 //=====================================
-// ScreenSize changed
+// ScreenSize combobox changed
 void CoreSettingsWidget::on_screensize()
-{
-	if(comboScreenSize->currentIndex() == 0){
-		emit setx("--geometry=", false, "# no #");
-	}else{
-		emit setx( "--geometry=",
-			   checkBoxFullScreenStartup->isChecked() == false,
-					comboScreenSize->itemData(comboScreenSize->currentIndex()).toString()
-			   );
-	}
-	emit setx( "--full-screen", checkBoxFullScreenStartup->isChecked(), "");
+{	
+	QString value(""), valueLeft(""), valueRight("");
+	value = comboScreenSize->itemData(comboScreenSize->currentIndex()).toString();
+	valueLeft = value.section('x', 0, 0);
+	valueRight = value.section('x', 1, 1);
+	lineEditScreenSizeW->setText(valueLeft);
+	lineEditScreenSizeH->setText(valueRight);
 }
 
 //=====================================
@@ -487,7 +483,6 @@ void CoreSettingsWidget::on_show_mp_map(){
 void CoreSettingsWidget::on_fgfs_path(QString txt)
 {
 	emit( mainObject->X->set_option("fgfs_path", true, txt));
-	outLog("Hey, set fgfs path: "+txt);
 }
 
 //=====================================
@@ -592,8 +587,8 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 		
 	}else if(option == "--geometry="){
 		comboScreenSize->setCurrentIndex(comboScreenSize->findData(value));
-		valueLeft = value.section('x', 0);
-		valueRight = value.section('x', 1);
+		valueLeft = value.section('x', 0, 0);
+		valueRight = value.section('x', 1, 1);
 		lineEditScreenSizeW->setText(valueLeft);
 		lineEditScreenSizeH->setText(valueRight);
 
