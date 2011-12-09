@@ -13,6 +13,7 @@ MetarWidget::MetarWidget(MainObject *mob, QWidget *parent) :
 	mainObject = mob;
 
 	setWindowIcon(QIcon(":/icon/metar"));
+    setWindowTitle("Metar Fetch");
 
 	setMinimumWidth(600);
 
@@ -51,7 +52,7 @@ void MetarWidget::load_metar(QString apt)
 	metarPath.chop(4);
 	metarPath.append("metar");
 #else
-    if ( ! mainObject->X->fgroot_use_default() ) {
+    //if ( ! mainObject->X->fgroot_use_default() ) {
         int ind, siz;
         tmp = mainObject->X->fgfs_path();
         ind = tmp.indexOf(QChar('/'));
@@ -69,7 +70,7 @@ void MetarWidget::load_metar(QString apt)
                 metarPath = tmp + metarPath;
             }
         }
-    }
+    //}
 #endif
 	txtMetar->setPlainText( QString("Loading..\n\nmetar %1").arg(apt) );
     outLog("Running: ["+metarPath+" "+args.join(" ")+"]");

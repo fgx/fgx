@@ -15,6 +15,7 @@
 #include <QStringList>
 #include <QDir>
 #include <QDateTime>
+#include <QFileDialog>
 
 // #include "zlib/fgx_zlib.h"
 /* ZIP FILE */
@@ -34,6 +35,8 @@ extern bool util_setStdLogFile();
 
 /* GET FILE LIST per filter */
 extern QStringList findFiles(const QString &startDir, QStringList filters, bool recurse = false);
+/* GET DIRECTORY list */
+extern QStringList findDirs(QString startDir, bool recurse = false);
 
 // given millisecond, return appropriate (nice) string, with units
 extern QString getElapTimeStg(int ms);
@@ -80,6 +83,27 @@ private:
     void init();
 };
 
+// native versions
+extern QString util_browseDirectory(QWidget * parent = 0,
+                                    QString prompt = QString(),
+                                    QString current = QString());
+extern QString util_browseFile(QWidget * parent = 0,
+                               QString prompt = QString(),
+                               QString current = QString(),
+                               QStringList filter = QStringList(),
+                               int options = 0);
+extern QString util_browseNewFile(QWidget * parent = 0,
+                               QString prompt = QString(),
+                               QString current = QString(),
+                               QStringList filter = QStringList(),
+                               int options = 0);
+
+// simple dialog version
+extern QString util_getFileName(QWidget *parent = 0, QString title = QString(), QString previous = QString(), QStringList filt = QStringList());
+extern QString util_getDirName(QWidget *parent = 0, QString title = QString(), QString previous = QString());
+extern QString util_getCurrentWorkDirectory();
+
+extern bool util_ensureUnixPathSep(QString &txt); // return 'true' if changed
 
 #endif // FGX_UTILITIES_H
 // eof - utilities.h

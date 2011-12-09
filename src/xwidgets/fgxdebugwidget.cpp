@@ -18,7 +18,7 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 
 	setProperty("settings_namespace", QVariant("fgxdebug_window"));
 	mainObject->settings->restoreWindow(this);
-
+    setWindowTitle("FGx Debug");
 
 	QVBoxLayout *mainLayout = new QVBoxLayout();
 	setLayout(mainLayout);

@@ -1,5 +1,12 @@
+/*
+ *  coresettingswidget.cpp
+ *  FGx
+ *
+ *  © 2011 --- GPL2
+ *
+ */
 
-
+#include "app_config.h"
 //#include <QtDebug>
 
 #include <QtCore/QProcess>
@@ -373,14 +380,35 @@ void CoreSettingsWidget::load_joysticks(){
 	int count = 0;
     QString startJSDemoPath;
     QStringList args;
-    startJSDemoPath = "";
-
+    startJSDemoPath = mainObject->X->getx("jsdemo_exe_path");
 	// TODO Fix this macro
 #ifdef Q_OS_MAC
-    startJSDemoPath = mainObject->X->getx("jsdemo_exe_path");
 	outLog("*** FGx Joystick Pre-Check jsdemo OSX-path defined: "+startJSDemoPath);
-#elif defined(Q_OS_UNIX)
-	startJSDemoPath = mainObject->X->getx("jsdemo_exe_path");
+#else // #elif defined(Q_OS_UNIX)
+    // TODO Check maybe this could be used for ALL ports?
+    if (startJSDemoPath.length() == 0) {
+        // see if it can be found...
+        startJSDemoPath = mainObject->X->fgfs_path();
+        if (startJSDemoPath.length()) { // we have a path to 'fgfs'
+            util_ensureUnixPathSep(startJSDemoPath);    // ensure all '/'
+            int ind = startJSDemoPath.lastIndexOf(QChar('/'));
+            if (ind > 0) {  // ok, use the same path for 'js_demo'
+                startJSDemoPath = startJSDemoPath.left(ind+1);
+                startJSDemoPath.append("js_demo");
+#ifdef Q_OS_WIN
+                startJSDemoPath.append(".exe"); // add the windows thing
+#endif // Q_OS_WIN
+                if (QFile::exists(startJSDemoPath)) {   // if file exists,
+                    emit setx("jsdemo_exe_path",true,startJSDemoPath);  // update profile
+                }
+            } else {
+                startJSDemoPath = "js_demo";
+            }
+        } else {
+            startJSDemoPath = "js_demo";
+        }
+    }
+    // This will do NOTHING is no 'environment' defined
 	QStringList extra_env = mainObject->X->get_fgfs_env();
     if (extra_env.size()) {
         //= append new env vars
@@ -396,9 +424,9 @@ void CoreSettingsWidget::load_joysticks(){
 		QString error_result = process.readAllStandardError();
 		outLog("*** FGx jsdemo joystick pre-check result: "+ok_result);
 		if (error_result > 0) {
-		outLog("*** FGx jsdemo error results: "+error_result);
+            outLog("*** FGx jsdemo error results: "+error_result);
 		}
-		Q_UNUSED(error_result);
+        //Q_UNUSED(error_result);
 		//* take result and split into parts
 		QStringList entries = ok_result.trimmed().split("\n");
 		for(int i=2; i < entries.count(); i++){ //First 2 lines are crap
@@ -418,10 +446,10 @@ void CoreSettingsWidget::load_joysticks(){
 			}
 		}
 	} else {
-		results = "FGx Error: Unable to run 'js_demo' to get Joystick list!\n";
+        results = "FGx Error: Unable to run '"+startJSDemoPath+"' to get Joystick list!\n";
 	}
-	//outLog("*** FGx reports: Joystick detection results\n"+results+" ***",0); // show results in LOG
-	if (count == 0) {
+    outLog("*** FGx reports: Joystick detection results\n"+results+" ***"); // show results in LOG
+    if (count == 0) {
 		labelInputs->setEnabled(false);
 		labelInputs->setText("No Joystick detected. Check logs");
 	}
@@ -663,20 +691,14 @@ void CoreSettingsWidget::terrasync_exe_check_path()
 }
 
 
-// Path check special case, not full path is used in settings, base dir is $HOME
-// So this checks against $HOME/path/to/terrasync/data
+// Path check now NOT special case...
 void CoreSettingsWidget::terrasync_data_check_path()
 {
-	QDir homepath(QDir::homePath());
-	QString homepathString(QDir::homePath());
-	homepathString.append(lineEditTerraSyncDataPath->text());
-	bool terrasync_data_exists = homepath.exists(homepathString);
-	if (terrasync_data_exists) {
-		labelTerrasyncDataCheck->setPixmap(QPixmap(":/icon/ok"));
-	} else {
-		labelTerrasyncDataCheck->setPixmap(QPixmap(":/icon/not-ok"));
-	}
-	
+    QDir dir(lineEditTerraSyncDataPath->text());
+    QString valid = ":/icon/not-ok";
+    if (dir.exists())
+        valid = ":/icon/ok";
+    labelTerrasyncDataCheck->setPixmap(QPixmap(valid));
 }
 
 void CoreSettingsWidget::custom_scenery_check_path()
@@ -698,9 +720,14 @@ void CoreSettingsWidget::custom_scenery_check_path()
 void CoreSettingsWidget::on_select_fgfsbutton()
 
 {
-	QString filePathFgfs = QFileDialog::getOpenFileName(this, tr("Select FlightGear binary (fgfs)"),
-	lineEditFgFsPath->text());
-		if(filePathFgfs.length() > 0){
+#ifdef USE_ALTERNATE_GETFILE
+    QString filePathFgfs = util_getFileName((QWidget *)this, tr("Select FlightGear binary (fgfs)"),
+                                            lineEditFgFsPath->text());
+#else // !#ifdef USE_ALTERNATE_GETFILE
+    QString filePathFgfs = QFileDialog::getOpenFileName(this, tr("Select FlightGear binary (fgfs)"),
+    lineEditFgFsPath->text());
+#endif // #ifdef USE_ALTERNATE_GETFILE y/n
+        if(filePathFgfs.length() > 0){
 			lineEditFgFsPath->setText(filePathFgfs);
 		}
 		
@@ -710,8 +737,13 @@ void CoreSettingsWidget::on_select_fgfsbutton()
 void CoreSettingsWidget::on_select_fgrootbutton()
 
 {
-	QString dirPathFgRoot = QFileDialog::getExistingDirectory(this, tr("Select FlightGear data directory (fgdata)"),
-	lineEditFgRootPath->text(), QFileDialog::ShowDirsOnly);
+#ifdef USE_ALTERNATE_GETFILE
+    QString dirPathFgRoot = util_getDirName(this, tr("Select FlightGear data directory (fgdata)"),
+                                            lineEditFgRootPath->text());
+#else // !#ifdef USE_ALTERNATE_GETFILE
+    QString dirPathFgRoot = QFileDialog::getExistingDirectory(this, tr("Select FlightGear data directory (fgdata)"),
+                                                              lineEditFgRootPath->text(), QFileDialog::ShowDirsOnly);
+#endif // #ifdef USE_ALTERNATE_GETFILE y/n
 	
 	if(dirPathFgRoot.length() > 0){
 		lineEditFgRootPath->setText(dirPathFgRoot);
@@ -722,8 +754,28 @@ void CoreSettingsWidget::on_select_fgrootbutton()
 void CoreSettingsWidget::on_select_terrasyncexebutton()
 
 {
-	QString filePathTerrasync = QFileDialog::getOpenFileName(this, tr("Select Terrasync binary (terrasync)"),
-													lineEditTerraSyncExePath->text());
+    QString title = tr("Select Terrasync binary (terrasync)");
+    QString previous = lineEditTerraSyncExePath->text();
+    if (previous.length() == 0) { // try harder to help user
+        previous = lineEditFgFsPath->text(); // if they have already set 'fgfs'
+        util_ensureUnixPathSep(previous);   // then 'terrasync' is probably nearby
+        int ind = previous.lastIndexOf(QChar('/'));
+        if (ind > 0) {
+            previous = previous.left(ind+1);    // get the path
+            previous.append("terrasync");       // add default exe name
+#if Q_OS_WIN
+            previous.append(".exe");            // add windows extension
+#endif
+        } else {
+            previous = ""; // failed - put it back to nothing
+        }
+    }
+#ifdef USE_ALTERNATE_GETFILE
+    QString filePathTerrasync = util_getFileName((QWidget *)this, title, previous);
+#else // !#ifdef USE_ALTERNATE_GETFILE
+    QString filePathTerrasync = QFileDialog::getOpenFileName(this, title, previous);
+#endif // #ifdef USE_ALTERNATE_GETFILE y/n
+
 	if(filePathTerrasync.length() > 0){
 		lineEditTerraSyncExePath->setText(filePathTerrasync);
 	}
@@ -734,9 +786,14 @@ void CoreSettingsWidget::on_select_terrasyncexebutton()
 void CoreSettingsWidget::on_select_terrasyncdatabutton()
 
 {
-	QString dirPathTerrasyncData = QFileDialog::getExistingDirectory(this, tr("Select Terrasync data directory"),
-														lineEditTerraSyncDataPath->text(), QFileDialog::ShowDirsOnly);
-	
+#ifdef USE_ALTERNATE_GETFILE
+    QString dirPathTerrasyncData = util_getDirName(this, tr("Select Terrasync data directory"),
+                                                   lineEditTerraSyncDataPath->text());
+#else // !#ifdef USE_ALTERNATE_GETFILE
+    QString dirPathTerrasyncData = QFileDialog::getExistingDirectory(this, tr("Select Terrasync data directory"),
+                                                                     lineEditTerraSyncDataPath->text(), QFileDialog::ShowDirsOnly);
+#endif // #ifdef USE_ALTERNATE_GETFILE y/n
+
 	if(dirPathTerrasyncData.length() > 0){
 		lineEditTerraSyncDataPath->setText(dirPathTerrasyncData);
 	}
@@ -746,10 +803,15 @@ void CoreSettingsWidget::on_select_terrasyncdatabutton()
 void CoreSettingsWidget::on_select_customscenerybutton()
 
 {
-	QString dirPathCustomScenery = QFileDialog::getExistingDirectory(this, tr("Select custom scenery data directory"),
-														lineEditCustomScenePath->text(), QFileDialog::ShowDirsOnly);
-	
-	if(dirPathCustomScenery.length() > 0){
+#ifdef USE_ALTERNATE_GETFILE
+    QString dirPathCustomScenery = util_getDirName(this, tr("Select custom scenery data directory"),
+                                                   lineEditCustomScenePath->text());
+#else // !#ifdef USE_ALTERNATE_GETFILE
+    QString dirPathCustomScenery = QFileDialog::getExistingDirectory(this, tr("Select custom scenery data directory"),
+                                                                     lineEditCustomScenePath->text(), QFileDialog::ShowDirsOnly);
+#endif // #ifdef USE_ALTERNATE_GETFILE y/n
+
+    if(dirPathCustomScenery.length() > 0){
 		lineEditCustomScenePath->setText(dirPathCustomScenery);
 	}
 	custom_scenery_check_path();

@@ -5,7 +5,7 @@
 */
 
 
-
+#include "app_config.h"
 //#include <QtCore/QDebug>
 
 #include <QtCore/QProcess>
@@ -404,10 +404,10 @@ QString AircraftWidget::selected_aircraft(){
 //=============================================================
 // Validate
 QString AircraftWidget::validate(){
-	if(groupUseAircraft->checkedId() == 1 &&  !treeWidget->currentItem()){
-		return QString("Aircraft: No aircraft selected or check [x] Use default");
-		outLog("FGx reports: AircraftWidget::validate() No aircraft selected (maybe no list), and [x] use default not selected. ***");
-	}
+    //if(groupUseAircraft->checkedId() == 1 &&  !treeWidget->currentItem()){
+    //	return QString("Aircraft: No aircraft selected or check [x] Use default");
+    //	outLog("FGx reports: AircraftWidget::validate() No aircraft selected (maybe no list), and [x] use default not selected. ***");
+    //}
 	return QString("");
 }
 
@@ -602,8 +602,13 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 
 void AircraftWidget::on_select_path()
 {
-	QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Hangar (Aircraft directory)"),
-														 txtAircraftPath->text(), QFileDialog::ShowDirsOnly);
+#ifdef USE_ALTERNATE_GETFILE
+    QString dirPath = util_getDirName(this, tr("Select Hangar (Aircraft directory)"),
+                                            txtAircraftPath->text());
+#else // !#ifdef USE_ALTERNATE_GETFILE
+    QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Hangar (Aircraft directory)"),
+                                                         txtAircraftPath->text(), QFileDialog::ShowDirsOnly);
+#endif // #ifdef USE_ALTERNATE_GETFILE y/n
 	if(dirPath.length() > 0){
 		txtAircraftPath->setText(dirPath);
 		on_set_aircraft();

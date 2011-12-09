@@ -9,6 +9,8 @@
 
 #include <QMutex>
 #include "utilities.h"
+#include "fileDialog.h"
+#include "dirDialog.h"
 #include "xobjects/mainobject.h"
 
 
@@ -106,6 +108,19 @@ QStringList findFiles(const QString &startDir, QStringList filters, bool recurse
 			names += findFiles(startDir + "/" + subdir, filters, recurse);
 	}
 	return names;
+}
+
+QStringList findDirs(QString startDir, bool recurse)
+{
+    QStringList names;
+    QDir dir(startDir);
+    foreach (QString subdir, dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot)) {
+        QString ndir(startDir+"/"+subdir);
+        names += ndir;
+        if (recurse)
+            names += findDirs(ndir,recurse);
+    }
+    return names;
 }
 
 // given millisecond, return appropriate (nice) string, with units
@@ -378,5 +393,112 @@ bool testExe::runTest()
     return result;
 }
 // =================================
+
+// replacement getFileName function, while my Qt/Ubuntu built-in function FAILS!!!
+// #include "fileDialog.h"
+QString util_getFileName(QWidget *parent, QString title, QString previous, QStringList filt)
+{
+    fileDialog d(parent);           // instantiate dialog
+    d.init(title,previous,filt);    // do setup
+    d.exec();                       // run dialog
+    QString newFile = d.getFileName();  // get results
+    return newFile;                 // return results - "" if user cancelled
+}
+
+QString util_getDirName(QWidget *parent, QString title, QString previous)
+{
+    dirDialog d(parent);           // instantiate dialog
+    d.init(title,previous);        // do setup
+    d.exec();                      // run dialog
+    QString newFile = d.getDirName();  // get results
+    return newFile;                 // return results - "" if user cancelled
+}
+
+
+QString util_getCurrentWorkDirectory()
+{
+    return QDir::currentPath();
+}
+
+bool util_ensureUnixPathSep(QString &txt)
+{
+    int ind = txt.indexOf(QChar('\\'));
+    if ( ind >= 0 ) {
+        txt.replace("\\","/"); // forced use of ONLY '/' char
+        return true;
+    }
+    return false;
+}
+
+// =====================
+// native get directory, file and new file
+QString util_browseDirectory(QWidget * parent, QString prompt, QString current)
+{
+    QString filePath =
+        QFileDialog::getExistingDirectory(
+                parent, prompt, current,
+                QFileDialog::ShowDirsOnly);
+    return filePath;
+}
+
+QFileDialog::Options _getUserOptions(int options)
+{
+    QFileDialog::Options opts = 0;
+    if (options & 0x0001)
+        opts |= QFileDialog::ShowDirsOnly;
+    if (options & 0x0002)
+        opts |= QFileDialog::DontResolveSymlinks;
+    if (options & 0x0004)
+        opts |= QFileDialog::DontConfirmOverwrite;
+    if (options & 0x0008)
+        opts |= QFileDialog::DontUseSheet;
+    if (options & 0x0010)
+        opts |= QFileDialog::DontUseNativeDialog;
+    if (options & 0x0020)
+        opts |= QFileDialog::ReadOnly;
+    if (options & 0x0040)
+        opts |= QFileDialog::HideNameFilterDetails;
+    return opts;
+}
+
+QString util_browseFile(QWidget * parent, QString prompt, QString current,
+                        QStringList filter, int options)
+{
+    QString filt;
+    if (filter.count()) {
+        filt = "Files (";
+        for (int i = 0; i < filter.count(); i++) {
+            if (i)
+                filt.append(" ");
+            filt.append(filter.at(i));
+        }
+        filt.append(")");
+    }
+    QFileDialog::Options opts = _getUserOptions(options);
+    QString filePath =
+        QFileDialog::getOpenFileName(
+                parent, prompt, current, filt, 0, opts );
+    return filePath;
+}
+
+QString util_browseNewFile(QWidget * parent, QString prompt, QString current,
+                           QStringList filter, int options)
+{
+    QString filt;
+    if (filter.count()) {
+        filt = "Files (";
+        for (int i = 0; i < filter.count(); i++) {
+            if (i)
+                filt.append(" ");
+            filt.append(filter.at(i));
+        }
+        filt.append(")");
+    }
+    QFileDialog::Options opts = _getUserOptions(options);
+    QString filePath =
+        QFileDialog::getSaveFileName(
+                parent, prompt, current, filt, 0, opts );
+    return filePath;
+}
 
 // eof - utilities.cpp

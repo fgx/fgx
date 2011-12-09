@@ -1,12 +1,17 @@
-
-
+/*
+ *  xsettingsmodel.cpp
+ *  FGx
+ *
+ *  Created by Peter Morgan
+ *  © 2011 --- GPL2
+ *
+ */
+#include "app_config.h"
 #include <QDebug>
-
 #include <QDesktopServices>
 #include <QFile>
 #include <QDir>
 #include <QFileDialog>
-
 
 #include "xobjects/xsettingsmodel.h"
 #include "utilities/utilities.h"
@@ -422,8 +427,11 @@ void XSettingsModel::load_last_profile(QString profile)
 void XSettingsModel::load_profile()
 {
 	_loading = true;
-	
-	QString filename = QFileDialog::getOpenFileName(0,  "Load Profiles",  profile(), "Profile files (*.ini)" );
+#ifdef USE_ALTERNATE_GETFILE
+    QString filename = util_getFileName(0,  "Load Profiles",  profile(), QStringList("*.ini") );
+#else // !#ifdef USE_ALTERNATE_GETFILE
+    QString filename = QFileDialog::getOpenFileName(0,  "Load Profiles",  profile(), "Profile files (*.ini)" );
+#endif // #ifdef USE_ALTERNATE_GETFILE y/n
 	QSettings settings(filename,QSettings::IniFormat);
 	
 	bool ena;
@@ -459,8 +467,12 @@ void XSettingsModel::load_profile()
 void XSettingsModel::save_profile()
 {
 	
-	QString filename = QFileDialog::getSaveFileName(0, "Save Profiles", "NewProfile.ini", "Profile files (*.ini)" );
-	QSettings settings(filename,QSettings::IniFormat);
+#ifdef USE_ALTERNATE_GETFILE
+    QString filename = util_getFileName(0, "Save Profiles", "NewProfile.ini", QStringList("*.ini"));
+#else // !#ifdef USE_ALTERNATE_GETFILE
+    QString filename = QFileDialog::getSaveFileName(0, "Save Profiles", "NewProfile.ini", "Profile files (*.ini)" );
+#endif // #ifdef USE_ALTERNATE_GETFILE y/n
+    QSettings settings(filename,QSettings::IniFormat);
 	
 	// selected profile filename will be stored in settings
 	set_option("profile", true, filename);
@@ -685,7 +697,7 @@ QString XSettingsModel::fgcom_exe_path(){
 	
 	
 QString XSettingsModel::jsdemo_exe_path(){
-		//nothing
+    return "";	//nothing
 	
 }
 
