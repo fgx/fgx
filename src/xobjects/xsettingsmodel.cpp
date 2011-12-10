@@ -547,18 +547,23 @@ QStringList XSettingsModel::get_fgfs_args()
 	args <<  QString("--fg-root=").append(fgroot());
 
 	//= Terrasync and custom scenery path
-	if (terrasync_enabled() && !custom_scenery_enabled()) {
-		args << QString("--fg-scenery=").append(terrasync_data_path()).append(":").append(scenery_path());
+    // setup the DIFFERENT path separators!!!
+    QString path_sep = ":"; // normal unix path separator
+#ifdef Q_OS_WIN
+    path_sep = ";"; // oops, switch the WINDOWS spearator
+#endif
+    if (terrasync_enabled() && !custom_scenery_enabled()) {
+        args << QString("--fg-scenery=").append(terrasync_data_path()).append(path_sep).append(scenery_path());
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
-		}
+    }
 	
-	if (terrasync_enabled() && custom_scenery_enabled()) {
-		args << QString("--fg-scenery=").append(custom_scenery_path()).append(":").append(terrasync_data_path()).append(":").append(scenery_path());
+    else if (terrasync_enabled() && custom_scenery_enabled()) {
+        args << QString("--fg-scenery=").append(custom_scenery_path()).append(path_sep).append(terrasync_data_path()).append(path_sep).append(scenery_path());
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}
 
 	else if (!terrasync_enabled() && custom_scenery_enabled())  {
-		args << QString("--fg-scenery=").append(custom_scenery_path()).append(":").append(scenery_path());
+        args << QString("--fg-scenery=").append(custom_scenery_path()).append(path_sep).append(scenery_path());
 	}
 	
 	else if (!terrasync_enabled() && !custom_scenery_enabled())  {

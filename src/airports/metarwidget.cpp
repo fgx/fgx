@@ -52,25 +52,15 @@ void MetarWidget::load_metar(QString apt)
 	metarPath.chop(4);
 	metarPath.append("metar");
 #else
-    //if ( ! mainObject->X->fgroot_use_default() ) {
-        int ind, siz;
-        tmp = mainObject->X->fgfs_path();
-        ind = tmp.indexOf(QChar('/'));
-        siz = 0;
-        // march to last '/' in path
-        while (ind >= 0) {
-            tmp = tmp.mid(ind + 1);
-            siz = tmp.size();
-            ind = tmp.indexOf(QChar('/'));
-        }
-        if (siz > 0) {
-            tmp = mainObject->X->fgfs_path();
-            tmp.chop(siz);
-            if (d.exists(tmp)) {
-                metarPath = tmp + metarPath;
-            }
-        }
-    //}
+    // it is hoped this would suit ALL ports
+    tmp = mainObject->X->fgfs_path();
+    tmp = util_getBasePath(tmp);
+    tmp.append("metar");
+#ifdef Q_OS_WIN
+    tmp.append(".exe"); // add windows thing
+#endif
+    if (QFile::exists(tmp))
+        metarPath = tmp;
 #endif
 	txtMetar->setPlainText( QString("Loading..\n\nmetar %1").arg(apt) );
     outLog("Running: ["+metarPath+" "+args.join(" ")+"]");

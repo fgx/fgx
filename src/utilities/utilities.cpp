@@ -420,6 +420,18 @@ QString util_getCurrentWorkDirectory()
     return QDir::currentPath();
 }
 
+QString util_getBasePath(QString in)
+{
+    QString path = in;
+    util_ensureUnixPathSep(path);
+    int ind = path.lastIndexOf(QChar('/'));
+    if (ind >= 0)
+        path = path.left(ind + 1);
+    else
+        path = "";
+    return path;
+}
+
 bool util_ensureUnixPathSep(QString &txt)
 {
     int ind = txt.indexOf(QChar('\\'));

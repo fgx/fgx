@@ -390,19 +390,13 @@ void CoreSettingsWidget::load_joysticks(){
         // see if it can be found...
         startJSDemoPath = mainObject->X->fgfs_path();
         if (startJSDemoPath.length()) { // we have a path to 'fgfs'
-            util_ensureUnixPathSep(startJSDemoPath);    // ensure all '/'
-            int ind = startJSDemoPath.lastIndexOf(QChar('/'));
-            if (ind > 0) {  // ok, use the same path for 'js_demo'
-                startJSDemoPath = startJSDemoPath.left(ind+1);
-                startJSDemoPath.append("js_demo");
+            startJSDemoPath = util_getBasePath(startJSDemoPath);
+            startJSDemoPath.append("js_demo");
 #ifdef Q_OS_WIN
-                startJSDemoPath.append(".exe"); // add the windows thing
+            startJSDemoPath.append(".exe"); // add the windows thing
 #endif // Q_OS_WIN
-                if (QFile::exists(startJSDemoPath)) {   // if file exists,
-                    emit setx("jsdemo_exe_path",true,startJSDemoPath);  // update profile
-                }
-            } else {
-                startJSDemoPath = "js_demo";
+            if (QFile::exists(startJSDemoPath)) {   // if file exists,
+                emit setx("jsdemo_exe_path",true,startJSDemoPath);  // update profile
             }
         } else {
             startJSDemoPath = "js_demo";
@@ -752,23 +746,16 @@ void CoreSettingsWidget::on_select_fgrootbutton()
 }
 
 void CoreSettingsWidget::on_select_terrasyncexebutton()
-
 {
     QString title = tr("Select Terrasync binary (terrasync)");
-    QString previous = lineEditTerraSyncExePath->text();
+    QString previous = lineEditTerraSyncExePath->text(); // get current
     if (previous.length() == 0) { // try harder to help user
         previous = lineEditFgFsPath->text(); // if they have already set 'fgfs'
-        util_ensureUnixPathSep(previous);   // then 'terrasync' is probably nearby
-        int ind = previous.lastIndexOf(QChar('/'));
-        if (ind > 0) {
-            previous = previous.left(ind+1);    // get the path
-            previous.append("terrasync");       // add default exe name
-#if Q_OS_WIN
-            previous.append(".exe");            // add windows extension
+        previous = util_getBasePath(previous);
+        previous.append("terrasync");       // add default exe name
+#ifdef Q_OS_WIN
+        previous.append(".exe");            // add windows extension
 #endif
-        } else {
-            previous = ""; // failed - put it back to nothing
-        }
     }
 #ifdef USE_ALTERNATE_GETFILE
     QString filePathTerrasync = util_getFileName((QWidget *)this, title, previous);

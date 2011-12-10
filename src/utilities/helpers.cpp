@@ -43,7 +43,7 @@ QString Helpers::hmm_to_decimal(QString hmm)
 {
 	QStringList parts = hmm.split(" ");
 	QString h = parts.at(0);
-	double deg;
+    double deg = 0.0; // just to remove compiler warning
 
 	if( h.contains("N") ){
 		h.replace("N", "");
