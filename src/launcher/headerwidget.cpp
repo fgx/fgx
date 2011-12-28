@@ -1,4 +1,5 @@
 
+#include "app_config.h"
 #include <QtDebug>
 
 #include <QVBoxLayout>
@@ -48,7 +49,7 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 //========================================================================
 //= Show Message
 void HeaderWidget::showMessage(QString message){
-	showMessage(message, 5000);
+    showMessage(message, DEF_TO_MS);
 }
 
 void HeaderWidget::showMessage(QString message, int timeout){
@@ -75,7 +76,7 @@ void HeaderWidget::setHeader(QString text)
 
 }
 
-//= Set Callsing Sentence
+//= Set Callsign Sentence
 void HeaderWidget::setCallsign(QString text)
 {
 	text = text.toUpper();

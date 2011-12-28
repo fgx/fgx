@@ -105,6 +105,7 @@ extern QString util_getCurrentWorkDirectory();
 
 extern bool util_ensureUnixPathSep(QString &txt); // return 'true' if changed
 extern QString util_getBasePath(QString in);    // return path up to and including last '/'
+extern QString util_getBaseName(QString in);    // return name after last '/'
 
 #endif // FGX_UTILITIES_H
 // eof - utilities.h

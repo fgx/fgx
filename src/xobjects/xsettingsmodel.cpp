@@ -419,19 +419,52 @@ void XSettingsModel::load_last_profile(QString profile)
 	
 }
 
+//========================================
+// == get last used Profile file name
+//========================================
+QString XSettingsModel::getLastUsed()
+{
+    QString key("lastprofile");
+    QSettings lastused;
+    QString previous = lastused.value(key,
+                "NewProfile.ini").toString();
+    return previous;
+}
+
+//========================================
+// == set last used Profile file name
+//========================================
+void XSettingsModel::setLastUsed(QString previous)
+{
+    QString key("lastprofile");
+    QSettings lastused;
+    lastused.setValue(key,previous);
+}
+
 //=============================================
 // == Load Profile
 /** \brief Opens Profile Dialog for loading a .ini File
  */
 
-void XSettingsModel::load_profile()
+bool XSettingsModel::load_profile()
 {
 	_loading = true;
+    // get lastused profile name
+    QString previous = getLastUsed();   // or default if none
+
 #ifdef USE_ALTERNATE_GETFILE
-    QString filename = util_getFileName(0,  "Load Profiles",  profile(), QStringList("*.ini") );
+    QString filename = util_getFileName(0,  "Load Profiles",  previous, QStringList("*.ini") );
 #else // !#ifdef USE_ALTERNATE_GETFILE
-    QString filename = QFileDialog::getOpenFileName(0,  "Load Profiles",  profile(), "Profile files (*.ini)" );
+    QString filename = QFileDialog::getOpenFileName(0,  "Load Profiles",  previous, "Profile files (*.ini)" );
 #endif // #ifdef USE_ALTERNATE_GETFILE y/n
+
+    QFile file;
+    if ((filename.length() == 0) || (!file.exists(filename))) {
+        outLog("*** Profile load abandonned!");
+        _loading = false;
+        return false;   // NO LOAD POSSIBLE
+    }
+
 	QSettings settings(filename,QSettings::IniFormat);
 	
 	bool ena;
@@ -453,10 +486,12 @@ void XSettingsModel::load_profile()
 				 );
 		settings.endGroup();
 	}
-	_loading = false;
 	emit updated(get_fgfs_list());
 	outLog("*** Profile loaded: "+filename);
-	
+
+    setLastUsed(filename);  // store lastused profile name
+    return true;
+
 }
 
 //=============================================
@@ -464,23 +499,29 @@ void XSettingsModel::load_profile()
 /** \brief Opens Profile Dialog for loading a .ini File
  */
 
-void XSettingsModel::save_profile()
+bool XSettingsModel::save_profile()
 {
-	
+    // get lastused profile name
+    QString previous = getLastUsed(); // or default if none
+
 #ifdef USE_ALTERNATE_GETFILE
-    QString filename = util_getFileName(0, "Save Profiles", "NewProfile.ini", QStringList("*.ini"));
+    QString filename = util_getFileName(0, "Save Profiles", previous, QStringList("*.ini"));
 #else // !#ifdef USE_ALTERNATE_GETFILE
-    QString filename = QFileDialog::getSaveFileName(0, "Save Profiles", "NewProfile.ini", "Profile files (*.ini)" );
+    QString filename = QFileDialog::getSaveFileName(0, "Save Profiles", previous, "Profile files (*.ini)" );
 #endif // #ifdef USE_ALTERNATE_GETFILE y/n
+
+    if (filename.length() == 0) {
+        outLog("*** Profile write abandoneed");
+        return false;
+    }
+
     QSettings settings(filename,QSettings::IniFormat);
 	
 	// selected profile filename will be stored in settings
 	set_option("profile", true, filename);
-	
-	// saved profile will be used in settings to load as last used profile
-	QSettings lastused;
-	lastused.setValue("lastprofile", filename);
-	
+
+    setLastUsed(filename);
+
 	//= loop rows and save each "option" as an [ini section] with enabled, value as values
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
 		settings.beginGroup(item(row_idx, C_OPTION)->text());
@@ -489,13 +530,9 @@ void XSettingsModel::save_profile()
 		settings.endGroup();
 	}
 	
-	
-	
 	outLog("*** Profile written to disk: "+filename);
-	
+    return true;
 }
-
-
 
 
 //==========================================================

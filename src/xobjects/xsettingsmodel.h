@@ -82,6 +82,8 @@ public:
 
 	void set_row_bg(int row_idx, QColor bgcolor);
 
+    QString getLastUsed();
+    void setLastUsed(QString previous);
 
 signals:
 	void upx(QString option, bool enabled, QString value);
@@ -97,8 +99,8 @@ public slots:
 	QString profile();
 	void read_default_ini();
 	void load_last_profile(QString profile);
-	void load_profile();
-	void save_profile();
+    bool load_profile();    // true if load done, else false
+    bool save_profile();    // true if save done, else false
 };
 
 #endif // XSETTINGSMODEL_H

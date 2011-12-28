@@ -247,28 +247,32 @@ void LauncherWindow::initialize(){
 	//= First load the profiles
 	
 	QSettings firstsettings;
-	
-	if (!firstsettings.value("firststartup").toBool()) {
-		outLog("*** Looks like first startup without profile, reading default values. ***");
-		mainObject->X->read_default_ini();
-		QMessageBox::warning(this, tr("FGx First Startup - Settings Reset"),
-									   tr("Welcome to FGx. You need to save this Settings Profile first. Choose a writable location in next dialog and click \"Save\"."),
-									   QMessageBox::Ok);
-		mainObject->X->save_profile();
-		firstsettings.setValue("firststartup", "true");
-		firstsettings.setValue("lastprofile", mainObject->X->getx("profile"));
-		firstsettings.sync();
-		header_show_message("Profile saved.");
-	}
+    QString previous = mainObject->X->getLastUsed();
+    int done = 0;
+    while (!firstsettings.value("firststartup").toBool()) {
+        // stay here UNTIL the FIRST SAVE has been done
+        if (done == 0) {    // first time - set a kind, gentle message
+            previous = "Welcome to FGx. You need to save this Settings Profile first. Choose a writable location in next dialog and click \"Save\".";
+            outLog("*** Looks like first startup without profile, reading default values. ***");
+            mainObject->X->read_default_ini();
+        }
+        QMessageBox::warning(this, tr("FGx First Startup - Settings Reset"),previous,QMessageBox::Ok);
+        done++;
+        if ( mainObject->X->save_profile() ) {
+            firstsettings.setValue("firststartup", "true");
+            firstsettings.sync();
+        } else {    // did NOT write a profile - get quite INSISTANT ;=()
+            previous.sprintf("Try %d! You MUST save this Settings Profile first. Choose a writable location in next dialog and click \"Ok\" ONLY.",
+                         (done + 1));
+        }
+    }
 	
 	// This we do everytime, solves a lot of problems loading the first saved profile
-	mainObject->X->load_last_profile(firstsettings.value("lastprofile").toString());
-	QString tmp = firstsettings.value("lastprofile").toString();
-	QFileInfo fi(tmp);
+    previous = mainObject->X->getLastUsed();
+    mainObject->X->load_last_profile(previous);
+    QFileInfo fi(previous);
 	QString name = fi.fileName();
 	header_show_message("Last used profile loaded: "+name);
-
-
 
 	//= check paths are sane
 	if(!mainObject->X->paths_sane()){
@@ -328,14 +332,13 @@ void LauncherWindow::on_start_fgcom_clicked() {
 //================================================================================
 void LauncherWindow::save_settings()
 {
-	QString message("Settings saved.");
-	headerWidget->showMessage(message);
-
 	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
-	outLog("FGx: LauncherWindow widget says: settings saved ***");
-
-
+    // get lastused profile name
+    QString previous = mainObject->X->getLastUsed();
+    previous = util_getBaseName(previous);
+    headerWidget->showMessage("Settings saved to "+previous);
+    outLog("FGx: LauncherWindow widget says: settings saved to "+previous);
 
 }
 
@@ -344,10 +347,14 @@ void LauncherWindow::save_settings()
 //================================================================================
 void LauncherWindow::load_profile()
 {
-	mainObject->X->load_profile();
-	
-	QString message("Profile loaded.");
-	headerWidget->showMessage(message);
+    QString message("Profile load abandoned");
+    if (mainObject->X->load_profile()) {
+        // get lastused profile name
+        QString previous = mainObject->X->getLastUsed();
+        previous = util_getBaseName(previous);
+        message = "Profile loaded from "+previous;
+    }
+    headerWidget->showMessage(message);
 }
 
 //================================================================================
@@ -355,10 +362,14 @@ void LauncherWindow::load_profile()
 //================================================================================
 void LauncherWindow::save_profile()
 {
-	mainObject->X->save_profile();
-	
-	QString message("Profile saved.");
-	headerWidget->showMessage(message);
+    QString message("Profile save abandoned");
+    if (mainObject->X->save_profile()) {
+        // get lastused profile name
+        QString previous = mainObject->X->getLastUsed();
+        previous = util_getBaseName(previous);
+        message = "Profile saved to "+previous;
+    }
+    headerWidget->showMessage(message);
 }
 
 

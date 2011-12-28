@@ -432,6 +432,18 @@ QString util_getBasePath(QString in)
     return path;
 }
 
+QString util_getBaseName(QString in)
+{
+    QString path = in;
+    util_ensureUnixPathSep(path);
+    int ind = path.lastIndexOf(QChar('/'));
+    int len = path.length();
+    if ((ind > 0)&&(len > ind))
+        path = path.right(len-ind-1);
+    return path;
+}
+
+
 bool util_ensureUnixPathSep(QString &txt)
 {
     int ind = txt.indexOf(QChar('\\'));

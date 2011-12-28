@@ -237,7 +237,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//Check if path exists and set pixmap
 	connect(lineEditTerraSyncExePath, SIGNAL(textChanged(QString)), this, SLOT(terrasync_exe_check_path()));
 	connect(lineEditTerraSyncExePath, SIGNAL(textChanged(QString)), this, SLOT(on_terrasync_path(QString)));
-	connect(buttonSetTerrasyncExePath, SIGNAL(textChanged(QString)), this, SLOT(terrasyncexe_set_path()));
+    // connect(buttonSetTerrasyncExePath, SIGNAL(textChanged(QString)), this, SLOT(terrasyncexe_set_path()));
 	
 	
 	//----------------------------------------------
@@ -269,7 +269,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//Check if path exists and set pixmap
 	connect(lineEditTerraSyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(terrasync_data_check_path()));
 	connect(lineEditTerraSyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(on_terrasync_data_path(QString)));
-	connect(buttonSetTerrasyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(terrasyncdata_set_path()));
+    // connect(buttonSetTerrasyncDataPath, SIGNAL(textChanged(QString)), this, SLOT(terrasyncdata_set_path()));
 	
 	layoutMiddle->addStretch(20);
 	
@@ -307,7 +307,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//Check if path exists and set pixmap
 	connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(custom_scenery_check_path()));
 	connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(on_custom_scenery_path(QString)));
-	connect(buttonSetCustomSceneryPath, SIGNAL(textChanged(QString)), this, SLOT(customscenery_set_path()));
+    // connect(buttonSetCustomSceneryPath, SIGNAL(textChanged(QString)), this, SLOT(customscenery_set_path()));
 	
 	
 	//===========================================================================

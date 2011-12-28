@@ -51,12 +51,12 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 	QPushButton *buttLoad = new QPushButton();
 	buttLoad->setText("Load Ini");
 	bottBox->addWidget(buttLoad);
-	connect(buttLoad, SIGNAL(clicked()), mainObject->X, SLOT(read_ini()));
+    // connect(buttLoad, SIGNAL(clicked()), mainObject->X, SLOT(read_ini()));
 
 	QPushButton *buttSave = new QPushButton();
 	buttSave->setText("Write Ini");
 	bottBox->addWidget(buttSave);
-	connect(buttSave, SIGNAL(clicked()), mainObject->X, SLOT(write_ini()));
+    // connect(buttSave, SIGNAL(clicked()), mainObject->X, SLOT(write_ini()));
 
 
 	//========================================================
