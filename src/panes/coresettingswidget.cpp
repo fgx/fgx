@@ -108,7 +108,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	checkBoxFullScreenStartup = new QCheckBox(tr("Fullscreen mode"));
 	grpBoxScreen->addWidget(checkBoxFullScreenStartup);
 	checkBoxFullScreenStartup->setWhatsThis(tr("<b>Full Screen</b><br><br>Will start FlightGear in Full Screen Mode (ESC to cancel mode)."));
-	connect(checkBoxFullScreenStartup, SIGNAL(clicked()), this, SLOT(on_screensize()));
+	connect(checkBoxFullScreenStartup, SIGNAL(clicked()), this, SLOT(on_fullscreen_changed()) );
 
 	//= Disable Splash
 	checkBoxDisableSplashScreen = new QCheckBox(tr("Disable Splash Screen"));
@@ -476,10 +476,17 @@ void CoreSettingsWidget::on_screensize()
 void CoreSettingsWidget::on_screensize_changed(QString)
 {
 	emit setx( "--geometry=",
-				checkBoxFullScreenStartup->isChecked() == false,
+				true,
 				lineEditScreenSizeW->text().append("x").append(lineEditScreenSizeH->text()));
 	
-	emit setx( "--full-screen", checkBoxFullScreenStartup->isChecked(), "");
+	//emit setx( "--enable-fullscreen", checkBoxFullScreenStartup->isChecked(), "");
+}
+
+//=====================================
+// FullScreen changed
+void CoreSettingsWidget::on_fullscreen_changed()
+{	
+	emit setx( "--enable-fullscreen", checkBoxFullScreenStartup->isChecked(), "");
 }
 
 

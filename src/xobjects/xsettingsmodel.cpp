@@ -94,7 +94,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 	//== Screen
 	add_option("--geometry=", false, "", "", 1, "Screen Size","");
-	add_option( "--full-screen",false, "", "", 1 ,"Enable Full Screen at Startup","Startup");
+	add_option( "--enable-fullscreen",false, "", "", 1 ,"Enable Full Screen at Startup","Startup");
 	add_option( "--disable-splash-screen", false, "", "", 1 ,"Enable Splash Screen at Startup","Startup");
 
 
@@ -554,10 +554,6 @@ QStringList XSettingsModel::get_fgfs_args()
 			if(str.length() > 0){
 				args << str;
 			}
-
-
-			
-
 		}
 	}
 	
