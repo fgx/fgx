@@ -10,14 +10,15 @@
 #include <QtGui/QDesktopServices>
 #include <QtGui/QAction>
 #include <QtGui/QMenu>
+#include <QtGui/QMenuBar>
 #include <QtGui/QCursor>
+#include <QMenuBar>
 
 #include "xobjects/mainobject.h"
 #include "launcher/launcherwindow.h"
 
 #include "settings/settingsdialog.h"
 #include "utilities/utilities.h"
-
 
 
 MainObject::MainObject(QObject *parent) :
@@ -28,7 +29,7 @@ MainObject::MainObject(QObject *parent) :
 	//= init the LOG file
 	util_setStdLogFile();
 
-	//= Prederences Object
+	//= Preferences Object
 	settings = new XSettings();
 	debug_mode = settings->value("DEBUG_MODE","0").toBool();
 
@@ -159,9 +160,8 @@ MainObject::MainObject(QObject *parent) :
 	menuHelp->addAction(tr("About Qt"), this, SLOT(on_about_qt()));
 
 
-
-
 	popupMenu->addSeparator();
+	
 
 	//== Quit
 	actionQuit = popupMenu->addAction(QIcon(":/icon/quit"), tr("Quit"));
@@ -191,10 +191,15 @@ MainObject::MainObject(QObject *parent) :
 	
 	launcherWindow = new LauncherWindow(this);
 	launcherWindow->hide();
+	
+	//QMenuBar *menuBar = new QMenuBar(0);
+	createActions();
+    createMenus();
 
 
 	//== initialise after initial show so UI dont look frozen while cache loading etc
 	QTimer::singleShot(300, this, SLOT(initialize()));
+	
 
 }
 
@@ -203,10 +208,53 @@ MainObject::~MainObject()
 	outLog(util_getDateTimestg()+" - Application close");
 }
 
+
+
+void MainObject::createActions()
+{
+	
+	actionDebugMode = new QAction(this);
+	actionDebugMode->setText(tr("Debug Mode"));
+	actionDebugMode->setCheckable(true);
+	actionDebugMode->setChecked(debug_mode);
+	connect(actionDebugMode, SIGNAL(triggered()),
+			this, SLOT(set_debug_mode())
+			);
+	
+	
+    loadProfileAction = new QAction("Load Profile", this);
+    //connect(loadProfileAction, SIGNAL(triggered()), this, SLOT(new_()));
+	
+	saveProfileAction = new QAction("Save Profile", this);
+    //connect(loadProfileAction, SIGNAL(triggered()), this, SLOT(new_()));
+}
+
+void MainObject::createMenus()
+{
+	debugMenu = new QMenu ("Debug");
+    profileMenu = new QMenu ("Profiles");
+	
+    profileMenu->addAction(loadProfileAction);
+    profileMenu->addAction(saveProfileAction);
+	
+	debugMenu->addAction(actionDebugMode);
+	
+	
+	// This is needed for OSX, see qt4 MenuBar doc
+	QMenuBar *menuBar = new QMenuBar(0);
+	
+	menuBar->addMenu(debugMenu);
+    menuBar->addMenu(profileMenu);
+}
+
+
+
 //============================================================================
 //= Initialize
 void MainObject::initialize(){
 	on_launcher();
+	
+	
 }
 
 //============================================================================

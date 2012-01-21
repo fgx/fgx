@@ -67,7 +67,7 @@ HEADERS += xobjects/xsettings.h \
 	airports/metarwidget.h \ 
     utilities/fileDialog.h \
     app_config.h \
-    utilities/dirDialog.h
+    utilities/dirDialog.h 
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -126,7 +126,7 @@ SOURCES += main.cpp \
 	aircraft/xaero.cpp \
 	airports/metarwidget.cpp \ 
     utilities/fileDialog.cpp \
-    utilities/dirDialog.cpp
+    utilities/dirDialog.cpp 
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \

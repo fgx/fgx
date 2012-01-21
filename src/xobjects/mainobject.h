@@ -119,6 +119,16 @@ public:
 	QAction *actionBrowserMap;
 
     QAction *actionQuit;
+	
+	
+	// Application menus
+	
+	QMenu *debugMenu;
+	QMenu *profileMenu;
+	
+	QAction *loadProfileAction;
+	QAction *saveProfileAction;
+	
 
 	QString get_fgfs_command();
 	QStringList get_fgfs_args();
@@ -135,6 +145,8 @@ signals:
 public slots:
 
 	void initialize();
+	void createMenus();
+	void createActions();
 
     void on_tray_icon(QSystemTrayIcon::ActivationReason reason);
 

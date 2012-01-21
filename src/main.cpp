@@ -120,6 +120,8 @@ int main( int argc, char* argv[])
 	if( XSettings::dev_mode() == false ){
 		qInstallMsgHandler(fgxErrorMessage);
 	}
+	
+	//QMenuBar *menuBar = new QMenuBar(0);
 
 	return app.exec();
 	
