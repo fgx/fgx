@@ -123,6 +123,7 @@ public:
 	
 	// Application menus
 	
+	QMenu *windowsMenu;
 	QMenu *debugMenu;
 	QMenu *profileMenu;
 	

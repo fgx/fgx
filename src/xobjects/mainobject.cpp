@@ -213,6 +213,11 @@ MainObject::~MainObject()
 void MainObject::createActions()
 {
 	
+	actionLauncher = new QAction(this);
+	actionLauncher->setText(tr("Launcher Window"));
+	connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
+
+	
 	actionDebugMode = new QAction(this);
 	actionDebugMode->setText(tr("Debug Mode"));
 	actionDebugMode->setCheckable(true);
@@ -231,8 +236,11 @@ void MainObject::createActions()
 
 void MainObject::createMenus()
 {
+	windowsMenu = new QMenu ("Windows");
 	debugMenu = new QMenu ("Debug");
     profileMenu = new QMenu ("Profiles");
+	
+	windowsMenu->addAction(actionLauncher);
 	
     profileMenu->addAction(loadProfileAction);
     profileMenu->addAction(saveProfileAction);
@@ -243,6 +251,7 @@ void MainObject::createMenus()
 	// This is needed for OSX, see qt4 MenuBar doc
 	QMenuBar *menuBar = new QMenuBar(0);
 	
+	menuBar->addMenu(windowsMenu);
 	menuBar->addMenu(debugMenu);
     menuBar->addMenu(profileMenu);
 }
