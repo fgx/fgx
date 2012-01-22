@@ -80,8 +80,6 @@ public:
 	static QString temp_dir();
 	static QString temp_dir(QString append_path);
 
-
-
     XSettings *settings;
 	XSettingsModel *X;
 
@@ -176,7 +174,14 @@ public slots:
 	void on_about_fgx();
 
 	void on_upx(QString option, bool enabled, QString value);
+	
+protected:
+	void contextMenuEvent(QContextMenuEvent *event);
+
 };
+
+
+
 
 
 #endif // MAINOBJECT_H

@@ -192,7 +192,8 @@ MainObject::MainObject(QObject *parent) :
 	launcherWindow = new LauncherWindow(this);
 	launcherWindow->hide();
 	
-	//QMenuBar *menuBar = new QMenuBar(0);
+	//= Add the application menus
+	
 	createActions();
     createMenus();
 
@@ -209,6 +210,8 @@ MainObject::~MainObject()
 }
 
 
+//== Application menu
+//= all menu actions goes here
 
 void MainObject::createActions()
 {
@@ -237,6 +240,8 @@ void MainObject::createActions()
 	saveProfileAction->setShortcut(tr("Ctrl+S"));
     //connect(loadProfileAction, SIGNAL(triggered()), this, SLOT(new_()));
 }
+
+//= create all menus
 
 void MainObject::createMenus()
 {
