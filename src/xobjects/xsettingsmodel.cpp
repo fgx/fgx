@@ -662,8 +662,15 @@ QString XSettingsModel::profile(){
  */
 QString XSettingsModel::fgfs_path(){
 	QSettings firstsettings;
+	
 	if(!firstsettings.value("firststartup").toBool()){
-		return QDir::currentPath().append("/").append(getx("fgfs_path"));
+		// OSX: prepending current app path for firststartup
+		if(mainObject->runningOs() == MainObject::MAC) {
+			return QDir::currentPath().append("/").append(getx("fgfs_path"));
+		}else {
+			return QString(getx("fgfs_path"));
+		}
+	// Not firststartup
 	}else {
 		return QString(getx("fgfs_path"));
 	}
@@ -689,9 +696,16 @@ bool XSettingsModel::terrasync_enabled(){
  */
 QString XSettingsModel::terrasync_exe_path(){
 	QSettings firstsettings;
+	
 	if(!firstsettings.value("firststartup").toBool()){
-		return QDir::currentPath().append("/").append(getx("terrasync_exe_path"));
-	}else{
+		// OSX: prepending current app path for firststartup
+		if(mainObject->runningOs() == MainObject::MAC) {
+			return QDir::currentPath().append("/").append(getx("terrasync_exe_path"));
+		}else {
+			return QString(getx("terrasync_exe_path"));
+		}
+		// Not firststartup
+	}else {
 		return QString(getx("terrasync_exe_path"));
 	}
 	
@@ -722,20 +736,39 @@ bool XSettingsModel::fgcom_enabled(){
 
 QString XSettingsModel::fgcom_exe_path(){
 	QSettings firstsettings;
+	
 	if(!firstsettings.value("firststartup").toBool()){
-		return QDir::currentPath().append("/").append(getx("fgcom_exe_path"));
+		// OSX: prepending current app path for firststartup
+		if(mainObject->runningOs() == MainObject::MAC) {
+			return QDir::currentPath().append("/").append(getx("fgcom_exe_path"));
+		}else {
+			return QString(getx("fgcom_exe_path"));
+		}
+		// Not firststartup
 	}else {
 		return QString(getx("fgcom_exe_path"));
 	}
 }
 
 
-	
-	
-	
-	
+//===========================================================================
+//== js_demo path
+//===========================================================================
+
 QString XSettingsModel::jsdemo_exe_path(){
-    return "";	//nothing
+    QSettings firstsettings;
+	
+	if(!firstsettings.value("firststartup").toBool()){
+		// OSX: prepending current app path for firststartup
+		if(mainObject->runningOs() == MainObject::MAC) {
+			return QDir::currentPath().append("/").append(getx("jsdemo_exe_path"));
+		}else {
+			return QString(getx("jsdemo_exe_path"));
+		}
+		// Not firststartup
+	}else {
+		return QString(getx("jsdemo_exe_path"));
+	}
 	
 }
 
@@ -747,8 +780,15 @@ QString XSettingsModel::jsdemo_exe_path(){
 /** \return The absolute path to FG_ROOT ie /fgdata directory */
 QString XSettingsModel::fgroot(){
 	QSettings firstsettings;
+	
 	if(!firstsettings.value("firststartup").toBool()){
-		return QDir::currentPath().append("/").append(getx("fgroot_path"));
+		// OSX: prepending current app path for firststartup
+		if(mainObject->runningOs() == MainObject::MAC) {
+			return QDir::currentPath().append("/").append(getx("fgroot_path"));
+		}else {
+			return QString(getx("fgroot_path"));
+		}
+		// Not firststartup
 	}else {
 		return QString(getx("fgroot_path"));
 	}
