@@ -214,12 +214,14 @@ void MainObject::createActions()
 {
 	
 	actionLauncher = new QAction(this);
-	actionLauncher->setText(tr("Launcher Window"));
+	actionLauncher->setText(tr("&Show Launcher Window"));
+	actionLauncher->setShortcut(tr("Ctrl+L"));
 	connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
 
 	
 	actionDebugMode = new QAction(this);
-	actionDebugMode->setText(tr("Debug Mode"));
+	actionDebugMode->setText(tr("&Debug Mode"));
+	actionDebugMode->setShortcut(tr("Ctrl+D"));
 	actionDebugMode->setCheckable(true);
 	actionDebugMode->setChecked(debug_mode);
 	connect(actionDebugMode, SIGNAL(triggered()),
@@ -227,18 +229,20 @@ void MainObject::createActions()
 			);
 	
 	
-    loadProfileAction = new QAction("Load Profile", this);
+    loadProfileAction = new QAction("&Load Profile", this);
+	loadProfileAction->setShortcut(tr("Ctrl+L"));
     //connect(loadProfileAction, SIGNAL(triggered()), this, SLOT(new_()));
 	
-	saveProfileAction = new QAction("Save Profile", this);
+	saveProfileAction = new QAction("&Save Profile", this);
+	saveProfileAction->setShortcut(tr("Ctrl+S"));
     //connect(loadProfileAction, SIGNAL(triggered()), this, SLOT(new_()));
 }
 
 void MainObject::createMenus()
 {
-	windowsMenu = new QMenu ("Windows");
-	debugMenu = new QMenu ("Debug");
-    profileMenu = new QMenu ("Profiles");
+	windowsMenu = new QMenu ("&Windows");
+	debugMenu = new QMenu ("&Debug");
+    profileMenu = new QMenu ("&Profiles");
 	
 	windowsMenu->addAction(actionLauncher);
 	
