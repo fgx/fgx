@@ -55,6 +55,11 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	setLayout(outerContainer);
 
 
+	//== Application Menu
+	
+	menuWidget = new MenuWidget(mainObject);
+	outerContainer->addWidget(menuWidget, 0);
+	
 	//== Message Label
 
 	headerWidget = new HeaderWidget(mainObject);

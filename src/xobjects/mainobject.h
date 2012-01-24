@@ -37,10 +37,6 @@ class PropsTreeWidget;
 class FgxDebugWidget;
 
 
-
-
-
-
 /*! \class MainObject
  * \brief The MainObject is an extended QObject, and the main "controller" for FGx
  *
@@ -100,7 +96,7 @@ public:
     QSystemTrayIcon *trayIcon;
     QMenu *popupMenu;
 	
-	QMenuBar *menuBar;
+	//QMenuBar *menuBar;
 
 
     QWidgetAction *actionCallsign;
@@ -144,8 +140,8 @@ signals:
 public slots:
 
 	void initialize();
-	void createMenus();
-	void createActions();
+	//void createMenus();
+	//void createActions();
 
     void on_tray_icon(QSystemTrayIcon::ActivationReason reason);
 
@@ -174,9 +170,6 @@ public slots:
 	void on_about_fgx();
 
 	void on_upx(QString option, bool enabled, QString value);
-	
-protected:
-	void contextMenuEvent(QContextMenuEvent *event);
 
 };
 

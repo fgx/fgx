@@ -4,9 +4,7 @@
 
 #include <QVBoxLayout>
 
-
 #include "launcher/headerwidget.h"
-
 #include "utilities/utilities.h"
 
 

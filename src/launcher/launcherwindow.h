@@ -33,6 +33,9 @@ class ExeControls;
 #include "launcher/headerwidget.h"
 class HeaderWidget;
 
+#include "launcher/menuwidget.h"
+class MenuWidget;
+
 #include "utilities/statusbar.h"
 
 #include "utilities/messagebox.h"
@@ -56,6 +59,7 @@ public:
 	MainObject *mainObject;
 	bool initializing;
 
+	MenuWidget *menuWidget;
 	HeaderWidget *headerWidget;
 
 	XGroupHBox *toolBox;

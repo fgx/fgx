@@ -65,9 +65,10 @@ HEADERS += xobjects/xsettings.h \
 	map/openlayerwidget.h \
 	aircraft/xaero.h \
 	airports/metarwidget.h \ 
-    utilities/fileDialog.h \
-    app_config.h \
-    utilities/dirDialog.h 
+	utilities/fileDialog.h \
+	app_config.h \
+	utilities/dirDialog.h \
+	launcher/menuwidget.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -125,8 +126,9 @@ SOURCES += main.cpp \
 	map/openlayerwidget.cpp \
 	aircraft/xaero.cpp \
 	airports/metarwidget.cpp \ 
-    utilities/fileDialog.cpp \
-    utilities/dirDialog.cpp 
+	utilities/fileDialog.cpp \
+	utilities/dirDialog.cpp \
+	launcher/menuwidget.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \

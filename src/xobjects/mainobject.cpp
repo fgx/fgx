@@ -191,11 +191,6 @@ MainObject::MainObject(QObject *parent) :
 	
 	launcherWindow = new LauncherWindow(this);
 	launcherWindow->hide();
-	
-	//= Add the application menus
-	
-	createActions();
-    createMenus();
 
 
 	//== initialise after initial show so UI dont look frozen while cache loading etc
@@ -208,63 +203,6 @@ MainObject::~MainObject()
 {
 	outLog(util_getDateTimestg()+" - Application close");
 }
-
-
-//== Application menu
-//= all menu actions goes here
-
-void MainObject::createActions()
-{
-	
-	actionLauncher = new QAction(this);
-	actionLauncher->setText(tr("&Show Launcher Window"));
-	actionLauncher->setShortcut(tr("Ctrl+L"));
-	connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
-
-	
-	actionDebugMode = new QAction(this);
-	actionDebugMode->setText(tr("&Debug Mode"));
-	actionDebugMode->setShortcut(tr("Ctrl+D"));
-	actionDebugMode->setCheckable(true);
-	actionDebugMode->setChecked(debug_mode);
-	connect(actionDebugMode, SIGNAL(triggered()),
-			this, SLOT(set_debug_mode())
-			);
-	
-	
-    loadProfileAction = new QAction("&Load Profile", this);
-	loadProfileAction->setShortcut(tr("Ctrl+L"));
-    //connect(loadProfileAction, SIGNAL(triggered()), this, SLOT(new_()));
-	
-	saveProfileAction = new QAction("&Save Profile", this);
-	saveProfileAction->setShortcut(tr("Ctrl+S"));
-    //connect(loadProfileAction, SIGNAL(triggered()), this, SLOT(new_()));
-}
-
-//= create all menus
-
-void MainObject::createMenus()
-{
-	windowsMenu = new QMenu ("&Windows");
-	debugMenu = new QMenu ("&Debug");
-    profileMenu = new QMenu ("&Profiles");
-	
-	windowsMenu->addAction(actionLauncher);
-	
-    profileMenu->addAction(loadProfileAction);
-    profileMenu->addAction(saveProfileAction);
-	
-	debugMenu->addAction(actionDebugMode);
-	
-	
-	// This is needed for OSX, see qt4 MenuBar doc
-	QMenuBar *menuBar = new QMenuBar(0);
-	
-	menuBar->addMenu(windowsMenu);
-	menuBar->addMenu(debugMenu);
-    menuBar->addMenu(profileMenu);
-}
-
 
 
 //============================================================================
