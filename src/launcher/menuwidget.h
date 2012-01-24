@@ -34,10 +34,10 @@ public:
 	// Application menus
 	
 	QMenu *applicationMenu;
-	QMenu *helpMenu;
+	QMenu *profileMenu;
 	
 	QAction *quitAction;
-	QAction *helpAction;
+	QAction *profileAction;
 	
 
 
@@ -45,7 +45,7 @@ signals:
 	
 
 public slots:
-	void on_quit();
+	void on_menu_quit();
 
 
 };
