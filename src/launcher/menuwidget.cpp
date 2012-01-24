@@ -19,9 +19,9 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	
 	menuLayout = new QHBoxLayout;
 	
-	quitAction = new QAction(tr("&Quit"), this);
+	quitAction = new QAction(tr("&Launcher Quit"), this);
 	quitAction->setShortcuts(QKeySequence::Quit);
-	//quitAction->setStatusTip(tr("Exit the application"));
+	quitAction->setStatusTip(tr("Exit the application"));
 	connect(quitAction, SIGNAL(triggered()), this, SLOT(on_quit()));
 	
 	
