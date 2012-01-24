@@ -12,6 +12,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QWidgetAction>
 
+#include "xwidgets/fgxdebugwidget.h"
 
 #include "xobjects/mainobject.h"
 class MainObject;
@@ -26,33 +27,26 @@ public:
 	bool debug_mode;
 
 	MainObject *mainObject;
+	XSettings *settings;
 
 	QHBoxLayout *menuLayout;
-	QMenuBar *applicationMenu;
-	QMenu *helpMenu;
+	QMenuBar *mainMenu;
 	
 	// Application menus
 	
-	QMenu *windowsMenu;
-	QMenu *debugMenu;
-	QMenu *profileMenu;
+	QMenu *applicationMenu;
+	QMenu *helpMenu;
 	
-	QAction *actionLauncher;
-	QAction *actionDebugMode;
-	QAction *loadProfileAction;
-	QAction *saveProfileAction;
+	QAction *quitAction;
+	QAction *helpAction;
+	
 
 
 signals:
-	void on_debug_mode(bool enabled);
+	
 
 public slots:
-	
-	
-	/*void set_debug_mode();
-	void on_launcher();
-	void on_browsermap();
-	void on_properties_browser();*/
+	void quit();
 
 
 };

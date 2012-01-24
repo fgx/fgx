@@ -16,57 +16,32 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 {
 
 	mainObject = mob;
-	//debug_mode = mainObject->X->get_ena("DEBUG_MODE");
 	
-	menuLayout = new QHBoxLayout(this);
+	menuLayout = new QHBoxLayout;
 	
-	
-	helpMenu = new QMenu("&Help");
-	//applicationMenu = new QMenuBar(0);
-	actionLauncher = new QAction(this);
-	actionLauncher->setText(tr("&Show Launcher Window"));
-	actionLauncher->setShortcut(tr("Ctrl+L"));
-	//connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
+	quitAction = new QAction(tr("&Quit"), this);
+	quitAction->setShortcuts(QKeySequence::Quit);
+	quitAction->setStatusTip(tr("Exit the application"));
+	connect(quitAction, SIGNAL(triggered()), this, SLOT(quit()));
 	
 	
-	actionDebugMode = new QAction(this);
-	actionDebugMode->setText(tr("&Debug Mode"));
-	actionDebugMode->setShortcut(tr("Ctrl+D"));
-	actionDebugMode->setCheckable(true);
-	//actionDebugMode->setChecked(debug_mode);
-	//connect(actionDebugMode, SIGNAL(triggered()), this, SLOT(set_debug_mode()));
+	applicationMenu = new QMenu(tr("&Launcher")); // tr needed at least for osx!
 	
+	applicationMenu->addAction(quitAction);
 	
-	loadProfileAction = new QAction("&Load Profile", this);
-	loadProfileAction->setShortcut(tr("Ctrl+L"));
-	//connect(loadProfileAction, SIGNAL(triggered()), this, SLOT(new_()));
+	// This is needed for OSX using the wrapper, see qt4 MenuBar doc
+	mainMenu = new QMenuBar(0);
 	
-	saveProfileAction = new QAction("&Save Profile", this);
-	saveProfileAction->setShortcut(tr("Ctrl+S"));
-	//connect(loadProfileAction, SIGNAL(triggered()), this, SLOT(new_()));
+	// Adding the menus to the MenuBar
+	mainMenu->addMenu(applicationMenu);
 	
-	windowsMenu = new QMenu ("&Windows");
-	debugMenu = new QMenu ("&Debug");
-	profileMenu = new QMenu ("&Profiles");
-	
-	windowsMenu->addAction(actionLauncher);
-	
-	profileMenu->addAction(loadProfileAction);
-	profileMenu->addAction(saveProfileAction);
-	
-	debugMenu->addAction(actionDebugMode);
-	
-	
-	// This is needed for OSX, see qt4 MenuBar doc
-	applicationMenu = new QMenuBar(0);
-	
-	applicationMenu->addMenu(windowsMenu);
-	applicationMenu->addMenu(debugMenu);
-	applicationMenu->addMenu(profileMenu);
-	
-	//applicationMenu->addMenu(helpMenu);
-	
-	menuLayout->addWidget(applicationMenu, 0);
+	// No action for OSX, but gives the menu for x/win
+	menuLayout->addWidget(mainMenu, 0);
 	
 
+}
+
+void MenuWidget::quit(){
+	mainObject->stop_all();
+	QApplication::quit();
 }
