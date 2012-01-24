@@ -27,7 +27,6 @@ public:
 	bool debug_mode;
 
 	MainObject *mainObject;
-	XSettings *settings;
 
 	QHBoxLayout *menuLayout;
 	QMenuBar *mainMenu;
@@ -46,7 +45,7 @@ signals:
 	
 
 public slots:
-	void quit();
+	void on_quit();
 
 
 };

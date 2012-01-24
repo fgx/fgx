@@ -95,9 +95,6 @@ public:
 
     QSystemTrayIcon *trayIcon;
     QMenu *popupMenu;
-	
-	//QMenuBar *menuBar;
-
 
     QWidgetAction *actionCallsign;
     QLabel *lblCallsign;

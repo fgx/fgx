@@ -21,8 +21,8 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	
 	quitAction = new QAction(tr("&Quit"), this);
 	quitAction->setShortcuts(QKeySequence::Quit);
-	quitAction->setStatusTip(tr("Exit the application"));
-	connect(quitAction, SIGNAL(triggered()), this, SLOT(quit()));
+	//quitAction->setStatusTip(tr("Exit the application"));
+	connect(quitAction, SIGNAL(triggered()), this, SLOT(on_quit()));
 	
 	
 	applicationMenu = new QMenu(tr("&Launcher")); // tr needed at least for osx!
@@ -41,7 +41,7 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 
 }
 
-void MenuWidget::quit(){
+void MenuWidget::on_quit(){
 	mainObject->stop_all();
 	QApplication::quit();
 }
