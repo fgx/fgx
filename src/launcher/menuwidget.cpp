@@ -18,6 +18,7 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	mainObject = mob;
 	
 	menuLayout = new QHBoxLayout;
+	setLayout(menuLayout);
 	
 	quitAction = new QAction(tr("&Quit"), this);
 	quitAction->setShortcuts(QKeySequence::Quit);
