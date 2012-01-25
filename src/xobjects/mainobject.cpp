@@ -224,7 +224,7 @@ void MainObject::on_launcher(){
 
 
 //****************************************************************************
-//** Borwser Map
+//** Browser Map
 void MainObject::on_browsermap(){
 	QUrl mapUrl(X->getx("show_mpmap"));
 	if (X->get_ena("show_mpmap")) {
