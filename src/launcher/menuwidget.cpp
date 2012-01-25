@@ -30,11 +30,6 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	quitAction->setStatusTip(tr("Exit the application"));
 	connect(quitAction, SIGNAL(triggered()), this, SLOT(on_menu_quit()));
 	
-	launcherWindowAction = new QAction(tr("Show &Launcher"), this);
-	launcherWindowAction->setShortcut(QString("Ctrl+L"));
-	launcherWindowAction->setStatusTip(tr("Shows launcher window"));
-	connect(launcherWindowAction, SIGNAL(triggered()), this, SLOT(on_show_launcher_window()));
-	
 	logWindowAction = new QAction(tr("Show &logs"), this);
 	logWindowAction->setShortcut(QString("Ctrl+Shift+L"));
 	logWindowAction->setStatusTip(tr("Shows all logs in a separate window"));
@@ -59,9 +54,6 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 
 	// Menu FGx/Windows
 	applicationMenu->addAction(quitAction);
-	if(MainObject::runningOs() == MainObject::MAC){
-		applicationMenu->addAction(launcherWindowAction); // makes no sense for x/windows, but for osx
-	}
 	applicationMenu->addAction(logWindowAction);
 	applicationMenu->addAction(debugWindowAction);
 	applicationMenu->addAction(propsWindowAction);
@@ -84,13 +76,6 @@ void MenuWidget::on_menu_quit(){
 	
 	// real quit, not window close only
 	QApplication::quit();
-}
-
-void MenuWidget::on_show_launcher_window(){
-	mainObject->launcherWindow->show();
-	mainObject->launcherWindow->raise();
-	mainObject->launcherWindow->activateWindow();
-	
 }
 
 void MenuWidget::on_show_log_window(){
