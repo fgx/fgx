@@ -21,7 +21,7 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	
 	// Macro needed to make the menubar disappear on osx
 	// Not nice.
-	if(!mainObject->runningOs() == MainObject::MAC){
+	if(MainObject::runningOs() != MainObject::MAC){
 		setLayout(menuLayout);
 	}
 	
@@ -31,7 +31,7 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	connect(quitAction, SIGNAL(triggered()), this, SLOT(on_menu_quit()));
 	
 	
-	applicationMenu = new QMenu(tr("&Launcher")); // tr needed at least for osx!
+	applicationMenu = new QMenu(tr("&FGx")); // tr needed at least for osx!
 	
 	applicationMenu->addAction(quitAction);
 	
