@@ -100,9 +100,9 @@ int main( int argc, char* argv[])
 	styles.append("QTabWidget#launcher_tabs > QTabBar::tab { background-image: url(:/artwork/boxtop-black-inactive); padding: 6px; border-right: 5px solid #eeeeee }");
 
 
-	//styles.append("QMenuBar { color: #eeeeee; background-color: #333333 }");
-	//styles.append("QMenu::item { color: #333333; background-color: #eeeeee }");
-	//styles.append("QMenu::item::selected { color: #eeeeee; background-color: #b0b0b0 }");
+	styles.append("QMenuBar { color: #333333; background-color: #ffffff }");
+	styles.append("QMenu::item { color: #333333; background-color: #ffffff }");
+	styles.append("QMenu::item::selected { color: #eeeeee; background-color: #b0b0b0 }");
 	styles.append("QTreeView::item{ padding: 2px;}");
 	styles.append("QPlainTextEdit { font-family: Andale mono, Lucida Console, monospace; font-size: 12px; background-color: #fffee0; border: 1px solid #dddddd }");
 	
