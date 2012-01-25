@@ -30,8 +30,13 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	quitAction->setStatusTip(tr("Exit the application"));
 	connect(quitAction, SIGNAL(triggered()), this, SLOT(on_menu_quit()));
 	
-	logWindowAction = new QAction(tr("&Show logs"), this);
-	logWindowAction->setShortcut(QString("Ctrl+L"));
+	launcherWindowAction = new QAction(tr("Show &Launcher"), this);
+	launcherWindowAction->setShortcut(QString("Ctrl+L"));
+	launcherWindowAction->setStatusTip(tr("Shows launcher window"));
+	connect(launcherWindowAction, SIGNAL(triggered()), this, SLOT(on_show_launcher_window()));
+	
+	logWindowAction = new QAction(tr("Show &logs"), this);
+	logWindowAction->setShortcut(QString("Ctrl+Shift+L"));
 	logWindowAction->setStatusTip(tr("Shows all logs in a separate window"));
 	connect(logWindowAction, SIGNAL(triggered()), this, SLOT(on_show_log_window()));
 	
@@ -45,15 +50,16 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	propsWindowAction->setStatusTip(tr("Shows properties browser"));
 	connect(propsWindowAction, SIGNAL(triggered()), this, SLOT(on_show_props_window()));
 	
-	
+	// Switching menu name, maybe should better go to two menus later
 	if(MainObject::runningOs() == MainObject::MAC){
-		applicationMenu = new QMenu(tr("&Debug"));
+		applicationMenu = new QMenu(tr("&Windows"));
 	}else {
 		applicationMenu = new QMenu(tr("&FGx"));
 	}
 
-	
+	// Menu FGx/Windows
 	applicationMenu->addAction(quitAction);
+	applicationMenu->addAction(launcherWindowAction);
 	applicationMenu->addAction(logWindowAction);
 	applicationMenu->addAction(debugWindowAction);
 	applicationMenu->addAction(propsWindowAction);
@@ -76,6 +82,13 @@ void MenuWidget::on_menu_quit(){
 	
 	// real quit, not window close only
 	QApplication::quit();
+}
+
+void MenuWidget::on_show_launcher_window(){
+	mainObject->launcherWindow->show();
+	mainObject->launcherWindow->raise();
+	mainObject->launcherWindow->activateWindow();
+	
 }
 
 void MenuWidget::on_show_log_window(){
