@@ -462,16 +462,16 @@ void LauncherWindow::on_quit(){
 
 //= window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
-	if(mainObject->X->get_ena("first_launcher_close") == false){
+	/*if(mainObject->X->get_ena("first_launcher_close") == false){
 		QMessageBox::information(this, "Minimize Notice",
 								 "FGx does probably not quit when this window closes on Windows/Linux, instead minimize to taskbar. You can open this window again.",
 								 QMessageBox::Ok);
 		emit setx("first_launcher_close", true, "");
-	}
+	}*/
 
 	QMessageBox msgBox;
 	msgBox.setText("Profile and Settings:");
-	msgBox.setInformativeText("Do you want to save your changes?");
+	msgBox.setInformativeText("Closing application: Do you want to save your changes?");
 	msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 	msgBox.setDefaultButton(QMessageBox::Save);
 	int ret = msgBox.exec();
@@ -498,6 +498,12 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 			event->accept();
 			break;
 	}
+	
+	// does this really stop all?
+	mainObject->stop_all();
+	
+	// real quit, not window close only
+	QApplication::quit();
 
 
 

@@ -59,7 +59,9 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 
 	// Menu FGx/Windows
 	applicationMenu->addAction(quitAction);
-	applicationMenu->addAction(launcherWindowAction);
+	if(MainObject::runningOs() == MainObject::MAC){
+		applicationMenu->addAction(launcherWindowAction); // makes no sense for x/windows, but for osx
+	}
 	applicationMenu->addAction(logWindowAction);
 	applicationMenu->addAction(debugWindowAction);
 	applicationMenu->addAction(propsWindowAction);
