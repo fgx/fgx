@@ -28,16 +28,17 @@ public:
 
 	MainObject *mainObject;
 
+	// Some kind of placeholder
 	QHBoxLayout *menuLayout;
+	
+	// Menubar
 	QMenuBar *mainMenu;
 	
-	// Application menus
-	
+	// Menus
 	QMenu *applicationMenu;
-	QMenu *profileMenu;
 	
+	// Actions
 	QAction *quitAction;
-	QAction *profileAction;
 	
 
 
