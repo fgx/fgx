@@ -39,6 +39,8 @@ public:
 	
 	// Actions
 	QAction *quitAction;
+	QAction *logWindowAction;
+	QAction *debugWindowAction;
 	
 
 
@@ -47,7 +49,8 @@ signals:
 
 public slots:
 	void on_menu_quit();
-
+	void on_show_log_window();
+	void on_show_debug_window();
 
 };
 

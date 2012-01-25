@@ -19,8 +19,8 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	
 	menuLayout = new QHBoxLayout;
 	
-	// Macro needed to make the menubar disappear on osx
-	// Not nice.
+	// Macro needed to make the widget "placeholder" disappearing on OSX.
+	// Not nice at all, but working.
 	if(MainObject::runningOs() != MainObject::MAC){
 		setLayout(menuLayout);
 	}
@@ -30,10 +30,27 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	quitAction->setStatusTip(tr("Exit the application"));
 	connect(quitAction, SIGNAL(triggered()), this, SLOT(on_menu_quit()));
 	
+	logWindowAction = new QAction(tr("&Show log window"), this);
+	logWindowAction->setShortcut(QString("Ctrl+L"));
+	logWindowAction->setStatusTip(tr("Shows all logs in a separate window"));
+	connect(logWindowAction, SIGNAL(triggered()), this, SLOT(on_show_log()));
 	
-	applicationMenu = new QMenu(tr("&FGx")); // tr needed at least for osx!
+	debugWindowAction = new QAction(tr("&Show debug window"), this);
+	debugWindowAction->setShortcut(QString("Ctrl+D"));
+	debugWindowAction->setStatusTip(tr("Shows the settings debug window"));
+	connect(debugWindowAction, SIGNAL(triggered()), this, SLOT(on_show_debug_window()));
+	
+	
+	if(MainObject::runningOs() == MainObject::MAC){
+		applicationMenu = new QMenu(tr("&Debug"));
+	}else {
+		applicationMenu = new QMenu(tr("&FGx"));
+	}
+
 	
 	applicationMenu->addAction(quitAction);
+	applicationMenu->addAction(logWindowAction);
+	applicationMenu->addAction(debugWindowAction);
 	
 	// 0 is needed for OSX using the wrapper, see qt4 MenuBar doc
 	mainMenu = new QMenuBar(0);
@@ -53,4 +70,18 @@ void MenuWidget::on_menu_quit(){
 	
 	// real quit, not window close only
 	QApplication::quit();
+}
+
+void MenuWidget::on_show_log_window(){
+	mainObject->viewLogsWidget->show();
+	mainObject->viewLogsWidget->raise();
+	mainObject->viewLogsWidget->activateWindow();
+	
+}
+
+void MenuWidget::on_show_debug_window(){
+	mainObject->fgxDebugWidget->show();
+	mainObject->fgxDebugWidget->raise();
+	mainObject->fgxDebugWidget->activateWindow();
+	
 }
