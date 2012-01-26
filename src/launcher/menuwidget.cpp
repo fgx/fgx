@@ -26,22 +26,22 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	}
 	
 	quitAction = new QAction(tr("&Quit"), this);
-	quitAction->setShortcuts(QKeySequence::Quit);
+	quitAction->setShortcut(QString("Ctrl+q"));
 	quitAction->setStatusTip(tr("Exit the application"));
 	connect(quitAction, SIGNAL(triggered()), this, SLOT(on_menu_quit()));
 	
 	logWindowAction = new QAction(tr("Show &logs"), this);
-	logWindowAction->setShortcut(QString("Ctrl+Shift+L"));
+	logWindowAction->setShortcut(QString("Ctrl+Shift+l"));
 	logWindowAction->setStatusTip(tr("Shows all logs in a separate window"));
 	connect(logWindowAction, SIGNAL(triggered()), this, SLOT(on_show_log_window()));
 	
 	debugWindowAction = new QAction(tr("&Debug settings"), this);
-	debugWindowAction->setShortcut(QString("Ctrl+D"));
+	debugWindowAction->setShortcut(QString("Ctrl+d"));
 	debugWindowAction->setStatusTip(tr("Shows the settings debug window"));
 	connect(debugWindowAction, SIGNAL(triggered()), this, SLOT(on_show_debug_window()));
 	
 	propsWindowAction = new QAction(tr("&Properties browser"), this);
-	propsWindowAction->setShortcut(QString("Ctrl+Shift+P"));
+	propsWindowAction->setShortcut(QString("Ctrl+Shift+p"));
 	propsWindowAction->setStatusTip(tr("Shows properties browser"));
 	connect(propsWindowAction, SIGNAL(triggered()), this, SLOT(on_show_props_window()));
 	
