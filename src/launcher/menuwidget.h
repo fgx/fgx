@@ -24,6 +24,7 @@ Q_OBJECT
 public:
 	explicit MenuWidget(MainObject *mob, QWidget *parent = 0);
 	
+	XSettings *settings;
 	bool debug_mode;
 
 	MainObject *mainObject;
@@ -36,20 +37,26 @@ public:
 	
 	// Menus
 	QMenu *applicationMenu;
+	QMenu *modeMenu;
 	
-	// Actions
+	// Menu Actions
 	QAction *quitAction;
 	QAction *logWindowAction;
 	QAction *debugWindowAction;
 	QAction *propsWindowAction;
+	
+	QAction *debugmodeAction;
 
 signals:
+	void on_debug_mode(bool enabled);
 
 public slots:
 	void on_menu_quit();
 	void on_show_log_window();
 	void on_show_debug_window();
 	void on_show_props_window();
+	
+	void on_menu_debug_mode();
 
 };
 

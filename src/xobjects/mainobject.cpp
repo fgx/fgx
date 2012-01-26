@@ -122,14 +122,14 @@ MainObject::MainObject(QObject *parent) :
 	);
 
 	//== Debug Enabled
-	actionDebugMode = new QAction(this);
+	/*actionDebugMode = new QAction(this);
 	actionDebugMode->setText(tr("Debug Mode"));
 	actionDebugMode->setCheckable(true);
 	actionDebugMode->setChecked(debug_mode);
 	popupMenu->addAction(actionDebugMode);
 	connect(actionDebugMode, SIGNAL(triggered()),
 			this, SLOT(set_debug_mode())
-	);
+	);*/
 
 
 	popupMenu->addSeparator();
@@ -367,14 +367,14 @@ void MainObject::on_view_fgx_debug(){
 	fgxDebugWidget->show();
 }
 
-void MainObject::set_debug_mode()
+
+// This is set by the menu widget now
+void MainObject::set_debug_mode(bool menu_mode)
 {
-	debug_mode = actionDebugMode->isChecked();
+	debug_mode = menu_mode;
 	settings->setValue("DEBUG_MODE",debug_mode);
 	emit on_debug_mode(debug_mode);
 }
-
-//void MainObject::on_debug_mode()
 
 //===========================================================================
 //** OS detection

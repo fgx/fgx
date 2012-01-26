@@ -106,28 +106,13 @@ public:
 
 	QAction *actionViewLogs;
 	QAction *actionViewFgxDebug;
-	QAction *actionDebugMode;
 	QAction *actionBrowserMap;
 
     QAction *actionQuit;
-	
-	
-	// Application menus
-	
-	QMenu *windowsMenu;
-	QMenu *debugMenu;
-	QMenu *profileMenu;
-	
-	QAction *loadProfileAction;
-	QAction *saveProfileAction;
-	
 
 	QString get_fgfs_command();
 	QStringList get_fgfs_args();
 	QStringList get_env();
-
-
-
 
 signals:
 	void show_settings(int);
@@ -137,8 +122,6 @@ signals:
 public slots:
 
 	void initialize();
-	//void createMenus();
-	//void createActions();
 
     void on_tray_icon(QSystemTrayIcon::ActivationReason reason);
 
@@ -159,7 +142,7 @@ public slots:
 	void quit();
 
 	void on_view_fgx_debug();
-	void set_debug_mode();
+	void set_debug_mode(bool);
 
 	void on_action_open_url(QAction*);
 

@@ -17,6 +17,9 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 
 	mainObject = mob;
 	
+	settings = new XSettings();
+	debug_mode = settings->value("DEBUG_MODE","0").toBool();
+	
 	menuLayout = new QHBoxLayout;
 	
 	// Macro needed to make the widget "placeholder" disappearing on OSX.
@@ -25,6 +28,7 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 		setLayout(menuLayout);
 	}
 	
+	// Menu "FGx" (OSX = "Windows") actions
 	quitAction = new QAction(tr("&Quit"), this);
 	quitAction->setShortcut(QString("Ctrl+q"));
 	quitAction->setStatusTip(tr("Exit the application"));
@@ -45,39 +49,52 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	propsWindowAction->setStatusTip(tr("Shows properties browser"));
 	connect(propsWindowAction, SIGNAL(triggered()), this, SLOT(on_show_props_window()));
 	
+	// Menu "Mode" actions
+	debugmodeAction = new QAction(tr("&Debug mode"), this);
+	debugmodeAction->setShortcut(QString("Ctrl+Shift+d"));
+	debugmodeAction->setStatusTip(tr("Switching debug mode"));
+	debugmodeAction->setCheckable(true);
+	debugmodeAction->setChecked(debug_mode);
+	connect(debugmodeAction, SIGNAL(triggered()), this, SLOT(on_menu_debug_mode()));
+	
 	// Switching menu name, maybe should better go to two menus later
 	if(MainObject::runningOs() == MainObject::MAC){
 		applicationMenu = new QMenu(tr("&Windows"));
 	}else {
 		applicationMenu = new QMenu(tr("&FGx"));
 	}
+	
+	modeMenu = new QMenu(tr("&Mode"));
 
-	// Menu FGx/Windows
+	// Add actions to menu "FGx"/"Windows" (OSX = "Windows")
 	applicationMenu->addAction(quitAction);
 	applicationMenu->addAction(logWindowAction);
 	applicationMenu->addAction(debugWindowAction);
 	applicationMenu->addAction(propsWindowAction);
 	
-	// 0 is needed for OSX using the wrapper, see qt4 MenuBar doc
+	// Add actions to menu "Mode"
+	modeMenu->addAction(debugmodeAction);
+	
+	// Create menubar, parentless 0 is needed for OSX using the wrapper for
+	// getting native OSX menus, see qt4 MenuBar doc
 	mainMenu = new QMenuBar(0);
 	
 	// Adding the menus to the MenuBar
 	mainMenu->addMenu(applicationMenu);
+	mainMenu->addMenu(modeMenu);
 	
 	// No action for OSX, but gives the menu for x/win
 	menuLayout->addWidget(mainMenu, 0);
-	
 
 }
 
+// Quit application
 void MenuWidget::on_menu_quit(){
-	// does this really stop all?
 	mainObject->stop_all();
-	
-	// real quit, not window close only
 	QApplication::quit();
 }
 
+// Show log window, focus
 void MenuWidget::on_show_log_window(){
 	mainObject->viewLogsWidget->show();
 	mainObject->viewLogsWidget->raise();
@@ -85,6 +102,7 @@ void MenuWidget::on_show_log_window(){
 	
 }
 
+// Show debug window, focus
 void MenuWidget::on_show_debug_window(){
 	mainObject->fgxDebugWidget->show();
 	mainObject->fgxDebugWidget->raise();
@@ -92,9 +110,17 @@ void MenuWidget::on_show_debug_window(){
 	
 }
 
+// Show properties window, focus
 void MenuWidget::on_show_props_window(){
 	mainObject->propertiesBrowser->show();
 	mainObject->propertiesBrowser->raise();
 	mainObject->propertiesBrowser->activateWindow();
 	
+}
+
+// Set application to debug mode (show all exe buttons)
+void MenuWidget::on_menu_debug_mode(){
+	debug_mode = debugmodeAction->isChecked();
+	mainObject->set_debug_mode(debug_mode);
+
 }
