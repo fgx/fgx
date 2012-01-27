@@ -910,5 +910,81 @@ void XSettingsModel::set_row_bg(int row_idx, QColor  bg_color)
 	}
 }
 
+// return a list of valid scenery directories
+QStringList XSettingsModel::getSceneryDirs()
+{
+    QStringList list;
+    QString path, msg;
+    QDir dir;
+    QFile file;
+    int i, ind, j;
+#ifdef Q_OS_WIN
+    QChar psep(';');
+#else
+    QChar psep(':');
+#endif
 
+    // 1 - get FG_ROOT/Scenery
+    path = fgroot("/Scenery");
+    ind = path.indexOf(QChar('"'));
+    if (ind == 0)
+        path = path.mid(1,msg.length()-2);
+    if ( !list.contains(path) ) {
+        if (dir.exists(path)) {
+            list += path;
+        }
+    }
+    // 2 - if terrasync enabled
+    if (terrasync_enabled()) {
+        path = terrasync_data_path();
+        ind = path.indexOf(QChar('"'));
+        if (ind == 0)
+            path = path.mid(1,msg.length()-2);
+        if ( !list.contains(path) ) {
+            if (dir.exists(path)) {
+                list += path;
+            }
+        }
+    }
+    // 3 - if custom scenery enabled
+    if (custom_scenery_enabled()) {
+        path = custom_scenery_path();
+        ind = path.indexOf(QChar('"'));
+        if (ind == 0)
+            path = path.mid(1,msg.length()-2);
+        if ( !list.contains(path) ) {
+            if (dir.exists(path)) {
+                list += path;
+            }
+        }
+    }
+
+    // 4 - check fgfs command for any others, avoiding DUPLICATION
+    QStringList fgfs_args = get_fgfs_args();
+    for (i = 0; i < fgfs_args.size(); i++) {
+        msg = fgfs_args.at(i);
+        ind = msg.indexOf(QChar('"'));
+        if (ind == 0)
+            msg = msg.mid(1,msg.length()-2);
+        if (msg.indexOf("--fg-scenery=") == 0) {
+            msg = msg.mid(13);
+            ind = msg.indexOf(QChar('"'));
+            if (ind == 0)
+                msg = msg.mid(1,msg.length()-2);
+            QStringList path_list = msg.split(psep);
+            for (j = 0; j < path_list.size(); j++) {
+                path = path_list.at(j);
+                ind = path.indexOf(QChar('"'));
+                if (ind == 0)
+                    path = path.mid(1,msg.length()-2);
+                if ( !list.contains(path) ) {
+                    if (dir.exists(path)) {
+                        list += path;
+                    }
+                }
+            }
+        }
+    }
+    return list;
+}
 

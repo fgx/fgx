@@ -32,7 +32,8 @@ class OpenLayerWidget;
 #include "airports/metarwidget.h"
 class MetarWidget;
 
-
+#include "utilities/workThread.h"   // class workThread
+#include "utilities/loadAptDat.h"   // class loadAptDat
 
 class AirportsWidget : public QWidget
 {
@@ -66,6 +67,7 @@ public:
 	};
 
 	explicit AirportsWidget(MainObject *mOb, QWidget *parent = 0);
+    ~AirportsWidget();
 
 	MainObject *mainObject;
 
@@ -117,6 +119,9 @@ public:
 
 	QString current_airport();
 
+    workThread *apt_dat_loader;
+    PLOADITEM ploadItem;
+    loadAptDat *pAptDat;
 
 signals:
 
@@ -145,6 +150,8 @@ public slots:
 	void on_coordinates_changed();
 
 	void on_upx( QString option, bool enabled, QString value);
+
+    void on_loadaptdat_done();  // fired when the apt.dat[.gz] thread load completes
 
 };
 

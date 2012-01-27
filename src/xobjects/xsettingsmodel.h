@@ -85,6 +85,8 @@ public:
     QString getLastUsed();
     void setLastUsed(QString previous);
 
+    QStringList getSceneryDirs();   // return list of 'valid' scenery directories
+
 signals:
 	void upx(QString option, bool enabled, QString value);
 	void updated(QStringList lines);

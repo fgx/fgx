@@ -68,7 +68,12 @@ HEADERS += xobjects/xsettings.h \
 	utilities/fileDialog.h \
 	app_config.h \
 	utilities/dirDialog.h \
-	launcher/menuwidget.h
+	launcher/menuwidget.h \
+    utilities/workThread.h \
+    utilities/loadAptDat.h \
+    utilities/simgear/SGGeodesy.h \
+    utilities/simgear/constants.h \
+    utilities/simgear/compiler.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -128,10 +133,13 @@ SOURCES += main.cpp \
 	airports/metarwidget.cpp \ 
 	utilities/fileDialog.cpp \
 	utilities/dirDialog.cpp \
-	launcher/menuwidget.cpp
+	launcher/menuwidget.cpp \
+    utilities/workThread.cpp \
+    utilities/loadAptDat.cpp \
+    utilities/simgear/SGGeodesy.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \
 	resources/openlayers.qrc \
 	resources/default.qrc 
-CONFIG += console
+CONFIG += qt thread

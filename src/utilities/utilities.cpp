@@ -525,4 +525,22 @@ QString util_browseNewFile(QWidget * parent, QString prompt, QString current,
     return filePath;
 }
 
+// FIX20110823 - dist_est_km() returned 'nan' if virtually the same point
+// double dist_est_km(double lat1, double lon1, double lat2, double lon2)
+double util_DistEst_km(double lat1, double lon1, double lat2, double lon2)
+{
+    double d, dd;
+    double small = 0.0000001;
+    double dt = fabs(lat1 - lat2);
+    double dn = fabs(lon1 - lon2);
+    if ((dt < small)&&(dn < small))
+        return 0.0; // this is to try to avoid a 'nan'
+    dt = lat1 * DEG2RAD;
+    dn = lat2 * DEG2RAD;
+    dd = (lon2 - lon1) * DEG2RAD;
+    d = sin(dt) * sin(dn);
+    d += cos(dt) * cos(dn) * cos(dd);
+    return (acos(d) * EARTH_RAD);
+}
+
 // eof - utilities.cpp

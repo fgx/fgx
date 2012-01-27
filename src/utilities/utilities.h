@@ -107,5 +107,12 @@ extern bool util_ensureUnixPathSep(QString &txt); // return 'true' if changed
 extern QString util_getBasePath(QString in);    // return path up to and including last '/'
 extern QString util_getBaseName(QString in);    // return name after last '/'
 
+// a distance estimate between two lat, lon positions, in km... using
+#define EARTH_RAD 6370  // actually from 6,353 to 6,384 km
+#define DEG2RAD 0.017453229251994329509  // est PI / 180
+// FIX20110823 - dist_est_km() returned 'nan' if virtually the same point
+// double dist_est_km(double lat1, double lon1, double lat2, double lon2)
+extern double util_DistEst_km(double lat1, double lon1, double lat2, double lon2);
+
 #endif // FGX_UTILITIES_H
 // eof - utilities.h

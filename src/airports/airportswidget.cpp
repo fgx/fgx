@@ -185,7 +185,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	treeAirports->header()->setStretchLastSection(true);
 	treeAirports->setColumnWidth(CA_CODE, 80);
 	treeAirports->setColumnWidth(CA_NAME, 50);
-	treeAirports->setColumnHidden(CA_DIR, true);
+    treeAirports->setColumnHidden(CA_DIR, true); // hide directory column
 
 	connect( treeAirports->selectionModel(),
 			 SIGNAL( currentChanged(QModelIndex,QModelIndex)),
@@ -382,7 +382,15 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 
+    ploadItem = 0;
+    pAptDat = 0;
 
+}
+
+AirportsWidget::~AirportsWidget()
+{
+    if (pAptDat)
+        delete pAptDat; // stop thread is running, and free list
 }
 
 //================================================================
@@ -414,6 +422,26 @@ void AirportsWidget::initialize(){
 	if(first_load_done){
 		return;
 	}
+    QString file = mainObject->X->fgroot("/Airports/apt.dat");
+    if (QFile::exists(file)) {
+        // pass to thread to load
+        first_load_done = true;
+    } else {
+        file.append(".gz");
+        if (QFile::exists(file)) {
+            // pass to thread to load
+            first_load_done = true;
+        }
+    }
+#ifdef ENABLE_APT_DAT_LOAD
+    if (first_load_done) {
+        pAptDat = new loadAptDat(this); // class to do loading
+        ploadItem = &pAptDat->loadItem;   // LOADITEM structure
+        ploadItem->optionFlag |= lf_FixName;
+        connect(pAptDat,SIGNAL(load_done()),this,SLOT(on_loadaptdat_done()));
+        pAptDat->loadOnThread(file);    // start the loading
+    }
+#endif // #ifdef ENABLE_APT_DAT_LOAD
 
 	if (!QFile::exists(mainObject->data_file("airports.txt"))){
 		statusBarAirports->showMessage("No cached data. Click Import");
@@ -423,7 +451,25 @@ void AirportsWidget::initialize(){
 	first_load_done = true;
 }
 
+void AirportsWidget::on_loadaptdat_done()
+{
+    outLog("AirportWidget::on_loadaptdat_done()");
+    int max = model->rowCount();
+    int i;
+    QString icao, name;
+    QStandardItem *item;
 
+    treeAirports->setUpdatesEnabled(false);
+    for (i = 0; i < max; i++) {
+        icao = model->item(i, CA_CODE)->text();
+        item = model->item(i, CA_NAME);
+        //name = pAptDat->findNameByICAO(icao,lf_FixName);
+        name = pAptDat->findNameByICAO(icao);
+        if (name.length())
+            item->setText(name);
+    }
+    treeAirports->setUpdatesEnabled(true);
+}
 
 
 //============================================================================
@@ -442,19 +488,35 @@ void AirportsWidget::load_airports_tree(){
 		   return;
 	}
 	QTextStream in(&dataFile);
+    QStringList dupes;  // avoid adding any ICAO twice
+    // prepare for dropping the 'path'
+    // such a path should be per the current 'user' supplied paths
+    QString icao, name, path;
 	QString line = in.readLine();
-	line = in.readLine();
+    int cnt;
+    //line = in.readLine(); // Why skip this line???
 	while(!line.isNull()){
 
 		QStringList cols = line.split("\t");
+        cnt = cols.count();
+
+        icao = cols.at(0);  // get the ICAO
+        if (dupes.contains(icao)) {
+            line = in.readLine();
+            continue;   // do NOT add twice
+        }
+        dupes += icao;
+        name = (cnt > 1 ? cols.at(1) : "");
+        path = (cnt > 2 ? cols.at(2) : "");
+
 		QStandardItem *itemAirportCode = new QStandardItem();
-		itemAirportCode->setText(cols.at(0));
+        itemAirportCode->setText(icao);
 
 		QStandardItem *itemAirportName = new QStandardItem();
-		itemAirportName->setText(cols.at(1));
+        itemAirportName->setText(name);
 
 		QStandardItem *itemAirportDir = new QStandardItem();
-		itemAirportDir->setText(cols.at(2));
+        itemAirportDir->setText(path);
 
 		QList<QStandardItem *> items;
 		items << itemAirportCode << itemAirportName << itemAirportDir;
@@ -477,7 +539,8 @@ void AirportsWidget::load_airports_tree(){
 		treeAirports->selectionModel()->setCurrentIndex(proxIdx, QItemSelectionModel::Rows);
 
 		//load_info_tree( model->item(srcIdx.row(), CA_DIR)->text(), model->item(srcIdx.row(), CA_CODE)->text() );
-		labelAirportsFolder->setText( model->item(srcIdx.row(), CA_DIR)->text());
+        path = model->item(srcIdx.row(), CA_DIR)->text(); // preparing to use USER paths
+        labelAirportsFolder->setText(path);
 		buttonOpenAirportsFolder->setToolTip(labelAirportsFolder->text());
 	}
 	treeAirports->setUpdatesEnabled(true);
@@ -535,7 +598,41 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 
 	QString count_label;
-	//mapWidget->setUpdatesEnabled(false);
+    // prepare to use USER current scenery paths
+#ifdef ENABLE_NEW_AIRPORT_PATH
+    if (airport_code.length() >= 3) {
+        QStringList paths = mainObject->X->getSceneryDirs();
+        int cnt, i;
+        cnt = paths.count();
+        if (cnt > 0) {
+            QString psep("/");
+            QString soup(psep);
+            soup.append(airport_code.at(0));
+            soup.append(psep);
+            soup.append(airport_code.at(1));
+            soup.append(psep);
+            soup.append(airport_code.at(2));
+            //soup.append(psep);
+            QString path;
+            QDir dir;
+            for (i = 0; i < cnt; i++) {
+                path = paths.at(i);
+                path.append(psep);
+                path.append("Airports");
+                path.append(soup);
+                if (dir.exists(path)) {
+                    if (airport_dir != path) {
+                        outLog("AirportsWidget::load_info_tree: from ["+airport_dir+"] to ["+path+"]");
+                        airport_dir = path;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+#endif // ENABLE_NEW_AIRPORT_PATH
+
+    //mapWidget->setUpdatesEnabled(false);
 
 	//== Clear the existing airport
 	//mapWidget->clear_airport(airport_code);
