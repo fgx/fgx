@@ -27,6 +27,7 @@
         <file alias="help">ycons/fgx-help.png</file>
         <file alias="save">ycons/fgx-save.png</file>
         <file alias="load">ycons/fgx-load.png</file>
+		<file alias="reset">ycons/fgx-reset.png</file>
         <file alias="import">ycons/fgx-import.png</file>
         <file alias="start">ycons/fgx-start.png</file>
         <file alias="stop">ycons/fgx-stop.png</file>
