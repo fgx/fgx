@@ -153,6 +153,18 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	connect(buttonSaveSettings, SIGNAL(clicked()),
 			this, SLOT(save_profile())
 			);
+	
+	//= Reset Settings
+	QToolButton *buttonResetSettings = new QToolButton(this);
+	buttonResetSettings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	buttonResetSettings->setText("Reset");
+	buttonResetSettings->setAutoRaise(true);
+	buttonResetSettings->setIcon(QIcon(":/icon/reset"));
+	buttonResetSettings->setStyleSheet("padding: 0px;");
+	toolBox->addWidget(buttonResetSettings);
+	connect(buttonResetSettings, SIGNAL(clicked()),
+			this, SLOT(reset_profile())
+			);
 	bottomActionLayout->addStretch(20);
 
 
@@ -374,6 +386,17 @@ void LauncherWindow::save_profile()
         previous = util_getBaseName(previous);
         message = "Profile saved to "+previous;
     }
+    headerWidget->showMessage(message);
+}
+
+
+//================================================================================
+// Reset Profile
+//================================================================================
+void LauncherWindow::reset_profile()
+{
+    QString message("Reset to default profile");
+    mainObject->X->read_default_ini();
     headerWidget->showMessage(message);
 }
 

@@ -78,6 +78,7 @@ public:
 
 	QPushButton *buttonLoadSettings;
 	QPushButton *buttonSaveSettings;
+	QPushButton *buttonResetSettings;
 
 	ExeControls *exeAll;
 	ExeControls *exeFgfs;
@@ -112,6 +113,7 @@ public slots:
 	void save_settings();
 	void load_profile();
 	void save_profile();
+	void reset_profile();
 	void initialize();
 	bool validate();
 	
