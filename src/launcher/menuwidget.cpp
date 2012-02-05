@@ -8,6 +8,7 @@
 
 #include "utilities/utilities.h"
 #include "launcher/menuwidget.h"
+#include "launcher/launcherwindow.h"
 #include "xobjects/mainobject.h"
 
 
@@ -65,6 +66,25 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	}
 	
 	modeMenu = new QMenu(tr("&Mode"));
+	
+	profileMenu = new QMenu(tr("&Profile"));
+	
+	// Menu Profile actions
+	loadProfileAction = new QAction(tr("&Load ..."), this);
+	loadProfileAction->setStatusTip(tr("Loads a profile"));
+	connect(loadProfileAction, SIGNAL(triggered()), this, SLOT(on_menu_load_profile()));
+	
+	saveProfileAction = new QAction(tr("&Save as ..."), this);
+	saveProfileAction->setStatusTip(tr("Saves current settings in a profile"));
+	connect(saveProfileAction, SIGNAL(triggered()), this, SLOT(on_menu_save_profile()));
+	
+	resetProfileAction = new QAction(tr("&Reset"), this);
+	resetProfileAction->setStatusTip(tr("Reset all settings to current loaded profile"));
+	connect(resetProfileAction, SIGNAL(triggered()), this, SLOT(on_menu_reset_profile()));
+	
+	defaultProfileAction = new QAction(tr("&Load default profile"), this);
+	defaultProfileAction->setStatusTip(tr("Reload FGx default profile (built-in)"));
+	connect(defaultProfileAction, SIGNAL(triggered()), this, SLOT(on_menu_default_profile()));
 
 	// Add actions to menu "FGx"/"Windows" (OSX = "Windows")
 	applicationMenu->addAction(quitAction);
@@ -75,6 +95,12 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	// Add actions to menu "Mode"
 	modeMenu->addAction(debugmodeAction);
 	
+	// Add actions to menu "Profile"
+	profileMenu->addAction(loadProfileAction);
+	profileMenu->addAction(saveProfileAction);
+	profileMenu->addAction(resetProfileAction);
+	profileMenu->addAction(defaultProfileAction);
+	
 	// Create menubar, parentless 0 is needed for OSX using the wrapper for
 	// getting native OSX menus, see qt4 MenuBar doc
 	mainMenu = new QMenuBar(0);
@@ -82,19 +108,24 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	// Adding the menus to the MenuBar
 	mainMenu->addMenu(applicationMenu);
 	mainMenu->addMenu(modeMenu);
+	mainMenu->addMenu(profileMenu);
 	
 	// No action for OSX, but gives the menu for x/win
 	menuLayout->addWidget(mainMenu, 0);
 
 }
 
+//================================================================================
 // Quit application
+//================================================================================
 void MenuWidget::on_menu_quit(){
 	mainObject->stop_all();
 	QApplication::quit();
 }
 
+//================================================================================
 // Show log window, focus
+//================================================================================
 void MenuWidget::on_show_log_window(){
 	mainObject->viewLogsWidget->show();
 	mainObject->viewLogsWidget->raise();
@@ -102,7 +133,9 @@ void MenuWidget::on_show_log_window(){
 	
 }
 
+//================================================================================
 // Show debug window, focus
+//================================================================================
 void MenuWidget::on_show_debug_window(){
 	mainObject->fgxDebugWidget->show();
 	mainObject->fgxDebugWidget->raise();
@@ -110,7 +143,9 @@ void MenuWidget::on_show_debug_window(){
 	
 }
 
+//================================================================================
 // Show properties window, focus
+//================================================================================
 void MenuWidget::on_show_props_window(){
 	mainObject->propertiesBrowser->show();
 	mainObject->propertiesBrowser->raise();
@@ -118,9 +153,64 @@ void MenuWidget::on_show_props_window(){
 	
 }
 
+//================================================================================
 // Set application to debug mode (show all exe buttons)
+//================================================================================
 void MenuWidget::on_menu_debug_mode(){
 	debug_mode = debugmodeAction->isChecked();
 	mainObject->set_debug_mode(debug_mode);
 
+}
+
+//================================================================================
+// Load Profile
+//================================================================================
+void MenuWidget::on_menu_load_profile()
+{
+    QString message("Profile load abandoned");
+    /*if (mainObject->X->load_profile()) {
+        // get lastused profile name
+        //QString previous = mainObject->X->getLastUsed();
+        //previous = util_getBaseName(previous);
+        //message = "Profile loaded from "+previous;
+    }
+	//mainObject->launcherWindow->headerWidget->showMessage(message);*/
+}
+
+//================================================================================
+// Save Profile
+//================================================================================
+void MenuWidget::on_menu_save_profile()
+{
+    QString message("Profile save abandoned");
+    if (mainObject->X->save_profile()) {
+        // get lastused profile name
+        QString previous = mainObject->X->getLastUsed();
+        previous = util_getBaseName(previous);
+        message = "Profile saved to "+previous;
+    }
+    mainObject->launcherWindow->headerWidget->showMessage(message);
+}
+
+
+//================================================================================
+// Reset Profile
+//================================================================================
+void MenuWidget::on_menu_reset_profile()
+{
+    QString message("Reset to loaded profile.");
+    QString previous = mainObject->X->getLastUsed();
+	mainObject->X->load_last_profile(previous);
+    mainObject->launcherWindow->headerWidget->showMessage(message);
+}
+
+//================================================================================
+// Default Profile
+//================================================================================
+void MenuWidget::on_menu_default_profile()
+{
+    QString message("Reset to FGx default profile.");
+    //QString previous = mainObject->X->getLastUsed();
+	mainObject->X->read_default_ini();
+    mainObject->launcherWindow->headerWidget->showMessage(message);
 }

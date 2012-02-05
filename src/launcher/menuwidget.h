@@ -38,6 +38,7 @@ public:
 	// Menus
 	QMenu *applicationMenu;
 	QMenu *modeMenu;
+	QMenu *profileMenu;
 	
 	// Menu Actions
 	QAction *quitAction;
@@ -46,6 +47,11 @@ public:
 	QAction *propsWindowAction;
 	
 	QAction *debugmodeAction;
+	
+	QAction *loadProfileAction;
+	QAction *saveProfileAction;
+	QAction *resetProfileAction;
+	QAction *defaultProfileAction;
 
 signals:
 	void on_debug_mode(bool enabled);
@@ -57,6 +63,11 @@ public slots:
 	void on_show_props_window();
 	
 	void on_menu_debug_mode();
+	
+	void on_menu_load_profile();
+	void on_menu_save_profile();
+	void on_menu_reset_profile();
+	void on_menu_default_profile();
 
 };
 
