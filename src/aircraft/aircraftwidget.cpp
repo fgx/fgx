@@ -451,7 +451,6 @@ void AircraftWidget::load_tree(){
 	QTextStream in(&dataFile);
 	QString line = in.readLine();
 	QString last_dir("");
-	line = in.readLine();
 	c = 0;
 	while(!line.isNull()){
 
