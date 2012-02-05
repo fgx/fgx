@@ -133,7 +133,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//= Load Settings
 	QToolButton *buttonLoadSettings = new QToolButton(this);
 	buttonLoadSettings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttonLoadSettings->setText("Load Profile");
+	buttonLoadSettings->setText("Load");
 	buttonLoadSettings->setAutoRaise(true);
 	buttonLoadSettings->setIcon(QIcon(":/icon/load"));
 	buttonLoadSettings->setStyleSheet("padding: 0px;");
@@ -145,7 +145,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	//= Save Settings
 	QToolButton *buttonSaveSettings = new QToolButton(this);
 	buttonSaveSettings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttonSaveSettings->setText("Save Profile");
+	buttonSaveSettings->setText("Save");
 	buttonSaveSettings->setAutoRaise(true);
 	buttonSaveSettings->setIcon(QIcon(":/icon/save"));
 	buttonSaveSettings->setStyleSheet("padding: 0px;");
@@ -191,7 +191,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 
 	//= FgCom
-	exeFgCom = new ExeControls("FgCom");
+	exeFgCom = new ExeControls("FGCom");
 	bottomActionLayout->addWidget(exeFgCom);
 	connect(exeFgCom->buttonStart, SIGNAL(clicked()),
 			this, SLOT(on_start_fgcom_clicked())
@@ -211,7 +211,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	connect(exeTerraSync, SIGNAL(stop()), mainObject->processTerraSync, SLOT(stop()));
 
 	//= FlightGear
-	exeFgfs = new ExeControls("FgFs");
+	exeFgfs = new ExeControls("FlightGear (fgfs)");
 	bottomActionLayout->addWidget(exeFgfs);
 	connect(	exeFgfs->buttonStart, SIGNAL(clicked()),
 			this, SLOT(on_start_fgfs_clicked())
@@ -395,8 +395,9 @@ void LauncherWindow::save_profile()
 //================================================================================
 void LauncherWindow::reset_profile()
 {
-    QString message("Reset to default profile");
-    mainObject->X->read_default_ini();
+    QString message("Reset to loaded profile.");
+    QString previous = mainObject->X->getLastUsed();
+	mainObject->X->load_last_profile(previous);
     headerWidget->showMessage(message);
 }
 
