@@ -30,6 +30,8 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 {
 
 	mainObject = mOb;
+	
+	fgrootcheck = false;
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	setLayout(mainLayout);
@@ -663,6 +665,7 @@ void CoreSettingsWidget::fgfs_check_path()
 	bool fgfs_exists = QFile::exists(lineEditFgFsPath->text());
 	if (fgfs_exists) {
 		labelFgfsCheck->setPixmap(QPixmap(":/icon/ok"));
+		fgrootcheck = true;
 	} else {
 		labelFgfsCheck->setPixmap(QPixmap(":/icon/not-ok"));
 	}
@@ -671,7 +674,10 @@ void CoreSettingsWidget::fgfs_check_path()
 
 void CoreSettingsWidget::fgroot_check_path()
 {
-	bool fgroot_exists = QFile::exists(lineEditFgRootPath->text());
+	// NEW: check if "version" file exists in folder.
+	// Without this file also fgfs won’t start
+	// Needs a version check later ...
+	bool fgroot_exists = QFile::exists(lineEditFgRootPath->text()+"/version");
 	if (fgroot_exists) {
 		labelFgRootCheck->setPixmap(QPixmap(":/icon/ok"));
 	} else {

@@ -24,6 +24,8 @@ public:
 
 	MainObject *mainObject;
 	
+	bool fgrootcheck;
+	
 	XMessageLabel *messageLabel;
 
 
