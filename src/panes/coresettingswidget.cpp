@@ -665,7 +665,6 @@ void CoreSettingsWidget::fgfs_check_path()
 	bool fgfs_exists = QFile::exists(lineEditFgFsPath->text());
 	if (fgfs_exists) {
 		labelFgfsCheck->setPixmap(QPixmap(":/icon/ok"));
-		fgrootcheck = true;
 	} else {
 		labelFgfsCheck->setPixmap(QPixmap(":/icon/not-ok"));
 	}
@@ -680,8 +679,10 @@ void CoreSettingsWidget::fgroot_check_path()
 	bool fgroot_exists = QFile::exists(lineEditFgRootPath->text()+"/version");
 	if (fgroot_exists) {
 		labelFgRootCheck->setPixmap(QPixmap(":/icon/ok"));
+		fgrootcheck = true;
 	} else {
 		labelFgRootCheck->setPixmap(QPixmap(":/icon/not-ok"));
+		fgrootcheck = false;
 	}
 
 }
@@ -756,7 +757,9 @@ void CoreSettingsWidget::on_select_fgrootbutton()
 		lineEditFgRootPath->setText(dirPathFgRoot);
 	}
 	fgroot_check_path();
-	reload_lists();
+	if (fgrootcheck == true) {
+		reload_lists();
+	}
 }
 
 void CoreSettingsWidget::on_select_terrasyncexebutton()
