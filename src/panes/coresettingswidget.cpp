@@ -23,7 +23,7 @@
 #include "xwidgets/xgroupboxes.h"
 #include "utilities/helpers.h"
 #include "utilities/utilities.h"
-
+#include "aircraft/aircraftwidget.h"
 
 CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
@@ -750,6 +750,7 @@ void CoreSettingsWidget::on_select_fgrootbutton()
 		lineEditFgRootPath->setText(dirPathFgRoot);
 	}
 	fgroot_check_path();
+	reload_lists();
 }
 
 void CoreSettingsWidget::on_select_terrasyncexebutton()
@@ -810,3 +811,15 @@ void CoreSettingsWidget::on_select_customscenerybutton()
 	}
 	custom_scenery_check_path();
 }
+
+
+// Reloading aircraft and airport lists
+// needed from setting new fgdata path and from clicking reset button on launcherWindow
+
+void CoreSettingsWidget::reload_lists(){
+	mainObject->launcherWindow->aircraftWidget->on_reload_cache();
+	mainObject->launcherWindow->airportsWidget->on_reload_cache();
+	// and get the airport names
+	mainObject->launcherWindow->airportsWidget->on_loadaptdat_done();
+}
+	

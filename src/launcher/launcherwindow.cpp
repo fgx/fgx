@@ -399,6 +399,9 @@ void LauncherWindow::reset_profile()
     QString previous = mainObject->X->getLastUsed();
 	mainObject->X->load_last_profile(previous);
     headerWidget->showMessage(message);
+	// Reload the aircraft and airport lists from this point since 2.6.0
+	// Comments?
+	mainObject->launcherWindow->coreSettingsWidget->reload_lists();
 }
 
 

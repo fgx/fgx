@@ -151,13 +151,13 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	connect(checkViewNested, SIGNAL(clicked()), this, SLOT(load_tree()));
 
 	//== Reload aircrafts
-	QToolButton *actionReloadCacheDb = new QToolButton(this);
+	/*QToolButton *actionReloadCacheDb = new QToolButton(this);
 	actionReloadCacheDb->setText("Reload");
 	actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
 	actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	actionReloadCacheDb->setAutoRaise(true);
 	statusBarTree->addPermanentWidget(actionReloadCacheDb);
-	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
+	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );*/
 
 
 	//================================================================================================

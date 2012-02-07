@@ -135,12 +135,14 @@ public slots:
 	void on_select_terrasyncdatabutton();
 	void on_select_customscenerybutton();
 	
+	void reload_lists();
+	
 	// Emit settings when changed
 	void fgfs_set_path();
 	void fgroot_set_path();
 	void terrasyncexe_set_path();
 	void terrasyncdata_set_path();
-	void customscenery_set_path();	
+	void customscenery_set_path();
 };
 
 #endif // CORESETTINGSWIDGET_H

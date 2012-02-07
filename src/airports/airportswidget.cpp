@@ -120,14 +120,14 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	layoutAptTopBar->addStretch(20);
 
 
-	QToolButton *buttonReloadCache = new QToolButton(this);
+	/*QToolButton *buttonReloadCache = new QToolButton(this);
 	layoutAptTopBar->addWidget(buttonReloadCache);
 	buttonReloadCache->setText("Reload airports");
 	buttonReloadCache->setToolTip("Scan directories and reload cache");
 	buttonReloadCache->setIcon(QIcon(":/icon/load"));
 	buttonReloadCache->setAutoRaise(true);
 	buttonReloadCache->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	connect(buttonReloadCache, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
+	connect(buttonReloadCache, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );*/
 
 
 	//==============================================================================
