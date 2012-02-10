@@ -45,6 +45,23 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	QVBoxLayout *layoutRight = new QVBoxLayout();
 	mainLayout->addLayout(layoutRight, 1);
 	
+	
+	//==================================================================
+	//= Image
+	
+	QHBoxLayout *imgBox = new QHBoxLayout();
+	imgBox->setAlignment(Qt::AlignBottom|Qt::AlignCenter);
+	layoutLeft->addLayout(imgBox);
+	
+	
+	imageLabel =  new QLabel(this);
+	//imageLabel->setScaledContents(true);
+	imageLabel->resize(300,225);
+	imageLabel->setStyleSheet("background: #5b5a56");
+	imageLabel->setMargin(5);
+	imageLabel->setPixmap(QPixmap(":/images/1"));
+	imgBox->addWidget(imageLabel);
+	
 
 	//==================================================================
 	//= Callsign
@@ -118,23 +135,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	connect(checkBoxDisableSplashScreen, SIGNAL(clicked()), this, SLOT(on_checkbox_splash_screen()));
 	checkBoxDisableSplashScreen->setWhatsThis(tr("<b>Disable Splash Screen</b><br><br>Disables FlightGear startup screen."));
 	
-	
-	//==================================================================
-	//= Map Features
-	XGroupVBox *grpMapFeatures = new XGroupVBox("Map Features");
-	layoutLeft->addWidget(grpMapFeatures);
-
-	checkBoxShowMpMap = new QCheckBox("Show Map in Browser");
-	grpMapFeatures->addWidget(checkBoxShowMpMap);
-	connect(checkBoxShowMpMap, SIGNAL(clicked()), this, SLOT(on_show_mp_map()));
-
-	comboMpMapServer = new QComboBox();
-	comboMpMapServer->addItem("mpmap01.flightgear.org", "http://mpmap01.flightgear.org");
-	comboMpMapServer->addItem("mpmap02.flightgear.org", "http://mpmap02.flightgear.org");
-	comboMpMapServer->setCurrentIndex(0);
-	grpMapFeatures->addWidget(comboMpMapServer);
-	connect(comboMpMapServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_show_mp_map()));
-	layoutLeft->addStretch(20);
 
 
 	//===========================================================================
@@ -316,6 +316,23 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	//= Input
 	QVBoxLayout *layoutInput = new QVBoxLayout();
 	layoutRight->addLayout(layoutInput);
+	
+	//==================================================================
+	//= Map Features
+	XGroupVBox *grpMapFeatures = new XGroupVBox("Map Features");
+	layoutRight->addWidget(grpMapFeatures);
+	
+	checkBoxShowMpMap = new QCheckBox("Show Map in Browser");
+	grpMapFeatures->addWidget(checkBoxShowMpMap);
+	connect(checkBoxShowMpMap, SIGNAL(clicked()), this, SLOT(on_show_mp_map()));
+	
+	comboMpMapServer = new QComboBox();
+	comboMpMapServer->addItem("mpmap01.flightgear.org", "http://mpmap01.flightgear.org");
+	comboMpMapServer->addItem("mpmap02.flightgear.org", "http://mpmap02.flightgear.org");
+	comboMpMapServer->setCurrentIndex(0);
+	grpMapFeatures->addWidget(comboMpMapServer);
+	connect(comboMpMapServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_show_mp_map()));
+	layoutRight->addStretch(20);
 	
 	//----------------------------------------------
 	//= FGCom Executable (fgcom)

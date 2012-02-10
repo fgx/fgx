@@ -27,6 +27,9 @@ public:
 	bool fgrootcheck;
 	
 	XMessageLabel *messageLabel;
+	
+	//* Images
+	QLabel *imageLabel;
 
 
 	//* Callsign

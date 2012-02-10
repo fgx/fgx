@@ -141,5 +141,6 @@ RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \
 	resources/openlayers.qrc \
-	resources/default.qrc 
+	resources/default.qrc \
+	resources/images.qrc
 CONFIG += qt thread
