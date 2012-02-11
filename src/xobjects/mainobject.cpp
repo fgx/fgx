@@ -216,7 +216,14 @@ void MainObject::initialize(){
 //============================================================================
 //=  Launcher window
 void MainObject::on_launcher(){
-
+	
+	// Sorry, but I need that for OSX here at the moment to get the window where 
+	// I need for the layout, I will look to get this into settings
+	if (runningOs() == MAC) {
+		launcherWindow->resize(800, 600);
+		launcherWindow->move(0,0);
+	}
+	
 	launcherWindow->show();
 	launcherWindow->raise();
 

@@ -65,7 +65,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 	//==================================================================
 	//= Callsign
-	XGroupVBox *grpCallsign = new XGroupVBox(tr("Callsign"));
+	XGroupVBox *grpCallsign = new XGroupVBox(tr("Your Callsign"));
 	layoutLeft->addWidget(grpCallsign);
 
 	txtCallSign = new QLineEdit(this);
