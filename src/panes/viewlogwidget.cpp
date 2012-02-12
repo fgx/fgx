@@ -14,6 +14,7 @@ ViewLogWidget::ViewLogWidget(MainObject *mOb, QWidget *parent) :
 
 	mainObject = mOb;
 	
+	setProperty("settings_namespace", QVariant("log_window"));
 	mainObject->settings->restoreWindow(this);
 
 	setWindowIcon(QIcon(":/icon/log"));
