@@ -71,6 +71,7 @@ void XSettings::restoreWindow(QWidget *widget){
     QByteArray ba = value(_windowName(widget)).toByteArray();
     outLog("restoreWindow: Key="+key+", values "+ba.toHex());
     
+	// Set fixed size to 900,700 of all windows for first startup
 	if (ba != "") {
 		widget->restoreGeometry(ba);
 	}else {

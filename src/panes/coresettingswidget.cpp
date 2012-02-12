@@ -154,7 +154,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelFgfsProgram = new QLabel("Path to FlightGear program (fgfs): ");
 	labelFgfsCheck = new QLabel("");
 	lineEditFgFsPath = new QLineEdit("");
-	lineEditFgFsPath->setFixedSize(QSize(280,20));
+	lineEditFgFsPath->setFixedSize(QSize(240,20));
 	buttonSetFgfsPath = new QToolButton();
 	buttonSetFgfsPath->setFixedSize(20,20);
 	buttonSetFgfsPath->setIcon(QIcon(":/icon/path"));
@@ -181,7 +181,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelFgRootData = new QLabel("Path to FlightGear data directory (fgdata): ");
 	labelFgRootCheck = new QLabel("");
 	lineEditFgRootPath = new QLineEdit("");
-	lineEditFgRootPath->setFixedSize(QSize(280,20));
+	lineEditFgRootPath->setFixedSize(QSize(240,20));
 	buttonSetFgRootPath = new QToolButton();
 	buttonSetFgRootPath->setFixedSize(20,20);
 	buttonSetFgRootPath->setIcon(QIcon(":/icon/path"));
@@ -219,7 +219,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelTerrasyncCheck = new QLabel("");
 	labelTerrasyncCheck->setEnabled(false);
 	lineEditTerraSyncExePath = new QLineEdit("");
-	lineEditTerraSyncExePath->setFixedSize(QSize(280,20));
+	lineEditTerraSyncExePath->setFixedSize(QSize(240,20));
 	lineEditTerraSyncExePath->setEnabled(false);
 	buttonSetTerrasyncExePath = new QToolButton();
 	buttonSetTerrasyncExePath->setFixedSize(20,20);
@@ -249,7 +249,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelTerrasyncDataCheck = new QLabel("");
 	labelTerrasyncDataCheck->setEnabled(false);
 	lineEditTerraSyncDataPath = new QLineEdit("");
-	lineEditTerraSyncDataPath->setFixedSize(QSize(280,20));
+	lineEditTerraSyncDataPath->setFixedSize(QSize(240,20));
 	lineEditTerraSyncDataPath->setEnabled(false);
 	buttonSetTerrasyncDataPath = new QToolButton();
 	buttonSetTerrasyncDataPath->setFixedSize(20,20);
@@ -287,7 +287,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	labelCustomSceneCheck = new QLabel("");
 	labelCustomSceneCheck->setEnabled(false);
 	lineEditCustomScenePath = new QLineEdit("");
-	lineEditCustomScenePath->setFixedSize(QSize(280,20));
+	lineEditCustomScenePath->setFixedSize(QSize(240,20));
 	lineEditCustomScenePath->setEnabled(false);
 	buttonSetCustomSceneryPath = new QToolButton();
 	buttonSetCustomSceneryPath->setFixedSize(20,20);
