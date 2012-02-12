@@ -66,10 +66,10 @@ void XSettings::saveWindow(QWidget *widget){
  *
  */
 void XSettings::restoreWindow(QWidget *widget){
-    // widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
+    //widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
     QString key = _windowName(widget);
     QByteArray ba = value(_windowName(widget)).toByteArray();
-    //outLog("restoreWindow: Key="+key+", values "+ba.toHex());
+    outLog("restoreWindow: Key="+key+", values "+ba.toHex());
     widget->restoreGeometry(ba);
 }
 

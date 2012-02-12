@@ -19,6 +19,7 @@
 
 #include "settings/settingsdialog.h"
 #include "utilities/utilities.h"
+#include "xobjects/xsettingsmodel.h"
 
 
 MainObject::MainObject(QObject *parent) :
@@ -191,6 +192,11 @@ MainObject::MainObject(QObject *parent) :
 	
 	launcherWindow = new LauncherWindow(this);
 	launcherWindow->hide();
+	
+	// Restore all windows
+	settings->restoreWindow(launcherWindow);
+	settings->restoreWindow(fgxDebugWidget);
+	settings->restoreWindow(viewLogsWidget);
 
 
 	//== initialise after initial show so UI dont look frozen while cache loading etc
@@ -356,6 +362,10 @@ void MainObject::start_fgcom(){
 
 void MainObject::quit(){
 	stop_all();
+	
+	//settings->saveWindow(launcherWindow);
+	//settings->saveWindow(fgxDebugWidget);
+	//settings->saveWindow(viewLogsWidget);
 
 	QApplication::quit();
 }

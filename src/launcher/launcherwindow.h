@@ -106,7 +106,6 @@ public slots:
 
 
 	//* Actions
-	void on_quit();
 	void on_whats_this();
 
 	//* Functions

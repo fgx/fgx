@@ -118,6 +118,7 @@ signals:
 	void show_settings(int);
 	void reload_paths();
 	void on_debug_mode(bool enabled);
+	void setx(QString option, bool enabled, QString value);
 
 public slots:
 

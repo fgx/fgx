@@ -39,7 +39,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 	mainObject = mainOb;
 
 
-	setProperty("settings_namespace", QVariant("launcher_window"));
+	//setProperty("settings_namespace", QVariant("launcher_window"));
 	//mainObject->settings->restoreWindow(this);
 
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
@@ -349,7 +349,6 @@ void LauncherWindow::on_start_fgcom_clicked() {
 //================================================================================
 void LauncherWindow::save_settings()
 {
-	mainObject->settings->saveWindow(this);
 	mainObject->settings->sync();
     // get lastused profile name
     QString previous = mainObject->X->getLastUsed();
@@ -479,13 +478,6 @@ void LauncherWindow::header_show_message(QString message)
 //* Misc Events
 //=======================================================================================================================
 
-//= quit
-void LauncherWindow::on_quit(){
-	save_settings(); // message save needed
-	mainObject->quit();
-}
-
-
 
 //= window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
@@ -496,7 +488,9 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 		emit setx("first_launcher_close", true, "");
 	}*/
 	
-	mainObject->settings->setValue("LauncherGeometry", saveGeometry());
+	mainObject->settings->saveWindow(mainObject->launcherWindow);
+	mainObject->settings->saveWindow(mainObject->fgxDebugWidget);
+	mainObject->settings->saveWindow(mainObject->viewLogsWidget);
 	
 	QMessageBox msgBox;
 	msgBox.setText("Profile and Settings:");
@@ -509,7 +503,6 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 		case QMessageBox::Save:
 			mainObject->X->save_profile();
 			save_settings();
-			mainObject->settings->saveWindow(this);
 			mainObject->settings->sync();
 			event->accept();
 			break;
@@ -522,18 +515,12 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 		default:
 			mainObject->X->save_profile();
 			save_settings();
-			mainObject->settings->saveWindow(this);
 			mainObject->settings->sync();
 			event->accept();
 			break;
 	}
 	
-	// does this really stop all?
-	mainObject->stop_all();
-	
-	// real quit, not window close only
-	QApplication::quit();
-
+	mainObject->quit();
 
 
 }
