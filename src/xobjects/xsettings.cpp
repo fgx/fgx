@@ -75,11 +75,7 @@ void XSettings::restoreWindow(QWidget *widget){
 	if (ba != "") {
 		widget->restoreGeometry(ba);
 	}else {
-//#if defined(Q_OS_MAC)
 		widget->resize(900,700);
-//#endif
-//		widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-		
 	}
 
 }
