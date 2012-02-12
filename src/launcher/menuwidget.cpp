@@ -174,7 +174,7 @@ void MenuWidget::on_menu_load_profile()
         previous = util_getBaseName(previous);
         message = "Profile loaded from "+previous;
     }
-	//mainObject->launcherWindow->headerWidget->showMessage(message);
+	mainObject->launcherWindow->headerWidget->showMessage(message);
 }
 
 //================================================================================
