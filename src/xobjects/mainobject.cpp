@@ -362,10 +362,6 @@ void MainObject::start_fgcom(){
 
 void MainObject::quit(){
 	stop_all();
-	
-	//settings->saveWindow(launcherWindow);
-	//settings->saveWindow(fgxDebugWidget);
-	//settings->saveWindow(viewLogsWidget);
 
 	QApplication::quit();
 }

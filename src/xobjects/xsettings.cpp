@@ -70,7 +70,13 @@ void XSettings::restoreWindow(QWidget *widget){
     QString key = _windowName(widget);
     QByteArray ba = value(_windowName(widget)).toByteArray();
     outLog("restoreWindow: Key="+key+", values "+ba.toHex());
-    widget->restoreGeometry(ba);
+    
+	if (ba != "") {
+		widget->restoreGeometry(ba);
+	}else {
+		widget->setFixedSize(900,700);
+	}
+
 }
 
 QString XSettings::_windowName(QWidget *widget){
