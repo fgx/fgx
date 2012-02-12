@@ -13,12 +13,10 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 
 	mainObject = mob;
 
-	setMinimumWidth(800);
-	setMinimumHeight(600);
-
-	setProperty("settings_namespace", QVariant("fgxdebug_window"));
+	setProperty("settings_namespace", QVariant("debug_window"));
 	mainObject->settings->restoreWindow(this);
-    setWindowTitle("FGx Debug");
+    
+	setWindowTitle("FGx Debug");
 
 	QVBoxLayout *mainLayout = new QVBoxLayout();
 	setLayout(mainLayout);

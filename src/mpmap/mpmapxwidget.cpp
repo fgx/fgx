@@ -26,14 +26,12 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
     QWidget(parent)
 {
 
-	mainObject  = mob,
+	mainObject  = mob;
+	
+	mainObject->settings->restoreWindow(this);
 
 	setWindowTitle(tr("FGx Multiplayer Map"));
 	setWindowIcon(QIcon(":/icon/mpmap"));
-
-
-	setProperty("settings_namespace", QVariant("mpmapxwidget__window"));
-	mainObject->settings->restoreWindow(this);
 
 
 	//======================================================

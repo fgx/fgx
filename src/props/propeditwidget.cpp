@@ -12,7 +12,9 @@ PropEditWidget::PropEditWidget(MainObject *mOb, QDialog *parent):
 	QDialog(parent)
 {
 
-	 mainObject = mOb;
+	mainObject = mOb;
+	
+	mainObject->settings->restoreWindow(this);
 
 	setWindowTitle("Edit Property");
 	setWindowIcon(QIcon(":/icons/node_val"));

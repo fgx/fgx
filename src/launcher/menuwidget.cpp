@@ -119,8 +119,7 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 // Quit application
 //================================================================================
 void MenuWidget::on_menu_quit(){
-	mainObject->stop_all();
-	QApplication::quit();
+	mainObject->on_quit();
 }
 
 //================================================================================

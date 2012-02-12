@@ -29,18 +29,15 @@
 #include "xobjects/xsettingsmodel.h"
 
 
-LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
+LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
 	: QWidget(parent)
 {
 
-
-
 	initializing = true;
-	mainObject = mainOb;
-
-
-	//setProperty("settings_namespace", QVariant("launcher_window"));
-	//mainObject->settings->restoreWindow(this);
+	mainObject = mob;
+	
+	setProperty("settings_namespace", QVariant("launcher_window"));
+	mainObject->settings->restoreWindow(this);
 
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	setWindowIcon(QIcon(":/icon/favicon"));
@@ -481,15 +478,13 @@ void LauncherWindow::header_show_message(QString message)
 
 //= window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
-	/*if(mainObject->X->get_ena("first_launcher_close") == false){
-		QMessageBox::information(this, "Minimize Notice",
-								 "FGx does probably not quit when this window closes on Windows/Linux, instead minimize to taskbar. You can open this window again.",
-								 QMessageBox::Ok);
-		emit setx("first_launcher_close", true, "");
-	}*/
+	
+	// save window geometry for all windows from here,
+	// launcherwindow is acting as some kind of a main window this way?
 	
 	mainObject->settings->saveWindow(mainObject->launcherWindow);
 	mainObject->settings->saveWindow(mainObject->fgxDebugWidget);
+	mainObject->settings->saveWindow(mainObject->propertiesBrowser);
 	mainObject->settings->saveWindow(mainObject->viewLogsWidget);
 	
 	QMessageBox msgBox;
@@ -520,7 +515,7 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 			break;
 	}
 	
-	mainObject->quit();
+	mainObject->on_quit();
 
 
 }

@@ -52,7 +52,7 @@ class LauncherWindow : public QWidget
 
 public:
 
-	LauncherWindow(MainObject *mainOb, QWidget *parent = 0);
+	LauncherWindow(MainObject *mob, QWidget *parent = 0);
 
 	~LauncherWindow();
 

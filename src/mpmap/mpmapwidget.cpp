@@ -23,7 +23,8 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
 {
 
 	mainObject = mOb;
-	setProperty("settings_namespace", QVariant("mp_map_window"));
+	
+	setProperty("settings_namespace", QVariant("mpmap_window"));
 	mainObject->settings->restoreWindow(this);
 
     setWindowTitle(tr("Multi Player Map"));

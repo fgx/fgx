@@ -14,18 +14,16 @@ ViewLogsWidget::ViewLogsWidget(MainObject *mOb, QWidget *parent) :
 {
 
 	mainObject = mOb;
+	
+	setProperty("settings_namespace", QVariant("log_window"));
+	mainObject->settings->restoreWindow(this);
 
 	setWindowIcon(QIcon(":/icon/log"));
 	setWindowTitle(tr("Log"));
-	setMinimumWidth(600);
-	setMinimumHeight(600);
-	setProperty("settings_namespace", QVariant("view_logs_widget"));
-	mainObject->settings->restoreWindow(this);
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 
 	setLayout(mainLayout);
-
 
 	tabWidget = new QTabWidget();
 	mainLayout->addWidget(tabWidget);

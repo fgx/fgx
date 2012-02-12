@@ -21,6 +21,8 @@ public:
 
 	QPlainTextEdit *txtLog;
 	QPushButton *buttonRefresh;
+	
+	void closeEvent(QCloseEvent *event);
 
 signals:
 

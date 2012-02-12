@@ -32,6 +32,9 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
 {
 
     mainObject = mOb;
+	
+	setProperty("settings_namespace", QVariant("properties_window"));
+	mainObject->settings->restoreWindow(this);
 
 	telnet = new TelnetSlave(this);
 
@@ -47,11 +50,7 @@ PropsTreeWidget::PropsTreeWidget(MainObject *mOb, QWidget *parent) :
 
 	setWindowTitle("Property Tree Browser");
 	setWindowIcon(QIcon(":/icon/props"));
-
-
-	setProperty("settings_namespace", QVariant("properties_window"));
-	mainObject->settings->restoreWindow(this);
-
+	
 
     //* Main Layout
     QVBoxLayout *mainLayout = new QVBoxLayout();

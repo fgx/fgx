@@ -53,7 +53,7 @@ MainObject::MainObject(QObject *parent) :
 	//====================================
 	//= Set GLobal style
 	QApplication::setStyle( QStyleFactory::create(settings->style_current()) );
-	QApplication::setQuitOnLastWindowClosed(false);
+	//QApplication::setQuitOnLastWindowClosed(false);
 
 
 
@@ -167,7 +167,7 @@ MainObject::MainObject(QObject *parent) :
 	//== Quit
 	actionQuit = popupMenu->addAction(QIcon(":/icon/quit"), tr("Quit"));
 	actionQuit->setIconVisibleInMenu(true);
-	connect(actionQuit, SIGNAL(triggered()), this, SLOT(quit()));
+	connect(actionQuit, SIGNAL(triggered()), this, SLOT(on_quit()));
 
 	//==================
 	trayIcon->show();
@@ -191,12 +191,7 @@ MainObject::MainObject(QObject *parent) :
 	}
 	
 	launcherWindow = new LauncherWindow(this);
-	launcherWindow->hide();
-	
-	// Restore all windows
-	settings->restoreWindow(launcherWindow);
-	settings->restoreWindow(fgxDebugWidget);
-	settings->restoreWindow(viewLogsWidget);
+	//launcherWindow->hide();
 
 
 	//== initialise after initial show so UI dont look frozen while cache loading etc
@@ -206,7 +201,7 @@ MainObject::MainObject(QObject *parent) :
 }
 
 MainObject::~MainObject()
-{
+{	
 	outLog(util_getDateTimestg()+" - Application close");
 }
 
@@ -360,10 +355,19 @@ void MainObject::start_fgcom(){
 }
 
 
-void MainObject::quit(){
+void MainObject::on_quit(){
+	
 	stop_all();
-
-	QApplication::quit();
+	
+	// other possibility would be to implement closeEvent in mainObject, yes.
+	// Some kind of a hack to keep old desktop app structure at the moment ... 
+	// quit is sent when last window is closed, so we need to close all windows 
+	// from here.
+	
+	launcherWindow->close();
+	fgxDebugWidget->close();
+	viewLogsWidget->close();
+	propertiesBrowser->close();
 }
 
 

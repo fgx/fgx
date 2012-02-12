@@ -13,6 +13,8 @@ ViewLogWidget::ViewLogWidget(MainObject *mOb, QWidget *parent) :
 {
 
 	mainObject = mOb;
+	
+	mainObject->settings->restoreWindow(this);
 
 	setWindowIcon(QIcon(":/icon/log"));
 	setWindowTitle(tr("View Log"));
@@ -61,4 +63,10 @@ void ViewLogWidget::on_load_log_file(){
 	}
 	txtLog->setPlainText( file.readAll());
 
+}
+
+//= window close
+void ViewLogWidget::closeEvent(QCloseEvent *event){
+	mainObject->settings->saveWindow(this);
+	event->accept();
 }

@@ -63,6 +63,7 @@ public:
 	QAction *actionEditProperty;
 
 	void closeEvent(QCloseEvent *event);
+	
 	QList<QStandardItem *> make_row(QString node_name, QString node_value, QString node_type, QString full_path, bool is_folder);
 
 signals:

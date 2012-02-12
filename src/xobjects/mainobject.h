@@ -140,7 +140,7 @@ public slots:
 	void start_terrasync();
 	void stop_all();
 
-	void quit();
+	void on_quit();
 
 	void on_view_fgx_debug();
 	void set_debug_mode(bool);
