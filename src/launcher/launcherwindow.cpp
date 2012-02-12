@@ -311,7 +311,7 @@ void LauncherWindow::on_start_all_clicked() {
 	if(!validate()){
 		return;
 	}
-	save_settings();
+	//save_settings();
 	mainObject->start_all();
 }
 
@@ -322,7 +322,7 @@ void LauncherWindow::on_start_fgfs_clicked() {
 		return;
 	}
 	qDebug() << "save";
-	save_settings();
+	//save_settings();
 	mainObject->start_fgfs();
 }
 
@@ -331,7 +331,7 @@ void LauncherWindow::on_start_terrasync_clicked() {
 	if(!validate()){
 		return;
 	}
-	save_settings();
+	//save_settings();
 	mainObject->start_terrasync();
 }
 
@@ -339,7 +339,7 @@ void LauncherWindow::on_start_fgcom_clicked() {
 	if(!validate()){
 		return;
 	}
-	save_settings();
+	//save_settings();
 	mainObject->start_fgcom();
 }
 

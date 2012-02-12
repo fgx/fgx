@@ -98,7 +98,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--disable-splash-screen", false, "", "", 1 ,"Enable Splash Screen at Startup","Startup");
 
 
-	add_option( "--callsign=", true,"", "fgx001", 1 ,"Your Callsign","Core");
+	add_option( "--callsign=", true,"", "", 1 ,"Your Callsign","Core");
 
 	//= Season
 	add_option("--season=", false,"","summer",1,"Season", "time");
