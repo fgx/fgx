@@ -168,13 +168,13 @@ void MenuWidget::on_menu_debug_mode(){
 void MenuWidget::on_menu_load_profile()
 {
     QString message("Profile load abandoned");
-    /*if (mainObject->X->load_profile()) {
+    if (mainObject->X->load_profile()) {
         // get lastused profile name
-        //QString previous = mainObject->X->getLastUsed();
-        //previous = util_getBaseName(previous);
-        //message = "Profile loaded from "+previous;
+        QString previous = mainObject->X->getLastUsed();
+        previous = util_getBaseName(previous);
+        message = "Profile loaded from "+previous;
     }
-	//mainObject->launcherWindow->headerWidget->showMessage(message);*/
+	//mainObject->launcherWindow->headerWidget->showMessage(message);
 }
 
 //================================================================================
