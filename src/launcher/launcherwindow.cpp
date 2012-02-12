@@ -40,7 +40,7 @@ LauncherWindow::LauncherWindow(MainObject *mainOb, QWidget *parent)
 
 
 	setProperty("settings_namespace", QVariant("launcher_window"));
-	mainObject->settings->restoreWindow(this);
+	//mainObject->settings->restoreWindow(this);
 
 	setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
 	setWindowIcon(QIcon(":/icon/favicon"));
@@ -495,7 +495,9 @@ void LauncherWindow::closeEvent(QCloseEvent *event){
 								 QMessageBox::Ok);
 		emit setx("first_launcher_close", true, "");
 	}*/
-
+	
+	mainObject->settings->setValue("LauncherGeometry", saveGeometry());
+	
 	QMessageBox msgBox;
 	msgBox.setText("Profile and Settings:");
 	msgBox.setInformativeText("Closing application: Do you want to save your changes?");
