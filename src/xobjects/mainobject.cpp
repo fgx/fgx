@@ -218,7 +218,10 @@ void MainObject::initialize(){
 //=  Launcher window
 void MainObject::on_launcher(){
 	
-	launcherWindow->move(0,0);
+	QSettings firstsettings;
+	if(!firstsettings.value("firststartup").toBool()){
+		launcherWindow->move(0,0);
+	}
 	launcherWindow->show();
 	launcherWindow->raise();
 
