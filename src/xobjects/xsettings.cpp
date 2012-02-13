@@ -59,7 +59,7 @@ void XSettings::saveWindow(QWidget *widget){
     //setValue( _windowName(widget), QVariant(widget->saveGeometry()) );
     QString key = _windowName(widget);
     QByteArray ba = widget->saveGeometry();
-    //outLog("saveWindow: Key="+key+", values "+ba.toHex());
+    outLog("saveWindow: Key="+key+", values "+ba.toHex());
     setValue( key, QVariant(ba) );
 }
 /** \brief Restores a window position

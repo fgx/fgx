@@ -359,15 +359,14 @@ void MainObject::on_quit(){
 	
 	stop_all();
 	
-	// other possibility would be to implement closeEvent in mainObject, yes.
-	// Some kind of a hack to keep old desktop app structure at the moment ... 
-	// quit is sent when last window is closed, so we need to close all windows 
-	// from here.
+	settings->saveWindow(launcherWindow);
+	settings->saveWindow(fgxDebugWidget);
+	settings->saveWindow(viewLogsWidget);
+	settings->saveWindow(propertiesBrowser);
 	
-	launcherWindow->close();
-	fgxDebugWidget->close();
-	viewLogsWidget->close();
-	propertiesBrowser->close();
+	settings->sync();
+	
+	QApplication::quit();
 }
 
 

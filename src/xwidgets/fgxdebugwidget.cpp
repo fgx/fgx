@@ -70,12 +70,10 @@ FgxDebugWidget::FgxDebugWidget(MainObject *mob, QWidget *parent) :
 
 
 //= window close
-void FgxDebugWidget::closeEvent(QCloseEvent *event){
-
+/*void FgxDebugWidget::closeEvent(QCloseEvent *event){
 	mainObject->settings->saveWindow(this);
-	mainObject->settings->sync();
 	event->accept();
-}
+}*/
 
 //= On Tab
 void FgxDebugWidget::on_tab(int idx)

@@ -31,7 +31,7 @@ signals:
 public slots:
 	void on_tab(int idx);
 
-	void closeEvent(QCloseEvent *event);
+	//void closeEvent(QCloseEvent *event);
 
 	void on_open_at_startup(bool checked);
 

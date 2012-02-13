@@ -33,10 +33,6 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 	setWindowTitle(tr("FGx OpenLayer Map"));
 	setWindowIcon(QIcon(":/icon/mpmap"));
 
-	setProperty("settings_namespace", QVariant("OpenLayerWidget_window"));
-
-	mainObject->settings->restoreWindow(this);
-
 	//======================================================
 	//= Main Layout and Splitter
 	QVBoxLayout *mainLayout = new QVBoxLayout(this);

@@ -479,14 +479,6 @@ void LauncherWindow::header_show_message(QString message)
 //= window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
 	
-	// save window geometry for all windows from here,
-	// launcherwindow is acting as some kind of a main window this way?
-	
-	mainObject->settings->saveWindow(mainObject->launcherWindow);
-	mainObject->settings->saveWindow(mainObject->fgxDebugWidget);
-	mainObject->settings->saveWindow(mainObject->propertiesBrowser);
-	mainObject->settings->saveWindow(mainObject->viewLogsWidget);
-	
 	QMessageBox msgBox;
 	msgBox.setText("Profile and Settings:");
 	msgBox.setInformativeText("Closing application: Do you want to save your changes?");
