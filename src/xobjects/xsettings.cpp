@@ -52,7 +52,7 @@ QString XSettings::fgx_path(){
 //===========================================================================
 //** Save/Restore Window
 //===========================================================================
-/** \brief Saves a window position
+/** \brief Saves a window size and position
  *
  */
 void XSettings::saveWindow(QWidget *widget){
@@ -72,10 +72,13 @@ void XSettings::restoreWindow(QWidget *widget){
     outLog("restoreWindow: Key="+key+", values "+ba.toHex());
     
 	// Set fixed size to 900,700 of all windows for first startup
+	
 	if (ba != "") {
 		widget->restoreGeometry(ba);
-	}else {
-		widget->resize(900,700);
+	} else {
+		if (widget->accessibleName() == "launcherWindow") {
+			widget->resize(900,700);
+		}
 	}
 
 }

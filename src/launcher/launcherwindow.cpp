@@ -35,6 +35,7 @@ LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
 
 	initializing = true;
 	mainObject = mob;
+	setAccessibleName("launcherWindow");
 	
 	setProperty("settings_namespace", QVariant("launcher_window"));
 	mainObject->settings->restoreWindow(this);
