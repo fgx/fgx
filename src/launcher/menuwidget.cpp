@@ -70,6 +70,7 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	profileMenu = new QMenu(tr("&Profile"));
 	
 	helpMenu = new QMenu(tr("&Help"));
+	helpFGxGroup = new QMenu(tr("&FGx Online Help"));
 	helpFlightGearGroup = new QMenu(tr("&FlightGear Online Help"));
 	
 	
@@ -91,13 +92,18 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	defaultProfileAction->setStatusTip(tr("Reload FGx default profile (built-in)"));
 	connect(defaultProfileAction, SIGNAL(triggered()), this, SLOT(on_menu_default_profile()));
 	
-	// Menu Help actions
+	// Menu FlightGear Help actions
 	
 	urlActionWiki = new QAction(tr("FlightGear Wiki"), this);
 	connect(urlActionWiki, SIGNAL(triggered()), this, SLOT(on_menu_url_wiki()));
 	
 	urlActionForums = new QAction(tr("FlightGear Forums"), this);
 	connect(urlActionForums, SIGNAL(triggered()), this, SLOT(on_menu_url_forums()));
+	
+	// Menu FGx Help actions
+	
+	urlActionFGxUserHelp = new QAction(tr("FGx User Forums"), this);
+	connect(urlActionFGxUserHelp, SIGNAL(triggered()), this, SLOT(on_menu_fgx_user_forums()));
 	
 	// Add actions to menu "FGx"/"Windows" (OSX = "Windows")
 	applicationMenu->addAction(quitAction);
@@ -117,7 +123,9 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	// Add actions to menu "Help"
 	helpFlightGearGroup->addAction(urlActionWiki);
 	helpFlightGearGroup->addAction(urlActionForums);
+	helpFGxGroup->addAction(urlActionFGxUserHelp);
 	helpMenu->addMenu(helpFlightGearGroup);
+	helpMenu->addMenu(helpFGxGroup);
 	
 	// Create menubar, parentless 0 is needed for OSX using the wrapper for
 	// getting native OSX menus, see qt4 MenuBar doc
@@ -245,5 +253,11 @@ void MenuWidget::on_menu_url_wiki()
 void MenuWidget::on_menu_url_forums()
 {
 	QUrl url("http://www.flightgear.org/forums");
+	QDesktopServices::openUrl( url );
+}
+
+void MenuWidget::on_menu_fgx_user_forums()
+{
+	QUrl url("http://www.flightgear.org/forums/viewforum.php?f=65");
 	QDesktopServices::openUrl( url );
 }

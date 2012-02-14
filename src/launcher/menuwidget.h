@@ -42,6 +42,7 @@ public:
 	
 	QMenu *helpMenu;
 	QMenu *helpFlightGearGroup;
+	QMenu *helpFGxGroup;
 	
 	// Menu Actions
 	QAction *quitAction;
@@ -58,6 +59,7 @@ public:
 	
 	QAction *urlActionWiki;
 	QAction *urlActionForums;
+	QAction *urlActionFGxUserHelp;
 
 signals:
 	void on_debug_mode(bool enabled);
@@ -77,6 +79,7 @@ public slots:
 	
 	void on_menu_url_wiki();
 	void on_menu_url_forums();
+	void on_menu_fgx_user_forums();
 
 };
 
