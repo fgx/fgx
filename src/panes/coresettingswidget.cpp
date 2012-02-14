@@ -483,6 +483,7 @@ void CoreSettingsWidget::load_joysticks(){
 void CoreSettingsWidget::on_callsign_changed(QString txt)
 {
 	emit( setx("--callsign=", true, txt ));
+	mainObject->launcherWindow->on_upx("--callsign=", true, txt); // change text in headerwidget
 }
 
 
@@ -638,7 +639,6 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 	
 	if(option == "--callsign="){
 		txtCallSign->setText(value);
-		
 
 	}else if(option == "--full-screen"){
 		checkBoxFullScreenStartup->setChecked(enabled);
@@ -682,6 +682,7 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 		lineEditCustomScenePath->setText(enabled ? value : mainObject->X->custom_scenery_path());
 	}
 }
+
 
 //======================================================================
 // Check paths and give some feedback
@@ -865,4 +866,3 @@ int CoreSettingsWidget::randInt(int low, int high)
     // Random number between low and high
     return qrand() % ((high + 1) - low) + low;
 }
-	
