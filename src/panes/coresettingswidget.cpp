@@ -69,6 +69,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	//connect(imageLabel, SIGNAL(clicked), this, SLOT(on_imagelabel_clicked()) );
 	imgBox->addWidget(imageLabel);
+	imageLabel->setWhatsThis(tr("<b>Just an image</b><br>Here you see some randomly selected images. \
+								Just for getting some impression from what FlightGear is bringing to you. \
+								This does not reflect you aircraft selection."));
 	
 
 	//==================================================================
@@ -81,6 +84,8 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	txtCallSign->setMaxLength(7);
 	grpCallsign->addWidget(txtCallSign);
 	connect(txtCallSign, SIGNAL(textChanged(QString)), this, SLOT(on_callsign_changed(QString)) );
+	grpCallsign->setWhatsThis(tr("<b>Your Callsign</b><br>Edit your callsign (max. 7 letters). This will be your uniqe callsign \
+								 used by FlightGear. For local offline flight or in multiplayer mode."));
 
 
 	//==================================================================
