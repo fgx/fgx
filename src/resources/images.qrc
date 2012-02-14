@@ -2,5 +2,12 @@
 <qresource prefix="/images" >
 	<file alias="1">images/001.png</file>
 	<file alias="2">images/002.png</file>
+	<file alias="3">images/003.png</file>
+	<file alias="4">images/004.png</file>
+	<file alias="5">images/005.png</file>
+	<file alias="6">images/006.png</file>
+	<file alias="7">images/007.png</file>
+	<file alias="8">images/008.png</file>
+	<file alias="9">images/009.png</file>
 </qresource>
 </RCC>

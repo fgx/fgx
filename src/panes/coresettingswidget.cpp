@@ -62,9 +62,9 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 	QTime time = QTime::currentTime();
 	qsrand((uint)time.msec());
-	// There are only two images at the moment, see resources /images
+	// There are only nine images at the moment, see resources /images
 	// and images.qrc
-	int randomValue = randInt(1,2);
+	int randomValue = randInt(1,9);
 	imageLabel->setPixmap(QPixmap(":/images/"+QString::number(randomValue)));
 	
 	//connect(imageLabel, SIGNAL(clicked), this, SLOT(on_imagelabel_clicked()) );
