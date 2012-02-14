@@ -59,7 +59,15 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	imageLabel->resize(300,225);
 	imageLabel->setStyleSheet("background: #5b5a56");
 	imageLabel->setMargin(5);
-	imageLabel->setPixmap(QPixmap(":/images/1"));
+	
+	QTime time = QTime::currentTime();
+	qsrand((uint)time.msec());
+	// There are only two images at the moment, see resources /images
+	// and images.qrc
+	int randomValue = randInt(1,2);
+	imageLabel->setPixmap(QPixmap(":/images/"+QString::number(randomValue)));
+	
+	//connect(imageLabel, SIGNAL(clicked), this, SLOT(on_imagelabel_clicked()) );
 	imgBox->addWidget(imageLabel);
 	
 
@@ -623,12 +631,14 @@ void CoreSettingsWidget::customscenery_set_path() {
 	emit setx("custom_scenery_path", true, lineEditCustomScenePath->text());
 }
 
+
 void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 {
 	QString valueLeft(""), valueRight("");
 	
 	if(option == "--callsign="){
 		txtCallSign->setText(value);
+		
 
 	}else if(option == "--full-screen"){
 		checkBoxFullScreenStartup->setChecked(enabled);
@@ -847,5 +857,12 @@ void CoreSettingsWidget::reload_lists(){
 	mainObject->launcherWindow->airportsWidget->on_reload_cache();
 	// and get the airport names
 	mainObject->launcherWindow->airportsWidget->on_loadaptdat_done();
+}
+
+// RandInt for choosing an image
+int CoreSettingsWidget::randInt(int low, int high)
+{
+    // Random number between low and high
+    return qrand() % ((high + 1) - low) + low;
 }
 	

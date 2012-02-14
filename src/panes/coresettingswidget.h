@@ -148,6 +148,8 @@ public slots:
 	void terrasyncexe_set_path();
 	void terrasyncdata_set_path();
 	void customscenery_set_path();
+	
+	int randInt(int low, int high);
 };
 
 #endif // CORESETTINGSWIDGET_H

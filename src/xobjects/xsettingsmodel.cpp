@@ -126,7 +126,6 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--httpd=",false, "", "",3,"Enable Httpd","servers");
 	add_option( "--jpg-httpd=",false, "", "",3,"Enable Screenshot","servers");
 
-
 	//-- Radio
 	add_option( "--nav1=",false, "", "",3,"","Radio");
 	add_option( "--nav2=",false, "", "",3,"","Radio");
@@ -139,8 +138,6 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--aircraft=", false,"", "", 1 ,"Aircraft","Aircraft");
 	add_option( "--fg-aircraft=", false,"", "", 1 ,"Custom Aircraft Folder","Aircraft");
 	add_option( "custom_hangar_enabled",false, "", "",1,"Custom Hangar Checked","Aircraft");
-
-
 
 	//-- Fuel
 	//add_option( "use_default_fuel",true,"","",3,"","Aircraft");

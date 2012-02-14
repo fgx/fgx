@@ -81,13 +81,10 @@ LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
 	//* Core Settings
 	coreSettingsWidget = new CoreSettingsWidget(mainObject);
 	tabWidget->addTab(coreSettingsWidget, tr("Core Settings"));
-	//connect(coreSettingsWidget->groupBoxTerraSync, SIGNAL(clicked()), this, SLOT(on_group_box_terrasync_clicked()));
-
 
 	//* Aircraft Widget
 	aircraftWidget = new AircraftWidget(mainObject);
 	tabWidget->addTab(aircraftWidget, tr("Aircraft"));
-	//#connect(aircraftWidget, SIGNAL(set_arg(QString,QString,QString)), this, SLOT(set_arg(QString,QString,QString)));
 
 	//** Position Tab
 	airportsWidget = new AirportsWidget(mainObject);
@@ -106,7 +103,6 @@ LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
 	//* Expert Options
 	expertOptionsWidget = new ExpertOptionsWidget(mainObject);
 	tabWidget->addTab( expertOptionsWidget, tr("Expert Options"));
-	//connect(outputPreviewWidget->buttonCommandPreview, SIGNAL(clicked()), this, SLOT(on_command_preview()));
 
 
 	mainLayout->addSpacing(10);
