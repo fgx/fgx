@@ -40,6 +40,9 @@ public:
 	QMenu *modeMenu;
 	QMenu *profileMenu;
 	
+	QMenu *helpMenu;
+	QMenu *helpFlightGearGroup;
+	
 	// Menu Actions
 	QAction *quitAction;
 	QAction *logWindowAction;
@@ -52,6 +55,9 @@ public:
 	QAction *saveProfileAction;
 	QAction *resetProfileAction;
 	QAction *defaultProfileAction;
+	
+	QAction *urlActionWiki;
+	QAction *urlActionForums;
 
 signals:
 	void on_debug_mode(bool enabled);
@@ -68,6 +74,9 @@ public slots:
 	void on_menu_save_profile();
 	void on_menu_reset_profile();
 	void on_menu_default_profile();
+	
+	void on_menu_url_wiki();
+	void on_menu_url_forums();
 
 };
 

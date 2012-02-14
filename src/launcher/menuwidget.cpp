@@ -69,6 +69,11 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	
 	profileMenu = new QMenu(tr("&Profile"));
 	
+	helpMenu = new QMenu(tr("&Help"));
+	helpFlightGearGroup = new QMenu(tr("&FlightGear Online Help"));
+	
+	
+	
 	// Menu Profile actions
 	loadProfileAction = new QAction(tr("&Load ..."), this);
 	loadProfileAction->setStatusTip(tr("Loads a profile"));
@@ -85,7 +90,15 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	defaultProfileAction = new QAction(tr("&Load default profile"), this);
 	defaultProfileAction->setStatusTip(tr("Reload FGx default profile (built-in)"));
 	connect(defaultProfileAction, SIGNAL(triggered()), this, SLOT(on_menu_default_profile()));
-
+	
+	// Menu Help actions
+	
+	urlActionWiki = new QAction(tr("FlightGear Wiki"), this);
+	connect(urlActionWiki, SIGNAL(triggered()), this, SLOT(on_menu_url_wiki()));
+	
+	urlActionForums = new QAction(tr("FlightGear Forums"), this);
+	connect(urlActionForums, SIGNAL(triggered()), this, SLOT(on_menu_url_forums()));
+	
 	// Add actions to menu "FGx"/"Windows" (OSX = "Windows")
 	applicationMenu->addAction(quitAction);
 	applicationMenu->addAction(logWindowAction);
@@ -101,6 +114,11 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	profileMenu->addAction(resetProfileAction);
 	profileMenu->addAction(defaultProfileAction);
 	
+	// Add actions to menu "Help"
+	helpFlightGearGroup->addAction(urlActionWiki);
+	helpFlightGearGroup->addAction(urlActionForums);
+	helpMenu->addMenu(helpFlightGearGroup);
+	
 	// Create menubar, parentless 0 is needed for OSX using the wrapper for
 	// getting native OSX menus, see qt4 MenuBar doc
 	mainMenu = new QMenuBar(0);
@@ -109,6 +127,7 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	mainMenu->addMenu(applicationMenu);
 	mainMenu->addMenu(modeMenu);
 	mainMenu->addMenu(profileMenu);
+	mainMenu->addMenu(helpMenu);
 	
 	// No action for OSX, but gives the menu for x/win
 	menuLayout->addWidget(mainMenu, 0);
@@ -212,4 +231,19 @@ void MenuWidget::on_menu_default_profile()
     //QString previous = mainObject->X->getLastUsed();
 	mainObject->X->read_default_ini();
     mainObject->launcherWindow->headerWidget->showMessage(message);
+}
+
+//================================================================================
+// Help
+//================================================================================
+void MenuWidget::on_menu_url_wiki()
+{
+	QUrl url("http://wiki.flightgear.org");
+	QDesktopServices::openUrl( url );
+}
+
+void MenuWidget::on_menu_url_forums()
+{
+	QUrl url("http://www.flightgear.org/forums");
+	QDesktopServices::openUrl( url );
 }
