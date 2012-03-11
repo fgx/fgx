@@ -764,7 +764,7 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 	fileXmlThrehsold.open(QIODevice::ReadOnly);
 
 	//= Make file contents into a string from bytearray
-	QString xmlThresholdString = fileXmlThrehsold.readAll().toUtf8();
+	QString xmlThresholdString = QString(fileXmlThrehsold.readAll()).toUtf8();
 
 	//= Create domDocument - important dont pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
 	QDomDocument dom;
@@ -878,7 +878,7 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 		//* Open file and read contents to string
 		QFile ppfile(file_path);
 		ppfile.open(QIODevice::ReadOnly);
-		QString xmlString = ppfile.readAll().toUtf8();
+		QString xmlString = QString(ppfile.readAll()).toUtf8();
 
 		//* Create domDocument - important - don't pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
 		QDomDocument dom;
@@ -992,7 +992,7 @@ void AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
 		//* Open file and read contents to string
 		QFile ppfile(file_path);
 		ppfile.open(QIODevice::ReadOnly);
-		QString xmlString = ppfile.readAll().toUtf8();
+		QString xmlString = QString(ppfile.readAll()).toUtf8();
 
 		//= Create domDocument - important - don't pass string in  QDomConstrucor(string) as ERRORS.. took hours DONT DO IT
 		QDomDocument dom;
