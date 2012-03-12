@@ -144,6 +144,11 @@ PAIRPORTLIST loadAptDat::setAirListPtr(PAIRPORTLIST pal)
     pAirList = pal;
     return cpal;
 }
+PAIRPORTLIST loadAptDat::getAirListPtr()
+{
+    return pAirList;
+}
+
 
 bool loadAptDat::loadDirect(QString zf)
 {

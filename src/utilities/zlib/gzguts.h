@@ -11,7 +11,9 @@
    and decompression services
    ------------------------------------------------------ */
 #define FGX_GZGUTS_H
-
+#ifdef _MSC_VER
+#pragma warning ( disable : 4996 ) /* remove MS specific 'use ISO C++ conformant name' and other warnings */
+#endif
 #ifdef _LARGEFILE64_SOURCE
 #  ifndef _LARGEFILE_SOURCE
 #    define _LARGEFILE_SOURCE 1

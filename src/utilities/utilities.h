@@ -77,7 +77,7 @@ public:
     int timeOut;
     int runTime;
     int flagOpts;
-    bool result;
+    int result;
     bool runTest();
 private:
     void init();

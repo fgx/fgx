@@ -382,8 +382,10 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 
-    ploadItem = 0;
-    pAptDat = 0;
+#ifdef ENABLE_APT_DAT_LOAD
+    pAptDat = new loadAptDat(this); // class to do loading
+    ploadItem = &pAptDat->loadItem;   // LOADITEM structure
+#endif // #ifdef ENABLE_APT_DAT_LOAD
 
 }
 
@@ -435,8 +437,6 @@ void AirportsWidget::initialize(){
     }
 #ifdef ENABLE_APT_DAT_LOAD
     if (first_load_done) {
-        pAptDat = new loadAptDat(this); // class to do loading
-        ploadItem = &pAptDat->loadItem;   // LOADITEM structure
         ploadItem->optionFlag |= lf_FixName;
         connect(pAptDat,SIGNAL(load_done()),this,SLOT(on_loadaptdat_done()));
         pAptDat->loadOnThread(file);    // start the loading

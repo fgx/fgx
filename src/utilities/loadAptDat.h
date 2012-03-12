@@ -78,7 +78,7 @@ public:
     QString fgroot;
     bool loadDirect(QString);
     void loadOnThread(QString);
-    PAIRPORTLIST getAirListPtr() { return pAirList; }
+    PAIRPORTLIST getAirListPtr();
     PAIRPORTLIST setAirListPtr(PAIRPORTLIST);
     void clear_list(PAIRPORTLIST pal = 0);
     int getAirportCount();
