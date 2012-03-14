@@ -412,6 +412,8 @@ void loadAptDat::_loadStatic(void * vp)
                     rw.id = rwyt;
                     rw.hdgt = parts.at(4).toDouble();
                     rw.lenft = parts.at(5).toDouble();
+                    if (pli->work.abort)
+                        break;
                     pap->run_list.push_back(rw);
                     tot_runways++;
                 } else if (add_taxiways) {
@@ -421,6 +423,8 @@ void loadAptDat::_loadStatic(void * vp)
                     tw.id = rwyt;
                     tw.hdgt = parts.at(4).toDouble();
                     tw.lenft = parts.at(5).toDouble();
+                    if (pli->work.abort)
+                        break;
                     pap->tax_list.push_back(tw);
                 }
             } else {
@@ -437,6 +441,8 @@ void loadAptDat::_loadStatic(void * vp)
                 ws.lat = parts.at(1).toDouble();
                 ws.lon = parts.at(2).toDouble();
                 ws.elev = parts.at(3).toDouble();
+                if (pli->work.abort)
+                    break;
                 pap->sock_list.push_back(ws);
             } else {
                 msg.sprintf("%d",line_counter);
@@ -481,6 +487,8 @@ void loadAptDat::_loadStatic(void * vp)
                     outLog("CHECK ME! COMM line without name "+msg+" ["+line+"]");
                     debug_stop(line_counter);
                 }
+                if (pli->work.abort)
+                    break;
                 pap->comm_list.push_back(comm);
                 comm_count++;
             } else {
@@ -545,6 +553,8 @@ void loadAptDat::_loadStatic(void * vp)
                         rw.id = parts.at(8);
                         rw.hdgt = az1;
                         rw.lenft = feet;
+                        if (pli->work.abort)
+                            break;
                         pap->run_list.push_back(rw);
                         tot_runways++;
                     }
@@ -604,6 +614,8 @@ void loadAptDat::_loadStatic(void * vp)
                         rw.id = parts.at(3);
                         rw.hdgt = az1;
                         rw.lenft = feet;
+                        if (pli->work.abort)
+                            break;
                         pap->run_list.push_back(rw);
                         tot_runways++;
                     }
@@ -646,6 +658,8 @@ void loadAptDat::_loadStatic(void * vp)
                         rw.id = rwyt;
                         rw.hdgt = parts.at(4).toDouble();
                         rw.lenft = parts.at(5).toDouble();
+                        if (pli->work.abort)
+                            break;
                         pap->run_list.push_back(rw);
                         tot_runways++;
                     }
@@ -686,7 +700,7 @@ void loadAptDat::_loadStatic(void * vp)
         }
     }
     // get any final entry
-    if (got_airport) {
+    if (got_airport && !pli->work.abort) {
         pal->push_back(pap);
     } else
         delete pap;
