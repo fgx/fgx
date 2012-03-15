@@ -108,6 +108,8 @@ loadAptDat::loadAptDat(QObject *par)
     loadTime_ms = 0;
     workthread = 0;
     loadItem.in_loading = false;
+    last_load = "";      // last apt.dat loaded = NONE yet
+
 }
 
 loadAptDat::~loadAptDat()
@@ -149,15 +151,36 @@ PAIRPORTLIST loadAptDat::getAirListPtr()
     return pAirList;
 }
 
+/* ----------------------------------------------
+   isFileLoaded:
+   Input: QString valid, existing file.
+   Return: true if name, size and date match
+           false if not
+   ---------------------------------------------- */
+bool loadAptDat::isFileLoaded(QString zf)
+{
+    QFile file(zf);
+    QFileInfo fi(file);
+    if (last_load.length()) {
+        // check if this is a NEW file
+        if ((zf == last_load) &&
+            (fi.size() == last_size) &&
+            (fi.lastModified() == last_date)) {
+            // YEEK, this is what is already loaded!
+            return true;
+        }
+    }
+    return false;
+}
 
-bool loadAptDat::loadDirect(QString zf)
+bool loadAptDat::loadDirect(QString zf, int flag)
 {
     if (loadItem.in_loading)
         return false;
     loadItem.work.abort = false;
     loadItem.zf = zf;
     loadItem.pAirList = getAirListPtr();
-    loadItem.optionFlag = lf_AddTax;
+    loadItem.optionFlag = flag;     // like lf_noAddTax;
     loadItem.in_loading = true;
     _loadStatic(&loadItem);
     loadItem.in_loading = false;
@@ -166,12 +189,21 @@ bool loadAptDat::loadDirect(QString zf)
     return !(loadItem.result); // RETURN SUCCESS
 }
 
-void loadAptDat::loadOnThread(QString zf)
+// ret 0 = on thread, flag = one or more of the flags - default none
+int loadAptDat::loadOnThread(QString zf, int flag)
 {
     if (loadItem.in_loading)
-        return; // do not start up a 2nd time
+        return 1; // 1 = already running - do not start up a 2nd time
+    QFile file(zf);
+    if (!file.exists())
+        return 2; // 2 = no file exist - do not fire up the thread
+    if (!(flag & lf_ForceLoad) && isFileLoaded(zf)) {
+        return 3; // 3 = already loaded, and no FORCE applied!
+    }
+    // we are going threading - setup the thread parameters
     loadItem.in_loading = true;
     loadItem.zf = zf;
+    loadItem.optionFlag = flag;     // like lf_noAddTax;
     loadItem.work.user_type = tht_loadAptDat;
     loadItem.work.act = _loadStatic;  // (static) loader
     loadItem.work.vp = &loadItem;
@@ -179,8 +211,14 @@ void loadAptDat::loadOnThread(QString zf)
     loadItem.pAirList = getAirListPtr();
     if (!workthread)
         workthread = new workThread;
+    // going for the LOAD, store the file information
+    QFileInfo fi(file);
+    last_load = zf;
+    last_size = fi.size();
+    last_date = fi.lastModified();
     connect(workthread,SIGNAL(work_done(int,int)),this,SLOT(thread_done(int,int)));
     loadItem.threadnum = workthread->work(_loadStatic,&loadItem);   // start up the thread to do the work
+    return 0;   // no problems, thread has started...
 }
 
 // connected to workThread::work_done(int num, int ms) signal
@@ -247,9 +285,10 @@ void loadAptDat::_loadStatic(void * vp)
     PLOADITEM pli = (PLOADITEM)vp;
     QString zf(pli->zf);
     AIRPORTLIST *pal = pli->pAirList;
-    bool add_taxiways = pli->optionFlag & lf_AddTax;
-    bool skip_outofrange = pli->optionFlag & lf_SkipOOR;
-    bool fix_name = pli->optionFlag & lf_FixName;
+    // switch to negative flags, so 0 is the default
+    bool add_taxiways = !(pli->optionFlag & lf_noAddTax);
+    bool skip_outofrange = !(pli->optionFlag & lf_noSkipOOR);
+    bool fix_name = !(pli->optionFlag & lf_noFixName);
     pli->result = false; // set FAILED
     QTime tm;
     QString msg;
@@ -781,32 +820,12 @@ PAD_AIRPORT loadAptDat::findAirportByICAO(QString icao)
 QString loadAptDat::findNameByICAO(QString icao, int flag)
 {
     QString name;
-    int cnt;
+    Q_UNUSED(flag);
     PAD_AIRPORT pad = findAirportByICAO(icao);
     if (pad) {
         name = pad->name;
-        if ((flag & lf_FixName)&&(name.length() > 2)) {
-            // NOTE: This has beeen moved to work on the THREAD
-            // =================================================
-            QString part,chr;
-            int i;
-            QString sp(" ");
-            QStringList list = name.split(QChar(' '),QString::SkipEmptyParts);
-            cnt = list.count();
-            name = "";
-            for (i = 0; i < cnt; i++) {
-                part = list.at(i);
-                if (part.length() > 2) {
-                    part = part.toLower();
-                    chr = part.at(0);
-                    chr = chr.toUpper();
-                    part.replace(0,1,chr);
-                }
-                if (name.length() > 0)
-                    name.append(sp);
-                name.append(part);
-            }
-        }
+        // NOTE: FIX NAME has beeen moved to work on the THREAD
+        // ====================================================
     }
     return name;
 }

@@ -861,7 +861,7 @@ void CoreSettingsWidget::on_select_customscenerybutton()
 void CoreSettingsWidget::reload_lists(){
 	mainObject->launcherWindow->aircraftWidget->on_reload_cache();
 	mainObject->launcherWindow->airportsWidget->on_reload_cache();
-	// and get the airport names
+    // and get the airport names, and potentially start apt.dat thread load...
 	mainObject->launcherWindow->airportsWidget->on_loadaptdat_done();
 }
 

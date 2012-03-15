@@ -14,6 +14,8 @@
 #include <QString>
 #include <QTime>
 #include <QFile>
+#include <QFileInfo>    // to compare to previous loaded file size
+#include <QDateTime>    // and date/time
 #include "utilities/fgx_gzlib.h"
 #include "utilities/workThread.h"
 
@@ -65,9 +67,11 @@ typedef struct tagLOADITEM {
     QString msg;
 }LOADITEM, *PLOADITEM;
 
-#define lf_AddTax   0x00000001
-#define lf_SkipOOR  0x00000002  // SKIP out-of-range values, else FIX
-#define lf_FixName  0x00000004  // fix case of name
+// negative flags, so that 0 is the DEFAULT
+#define lf_noAddTax     0x00000001
+#define lf_noSkipOOR    0x00000002  // SKIP out-of-range values, else FIX
+#define lf_noFixName    0x00000004  // fix case of name
+#define lf_ForceLoad    0x00000008  // force a load, even if the SAME file
 
 class loadAptDat : public QObject
 {
@@ -76,8 +80,8 @@ public:
     explicit loadAptDat(QObject *par = 0);
     ~loadAptDat();
     QString fgroot;
-    bool loadDirect(QString);
-    void loadOnThread(QString);
+    bool loadDirect(QString file, int flag = 0);
+    int loadOnThread(QString file, int flag = 0); // ret 0 = on thread, flag = one or more of above flags - default none
     PAIRPORTLIST getAirListPtr();
     PAIRPORTLIST setAirListPtr(PAIRPORTLIST);
     void clear_list(PAIRPORTLIST pal = 0);
@@ -86,11 +90,12 @@ public:
     int loadTime_ms;
     int getLoadTime() { return loadTime_ms; }
     PAD_AIRPORT findAirportByICAO(QString);
-    QString findNameByICAO(QString icao, int flag = 0);
+    QString findNameByICAO(QString icao, int flag = 0); // note 'flag' presently NOT USED!
     QString getAiportStg(PAD_AIRPORT pad, int flag = 0);
     AIRPORTLIST *getNearestAiportList(PAD_AIRPORT pad, int flag = 0);
     bool isThreadInFunction();
     LOADITEM loadItem;  // structure passed to thread
+    bool isFileLoaded(QString zf); // compare with LAST loaded apt.dat file
 
 signals:
     void load_done();
@@ -102,6 +107,9 @@ private:
     PAIRPORTLIST pAirList;
     static void _loadStatic(void *vp);
     workThread *workthread;
+    QString last_load;      // file last loaded
+    qint64 last_size;       // its size
+    QDateTime last_date;    // and date/time last modified
 };
 
 extern void sortByICAO(AIRPORTLIST *pal);

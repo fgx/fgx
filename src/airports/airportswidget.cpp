@@ -382,10 +382,10 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
 
-#ifdef ENABLE_APT_DAT_LOAD
+// #ifdef ENABLE_APT_DAT_LOAD // this can no longer be 'safely' turned off
     pAptDat = new loadAptDat(this); // class to do loading
     ploadItem = &pAptDat->loadItem;   // LOADITEM structure
-#endif // #ifdef ENABLE_APT_DAT_LOAD
+// #endif // #ifdef ENABLE_APT_DAT_LOAD
 
 }
 
@@ -437,7 +437,7 @@ void AirportsWidget::initialize(){
     }
 #ifdef ENABLE_APT_DAT_LOAD
     if (first_load_done) {
-        ploadItem->optionFlag |= lf_FixName;
+        // ploadItem->optionFlag |= lf_noFixName;
         connect(pAptDat,SIGNAL(load_done()),this,SLOT(on_loadaptdat_done()));
         pAptDat->loadOnThread(file);    // start the loading
     }
@@ -453,6 +453,20 @@ void AirportsWidget::initialize(){
 
 void AirportsWidget::on_loadaptdat_done()
 {
+    // first, check if the current apt.dat has been loaded
+    QString zf = mainObject->X->fgroot("/Airports/apt.dat");
+    if (!QFile::exists(zf)) {
+        zf.append(".gz");   // switch to 'gz' file
+    }
+    if (QFile::exists(zf) && !pAptDat->isFileLoaded(zf) ) {
+        connect(pAptDat,SIGNAL(load_done()),this,SLOT(on_loadaptdat_done()));
+        if ( pAptDat->loadOnThread(zf) == 0 ) {    // start the thread loading
+            outLog("AirportWidget::on_loadaptdat_done() - started load "+zf);
+            return;
+        }
+    }
+    // appears it is (or is not valid, in which case nothing will change), so
+    // proceed to fill in Airport names
     outLog("AirportWidget::on_loadaptdat_done()");
     int max = model->rowCount();
     int i;
