@@ -539,16 +539,20 @@ QStringList XSettingsModel::get_fgfs_args()
 {
 	//= Read --options from tree
 	QStringList args;
+    QString str("");
 
 	for(int row_idx=0; row_idx < rowCount(); row_idx++){
 
 		if(item(row_idx, C_ENABLED)->text() == "1"){
-			QString str("");
 			QString op = item(row_idx, C_OPTION)->text();
+            str = "";
 			if(op.startsWith("--")){
 				str.append(item(row_idx, C_OPTION)->text()).append(item(row_idx, C_VALUE)->text());
 			}
 			if(str.length() > 0){
+                if (str.indexOf(QChar(' ')) > 0) {
+                    str = "\""+str+"\"";    // encase in QUOTE if it contains a SPACE char
+                }
 				args << str;
 			}
 		}
@@ -574,7 +578,16 @@ QStringList XSettingsModel::get_fgfs_args()
 	}
 
 	//== FgRoot
-	args <<  QString("--fg-root=").append(fgroot());
+    str = fgroot();
+    if (str.length() > 0) {
+        // only ADDED if we have a FGROOT
+        // Maybe the user sets FG_ROOT in the environment, so do NOT need any here
+        str = "--fg-root="+str;
+        if (str.indexOf(QChar(' ')) > 0) {
+            str = "\""+str+"\"";    // encase in QUOTE if it contains a SPACE char
+        }
+        args <<  str;
+    }
 
 	//= Terrasync and custom scenery path
     // setup the DIFFERENT path separators!!!
@@ -582,22 +595,45 @@ QStringList XSettingsModel::get_fgfs_args()
 #ifdef Q_OS_WIN
     path_sep = ";"; // oops, switch the WINDOWS spearator
 #endif
+    // FIX20120410 - For Windows, and most other OSes, put paths with a SPACE in quotes
+    // TODO - should check if paths are not BLANK, and are valid paths before blithly adding them
+    // Helps no one to add BLANK or INVALID paths
     if (terrasync_enabled() && !custom_scenery_enabled()) {
-        args << QString("--fg-scenery=").append(terrasync_data_path()).append(path_sep).append(scenery_path());
+        str = "--fg-scenery=";
+        str.append(terrasync_data_path()).append(path_sep).append(scenery_path());
+        if (str.indexOf(QChar(' ')) > 0) {
+            str = "\""+str+"\"";    // encase in QUOTE if it contains a SPACE char
+        }
+        args << str;
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
     }
 	
     else if (terrasync_enabled() && custom_scenery_enabled()) {
-        args << QString("--fg-scenery=").append(custom_scenery_path()).append(path_sep).append(terrasync_data_path()).append(path_sep).append(scenery_path());
+        str = "--fg-scenery=";
+        str.append(custom_scenery_path()).append(path_sep).append(terrasync_data_path()).append(path_sep).append(scenery_path());
+        if (str.indexOf(QChar(' ')) > 0) {
+            str = "\""+str+"\"";    // encase in QUOTE if it contains a SPACE char
+        }
+        args << str;
 		args << QString("--atlas=socket,out,5,localhost,5505,udp");
 	}
 
 	else if (!terrasync_enabled() && custom_scenery_enabled())  {
-        args << QString("--fg-scenery=").append(custom_scenery_path()).append(path_sep).append(scenery_path());
+        str = "--fg-scenery=";
+        str.append(custom_scenery_path()).append(path_sep).append(scenery_path());
+        if (str.indexOf(QChar(' ')) > 0) {
+            str = "\""+str+"\"";    // encase in QUOTE if it contains a SPACE char
+        }
+        args << str;
 	}
 	
 	else if (!terrasync_enabled() && !custom_scenery_enabled())  {
-		args << QString("--fg-scenery=").append(scenery_path());
+        str = "--fg-scenery=";
+        str.append(scenery_path());
+        if (str.indexOf(QChar(' ')) > 0) {
+            str = "\""+str+"\"";    // encase in QUOTE if it contains a SPACE char
+        }
+        args << str;
 	}
 	
 	return args;
@@ -608,16 +644,31 @@ QStringList XSettingsModel::get_fgfs_list()
 {
 	//TODO append the commands here
 	QStringList args;
-	args << fgfs_path();
+    QString fgfs = fgfs_path();
+    if (fgfs.indexOf((QChar(' ')) > 0)) {
+        fgfs = "\""+fgfs+"\"";  // Quote it if it contains a SPACE
+    }
+    args << fgfs;
 	args << get_fgfs_args();
 	return args;
 }
 
 QString XSettingsModel::get_fgfs_command_string()
 {
-	return fgfs_path().append(" ").append( get_fgfs_args().join(" ") );
+    QString fgfs = fgfs_path();
+    QFile file(fgfs);
+    if (file.exists()) {
+        outLog("XSettingsModel::get_fgfs_command_string: Found valid file ["+fgfs+"]");
+    } else {
+        outLog("XSettingsModel::get_fgfs_command_string: File ["+fgfs+"] NOT valid!");
+    }
+    if (fgfs.indexOf((QChar(' ')) > 0)) {
+        fgfs = "\""+fgfs+"\"";  // quote it if it contains a SPACE
+    }
+    fgfs.append(" ");
+    fgfs.append( get_fgfs_args().join(" ") );
+    return fgfs;
 }
-
 
 
 //========================================================
