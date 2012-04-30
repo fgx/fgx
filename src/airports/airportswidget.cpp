@@ -402,7 +402,10 @@ void AirportsWidget::on_map_double_clicked(QString lat, QString lon, QString hea
 	// disable runway/parking - clear tree
 	emit set_ena("--runway=", false);
 	emit set_ena("--parking-id=", false);
-	treeAptInfo->selectionModel()->clear();
+	emit set_ena("--airport=", false);
+	
+	/*treeAptInfo->selectionModel()->clear();*/
+	
 
 	//- Set position
 	emit setx("--lat=", true, lat);
