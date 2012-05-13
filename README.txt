@@ -88,5 +88,3 @@ FlightGear Forum (User and Development Forums):
 http://www.flightgear.org/forums
 
 
-
-
