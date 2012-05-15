@@ -1,7 +1,7 @@
 Index: src/osgViewer/GraphicsWindowCocoa.mm
 ===================================================================
---- OpenSceneGraph/src/src/osgViewer/GraphicsWindowCocoa.mm	(revision 12982)
-+++ OpenSceneGraph/src/src/osgViewer/GraphicsWindowCocoa.mm	(working copy)
+--- src/osgViewer/GraphicsWindowCocoa.mm	(revision 12982)
++++ src/osgViewer/GraphicsWindowCocoa.mm	(working copy)
 @@ -212,7 +212,11 @@
  {
      s_quit_requested = true;
