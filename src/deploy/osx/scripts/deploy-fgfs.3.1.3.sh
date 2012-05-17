@@ -2,7 +2,7 @@
 
 FILES = "fgfs fgjs fgviewer jsdemo metar terrasync yasim yasim-proptest"
 
-for f in *
+for f in $FILES
 
 do
 	# link OSG
