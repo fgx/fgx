@@ -6,7 +6,7 @@ index f34fc14..e545839 100644
    MenuItemBindings itemBindings;
  };
  
-+#if 0 && __MAC_OS_X_VERSION_MIN_REQUIRED < 1060
++#if __MAC_OS_X_VERSION_MIN_REQUIRED < 1060
 +@protocol NSApplicationDelegate <NSObject>
 +@end
 +@protocol NSWindowDelegate <NSObject>
