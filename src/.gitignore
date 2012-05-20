@@ -11,4 +11,5 @@ fgx.app/*
 fgx.app
 PkgInfo
 DEV_MODE.txt
-
+.DS_Store
+build*
