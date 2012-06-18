@@ -779,7 +779,7 @@ bool XSettingsModel::fgcom_enabled(){
 //===========================================================================
 //== fgcom Executable
 //===========================================================================
-/** \brief Path to fgfs executable
+/** \brief Path to fgcom executable
  */
 QString XSettingsModel::fgcom_exe_path(){
 	QSettings firstsettings;
