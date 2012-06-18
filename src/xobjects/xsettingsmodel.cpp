@@ -58,7 +58,6 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option("custom_scenery_enabled", false,"","",0,"","paths");
 	add_option("custom_scenery_path", false,"","",0,"","paths");
     add_option("fgcom_exe_path", false, "", "", 0, "", "paths");
-	add_option("fgcom_enabled", false, "", "", 0, "", "paths");
 	add_option("jsdemo_enabled", false, "", "", 0, "", "paths");
     add_option("jsdemo_exe_path", false, "", "", 0, "", "paths");
 
@@ -776,12 +775,12 @@ bool XSettingsModel::fgcom_enabled(){
 	return get_ena("fgcom_enabled");
 }
 
+
 //===========================================================================
 //== fgcom Executable
 //===========================================================================
-/** \brief Path to terrasync executable
+/** \brief Path to fgfs executable
  */
-
 QString XSettingsModel::fgcom_exe_path(){
 	QSettings firstsettings;
 	
@@ -796,6 +795,8 @@ QString XSettingsModel::fgcom_exe_path(){
 	}else {
 		return QString(getx("fgcom_exe_path"));
 	}
+	
+	
 }
 
 

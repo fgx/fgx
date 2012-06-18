@@ -52,6 +52,11 @@ public:
 	XGroupGBox *grpFgCom;
 	QLineEdit *txtFgComNo;
 	QLineEdit *txtFgComPort;
+	
+	QLineEdit *lineEditFgComPath;
+	QToolButton *buttonSetFgComPath;
+	QLabel *labelFgComProgram;
+	QLabel *labelFgComCheck;
 
 	XGroupHBox *grpTelnet;
 	QLineEdit *txtTelnet;
@@ -79,6 +84,11 @@ public slots:
 
 	void set_mp_server();
 	void set_fgcom();
+	
+	void fgcom_check_path();
+	void fgcom_set_path();
+	void on_fgcom_path(QString);
+	void on_select_fgcombutton();
 
 	void on_http();
 	void on_telnet();

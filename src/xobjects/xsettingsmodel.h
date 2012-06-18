@@ -50,7 +50,6 @@ public:
 	QStringList get_fgfs_env();
 
 	QString terrasync_default_path();
-	QString fgcom_default_path();
 	QString fgfs_path();
 
 

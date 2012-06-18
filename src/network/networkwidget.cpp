@@ -219,13 +219,34 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	}else {
 		txtFgComPort->setEnabled(false);
 	}
-
-
+	
 	row++;
 	QLabel *lblHelp2 = new QLabel("eg: 16661");
 	lblHelp2->setStyleSheet(style);
 	grpFgCom->addWidget(lblHelp2, row, 1, 1, 2);
-
+	
+	// fgCom exe path
+	row++;
+	labelFgComProgram = new QLabel("Path to FGcom: ");
+	labelFgComCheck = new QLabel("");
+	lineEditFgComPath = new QLineEdit("");
+	lineEditFgComPath->setFixedSize(QSize(240,20));
+	buttonSetFgComPath = new QToolButton();
+	buttonSetFgComPath->setFixedSize(20,20);
+	buttonSetFgComPath->setIcon(QIcon(":/icon/path"));
+	grpFgCom->addWidget(labelFgComProgram,row, 0,1,1, Qt::AlignRight);
+	grpFgCom->addWidget(lineEditFgComPath,row, 1,1,1, Qt::AlignLeft);
+	grpFgCom->addWidget(labelFgComCheck,row, 2,1,1, Qt::AlignRight);
+	grpFgCom->addWidget(buttonSetFgComPath,row, 3,1,1, Qt::AlignRight);
+	lineEditFgComPath->setText( mainObject->X->fgcom_exe_path() );
+	
+	// "Set" clicked
+	connect( buttonSetFgComPath, SIGNAL(clicked()),this, SLOT(on_select_fgcombutton()) );
+	
+	//Check if path exists, set pixmap, emit setting
+	connect(lineEditFgComPath, SIGNAL(textChanged(QString)), this, SLOT(fgcom_check_path()));
+	connect(lineEditFgComPath, SIGNAL(textChanged(QString)), this, SLOT(on_fgcom_path(QString)));
+	connect(buttonSetFgComPath, SIGNAL(clicked()), this, SLOT(fgcom_set_path()));
 
 
 	//===========================================================
@@ -463,6 +484,49 @@ void NetworkWidget::set_fgcom(){
 				QString("--generic=socket,out,10,localhost,%1,udp,fgcom").arg(txtFgComPort->text())
 			);
 }
+
+//======================================================================
+// Check fgcom path and give some feedback
+//======================================================================
+
+void NetworkWidget::fgcom_check_path()
+{
+	bool fgcom_exists = QFile::exists(lineEditFgComPath->text());
+	if (fgcom_exists) {
+		labelFgComCheck->setPixmap(QPixmap(":/icon/ok"));
+	} else {
+		labelFgComCheck->setPixmap(QPixmap(":/icon/not-ok"));
+	}
+	
+}
+
+//======================================================================
+// Set fgcom path with button
+//======================================================================
+
+void NetworkWidget::on_select_fgcombutton()
+
+{
+#ifdef USE_ALTERNATE_GETFILE
+    QString filePathFgCom = util_getFileName((QWidget *)this, tr("Select fgcom binary"),
+                                            lineEditFgComPath->text());
+#else // !#ifdef USE_ALTERNATE_GETFILE
+    QString filePathFgCom = QFileDialog::getOpenFileName(this, tr("Select fgcom binary"),
+														lineEditFgComPath->text());
+#endif // #ifdef USE_ALTERNATE_GETFILE y/n
+	if(filePathFgCom.length() > 0){
+		lineEditFgComPath->setText(filePathFgCom);
+	}
+	
+	fgcom_check_path();
+}
+
+//=====================================
+// Emit fgcom path
+void NetworkWidget::on_fgcom_path(QString txt)
+{
+	emit( mainObject->X->set_option("fgcom_exe_path", true, txt));
+}
 		
 		
 //=====================================
@@ -527,7 +591,9 @@ void NetworkWidget::on_screenshot()
 	emit setx("--jpg-httpd=", grpScreenShot->isChecked(), txtScreenShot->text());
 }
 
-
+void NetworkWidget::fgcom_set_path() {
+	emit setx("fgcom_exe_path", true, lineEditFgComPath->text());
+}
 
 //=============================================================
 // Update Widgets
@@ -580,6 +646,9 @@ void NetworkWidget::on_upx(QString option, bool enabled, QString value)
 	}else if(option == "--jpg-httpd="){
 		grpScreenShot->setChecked(enabled);
 		txtScreenShot->setText(value);
-
+		
+	}else if(option == "fgcom_exe_path"){
+		lineEditFgComPath->setText(mainObject->X->fgcom_exe_path());
 	}
+	
 }
