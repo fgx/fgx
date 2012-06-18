@@ -184,7 +184,8 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	// FgCom Box
 	grpFgCom = new XGroupGBox(tr("FGCom - Voice Communications"));
 	rightLayout->addWidget(grpFgCom, 2);
-	//grpFgCom->setCheckable(true);
+	grpFgCom->setCheckable(true);
+	connect(grpFgCom, SIGNAL(clicked()), this, SLOT(set_fgcom()));
 
 	QString style("font-size: 8pt; color: #666666;");
 
