@@ -272,10 +272,14 @@ void LauncherWindow::initialize(){
         if ( mainObject->X->save_profile() ) {
             firstsettings.setValue("firststartup", "true");
             firstsettings.sync();
+			
         } else {    // did NOT write a profile - get quite INSISTANT ;=()
             previous.sprintf("Try %d! You MUST save this Settings Profile first. Choose a writable location in next dialog and click \"Ok\" ONLY.",
                          (done + 1));
         }
+		// reload lists after setting default init values
+		mainObject->launcherWindow->aircraftWidget->on_reload_cache();
+		mainObject->launcherWindow->airportsWidget->on_reload_cache();
     }
 	
 	// This we do everytime, solves a lot of problems loading the first saved profile
