@@ -3,7 +3,7 @@
  *  FGx
  *
  *  Created by Yves Sablonier, Zurich
- *  © 2011 --- GPL2
+ *  (c) 2011 --- GPL2
  *
  */
 
@@ -47,9 +47,9 @@ int main( int argc, char* argv[])
 	
 	QApplication app(argc, argv);
 	QApplication::setOrganizationName("FGx");
-	QApplication::setOrganizationDomain("fgx.org");
-	QApplication::setApplicationName("FGx FlightGear Launcher");
-	QApplication::setApplicationVersion("2.7.0a");
+	QApplication::setOrganizationDomain("fgx.ch");
+	QApplication::setApplicationName("FGxFlightGearLauncher");
+	QApplication::setApplicationVersion("2.8.0rc1");
 	
 	//=====================================================
 	//== Add fonts to database and set default application font

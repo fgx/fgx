@@ -1,7 +1,3 @@
-
-
-//#include <QtDebug>
-
 #include <QtCore/QDir>
 #include <QtCore/QVariant>
 
