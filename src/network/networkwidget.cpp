@@ -192,14 +192,9 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	// fgCom NO
 	int row = 0;
 	grpFgCom->addWidget(new QLabel("Server"), row, 0, 1, 1, Qt::AlignRight);
-	txtFgComNo = new QLineEdit();
+	txtFgComNo = new QLineEdit("");
 	grpFgCom->addWidget(txtFgComNo, row, 1, 1, 1);
-	if (mainObject->X->get_ena("fgcom_enabled")){
-		txtFgComNo->setEnabled(true);
-		connect(txtFgComNo, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
-	} else {
-		txtFgComNo->setEnabled(false);
-	}
+	connect(txtFgComNo, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
 
 
 	row++;
@@ -210,15 +205,10 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	//* fgCom Port
 	row++;
 	grpFgCom->addWidget(new QLabel("Port"), row, 0, 1, 1, Qt::AlignRight);
-	txtFgComPort = new QLineEdit();
+	txtFgComPort = new QLineEdit("");
 	txtFgComPort->setMaximumWidth(100);
 	grpFgCom->addWidget(txtFgComPort, row, 1, 1, 1);
-	if (mainObject->X->get_ena("fgcom_enabled")){
-		txtFgComPort->setEnabled(true);
-		connect(txtFgComPort, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
-	}else {
-		txtFgComPort->setEnabled(false);
-	}
+	connect(txtFgComPort, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
 	
 	row++;
 	QLabel *lblHelp2 = new QLabel("eg: 16661");
@@ -478,11 +468,13 @@ void NetworkWidget::set_mp_server(){
 //=====================================
 // Setup fgCom
 void NetworkWidget::set_fgcom(){
-	//emit setx( "--fgcom=", grpFgCom->isChecked(), txtFgComNo->text().append(":").append( txtFgComPort->text() ) );
+	
 	emit setx( "fgcom_enabled",
 				grpFgCom->isChecked(),
 				QString("--generic=socket,out,10,localhost,%1,udp,fgcom").arg(txtFgComPort->text())
 			);
+	
+	emit setx( "fgcom_server", grpFgCom->isChecked(), QString("%0:%1").arg(txtFgComNo->text()).arg(txtFgComPort->text()) );
 }
 
 //======================================================================
@@ -626,12 +618,19 @@ void NetworkWidget::on_upx(QString option, bool enabled, QString value)
 		}
 
 
-	}else if(option == "--fgcom="){
+	}else if(option == "fgcom_enabled"){
 		grpFgCom->setChecked(enabled);
+		
+	}else if(option == "fgcom_server"){
 		if(value.contains(":")){
-			txtFgComNo->setText( value.split(":").at(0));
-			txtFgComPort->setText( value.split(":").at(1));
+		 txtFgComNo->setText( value.split(":").at(0));
+		 txtFgComPort->setText( value.split(":").at(1));
+		 }
+		else {
+			txtFgComNo->setText("Not valid");
+			txtFgComPort->setText("Not valid");
 		}
+
 
 	}else if(option == "--telnet="){
 		grpTelnet->setChecked(enabled);

@@ -117,7 +117,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--multiplay=out", false, "", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
 
 	//= FGCom Related
-	add_option( "--fgcom=",false, "", "fgcom.flightgear.org.uk:16661",3,"FgCom","FgCom");
+	add_option( "fgcom_server",false, "", "fgcom.flightgear.org.uk:16661",3,"FgCom","FgCom");
 	add_option( "fgcom_enabled", false, "", "",10,"FgCom Socket","FgCom");
 
 	//= Local Servers
@@ -559,8 +559,17 @@ QStringList XSettingsModel::get_fgfs_args()
 	
 	// Process unique items, like fgcom socket
 	if(fgcom_enabled()){
-		args << "--generic=socket,out,10,localhost,16661,udp,fgcom";
+		// This option needs an overhaul once. Server and port separated. It is never needed
+		// as server:port for fgfs or fgcom. It’s just splitted everywhere ...
+		// For the fgfs command line option we only need the port, for starting fgcom
+		// we need the server and the port, but this can come to separated setting values (?)
+		// Anyway ... took an age this one.
+		QString serverandport(getx("fgcom_server"));
+		QString portonly(serverandport.split(":").at(1));
+		args << QString("--generic=socket,out,10,localhost,%1,udp,fgcom").arg(portonly);
 	}
+	
+	//txtFgComPort->setText( value.split(":").at(1));
 
 	//= add Extra args
 	XOpt opt = get_opt("extra_args");
