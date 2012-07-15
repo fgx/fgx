@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILES="fgfs fgjs fgviewer js_demo metar terrasync yasim yasim-proptest"
+FILES="fgcom fgfs fgjs fgviewer js_demo metar terrasync yasim yasim-proptest"
 
 for f in $FILES
 
