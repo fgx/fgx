@@ -337,13 +337,13 @@ void XSettingsModel::read_default_ini()
 {
 	QString defaultSettings("");
 	switch (mainObject->runningOs()) {
-		case MainObject::MAC:
+		case OS_MAC:
 			defaultSettings = ":/default/osx_default.ini";
 			break;
-		case MainObject::WINDOWS:
+		case OS_WINDOWS:
 			defaultSettings = ":/default/win_default.ini";
 			break;
-		case MainObject::LINUX:
+		case OS_LINUX:
 			defaultSettings = ":/default/x_default.ini";
 			break;
 		default:
@@ -721,7 +721,7 @@ QString XSettingsModel::fgfs_path(){
 	
 	if(!firstsettings.value("firststartup").toBool()){
 		// OSX: prepending current app path for firststartup
-		if(mainObject->runningOs() == MainObject::MAC) {
+		if(mainObject->runningOs() == OS_MAC) {
 			return QDir::currentPath().append("/").append(getx("fgfs_path"));
 		}else {
 			return QString(getx("fgfs_path"));
@@ -755,7 +755,7 @@ QString XSettingsModel::terrasync_exe_path(){
 	
 	if(!firstsettings.value("firststartup").toBool()){
 		// OSX: prepending current app path for firststartup
-		if(mainObject->runningOs() == MainObject::MAC) {
+		if(mainObject->runningOs() == OS_MAC) {
 			return QDir::currentPath().append("/").append(getx("terrasync_exe_path"));
 		}else {
 			return QString(getx("terrasync_exe_path"));
@@ -795,7 +795,7 @@ QString XSettingsModel::fgcom_exe_path(){
 	
 	if(!firstsettings.value("firststartup").toBool()){
 		// OSX: prepending current app path for firststartup
-		if(mainObject->runningOs() == MainObject::MAC) {
+		if(mainObject->runningOs() == OS_MAC) {
 			return QDir::currentPath().append("/").append(getx("fgcom_exe_path"));
 		}else {
 			return QString(getx("fgcom_exe_path"));
@@ -818,7 +818,7 @@ QString XSettingsModel::jsdemo_exe_path(){
 	
 	if(!firstsettings.value("firststartup").toBool()){
 		// OSX: prepending current app path for firststartup
-		if(mainObject->runningOs() == MainObject::MAC) {
+		if(mainObject->runningOs() == OS_MAC) {
 			return QDir::currentPath().append("/").append(getx("jsdemo_exe_path"));
 		}else {
 			return QString(getx("jsdemo_exe_path"));
@@ -841,7 +841,7 @@ QString XSettingsModel::fgroot(){
 	
 	if(!firstsettings.value("firststartup").toBool()){
 		// OSX: prepending current app path for firststartup
-		if(mainObject->runningOs() == MainObject::MAC) {
+		if(mainObject->runningOs() == OS_MAC) {
 			return QDir::currentPath().append("/").append(getx("fgroot_path"));
 		}else {
 			return QString(getx("fgroot_path"));

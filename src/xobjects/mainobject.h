@@ -57,13 +57,6 @@ public:
     explicit MainObject(QObject *parent = 0);
     ~MainObject();
 	
-	enum OS{
-		BSD = 1,
-		MAC = 2,
-		LINUX = 3,
-		WINDOWS = 4,
-		UNKNOWN = 5,
-	};
 	static int runningOs();
 
 	bool debug_mode;

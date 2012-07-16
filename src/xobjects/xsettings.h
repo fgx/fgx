@@ -8,13 +8,6 @@ class XSettings : public QSettings
 Q_OBJECT
 public:
 
-	enum OS{
-		BSD = 1,
-		MAC = 2,
-		LINUX = 3,
-		WINDOWS = 4,
-		UNKNOWN = 5,
-	};
     explicit XSettings(QObject *parent = 0);
 
 	static bool dev_mode();
