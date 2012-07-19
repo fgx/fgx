@@ -1,11 +1,25 @@
-/*
- *  main.cpp
- *  FGx
- *
- *  Created by Yves Sablonier, Zurich
- *  (c) 2011 --- GPL2
- *
- */
+//             ____
+//       ,,-'''    `'''--.                  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//     ,'                 `.                FGx FlightGear Launcher
+//   ,'                     \               -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//  ,'                     / '              (c) 2010-2012
+// /                  ,---[  ||             Yves Sablonier, Pete Morgan
+// |             _,.--|     /  \            Geoff McLane
+// |         .-''     '   /'  ,',-._
+// |          '---...--'''_.']-'    `..     General Public Licence,
+// |                 _,.-:.-'          '-.  Version 2 (GNU GPLv2)
+//  `.____,,....--=::.--'             ,,'
+//           -\'''                 _,'      This program is free software
+//             `._               ,'        You can redistribute it
+//                `._         _,'       and/or modify it under the terms
+//                   ``------'      of the GNU General Public Licence
+//                                as published by the Free Software
+// Foundation. This program is distributed in the hope it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// ***********************************************************************
+
 
 #include <QApplication>
 #include <stdio.h>
@@ -49,7 +63,7 @@ int main( int argc, char* argv[])
 	QApplication::setOrganizationName("FGx");
 	QApplication::setOrganizationDomain("fgx.ch");
 	QApplication::setApplicationName("FGxFlightGearLauncher");
-	QApplication::setApplicationVersion("2.8.0rc1");
+	QApplication::setApplicationVersion("2.8.0rc2");
 	
 	//=====================================================
 	//== Add fonts to database and set default application font
@@ -87,9 +101,6 @@ int main( int argc, char* argv[])
 	//== Other Tabs
 	styles.append("QTabWidget::pane { background-image: url(:/artwork/background-gray-tabbar); border: 0px; padding-top: 10px; }");
 	styles.append("QTabBar { background-color: #b0b0b0 }");
-	//styles.append("QTabBar::tab::hover { background-color: #ffffff }");
-	//styles.append("QTabBar::tab:selected {  }");
-	//styles.append("QTabBar::tab {  padding: 6px; border-right: 5px solid #eeeeee }");
 
 
 	//== Launcher Tabs

@@ -3,7 +3,7 @@
  *  FGx
  *
  *  Created by Geoff R. McLane, France
- *  © 2011 --- GPL2
+ *  (c) 2011 --- GPL2
  *
  * GLOBAL application configuration
  * Must ONLY contain #defines

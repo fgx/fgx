@@ -1,4 +1,10 @@
-
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // airportsdata.cpp
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 #include <QFile>
 #include <QHash>
@@ -16,9 +22,6 @@
 #define USE_LOCAL_ZLIB
 #undef ADD_EXTRA_DEBUG
 
-//AirportsData::AirportsData()
-//{
-//}
 
 bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
 

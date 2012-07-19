@@ -3,7 +3,7 @@
    *  for fgx project
    *
    *  Created by Geoff R. Mclane, Paris
-   *  © 2011 GPL2 (or later)
+   *  (c) 2011 GPL2 (or later)
    *
    ******************************************************** */
 #ifndef FGX_GZLIB_H
