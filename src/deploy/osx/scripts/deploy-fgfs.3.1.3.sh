@@ -33,9 +33,8 @@ do
 	install_name_tool -change /opt/local/lib/libjpeg.8.dylib @executable_path/../Frameworks/libjpeg.8.dylib $f
 	
 	# link openrti
-	install_name_tool -change libRTI-NG.1.dylib @executable_path/../Frameworks/libRTI-NG.1.dylib
-	install_name_tool -change libFedTime.1.dylib @executable_path/../Frameworks/libFedTime.1.dylib
-	
+	install_name_tool -change libRTI-NG.1.dylib @executable_path/../Frameworks/libRTI-NG.1.dylib $f
+	install_name_tool -change libFedTime.1.dylib @executable_path/../Frameworks/libFedTime.1.dylib $f
 	
 	# Show result in log
 	otool -L $f
