@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILES="libRTI-NG.1.dylib libFedTime.1.dylib libOpenRTI"
+FILES="libRTI-NG.1.dylib libFedTime.1.dylib libOpenRTI.1.dylib"
 
 for f in $FILES
 
