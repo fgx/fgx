@@ -32,6 +32,12 @@ do
 	# link libjepeg (imageio/cocoa related)
 	install_name_tool -change /opt/local/lib/libjpeg.8.dylib @executable_path/../Frameworks/libjpeg.8.dylib $f
 	
+	# link svn
+	install_name_tool -change /usr/lib/libsvn_client-1.0.dylib @executable_path/../Frameworks/libsvn_client-1.0.dylib $f
+	install_name_tool -change /usr/lib/libsvn_subr-1.0.dylib @executable_path/../Frameworks/libsvn_subr-1.0.dylib $f
+	install_name_tool -change /usr/lib/libsvn_ra-1.0.dylib @executable_path/../Frameworks/libsvn_ra-1.0.dylib $f
+	install_name_tool -change /usr/lib/libsvn_wc-1.0.dylib @executable_path/../Frameworks/libsvn_wc-1.0.dylib $f
+	
 	# link openrti
 	install_name_tool -change libRTI-NG.1.dylib @executable_path/../Frameworks/libRTI-NG.1.dylib $f
 	install_name_tool -change libFedTime.1.dylib @executable_path/../Frameworks/libFedTime.1.dylib $f
