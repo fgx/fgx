@@ -51,36 +51,6 @@ Index: src/osg/Texture.cpp
      if (_useHardwareMipMapGeneration)
      {
          unsigned int contextID = state.getContextID();
-Index: src/osgPlugins/imageio/ReaderWriterImageIO.cpp
-===================================================================
---- src/osgPlugins/imageio/ReaderWriterImageIO.cpp	(revision 12982)
-+++ src/osgPlugins/imageio/ReaderWriterImageIO.cpp	(working copy)
-@@ -384,7 +384,7 @@
-     // by Tatsuhiro Nishioka (based on SDL's workaround on the similar issue)
-     // http://bugzilla.libsdl.org/show_bug.cgi?id=868
-     // 
--    if (bits_per_pixel > 8 && (bitmap_info & kCGBitmapAlphaInfoMask) == kCGImageAlphaPremultipliedFirst) {
-+    if (bits_per_pixel > 8) {
-         int i, j;
-         GLubyte *pixels = (GLubyte *)image_data;
-         for (i = the_height * the_width; i--; ) {
-@@ -401,10 +401,12 @@
-             // get corrupted on Preview.app ...
-             *value = ((*value) >> 24) | (((*value) << 8) & 0x00FF0000) | (((*value) >> 8) & 0x0000FF00) | ((*value) << 24);
- #endif
--            GLubyte alpha = pixels[3];
--            if (alpha) {
--                for (j = 0; j < 3; ++j) {
--                    pixels[j] = (pixels[j] * 255) / alpha;
-+            if ((bitmap_info & kCGBitmapAlphaInfoMask) == kCGImageAlphaPremultipliedFirst) {
-+                GLubyte alpha = pixels[3];
-+                if (alpha) {
-+                    for (j = 0; j < 3; ++j) {
-+                        pixels[j] = (pixels[j] * 255) / alpha;
-+                    }
-                 }
-             }
-             pixels += 4;
 Index: src/osgViewer/GraphicsWindowCocoa.mm
 ===================================================================
 --- src/osgViewer/GraphicsWindowCocoa.mm	(revision 12982)
