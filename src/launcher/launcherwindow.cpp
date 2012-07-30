@@ -93,11 +93,15 @@ LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
 
 	//** Position Tab
 	airportsWidget = new AirportsWidget(mainObject);
-	tabWidget->addTab(  airportsWidget, tr("Position"));
+	tabWidget->addTab(airportsWidget, tr("Position"));
 
 	//* Time / Weather Widget
 	timeWeatherWidget = new TimeWeatherWidget(mainObject);
 	tabWidget->addTab(timeWeatherWidget, tr("Time and Weather"));
+	
+	//* Rendering Widget
+	renderingWidget = new RenderingWidget(mainObject);
+	tabWidget->addTab(renderingWidget, tr("Rendering"));
 
 
 	//* Network Tab
