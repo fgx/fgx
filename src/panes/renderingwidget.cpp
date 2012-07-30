@@ -111,11 +111,14 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	
 	row++;
 	sliderVisibility = new QSlider(Qt::Horizontal);
-	sliderVisibility->setRange(0,90); // x 500
+	sliderVisibility->setRange(1,90); // x 500
 	sliderVisibility->setTickPosition(QSlider::TicksLeft);
 	sliderVisibility->setTickInterval(1);
-	sliderVisibility->setPageStep(1);
+	sliderVisibility->setPageStep(9);
 	grp3dClouds->addWidget(sliderVisibility, row, 1, 1, 1);
+	sliderLabelVisValue = new QLabel("0");
+	connect(sliderVisibility,SIGNAL(valueChanged(int)),this,SLOT(set_vis_value(int)));
+	grp3dClouds->addWidget(sliderLabelVisValue, row, 2, 1, 1);
 	
 	row++;
 	labelDensity = new QLabel("Density");
@@ -125,10 +128,15 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	sliderDensity = new QSlider(Qt::Horizontal);
 	sliderDensity->setRange(0,100); // : 100
 	sliderDensity->setTickPosition(QSlider::TicksLeft);
-	sliderDensity->setTickInterval(1);
+	sliderDensity->setTickInterval(10);
+	sliderVisibility->setPageStep(10);
 	grp3dClouds->addWidget(sliderDensity, row, 1, 1, 1);
+	sliderLabelDenValue = new QLabel("0");
+	sliderLabelDenValue->setFixedWidth(50);
+	connect(sliderDensity,SIGNAL(valueChanged(int)),this,SLOT(set_den_value(int)));
+	grp3dClouds->addWidget(sliderLabelDenValue, row, 2, 1, 1);
 	
-	//connect(grpAntiAliasing, SIGNAL(toggled(bool)), this, SLOT(set_anti_aliasing()));
+	connect(grp3dClouds, SIGNAL(toggled(bool)), this, SLOT(set_3dclouds_enabled()));
 	//connect(comboAntiAliasing, SIGNAL(currentIndexChanged(int)), this, SLOT(set_anti_aliasing_strength()));
 	
 
@@ -151,4 +159,25 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	{
 	emit setx("--prop:/sim/rendering/shaders/quality-level=", true, comboShaderQuality->currentText());
 	}
+
+	void RenderingWidget::set_3dclouds_enabled()
+	{
+	emit setx("--prop:/sim/rendering/shaders/clouds3d-enable=", true, "true";
+	emit setx("--prop:/sim/rendering/shaders/clouds3d-vis-range=", true, sliderLabelVisValue->currentText());
+	emit setx("--prop:/sim/rendering/shaders/clouds3d-density=", true, sliderLabelDenValue->currentText());
+	}
+
+	//================================================================
+	// Label helpers, put 3d clouds slider values to the labels
+
+	void RenderingWidget::set_vis_value(int value)
+	{
+	sliderLabelVisValue->setText(QString::number(value*500) );
+	}
+
+	void RenderingWidget::set_den_value(int value)
+	{
+	sliderLabelDenValue->setText(QString::number(value*0.01) );
+	}
+
 

@@ -20,6 +20,8 @@
 
 
 #include "xobjects/mainobject.h"
+#include "xwidgets/xgroupboxes.h"
+
 class MainObject;
 
 
@@ -40,8 +42,10 @@ public:
 	XGroupGBox *grp3dClouds;
 	QLabel *labelVisibility;
 	QSlider *sliderVisibility;
+	QLabel *sliderLabelVisValue;
 	QLabel *labelDensity;
 	QSlider *sliderDensity;
+	QLabel *sliderLabelDenValue;
 
 
 signals:
@@ -53,6 +57,9 @@ public slots:
 	void set_anti_aliasing_strength();
 	
 	void set_shader_quality();
+	
+	void set_vis_value(int value);
+	void set_den_value(int value);
 
 };
 
