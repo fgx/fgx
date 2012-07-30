@@ -30,26 +30,30 @@ public:
 	explicit RenderingWidget(MainObject *mOb, QWidget *parent = 0);
 
 	MainObject *mainObject;
+	
+	XGroupHBox *grpAntiAliasing;
+	QComboBox *comboAntiAliasing;
+	
+	XGroupHBox *grpShaderQuality;
+	QComboBox *comboShaderQuality;
+	
+	XGroupGBox *grp3dClouds;
+	QLabel *labelVisibility;
+	QSlider *sliderVisibility;
+	QLabel *labelDensity;
+	QSlider *sliderDensity;
 
-	//QMap<QString, QString> mpMapServers;
-
-	//QButtonGroup *buttonGroupTime;
-	//QButtonGroup *buttonGroupSeason;
-
-	//QButtonGroup *buttonGroupMetar;
-	//QPlainTextEdit *txtMetar;
-
-	//QString validate();
 
 signals:
-	//void setx(QString option, bool enabled, QString value);
+	void setx(QString option, bool enabled, QString value);
 
 public slots:
-	//void on_weather();
-	//void on_time_clicked();
-	//void on_season_clicked(int);
+	
+	void set_anti_aliasing();
+	void set_anti_aliasing_strength();
+	
+	void set_shader_quality();
 
-	//void on_upx(QString option, bool enabled, QString value);
 };
 
 #endif // RENDERINGWIDGET_H
