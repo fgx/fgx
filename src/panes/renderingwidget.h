@@ -58,8 +58,11 @@ public slots:
 	
 	void set_shader_quality();
 	
+	void set_3dclouds_enabled();
 	void set_vis_value(int value);
 	void set_den_value(int value);
+	
+	void on_upx(QString option, bool enabled, QString value);
 
 };
 
