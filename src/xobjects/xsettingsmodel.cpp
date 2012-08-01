@@ -693,6 +693,9 @@ QString XSettingsModel::get_fgfs_command_string()
 QStringList XSettingsModel::get_fgfs_env(){
 
 	QStringList args;
+	if (!mainObject->X->get_ena("extra_env")) {
+        return args;
+    }
 	QString extra = getx("extra_env");
 	if (extra.length() > 0) {
 		QStringList parts = extra.split("\n");
