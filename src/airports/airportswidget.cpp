@@ -607,6 +607,7 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 	QString airport_dir = model->item(srcIndex.row(), CA_DIR)->text();
 
 	emit setx("--airport=", true, airport_code);
+	mainObject->launcherWindow->on_upx("--airport=", true, airport_code); // Show airport in header
 
 
 	load_info_tree(airport_dir, airport_code);
@@ -1170,6 +1171,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 			emit setx("--lat=", false, item->text(CI_LAT));
 			emit setx("--lon=", false, item->text(CI_LON));
 			emit setx("--heading=", false, item->text(CI_HEADING));
+			mainObject->launcherWindow->on_upx("--runway=", true, item->text(CI_NODE)); // Show runway in header
 
 		}else{ // its a stand
 			emit set_ena("--runway=", false);
@@ -1177,6 +1179,7 @@ void AirportsWidget::on_airport_info_selection_changed()
 			emit setx("--lat=", false, item->text(CI_LAT));
 			emit setx("--lon=", false, item->text(CI_LON));
 			emit setx("--heading=", false, item->text(CI_HEADING));
+			mainObject->launcherWindow->on_upx("--parking-id=", true, item->text(CI_NODE)); // Show parking in header
 		}
 		mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
 								 item->text(CI_LAT), item->text(CI_LON),

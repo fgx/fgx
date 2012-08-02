@@ -409,7 +409,7 @@ void LauncherWindow::reset_profile()
     headerWidget->showMessage(message);
 	// Reload the aircraft and airport lists from this point since 2.6.0
 	// Comments?
-	mainObject->launcherWindow->coreSettingsWidget->reload_lists();
+	airportsWidget->on_reload_cache();
 }
 
 

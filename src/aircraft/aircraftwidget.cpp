@@ -344,16 +344,17 @@ void AircraftWidget::on_tree_selection_changed(){
 	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
 																	item->text(C_DIR),
 																	item->text(C_AERO));
+	outLog("Path to thumb: "+thumb_file);
 
 	if(QFile::exists(thumb_file)){
 		QPixmap aeroImage(thumb_file);
 		if(!aeroImage.isNull()){
-			outLog("on_tree_selection_changed: Loaded thumb "+thumb_file);
+			//outLog("on_tree_selection_changed: Loaded thumb "+thumb_file);
 			aeroImageLabel->setText("");
 			aeroImageLabel->setPixmap(aeroImage);
 
 		} else{
-			outLog("on_tree_selection_changed: NO thumb load "+thumb_file);
+			//outLog("on_tree_selection_changed: NO thumb load "+thumb_file);
 			aeroImageLabel->clear();
 			aeroImageLabel->setText("No Image");
 		}
