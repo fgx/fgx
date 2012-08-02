@@ -31,7 +31,7 @@ Q_OBJECT
 public:
 	//aero << directory << xml_file << description << fdm << author << file_path;
 	enum COLS{
-		C_DIR = 0,
+		C_DIR,
 		C_AERO,
 		C_RATING,
 		C_DESCRIPTION,
@@ -89,7 +89,6 @@ signals:
 
 public slots:
 	void load_tree();
-	void on_set_aircraft();
 	void on_select_path();
 	void on_custom_hangar_path();
 	void on_tree_selection_changed();

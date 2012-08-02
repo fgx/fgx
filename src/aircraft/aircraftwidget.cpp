@@ -15,7 +15,6 @@
 #include <QtCore/QStringList>
 #include <QtCore/QFile>
 
-
 #include <QtXmlPatterns/QXmlQuery>
 #include <QtXml/QDomDocument>
 
@@ -81,17 +80,6 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	treeTopBar->setContentsMargins(5,5,5,5);
 	treeTopBar->setSpacing(5);
 	treeLayout->addLayout(treeTopBar);
-
-	//groupUseAircraft = new QButtonGroup(this);
-	//groupUseAircraft->setExclusive(true);
-	//connect(groupUseAircraft, SIGNAL(buttonClicked(int)), this, SLOT(on_set_aircraft()) );
-
-	//= Use Default Selected
-	//QLabel *labelDefaultHangar = new QLabel();
-	//labelDefaultHangar->setText("Default Hangar");
-	//treeTopBar->addWidget(labelDefaultHangar);
-	//connect(checkBoxUseDefaultHangar, SIGNAL(clicked()), this, SLOT(on_set_default_hangar_path()) );
-
 
 	//= Use Custom Hangar (Aircraft Directory)
 	checkBoxUseCustomHangar = new QCheckBox("Use Custom Hangar (Custom aircraft directory):");
@@ -341,9 +329,10 @@ void AircraftWidget::on_tree_selection_changed(){
 	//buttonAeroPath->setDisabled(false);
 
 	//= Get the thumbnail image
-	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
-																	item->text(C_DIR),
-																	item->text(C_AERO));
+	QString thumb_file = QString("%1/%2/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
+																	//item->text(C_DIR),
+															        item->text(C_DIR));
+																	//item->text(C_AERO));
 	outLog("Path to thumb: "+thumb_file);
 
 	if(QFile::exists(thumb_file)){
@@ -536,12 +525,6 @@ void AircraftWidget::on_fuel_changed()
 
 }
 
-void AircraftWidget::on_set_aircraft()
-{	
-	//emit setx("custom_hangar_enabled",checkBoxUseCustomHangar->isChecked(),"");
-	//emit setx("--fg-aircraft=",checkBoxUseCustomHangar->isChecked(),txtAircraftPath->text());
-}
-
 
 
 //=====================================================
@@ -613,7 +596,6 @@ void AircraftWidget::on_select_path()
 #endif // #ifdef USE_ALTERNATE_GETFILE y/n
 	if(dirPath.length() > 0){
 		txtAircraftPath->setText(dirPath);
-		on_set_aircraft();
 	}
 	
 	on_custom_hangar_path();
