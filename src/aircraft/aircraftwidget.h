@@ -39,10 +39,10 @@ public:
 		C_AUTHOR,
 		C_FILE_PATH
 	};
-	enum VIEWS{
-		LIST_VIEW = 0,
-		FOLDER_VIEW = 1
-	};
+	/*enum VIEWS{
+		LIST_VIEW = 1,
+		FOLDER_VIEW = 0
+	};*/
 
 	explicit AircraftWidget(MainObject *mOb, QWidget *parent = 0);
 

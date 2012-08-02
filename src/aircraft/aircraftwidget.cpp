@@ -134,10 +134,10 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	statusBarTree->addPermanentWidget(labelAeroPath);
 
 	//== View nested Checkbox
-	checkViewNested = new QCheckBox();
+	/*checkViewNested = new QCheckBox();
 	checkViewNested->setText("View folders");
 	statusBarTree->addPermanentWidget(checkViewNested);
-	connect(checkViewNested, SIGNAL(clicked()), this, SLOT(load_tree()));
+	connect(checkViewNested, SIGNAL(clicked()), this, SLOT(load_tree()));*/
 
 	//== Reload aircrafts
 	/*QToolButton *actionReloadCacheDb = new QToolButton(this);
@@ -325,15 +325,15 @@ void AircraftWidget::on_tree_selection_changed(){
 	}
 
 	//qDebug() << item->text(C_DIR);
-	labelAeroPath->setText(mainObject->X->aircraft_path() + "/" + item->text(C_AERO));
+	labelAeroPath->setText(mainObject->X->aircraft_path() + item->text(C_DIR) + item->text(C_AERO));
 	//buttonAeroPath->setDisabled(false);
 
 	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
-																	//item->text(C_DIR),
-															        item->text(C_DIR));
-																	//item->text(C_AERO));
+																	item->text(C_DIR),
+																	item->text(C_AERO));
 	outLog("Path to thumb: "+thumb_file);
+	outLog("DIR: "+item->text(C_DIR));
 
 	if(QFile::exists(thumb_file)){
 		QPixmap aeroImage(thumb_file);
@@ -428,13 +428,13 @@ void AircraftWidget::load_tree(){
 
 	QTreeWidgetItem *parentItem = new QTreeWidgetItem();
 
-	int view = 0;
+	/*int view = 0;
 	if (checkViewNested->isChecked()) {
 		view = 1;
-	}
+	}*/
 
-	treeWidget->setColumnHidden(C_DIR, view == LIST_VIEW);
-	treeWidget->setRootIsDecorated(view == FOLDER_VIEW);
+	/*treeWidget->setColumnHidden(C_DIR, view == LIST_VIEW);*/
+	/*treeWidget->setRootIsDecorated(view == FOLDER_VIEW);*/
 
 	QFile dataFile(mainObject->data_file(("aircraft.txt")));
 	if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -451,9 +451,10 @@ void AircraftWidget::load_tree(){
 		/* The parent is invisible root if a list,
 			otherwise folder nodes are created
 		*/
-		if(view == LIST_VIEW){
+		/*if(view == LIST_VIEW){
 				parentItem = treeWidget->invisibleRootItem();
-		}else if(last_dir != cols.at(C_DIR)){
+		}else if(last_dir != cols.at(C_DIR)){*/
+		if(last_dir != cols.at(C_DIR)){
 				parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
 				parentItem->setText( C_DIR,cols.at(C_DIR));
 				parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
@@ -474,7 +475,8 @@ void AircraftWidget::load_tree(){
 		line = in.readLine();
 	}
 
-	treeWidget->sortByColumn(view == FOLDER_VIEW ? C_DIR : C_AERO, Qt::AscendingOrder);
+	/*treeWidget->sortByColumn(view == FOLDER_VIEW ? C_DIR : C_AERO, Qt::AscendingOrder);*/
+	treeWidget->sortByColumn(C_DIR, Qt::AscendingOrder);
 	treeWidget->setUpdatesEnabled(true);
 
 	select_node(mainObject->X->getx("--aircraft="));
