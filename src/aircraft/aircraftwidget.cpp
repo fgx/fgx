@@ -439,6 +439,7 @@ void AircraftWidget::load_tree(){
 	QTextStream in(&dataFile);
 	QString line = in.readLine();
 	QString last_dir("");
+	int countaircrafts = 0;
 	c = 0;
 	while(!line.isNull()){
 
@@ -451,12 +452,13 @@ void AircraftWidget::load_tree(){
 				parentItem = treeWidget->invisibleRootItem();
 		}else if(last_dir != cols.at(C_DIR)){*/
 		if(last_dir != cols.at(C_DIR)){
-				parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
-				parentItem->setText( C_DIR,cols.at(C_DIR));
-				parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
-				treeWidget->addTopLevelItem(parentItem);
-				treeWidget->setFirstItemColumnSpanned(parentItem, true);
-				last_dir = cols.at(C_DIR);
+			parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
+			parentItem->setText( C_DIR,cols.at(C_DIR));
+			parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
+			treeWidget->addTopLevelItem(parentItem);
+			treeWidget->setFirstItemColumnSpanned(parentItem, true);
+			last_dir = cols.at(C_DIR);
+			countaircrafts += 1;
 		}
 
 		XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
@@ -476,7 +478,7 @@ void AircraftWidget::load_tree(){
 	treeWidget->setUpdatesEnabled(true);
 
 	select_node(mainObject->X->getx("--aircraft="));
-	QString str = QString("%1 aircraft(s)").arg(c);
+	QString str = QString("%1 aircrafts").arg(countaircrafts)+QString(", %1 models").arg(c);
 	statusBarTree->showMessage(str);
 	outLog("*** FGx: AircraftWidget::load_tree: with " + str);
 }
