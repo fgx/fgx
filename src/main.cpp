@@ -63,7 +63,7 @@ int main( int argc, char* argv[])
 	QApplication::setOrganizationName("FGx");
 	QApplication::setOrganizationDomain("fgx.ch");
 	QApplication::setApplicationName("FGxFlightGearLauncher");
-	QApplication::setApplicationVersion("2.8.0rc3");
+	QApplication::setApplicationVersion("2.8.0rc4");
 	
 	//=====================================================
 	//== Add fonts to database and set default application font
