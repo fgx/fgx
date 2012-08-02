@@ -361,6 +361,7 @@ void AircraftWidget::on_tree_selection_changed(){
 		aeroImageLabel->setText("No Image");
 	}
 	emit setx("--aircraft=", true, selected_aircraft());
+	mainObject->launcherWindow->on_upx("--aircraft=", true, selected_aircraft()); // Show aircraft in header
 }
 
 //============================================

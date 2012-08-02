@@ -378,6 +378,8 @@ void LauncherWindow::load_profile()
         message = "Profile loaded from "+previous;
     }
     headerWidget->showMessage(message);
+	airportsWidget->on_reload_cache();
+	
 }
 
 //================================================================================
