@@ -324,16 +324,12 @@ void AircraftWidget::on_tree_selection_changed(){
 		return;
 	}
 
-	//qDebug() << item->text(C_DIR);
-	labelAeroPath->setText(mainObject->X->aircraft_path() + item->text(C_DIR) + item->text(C_AERO));
-	//buttonAeroPath->setDisabled(false);
+	// This is obsolete debugging output somehow
+	//labelAeroPath->setText(mainObject->X->aircraft_path() + item->parent->text(C_DIR) + item->text(C_AERO));
 
 	//= Get the thumbnail image
 	QString thumb_file = QString("%1/%2/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
-																	item->text(C_DIR),
-																	item->text(C_AERO));
-	outLog("Path to thumb: "+thumb_file);
-	outLog("DIR: "+item->text(C_DIR));
+																	item->parent()->text(C_DIR));
 
 	if(QFile::exists(thumb_file)){
 		QPixmap aeroImage(thumb_file);
