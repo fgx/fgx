@@ -89,7 +89,7 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	//====================================================
 	//== Deferred Rendering (Rembrandt)
 	
-	grpRembrandt = new XGroupGBox("Defered Rendering (Rembrandt)");
+	grpRembrandt = new XGroupGBox("Deferred Rendering (Rembrandt)");
 	leftLayout->addWidget(grpRembrandt);
 	grpRembrandt->setCheckable(true);
 	
