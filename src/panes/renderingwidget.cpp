@@ -29,7 +29,7 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
     setLayout(mainLayout);
     mainLayout->setSpacing(0);
 	int m = 10;
-	mainLayout->setContentsMargins(m,m,m,300);
+	mainLayout->setContentsMargins(m,m,m,m);
 	
 	
 	
@@ -69,8 +69,6 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	connect(grpAntiAliasing, SIGNAL(toggled(bool)), this, SLOT(set_anti_aliasing()));
 	connect(comboAntiAliasing, SIGNAL(currentIndexChanged(int)), this, SLOT(set_anti_aliasing_strength()));
 	
-	grpAntiAliasing->xLayout->addStretch(20);
-	
 	//====================================================
 	//== Shader Quality
 	
@@ -81,14 +79,50 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	comboShaderQuality->addItem("0", "0");
 	comboShaderQuality->addItem("1", "1");
 	comboShaderQuality->addItem("2", "2");
-	comboShaderQuality->addItem("3 (default)", "3");
+	comboShaderQuality->addItem("3", "3");
 	comboShaderQuality->addItem("4", "4");
 	comboShaderQuality->addItem("5", "5");
 	grpShaderQuality->addWidget(comboShaderQuality);
 	
 	connect(comboShaderQuality, SIGNAL(currentIndexChanged(int)), this, SLOT(set_shader_quality()));
-
-	grpShaderQuality->xLayout->addStretch(20);
+	
+	//====================================================
+	//== Deferred Rendering (Rembrandt)
+	
+	grpRembrandt = new XGroupGBox("Defered Rendering (Rembrandt)");
+	leftLayout->addWidget(grpRembrandt);
+	grpRembrandt->setCheckable(true);
+	
+	int rrow = 0;
+	labelMapsize = new QLabel("Graphics card memory consumption");
+	grpRembrandt->addWidget(labelMapsize, rrow, 1, 1, 1);
+	
+	rrow++;
+	comboShadowMapsize = new QComboBox();
+	//comboShadowMapsize->setFixedWidth(100);
+	comboShadowMapsize->addItem("1024", "1024");
+	comboShadowMapsize->addItem("2048", "2048");
+	comboShadowMapsize->addItem("4096", "4096");
+	comboShadowMapsize->addItem("8192", "8192");
+	grpRembrandt->addWidget(comboShadowMapsize, rrow, 1, 1, 1);
+	
+	rrow++;
+	labelShadowQuality = new QLabel("Rendering Quality");
+	grpRembrandt->addWidget(labelShadowQuality, rrow, 1, 1, 1);
+	
+	rrow++;
+	comboShadowQuality = new QComboBox();
+	//comboShadowQuality->setFixedWidth(100);
+	comboShadowQuality->addItem("1", "1");
+	comboShadowQuality->addItem("2", "2");
+	comboShadowQuality->addItem("3", "3");
+	comboShadowQuality->addItem("4", "4");
+	grpRembrandt->addWidget(comboShadowQuality, rrow, 1, 1, 1);
+	
+	connect(grpRembrandt, SIGNAL(toggled(bool)), this, SLOT(set_rembrandt()));
+	connect(comboShadowMapsize, SIGNAL(currentIndexChanged(int)), this, SLOT(set_rembrandt()));
+	connect(comboShadowQuality, SIGNAL(currentIndexChanged(int)), this, SLOT(set_rembrandt()));
+	
 	
 	//====================================================
 	//== Right Layout
@@ -148,6 +182,9 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
 	connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 	
+	leftLayout->addStretch(10);
+	rightLayout->addStretch(10);
+	
 
 }
 
@@ -167,6 +204,13 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	void RenderingWidget::set_shader_quality()
 	{
 	emit setx("--prop:/sim/rendering/shaders/quality-level-internal=", true, comboShaderQuality->currentText());
+	}
+	
+	void RenderingWidget::set_rembrandt()
+	{
+	emit setx("--prop:/sim/rendering/rembrandt/enabled=", grpRembrandt->isChecked(), "1");
+	emit setx("--prop:/sim/rendering/shadows/map-size=", grpRembrandt->isChecked(), comboShadowMapsize->currentText());
+	emit setx("--prop:/sim/rendering/shadows/num-cascades=", grpRembrandt->isChecked(), comboShadowQuality->currentText());
 	}
 
 	void RenderingWidget::set_3dclouds_enabled()
@@ -189,6 +233,15 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 		
 	}else if(option == "--prop:/sim/rendering/shaders/quality-level-internal="){
 		comboShaderQuality->setCurrentIndex(comboShaderQuality->findData(value));
+		
+	}else if(option == "--prop:/sim/rendering/rembrandt/enabled="){
+		grpRembrandt->setChecked(enabled);
+		
+	}else if(option == "--prop:/sim/rendering/shadows/map-size="){
+		comboShadowMapsize->setCurrentIndex(comboShadowMapsize->findData(value));
+		
+	}else if(option == "--prop:/sim/rendering/shadows/num-cascades="){
+		comboShadowQuality->setCurrentIndex(comboShadowQuality->findData(value));
 		
 	}else if(option == "--prop:/sim/rendering/clouds3d-enable="){
 		grp3dClouds->setChecked(enabled);

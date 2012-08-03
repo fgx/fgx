@@ -39,6 +39,12 @@ public:
 	XGroupHBox *grpShaderQuality;
 	QComboBox *comboShaderQuality;
 	
+	XGroupGBox *grpRembrandt;
+	QLabel *labelMapsize;
+	QLabel *labelShadowQuality;
+	QComboBox *comboShadowMapsize;
+	QComboBox *comboShadowQuality;
+	
 	XGroupGBox *grp3dClouds;
 	QLabel *labelVisibility;
 	QSlider *sliderVisibility;
@@ -57,6 +63,8 @@ public slots:
 	void set_anti_aliasing_strength();
 	
 	void set_shader_quality();
+	
+	void set_rembrandt();
 	
 	void set_3dclouds_enabled();
 	void set_vis_value(int value);

@@ -115,6 +115,10 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--prop:/sim/rendering/multi-sample-buffers=",true, "", "1",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/multi-samples=",true, "", "2",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/shaders/quality-level-internal=",true, "", "3",1,"","Rendering");
+	add_option( "--prop:/sim/rendering/rembrandt/enabled=",true, "", "0",1,"","Rendering");
+	add_option( "--prop:/sim/rendering/shadows/map-size=",true, "", "4096",1,"","Rendering");
+	add_option( "--prop:/sim/rendering/shadows/num-cascades=",true, "", "4",1,"","Rendering");
+	
 	add_option( "--prop:/sim/rendering/clouds3d-enable=",true, "", "",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/clouds3d-vis-range=",true, "", "10000",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/clouds3d-density=",true, "", "0.25",1,"","Rendering");
