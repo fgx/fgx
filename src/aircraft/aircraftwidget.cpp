@@ -474,6 +474,7 @@ void AircraftWidget::load_tree(){
 	}
 
 	/*treeWidget->sortByColumn(view == FOLDER_VIEW ? C_DIR : C_AERO, Qt::AscendingOrder);*/
+	treeWidget->sortByColumn(C_DIR, Qt::AscendingOrder);
 	treeWidget->sortByColumn(C_AERO, Qt::AscendingOrder);
 	treeWidget->setUpdatesEnabled(true);
 
