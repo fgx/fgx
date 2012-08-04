@@ -36,8 +36,9 @@ public:
 	XGroupHBox *grpAntiAliasing;
 	QComboBox *comboAntiAliasing;
 	
-	XGroupHBox *grpShaderQuality;
-	QComboBox *comboShaderQuality;
+	XGroupGBox *grpShaderQuality;
+	QSlider *sliderShaderQuality;
+	QLabel *sliderLabelShaderQuality;
 	
 	XGroupGBox *grpRembrandt;
 	QLabel *labelMapsize;
@@ -65,6 +66,9 @@ public:
 	QCheckBox *checkBoxUseNativeMenu;
 	
 	XGroupHBox *grpMaterials;
+	QComboBox *comboMaterials;
+	QLineEdit *pathMaterials;
+	QToolButton *buttonPathMaterials;
 
 
 signals:
@@ -75,7 +79,7 @@ public slots:
 	void set_anti_aliasing();
 	void set_anti_aliasing_strength();
 	
-	void set_shader_quality();
+	void set_shader_quality(int value);
 	
 	void set_rembrandt();
 	

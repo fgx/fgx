@@ -41,103 +41,21 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	//int mm = 10;
 	//middleLayout->setContentsMargins(mm,mm,mm,mm);
 	
+	
 	//====================================================
 	//== Left Layout
 	//====================================================
+	
 	QVBoxLayout *leftLayout = new QVBoxLayout();
-	middleLayout->addLayout(leftLayout, 1);
-	
-	//====================================================
-	//== Anti Aliasing
-	
-	grpAntiAliasing = new XGroupHBox("Anti-aliasing");
-	grpAntiAliasing->setCheckable(true);
-	leftLayout->addWidget(grpAntiAliasing);
-	
-	comboAntiAliasing = new QComboBox();
-	comboAntiAliasing->addItem("1", "1");
-	comboAntiAliasing->addItem("2", "2");
-	comboAntiAliasing->addItem("3", "3");
-	comboAntiAliasing->addItem("4 (default)", "4");
-	comboAntiAliasing->addItem("5", "5");
-	comboAntiAliasing->addItem("6", "6");
-	comboAntiAliasing->addItem("7", "7");
-	comboAntiAliasing->addItem("8", "8");
-	comboAntiAliasing->setEditable(true);
-	grpAntiAliasing->addWidget(comboAntiAliasing);
-	
-	connect(grpAntiAliasing, SIGNAL(toggled(bool)), this, SLOT(set_anti_aliasing()));
-	connect(comboAntiAliasing, SIGNAL(currentIndexChanged(int)), this, SLOT(set_anti_aliasing_strength()));
-	
-	//====================================================
-	//== Shader Quality
-	
-	grpShaderQuality = new XGroupHBox("Shader Quality Level");
-	leftLayout->addWidget(grpShaderQuality);
-	
-	comboShaderQuality = new QComboBox();
-	comboShaderQuality->addItem("0", "0");
-	comboShaderQuality->addItem("1", "1");
-	comboShaderQuality->addItem("2", "2");
-	comboShaderQuality->addItem("3", "3");
-	comboShaderQuality->addItem("4", "4");
-	comboShaderQuality->addItem("5", "5");
-	grpShaderQuality->addWidget(comboShaderQuality);
-	
-	connect(comboShaderQuality, SIGNAL(currentIndexChanged(int)), this, SLOT(set_shader_quality()));
-	
-	//====================================================
-	//== Deferred Rendering (Rembrandt)
-	
-	grpRembrandt = new XGroupGBox("Deferred Rendering (Rembrandt)");
-	leftLayout->addWidget(grpRembrandt);
-	grpRembrandt->setCheckable(true);
-	
-	int rrow = 0;
-	labelMapsize = new QLabel("Graphics card memory consumption");
-	grpRembrandt->addWidget(labelMapsize, rrow, 1, 1, 1);
-	
-	rrow++;
-	comboShadowMapsize = new QComboBox();
-	//comboShadowMapsize->setFixedWidth(100);
-	comboShadowMapsize->addItem("1024", "1024");
-	comboShadowMapsize->addItem("2048", "2048");
-	comboShadowMapsize->addItem("4096", "4096");
-	comboShadowMapsize->addItem("8192", "8192");
-	grpRembrandt->addWidget(comboShadowMapsize, rrow, 1, 1, 1);
-	
-	rrow++;
-	labelShadowQuality = new QLabel("Rendering Quality");
-	grpRembrandt->addWidget(labelShadowQuality, rrow, 1, 1, 1);
-	
-	rrow++;
-	comboShadowQuality = new QComboBox();
-	//comboShadowQuality->setFixedWidth(100);
-	comboShadowQuality->addItem("1", "1");
-	comboShadowQuality->addItem("2", "2");
-	comboShadowQuality->addItem("3", "3");
-	comboShadowQuality->addItem("4", "4");
-	grpRembrandt->addWidget(comboShadowQuality, rrow, 1, 1, 1);
-	
-	connect(grpRembrandt, SIGNAL(toggled(bool)), this, SLOT(set_rembrandt()));
-	connect(comboShadowMapsize, SIGNAL(currentIndexChanged(int)), this, SLOT(set_rembrandt()));
-	connect(comboShadowQuality, SIGNAL(currentIndexChanged(int)), this, SLOT(set_rembrandt()));
-	
-	
-	//====================================================
-	//== Right Layout
-	//====================================================
-	
-	QVBoxLayout *rightLayout = new QVBoxLayout();
-	rightLayout->setSpacing(10);
-	middleLayout->addLayout(rightLayout, 2);
+	leftLayout->setSpacing(10);
+	middleLayout->addLayout(leftLayout, 2);
 	
 	//==================================================================
 	//= Screen Options
 	
 	QHBoxLayout *screenLayout = new QHBoxLayout();
 	screenLayout->setSpacing(10);
-	rightLayout->addLayout(screenLayout);
+	leftLayout->addLayout(screenLayout);
 	
 	XGroupVBox *grpBoxScreen = new XGroupVBox(tr("Screen Options"));
 	screenLayout->addWidget(grpBoxScreen);
@@ -197,26 +115,77 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	connect(checkBoxDisableSplashScreen, SIGNAL(clicked()), this, SLOT(on_checkbox_splash_screen()));
 	checkBoxDisableSplashScreen->setWhatsThis(tr("<b>Disable Splash Screen</b><br><br>Disables FlightGear startup screen."));
 	
-	//= Disable Splash
-	checkBoxUseNativeMenu = new QCheckBox(tr("Use Native Menubar"));
+	//= Native menubar switch osx
+	checkBoxUseNativeMenu = new QCheckBox(tr("Use native menubar (OSX only)"));
 	grpBoxScreen->addWidget(checkBoxUseNativeMenu);
 	connect(checkBoxUseNativeMenu, SIGNAL(clicked()), this, SLOT(on_checkbox_native_menubar()));
 	checkBoxUseNativeMenu->setWhatsThis(tr("<b>Use native menu</b><br><br>Using native menubar in OSX instead of in-window one."));
 	
+	// switch off for other os
+	if(MainObject::runningOs() != OS_MAC){
+		checkBoxUseNativeMenu->setEnabled(false);
+	}
+	
+	QVBoxLayout *screenMatLayout = new QVBoxLayout();
+	screenMatLayout->setSpacing(10);
+	screenLayout->addLayout(screenMatLayout);
+	
 	//==================================================================
 	//= Materials File
 	XGroupVBox *grpMaterials = new XGroupVBox(tr("Materials"));
-	screenLayout->addWidget(grpMaterials);
+	screenMatLayout->addWidget(grpMaterials);
 	grpMaterials->setWhatsThis(tr("<b>Materials</b><br><br>Choose a materials file."));
+	
+	comboMaterials = new QComboBox();
+	comboMaterials->addItem("default", "default");
+	comboMaterials->addItem("regions", "regions");
+	comboMaterials->addItem("dds", "dds");
+	
+	pathMaterials = new QLineEdit("");
+	pathMaterials->setFixedSize(QSize(240,20));
+	buttonPathMaterials = new QToolButton();
+	buttonPathMaterials->setFixedSize(20,20);
+	buttonPathMaterials->setIcon(QIcon(":/icon/path"));
+	
+	QHBoxLayout *materialsPathBox = new QHBoxLayout();
+	materialsPathBox->addWidget(pathMaterials);
+	materialsPathBox->addWidget(buttonPathMaterials);
+	
+	grpMaterials->addWidget(comboMaterials);
+	grpMaterials->addLayout(materialsPathBox);
+	
+	//====================================================
+	//== Shader Quality
+	
+	grpShaderQuality = new XGroupGBox("Shader Quality Level");
+	screenMatLayout->addWidget(grpShaderQuality);
+	
+	int row = 0;
+	
+	row++;
+	sliderShaderQuality = new QSlider(Qt::Horizontal);
+	sliderShaderQuality->setRange(0,5);
+	sliderShaderQuality->setTickPosition(QSlider::TicksLeft);
+	sliderShaderQuality->setTickInterval(1);
+	sliderShaderQuality->setPageStep(6);
+	sliderLabelShaderQuality = new QLabel("0");
+	sliderLabelShaderQuality->setFixedWidth(10);
+	sliderLabelShaderQuality->setAlignment(Qt::AlignRight);
+	int sliderShaderQuality = mainObject->X->getx("--prop:/sim/rendering/shaders/quality-level-internal=", true).toInt();
+	sliderShaderQuality->setValue(sliderShaderQuality);
+	connect(sliderShaderQuality,SIGNAL(valueChanged(int)),this,SLOT(set_shader_quality(int)));
+	grpShaderQuality->addWidget(sliderShaderQuality, row, 1, 1, 1);
+	grpShaderQuality->addWidget(sliderLabelShaderQuality, row, 2, 1, 1);
+	
 	
 	//====================================================
 	//== 3d Clouds
 	
 	grp3dClouds = new XGroupGBox("3d Clouds");
 	grp3dClouds->setCheckable(true);
-	rightLayout->addWidget(grp3dClouds);
+	leftLayout->addWidget(grp3dClouds);
 	
-	int row = 0;
+	row = 0;
 	labelVisibility = new QLabel("Visibility (meters)");
 	grp3dClouds->addWidget(labelVisibility, row, 1, 1, 1);
 	
@@ -255,8 +224,71 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	connect(grp3dClouds, SIGNAL(toggled(bool)), this, SLOT(set_3dclouds_enabled()));
 	
 	
+	//====================================================
+	//== Right Layout
+	//====================================================
+	QVBoxLayout *rightLayout = new QVBoxLayout();
+	middleLayout->addLayout(rightLayout, 1);
+	
+	//====================================================
+	//== Anti Aliasing
+	
+	grpAntiAliasing = new XGroupHBox("Anti-aliasing");
+	grpAntiAliasing->setCheckable(true);
+	rightLayout->addWidget(grpAntiAliasing);
+	
+	comboAntiAliasing = new QComboBox();
+	comboAntiAliasing->addItem("1", "1");
+	comboAntiAliasing->addItem("2", "2");
+	comboAntiAliasing->addItem("3", "3");
+	comboAntiAliasing->addItem("4", "4");
+	comboAntiAliasing->addItem("5", "5");
+	comboAntiAliasing->addItem("6", "6");
+	comboAntiAliasing->addItem("7", "7");
+	comboAntiAliasing->addItem("8", "8");
+	comboAntiAliasing->setEditable(true);
+	grpAntiAliasing->addWidget(comboAntiAliasing);
+	
+	connect(grpAntiAliasing, SIGNAL(toggled(bool)), this, SLOT(set_anti_aliasing()));
+	connect(comboAntiAliasing, SIGNAL(currentIndexChanged(int)), this, SLOT(set_anti_aliasing_strength()));
 	
 	
+	//====================================================
+	//== Deferred Rendering (Rembrandt)
+	
+	grpRembrandt = new XGroupGBox("Deferred Rendering (Rembrandt)");
+	rightLayout->addWidget(grpRembrandt);
+	grpRembrandt->setCheckable(true);
+	
+	int rrow = 0;
+	labelMapsize = new QLabel("Graphics card memory consumption");
+	grpRembrandt->addWidget(labelMapsize, rrow, 1, 1, 1);
+	
+	rrow++;
+	comboShadowMapsize = new QComboBox();
+	//comboShadowMapsize->setFixedWidth(100);
+	comboShadowMapsize->addItem("1024", "1024");
+	comboShadowMapsize->addItem("2048", "2048");
+	comboShadowMapsize->addItem("4096", "4096");
+	comboShadowMapsize->addItem("8192", "8192");
+	grpRembrandt->addWidget(comboShadowMapsize, rrow, 1, 1, 1);
+	
+	rrow++;
+	labelShadowQuality = new QLabel("Rendering Quality");
+	grpRembrandt->addWidget(labelShadowQuality, rrow, 1, 1, 1);
+	
+	rrow++;
+	comboShadowQuality = new QComboBox();
+	//comboShadowQuality->setFixedWidth(100);
+	comboShadowQuality->addItem("1", "1");
+	comboShadowQuality->addItem("2", "2");
+	comboShadowQuality->addItem("3", "3");
+	comboShadowQuality->addItem("4", "4");
+	grpRembrandt->addWidget(comboShadowQuality, rrow, 1, 1, 1);
+	
+	connect(grpRembrandt, SIGNAL(toggled(bool)), this, SLOT(set_rembrandt()));
+	connect(comboShadowMapsize, SIGNAL(currentIndexChanged(int)), this, SLOT(set_rembrandt()));
+	connect(comboShadowQuality, SIGNAL(currentIndexChanged(int)), this, SLOT(set_rembrandt()));
 	
 	
 	//== Connect Settings
@@ -282,10 +314,10 @@ void RenderingWidget::set_anti_aliasing_strength()
 	emit setx("--prop:/sim/rendering/multi-samples=", grpAntiAliasing->isChecked(), comboAntiAliasing->currentText());
 }
 
-void RenderingWidget::set_shader_quality()
-{
-	emit setx("--prop:/sim/rendering/shaders/quality-level-internal=", true, comboShaderQuality->currentText());
-}
+//void RenderingWidget::set_shader_quality()
+//{
+//	emit setx("--prop:/sim/rendering/shaders/quality-level-internal=", true, sliderLabelShaderQuality->text());
+//}
 	
 void RenderingWidget::set_rembrandt()
 {
@@ -319,7 +351,7 @@ void RenderingWidget::on_upx( QString option, bool enabled, QString value)
 		comboAntiAliasing->setCurrentIndex(comboAntiAliasing->findData(value));
 		
 	}else if(option == "--prop:/sim/rendering/shaders/quality-level-internal="){
-		comboShaderQuality->setCurrentIndex(comboShaderQuality->findData(value));
+		sliderLabelShaderQuality->setText(value);
 		
 	}else if(option == "--prop:/sim/rendering/rembrandt/enabled="){
 		grpRembrandt->setChecked(enabled);
@@ -374,6 +406,15 @@ void RenderingWidget::set_vis_value(int value)
 	{
 	sliderLabelDenValue->setText(QString::number(value*0.01) );
 	emit setx("--prop:/sim/rendering/clouds3d-density=", true, sliderLabelDenValue->text());
+}
+
+//================================================================
+// Shader Quality label helpers, put shader quality slider values to the labels
+
+void RenderingWidget::set_shader_quality(int value)
+{
+	sliderLabelShaderQuality->setText(QString::number(value));
+	emit setx("--prop:/sim/rendering/shaders/quality-level-internal=", true, sliderLabelShaderQuality->text());
 }
 
 //=====================================
