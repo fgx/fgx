@@ -171,8 +171,8 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	sliderLabelShaderQuality = new QLabel("0");
 	sliderLabelShaderQuality->setFixedWidth(10);
 	sliderLabelShaderQuality->setAlignment(Qt::AlignRight);
-	int sliderShaderQuality = mainObject->X->getx("--prop:/sim/rendering/shaders/quality-level-internal=", true).toInt();
-	sliderShaderQuality->setValue(sliderShaderQuality);
+	int sliderShaderQualityPosition = mainObject->X->getx("--prop:/sim/rendering/shaders/quality-level-internal=", true).toInt();
+	sliderShaderQuality->setValue(sliderShaderQualityPosition);
 	connect(sliderShaderQuality,SIGNAL(valueChanged(int)),this,SLOT(set_shader_quality(int)));
 	grpShaderQuality->addWidget(sliderShaderQuality, row, 1, 1, 1);
 	grpShaderQuality->addWidget(sliderLabelShaderQuality, row, 2, 1, 1);
@@ -313,11 +313,6 @@ void RenderingWidget::set_anti_aliasing_strength()
 {
 	emit setx("--prop:/sim/rendering/multi-samples=", grpAntiAliasing->isChecked(), comboAntiAliasing->currentText());
 }
-
-//void RenderingWidget::set_shader_quality()
-//{
-//	emit setx("--prop:/sim/rendering/shaders/quality-level-internal=", true, sliderLabelShaderQuality->text());
-//}
 	
 void RenderingWidget::set_rembrandt()
 {
@@ -352,6 +347,8 @@ void RenderingWidget::on_upx( QString option, bool enabled, QString value)
 		
 	}else if(option == "--prop:/sim/rendering/shaders/quality-level-internal="){
 		sliderLabelShaderQuality->setText(value);
+		int sliderShaderQualityPosition = mainObject->X->getx("--prop:/sim/rendering/shaders/quality-level-internal=", true).toInt();
+		sliderShaderQuality->setValue(sliderShaderQualityPosition);
 		
 	}else if(option == "--prop:/sim/rendering/rembrandt/enabled="){
 		grpRembrandt->setChecked(enabled);
