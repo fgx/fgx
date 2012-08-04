@@ -52,6 +52,19 @@ public:
 	QLabel *labelDensity;
 	QSlider *sliderDensity;
 	QLabel *sliderLabelDenValue;
+	
+	XGroupHBox *grpBoxScreen;
+	QComboBox *comboScreenSize;
+	QCheckBox *checkBoxDisableSplashScreen;
+	QCheckBox *checkBoxFullScreenStartup;
+	QHBoxLayout *screenSizeBox;
+	QLineEdit *lineEditScreenSizeW;
+	QLineEdit *lineEditScreenSizeH;
+	QLabel *lineEditScreenSizeWLabel;
+	QLabel *lineEditScreenSizeHLabel;
+	QCheckBox *checkBoxUseNativeMenu;
+	
+	XGroupHBox *grpMaterials;
 
 
 signals:
@@ -69,6 +82,12 @@ public slots:
 	void set_3dclouds_enabled();
 	void set_vis_value(int value);
 	void set_den_value(int value);
+	
+	void on_screensize();
+	void on_fullscreen_changed();
+	void on_screensize_changed(QString);
+	void on_checkbox_splash_screen();
+	void on_checkbox_native_menubar();
 	
 	void on_upx(QString option, bool enabled, QString value);
 

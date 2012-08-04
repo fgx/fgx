@@ -87,66 +87,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpCallsign->setWhatsThis(tr("<b>Your Callsign</b><br>Edit your callsign (max. 7 letters). This will be your uniqe callsign \
 								 used by FlightGear. For local offline flight or in multiplayer mode."));
 
-
-	//==================================================================
-	//= Screen Options
-	XGroupVBox *grpBoxScreen = new XGroupVBox(tr("Screen Options"));
-	layoutLeft->addWidget(grpBoxScreen);
-	grpBoxScreen->setWhatsThis(tr("<b>Screen Options</b><br><br>Set prefered size for the FlightGear window."));
-
-	//= Initial Size
-	grpBoxScreen->addWidget(new QLabel("Initial Screen Size"));
-	comboScreenSize = new QComboBox();
-	comboScreenSize->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-	comboScreenSize->addItem("800 x 600 (4:3)", "800x600");
-	comboScreenSize->addItem("1024 x 768 (4:3)", "1024x768");
-	comboScreenSize->addItem("1280 x 720 (16:9)", "1280x720");
-	comboScreenSize->addItem("1280 x 800 (16:10)", "1280x800");
-	comboScreenSize->addItem("1280 x 960 (4:3)", "1280x960");
-	comboScreenSize->addItem("1280 x 1024 (5:4)", "1280x1024");
-	comboScreenSize->addItem("1366 x 768 (16:9)", "1366x768");
-	comboScreenSize->addItem("1440 x 900 (16:10)", "1440x900");
-	comboScreenSize->addItem("1600 x 900 (16:9)", "1600x900");
-	comboScreenSize->addItem("1680 x 1050 (16:10)", "1680x1050");
-	comboScreenSize->addItem("1920 x 1200 (16:10)", "1920x1200");
-	grpBoxScreen->addWidget(comboScreenSize);
-	connect(comboScreenSize, SIGNAL(currentIndexChanged(int)),
-			this, SLOT(on_screensize())
-	);
-	
-	// set screen size manually, set input mask to 4 digits and numbers only
-	QHBoxLayout *screenSizeBox = new QHBoxLayout();
-	lineEditScreenSizeWLabel = new QLabel("Width: ");
-	lineEditScreenSizeW = new QLineEdit(this);
-	lineEditScreenSizeW->setText("");
-	lineEditScreenSizeW->setMaxLength(4);
-	lineEditScreenSizeW->setInputMask("9999");
-	connect(lineEditScreenSizeW, SIGNAL(textChanged(QString)), this, SLOT(on_screensize_changed(QString)) );
-	
-	lineEditScreenSizeHLabel = new QLabel("Height: ");
-	lineEditScreenSizeH = new QLineEdit(this);
-	lineEditScreenSizeH->setText("");
-	lineEditScreenSizeH->setMaxLength(4);
-	lineEditScreenSizeH->setInputMask("9999");
-	connect(lineEditScreenSizeH, SIGNAL(textChanged(QString)), this, SLOT(on_screensize_changed(QString)) );
-	
-	screenSizeBox->addWidget(lineEditScreenSizeWLabel, 1);
-	screenSizeBox->addWidget(lineEditScreenSizeW, 1);
-	screenSizeBox->addWidget(lineEditScreenSizeHLabel, 1);
-	screenSizeBox->addWidget(lineEditScreenSizeH, 1);
-	grpBoxScreen->addLayout(screenSizeBox);
-	
-	//= Full Screen
-	checkBoxFullScreenStartup = new QCheckBox(tr("Fullscreen mode"));
-	grpBoxScreen->addWidget(checkBoxFullScreenStartup);
-	checkBoxFullScreenStartup->setWhatsThis(tr("<b>Full Screen</b><br><br>Will start FlightGear in Full Screen Mode (ESC to cancel mode)."));
-	connect(checkBoxFullScreenStartup, SIGNAL(clicked()), this, SLOT(on_fullscreen_changed()) );
-
-	//= Disable Splash
-	checkBoxDisableSplashScreen = new QCheckBox(tr("Disable Splash Screen"));
-	grpBoxScreen->addWidget(checkBoxDisableSplashScreen);
-	connect(checkBoxDisableSplashScreen, SIGNAL(clicked()), this, SLOT(on_checkbox_splash_screen()));
-	checkBoxDisableSplashScreen->setWhatsThis(tr("<b>Disable Splash Screen</b><br><br>Disables FlightGear startup screen."));
 	
 	layoutLeft->addStretch(10);
 	
@@ -495,46 +435,6 @@ void CoreSettingsWidget::on_callsign_changed(QString txt)
 
 
 //=====================================
-// ScreenSize combobox changed
-void CoreSettingsWidget::on_screensize()
-{	
-	QString value(""), valueLeft(""), valueRight("");
-	value = comboScreenSize->itemData(comboScreenSize->currentIndex()).toString();
-	valueLeft = value.section('x', 0, 0);
-	valueRight = value.section('x', 1, 1);
-	lineEditScreenSizeW->setText(valueLeft);
-	lineEditScreenSizeH->setText(valueRight);
-}
-
-//=====================================
-// ScreenSize changed
-void CoreSettingsWidget::on_screensize_changed(QString)
-{
-	emit setx( "--geometry=",
-				true,
-				lineEditScreenSizeW->text().append("x").append(lineEditScreenSizeH->text()));
-	
-	//emit setx( "--enable-fullscreen", checkBoxFullScreenStartup->isChecked(), "");
-}
-
-//=====================================
-// FullScreen changed
-void CoreSettingsWidget::on_fullscreen_changed()
-{	
-	emit setx( "--enable-fullscreen", checkBoxFullScreenStartup->isChecked(), "");
-}
-
-
-//=====================================
-// SplashScreen Changed
-void CoreSettingsWidget::on_checkbox_splash_screen()
-{
-	emit setx("--disable-splash-screen", checkBoxDisableSplashScreen->isChecked(), "");
-}
-
-
-
-//=====================================
 // Show Mp Map
 void CoreSettingsWidget::on_show_mp_map(){
 	comboMpMapServer->setEnabled(checkBoxShowMpMap->isChecked());
@@ -646,20 +546,6 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 	
 	if(option == "--callsign="){
 		txtCallSign->setText(value);
-
-	}else if(option == "--full-screen"){
-		checkBoxFullScreenStartup->setChecked(enabled);
-		comboScreenSize->setDisabled(enabled);
-		
-	}else if(option == "--geometry="){
-		comboScreenSize->setCurrentIndex(comboScreenSize->findData(value));
-		valueLeft = value.section('x', 0, 0);
-		valueRight = value.section('x', 1, 1);
-		lineEditScreenSizeW->setText(valueLeft);
-		lineEditScreenSizeH->setText(valueRight);
-
-	}else if(option == "--disable-splash-screen"){
-		checkBoxDisableSplashScreen->setChecked(enabled);
 
 	}else if(option == "show_mpmap"){
 		checkBoxShowMpMap->setChecked(enabled);

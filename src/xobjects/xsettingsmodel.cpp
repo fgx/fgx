@@ -84,18 +84,9 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
     //==
 
-
 	add_option( "show_mpmap", false, "", "",10,"Follow in MpMap","Map");
 
-
 	add_option( "--enable-auto-coordination",false, "", "",10,"Enabled Rudder and Airelon","Control");
-
-
-	//== Screen
-	add_option("--geometry=", false, "", "", 1, "Screen Size","");
-	add_option( "--enable-fullscreen",false, "", "", 1 ,"Enable Full Screen at Startup","Startup");
-	add_option( "--disable-splash-screen", false, "", "", 1 ,"Enable Splash Screen at Startup","Startup");
-
 
 	add_option( "--callsign=", true,"CALLSIG", "", 1 ,"Your Callsign","Core");
 
@@ -122,6 +113,12 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--prop:/sim/rendering/clouds3d-enable=",true, "", "",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/clouds3d-vis-range=",true, "", "10000",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/clouds3d-density=",true, "", "0.25",1,"","Rendering");
+	
+	add_option("--geometry=", false, "", "", 1, "Screen Size","");
+	add_option( "--enable-fullscreen",false, "", "", 1 ,"Enable Full Screen at Startup","Startup");
+	add_option( "--disable-splash-screen", false, "", "", 1 ,"Enable Splash Screen at Startup","Startup");
+	add_option( "--prop:/sim/menubar/native=",false, "", "", 1, "OSX switch for native/pui menubar", "Rendering"); 
+	
 
 
 	//= MultiPlayer

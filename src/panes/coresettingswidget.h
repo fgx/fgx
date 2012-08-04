@@ -113,11 +113,6 @@ public slots:
 
 	void on_callsign_changed(QString);
 
-	void on_screensize();
-	void on_fullscreen_changed();
-	void on_screensize_changed(QString);
-	void on_checkbox_splash_screen();
-
 	void on_show_mp_map();
 	
 	void on_fgfs_path(QString);
