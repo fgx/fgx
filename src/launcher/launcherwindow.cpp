@@ -378,7 +378,7 @@ void LauncherWindow::load_profile()
         message = "Profile loaded from "+previous;
     }
     headerWidget->showMessage(message);
-	airportsWidget->on_reload_cache();
+	reset_profile(); // resets the profile, gives emitting back, reload cache
 	
 }
 
@@ -407,9 +407,7 @@ void LauncherWindow::reset_profile()
     QString previous = mainObject->X->getLastUsed();
 	mainObject->X->load_last_profile(previous);
     headerWidget->showMessage(message);
-	// Reload the aircraft and airport lists from this point since 2.6.0
-	// Comments?
-	airportsWidget->on_reload_cache();
+	airportsWidget->on_reload_cache(); // Reload the aircraft and airport lists
 }
 
 
