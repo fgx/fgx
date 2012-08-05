@@ -134,22 +134,23 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	//= Materials File
 	XGroupVBox *grpMaterials = new XGroupVBox(tr("Materials"));
 	screenMatLayout->addWidget(grpMaterials);
-	grpMaterials->setWhatsThis(tr("<b>Materials</b><br><br>Choose a materials file."));
+	grpMaterials->setWhatsThis(tr("<b>Materials</b><br><br>Choose a materials file when you want \
+								  to switch to another texture set."));
 	
 	comboMaterials = new QComboBox();
 	comboMaterials->addItem("default", "default");
 	comboMaterials->addItem("regions", "regions");
 	comboMaterials->addItem("dds", "dds");
+	comboMaterials->addItem("custom", "custom");
+	connect(comboMaterials, SIGNAL(currentIndexChanged(int)), this, SLOT(set_materials()));
 	
 	pathMaterials = new QLineEdit("");
 	pathMaterials->setFixedSize(QSize(240,20));
-	buttonPathMaterials = new QToolButton();
-	buttonPathMaterials->setFixedSize(20,20);
-	buttonPathMaterials->setIcon(QIcon(":/icon/path"));
+	pathMaterials->setDisabled(true);
+	connect(pathMaterials, SIGNAL(textChanged(QString)), this, SLOT(set_custom_materials(QString)) );
 	
 	QHBoxLayout *materialsPathBox = new QHBoxLayout();
 	materialsPathBox->addWidget(pathMaterials);
-	materialsPathBox->addWidget(buttonPathMaterials);
 	
 	grpMaterials->addWidget(comboMaterials);
 	grpMaterials->addLayout(materialsPathBox);
@@ -298,6 +299,8 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	leftLayout->addStretch(20);
 	rightLayout->addStretch(20);
 	
+	set_materials();
+	
 
 }
 
@@ -385,6 +388,9 @@ void RenderingWidget::on_upx( QString option, bool enabled, QString value)
 	}else if(option == "--prop:/sim/menubar/native="){
 		checkBoxUseNativeMenu->setChecked(enabled);
 		
+	}else if(option == "--materials-file="){
+		checkBoxUseNativeMenu->setChecked(enabled);
+		
 	}
 }
 
@@ -452,4 +458,34 @@ void RenderingWidget::on_checkbox_splash_screen()
 	emit setx("--disable-splash-screen", checkBoxDisableSplashScreen->isChecked(), "");
 }
 
+//================================================================
+// Set Materials file
+void RenderingWidget::set_materials()
+{
+	QString value = comboMaterials->itemData(comboMaterials->currentIndex()).toString();
+	if (value == "default") {
+		pathMaterials->setDisabled(true);
+		pathMaterials->setText("default/materials.xml");
+		emit setx("--materials-file=", true, pathMaterials->text());
+
+	}if (value == "regions") {
+		pathMaterials->setDisabled(true);
+		pathMaterials->setText("regions/materials.xml");
+		emit setx("--materials-file=", true, pathMaterials->text());
+
+	}if (value == "dds") {
+		pathMaterials->setDisabled(true);
+		pathMaterials->setText("dds/materials.xml");
+		emit setx("--materials-file=", true, pathMaterials->text());
+
+	}if (value == "custom") {
+		pathMaterials->setDisabled(false);
+		emit setx("--materials-file=", true, pathMaterials->text());
+	}
+}
+
+void RenderingWidget::set_custom_materials(QString path)
+{
+	emit setx("--materials-file=", true, path);
+}
 

@@ -110,6 +110,8 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--prop:/sim/rendering/shadows/map-size=",true, "", "4096",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/shadows/num-cascades=",true, "", "4",1,"","Rendering");
 	
+	add_option( "--materials-file=",false, "", "", 1, "", "Rendering");
+	
 	add_option( "--prop:/sim/rendering/clouds3d-enable=",true, "", "",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/clouds3d-vis-range=",true, "", "10000",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/clouds3d-density=",true, "", "0.25",1,"","Rendering");
