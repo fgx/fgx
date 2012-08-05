@@ -59,7 +59,7 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	
 	XGroupVBox *grpBoxScreen = new XGroupVBox(tr("Screen Options"));
 	screenLayout->addWidget(grpBoxScreen);
-	grpBoxScreen->setWhatsThis(tr("<b>Screen Options</b><br><br>Set prefered size for the FlightGear window."));
+	grpBoxScreen->setWhatsThis(tr("<b>Screen Options</b><br><br>Set preferred size for the FlightGear window."));
 	
 	//= Initial Size
 	grpBoxScreen->addWidget(new QLabel("Initial Screen Size"));
@@ -164,6 +164,7 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	int row = 0;
 	
 	row++;
+	//= Shader quality (range 0-5)
 	sliderShaderQuality = new QSlider(Qt::Horizontal);
 	sliderShaderQuality->setRange(0,5);
 	sliderShaderQuality->setTickPosition(QSlider::TicksLeft);
@@ -177,6 +178,13 @@ RenderingWidget::RenderingWidget(MainObject *mOb, QWidget *parent) :
 	connect(sliderShaderQuality,SIGNAL(valueChanged(int)),this,SLOT(set_shader_quality(int)));
 	grpShaderQuality->addWidget(sliderShaderQuality, row, 1, 1, 1);
 	grpShaderQuality->addWidget(sliderLabelShaderQuality, row, 2, 1, 1);
+	
+	row++;
+	//= Atmospheric light scattering
+	checkBoxSkydome = new QCheckBox(tr("Atmospheric lighting"));
+	grpShaderQuality->addWidget(checkBoxSkydome, row, 1, 1, 1);
+	connect(checkBoxSkydome, SIGNAL(clicked()), this, SLOT(set_skydome()));
+	checkBoxSkydome->setWhatsThis(tr("<b>Atmospheric light scattering</b><br><br>This shader is experimental and will disable other shaders.")); 
 	
 	
 	//====================================================
@@ -353,6 +361,9 @@ void RenderingWidget::on_upx( QString option, bool enabled, QString value)
 		int sliderShaderQualityPosition = mainObject->X->getx("--prop:/sim/rendering/shaders/quality-level-internal=", true).toInt();
 		sliderShaderQuality->setValue(sliderShaderQualityPosition);
 		
+	}else if(option == "--prop:/sim/rendering/shaders/skydome="){
+		checkBoxSkydome->setChecked(enabled);
+		
 	}else if(option == "--prop:/sim/rendering/rembrandt/enabled="){
 		grpRembrandt->setChecked(enabled);
 		
@@ -439,8 +450,6 @@ void RenderingWidget::on_screensize_changed(QString)
 	emit setx( "--geometry=",
 			  true,
 			  lineEditScreenSizeW->text().append("x").append(lineEditScreenSizeH->text()));
-	
-	//emit setx( "--enable-fullscreen", checkBoxFullScreenStartup->isChecked(), "");
 }
 
 //=====================================
@@ -459,23 +468,30 @@ void RenderingWidget::on_checkbox_splash_screen()
 }
 
 //================================================================
+// Set Skydome Shader (Atmospheric Scattering, experimental)
+void RenderingWidget::set_skydome()
+{
+	emit setx("--prop:/sim/rendering/shaders/skydome=", checkBoxSkydome->isChecked(), "1");
+}
+
+//================================================================
 // Set Materials file
 void RenderingWidget::set_materials()
 {
 	QString value = comboMaterials->itemData(comboMaterials->currentIndex()).toString();
 	if (value == "default") {
 		pathMaterials->setDisabled(true);
-		pathMaterials->setText("default/materials.xml");
+		pathMaterials->setText("Materials/default/materials.xml");
 		emit setx("--materials-file=", true, pathMaterials->text());
 
 	}if (value == "regions") {
 		pathMaterials->setDisabled(true);
-		pathMaterials->setText("regions/materials.xml");
+		pathMaterials->setText("Materials/regions/materials.xml");
 		emit setx("--materials-file=", true, pathMaterials->text());
 
 	}if (value == "dds") {
 		pathMaterials->setDisabled(true);
-		pathMaterials->setText("dds/materials.xml");
+		pathMaterials->setText("Materials/dds/materials.xml");
 		emit setx("--materials-file=", true, pathMaterials->text());
 
 	}if (value == "custom") {

@@ -105,7 +105,11 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	//= Rendering
 	add_option( "--prop:/sim/rendering/multi-sample-buffers=",false, "", "",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/multi-samples=",false, "", "",1,"","Rendering");
+	
 	add_option( "--prop:/sim/rendering/shaders/quality-level-internal=",true, "", "3",1,"","Rendering");
+	
+	add_option( "--prop:/sim/rendering/shaders/skydome=",false, "", "", 1, "", "Rendering");
+	
 	add_option( "--prop:/sim/rendering/rembrandt/enabled=",true, "", "0",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/shadows/map-size=",true, "", "4096",1,"","Rendering");
 	add_option( "--prop:/sim/rendering/shadows/num-cascades=",true, "", "4",1,"","Rendering");

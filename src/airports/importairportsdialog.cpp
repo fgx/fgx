@@ -53,7 +53,7 @@ ImportAirportsDialog::ImportAirportsDialog(QWidget *parent) :
     mainVBox->setSpacing(10);
 
 
-	QLabel *lblHelp = new QLabel("Importing can take a few minutes !");
+	QLabel *lblHelp = new QLabel("Importing can take a few seconds !");
     mainVBox->addWidget(lblHelp, 1);
     lblHelp->setStyleSheet("background-color: #efefef; padding: 5px; border: 1px solid #000099;");
 

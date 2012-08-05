@@ -39,6 +39,7 @@ public:
 	XGroupGBox *grpShaderQuality;
 	QSlider *sliderShaderQuality;
 	QLabel *sliderLabelShaderQuality;
+	QCheckBox *checkBoxSkydome;
 	
 	XGroupGBox *grpRembrandt;
 	QLabel *labelMapsize;
@@ -79,6 +80,7 @@ public slots:
 	void set_anti_aliasing_strength();
 	
 	void set_shader_quality(int value);
+	void set_skydome();
 	
 	void set_materials();
 	void set_custom_materials(QString path);
