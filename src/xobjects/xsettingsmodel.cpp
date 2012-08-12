@@ -972,11 +972,8 @@ QString XSettingsModel::custom_scenery_path(){
 }
 
 bool XSettingsModel::custom_scenery_enabled(){
-	return get_ena("custom_scenery_path");
+	return get_ena("custom_scenery_enabled");
 }
-
-
-
 
 void XSettingsModel::set_row_bg(int row_idx, QColor  bg_color)
 {
