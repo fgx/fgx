@@ -238,7 +238,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	grpScene->addWidget(checkBoxUseCustomScenery);
 	connect(checkBoxUseCustomScenery, SIGNAL(clicked()), this, SLOT(on_custom_scenery_enabled()));
 	
-	labelCustomScene = new QLabel("Path to custom scenery directory:");
+	labelCustomScene = new QLabel("Path(s) to custom scenery directories:");
 	labelCustomSceneCheck = new QLabel("");
 	labelCustomSceneCheck->setEnabled(false);
 	lineEditCustomScenePath = new QLineEdit("");
@@ -262,7 +262,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	connect( buttonSetCustomSceneryPath, SIGNAL(clicked()),this, SLOT(on_select_customscenerybutton()) );
 	
 	//Check if path exists and set pixmap
-	connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(custom_scenery_check_path()));
+	//connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(custom_scenery_check_path()));
 	connect(lineEditCustomScenePath, SIGNAL(textChanged(QString)), this, SLOT(on_custom_scenery_path(QString)));
     // connect(buttonSetCustomSceneryPath, SIGNAL(textChanged(QString)), this, SLOT(customscenery_set_path()));
 	
@@ -737,7 +737,13 @@ void CoreSettingsWidget::on_select_customscenerybutton()
 #endif // #ifdef USE_ALTERNATE_GETFILE y/n
 
     if(dirPathCustomScenery.length() > 0){
+		if (lineEditCustomScenePath->text() > 0) {
+			QString currentPaths = lineEditCustomScenePath->text().append(":");
+			lineEditCustomScenePath->setText(currentPaths.append(dirPathCustomScenery));
+		}
+		else {
 		lineEditCustomScenePath->setText(dirPathCustomScenery);
+		}
 	}
 	custom_scenery_check_path();
 }
