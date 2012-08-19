@@ -503,7 +503,7 @@ void CoreSettingsWidget::terrasync_enabled_checkstate()
 void CoreSettingsWidget::on_custom_scenery_enabled()
 {
 	emit( setx("custom_scenery_enabled", checkBoxUseCustomScenery->isChecked(), ""));
-	//custom_scenery_enabled_checkstate();
+	custom_scenery_enabled_checkstate();
 }
 
 void CoreSettingsWidget::custom_scenery_enabled_checkstate()
