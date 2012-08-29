@@ -1,5 +1,10 @@
-
-//#include <QDebug>
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // mainobject.cpp
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 #include <QCoreApplication>
 #include <QApplication>
@@ -398,18 +403,18 @@ void MainObject::set_debug_mode(bool menu_mode)
  */
 int MainObject::runningOs() {
 	#ifdef Q_WS_X11
-		return MainObject::LINUX;
+		return OS_LINUX;
 	#endif
 
 	#ifdef Q_WS_MAC
-		return MainObject::MAC;
+		return OS_MAC;
 	#endif
 
 	#ifdef Q_WS_WIN
-		return MainObject::WINDOWS;
+		return OS_WINDOWS;
 	#endif
 
-	return MainObject::UNKNOWN;
+	return OS_UNKNOWN;
 }
 
 
@@ -418,13 +423,13 @@ int MainObject::runningOs() {
  * \return Absolute path to log file
  */
 QString MainObject::log_file_path(){
-	if(runningOs() == MainObject::WINDOWS){
+	if(runningOs() == OS_WINDOWS){
 		return temp_dir("/fgx-log.txt");
 
-	}else if(runningOs() == MainObject::MAC){
+	}else if(runningOs() == OS_MAC){
 		return QDir::homePath().append("/Library/Logs/fgx.log");
 
-	}else if(runningOs() == MainObject::LINUX){
+	}else if(runningOs() == OS_LINUX){
 		return temp_dir("/fgx.log");
 
 	}else{

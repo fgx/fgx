@@ -1,0 +1,145 @@
+Index: src/osgFX/AnisotropicLighting.cpp
+===================================================================
+--- src/osgFX/AnisotropicLighting.cpp	(revision 12982)
++++ src/osgFX/AnisotropicLighting.cpp	(working copy)
+@@ -113,7 +113,12 @@
+ namespace
+ {
+ 
+-    Registry::Proxy proxy(new AnisotropicLighting);
++  void init_AnisotropicLighting(void) {
++//    FIXME: FlightGear doesn't use this, but this causes SIGSEGV 
++//    since this is global variable and it also uses new in its constructor.
++//    so I disable this (seems working on XCode 4.1, but not on 4.2.1)
++    static Registry::Proxy proxy(new AnisotropicLighting);
++}
+ 
+     class DefaultTechnique: public Technique {
+     public:
+@@ -238,6 +243,7 @@
+     _lightnum(0),
+     _texture(new osg::Texture2D)
+ {
++    init_AnisotropicLighting();
+     _texture->setImage(create_default_image());
+     _texture->setWrap(osg::Texture::WRAP_S, osg::Texture::CLAMP);
+     _texture->setWrap(osg::Texture::WRAP_T, osg::Texture::CLAMP);
+@@ -248,6 +254,7 @@
+     _lightnum(copy._lightnum),
+     _texture(static_cast<osg::Texture2D *>(copyop(copy._texture.get())))
+ {
++    init_AnisotropicLighting();
+ }
+ 
+ bool AnisotropicLighting::define_techniques()
+Index: src/osg/Texture.cpp
+===================================================================
+--- src/osg/Texture.cpp	(revision 12982)
++++ src/osg/Texture.cpp	(working copy)
+@@ -2292,6 +2292,14 @@
+ 
+ bool Texture::isHardwareMipmapGenerationEnabled(const State& state) const
+ {
++#ifdef __APPLE__
++      // disable hardware mipmapping for avoiding crash on many nVidia and GMA950 drivers on Mac
++      if (strncmp((const char *)glGetString(GL_RENDERER), "NVIDIA", 6) == 0 && 
++          strncmp((const char *)glGetString(GL_RENDERER), "NVIDIA NV34MAP", 13) != 0) {
++        osg::notify(osg::DEBUG_INFO) << "Hardware mipmapping is disabled due to NVIDIA driver bug" << std::endl;
++        return false;
++      }
++#endif
+     if (_useHardwareMipMapGeneration)
+     {
+         unsigned int contextID = state.getContextID();
+Index: src/osgViewer/GraphicsWindowCocoa.mm
+===================================================================
+--- src/osgViewer/GraphicsWindowCocoa.mm	(revision 12982)
++++ src/osgViewer/GraphicsWindowCocoa.mm	(working copy)
+@@ -212,7 +212,11 @@
+ {
+     s_quit_requested = true;
+     DEBUG_OUT("quit requested ");
+-    return NSTerminateNow;
++    // FIXME: This is (At this moment) only for FlightGear to avoid crash when Command-Q is pressed.
++    // DatabasePager and Some other threads must be killed before finalize() is called.
++    // To do so, osgViewer must send QUIT_APPLICATION event rather than quitting by NSApplication
++    // therefore, I changed this to simply cancel the termination.
++    return NSTerminateCancel;
+ }
+ 
+ - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+@@ -710,7 +714,7 @@
+     if (!_win) return;
+ 
+     NSString* unmodified_chars = [theEvent charactersIgnoringModifiers];
+-    if ([theEvent modifierFlags] && NSShiftKeyMask) {
++    if ([theEvent modifierFlags] & NSShiftKeyMask) {
+         unmodified_chars = [unmodified_chars lowercaseString];
+     }
+ 
+@@ -718,9 +722,13 @@
+ 
+     if ((chars) && ([chars length] > 0)) {
+         unsigned int unmodified_keyCode = remapCocoaKey([unmodified_chars characterAtIndex:0], [theEvent modifierFlags] );
+-        unsigned int keyCode = remapCocoaKey([chars characterAtIndex:0], [theEvent modifierFlags] );
+-        //std::cout << std::hex << "key dn: " <<[chars characterAtIndex:0] << "=" << keyCode << " unmodified: " << unmodified_keyCode <<  std::endl;
+-        _win->getEventQueue()->keyPress( keyCode, _win->getEventQueue()->getTime(), unmodified_keyCode);
++//        std::cout << std::hex << "key dn: " <<[chars characterAtIndex:0] << "=" << keyCode << " unmodified: " << unmodified_keyCode <<  std::endl;
++        if (([theEvent modifierFlags] & NSControlKeyMask) && unmodified_keyCode >= 'a' && unmodified_keyCode <= 'z') {
++          _win->getEventQueue()->keyPress( [chars characterAtIndex:0], _win->getEventQueue()->getTime(), unmodified_keyCode);
++        } else {
++          unsigned int keyCode = remapCocoaKey([chars characterAtIndex:0], [theEvent modifierFlags] );
++          _win->getEventQueue()->keyPress( keyCode, _win->getEventQueue()->getTime(), unmodified_keyCode);
++        }
+     }
+ }
+ 
+@@ -730,7 +738,7 @@
+     if (!_win) return;
+ 
+     NSString* unmodified_chars = [theEvent charactersIgnoringModifiers];
+-    if ([theEvent modifierFlags] && NSShiftKeyMask) {
++    if ([theEvent modifierFlags] & NSShiftKeyMask) {
+         unmodified_chars = [unmodified_chars lowercaseString];
+     }
+ 
+@@ -738,10 +746,12 @@
+ 
+     if ((chars) && ([chars length] > 0)) {
+         unsigned int unmodified_keyCode = remapCocoaKey([unmodified_chars characterAtIndex:0], [theEvent modifierFlags] );
+-        unsigned int keyCode = remapCocoaKey([chars characterAtIndex:0], [theEvent modifierFlags] );
+-        //std::cout << std::hex << "key up: " <<[chars characterAtIndex:0] << "=" << keyCode << " unmodified: " << unmodified_keyCode <<  std::endl;
+-
+-        _win->getEventQueue()->keyRelease( keyCode, _win->getEventQueue()->getTime(), unmodified_keyCode);
++        if (([theEvent modifierFlags] & NSControlKeyMask) && unmodified_keyCode >= 'a' && unmodified_keyCode <= 'z') {
++          _win->getEventQueue()->keyRelease( [chars characterAtIndex:0], _win->getEventQueue()->getTime(), unmodified_keyCode);
++        } else {
++          unsigned int keyCode = remapCocoaKey([chars characterAtIndex:0], [theEvent modifierFlags] );
++          _win->getEventQueue()->keyRelease( keyCode, _win->getEventQueue()->getTime(), unmodified_keyCode);
++        }
+     }
+ }
+ 
+@@ -1606,6 +1616,22 @@
+             [[NSCursor crosshairCursor] set];
+             break;
+ 
++        case HandCursor:
++            [[NSCursor pointingHandCursor] set];
++            break;
++        
++        case TopSideCursor:
++        case BottomSideCursor:
++        case UpDownCursor:
++            [[NSCursor resizeUpDownCursor] set];
++            break;
++        
++        case LeftSideCursor:
++        case RightSideCursor:
++        case LeftRightCursor:
++            [[NSCursor resizeLeftRightCursor] set];
++            break;
++        
+         default:
+             OSG_INFO << "GraphicsWindowCocoa::setCursor :: unsupported MouseCursor: " << mouseCursor << std::endl;
+     }

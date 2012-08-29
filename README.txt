@@ -1,6 +1,6 @@
 FGx - FREE AND OPEN SOURCE LAUNCHER FOR FLIGHTGEAR
 --------------------------------------------------
-Version 2.4.x
+Version 2.8.x
 
 
 ==== The project ==== 

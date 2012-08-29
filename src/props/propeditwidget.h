@@ -1,3 +1,11 @@
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // propeditwidget.h
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
+
 #ifndef PROPEDITWIDGET_H
 #define PROPEDITWIDGET_H
 

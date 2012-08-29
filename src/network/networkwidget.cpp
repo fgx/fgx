@@ -1,4 +1,10 @@
-
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // networkwidget.cpp
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 #include <QtCore/QString>
 #include <QtCore/QChar>
@@ -184,21 +190,17 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	// FgCom Box
 	grpFgCom = new XGroupGBox(tr("FGCom - Voice Communications"));
 	rightLayout->addWidget(grpFgCom, 2);
-	//grpFgCom->setCheckable(true);
+	grpFgCom->setCheckable(true);
+	connect(grpFgCom, SIGNAL(clicked()), this, SLOT(set_fgcom()));
 
 	QString style("font-size: 8pt; color: #666666;");
 
 	// fgCom NO
 	int row = 0;
 	grpFgCom->addWidget(new QLabel("Server"), row, 0, 1, 1, Qt::AlignRight);
-	txtFgComNo = new QLineEdit();
+	txtFgComNo = new QLineEdit("");
 	grpFgCom->addWidget(txtFgComNo, row, 1, 1, 1);
-	if (mainObject->X->get_ena("fgcom_enabled")){
-		txtFgComNo->setEnabled(true);
-		connect(txtFgComNo, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
-	} else {
-		txtFgComNo->setEnabled(false);
-	}
+	connect(txtFgComNo, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
 
 
 	row++;
@@ -209,22 +211,38 @@ NetworkWidget::NetworkWidget(MainObject *mOb, QWidget *parent) :
 	//* fgCom Port
 	row++;
 	grpFgCom->addWidget(new QLabel("Port"), row, 0, 1, 1, Qt::AlignRight);
-	txtFgComPort = new QLineEdit();
+	txtFgComPort = new QLineEdit("");
 	txtFgComPort->setMaximumWidth(100);
 	grpFgCom->addWidget(txtFgComPort, row, 1, 1, 1);
-	if (mainObject->X->get_ena("fgcom_enabled")){
-		txtFgComPort->setEnabled(true);
-		connect(txtFgComPort, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
-	}else {
-		txtFgComPort->setEnabled(false);
-	}
-
-
+	connect(txtFgComPort, SIGNAL(textChanged(QString)), this, SLOT(set_fgcom()));
+	
 	row++;
 	QLabel *lblHelp2 = new QLabel("eg: 16661");
 	lblHelp2->setStyleSheet(style);
 	grpFgCom->addWidget(lblHelp2, row, 1, 1, 2);
-
+	
+	// fgCom exe path
+	row++;
+	labelFgComProgram = new QLabel("Path to FGcom: ");
+	labelFgComCheck = new QLabel("");
+	lineEditFgComPath = new QLineEdit("");
+	lineEditFgComPath->setFixedSize(QSize(240,20));
+	buttonSetFgComPath = new QToolButton();
+	buttonSetFgComPath->setFixedSize(20,20);
+	buttonSetFgComPath->setIcon(QIcon(":/icon/path"));
+	grpFgCom->addWidget(labelFgComProgram,row, 0,1,1, Qt::AlignRight);
+	grpFgCom->addWidget(lineEditFgComPath,row, 1,1,1, Qt::AlignLeft);
+	grpFgCom->addWidget(labelFgComCheck,row, 2,1,1, Qt::AlignRight);
+	grpFgCom->addWidget(buttonSetFgComPath,row, 3,1,1, Qt::AlignRight);
+	lineEditFgComPath->setText( mainObject->X->fgcom_exe_path() );
+	
+	// "Set" clicked
+	connect( buttonSetFgComPath, SIGNAL(clicked()),this, SLOT(on_select_fgcombutton()) );
+	
+	//Check if path exists, set pixmap, emit setting
+	connect(lineEditFgComPath, SIGNAL(textChanged(QString)), this, SLOT(fgcom_check_path()));
+	connect(lineEditFgComPath, SIGNAL(textChanged(QString)), this, SLOT(on_fgcom_path(QString)));
+	connect(buttonSetFgComPath, SIGNAL(clicked()), this, SLOT(fgcom_set_path()));
 
 
 	//===========================================================
@@ -456,11 +474,56 @@ void NetworkWidget::set_mp_server(){
 //=====================================
 // Setup fgCom
 void NetworkWidget::set_fgcom(){
-	//emit setx( "--fgcom=", grpFgCom->isChecked(), txtFgComNo->text().append(":").append( txtFgComPort->text() ) );
+	
 	emit setx( "fgcom_enabled",
 				grpFgCom->isChecked(),
 				QString("--generic=socket,out,10,localhost,%1,udp,fgcom").arg(txtFgComPort->text())
 			);
+	
+	emit setx( "fgcom_server", grpFgCom->isChecked(), QString("%0:%1").arg(txtFgComNo->text()).arg(txtFgComPort->text()) );
+}
+
+//======================================================================
+// Check fgcom path and give some feedback
+//======================================================================
+
+void NetworkWidget::fgcom_check_path()
+{
+	bool fgcom_exists = QFile::exists(lineEditFgComPath->text());
+	if (fgcom_exists) {
+		labelFgComCheck->setPixmap(QPixmap(":/icon/ok"));
+	} else {
+		labelFgComCheck->setPixmap(QPixmap(":/icon/not-ok"));
+	}
+	
+}
+
+//======================================================================
+// Set fgcom path with button
+//======================================================================
+
+void NetworkWidget::on_select_fgcombutton()
+
+{
+#ifdef USE_ALTERNATE_GETFILE
+    QString filePathFgCom = util_getFileName((QWidget *)this, tr("Select fgcom binary"),
+                                            lineEditFgComPath->text());
+#else // !#ifdef USE_ALTERNATE_GETFILE
+    QString filePathFgCom = QFileDialog::getOpenFileName(this, tr("Select fgcom binary"),
+														lineEditFgComPath->text());
+#endif // #ifdef USE_ALTERNATE_GETFILE y/n
+	if(filePathFgCom.length() > 0){
+		lineEditFgComPath->setText(filePathFgCom);
+	}
+	
+	fgcom_check_path();
+}
+
+//=====================================
+// Emit fgcom path
+void NetworkWidget::on_fgcom_path(QString txt)
+{
+	emit( mainObject->X->set_option("fgcom_exe_path", true, txt));
 }
 		
 		
@@ -526,7 +589,9 @@ void NetworkWidget::on_screenshot()
 	emit setx("--jpg-httpd=", grpScreenShot->isChecked(), txtScreenShot->text());
 }
 
-
+void NetworkWidget::fgcom_set_path() {
+	emit setx("fgcom_exe_path", true, lineEditFgComPath->text());
+}
 
 //=============================================================
 // Update Widgets
@@ -559,12 +624,19 @@ void NetworkWidget::on_upx(QString option, bool enabled, QString value)
 		}
 
 
-	}else if(option == "--fgcom="){
+	}else if(option == "fgcom_enabled"){
 		grpFgCom->setChecked(enabled);
+		
+	}else if(option == "fgcom_server"){
 		if(value.contains(":")){
-			txtFgComNo->setText( value.split(":").at(0));
-			txtFgComPort->setText( value.split(":").at(1));
+		 txtFgComNo->setText( value.split(":").at(0));
+		 txtFgComPort->setText( value.split(":").at(1));
+		 }
+		else {
+			txtFgComNo->setText("Not valid");
+			txtFgComPort->setText("Not valid");
 		}
+
 
 	}else if(option == "--telnet="){
 		grpTelnet->setChecked(enabled);
@@ -579,6 +651,9 @@ void NetworkWidget::on_upx(QString option, bool enabled, QString value)
 	}else if(option == "--jpg-httpd="){
 		grpScreenShot->setChecked(enabled);
 		txtScreenShot->setText(value);
-
+		
+	}else if(option == "fgcom_exe_path"){
+		lineEditFgComPath->setText(mainObject->X->fgcom_exe_path());
 	}
+	
 }

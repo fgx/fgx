@@ -1,11 +1,11 @@
-/*
- *  xsettingsmodel.cpp
- *  FGx
- *
- *  Created by Peter Morgan
- *  © 2011 --- GPL2
- *
- */
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // xsettingsmodel.cpp
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
+
 #include "app_config.h"
 #include <QDebug>
 #include <QDesktopServices>
@@ -58,7 +58,6 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option("custom_scenery_enabled", false,"","",0,"","paths");
 	add_option("custom_scenery_path", false,"","",0,"","paths");
     add_option("fgcom_exe_path", false, "", "", 0, "", "paths");
-	add_option("fgcom_enabled", false, "", "", 0, "", "paths");
 	add_option("jsdemo_enabled", false, "", "", 0, "", "paths");
     add_option("jsdemo_exe_path", false, "", "", 0, "", "paths");
 
@@ -85,18 +84,9 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
     //==
 
-
 	add_option( "show_mpmap", false, "", "",10,"Follow in MpMap","Map");
 
-
 	add_option( "--enable-auto-coordination",false, "", "",10,"Enabled Rudder and Airelon","Control");
-
-
-	//== Screen
-	add_option("--geometry=", false, "", "", 1, "Screen Size","");
-	add_option( "--enable-fullscreen",false, "", "", 1 ,"Enable Full Screen at Startup","Startup");
-	add_option( "--disable-splash-screen", false, "", "", 1 ,"Enable Splash Screen at Startup","Startup");
-
 
 	add_option( "--callsign=", true,"CALLSIG", "", 1 ,"Your Callsign","Core");
 
@@ -111,6 +101,30 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option("--enable-real-weather-fetch",	false, "","",1,"Enable Real Weather","weather");
 	add_option("--disable-real-weather-fetch",	false, "","",1,"Disable Real Weather","weather");
 	add_option("--metar=",						false,"","",1,"","weather");
+	
+	//= Rendering
+	add_option( "--prop:/sim/rendering/multi-sample-buffers=",false, "", "",1,"","Rendering");
+	add_option( "--prop:/sim/rendering/multi-samples=",false, "", "",1,"","Rendering");
+	
+	add_option( "--prop:/sim/rendering/shaders/quality-level-internal=",true, "", "3",1,"","Rendering");
+	
+	add_option( "--prop:/sim/rendering/shaders/skydome=",false, "", "", 1, "", "Rendering");
+	
+	add_option( "--prop:/sim/rendering/rembrandt/enabled=",true, "", "0",1,"","Rendering");
+	add_option( "--prop:/sim/rendering/shadows/map-size=",true, "", "4096",1,"","Rendering");
+	add_option( "--prop:/sim/rendering/shadows/num-cascades=",true, "", "4",1,"","Rendering");
+	
+	add_option( "--materials-file=",false, "", "", 1, "", "Rendering");
+	
+	add_option( "--prop:/sim/rendering/clouds3d-enable=",true, "", "",1,"","Rendering");
+	add_option( "--prop:/sim/rendering/clouds3d-vis-range=",true, "", "10000",1,"","Rendering");
+	add_option( "--prop:/sim/rendering/clouds3d-density=",true, "", "0.25",1,"","Rendering");
+	
+	add_option("--geometry=", false, "", "", 1, "Screen Size","");
+	add_option( "--enable-fullscreen",false, "", "", 1 ,"Enable Full Screen at Startup","Startup");
+	add_option( "--disable-splash-screen", false, "", "", 1 ,"Enable Splash Screen at Startup","Startup");
+	add_option( "--prop:/sim/menubar/native=",false, "", "", 1, "OSX switch for native/pui menubar", "Rendering"); 
+	
 
 
 	//= MultiPlayer
@@ -118,7 +132,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 	add_option( "--multiplay=out", false, "", ",10,localhost,20",2,"Multiplayer In","MultiPlayer");
 
 	//= FGCom Related
-	add_option( "--fgcom=",false, "", "fgcom.flightgear.org.uk:16661",3,"FgCom","FgCom");
+	add_option( "fgcom_server",false, "", "fgcom.flightgear.org.uk:16661",3,"FgCom","FgCom");
 	add_option( "fgcom_enabled", false, "", "",10,"FgCom Socket","FgCom");
 
 	//= Local Servers
@@ -338,13 +352,13 @@ void XSettingsModel::read_default_ini()
 {
 	QString defaultSettings("");
 	switch (mainObject->runningOs()) {
-		case MainObject::MAC:
+		case OS_MAC:
 			defaultSettings = ":/default/osx_default.ini";
 			break;
-		case MainObject::WINDOWS:
+		case OS_WINDOWS:
 			defaultSettings = ":/default/win_default.ini";
 			break;
-		case MainObject::LINUX:
+		case OS_LINUX:
 			defaultSettings = ":/default/x_default.ini";
 			break;
 		default:
@@ -560,8 +574,17 @@ QStringList XSettingsModel::get_fgfs_args()
 	
 	// Process unique items, like fgcom socket
 	if(fgcom_enabled()){
-		args << "--generic=socket,out,10,localhost,16661,udp,fgcom";
+		// This option needs an overhaul once. Server and port separated. It is never needed
+		// as server:port for fgfs or fgcom. It’s just splitted everywhere ...
+		// For the fgfs command line option we only need the port, for starting fgcom
+		// we need the server and the port, but this can come to separated setting values (?)
+		// Anyway ... took an age this one.
+		QString serverandport(getx("fgcom_server"));
+		QString portonly(serverandport.split(":").at(1));
+		args << QString("--generic=socket,out,10,localhost,%1,udp,fgcom").arg(portonly);
 	}
+	
+	//txtFgComPort->setText( value.split(":").at(1));
 
 	//= add Extra args
 	XOpt opt = get_opt("extra_args");
@@ -677,6 +700,9 @@ QString XSettingsModel::get_fgfs_command_string()
 QStringList XSettingsModel::get_fgfs_env(){
 
 	QStringList args;
+	if (!mainObject->X->get_ena("extra_env")) {
+        return args;
+    }
 	QString extra = getx("extra_env");
 	if (extra.length() > 0) {
 		QStringList parts = extra.split("\n");
@@ -713,7 +739,7 @@ QString XSettingsModel::fgfs_path(){
 	
 	if(!firstsettings.value("firststartup").toBool()){
 		// OSX: prepending current app path for firststartup
-		if(mainObject->runningOs() == MainObject::MAC) {
+		if(mainObject->runningOs() == OS_MAC) {
 			return QDir::currentPath().append("/").append(getx("fgfs_path"));
 		}else {
 			return QString(getx("fgfs_path"));
@@ -747,7 +773,7 @@ QString XSettingsModel::terrasync_exe_path(){
 	
 	if(!firstsettings.value("firststartup").toBool()){
 		// OSX: prepending current app path for firststartup
-		if(mainObject->runningOs() == MainObject::MAC) {
+		if(mainObject->runningOs() == OS_MAC) {
 			return QDir::currentPath().append("/").append(getx("terrasync_exe_path"));
 		}else {
 			return QString(getx("terrasync_exe_path"));
@@ -776,18 +802,18 @@ bool XSettingsModel::fgcom_enabled(){
 	return get_ena("fgcom_enabled");
 }
 
+
 //===========================================================================
 //== fgcom Executable
 //===========================================================================
-/** \brief Path to terrasync executable
+/** \brief Path to fgcom executable
  */
-
 QString XSettingsModel::fgcom_exe_path(){
 	QSettings firstsettings;
 	
 	if(!firstsettings.value("firststartup").toBool()){
 		// OSX: prepending current app path for firststartup
-		if(mainObject->runningOs() == MainObject::MAC) {
+		if(mainObject->runningOs() == OS_MAC) {
 			return QDir::currentPath().append("/").append(getx("fgcom_exe_path"));
 		}else {
 			return QString(getx("fgcom_exe_path"));
@@ -796,6 +822,8 @@ QString XSettingsModel::fgcom_exe_path(){
 	}else {
 		return QString(getx("fgcom_exe_path"));
 	}
+	
+	
 }
 
 
@@ -808,7 +836,7 @@ QString XSettingsModel::jsdemo_exe_path(){
 	
 	if(!firstsettings.value("firststartup").toBool()){
 		// OSX: prepending current app path for firststartup
-		if(mainObject->runningOs() == MainObject::MAC) {
+		if(mainObject->runningOs() == OS_MAC) {
 			return QDir::currentPath().append("/").append(getx("jsdemo_exe_path"));
 		}else {
 			return QString(getx("jsdemo_exe_path"));
@@ -831,7 +859,7 @@ QString XSettingsModel::fgroot(){
 	
 	if(!firstsettings.value("firststartup").toBool()){
 		// OSX: prepending current app path for firststartup
-		if(mainObject->runningOs() == MainObject::MAC) {
+		if(mainObject->runningOs() == OS_MAC) {
 			return QDir::currentPath().append("/").append(getx("fgroot_path"));
 		}else {
 			return QString(getx("fgroot_path"));
@@ -944,11 +972,8 @@ QString XSettingsModel::custom_scenery_path(){
 }
 
 bool XSettingsModel::custom_scenery_enabled(){
-	return get_ena("custom_scenery_path");
+	return get_ena("custom_scenery_enabled");
 }
-
-
-
 
 void XSettingsModel::set_row_bg(int row_idx, QColor  bg_color)
 {

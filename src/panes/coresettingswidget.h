@@ -1,3 +1,11 @@
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // coresettingswidget.h
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
+
 #ifndef CORESETTINGSWIDGET_H
 #define CORESETTINGSWIDGET_H
 
@@ -104,11 +112,6 @@ signals:
 public slots:
 
 	void on_callsign_changed(QString);
-
-	void on_screensize();
-	void on_fullscreen_changed();
-	void on_screensize_changed(QString);
-	void on_checkbox_splash_screen();
 
 	void on_show_mp_map();
 	

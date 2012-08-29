@@ -1,3 +1,11 @@
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // launcherwindow.h
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
+
 #ifndef LAUNCHERWINDOW_H
 #define LAUNCHERWINDOW_H
 
@@ -14,6 +22,9 @@ class CoreSettingsWidget;
 
 #include "panes/timeweatherwidget.h"
 class TimeWeatherWidget;
+
+#include "panes/renderingwidget.h"
+class RenderingWidget;
 
 #include "aircraft/aircraftwidget.h"
 class AircraftWidget;
@@ -71,6 +82,7 @@ public:
 
 	CoreSettingsWidget *coreSettingsWidget;
 	TimeWeatherWidget *timeWeatherWidget;
+	RenderingWidget *renderingWidget;
 	AircraftWidget *aircraftWidget;
 	AirportsWidget *airportsWidget;
 	NetworkWidget *networkWidget;

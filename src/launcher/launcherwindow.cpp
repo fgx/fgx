@@ -1,5 +1,10 @@
-
-//#include <QDebug>
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // launcherwindow.cpp
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 #include <QtCore/QUrl>
 #include <QtCore/QCoreApplication>
@@ -88,11 +93,15 @@ LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
 
 	//** Position Tab
 	airportsWidget = new AirportsWidget(mainObject);
-	tabWidget->addTab(  airportsWidget, tr("Position"));
+	tabWidget->addTab(airportsWidget, tr("Position"));
 
 	//* Time / Weather Widget
 	timeWeatherWidget = new TimeWeatherWidget(mainObject);
 	tabWidget->addTab(timeWeatherWidget, tr("Time and Weather"));
+	
+	//* Rendering Widget
+	renderingWidget = new RenderingWidget(mainObject);
+	tabWidget->addTab(renderingWidget, tr("Rendering"));
 
 
 	//* Network Tab
@@ -272,10 +281,14 @@ void LauncherWindow::initialize(){
         if ( mainObject->X->save_profile() ) {
             firstsettings.setValue("firststartup", "true");
             firstsettings.sync();
+			
         } else {    // did NOT write a profile - get quite INSISTANT ;=()
             previous.sprintf("Try %d! You MUST save this Settings Profile first. Choose a writable location in next dialog and click \"Ok\" ONLY.",
                          (done + 1));
         }
+		// reload lists after setting default init values
+		mainObject->launcherWindow->aircraftWidget->on_reload_cache();
+		mainObject->launcherWindow->airportsWidget->on_reload_cache();
     }
 	
 	// This we do everytime, solves a lot of problems loading the first saved profile
@@ -365,6 +378,8 @@ void LauncherWindow::load_profile()
         message = "Profile loaded from "+previous;
     }
     headerWidget->showMessage(message);
+	reset_profile(); // resets the profile, gives emitting back, reload cache
+	
 }
 
 //================================================================================
@@ -392,9 +407,7 @@ void LauncherWindow::reset_profile()
     QString previous = mainObject->X->getLastUsed();
 	mainObject->X->load_last_profile(previous);
     headerWidget->showMessage(message);
-	// Reload the aircraft and airport lists from this point since 2.6.0
-	// Comments?
-	mainObject->launcherWindow->coreSettingsWidget->reload_lists();
+	airportsWidget->on_reload_cache(); // Reload the aircraft and airport lists
 }
 
 

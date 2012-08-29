@@ -1,4 +1,10 @@
-
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // xprocess.cpp
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 #include "xprocess.h"
 #ifdef Q_OS_WIN
@@ -41,6 +47,8 @@ void XProcess::start(QString command_line, QStringList extra_env)
 		QStringList env = QProcess::systemEnvironment();
 		env << extra_env;
 		process->setEnvironment(env);
+        outLog("ENV:"+log_name+": ["+extra_env.join(" ")+"]");
+        // just to see ALL - outLog("NEW:"+log_name+": ["+env.join(" ")+"]");
 	}
     outLog("CMD:"+log_name+": ["+command_line+"]");
 	process->start(command_line);

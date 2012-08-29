@@ -1,19 +1,19 @@
-
-/**
-	Started apr 2011 by: pete at freeflightsim.org
-	TODO: Convert QTreeWidget to QTreeView with A filterSortProxy Model
-*/
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // aircraftwidget.cpp
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 
 #include "app_config.h"
-//#include <QtCore/QDebug>
 
 #include <QtCore/QProcess>
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QFile>
-
 
 #include <QtXmlPatterns/QXmlQuery>
 #include <QtXml/QDomDocument>
@@ -81,17 +81,6 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	treeTopBar->setSpacing(5);
 	treeLayout->addLayout(treeTopBar);
 
-	//groupUseAircraft = new QButtonGroup(this);
-	//groupUseAircraft->setExclusive(true);
-	//connect(groupUseAircraft, SIGNAL(buttonClicked(int)), this, SLOT(on_set_aircraft()) );
-
-	//= Use Default Selected
-	//QLabel *labelDefaultHangar = new QLabel();
-	//labelDefaultHangar->setText("Default Hangar");
-	//treeTopBar->addWidget(labelDefaultHangar);
-	//connect(checkBoxUseDefaultHangar, SIGNAL(clicked()), this, SLOT(on_set_default_hangar_path()) );
-
-
 	//= Use Custom Hangar (Aircraft Directory)
 	checkBoxUseCustomHangar = new QCheckBox("Use Custom Hangar (Custom aircraft directory):");
 	treeTopBar->addWidget(checkBoxUseCustomHangar);
@@ -145,19 +134,19 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 	statusBarTree->addPermanentWidget(labelAeroPath);
 
 	//== View nested Checkbox
-	checkViewNested = new QCheckBox();
+	/*checkViewNested = new QCheckBox();
 	checkViewNested->setText("View folders");
 	statusBarTree->addPermanentWidget(checkViewNested);
-	connect(checkViewNested, SIGNAL(clicked()), this, SLOT(load_tree()));
+	connect(checkViewNested, SIGNAL(clicked()), this, SLOT(load_tree()));*/
 
 	//== Reload aircrafts
-	/*QToolButton *actionReloadCacheDb = new QToolButton(this);
+	QToolButton *actionReloadCacheDb = new QToolButton(this);
 	actionReloadCacheDb->setText("Reload");
 	actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
 	actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	actionReloadCacheDb->setAutoRaise(true);
 	statusBarTree->addPermanentWidget(actionReloadCacheDb);
-	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );*/
+	connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
 
 	//================================================================================================
@@ -335,24 +324,22 @@ void AircraftWidget::on_tree_selection_changed(){
 		return;
 	}
 
-	//qDebug() << item->text(C_DIR);
-	labelAeroPath->setText(mainObject->X->aircraft_path() + "/" + item->text(C_AERO));
-	//buttonAeroPath->setDisabled(false);
+	// This is obsolete debugging output somehow
+	//labelAeroPath->setText(mainObject->X->aircraft_path() + item->parent->text(C_DIR) + item->text(C_AERO));
 
 	//= Get the thumbnail image
-	QString thumb_file = QString("%1/%2/%3/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
-																	item->text(C_DIR),
-																	item->text(C_AERO));
+	QString thumb_file = QString("%1/%2/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
+																	item->parent()->text(C_DIR));
 
 	if(QFile::exists(thumb_file)){
 		QPixmap aeroImage(thumb_file);
 		if(!aeroImage.isNull()){
-			outLog("on_tree_selection_changed: Loaded thumb "+thumb_file);
+			//outLog("on_tree_selection_changed: Loaded thumb "+thumb_file);
 			aeroImageLabel->setText("");
 			aeroImageLabel->setPixmap(aeroImage);
 
 		} else{
-			outLog("on_tree_selection_changed: NO thumb load "+thumb_file);
+			//outLog("on_tree_selection_changed: NO thumb load "+thumb_file);
 			aeroImageLabel->clear();
 			aeroImageLabel->setText("No Image");
 		}
@@ -360,6 +347,7 @@ void AircraftWidget::on_tree_selection_changed(){
 		aeroImageLabel->setText("No Image");
 	}
 	emit setx("--aircraft=", true, selected_aircraft());
+	mainObject->launcherWindow->on_upx("--aircraft=", true, selected_aircraft()); // Show aircraft in header
 }
 
 //============================================
@@ -436,13 +424,13 @@ void AircraftWidget::load_tree(){
 
 	QTreeWidgetItem *parentItem = new QTreeWidgetItem();
 
-	int view = 0;
+	/*int view = 0;
 	if (checkViewNested->isChecked()) {
 		view = 1;
-	}
+	}*/
 
-	treeWidget->setColumnHidden(C_DIR, view == LIST_VIEW);
-	treeWidget->setRootIsDecorated(view == FOLDER_VIEW);
+	/*treeWidget->setColumnHidden(C_DIR, view == LIST_VIEW);*/
+	/*treeWidget->setRootIsDecorated(view == FOLDER_VIEW);*/
 
 	QFile dataFile(mainObject->data_file(("aircraft.txt")));
 	if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -451,6 +439,7 @@ void AircraftWidget::load_tree(){
 	QTextStream in(&dataFile);
 	QString line = in.readLine();
 	QString last_dir("");
+	int countaircrafts = 0;
 	c = 0;
 	while(!line.isNull()){
 
@@ -459,15 +448,17 @@ void AircraftWidget::load_tree(){
 		/* The parent is invisible root if a list,
 			otherwise folder nodes are created
 		*/
-		if(view == LIST_VIEW){
+		/*if(view == LIST_VIEW){
 				parentItem = treeWidget->invisibleRootItem();
-		}else if(last_dir != cols.at(C_DIR)){
-				parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
-				parentItem->setText( C_DIR,cols.at(C_DIR));
-				parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
-				treeWidget->addTopLevelItem(parentItem);
-				treeWidget->setFirstItemColumnSpanned(parentItem, true);
-				last_dir = cols.at(C_DIR);
+		}else if(last_dir != cols.at(C_DIR)){*/
+		if(last_dir != cols.at(C_DIR)){
+			parentItem = new XTreeWidgetItem(treeWidget->invisibleRootItem());
+			parentItem->setText( C_DIR,cols.at(C_DIR));
+			parentItem->setIcon(C_DIR, QIcon(":/icon/folder"));
+			treeWidget->addTopLevelItem(parentItem);
+			treeWidget->setFirstItemColumnSpanned(parentItem, true);
+			last_dir = cols.at(C_DIR);
+			countaircrafts += 1;
 		}
 
 		XTreeWidgetItem *aeroItem = new XTreeWidgetItem(parentItem);
@@ -482,11 +473,13 @@ void AircraftWidget::load_tree(){
 		line = in.readLine();
 	}
 
-	treeWidget->sortByColumn(view == FOLDER_VIEW ? C_DIR : C_AERO, Qt::AscendingOrder);
+	/*treeWidget->sortByColumn(view == FOLDER_VIEW ? C_DIR : C_AERO, Qt::AscendingOrder);*/
+	treeWidget->sortByColumn(C_DIR, Qt::AscendingOrder);
+	treeWidget->sortByColumn(C_AERO, Qt::AscendingOrder);
 	treeWidget->setUpdatesEnabled(true);
 
 	select_node(mainObject->X->getx("--aircraft="));
-	QString str = QString("%1 aircraft(s)").arg(c);
+	QString str = QString("%1 aircrafts").arg(countaircrafts)+QString(", %1 models").arg(c);
 	statusBarTree->showMessage(str);
 	outLog("*** FGx: AircraftWidget::load_tree: with " + str);
 }
@@ -531,12 +524,6 @@ void AircraftWidget::on_fuel_changed()
 	emit setx("--prop:/consumables/fuels/tank[2]/level-gal=", true, txtTank2->text());
 	emit setx("--prop:/consumables/fuels/tank[3]/level-gal=", true, txtTank3->text());
 
-}
-
-void AircraftWidget::on_set_aircraft()
-{	
-	//emit setx("custom_hangar_enabled",checkBoxUseCustomHangar->isChecked(),"");
-	//emit setx("--fg-aircraft=",checkBoxUseCustomHangar->isChecked(),txtAircraftPath->text());
 }
 
 
@@ -610,7 +597,6 @@ void AircraftWidget::on_select_path()
 #endif // #ifdef USE_ALTERNATE_GETFILE y/n
 	if(dirPath.length() > 0){
 		txtAircraftPath->setText(dirPath);
-		on_set_aircraft();
 	}
 	
 	on_custom_hangar_path();

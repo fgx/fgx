@@ -1,3 +1,11 @@
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // aircraftwidget.h
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
+
 #ifndef AIRCRAFTWIDGET_H
 #define AIRCRAFTWIDGET_H
 
@@ -23,7 +31,7 @@ Q_OBJECT
 public:
 	//aero << directory << xml_file << description << fdm << author << file_path;
 	enum COLS{
-		C_DIR = 0,
+		C_DIR,
 		C_AERO,
 		C_RATING,
 		C_DESCRIPTION,
@@ -31,10 +39,10 @@ public:
 		C_AUTHOR,
 		C_FILE_PATH
 	};
-	enum VIEWS{
-		LIST_VIEW = 0,
-		FOLDER_VIEW = 1
-	};
+	/*enum VIEWS{
+		LIST_VIEW = 1,
+		FOLDER_VIEW = 0
+	};*/
 
 	explicit AircraftWidget(MainObject *mOb, QWidget *parent = 0);
 
@@ -81,7 +89,6 @@ signals:
 
 public slots:
 	void load_tree();
-	void on_set_aircraft();
 	void on_select_path();
 	void on_custom_hangar_path();
 	void on_tree_selection_changed();

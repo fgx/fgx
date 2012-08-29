@@ -3,7 +3,7 @@
  *  FGx
  *
  *  Created by Geoff R. McLane, France
- *  © 2011 --- GPL2
+ *  (c) 2011 --- GPL2
  *
  * GLOBAL application configuration
  * Must ONLY contain #defines
@@ -26,6 +26,14 @@
 
 // Thread - User types
 #define tht_loadAptDat  1
+
+	enum OS_TYPE {
+		OS_BSD = 1,
+		OS_MAC = 2,
+		OS_LINUX = 3,
+		OS_WINDOWS = 4,
+		OS_UNKNOWN = 5,
+	};
 
 #endif // APP_CONFIG_H
 // app_config.h

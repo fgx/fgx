@@ -1,3 +1,11 @@
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // importairportsdialog.cpp
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
+
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
@@ -45,7 +53,7 @@ ImportAirportsDialog::ImportAirportsDialog(QWidget *parent) :
     mainVBox->setSpacing(10);
 
 
-	QLabel *lblHelp = new QLabel("Importing can take a few minutes !");
+	QLabel *lblHelp = new QLabel("Importing can take a few seconds !");
     mainVBox->addWidget(lblHelp, 1);
     lblHelp->setStyleSheet("background-color: #efefef; padding: 5px; border: 1px solid #000099;");
 

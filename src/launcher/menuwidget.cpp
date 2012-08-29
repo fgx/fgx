@@ -1,3 +1,11 @@
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // menuwidget.cpp
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
+
 #include "app_config.h"
 #include <QtDebug>
 
@@ -25,7 +33,7 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	
 	// Macro needed to make the widget "placeholder" disappearing on OSX.
 	// Not nice at all, but working.
-	if(MainObject::runningOs() != MainObject::MAC){
+	if(MainObject::runningOs() != OS_MAC){
 		setLayout(menuLayout);
 	}
 	
@@ -59,7 +67,7 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	connect(debugmodeAction, SIGNAL(triggered()), this, SLOT(on_menu_debug_mode()));
 	
 	// Switching menu name, maybe should better go to two menus later
-	if(MainObject::runningOs() == MainObject::MAC){
+	if(MainObject::runningOs() == OS_MAC){
 		applicationMenu = new QMenu(tr("&Windows"));
 	}else {
 		applicationMenu = new QMenu(tr("&FGx"));

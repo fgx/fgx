@@ -1,3 +1,11 @@
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // mainobject.h
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
+
 #ifndef MAINOBJECT_H
 #define MAINOBJECT_H
 
@@ -57,13 +65,6 @@ public:
     explicit MainObject(QObject *parent = 0);
     ~MainObject();
 	
-	enum OS{
-		BSD = 1,
-		MAC = 2,
-		LINUX = 3,
-		WINDOWS = 4,
-		UNKNOWN = 5,
-	};
 	static int runningOs();
 
 	bool debug_mode;

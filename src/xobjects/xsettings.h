@@ -1,3 +1,11 @@
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // xsettings.h
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
+
 #ifndef XSETTINGS_H
 #define XSETTINGS_H
 
@@ -8,13 +16,6 @@ class XSettings : public QSettings
 Q_OBJECT
 public:
 
-	enum OS{
-		BSD = 1,
-		MAC = 2,
-		LINUX = 3,
-		WINDOWS = 4,
-		UNKNOWN = 5,
-	};
     explicit XSettings(QObject *parent = 0);
 
 	static bool dev_mode();

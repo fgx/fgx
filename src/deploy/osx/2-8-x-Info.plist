@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>FGx</string>
+	<key>CFBundleGetInfoString</key>
+	<string>Created by Yves Sablonier, Zurich (Switzerland)</string>
+	<key>CFBundleIconFile</key>
+	<string>fgx.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>ch.fgx.fgx.org</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>FGxx</string>
+	<key>CFBundleVersion</key>
+	<string>2.8.x</string>
+	<key>NOTE</key>
+	<string>Created by Yves Sablonier at jenkins.fgx.ch</string>
+</dict>
+</plist>

@@ -1,4 +1,10 @@
-
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// FGx FlightGear Launcher // airportsdata.cpp
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
+// (c) 2010-2012
+// Yves Sablonier, Pete Morgan
+// Geoff McLane
+// GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 #include <QFile>
 #include <QHash>
@@ -16,9 +22,6 @@
 #define USE_LOCAL_ZLIB
 #undef ADD_EXTRA_DEBUG
 
-//AirportsData::AirportsData()
-//{
-//}
 
 bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
 
@@ -60,7 +63,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
 	QDirIterator loopAirportsFiles( mainObject->X->airports_path(), QDirIterator::Subdirectories );
 	QString xFileName;
 
-    msg = "*** FGx airportsdata reload: Scanning XML files in "+mainObject->X->airports_path();
+    msg = "FGx airportsdata reload: Scanning XML files in "+mainObject->X->airports_path();
     outLog(msg);
     progress.setWindowTitle(msg);
 	progress.setRange(0, 50000);
