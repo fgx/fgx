@@ -66,7 +66,7 @@ void TelnetSlave::set_property(QString path, QString value){
 
 void TelnetSlave::add_que(QString node)
 {
-	//que->
+    Q_UNUSED(node);
 }
 
 //==========================================================================================
