@@ -26,52 +26,52 @@
 bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
 
 
-	QHash<QString, QString> airports;
+    QHash<QString, QString> airports;
     QString msg;
     QTime tm;
-    int   ms;
+    int ms;
 
-	progress.setValue(0);
-	progress.setWindowTitle("Scanning Airport Directories");
-	progress.setRange(0, 50000);
+    progress.setValue(0);
+    progress.setWindowTitle("Scanning Airport Directories");
+    progress.setRange(0, 50000);
 
 
-	int c = 0;
-	int found = 0;
+    int c = 0;
+    int found = 0;
     int air_added = 0;
     ms = tm.restart();
 	
-	// Removing cache file, if exists()
-	if (QFile::exists(mainObject->data_file("airports.txt"))) {
-		outLog("*** FGx airportsdata reload: cache file exists!");
-		QFile::remove(mainObject->data_file("airports.txt"));
-		outLog("*** FGx airportsdata reload: REMOVED AIRPORTS CACHE FILE");
-	}
+    // Removing cache file, if exists()
+    if (QFile::exists(mainObject->data_file("airports.txt"))) {
+            outLog("*** FGx airportsdata reload: cache file exists!");
+            QFile::remove(mainObject->data_file("airports.txt"));
+            outLog("*** FGx airportsdata reload: REMOVED AIRPORTS CACHE FILE");
+    }
 
-	//= Cache File
-	QFile cacheFile( mainObject->data_file("airports.txt") );
-	if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
-		//qDebug() << "TODO Open error cachce file=";
-		return true;
-	}
-	QTextStream out(&cacheFile);
+    //= Cache File
+    QFile cacheFile( mainObject->data_file("airports.txt") );
+    if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
+            //qDebug() << "TODO Open error cachce file=";
+            return true;
+    }
+    QTextStream out(&cacheFile);
 
 
-	//================================================
-	//* Lets Loop the directories
-	//* Get out aiports path from setings and get the the subdir also
-	QDirIterator loopAirportsFiles( mainObject->X->airports_path(), QDirIterator::Subdirectories );
-	QString xFileName;
+    //================================================
+    //* Lets Loop the directories
+    //* Get out aiports path from setings and get the the subdir also
+    QDirIterator loopAirportsFiles( mainObject->X->airports_path(), QDirIterator::Subdirectories );
+    QString xFileName;
 
     msg = "FGx airportsdata reload: Scanning XML files in "+mainObject->X->airports_path();
     outLog(msg);
     progress.setWindowTitle(msg);
-	progress.setRange(0, 50000);
+    progress.setRange(0, 50000);
 
     // Check the fgfs additional argument list,
     // and/or any additional scenery path inputs
     // *** take care NOT to duplicate ***
-	QStringList fgfs_args = mainObject->X->get_fgfs_args();
+    QStringList fgfs_args = mainObject->X->get_fgfs_args();
     int i, ind;
     QDir d;
     QString path;
@@ -81,7 +81,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
     QChar psep(':');
 #endif
 	
-	// AIIIIII, found the doubler !, said yves very very loud
+    // AIIIIII, found the doubler !, said yves very very loud - well done said pete ;-)
     for (i = 0; i < fgfs_args.size(); i++) {
         msg = fgfs_args.at(i);
         ind = msg.indexOf(QChar('"'));
@@ -94,7 +94,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
             if (ind == 0)
                 msg = msg.mid(1,msg.length()-2);
             QStringList path_list = msg.split(psep);
-			int pathnumber = 0;
+            int pathnumber = 0;
             for( QStringList::ConstIterator entry = path_list.begin(); entry != path_list.end(); entry++) {
                 path = *entry;
 				pathnumber = pathnumber + 1;
@@ -134,9 +134,8 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
                             QStringList cols; // missing in middle is description ??
                             cols << airport_code << airport_name << fileInfoThreshold.absoluteDir().absolutePath() << QString::number(pathnumber);
 
-							out << cols.join("\t").append("\n");
-							air_added++;
-
+                            out << cols.join("\t").append("\n");
+                            air_added++;
 
                             found++;
                         }
@@ -153,11 +152,11 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
     }
 
 
-	cacheFile.close();
+    cacheFile.close();
 
     msg.sprintf("*** FGx airportsdata reload: Walked %d files, found %d threshold.xml, appended %d to cache",
                 c, found, air_added);
     outLog(msg+", in "+getElapTimeStg(tm.elapsed()));
-	progress.hide();
-	return false;
+    progress.hide();
+    return false;
 }
