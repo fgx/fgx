@@ -1,0 +1,183 @@
+Only in osg/: .DS_Store
+diff -ur --exclude='osg/build*' --exclude=.git CMakeLists.txt osg/CMakeLists.txt
+--- CMakeLists.txt	2013-02-03 13:19:23.000000000 +0100
++++ CMakeLists.txt	2013-02-03 11:22:30.000000000 +0100
+@@ -859,33 +859,13 @@
+         # will overwrite any changes the user sets.
+         # FORCE is used because the options are not reflected in the UI otherwise.
+         # Seems like a good place to add version specific compiler flags too.
+-        IF(NOT OSG_CONFIG_HAS_BEEN_RUN_BEFORE)
+-            IF(${OSG_OSX_SDK_NAME} STREQUAL "macosx10.8")
+-                SET(OSG_DEFAULT_IMAGE_PLUGIN_FOR_OSX "imageio" CACHE STRING "Forced imageio default image plugin for OSX" FORCE)
+-                # 64 Bit Works, i386,ppc is not supported any more
+-                SET(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Build architectures for OSX" FORCE)
+-                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.8 -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
+-            ELSEIF(${OSG_OSX_SDK_NAME} STREQUAL "macosx10.7")
+-                SET(OSG_DEFAULT_IMAGE_PLUGIN_FOR_OSX "imageio" CACHE STRING "Forced imageio default image plugin for OSX" FORCE)
+-                # 64 Bit Works, PPC is not supported any more
+-                SET(CMAKE_OSX_ARCHITECTURES "i386;x86_64" CACHE STRING "Build architectures for OSX" FORCE)
+-                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.7 -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
+-            ELSEIF(${OSG_OSX_SDK_NAME} STREQUAL "macosx10.6" OR ${OSG_OSX_SDK_NAME} STREQUAL "macosx10.5")
+-                SET(OSG_DEFAULT_IMAGE_PLUGIN_FOR_OSX "imageio" CACHE STRING "Forced imageio default image plugin for OSX" FORCE)
+-                # 64-bit compiles are not supported with Carbon. 
+-                SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX" FORCE)
+-                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.5 -ftree-vectorize -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
+-            ELSEIF(${OSG_OSX_SDK_NAME} STREQUAL "macosx10.4")
+-                SET(OSG_DEFAULT_IMAGE_PLUGIN_FOR_OSX "quicktime" CACHE STRING "Forced imageio default image plugin for OSX" FORCE)
+-                SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX" FORCE)
+-                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.4 -ftree-vectorize -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
+-            ELSE()
+-                # No Universal Binary support
+-                # Should break down further to set the -mmacosx-version-min,
+-                # but the SDK detection is too unreliable here.
+-            ENDIF()
+-        ENDIF()
+-
++        
++        
++        SET(OSG_DEFAULT_IMAGE_PLUGIN_FOR_OSX "imageio" CACHE STRING "Forced imageio default image plugin for OSX" FORCE)
++        # 64-bit compiles are not supported with Carbon. 
++        # No! We do not build for PPC and we set sdk 10.5 anyway the hard
++        SET(CMAKE_OSX_ARCHITECTURES "i386" CACHE STRING "Build architectures for OSX" FORCE)
++        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.5 -ftree-vectorize -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
+         OPTION(OSG_BUILD_APPLICATION_BUNDLES "Enable the building of applications and examples as OSX Bundles" OFF)
+ 
+     ENDIF()
+diff -ur --exclude='osg/build*' --exclude=.git CMakeModules/FindAVFoundation.cmake osg/CMakeModules/FindAVFoundation.cmake
+--- CMakeModules/FindAVFoundation.cmake	2013-02-03 13:19:23.000000000 +0100
++++ CMakeModules/FindAVFoundation.cmake	2013-02-02 23:49:24.000000000 +0100
+@@ -32,11 +32,11 @@
+       # AVFoundation exists since 10.7, but only 10.8 has all features necessary for OSG
+       # so check the SDK-setting
+ 
+-      IF(${OSG_OSX_SDK_NAME} STREQUAL "macosx10.8")
++      #IF(${OSG_OSX_SDK_NAME} STREQUAL "macosx10.8")
+           # nothing special here ;-)
+-      ELSE()
++      #ELSE()
+           MESSAGE("AVFoundation disabled for SDK < 10.8")
+           SET(AV_FOUNDATION_FOUND "NO")  
+-      ENDIF()
++      #ENDIF()
+   ENDIF()
+ ENDIF()
+diff -ur --exclude='osg/build*' --exclude=.git CMakeModules/FindQuickTime.cmake osg/CMakeModules/FindQuickTime.cmake
+--- CMakeModules/FindQuickTime.cmake	2013-02-03 13:19:23.000000000 +0100
++++ CMakeModules/FindQuickTime.cmake	2013-02-02 23:48:00.000000000 +0100
+@@ -64,9 +64,9 @@
+       ENDIF()
+       # Disable quicktime for >= 10.7, as it's officially deprecated
+       
+-      IF(${OSG_OSX_SDK_NAME} STREQUAL "macosx10.7" OR ${OSG_OSX_SDK_NAME} STREQUAL "macosx10.8" OR ${OSG_OSX_SDK_NAME} STREQUAL "macosx10.9")
+-          MESSAGE("disabling quicktime because it's not supported by the selected SDK ${OSG_OSX_SDK_NAME}")
+-          SET(QUICKTIME_FOUND "NO")
+-      ENDIF()
++      #IF(${OSG_OSX_SDK_NAME} STREQUAL "macosx10.7" OR ${OSG_OSX_SDK_NAME} STREQUAL "macosx10.8" OR ${OSG_OSX_SDK_NAME} STREQUAL "macosx10.9")
++      #    MESSAGE("disabling quicktime because it's not supported by the selected SDK ${OSG_OSX_SDK_NAME}")
++      #    SET(QUICKTIME_FOUND "NO")
++      #ENDIF()
+   ENDIF()
+ ENDIF()
+Only in osg/: build
+Only in osg/src: .DS_Store
+diff -ur --exclude='osg/build*' --exclude=.git src/osgPlugins/CMakeLists.txt osg/src/osgPlugins/CMakeLists.txt
+--- src/osgPlugins/CMakeLists.txt	2013-02-03 13:19:24.000000000 +0100
++++ src/osgPlugins/CMakeLists.txt	2013-02-03 12:42:51.000000000 +0100
+@@ -221,9 +221,9 @@
+     ADD_SUBDIRECTORY(quicktime)
+ ENDIF()
+ 
+-IF(QTKIT_FOUND)
+-    ADD_SUBDIRECTORY(QTKit)
+-ENDIF()
++#IF(QTKIT_FOUND)
++#    ADD_SUBDIRECTORY(QTKit)
++#ENDIF()
+ 
+ IF(NVTT_FOUND)
+     ADD_SUBDIRECTORY(nvtt)
+@@ -272,9 +272,9 @@
+ ENDIF(ASIO_FOUND)
+ 
+ 
+-IF(ZEROCONF_FOUND)
+-    ADD_SUBDIRECTORY(ZeroConfDevice)
+-ENDIF()
++#IF(ZEROCONF_FOUND)
++#    ADD_SUBDIRECTORY(ZeroConfDevice)
++#ENDIF()
+ 
+ ##########to get all the variables of Cmake
+ #GET_CMAKE_PROPERTY(MYVARS VARIABLES)
+diff -ur --exclude='osg/build*' --exclude=.git src/osgPlugins/QTKit/OSXQTKitVideo.mm osg/src/osgPlugins/QTKit/OSXQTKitVideo.mm
+--- src/osgPlugins/QTKit/OSXQTKitVideo.mm	2013-02-03 13:19:24.000000000 +0100
++++ src/osgPlugins/QTKit/OSXQTKitVideo.mm	2013-02-03 01:35:09.000000000 +0100
+@@ -23,6 +23,7 @@
+ 
+ namespace {
+ 
++
+ static NSString* toNSString(const std::string& str)
+ {
+     return [NSString stringWithUTF8String: str.c_str()];
+@@ -89,7 +90,7 @@
+ };
+ 
+ 
+-void OSXQTKitVideo::initializeQTKit()
++/*void OSXQTKitVideo::initializeQTKit()
+ {
+     static bool inited(false);
+     if (!inited)
+@@ -121,10 +122,10 @@
+             movie = NULL;
+         }
+     }
+-}
++}*/
+ 
+ 
+-OSXQTKitVideo::OSXQTKitVideo()
++/*OSXQTKitVideo::OSXQTKitVideo()
+     : osgVideo::VideoImageStream()
+     , _rate(0.0)
+     , _coreVideoAdapter(NULL)
+@@ -139,7 +140,7 @@
+     _data->notificationHandler.video = this;
+     
+     setOrigin(osg::Image::TOP_LEFT);
+-}
++}*/
+ 
+ 
+ OSXQTKitVideo::~OSXQTKitVideo()
+@@ -357,7 +358,7 @@
+ 
+ 
+ 
+-void OSXQTKitVideo::decodeFrame(bool force)
++/*void OSXQTKitVideo::decodeFrame(bool force)
+ {
+     if(getCoreVideoAdapter())
+         return;
+@@ -405,7 +406,7 @@
+         CFRetain(_data->lastFrame);
+         dirty();
+     }
+-}
++}*/
+ 
+ 
+ osg::Texture* OSXQTKitVideo::createSuitableTexture()
+diff -ur --exclude='osg/build*' --exclude=.git src/osgViewer/CMakeLists.txt osg/src/osgViewer/CMakeLists.txt
+--- src/osgViewer/CMakeLists.txt	2013-02-03 13:19:25.000000000 +0100
++++ src/osgViewer/CMakeLists.txt	2013-02-03 00:06:50.000000000 +0100
+@@ -64,7 +64,7 @@
+     )
+ ELSE()
+     IF(APPLE)
+-
++		SET (OSG_OSX_SDK_NAME "macosx10.5")
+         IF(OSG_BUILD_PLATFORM_IPHONE OR OSG_BUILD_PLATFORM_IPHONE_SIMULATOR)
+             SET(OSG_WINDOWING_SYSTEM "IOS" CACHE STRING "Windowing system type for graphics window creation, options only IOS.")
+         ELSE()
