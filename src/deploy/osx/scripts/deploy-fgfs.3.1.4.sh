@@ -26,8 +26,8 @@ do
 	install_name_tool -change libosgVolume.95.dylib @executable_path/../Frameworks/libosgVolume.95.dylib $f
 	install_name_tool -change libosgWidget.95.dylib @executable_path/../Frameworks/libosgWidget.95.dylib $f
 	
-	# link ALUT
-	install_name_tool -change /Users/jmt/Library/Frameworks/ALUT.framework/Versions/A/ALUT @executable_path/../Frameworks//ALUT.framework/Versions/A/ALUT $f
+	# link ALUT (not needed for FGx >= 2.10.0 anymore, thanks James!) 
+	#install_name_tool -change /Users/jmt/Library/Frameworks/ALUT.framework/Versions/A/ALUT @executable_path/../Frameworks//ALUT.framework/Versions/A/ALUT $f
 	
 	# link libjepeg (imageio/cocoa related)
 	install_name_tool -change /opt/local/lib/libjpeg.8.dylib @executable_path/../Frameworks/libjpeg.8.dylib $f
