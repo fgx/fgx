@@ -1,6 +1,6 @@
---- simgear/scene/tsync/terrasync.cxx	2013-02-11 23:49:56.000000000 +0100
-+++ simgear/scene/tsync/terrasync_105.cxx	2013-02-11 23:55:24.000000000 +0100
-@@ -399,19 +399,8 @@
+--- simgear/scene/tsync/terrasync.cxx	2013-02-12 00:17:50.000000000 +0100
++++ simgear/scene/tsync/terrasync_105.cxx	2013-02-12 00:19:19.000000000 +0100
+@@ -399,18 +399,7 @@
      apr_pool_t *subpool = svn_pool_create(_svn_pool);
  
      svn_error_t *err = NULL;
@@ -16,13 +16,19 @@
 -            _svn_ctx,
 -            subpool);
 -#else
--    // version 1.4 API
-+	
 +
+     // version 1.4 API
      err = svn_client_checkout2(NULL,
              command.str().c_str(),
-             dest_base_dir.str().c_str(),
-@@ -635,11 +624,6 @@
+@@ -421,7 +410,6 @@
+             0, // ignore externals = false
+             _svn_ctx,
+             subpool);
+-#endif
+ 
+     bool ReturnValue = true;
+     if (err)
+@@ -635,15 +623,9 @@
  
      svn_auth_baton_t *ab=NULL;
  
@@ -34,3 +40,7 @@
      err = svn_cmdline_setup_auth_baton(&ab,
          TRUE, NULL, NULL, config_dir, TRUE, cfg,
          _svn_ctx->cancel_func, _svn_ctx->cancel_baton, pool);
+-#endif
+ 
+     if (err)
+         return svn_cmdline_handle_exit_error(err, pool, "fgfs: ");
