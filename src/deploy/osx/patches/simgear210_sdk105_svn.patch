@@ -1,0 +1,36 @@
+--- simgear/scene/tsync/terrasync.cxx	2013-02-11 23:49:56.000000000 +0100
++++ simgear/scene/tsync/terrasync_105.cxx	2013-02-11 23:55:24.000000000 +0100
+@@ -399,19 +399,8 @@
+     apr_pool_t *subpool = svn_pool_create(_svn_pool);
+ 
+     svn_error_t *err = NULL;
+-#if (SVN_VER_MINOR >= 5)
+-    err = svn_client_checkout3(NULL,
+-            command.str().c_str(),
+-            dest_base_dir.str().c_str(),
+-            _svn_rev_peg,
+-            _svn_rev,
+-            svn_depth_infinity,
+-            0, // ignore-externals = false
+-            0, // allow unver obstructions = false
+-            _svn_ctx,
+-            subpool);
+-#else
+-    // version 1.4 API
++	
++
+     err = svn_client_checkout2(NULL,
+             command.str().c_str(),
+             dest_base_dir.str().c_str(),
+@@ -635,11 +624,6 @@
+ 
+     svn_auth_baton_t *ab=NULL;
+ 
+-#if (SVN_VER_MINOR >= 6)
+-    err = svn_cmdline_create_auth_baton  (&ab,
+-            TRUE, NULL, NULL, config_dir, TRUE, FALSE, cfg,
+-            _svn_ctx->cancel_func, _svn_ctx->cancel_baton, pool);
+-#else
+     err = svn_cmdline_setup_auth_baton(&ab,
+         TRUE, NULL, NULL, config_dir, TRUE, cfg,
+         _svn_ctx->cancel_func, _svn_ctx->cancel_baton, pool);
