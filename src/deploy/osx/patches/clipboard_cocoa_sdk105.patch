@@ -18,7 +18,7 @@
 -        NSPasteboard* pboard = [NSPasteboard generalPasteboard];
 -        NSString* nstext = [pboard stringForType:NSPasteboardTypeString];
 -        return stdStringFromCocoa(nstext);
-+      #if MAC_OS_X_VERSION_MIN_REQUIRED <= 1050
++      #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
 +      NSString* nstext = [pboard stringForType:NSStringPboardType];
 +      #else // > 10.5
 +      NSString* nstext = [pboard stringForType:NSPasteboardTypeString];
@@ -31,7 +31,7 @@
        {
          NSPasteboard* pboard = [NSPasteboard generalPasteboard];
          NSString* nstext = stdStringToCocoa(text);
-+        #if MAC_OS_X_VERSION_MIN_REQUIRED <= 1050
++        #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
 +        NSString* type = NSStringPboardType;
 +        NSArray* types = [NSArray arrayWithObjects: type, nil];
 +        [pboard declareTypes:types owner:nil];
