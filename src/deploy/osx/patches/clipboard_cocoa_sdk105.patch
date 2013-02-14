@@ -1,5 +1,5 @@
---- src/Scripting/ClipboardCocoa.mm	2013-02-14 18:56:21.000000000 +0100
-+++ src/Scripting/ClipboardCocoa.mm.patched	2013-02-14 19:21:23.000000000 +0100
+--- src/Scripting/ClipboardCocoa.mm	2012-09-08 19:03:16.000000000 +0200
++++ src/Scripting/ClipboardCocoa.mm.patched	2013-02-14 20:59:47.000000000 +0100
 @@ -16,6 +16,8 @@
  // along with this program; if not, write to the Free Software
  // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -9,37 +9,38 @@
  #include "NasalClipboard.hxx"
  
  #include <simgear/debug/logstream.hxx>
-@@ -64,11 +66,12 @@
-     {
-       CocoaAutoreleasePool pool;
+@@ -66,9 +68,13 @@
        
--      if( type == CLIPBOARD )
--      {
+       if( type == CLIPBOARD )
+       {
 -        NSPasteboard* pboard = [NSPasteboard generalPasteboard];
 -        NSString* nstext = [pboard stringForType:NSPasteboardTypeString];
 -        return stdStringFromCocoa(nstext);
-+      #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
-+      NSString* nstext = [pboard stringForType:NSStringPboardType];
-+      #else // > 10.5
-+      NSString* nstext = [pboard stringForType:NSPasteboardTypeString];
-+      #endif // MAC_OS_X_VERSION_MIN_REQUIRED
-+      return stdStringFromCocoa(nstext);
++       NSPasteboard* pboard = [NSPasteboard generalPasteboard];
++       #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
++         NSString* nstext = [pboard stringForType:NSStringPboardType];
++       #else // > 10.5
++         NSString* nstext = [pboard stringForType:NSPasteboardTypeString];
++       #endif // MAC_OS_X_VERSION_MIN_REQUIRED
++       return stdStringFromCocoa(nstext);
        }
        
        return "";
-@@ -85,8 +88,16 @@
+@@ -85,8 +91,16 @@
        {
          NSPasteboard* pboard = [NSPasteboard generalPasteboard];
          NSString* nstext = stdStringToCocoa(text);
+-        [pboard clearContents];
+-        [pboard setString:nstext forType:NSPasteboardTypeString];
 +        #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
-+        NSString* type = NSStringPboardType;
-+        NSArray* types = [NSArray arrayWithObjects: type, nil];
-+        [pboard declareTypes:types owner:nil];
-+        [pboard setString:nstext forType: NSStringPboardType];
++          NSString* type = NSStringPboardType;
++          NSArray* types = [NSArray arrayWithObjects: type, nil];
++          [pboard declareTypes:types owner:nil];
++          [pboard setString:nstext forType: NSStringPboardType];
 +        #else // > 10.5
-+        NSString* type = NSPasteboardTypeString;
-         [pboard clearContents];
-         [pboard setString:nstext forType:NSPasteboardTypeString];
++          NSString* type = NSPasteboardTypeString;
++          [pboard clearContents];
++          [pboard setString:nstext forType:NSPasteboardTypeString];
 +        #endif // MAC_OS_X_VERSION_MIN_REQUIRED
          return true;
        }
