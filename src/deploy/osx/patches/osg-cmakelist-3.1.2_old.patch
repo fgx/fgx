@@ -1,5 +1,5 @@
---- ../OpenSceneGraph-3.1.2-patched/CMakeLists.txt	2012-03-25 20:54:06.000000000 +0200
-+++ ../OpenSceneGraph-3.1.2-compiled/CMakeLists.txt	2012-03-25 21:12:34.000000000 +0200
+--- CMakeLists.txt	2012-03-25 20:54:06.000000000 +0200
++++ CMakeLists.txt	2012-03-25 21:12:34.000000000 +0200
 @@ -189,9 +189,11 @@
  IF(NOT ANDROID)
  IF(APPLE)
