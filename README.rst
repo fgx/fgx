@@ -19,24 +19,24 @@ The project
 Minimal Requirements
 --------------------------
 Hard- and Software (TODO: Windows, Linux requirements):
-- Apple Intel-based Mac, OSX 10.5.8, 1 GB RAM, 128 Mb VRAM
-- Windows XP, Vista
-- Linux Debian/Ubuntu, tested also for Fedora/Gentoo
+* Apple Intel-based Mac, OSX 10.5.8, 1 GB RAM, 128 Mb VRAM
+* Windows XP, Vista
+* Linux Debian/Ubuntu, tested also for Fedora/Gentoo
 
 Development requirements:
 --------------------------
-- Open Source Edition of qt, >= 4.7
-http://doc.qt.nokia.com/4.7-snapshot/requirements.htm
-- Qt Creator, for OSX you can also use XCode <= 4.0
-- recent git
+* Open Source Edition of qt, >= 4.7
+  * http://doc.qt.nokia.com/4.7-snapshot/requirements.htm
+* Qt Creator, for OSX you can also use XCode <= 4.0
+* lastet git
 
 
 Installation
 --------------------------
 From source
-> cd src/
-> qmake
-> make
+  > cd src/
+  > qmake
+  > make
 
 About
 --------------------------
@@ -53,11 +53,11 @@ All the code is under GPLv2 or later. LICENCE.txt and README.txt have to be incl
 Authors
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 * Yves Sablonier (CH), flightgear [at] sablonier dot ch
-  * Project Lead, Code Facility Services, GUI Design and Features
+   * Project Lead, Code Facility Services, GUI Design and Features
 * Pete Morgan (UK) pete [at] freeflightsim dot org
-  * Coding lead, Developer and Programmer, Application Design
+   * Coding lead, Developer and Programmer, Application Design
 * Geoff McLane (F) ubuntu [at] geoffair.info
-  * Senior Developer, Analyst, Reviewer, Engineer and Programmer
+   * Senior Developer, Analyst, Reviewer, Engineer and Programmer
 
 Some included code in FGx comes from other GPL sources, like zlib from Jean-Loup Gailly/Mark Adler. We try to pay attribution everywhere, you will find such notes directly in the source files or documentation.
 
