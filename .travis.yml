@@ -1,0 +1,17 @@
+language: cpp
+compiler:
+  - gcc
+before_install:
+    - sudo apt-get update -qq qt
+script:
+    - make
+    - make docs
+notifications:
+    channels:
+      - "irc.flightgear.org#fgx"
+    template:
+      - "%{repository} (%{commit}) by %{author} : %{message} %{foo} "
+      - "Build details: %{build_url}"
+      - "Latest commit: %{compare_url}"
+    on_success: change
+    on_failure: change
