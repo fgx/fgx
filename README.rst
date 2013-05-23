@@ -2,7 +2,11 @@ FGx - FREE AND OPEN SOURCE LAUNCHER FOR FLIGHTGEAR
 --------------------------------------------------
 Version 2.8.x
 
+.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=master
+    :target: http://travis-ci.org/fgx/fgx
 
+.. image:: https://coveralls.io/repos/fgx/fgx/badge.png?branch=master
+    :target: https://coveralls.io/r/fgx/fgx
 
 ==== The project ==== 
 * Bugs and documentation: http://code.google.com/p/fgx
