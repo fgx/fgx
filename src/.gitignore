@@ -13,3 +13,9 @@ PkgInfo
 DEV_MODE.txt
 .DS_Store
 build*
+
+FGx.config
+FGx.creator
+FGx.creator.user
+FGx.files
+FGx.includes

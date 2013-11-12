@@ -1,2 +1,11 @@
 fgx-build-desktop*/
 .DS_*
+
+CMakeCache.txt
+CMakeLists.txt.user
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
+
