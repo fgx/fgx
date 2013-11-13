@@ -9,8 +9,11 @@
 
 #include <QString>
 #include <QByteArray>
-
+#ifdef USE_SYSTEM_ZLIB
+#include <zlib.h>
+#else
 #include "zlib/fgx_zlib.h"
+#endif
 
 typedef void * fgx_gzHandle;
 

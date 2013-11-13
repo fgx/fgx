@@ -146,3 +146,40 @@ RESOURCES += resources/ycons.qrc \
 	resources/default.qrc \
 	resources/images.qrc
 CONFIG += qt thread
+
+unix {
+	contains(SYSTEM_ZLIB, "ON") {
+		packagesExist(zlib) {
+			CONFIG += link_pkgconfig
+    		PKGCONFIG += zlib
+			message("Using system zlib")
+			DEFINE += USE_SYSTEM_ZLIB
+			HEADERS -= utilities/zlib/inftrees.h \
+			utilities/zlib/inflate.h \
+			utilities/zlib/inffixed.h \
+			utilities/zlib/inffast.h \
+			utilities/zlib/gzguts.h \
+			utilities/zlib/fgx_zutil.h \
+			utilities/zlib/fgx_zlib.h \
+			utilities/zlib/fgx_zconf.h \
+			utilities/zlib/deflate.h \
+			utilities/zlib/crc32.h \
+			utilities/zlib/trees.h
+			SOURCES -= utilities/zlib/uncompr.c \
+			utilities/zlib/trees.c \
+			utilities/zlib/inftrees.c \
+			utilities/zlib/inflate.c \
+			utilities/zlib/inffast.c \
+			utilities/zlib/infback.c \
+			utilities/zlib/gzwrite.c \
+			utilities/zlib/gzread.c \
+			utilities/zlib/gzlib.c \
+			utilities/zlib/gzclose.c \
+			utilities/zlib/deflate.c \
+			utilities/zlib/crc32.c \
+			utilities/zlib/compress.c \
+			utilities/zlib/adler32.c \
+			utilities/zlib/zutil.c
+		}
+	}
+}
