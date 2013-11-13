@@ -9,16 +9,16 @@
 #include <QHostAddress>
 #include <QNetworkInterface>
 
-#include <QtCore/QList>
+#include <QList>
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QSplitter>
-#include <QtGui/QToolBar>
-#include <QtGui/QAction>
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QTreeWidgetItem>
-#include <QtGui/QIcon>
-#include <QtGui/QFont>
+#include <QVBoxLayout>
+#include <QSplitter>
+#include <QToolBar>
+#include <QAction>
+#include <QAbstractItemView>
+#include <QTreeWidgetItem>
+#include <QIcon>
+#include <QFont>
 
 
 #include "props/propstreewidget.h"

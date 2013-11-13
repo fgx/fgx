@@ -11,19 +11,19 @@
 
 
 
-#include <QtCore/QTimer>
-#include <QtCore/QStringList>
+#include <QTimer>
+#include <QStringList>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
-#include <QtGui/QTreeView>
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QStandardItem>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QStatusBar>
+#include <QTreeView>
+#include <QStandardItemModel>
+#include <QStandardItem>
+#include <QSortFilterProxyModel>
+#include <QStatusBar>
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QComboBox>
+#include <QCheckBox>
+#include <QComboBox>
 #include <QAction>
 
 #include "xobjects/mainobject.h"

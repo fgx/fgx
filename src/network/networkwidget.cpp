@@ -6,33 +6,33 @@
 // Geoff McLane
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
-#include <QtCore/QString>
-#include <QtCore/QChar>
-#include <QtCore/QMap>
-#include <QtCore/QMapIterator>
-#include <QtCore/QUrl>
+#include <QString>
+#include <QChar>
+#include <QMap>
+#include <QMapIterator>
+#include <QUrl>
 
-#include <QtCore/QProcess>
+#include <QProcess>
 
-#include <QtNetwork/QHostInfo>
-#include <QtNetwork/QHostAddress>
-#include <QtNetwork/QNetworkInterface>
+#include <QHostInfo>
+#include <QHostAddress>
+#include <QNetworkInterface>
 
-#include <QtGui/QDesktopServices>
-#include <QtGui/QBrush>
-#include <QtGui/QColor>
+#include <QDesktopServices>
+#include <QBrush>
+#include <QColor>
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QGridLayout>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
 
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
-#include <QtGui/QLabel>
-#include <QtGui/QTreeWidgetItem>
-#include <QtGui/QHeaderView>
-#include <QtGui/QToolButton>
-#include <QtGui/QPushButton>
+#include <QAction>
+#include <QMenu>
+#include <QLabel>
+#include <QTreeWidgetItem>
+#include <QHeaderView>
+#include <QToolButton>
+#include <QPushButton>
 
 #include "network/networkwidget.h"
 #include "network/mptelnet.h"

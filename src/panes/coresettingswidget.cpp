@@ -9,15 +9,15 @@
 #include "app_config.h"
 //#include <QtDebug>
 
-#include <QtCore/QProcess>
+#include <QProcess>
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QRadioButton>
-#include <QtGui/QPushButton>
-#include <QtGui/QFileDialog>
-#include <QtGui/QWhatsThis>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QRadioButton>
+#include <QPushButton>
+#include <QFileDialog>
+#include <QWhatsThis>
 
 #include "panes/coresettingswidget.h"
 #include "xwidgets/xgroupboxes.h"

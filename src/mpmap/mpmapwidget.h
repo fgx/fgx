@@ -11,14 +11,14 @@
 
 #include <QtCore/QString>
 
-#include <QtGui/QWidget>
-#include <QtGui/QProgressBar>
-#include <QtGui/QStatusBar>
-#include <QtGui/QComboBox>
+#include <QWidget>
+#include <QProgressBar>
+#include <QStatusBar>
+#include <QComboBox>
 
-#include <QtGui/QCloseEvent>
+#include <QCloseEvent>
 
-#include <QtWebKit/QWebView>
+#include <QWebView>
 #include <QtNetwork/QNetworkDiskCache>
 #include <QtNetwork/QNetworkCookieJar>
 

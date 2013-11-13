@@ -16,28 +16,28 @@
 #include <QtXml/QDomNodeList>
 
 #include <QDesktopServices>
-#include <QtGui/QMessageBox>
-#include <QtGui/QSizePolicy>
-#include <QtGui/QFont>
+#include <QMessageBox>
+#include <QSizePolicy>
+#include <QFont>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QGridLayout>
-#include <QtGui/QSplitter>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QSplitter>
 
-#include <QtGui/QToolBar>
-#include <QtGui/QToolButton>
-#include <QtGui/QPushButton>
-#include <QtGui/QAction>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
+#include <QToolBar>
+#include <QToolButton>
+#include <QPushButton>
+#include <QAction>
+#include <QLabel>
+#include <QLineEdit>
 
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QItemSelection>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QHeaderView>
+#include <QStandardItemModel>
+#include <QItemSelection>
+#include <QItemSelectionModel>
+#include <QAbstractItemView>
+#include <QHeaderView>
 
-#include <QtGui/QProgressDialog>
+#include <QProgressDialog>
 
 
 

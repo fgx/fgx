@@ -6,14 +6,14 @@
 // Geoff McLane
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
+#include <QString>
+#include <QStringList>
+#include <QVariant>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QRadioButton>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QGroupBox>
+#include <QRadioButton>
 
 #include "timeweatherwidget.h"
 #include "xwidgets/xgroupboxes.h"

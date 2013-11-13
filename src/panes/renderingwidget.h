@@ -14,9 +14,9 @@
 #include <QtCore/QMap>
 
 
-#include <QtGui/QWidget>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QPlainTextEdit>
+#include <QWidget>
+#include <QButtonGroup>
+#include <QPlainTextEdit>
 
 
 #include "xobjects/mainobject.h"

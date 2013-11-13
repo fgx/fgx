@@ -10,9 +10,9 @@
 #define VIEWLOGWIDGET_H
 
 
-#include <QtGui/QPlainTextEdit>
-#include <QtGui/QPushButton>
-#include <QtGui/QWidget>
+#include <QPlainTextEdit>
+#include <QPushButton>
+#include <QWidget>
 
 #include "xobjects/mainobject.h"
 

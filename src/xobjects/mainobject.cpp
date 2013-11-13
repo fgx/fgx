@@ -12,11 +12,11 @@
 
 #include <QStyleFactory>
 
-#include <QtGui/QDesktopServices>
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
-#include <QtGui/QMenuBar>
-#include <QtGui/QCursor>
+#include <QDesktopServices>
+#include <QAction>
+#include <QMenu>
+#include <QMenuBar>
+#include <QCursor>
 #include <QMenuBar>
 
 #include "xobjects/mainobject.h"

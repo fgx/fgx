@@ -9,13 +9,13 @@
 #ifndef CORESETTINGSWIDGET_H
 #define CORESETTINGSWIDGET_H
 
-#include <QtGui/QWidget>
-#include <QtGui/QComboBox>
-#include <QtGui/QCheckBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QGroupBox>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QRadioButton>
+#include <QWidget>
+#include <QComboBox>
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QGroupBox>
+#include <QButtonGroup>
+#include <QRadioButton>
 #include <QToolButton>
 
 #include "xobjects/mainobject.h"

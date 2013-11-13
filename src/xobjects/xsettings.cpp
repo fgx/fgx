@@ -7,11 +7,11 @@
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 
-#include <QtCore/QDir>
-#include <QtCore/QVariant>
+#include <QDir>
+#include <QVariant>
 
-#include <QtGui/QDesktopServices>
-#include <QtGui/QWidget>
+#include <QDesktopServices>
+#include <QWidget>
 
 #include "xsettings.h"
 #include "utilities/utilities.h"

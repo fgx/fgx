@@ -6,11 +6,11 @@
 // Geoff McLane
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
-#include <QtCore/QByteArray>
-#include <QtCore/QStringList>
+#include <QByteArray>
+#include <QStringList>
 
-#include <QtNetwork/QTcpSocket>
-#include <QtNetwork/QHostAddress>
+#include <QTcpSocket>
+#include <QHostAddress>
 
 #include "telnetslave.h"
 
@@ -60,7 +60,7 @@ void TelnetSlave::set_property(QString path, QString value){
 	command.append(path).append(" ").append(value).append("\r\n");
 	//QByteArray cmd(command);
 	qDebug() << command;
-	//*** TODO #### ARGH.. this crashes with ASSERT failure in QList<T>::operator[]: "index out of range", file /usr/include/qt4/QtCore/qlist.h, line 463
+    //*** TODO #### ARGH.. this crashes with ASSERT failure in QList<T>::operator[]: "index out of range", file /usr/include/qt4/qlist.h, line 463
 	socket->write( command );
 }
 

@@ -12,11 +12,11 @@
 #include <QtCore/QVariant>
 
 
-#include <QtGui/QCloseEvent>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QToolBar>
-#include <QtGui/QLabel>
-#include <QtGui/QComboBox>
+#include <QCloseEvent>
+#include <QVBoxLayout>
+#include <QToolBar>
+#include <QLabel>
+#include <QComboBox>
 
 #include "mpmap/mpmapwidget.h"
 #include "panes/coresettingswidget.h"

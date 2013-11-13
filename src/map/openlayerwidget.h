@@ -17,14 +17,14 @@
 #include <QtNetwork/QNetworkDiskCache>
 
 
-#include <QtGui/QStatusBar>
-#include <QtGui/QProgressBar>
-#include <QtGui/QLabel>
-#include <QtGui/QWidget>
-#include <QtGui/QActionGroup>
-#include <QtGui/QToolButton>
-#include <QtGui/QSlider>
-#include <QtGui/QDoubleSpinBox>
+#include <QStatusBar>
+#include <QProgressBar>
+#include <QLabel>
+#include <QWidget>
+#include <QActionGroup>
+#include <QToolButton>
+#include <QSlider>
+#include <QDoubleSpinBox>
 #include <QToolBar>
 #include <QDial>
 

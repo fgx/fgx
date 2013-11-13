@@ -9,10 +9,10 @@
 #ifndef EXPERTOPTIONSWIDGET_H
 #define EXPERTOPTIONSWIDGET_H
 
-#include <QtGui/QPlainTextEdit>
-#include <QtGui/QPushButton>
-#include <QtGui/QWidget>
-#include <QtGui/QButtonGroup>
+#include <QPlainTextEdit>
+#include <QPushButton>
+#include <QWidget>
+#include <QButtonGroup>
 
 #include "xobjects/mainobject.h"
 

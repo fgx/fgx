@@ -12,16 +12,16 @@
 #include <QString>
 #include <QStringList>
 
-#include <QtGui/QWidget>
-#include <QtGui/QAbstractButton>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QCheckBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QTabBar>
-#include <QtGui/QLabel>
-#include <QtGui/QStatusBar>
-#include <QtGui/QToolButton>
+#include <QWidget>
+#include <QAbstractButton>
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QTreeWidget>
+#include <QTabBar>
+#include <QLabel>
+#include <QStatusBar>
+#include <QToolButton>
 
 #include "xobjects/mainobject.h"
 

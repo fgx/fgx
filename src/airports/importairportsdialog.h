@@ -10,11 +10,11 @@
 #define IMPORTAIRPORTSWIDGET_H
 
 
-#include <QtGui/QDialog>
-#include <QtGui/QRadioButton>
-#include <QtGui/QCheckBox>
-#include <QtGui/QPushButton>
-#include <QtGui/QProgressDialog>
+#include <QDialog>
+#include <QRadioButton>
+#include <QCheckBox>
+#include <QPushButton>
+#include <QProgressDialog>
 
 #include "xobjects/xsettings.h"
 

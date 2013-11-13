@@ -8,10 +8,10 @@
 
 #include <QFile>
 #include <QFileInfo>
-#include <QtCore/QProcess>
-#include <QtCore/QTimer>
+#include <QProcess>
+#include <QTimer>
 
-#include <QtGui/QHBoxLayout>
+#include <QHBoxLayout>
 
 #include "execontrols.h"
 #include "launcher/launcherwindow.h"

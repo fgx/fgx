@@ -9,12 +9,12 @@
 #ifndef LAUNCHERWINDOW_H
 #define LAUNCHERWINDOW_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
-#include <QtGui/QPushButton>
-#include <QtGui/QMessageBox>
+#include <QAction>
+#include <QActionGroup>
+#include <QPushButton>
+#include <QMessageBox>
 
 
 #include "panes/coresettingswidget.h"

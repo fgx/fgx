@@ -6,21 +6,21 @@
 // Geoff McLane
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
-#include <QtCore/QByteArray>
-#include <QtCore/QFile>
-#include <QtCore/QStringList>
+#include <QByteArray>
+#include <QFile>
+#include <QStringList>
 
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QToolBar>
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
-#include <QtGui/QToolButton>
-#include <QtGui/QMenu>
-#include <QtGui/QLabel>
+#include <QVBoxLayout>
+#include <QToolBar>
+#include <QAction>
+#include <QActionGroup>
+#include <QToolButton>
+#include <QMenu>
+#include <QLabel>
 
 #include <QtWebKit/QWebFrame>
-#include <QtGui/QDesktopServices>
+#include <QDesktopServices>
 
 #include "mpmap/mpmapxwidget.h"
 

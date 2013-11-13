@@ -7,19 +7,19 @@
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QProcess>
-#include <QtCore/QVariant>
+#include <QFileInfo>
+#include <QProcess>
+#include <QVariant>
 
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QWidget>
-#include <QtGui/QRadioButton>
-#include <QtGui/QIcon>
-#include <QtGui/QLabel>
-#include <QtGui/QCheckBox>
-#include <QtGui/QProgressDialog>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QWidget>
+#include <QRadioButton>
+#include <QIcon>
+#include <QLabel>
+#include <QCheckBox>
+#include <QProgressDialog>
 
 
 #include "airports/importairportsdialog.h"

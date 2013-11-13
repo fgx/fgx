@@ -13,21 +13,21 @@
 #include <QtCore/QStringList>
 #include <QtCore/QHash>
 
-#include <QtGui/QWidget>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QRadioButton>
-#include <QtGui/QPushButton>
-#include <QtGui/QProgressBar>
-#include <QtGui/QStatusBar>
-#include <QtGui/QRadioButton>
-#include <QtGui/QToolButton>
-#include <QtGui/QTabWidget>
+#include <QWidget>
+#include <QButtonGroup>
+#include <QRadioButton>
+#include <QPushButton>
+#include <QProgressBar>
+#include <QStatusBar>
+#include <QRadioButton>
+#include <QToolButton>
+#include <QTabWidget>
 
 
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QTreeView>
-#include <QtGui/QTreeWidget>
+#include <QStandardItemModel>
+#include <QSortFilterProxyModel>
+#include <QTreeView>
+#include <QTreeWidget>
 
 #include "xwidgets/xgroupboxes.h"
 

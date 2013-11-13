@@ -10,12 +10,12 @@
 
 #include <QListIterator>
 
-#include <QtXml/QDomNodeList>
-#include <QtXml/QDomNamedNodeMap>
+#include <QDomNodeList>
+#include <QDomNamedNodeMap>
 
 
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 
 #include <QVBoxLayout>

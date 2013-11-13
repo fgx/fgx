@@ -1,4 +1,5 @@
 fgx-build-desktop*/
+build-*/
 .DS_*
 
 CMakeCache.txt

@@ -6,24 +6,24 @@
 // Geoff McLane
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
-#include <QtCore/QUrl>
-#include <QtCore/QCoreApplication>
+#include <QUrl>
+#include <QCoreApplication>
 #include <QtCore/QTimer>
 #include <QtCore/QProcess>
-#include <QtGui/QWhatsThis>
+#include <QWhatsThis>
 
 
-#include <QtGui/QApplication>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHeaderView>
-#include <QtGui/QDesktopServices>
-#include <QtGui/QMenuBar>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
-#include <QtGui/QStyleFactory>
-#include <QtGui/QMessageBox>
-#include <QtGui/QToolBar>
-#include <QtGui/QFileDialog>
+#include <QApplication>
+#include <QVBoxLayout>
+#include <QHeaderView>
+#include <QDesktopServices>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
+#include <QStyleFactory>
+#include <QMessageBox>
+#include <QToolBar>
+#include <QFileDialog>
 
 #include "xwidgets/xgroupboxes.h"
 

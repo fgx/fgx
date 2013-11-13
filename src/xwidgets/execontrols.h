@@ -9,14 +9,14 @@
 #ifndef EXECONTROLS_H
 #define EXECONTROLS_H
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QString>
+#include <QStringList>
 
-#include <QtGui/QWidget>
-#include <QtGui/QGroupBox>
-#include <QtGui/QPushButton>
-#include <QtGui/QToolButton>
-#include <QtGui/QStatusBar>
+#include <QWidget>
+#include <QGroupBox>
+#include <QPushButton>
+#include <QToolButton>
+#include <QStatusBar>
 #include <QProcess>
 
 class ExeControls : public QGroupBox

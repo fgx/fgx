@@ -7,7 +7,7 @@
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 
-#include <QtGui/QTreeWidgetItem>
+#include <QTreeWidgetItem>
 
 class XTreeWidgetItem : public QTreeWidgetItem
 {

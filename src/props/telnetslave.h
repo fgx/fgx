@@ -9,10 +9,10 @@
 #ifndef TELNETSLAVE_H
 #define TELNETSLAVE_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QQueue>
-#include <QtNetwork/QTcpSocket>
+#include <QObject>
+#include <QString>
+#include <QQueue>
+#include <QTcpSocket>
 
 /*
 void	connected ()

@@ -1,7 +1,7 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
 // FGx FlightGear Launcher // pilotswidget.h
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
-// (c) 2010-2012
+// (c) 2010-201
 // Yves Sablonier, Pete Morgan
 // Geoff McLane
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
@@ -10,16 +10,16 @@
 #define PILOTSWIDGET_H
 
 
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkReply>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 #include <QDomDocument>
 
-#include <QtGui/QWidget>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QStatusBar>
-#include <QtGui/QCheckBox>
-#include <QtGui/QComboBox>
+#include <QWidget>
+#include <QTreeWidget>
+#include <QStatusBar>
+#include <QCheckBox>
+#include <QComboBox>
 
 
 #include "xobjects/mainobject.h"

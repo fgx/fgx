@@ -9,20 +9,20 @@
 #ifndef MPMAPXWIDGET_H
 #define MPMAPXWIDGET_H
 
-#include <QtCore/QVariant>
-#include <QtCore/QString>
+#include <QVariant>
+#include <QString>
 
-#include <QtWebKit/QWebView>
-#include <QtNetwork/QNetworkDiskCache>
-#include <QtNetwork/QNetworkCookieJar>
+#include <QWebView>
+#include <QNetworkDiskCache>
+#include <QNetworkCookieJar>
 
-#include <QtGui/QSplitter>
-#include <QtGui/QStatusBar>
-#include <QtGui/QProgressBar>
-#include <QtGui/QLabel>
-#include <QtGui/QWidget>
-#include <QtGui/QActionGroup>
-#include <QtGui/QToolButton>
+#include <QSplitter>
+#include <QStatusBar>
+#include <QProgressBar>
+#include <QLabel>
+#include <QWidget>
+#include <QActionGroup>
+#include <QToolButton>
 
 
 #include "map/openlayerwidget.h"

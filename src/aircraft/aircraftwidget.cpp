@@ -9,38 +9,39 @@
 
 #include "app_config.h"
 
-#include <QtCore/QProcess>
-#include <QtCore/QByteArray>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QFile>
+#include <QProcess>
+#include <QByteArray>
+#include <QString>
+#include <QStringList>
+#include <QFile>
 
-#include <QtXmlPatterns/QXmlQuery>
-#include <QtXml/QDomDocument>
+#include <QXmlQuery>
+#include <QDomDocument>
 
+// @TODO - qt5 dont use this
 #include <QDesktopServices>
 #include <QFileDialog>
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QSplitter>
-#include <QtGui/QProgressDialog>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGroupBox>
+#include <QSplitter>
+#include <QProgressDialog>
 
-#include <QtGui/QToolBar>
-#include <QtGui/QToolButton>
-#include <QtGui/QAbstractButton>
-#include <QtGui/QButtonGroup>
+#include <QToolBar>
+#include <QToolButton>
+#include <QAbstractButton>
+#include <QButtonGroup>
 
-#include <QtGui/QAction>
-#include <QtGui/QLabel>
-#include <QtGui/QCheckBox>
-#include <QtGui/QTabWidget>
+#include <QAction>
+#include <QLabel>
+#include <QCheckBox>
+#include <QTabWidget>
 
-#include <QtGui/QHeaderView>
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QPixmap>
-#include <QtGui/QDoubleValidator>
+#include <QHeaderView>
+#include <QAbstractItemView>
+#include <QPixmap>
+#include <QDoubleValidator>
 
 
 #include "aircraft/aircraftwidget.h"

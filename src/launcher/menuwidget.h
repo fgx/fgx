@@ -14,11 +14,11 @@
 
 #include <QWidget>
 #include <QLabel>
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
-#include <QtGui/QMenuBar>
-#include <QtGui/QLabel>
-#include <QtGui/QWidgetAction>
+#include <QAction>
+#include <QMenu>
+#include <QMenuBar>
+#include <QLabel>
+#include <QWidgetAction>
 
 #include "xwidgets/fgxdebugwidget.h"
 

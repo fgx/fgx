@@ -7,17 +7,17 @@
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
-#include <QtGui/QToolButton>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
-#include <QtGui/QFileDialog>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QMessageBox>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QGroupBox>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QToolButton>
+#include <QMenu>
+#include <QAction>
+#include <QFileDialog>
+#include <QTreeWidget>
+#include <QMessageBox>
 
 #include "settingsdialog.h"
 #include "launcher/launcherwindow.h"

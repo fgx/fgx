@@ -9,13 +9,13 @@
 #ifndef SettingsDialog_H
 #define SettingsDialog_H
 
-#include <QtCore/QString>
+#include <QString>
 
-#include <QtGui/QDialog>
-#include <QtGui/QWidget>
-//#include <QtGui/QStatusBar>
-#include <QtGui/QPushButton>
-#include <QtGui/QTabWidget>
+#include <QDialog>
+#include <QWidget>
+//#include <QStatusBar>
+#include <QPushButton>
+#include <QTabWidget>
 
 #include "xobjects/mainobject.h"
 

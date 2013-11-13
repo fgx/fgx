@@ -9,15 +9,15 @@
 #ifndef NETWORKWIDGET_H
 #define NETWORKWIDGET_H
 
-#include <QtNetwork/QHostInfo>
+#include <QHostInfo>
 
 
 #include <QWidget>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QGroupBox>
-#include <QtGui/QCheckBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QComboBox>
+#include <QTreeWidget>
+#include <QGroupBox>
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QComboBox>
 
 #include "xobjects/mainobject.h"
 #include "xwidgets/xgroupboxes.h"

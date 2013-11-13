@@ -7,21 +7,21 @@
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
 
-#include <QtCore/QByteArray>
-#include <QtCore/QFile>
-#include <QtCore/QStringList>
+#include <QByteArray>
+#include <QFile>
+#include <QStringList>
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
-#include <QtGui/QToolButton>
-#include <QtGui/QMenu>
-#include <QtGui/QLabel>
-#include <QtGui/QSplitter>
+#include <QVBoxLayout>
+#include <QAction>
+#include <QActionGroup>
+#include <QToolButton>
+#include <QMenu>
+#include <QLabel>
+#include <QSplitter>
 
 
 #include <QtWebKit/QWebFrame>
-#include <QtGui/QDesktopServices>
+#include <QDesktopServices>
 
 #include <QDoubleValidator>
 
