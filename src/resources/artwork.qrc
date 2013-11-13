@@ -8,12 +8,10 @@
         <file alias="background_yellow_dark">artwork/background_yellow_dark.gif</file>
         <file alias="background_blue">artwork/background_blue.gif</file>
 		
-		/* tab bar widgets */
 		<file alias="background-gray-tabbar">artwork/background-gray-tabbar.gif</file>
 		<file alias="boxtop-black-tabbar">artwork/boxtop-black-tabbar.gif</file>
 		<file alias="boxtop-black-inactive">artwork/boxtop-black-inactive.gif</file>
 		
-		/* group boxes */
 		<file alias="background-gray-light">artwork/background-gray-light.gif</file>
 		
 		

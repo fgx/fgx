@@ -53,19 +53,22 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	imgBox->setAlignment(Qt::AlignBottom|Qt::AlignCenter);
 	layoutLeft->addLayout(imgBox);
 	
-	
+
+    //==================================================================
+    //= Picture Label
 	imageLabel =  new QLabel(this);
 	//imageLabel->setScaledContents(true);
 	imageLabel->resize(300,225);
 	imageLabel->setStyleSheet("background: #5b5a56");
 	imageLabel->setMargin(5);
 	
+    // Seed random image
 	QTime time = QTime::currentTime();
 	qsrand((uint)time.msec());
 	// There are only nine images at the moment, see resources /images
 	// and images.qrc
 	int randomValue = randInt(1,9);
-	imageLabel->setPixmap(QPixmap(":/images/"+QString::number(randomValue)));
+    imageLabel->setPixmap(QPixmap(":/images/"+QString::number(randomValue)));
 	
 	//connect(imageLabel, SIGNAL(clicked), this, SLOT(on_imagelabel_clicked()) );
 	imgBox->addWidget(imageLabel);
@@ -75,7 +78,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 	
 
 	//==================================================================
-	//= Callsign
+    //= Set Callsign
 	XGroupVBox *grpCallsign = new XGroupVBox(tr("Your Callsign"));
 	layoutLeft->addWidget(grpCallsign);
 
