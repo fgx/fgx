@@ -100,17 +100,18 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	defaultProfileAction->setStatusTip(tr("Reload FGx default profile (built-in)"));
 	connect(defaultProfileAction, SIGNAL(triggered()), this, SLOT(on_menu_default_profile()));
 	
+    //=======================================
 	// Menu FlightGear Help actions
-	
 	urlActionWiki = new QAction(tr("FlightGear Wiki"), this);
 	connect(urlActionWiki, SIGNAL(triggered()), this, SLOT(on_menu_url_wiki()));
 	
 	urlActionForums = new QAction(tr("FlightGear Forums"), this);
 	connect(urlActionForums, SIGNAL(triggered()), this, SLOT(on_menu_url_forums()));
 	
+    //=======================================
 	// Menu FGx Help actions
 	
-	urlActionFGxUserHelp = new QAction(tr("FGx User Forums"), this);
+    urlActionFGxUserHelp = new QAction(tr("FGx - User Forum"), this);
 	connect(urlActionFGxUserHelp, SIGNAL(triggered()), this, SLOT(on_menu_fgx_user_forums()));
 	
 	// Add actions to menu "FGx"/"Windows" (OSX = "Windows")
@@ -131,7 +132,9 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 	// Add actions to menu "Help"
 	helpFlightGearGroup->addAction(urlActionWiki);
 	helpFlightGearGroup->addAction(urlActionForums);
-	helpFGxGroup->addAction(urlActionFGxUserHelp);
+    helpFGxGroup->addAction("FGx - Source code and Bugs at github", this, SLOT(on_menu_fgx_github()) );
+    helpFGxGroup->addAction(urlActionFGxUserHelp);
+
 	helpMenu->addMenu(helpFlightGearGroup);
 	helpMenu->addMenu(helpFGxGroup);
 	
@@ -260,12 +263,16 @@ void MenuWidget::on_menu_url_wiki()
 
 void MenuWidget::on_menu_url_forums()
 {
-	QUrl url("http://www.flightgear.org/forums");
+    QUrl url("http://forum.flightgear.org/");
 	QDesktopServices::openUrl( url );
 }
 
 void MenuWidget::on_menu_fgx_user_forums()
 {
-	QUrl url("http://www.flightgear.org/forums/viewforum.php?f=65");
-	QDesktopServices::openUrl( url );
+    QUrl url("http://forum.flightgear.org/viewforum.php?f=65");
+    QDesktopServices::openUrl( url );
+}
+
+void MenuWidget::on_menu_fgx_github(){
+    QDesktopServices::openUrl( QUrl("https://github.com/fgx/fgx") );
 }

@@ -88,7 +88,7 @@ public slots:
 	void on_menu_url_wiki();
 	void on_menu_url_forums();
 	void on_menu_fgx_user_forums();
-
+    void on_menu_fgx_github();
 };
 
 #endif // XMENUWIDGET_H

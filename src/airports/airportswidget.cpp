@@ -376,7 +376,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 	mapWidget = new OpenLayerWidget(mainObject);
 	mapWidget->setMinimumWidth(400);
 	mainLayout->addWidget(mapWidget);
-	mapWidget->load_map("airport");
+    mapWidget->load_map("airport");
 	connect(mapWidget, SIGNAL(map_double_clicked(QString,QString, QString)), this, SLOT(on_map_double_clicked(QString, QString, QString)));
 
 
