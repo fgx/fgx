@@ -6,7 +6,7 @@ FGx
 * Version 2.8.x
 * Version
 .. include:: version
-
+    :literal:
 
 Build Status
 --------------------------
