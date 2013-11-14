@@ -198,6 +198,8 @@ MainObject::MainObject(QObject *parent) :
 	launcherWindow = new LauncherWindow(this);
 	//launcherWindow->hide();
 
+    mapMainWindow = new MapMainWindow(this);
+    //mapMainWindow->hide();
 
 	//== initialise after initial show so UI dont look frozen while cache loading etc
 	QTimer::singleShot(300, this, SLOT(initialize()));
@@ -214,8 +216,8 @@ MainObject::~MainObject()
 //============================================================================
 //= Initialize
 void MainObject::initialize(){
-	on_launcher();
-	
+    //on_launcher();
+    on_map_main_window();
 	
 }
 
@@ -518,4 +520,11 @@ void MainObject::on_upx(QString option, bool enabled, QString value)
 	if(option == "--callsign="){
 		lblCallsign->setText(value);
 	}
+}
+
+void MainObject::on_map_main_window()
+{
+    mapMainWindow->show();
+    mapMainWindow->raise();
+
 }

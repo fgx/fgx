@@ -74,7 +74,8 @@ HEADERS += xobjects/xsettings.h \
     utilities/loadAptDat.h \
     utilities/simgear/SGGeodesy.h \
     utilities/simgear/constants.h \
-    utilities/simgear/compiler.h
+    utilities/simgear/compiler.h \
+    map/mapmainwindow.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -138,7 +139,8 @@ SOURCES += main.cpp \
 	launcher/menuwidget.cpp \
     utilities/workThread.cpp \
     utilities/loadAptDat.cpp \
-    utilities/simgear/SGGeodesy.cpp
+    utilities/simgear/SGGeodesy.cpp \
+    map/mapmainwindow.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \

@@ -1,7 +1,7 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
 // FGx FlightGear Launcher // mainobject.h
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
-// (c) 2010-2012
+// (c) 2010-2013
 // Yves Sablonier, Pete Morgan
 // Geoff McLane
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
@@ -32,6 +32,10 @@ class XProcess;
 #include "launcher/launcherwindow.h"
 class LauncherWindow;
 
+#include "map/mapmainwindow.h"
+class MapMainWindow;
+
+
 #include "mpmap/mpmapwidget.h"
 #include "mpmap/mpmapxwidget.h"
 #include "logs/viewlogswidget.h"
@@ -46,11 +50,12 @@ class FgxDebugWidget;
 
 
 /*! \class MainObject
- * \brief The MainObject is an extended QObject, and the main "controller" for FGx
+ * \brief The MainObject is an extended QObject, and the main "startup and controller" for FGx.
  *
- * This is the main object created and called when the app starts in the backgound
- * It manifest itself and is made visible via an icon in the QSystemTrayIcon ie TaskBar
- * All widgets are children to this object and are hidden (at the moment)
+ * On startup, the MainObject is created and called when the app starts in the backgound.
+ * It "shows" itself and is made visible via an icon in the QSystemTrayIcon ie TaskBar.
+ * All widgets are children to this object, and is passed around as the first argument.
+ * @todo: Make MainObject a singleton
  *
  * MainObject also controls the starting and stopping of processes// TBC
  *
@@ -82,6 +87,7 @@ public:
 
 
 	LauncherWindow *launcherWindow;
+    MapMainWindow  *mapMainWindow;
 	//MpMapWidget *mpMapWidget;
 	//MpMapXWidget *mpMapXWidget;
 
@@ -128,7 +134,10 @@ public slots:
     void on_tray_icon(QSystemTrayIcon::ActivationReason reason);
 
     void on_launcher();
+    void on_map_main_window();
+
 	void on_browsermap();
+
 	void on_properties_browser();
 
 	void on_view_logs();
