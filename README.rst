@@ -1,19 +1,17 @@
 FGx 
 ========
 
-**FREE AND OPEN SOURCE LAUNCHER FOR FLIGHTGEAR**
+**Free & Open Source XPlatform Launcher For FlightGear**
 
 * Version 2.8.x
+* Version
+.. include:: version
 
+
+Build Status
+--------------------------
 .. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=master
     :target: http://travis-ci.org/fgx/fgx
-
-
-The project
---------------------------
-
-* Bugs and documentation: http://code.google.com/p/fgx
-* Code: http://gitorious.org/fgx
 
 
 Minimal Requirements
@@ -40,7 +38,7 @@ From source
 
 About
 --------------------------
-FGX is a qt-based c++ launcher for FlightGear. There is more than one launcher around for FlightGear like FGrun or others, intention for FGX was mainly to have fast and small launcher for OSX, starting the real and only free and Open Source Flight Simulator FlightGear within 5 seconds (also development versions and nightly builds). Since it makes no sense to have such a launcher only for one platform using qt, it became cross-platform and could be used also with Debian and Win.
+FGX is a Qt-based c++ launcher for FlightGear. There is more than one launcher around for FlightGear like FGrun or others, intention for FGX was mainly to have fast and small launcher for OSX, starting the real and only free and Open Source Flight Simulator FlightGear within 5 seconds (also development versions and nightly builds). Since it makes no sense to have such a launcher only for one platform using qt, it became cross-platform and could be used also with Debian and Win.
 
 The FGX project was started early 2011 by Yves Sablonier in Swiss Mountains, peering to another project started once by Pedro. Bright Pedro in Wales (there are mountains too) was enough of a git to go and check it out, then code a load of patches to its current state and do all needed changes, to get more stable code. Yves Sablonier tried to step down, but Pedro still needs him for issue tracking, polish, to get a good logo, and maybe once for good manuals and documentation. So Yves Sablonier did not step down, but he is always one step behind ...
 
@@ -104,6 +102,6 @@ FlightGear Source, Development Site:
 http://www.gitorious.org/fg
 
 FlightGear Forum (User and Development Forums):
-http://www.flightgear.org/forums
+http://forums.flightgear.org
 
 
