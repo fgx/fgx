@@ -25,6 +25,8 @@
 #include "xobjects/mainobject.h"
 class MainObject;
 
+#include "utilities/utilities.h"
+
 
 class MenuWidget : public QWidget
 {

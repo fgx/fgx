@@ -6,11 +6,14 @@
    *
    ******************************************************** */
 
+#include "xobjects/mainobject.h"
+class MainObject;
+
 #include <QMutex>
 #include "utilities.h"
 #include "fileDialog.h"
 #include "dirDialog.h"
-#include "xobjects/mainobject.h"
+
 
 
 /*

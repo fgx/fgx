@@ -3,7 +3,13 @@
 
 #include <QMainWindow>
 
+
 #include "xobjects/mainobject.h"
+
+//#include "marble/MarbleGlobal.h"
+#include "marble/MarbleWidget.h"
+//using namespace Marble;
+
 
 class MapMainWindow : public QMainWindow
 {
@@ -12,6 +18,8 @@ public:
     explicit MapMainWindow(MainObject*, QWidget *parent = 0);
 
     MainObject *mainObject;
+
+    Marble::MarbleWidget *marbleWidget;
 
 signals:
 

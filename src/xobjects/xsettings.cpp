@@ -10,7 +10,11 @@
 #include <QDir>
 #include <QVariant>
 
+// @todo: below will go with qt5 for QStandardPaths ????
 #include <QDesktopServices>
+
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QWidget>
 
 #include "xsettings.h"
@@ -77,7 +81,7 @@ void XSettings::restoreWindow(QWidget *widget){
     outLog("restoreWindow: Key="+key+", values "+ba.toHex());
     
 	// Set fixed size to 900,700 of all windows for first startup
-	
+    // @todo: this bt here has do go an a new plan..
 	if (ba != "") {
 		widget->restoreGeometry(ba);
 	} else {
@@ -87,6 +91,61 @@ void XSettings::restoreWindow(QWidget *widget){
 	}
 
 }
+/*
+Auto size a window to width/height margin
+
+    Attempt to resize the window to the margins as padding
+
+    @param window: Window Object to resize
+    @type window: QWidget
+    @param width_margin: Requested width margin of window
+    @param height_margin: Requested height margin or window
+*/
+
+/*void XSettings::autosizeWindow(QWidget *wind, int width_margin, int height_margin, int max_width, int max_height ){
+
+}*/
+
+void XSettings::autosizeWindow(QWidget *wind, int width_margin, int height_margin ){
+
+   QDesktopWidget *desktop = QApplication::desktop();
+
+    int screen_no = desktop->screenNumber(wind);
+
+    QRect rect = desktop->availableGeometry();
+    int wid = rect.width() - width_margin;
+    int hei = rect.height() - height_margin;
+
+    wind->move(10, 10);
+    wind->resize( wid, hei);
+
+    /*
+    def auto_size(self,  window, width_margin=100, height_margin=100, max_width=None, max_height=None):
+            """
+            """
+            desktop =  QtGui.QApplication.desktop()
+            screen_no = desktop.screenNumber(window)
+
+            rect  =  desktop.availableGeometry(screen_no)
+
+            wid = rect.width()
+            wid = wid - width_margin
+
+            if max_width and wid > max_width:
+                #print "set max"
+                wid = max_width
+            #print rect.width(), width_margin, wid - width_margin, max_width, wid
+            #print rect, screen_no
+
+            hei = rect.height()
+            hei = hei - height_margin
+            if max_height and hei > max_height:
+                hei = max_height
+            #print height_margin, rect.height(), max_height, hei
+            window.resize( wid, hei)
+            */
+}
+
 
 QString XSettings::_windowName(QWidget *widget){
 	QString key_name = "window/";

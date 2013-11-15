@@ -28,7 +28,10 @@ public:
 
 	void saveWindow(QWidget *widget);
 	void restoreWindow(QWidget *widget);
+    //static void autosizeWindow(QWidget *widget, int width_margin, int height_margin, int max_width, int max_height);
+    static void autosizeWindow(QWidget *widget, int width_margin, int height_margin);
 
+    //void autosizeWindow(QWidget *widget, int width_margin, int height_margin);
 
 	QString fgcom_exe_path();
 	QString fgcom_port();

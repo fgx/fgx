@@ -25,6 +25,8 @@
 #include "xobjects/mainobject.h"
 class MainObject;
 
+#include "utilities/utilities.h"
+
 #include "map/openlayerwidget.h"
 
 #include "aircraft/xaero.h"

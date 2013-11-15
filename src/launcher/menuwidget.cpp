@@ -14,7 +14,7 @@
 #include <QMenuBar>
 #include <QMenu>
 
-#include "utilities/utilities.h"
+
 #include "launcher/menuwidget.h"
 #include "launcher/launcherwindow.h"
 #include "xobjects/mainobject.h"

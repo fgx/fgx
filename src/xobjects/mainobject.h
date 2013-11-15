@@ -19,6 +19,14 @@
 #include <QLabel>
 #include <QWidgetAction>
 
+
+// Forward Declare Marble Map (wtf !)
+//#include "marble/MarbleGlobal.h"
+#include "marble/MarbleWidget.h"
+//using namespace Marble;
+class Marble::MarbleWidget::MarbleWidget;
+
+
 #include "xobjects/xsettings.h"
 
 #include "xobjects/xsettingsmodel.h"
@@ -29,11 +37,15 @@ class XProcess;
 
 
 
+
+
 #include "launcher/launcherwindow.h"
 class LauncherWindow;
 
 #include "map/mapmainwindow.h"
 class MapMainWindow;
+
+
 
 
 #include "mpmap/mpmapwidget.h"

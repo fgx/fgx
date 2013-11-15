@@ -30,6 +30,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
     QString msg;
     QTime tm;
     int ms;
+    Q_UNUSED(ms);
 
     progress.setValue(0);
     progress.setWindowTitle("Scanning Airport Directories");

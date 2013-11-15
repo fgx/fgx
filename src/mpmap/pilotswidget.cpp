@@ -24,7 +24,7 @@
 #include <QTreeWidgetItem>
 #include <QHeaderView>
 
-#include "utilities/utilities.h"
+//#include "utilities/utilities.h"
 #include "xwidgets/xtreewidgetitem.h"
 #include "pilotswidget.h"
 
