@@ -15,9 +15,19 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
     this->setWindowIcon(QIcon(":/icon/map_type"));
 
 
-    this->marbleWidget = new Marble::MarbleWidget();
-    marbleWidget->setMapThemeId("earth/bluemarble/bluemarble.dgml");
-    this->setCentralWidget(this->marbleWidget);
+    this->mapWidget = new Marble::MarbleWidget();
+    mapWidget->setMapThemeId("earth/bluemarble/bluemarble.dgml");
+    //mapWidget->setMapThemeId("earth/openstreetmap/openstreetmap.dgml");
+    this->setCentralWidget(this->mapWidget);
+
+    // Enable the cloud cover and enable the country borders
+    mapWidget->setShowClouds( false );
+    mapWidget->setShowBorders( true );
+
+    // Hide the FloatItems: Compass and StatusBar
+    mapWidget->setShowOverviewMap(true);
+    mapWidget->setShowScaleBar(true);
+    mapWidget->setShowCompass(true);
 
     XSettings::autosizeWindow(this, 100, 100);
 }

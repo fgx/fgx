@@ -24,7 +24,7 @@
 //#include "marble/MarbleGlobal.h"
 #include "marble/MarbleWidget.h"
 //using namespace Marble;
-class Marble::MarbleWidget;
+//class Marble::MarbleWidget;
 
 
 #include "xobjects/xsettings.h"

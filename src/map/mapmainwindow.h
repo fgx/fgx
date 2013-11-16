@@ -8,7 +8,7 @@
 
 //#include "marble/MarbleGlobal.h"
 #include "marble/MarbleWidget.h"
-//using namespace Marble;
+
 
 
 class MapMainWindow : public QMainWindow
@@ -19,7 +19,7 @@ public:
 
     MainObject *mainObject;
 
-    Marble::MarbleWidget *marbleWidget;
+    Marble::MarbleWidget *mapWidget;
 
 signals:
 
