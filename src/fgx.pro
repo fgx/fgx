@@ -5,6 +5,8 @@ TEMPLATE = app
 TARGET = fgx
 DEPENDPATH += .
 INCLUDEPATH += .
+LIBS += -lmarblewidget
+
 QT += network \
 	xml \
 	xmlpatterns \

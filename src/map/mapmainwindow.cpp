@@ -16,6 +16,7 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
 
 
     this->marbleWidget = new Marble::MarbleWidget();
+    marbleWidget->setMapThemeId("earth/bluemarble/bluemarble.dgml");
     this->setCentralWidget(this->marbleWidget);
 
     XSettings::autosizeWindow(this, 100, 100);
