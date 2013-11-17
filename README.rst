@@ -7,7 +7,7 @@ FGx
 
 Build Status
 --------------------------
-.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=master
+.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=master,next,marble13
     :target: http://travis-ci.org/fgx/fgx
 
 
