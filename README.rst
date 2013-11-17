@@ -11,7 +11,7 @@ Build Status (master, next, marble13)
     :target: http://travis-ci.org/fgx/fgx
 .. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=next
     :target: http://travis-ci.org/fgx/fgx
-.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=maarble13
+.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=marble13
 
 Minimal Requirements
 --------------------------
