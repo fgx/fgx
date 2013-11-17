@@ -2,8 +2,8 @@ language: cpp
 compiler:
   - gcc
 before_install:
-    - sudo apt-get install libmarble-dev
     - sudo apt-get update -qq 
+    - sudo apt-get install libmarble-dev
 script:
     - cd src
     - qmake
