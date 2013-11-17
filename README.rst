@@ -5,17 +5,21 @@ FGx
 
 * Version 2.8.x - see 
 
-Build Status (master, next, marble13)
+Build Status 
 ------------------------------------------
-.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=master
-    :target: http://travis-ci.org/fgx/fgx
-.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=next
-    :target: http://travis-ci.org/fgx/fgx
-.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=marble13
+master / next / marble13  - branches below
 
+.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=master
+    :target: https://travis-ci.org/fgx/fgx/builds
+.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=next
+    :target: https://travis-ci.org/fgx/fgx/builds
+.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=marble13
+    :target: https://travis-ci.org/fgx/fgx/builds
+    
 Minimal Requirements
 --------------------------
-Hard- and Software (TODO: Windows, Linux requirements):
+Hardware and Software (TODO: Windows, Linux requirements):
+
 * Apple Intel-based Mac, OSX 10.5.8, 1 GB RAM, 128 Mb VRAM
 * Windows XP, Vista
 * Linux Debian/Ubuntu, tested also for Fedora/Gentoo
@@ -25,7 +29,7 @@ Development requirements:
 * Open Source Edition of qt, >= 4.7
   * http://doc.qt.nokia.com/4.7-snapshot/requirements.htm
 * Qt Creator, for OSX you can also use XCode <= 4.0
-* lastet git
+* latest git
 
 
 Installation
