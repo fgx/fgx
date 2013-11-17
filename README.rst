@@ -5,11 +5,13 @@ FGx
 
 * Version 2.8.x - see 
 
-Build Status
---------------------------
-.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=master,next,marble13
+Build Status (master, next, marble13)
+------------------------------------------
+.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=master
     :target: http://travis-ci.org/fgx/fgx
-
+.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=next
+    :target: http://travis-ci.org/fgx/fgx
+.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=maarble13
 
 Minimal Requirements
 --------------------------
