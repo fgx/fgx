@@ -48,7 +48,7 @@ June 2011 Geoff McLane joined the project and started to extend debugging and lo
 
 License
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-All the code is under GPLv2 or later. LICENCE.txt and README.txt have to be included with every distribution. Please donÕt bootleg, make loads of copies and flog them around. Do what you want and what GPL allows you. The logo FGx logo is trademarked and patented under the creative commons and owned by Yves Sablonier, Zurich (unfortunately GPL does not cover free and open source artwork, thatÕs why Yves choose CC, until someone explains him how to protect free artwork under GPL).
+All the code is under GPLv2 or later. LICENCE.txt and README.txt have to be included with every distribution. Please donï¿½t bootleg, make loads of copies and flog them around. Do what you want and what GPL allows you. The logo FGx logo is trademarked and patented under the creative commons and owned by Yves Sablonier, Zurich (unfortunately GPL does not cover free and open source artwork, thatï¿½s why Yves choose CC, until someone explains him how to protect free artwork under GPL).
 
 Authors
 ^^^^^^^^^^^^^^^^^^^^^^^^^
