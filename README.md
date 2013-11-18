@@ -5,8 +5,7 @@ FGx
 
 * Version 2.8.x
 
-.. image:: https://secure.travis-ci.org/fgx/fgx.png?branch=master
-    :target: http://travis-ci.org/fgx/fgx
+[image](https://secure.travis-ci.org/fgx/fgx.png?branch=master:target: http://travis-ci.org/fgx/fgx)
 
 
 The project
@@ -47,11 +46,11 @@ The FGX project was started early 2011 by Yves Sablonier in Swiss Mountains, pee
 June 2011 Geoff McLane joined the project and started to extend debugging and logging tools and created a non-database fallback for the xml parsing of aircraft and airport data. In general he brings a lot more style to the code everywhere. He writes proper and important helpers for FGx, like zlib integration or log utilities.
 
 License
-^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------
 All the code is under GPLv2 or later. LICENCE.txt and README.txt have to be included with every distribution. Please don�t bootleg, make loads of copies and flog them around. Do what you want and what GPL allows you. The logo FGx logo is trademarked and patented under the creative commons and owned by Yves Sablonier, Zurich (unfortunately GPL does not cover free and open source artwork, that�s why Yves choose CC, until someone explains him how to protect free artwork under GPL).
 
 Authors
-^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------
 * Yves Sablonier (CH), flightgear [at] sablonier dot ch
    * Project Lead, Code Facility Services, GUI Design and Features
 * Pete Morgan (UK) pete [at] freeflightsim dot org
@@ -61,10 +60,10 @@ Authors
 
 Some included code in FGx comes from other GPL sources, like zlib from Jean-Loup Gailly/Mark Adler. We try to pay attribution everywhere, you will find such notes directly in the source files or documentation.
 
-Other Notice
+Other Notices
 -------------------------------
 FlightGear is a free and open source Flight Simulator, available under GPLv2 or later here:
-http://www.flightgear.org or here: http://www.gitorious.org/fg
+<http://www.flightgear.org or here: http://www.gitorious.org/fg>
 Qt Open Source Edition is under Qt GNU GPL v. 3.0 Version
 
 Thanks
@@ -83,10 +82,10 @@ Please start with reading section WARRANTY of GPLv2 or later licence you get wit
 FGx Links
 ----------------------------------
 Source, main Git Repository:
-http://www.gitorious.org/fgx
+<http://www.gitorious.org/fgx>
 
 Issue tracker, tasks:
-http://fgx.googlecode.com
+<http://fgx.googlecode.com>
 
 (Closed) Developer Group:
 http://fgx-project.googlegroups.com
