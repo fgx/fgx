@@ -70,9 +70,13 @@ Thanks
 -------------------------------
 First I send my BIG THANKS to Pete, who decided to contribute and who is responsible that FGx improves fast since early 2011. Second my thanks goes to Geoff McLane who brings a lot more style into the code with his analyses, proposals and new code.
 
-And third thanks goes to ALL the FlightGear developers and associated projects. Without all this developers, programmers and users it would never be possible to have a cool, free, open source Flight Simulator available. Special thanks from Yves goes to Martin Spott, James Turner and Frederic Bouvier. 
+And third thanks goes to ALL the FlightGear developers and associated projects. 
+Without all this developers, programmers and users it would never be possible 
+to have a cool, free, open source Flight Simulator available. 
+Special thanks from Yves goes to Martin Spott, James Turner and Frederic Bouvier. 
 
-(Beware of FlightGear versions where you have to pay for, original FlightGear is FREE, has a huge community, a living forum and wiki. We guess you will never get a better version than the original.)
+(Beware of FlightGear versions where you have to pay for, original FlightGear is FREE, has a huge community, 
+a living forum and wiki. We guess you will never get a better version than the original.)
 
 
 WARRANTY
@@ -88,21 +92,21 @@ Issue tracker, tasks:
 <http://fgx.googlecode.com>
 
 (Closed) Developer Group:
-http://fgx-project.googlegroups.com
+<http://fgx-project.googlegroups.com>
 
 Personal Developer Sites:
-http://fgx.freeflightsim.org
-http://fgx.sablonier.ch
+<http://fgx.freeflightsim.org>
+<http://fgx.sablonier.ch>
 
 FlightGear Links
 -----------------------------------
 FlightGear Wiki Central:
-http://wiki.flightgear.org
+<http://wiki.flightgear.org>
 
 FlightGear Source, Development Site: 
-http://www.gitorious.org/fg
+<http://www.gitorious.org/fg>
 
 FlightGear Forum (User and Development Forums):
-http://www.flightgear.org/forums
+<http://www.flightgear.org/forums>
 
 
