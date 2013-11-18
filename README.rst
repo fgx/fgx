@@ -3,7 +3,7 @@ FGx
 
 **Free & Open Source XPlatform Launcher For FlightGear**
 
-* Version 2.8.x - see 
+* Version 2.10.x -
 
 Build Status 
 ------------------------------------------
