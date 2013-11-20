@@ -72,13 +72,15 @@ HEADERS += xobjects/xsettings.h \
 	app_config.h \
 	utilities/dirDialog.h \
 	launcher/menuwidget.h \
-    utilities/workThread.h \
-    utilities/loadAptDat.h \
-    utilities/simgear/SGGeodesy.h \
-    utilities/simgear/constants.h \
-    utilities/simgear/compiler.h \
-    map/mapmainwindow.h \
-    network/crossfeedjson.h
+        utilities/workThread.h \
+        utilities/loadAptDat.h \
+        utilities/simgear/SGGeodesy.h \
+        utilities/simgear/constants.h \
+        utilities/simgear/compiler.h \
+        map/mapmainwindow.h \
+        map/mapcorewidget.h \
+        map/xmarblewidget.h \
+        network/crossfeedjson.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -140,11 +142,13 @@ SOURCES += main.cpp \
 	utilities/fileDialog.cpp \
 	utilities/dirDialog.cpp \
 	launcher/menuwidget.cpp \
-    utilities/workThread.cpp \
-    utilities/loadAptDat.cpp \
-    utilities/simgear/SGGeodesy.cpp \
-    map/mapmainwindow.cpp \
-    network/crossfeedjson.cpp
+        utilities/workThread.cpp \
+        utilities/loadAptDat.cpp \
+        utilities/simgear/SGGeodesy.cpp \
+        map/mapmainwindow.cpp \
+        map/mapcorewidget.cpp \
+        map/xmarblewidget.cpp \
+        network/crossfeedjson.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \

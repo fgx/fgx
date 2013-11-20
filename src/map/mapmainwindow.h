@@ -7,9 +7,10 @@
 #include "xobjects/mainobject.h"
 
 //#include "marble/MarbleGlobal.h"
-#include "marble/MarbleWidget.h"
+//#include "marble/MarbleWidget.h"
 
-
+#include "map/mapcorewidget.h"
+class MapCoreWidget;
 
 class MapMainWindow : public QMainWindow
 {
@@ -19,7 +20,7 @@ public:
 
     MainObject *mainObject;
 
-    Marble::MarbleWidget *mapWidget;
+    MapCoreWidget *mapWidget;
 
 signals:
 
