@@ -17,6 +17,7 @@
 #include <QWidget>
 
 #include <QTreeView>
+#include <QTreeWidgetItem>
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QSortFilterProxyModel>
@@ -82,8 +83,8 @@ public slots:
 	void on_props_folder(QString, QString);
 	void on_props_value(QString, QString, QString, QString);
 
-    void on_item_expanded(QTreeWidgetItem *);
-	void on_item_double_clicked(QTreeWidgetItem *, int );
+    //void on_item_expanded(QTreeWidgetItem *);
+    //void on_item_double_clicked(QTreeWidgetItem *, int );
 	void on_item_selection_changed();
 
     void on_auto_refresh_enabled();

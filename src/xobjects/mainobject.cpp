@@ -50,7 +50,7 @@ MainObject::MainObject(QObject *parent) :
 	);
 
 
-    //flightsModel = 0; //new FlightsModel(this);
+    this->flightsModel = new FlightsModel(this);
 
 
 	//================================================================

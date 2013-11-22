@@ -317,8 +317,8 @@ void PropsTreeWidget::on_props_value(QString parent_path, QString node_name,
 
 
 
-void PropsTreeWidget::on_item_expanded(QTreeWidgetItem *item){
-	Q_UNUSED(item);
+//void PropsTreeWidget::on_item_expanded(QTreeWidgetItem *item){
+//	Q_UNUSED(item);
    // qDebug() << "ON Expand=" << item->text(3);
    // qDebug() << item->text(3);
 	//item->setIcon(0, QIcon(":/icon/folder")); // folder_open
@@ -332,9 +332,10 @@ void PropsTreeWidget::on_item_expanded(QTreeWidgetItem *item){
     item->setCheckState(1, Qt::Unchecked);
 	*/
 	//telnet->get_node(item->text(3));
-}
+//}
 
 //*** TODO ???
+/*
 void PropsTreeWidget::on_item_double_clicked(QTreeWidgetItem *item, int col){
 	Q_UNUSED(col);
 	if(item->text(C_TYPE).length() == 0){
@@ -342,7 +343,7 @@ void PropsTreeWidget::on_item_double_clicked(QTreeWidgetItem *item, int col){
 	}
 	actionEditProperty->trigger();
 }
-
+*/
 
 void PropsTreeWidget::on_item_selection_changed(){
 	//QTreeWidgetItem *item = treeWidget->currentItem();

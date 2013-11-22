@@ -15,7 +15,7 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
     this->mainObject = mob;
 
 
-    this->flightsModel = new FlightsModel(this);
+    //this->flightsModel = new FlightsModel(this);
 
     this->setWindowTitle("FGx - The Utlimate Map ;)");
     this->setWindowIcon(QIcon(":/icon/map_type"));
@@ -53,5 +53,5 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
 
     XSettings::autosizeWindow(this, 300, 300);
 
-   this->flightsModel->timer->start();
+    this->mainObject->flightsModel->timer->start();
 }

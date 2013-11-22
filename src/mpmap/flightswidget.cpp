@@ -144,7 +144,7 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 
 	//=========================================================
 	//== Tree
-	tree = new QTreeWidget();
+    tree = new QTreeView();
 	mainLayout->addWidget(tree);
 
 	tree->setRootIsDecorated(false);
@@ -189,8 +189,8 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 	tree->setSortingEnabled(true);
     tree->sortByColumn(FlightsModel::C_CALLSIGN, Qt::AscendingOrder);
 
-	connect(tree,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-			this, SLOT(on_item_doubled_clicked(QTreeWidgetItem*,int)));
+    //connect(tree,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+    //		this, SLOT(on_item_doubled_clicked(QTreeWidgetItem*,int)));
 
 	//===========================================================================
 	//= Status Bar
@@ -258,59 +258,59 @@ void FlightsWidget::on_server_ready_read(){
    SO current plan is to make a time stamp when a new pilot is gr
 */
 
-void FlightsWidget::on_server_read_finished(){
+//void FlightsWidget::on_server_read_finished(){
 	//qDebug() << "done"; // << server_string;
 
-	statusBar->showMessage("Processing data");
+    //statusBar->showMessage("Processing data");
 
-	tree->setUpdatesEnabled(false);
+    //tree->setUpdatesEnabled(false);
 	//emit freeze_map(true);
-	mapWidget->clear_radar();
+    //mapWidget->clear_radar();
 
-	QStringList tower_names;
-	tower_names << "atc"  << "atc-tower" << "atc-tower2";
+    //QStringList tower_names;
+    //tower_names << "atc"  << "atc-tower" << "atc-tower2";
 
-	QTreeWidgetItem *rootItem = tree->invisibleRootItem();
+    //QTreeWidgetItem *rootItem = tree->invisibleRootItem();
 
 	//== Loop all ndes and set flag to 1 - item remaining will b enuked
-	for(int idx=0; idx < rootItem->childCount(); idx++){
-        rootItem->child(idx)->setText(FlightsModel::C_FLAG, "1");
-	}
+    //for(int idx=0; idx < rootItem->childCount(); idx++){
+        //rootItem->child(idx)->setText(FlightsModel::C_FLAG, "1");
+    //}
 
 
 	//= Create Dom Document
-	dom.setContent(server_string);
+    //dom.setContent(server_string);
 
 	//= get the <fg_server> node
-	QDomNodeList nodes = dom.elementsByTagName("marker");
+    //QDomNodeList nodes = dom.elementsByTagName("marker");
 
-	QTreeWidgetItem *item;
+    //QTreeWidgetItem *item;
 
-	if (nodes.count() > 0){
-		for(int idxd =0; idxd < nodes.count(); idxd++){
+    //if (nodes.count() > 0){
+        //for(int idxd =0; idxd < nodes.count(); idxd++){
 
-			QDomNode node = nodes.at(idxd);
-			QDomNamedNodeMap attribs =  node.attributes();
+            //QDomNode node = nodes.at(idxd);
+            //QDomNamedNodeMap attribs =  node.attributes();
 
 			// = check if pilot in list or update
-            QList<QTreeWidgetItem *> fitems = tree->findItems(attribs.namedItem("callsign").nodeValue(), Qt::MatchExactly, FlightsModel::C_CALLSIGN);
-			if(fitems.size() == 0){
-				item = new QTreeWidgetItem(rootItem);
-                item->setText(FlightsModel::C_CALLSIGN, attribs.namedItem("callsign").nodeValue().toUpper());
-                item->setText(FlightsModel::C_AIRCRAFT, attribs.namedItem("model").nodeValue());
-                item->setText(FlightsModel::C_COUNT, "0");
+           // QList<QTreeWidgetItem *> fitems = tree->findItems(attribs.namedItem("callsign").nodeValue(), Qt::MatchExactly, FlightsModel::C_CALLSIGN);
+            //if(fitems.size() == 0){
+                //item = new QTreeWidgetItem(rootItem);
+                //item->setText(FlightsModel::C_CALLSIGN, attribs.namedItem("callsign").nodeValue().toUpper());
+               // item->setText(FlightsModel::C_AIRCRAFT, attribs.namedItem("model").nodeValue());
+               // item->setText(FlightsModel::C_COUNT, "0");
 
-				tree->addTopLevelItem(item);
-			}else{
-				item = fitems.at(0);
-			}
+                //tree->addTopLevelItem(item);
+        //	}else{
+            //	item = fitems.at(0);
+            //}
 
 			//== Check for atc
-			QString model = QString(attribs.namedItem("model").nodeValue());
+            //QString model = QString(attribs.namedItem("model").nodeValue());
 
 			//= Need to catch atc models here?
 
-			bool is_tower = tower_names.contains( model.toLower() );
+        //	bool is_tower = tower_names.contains( model.toLower() );
 
 
             /*
@@ -344,8 +344,8 @@ void FlightsWidget::on_server_read_finished(){
 					   is_tower
 				);
 			*/
-		}
-	}
+        //}
+    //}
 
 	//= Inc the flagged count items
     /*
@@ -367,19 +367,19 @@ void FlightsWidget::on_server_read_finished(){
 	tree->setUpdatesEnabled(true);
     */
 	//= Follow selected
-	if(checkBoxFollowSelected->isChecked() && tree->selectionModel()->hasSelection()){
+    //if(checkBoxFollowSelected->isChecked() && tree->selectionModel()->hasSelection()){
         //mapWidget->zoom_to_latlon(tree->currentItem()->text(C_LAT), tree->currentItem()->text(C_LON),12);
-	}
+    //}
 
 
-	if(checkBoxAutoRefresh->isChecked()){
-		QTimer::singleShot( comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000, this, SLOT(fetch_pilots()) );
-		statusBar->showMessage(QString("Waiting %1").arg(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt()));
+    //if(checkBoxAutoRefresh->isChecked()){
+    //	QTimer::singleShot( comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000, this, SLOT(fetch_pilots()) );
+    //	statusBar->showMessage(QString("Waiting %1").arg(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt()));
 
-	}else{
-		statusBar->showMessage("Idle");
-	}
-}
+    //}else{
+    //	statusBar->showMessage("Idle");
+    //}
+//}
 
 
 void FlightsWidget::on_check_autorefresh(int checked){
@@ -398,14 +398,14 @@ void FlightsWidget::on_combo_changed(int idx){
 	//timer->setInterval(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt());
 }
 
-void FlightsWidget::on_item_doubled_clicked(QTreeWidgetItem *item, int colidx){
-	Q_UNUSED(colidx);
+//void FlightsWidget::on_item_doubled_clicked(QTreeWidgetItem *item, int colidx){
+//	Q_UNUSED(colidx);
 	//emit aircraft_selected(item->text(C_CALLSIGN));
     //XAero aero(item->text(C_CALLSIGN));
     //aero.lat = item->text(C_LAT);
     //aero.lon = item->text(C_LON);
     //emit aircraft_selected(aero);
-}
+//}
 
 
 

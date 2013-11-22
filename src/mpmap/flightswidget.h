@@ -16,7 +16,7 @@
 #include <QDomDocument>
 
 #include <QWidget>
-#include <QTreeWidget>
+#include <QTreeView>
 #include <QStatusBar>
 #include <QCheckBox>
 #include <QComboBox>
@@ -58,7 +58,7 @@ public:
 	QCheckBox *checkBoxAutoRefresh;
 	QComboBox *comboBoxHz;
 
-	QTreeWidget *tree;
+    QTreeView *tree;
 
 	QStatusBar *statusBar;
 
@@ -82,7 +82,7 @@ public slots:
 
 	void on_check_autorefresh(int);
 	void on_combo_changed(int);
-	void on_item_doubled_clicked(QTreeWidgetItem*,int);
+    //void on_item_doubled_clicked(QTreeWidgetItem*,int);
 
 	void on_show_cols(QAbstractButton*);
 

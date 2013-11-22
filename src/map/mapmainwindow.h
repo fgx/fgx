@@ -9,8 +9,8 @@
 #include "mpmap/flightswidget.h"
 class FlightsWidget;
 
-#include "mpmap/flightsmodel.h"
-class FlightsModel;
+//#include "mpmap/flightsmodel.h"
+//class FlightsModel;
 
 //#include "marble/MarbleGlobal.h"
 //#include "marble/MarbleWidget.h"
@@ -32,7 +32,7 @@ public:
 
     QDockWidget *dockFlights;
     FlightsWidget *flightsWidget;
-    FlightsModel *flightsModel;
+    //FlightsModel *flightsModel;
 
 
 signals:
