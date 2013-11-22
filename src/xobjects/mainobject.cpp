@@ -46,7 +46,7 @@ MainObject::MainObject(QObject *parent) :
 	);
 
 
-    cfModel = new CrossfeedModel(this);
+    flightsModel = new FlightsModel(this);
 
 
 	//================================================================
