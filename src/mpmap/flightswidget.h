@@ -13,7 +13,8 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
-#include <QDomDocument>
+//#include <QDomDocument>
+#include <QSortFilterProxyModel>
 
 #include <QWidget>
 #include <QTreeView>
@@ -35,7 +36,12 @@ class MainObject;
 class FlightsModel;
 
 
-
+/*! \class FlightsWidget
+ * \brief The FlightsWidget contains a QTreeView and associated controls to view pilots
+ *
+ *
+ * @author: Peter Morgan
+ */
 class FlightsWidget : public QWidget
 {
 Q_OBJECT
@@ -46,12 +52,6 @@ public:
 
 	MainObject *mainObject;
 
-	OpenLayerWidget *mapWidget;
-	QDomDocument dom;
-
-	QNetworkAccessManager *netMan;
-	QNetworkReply  *reply;
-	QString server_string;
 
 	QCheckBox *checkBoxFollowSelected;
 
@@ -59,26 +59,19 @@ public:
 	QComboBox *comboBoxHz;
 
     QTreeView *tree;
+    QSortFilterProxyModel *proxyModel;
 
 	QStatusBar *statusBar;
 
 	QButtonGroup *buttonGroupCols;
 
-	void set_map_widget(OpenLayerWidget *mapWidget);
 
 signals:
 
-	//void radar(QString callsign, QString lat, QString lon, QString heading, QString altitude, bool is_tower);
-	//void clear_radar();
 	void aircraft_selected(XAero aero);
 
 public slots:
 
-	void fetch_pilots();
-
-	void on_server_error(QNetworkReply::NetworkError);
-	void on_server_ready_read();
-	void on_server_read_finished();
 
 	void on_check_autorefresh(int);
 	void on_combo_changed(int);

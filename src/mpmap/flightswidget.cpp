@@ -140,12 +140,17 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 	colsWidgetAction->setDefaultWidget(widgetColsSelecta);
 	menuCols->addAction(colsWidgetAction);
 
-
+    //=========================================================
+    // Models
+    //this->proxyModel = new QSortFilterProxyModel(this);
+    //this->proxyModel->setSourceModel(this->mainObject->flightsModel);
 
 	//=========================================================
 	//== Tree
     tree = new QTreeView();
 	mainLayout->addWidget(tree);
+
+    this->tree->setModel(this->mainObject->flightsModel);
 
 	tree->setRootIsDecorated(false);
 	tree->setUniformRowHeights(true);
@@ -202,16 +207,8 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 
 
 
-
-
-
-	//==========================================================
-	//= Initialize Objects
-	netMan = new QNetworkAccessManager(this);
-
-
 }
-
+/*
 void FlightsWidget::fetch_pilots()
 {
 
@@ -233,159 +230,16 @@ void FlightsWidget::fetch_pilots()
 	statusBar->showMessage("Request");
 
 }
-
-
-//==========================================================
-//= Server Events
-//==========================================================
-void FlightsWidget::on_server_error(QNetworkReply::NetworkError error){
-	//qDebug() << "error" << error;
-	Q_UNUSED(error);
-	//outLog("FGx: PilotsWidget::on_server_error()");
-}
-
-void FlightsWidget::on_server_ready_read(){
-	QString s(reply->readAll());
-	server_string.append(s);
-}
-
-//=============================================
-// Server call finished.. so parse to tree
-//=============================================
-/* we do not want to clear the tree and reload as user would loose focus..
-   Also the last "communicate tiem means a pilot does not clear of the list"
-   A net conection might drop and reappear later = crash or terrain terrain etc..
-   SO current plan is to make a time stamp when a new pilot is gr
 */
 
-//void FlightsWidget::on_server_read_finished(){
-	//qDebug() << "done"; // << server_string;
-
-    //statusBar->showMessage("Processing data");
-
-    //tree->setUpdatesEnabled(false);
-	//emit freeze_map(true);
-    //mapWidget->clear_radar();
-
-    //QStringList tower_names;
-    //tower_names << "atc"  << "atc-tower" << "atc-tower2";
-
-    //QTreeWidgetItem *rootItem = tree->invisibleRootItem();
-
-	//== Loop all ndes and set flag to 1 - item remaining will b enuked
-    //for(int idx=0; idx < rootItem->childCount(); idx++){
-        //rootItem->child(idx)->setText(FlightsModel::C_FLAG, "1");
-    //}
 
 
-	//= Create Dom Document
-    //dom.setContent(server_string);
-
-	//= get the <fg_server> node
-    //QDomNodeList nodes = dom.elementsByTagName("marker");
-
-    //QTreeWidgetItem *item;
-
-    //if (nodes.count() > 0){
-        //for(int idxd =0; idxd < nodes.count(); idxd++){
-
-            //QDomNode node = nodes.at(idxd);
-            //QDomNamedNodeMap attribs =  node.attributes();
-
-			// = check if pilot in list or update
-           // QList<QTreeWidgetItem *> fitems = tree->findItems(attribs.namedItem("callsign").nodeValue(), Qt::MatchExactly, FlightsModel::C_CALLSIGN);
-            //if(fitems.size() == 0){
-                //item = new QTreeWidgetItem(rootItem);
-                //item->setText(FlightsModel::C_CALLSIGN, attribs.namedItem("callsign").nodeValue().toUpper());
-               // item->setText(FlightsModel::C_AIRCRAFT, attribs.namedItem("model").nodeValue());
-               // item->setText(FlightsModel::C_COUNT, "0");
-
-                //tree->addTopLevelItem(item);
-        //	}else{
-            //	item = fitems.at(0);
-            //}
-
-			//== Check for atc
-            //QString model = QString(attribs.namedItem("model").nodeValue());
-
-			//= Need to catch atc models here?
-
-        //	bool is_tower = tower_names.contains( model.toLower() );
-
-
-            /*
-			item->setText(C_ALTITUDE, QString::number(attribs.namedItem("alt").nodeValue().toFloat(), 'f', 0));
-			item->setTextAlignment(C_ALTITUDE, Qt::AlignRight);
-
-			item->setText(C_HEADING, QString::number(attribs.namedItem("heading").nodeValue().toFloat(), 'f', 0));
-			item->setTextAlignment(C_HEADING, Qt::AlignRight);
-
-			item->setText(C_LAT, attribs.namedItem("lat").nodeValue());
-			item->setTextAlignment(C_LAT, Qt::AlignRight);
-			item->setText(C_LON, attribs.namedItem("lng").nodeValue());
-			item->setTextAlignment(C_LON, Qt::AlignRight);
-
-			item->setText(C_PITCH, attribs.namedItem("pitch").nodeValue());
-			item->setText(C_FLAG, "0");
-
-			mapWidget->show_radar( item->text(C_CALLSIGN),
-								   item->text(C_LAT),
-								   item->text(C_LON),
-								   item->text(C_HEADING),
-								   item->text(C_ALTITUDE),
-								   is_tower);
-            */
-			/*
-			emit radar(item->text(C_CALLSIGN),
-					   item->text(C_LAT),
-					   item->text(C_LON),
-					   item->text(C_HEADING),
-					   item->text(C_ALTITUDE),
-					   is_tower
-				);
-			*/
-        //}
-    //}
-
-	//= Inc the flagged count items
-    /*
-	QList<QTreeWidgetItem *> items = tree->findItems("1", Qt::MatchExactly, C_FLAG);
-	for(int idxr=0; idxr < items.count(); idxr++){
-		int count = items.at(idxr)->text(C_COUNT).toInt();
-		items.at(idxr)->setText( C_COUNT, QString::number(count + 1) );
-	}
-    */
-	//== Remove dead
-    /*
-	items = tree->findItems("1", Qt::MatchExactly, C_COUNT);
-	QListIterator<QTreeWidgetItem *> it(items);
-	while (it.hasNext()){
-		QTreeWidgetItem *rItem = it.next();
-		tree->invisibleRootItem()->removeChild( rItem );
-	}
-
-	tree->setUpdatesEnabled(true);
-    */
-	//= Follow selected
-    //if(checkBoxFollowSelected->isChecked() && tree->selectionModel()->hasSelection()){
-        //mapWidget->zoom_to_latlon(tree->currentItem()->text(C_LAT), tree->currentItem()->text(C_LON),12);
-    //}
-
-
-    //if(checkBoxAutoRefresh->isChecked()){
-    //	QTimer::singleShot( comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt() * 1000, this, SLOT(fetch_pilots()) );
-    //	statusBar->showMessage(QString("Waiting %1").arg(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt()));
-
-    //}else{
-    //	statusBar->showMessage("Idle");
-    //}
-//}
 
 
 void FlightsWidget::on_check_autorefresh(int checked){
 	mainObject->settings->setValue("mpxmap_autorefresh_enabled", checked);
 	if(checked){
-		fetch_pilots();
+        //fetch_pilots();
 		//timer->start();
 	}else{
 		//timer->stop();
@@ -423,7 +277,3 @@ void FlightsWidget::on_show_cols(QAbstractButton *button)
 }
 
 
-void FlightsWidget::set_map_widget(OpenLayerWidget *mWidget)
-{
-	this->mapWidget = mWidget;
-}
