@@ -31,6 +31,11 @@ class MainObject;
 
 #include "aircraft/xaero.h"
 
+#include "mpmap/crossfeedmodel.h"
+class CrossfeedModel;
+
+
+
 class FlightsWidget : public QWidget
 {
 Q_OBJECT

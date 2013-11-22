@@ -109,29 +109,30 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 
 	mainObject->settings->beginGroup("pilots_widget_cols");
 
+
 	QCheckBox *chkShowModel = new QCheckBox();
 	chkShowModel->setText("Aircraft Type");
 	layCols->addWidget(chkShowModel);
-	buttonGroupCols->addButton(chkShowModel, C_AIRCRAFT);
-	chkShowModel->setChecked(mainObject->settings->value(QString::number(C_AIRCRAFT), "1").toBool());
+    buttonGroupCols->addButton(chkShowModel, CrossfeedModel::C_AIRCRAFT);
+    chkShowModel->setChecked(mainObject->settings->value(QString::number(CrossfeedModel::C_AIRCRAFT), "1").toBool());
 
 	QCheckBox *chkShowLatLon = new QCheckBox();
 	chkShowLatLon->setText("Lat/Lon");
 	layCols->addWidget(chkShowLatLon);
-	buttonGroupCols->addButton(chkShowLatLon, C_LAT);
-	chkShowLatLon->setChecked(mainObject->settings->value(QString::number(C_LAT), "1").toBool());
+    buttonGroupCols->addButton(chkShowLatLon, CrossfeedModel::C_LAT);
+    chkShowLatLon->setChecked(mainObject->settings->value(QString::number(CrossfeedModel::C_LAT), "1").toBool());
 
 	QCheckBox *chkShowAlt = new QCheckBox();
 	chkShowAlt->setText("Altitude");
 	layCols->addWidget(chkShowAlt);
-	buttonGroupCols->addButton(chkShowAlt, C_ALTITUDE);
-	chkShowAlt->setChecked(mainObject->settings->value(QString::number(C_ALTITUDE), "1").toBool());
+    buttonGroupCols->addButton(chkShowAlt, CrossfeedModel::C_ALTITUDE);
+    chkShowAlt->setChecked(mainObject->settings->value(QString::number(CrossfeedModel::C_ALTITUDE), "1").toBool());
 
 	QCheckBox *chkShowHdg = new QCheckBox();
 	chkShowHdg->setText("Heading");
 	layCols->addWidget(chkShowHdg);
-	buttonGroupCols->addButton(chkShowHdg, C_HEADING);
-	chkShowHdg->setChecked(mainObject->settings->value(QString::number(C_HEADING), "1").toBool());
+    buttonGroupCols->addButton(chkShowHdg, CrossfeedModel::C_HEADING);
+    chkShowHdg->setChecked(mainObject->settings->value(QString::number(CrossfeedModel::C_HEADING), "1").toBool());
 
 	mainObject->settings->endGroup();
 
@@ -150,8 +151,10 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 	tree->setUniformRowHeights(true);
 	tree->setAlternatingRowColors(true);
 
+
 	tree->header()->setStretchLastSection(true);
 	tree->header()->setResizeMode(QHeaderView::Stretch);
+    /*
 	tree->headerItem()->setText(C_CALLSIGN, "Callsign");
 	tree->headerItem()->setText(C_AIRCRAFT, "Aircraft");
 	tree->headerItem()->setText(C_ALTITUDE, "Alt");
@@ -166,24 +169,25 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 	tree->headerItem()->setTextAlignment(C_HEADING, Qt::AlignRight);
 	tree->headerItem()->setTextAlignment(C_LAT, Qt::AlignRight);
 	tree->headerItem()->setTextAlignment(C_LON, Qt::AlignRight);
+    */
 
-	tree->setColumnHidden(C_PITCH, true);
-	tree->setColumnHidden(C_FLAG, true);
-	tree->setColumnHidden(C_COUNT, true);
+    //tree->setColumnHidden(C_PITCH, true);
+    tree->setColumnHidden(CrossfeedModel::C_FLAG, true);
+    tree->setColumnHidden(CrossfeedModel::C_COUNT, true);
 
-	tree->setColumnHidden(C_AIRCRAFT, !chkShowModel->isChecked());
-	tree->setColumnHidden(C_HEADING, !chkShowHdg->isChecked());
-	tree->setColumnHidden(C_ALTITUDE, !chkShowAlt->isChecked());
-	tree->setColumnHidden(C_LAT, !chkShowLatLon->isChecked());
-	tree->setColumnHidden(C_LON, !chkShowLatLon->isChecked());
+    tree->setColumnHidden(CrossfeedModel::C_AIRCRAFT, !chkShowModel->isChecked());
+    tree->setColumnHidden(CrossfeedModel::C_HEADING, !chkShowHdg->isChecked());
+    tree->setColumnHidden(CrossfeedModel::C_ALTITUDE, !chkShowAlt->isChecked());
+    tree->setColumnHidden(CrossfeedModel::C_LAT, !chkShowLatLon->isChecked());
+    tree->setColumnHidden(CrossfeedModel::C_LON, !chkShowLatLon->isChecked());
 
-	tree->setColumnWidth(C_CALLSIGN, 100);
-	tree->setColumnWidth(C_AIRCRAFT, 100);
-	tree->setColumnWidth(C_ALTITUDE, 50);
-	tree->setColumnWidth(C_HEADING, 50);
+    tree->setColumnWidth(CrossfeedModel::C_CALLSIGN, 100);
+    tree->setColumnWidth(CrossfeedModel::C_AIRCRAFT, 100);
+    tree->setColumnWidth(CrossfeedModel::C_ALTITUDE, 50);
+    tree->setColumnWidth(CrossfeedModel::C_HEADING, 50);
 
 	tree->setSortingEnabled(true);
-	tree->sortByColumn(C_CALLSIGN, Qt::AscendingOrder);
+    tree->sortByColumn(CrossfeedModel::C_CALLSIGN, Qt::AscendingOrder);
 
 	connect(tree,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
 			this, SLOT(on_item_doubled_clicked(QTreeWidgetItem*,int)));
@@ -270,7 +274,7 @@ void FlightsWidget::on_server_read_finished(){
 
 	//== Loop all ndes and set flag to 1 - item remaining will b enuked
 	for(int idx=0; idx < rootItem->childCount(); idx++){
-		rootItem->child(idx)->setText(C_FLAG, "1");
+        rootItem->child(idx)->setText(CrossfeedModel::C_FLAG, "1");
 	}
 
 
@@ -289,12 +293,12 @@ void FlightsWidget::on_server_read_finished(){
 			QDomNamedNodeMap attribs =  node.attributes();
 
 			// = check if pilot in list or update
-			QList<QTreeWidgetItem *> fitems = tree->findItems(attribs.namedItem("callsign").nodeValue(), Qt::MatchExactly, C_CALLSIGN);
+            QList<QTreeWidgetItem *> fitems = tree->findItems(attribs.namedItem("callsign").nodeValue(), Qt::MatchExactly, CrossfeedModel::C_CALLSIGN);
 			if(fitems.size() == 0){
 				item = new QTreeWidgetItem(rootItem);
-				item->setText(C_CALLSIGN, attribs.namedItem("callsign").nodeValue().toUpper());
-				item->setText(C_AIRCRAFT, attribs.namedItem("model").nodeValue());
-				item->setText(C_COUNT, "0");
+                item->setText(CrossfeedModel::C_CALLSIGN, attribs.namedItem("callsign").nodeValue().toUpper());
+                item->setText(CrossfeedModel::C_AIRCRAFT, attribs.namedItem("model").nodeValue());
+                item->setText(CrossfeedModel::C_COUNT, "0");
 
 				tree->addTopLevelItem(item);
 			}else{
@@ -309,7 +313,7 @@ void FlightsWidget::on_server_read_finished(){
 			bool is_tower = tower_names.contains( model.toLower() );
 
 
-
+            /*
 			item->setText(C_ALTITUDE, QString::number(attribs.namedItem("alt").nodeValue().toFloat(), 'f', 0));
 			item->setTextAlignment(C_ALTITUDE, Qt::AlignRight);
 
@@ -330,6 +334,7 @@ void FlightsWidget::on_server_read_finished(){
 								   item->text(C_HEADING),
 								   item->text(C_ALTITUDE),
 								   is_tower);
+            */
 			/*
 			emit radar(item->text(C_CALLSIGN),
 					   item->text(C_LAT),
@@ -343,13 +348,15 @@ void FlightsWidget::on_server_read_finished(){
 	}
 
 	//= Inc the flagged count items
+    /*
 	QList<QTreeWidgetItem *> items = tree->findItems("1", Qt::MatchExactly, C_FLAG);
 	for(int idxr=0; idxr < items.count(); idxr++){
 		int count = items.at(idxr)->text(C_COUNT).toInt();
 		items.at(idxr)->setText( C_COUNT, QString::number(count + 1) );
 	}
-
+    */
 	//== Remove dead
+    /*
 	items = tree->findItems("1", Qt::MatchExactly, C_COUNT);
 	QListIterator<QTreeWidgetItem *> it(items);
 	while (it.hasNext()){
@@ -358,10 +365,10 @@ void FlightsWidget::on_server_read_finished(){
 	}
 
 	tree->setUpdatesEnabled(true);
-
+    */
 	//= Follow selected
 	if(checkBoxFollowSelected->isChecked() && tree->selectionModel()->hasSelection()){
-		mapWidget->zoom_to_latlon(tree->currentItem()->text(C_LAT), tree->currentItem()->text(C_LON),12);
+        //mapWidget->zoom_to_latlon(tree->currentItem()->text(C_LAT), tree->currentItem()->text(C_LON),12);
 	}
 
 
@@ -394,10 +401,10 @@ void FlightsWidget::on_combo_changed(int idx){
 void FlightsWidget::on_item_doubled_clicked(QTreeWidgetItem *item, int colidx){
 	Q_UNUSED(colidx);
 	//emit aircraft_selected(item->text(C_CALLSIGN));
-	XAero aero(item->text(C_CALLSIGN));
-	aero.lat = item->text(C_LAT);
-	aero.lon = item->text(C_LON);
-	emit aircraft_selected(aero);
+    //XAero aero(item->text(C_CALLSIGN));
+    //aero.lat = item->text(C_LAT);
+    //aero.lon = item->text(C_LON);
+    //emit aircraft_selected(aero);
 }
 
 
@@ -406,8 +413,8 @@ void FlightsWidget::on_show_cols(QAbstractButton *button)
 {
 	int col_idx = buttonGroupCols->id(button);
 	tree->setColumnHidden(col_idx, !button->isChecked() );
-	if(col_idx == C_LAT){
-		tree->setColumnHidden(C_LON, !button->isChecked() );
+    if(col_idx == CrossfeedModel::C_LAT){
+        tree->setColumnHidden(CrossfeedModel::C_LON, !button->isChecked() );
 	}
 	mainObject->settings->beginGroup("pilots_widget_cols");
 	mainObject->settings->setValue(QString::number(col_idx), button->isChecked());
