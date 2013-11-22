@@ -59,7 +59,7 @@ MpMapXWidget::MpMapXWidget(MainObject *mob, QWidget *parent) :
 	//================================================================================
 	//= Pilots widget
 	//================================================================================
-	pilotsWidget = new PilotsWidget(mainObject);
+    pilotsWidget = new FlightsWidget(mainObject);
 	splitter->addWidget(pilotsWidget);
 	pilotsWidget->set_map_widget(mapWidget);
 

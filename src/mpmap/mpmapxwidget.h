@@ -28,8 +28,8 @@
 #include "map/openlayerwidget.h"
 class OpenLayerWidget;
 
-#include "mpmap/pilotswidget.h"
-class PilotsWidget;
+#include "mpmap/flightswidget.h"
+class FlightsWidget;
 
 #include "xobjects/mainobject.h"
 class MainObject;
@@ -50,7 +50,7 @@ public:
 	MainObject *mainObject;
 
 	OpenLayerWidget *mapWidget;
-	PilotsWidget *pilotsWidget;
+    FlightsWidget *pilotsWidget;
 
 	QSplitter *splitter;
 

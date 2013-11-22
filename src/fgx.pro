@@ -55,8 +55,7 @@ HEADERS += xobjects/xsettings.h \
 	xobjects/latlng.h \
 	props/propeditwidget.h \
 	mpmap/mpmapwidget.h \
-	mpmap/mpmapxwidget.h \
-	mpmap/pilotswidget.h \
+        mpmap/flightswidget.h \
 	mpmap/xwebpage.h \
 	panes/expertoptionswidget.h \
 	xobjects/xsettingsmodel.h \
@@ -127,8 +126,7 @@ SOURCES += main.cpp \
 	xobjects/latlng.cpp \
 	props/propeditwidget.cpp \
 	mpmap/mpmapwidget.cpp \
-	mpmap/mpmapxwidget.cpp \
-	mpmap/pilotswidget.cpp \
+        mpmap/flightswidget.cpp \
 	mpmap/xwebpage.cpp \
 	panes/expertoptionswidget.cpp \
 	xobjects/xsettingsmodel.cpp \

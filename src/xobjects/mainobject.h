@@ -48,17 +48,17 @@ class LauncherWindow;
 #include "map/mapmainwindow.h"
 class MapMainWindow;
 
-
-
+//#include "mpmap/mpmapxwidget.h"
+//class MpMapXWidget;
 
 #include "mpmap/mpmapwidget.h"
-#include "mpmap/mpmapxwidget.h"
+
 #include "logs/viewlogswidget.h"
 #include "props/propstreewidget.h"
 #include "xwidgets/fgxdebugwidget.h"
 
 //class MpMapWidget;
-//class MpMapXWidget;
+
 class ViewLogsWidget;
 class PropsTreeWidget;
 class FgxDebugWidget;
@@ -105,7 +105,7 @@ public:
 	LauncherWindow *launcherWindow;
     MapMainWindow  *mapMainWindow;
 	//MpMapWidget *mpMapWidget;
-	//MpMapXWidget *mpMapXWidget;
+    //MpMapXWidget *mpMapXWidget;
 
 	ViewLogsWidget *viewLogsWidget;
 	PropsTreeWidget *propertiesBrowser;

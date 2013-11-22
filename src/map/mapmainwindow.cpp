@@ -1,3 +1,6 @@
+
+
+
 #include "mapmainwindow.h"
 
 #include "xobjects/xsettings.h"
@@ -29,6 +32,18 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
     //mapWidget->setShowOverviewMap(true);
     //mapWidget->setShowScaleBar(true);
     //mapWidget->setShowCompass(true);
+
+
+    //================================================================================
+    //= Pilots widget
+    //================================================================================
+    this->dockPilots = new QDockWidget();
+    this->addDockWidget(Qt::RightDockWidgetArea, dockPilots);
+
+    this->flightsWidget = new FlightsWidget(mainObject);
+    dockPilots->setWidget(this->flightsWidget);
+    //this->flightsWidget->set_map_widget(mapWidget);
+
 
     XSettings::autosizeWindow(this, 100, 100);
 }

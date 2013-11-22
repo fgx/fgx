@@ -26,12 +26,12 @@
 
 //#include "utilities/utilities.h"
 #include "xwidgets/xtreewidgetitem.h"
-#include "pilotswidget.h"
+#include "flightswidget.h"
 
 
 
 
-PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
+FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
     QWidget(parent)
 {
 
@@ -208,7 +208,7 @@ PilotsWidget::PilotsWidget(MainObject *mob, QWidget *parent) :
 
 }
 
-void PilotsWidget::fetch_pilots()
+void FlightsWidget::fetch_pilots()
 {
 
 	server_string = "";
@@ -234,13 +234,13 @@ void PilotsWidget::fetch_pilots()
 //==========================================================
 //= Server Events
 //==========================================================
-void PilotsWidget::on_server_error(QNetworkReply::NetworkError error){
+void FlightsWidget::on_server_error(QNetworkReply::NetworkError error){
 	//qDebug() << "error" << error;
 	Q_UNUSED(error);
 	//outLog("FGx: PilotsWidget::on_server_error()");
 }
 
-void PilotsWidget::on_server_ready_read(){
+void FlightsWidget::on_server_ready_read(){
 	QString s(reply->readAll());
 	server_string.append(s);
 }
@@ -254,7 +254,7 @@ void PilotsWidget::on_server_ready_read(){
    SO current plan is to make a time stamp when a new pilot is gr
 */
 
-void PilotsWidget::on_server_read_finished(){
+void FlightsWidget::on_server_read_finished(){
 	//qDebug() << "done"; // << server_string;
 
 	statusBar->showMessage("Processing data");
@@ -375,7 +375,7 @@ void PilotsWidget::on_server_read_finished(){
 }
 
 
-void PilotsWidget::on_check_autorefresh(int checked){
+void FlightsWidget::on_check_autorefresh(int checked){
 	mainObject->settings->setValue("mpxmap_autorefresh_enabled", checked);
 	if(checked){
 		fetch_pilots();
@@ -385,13 +385,13 @@ void PilotsWidget::on_check_autorefresh(int checked){
 	}
 }
 
-void PilotsWidget::on_combo_changed(int idx){
+void FlightsWidget::on_combo_changed(int idx){
 	Q_UNUSED(idx);
 	mainObject->settings->setValue("mpxmap_autorefresh_hz", comboBoxHz->itemData(comboBoxHz->currentIndex()).toString());
 	//timer->setInterval(comboBoxHz->itemData(comboBoxHz->currentIndex()).toInt());
 }
 
-void PilotsWidget::on_item_doubled_clicked(QTreeWidgetItem *item, int colidx){
+void FlightsWidget::on_item_doubled_clicked(QTreeWidgetItem *item, int colidx){
 	Q_UNUSED(colidx);
 	//emit aircraft_selected(item->text(C_CALLSIGN));
 	XAero aero(item->text(C_CALLSIGN));
@@ -402,7 +402,7 @@ void PilotsWidget::on_item_doubled_clicked(QTreeWidgetItem *item, int colidx){
 
 
 
-void PilotsWidget::on_show_cols(QAbstractButton *button)
+void FlightsWidget::on_show_cols(QAbstractButton *button)
 {
 	int col_idx = buttonGroupCols->id(button);
 	tree->setColumnHidden(col_idx, !button->isChecked() );
@@ -416,7 +416,7 @@ void PilotsWidget::on_show_cols(QAbstractButton *button)
 }
 
 
-void PilotsWidget::set_map_widget(OpenLayerWidget *mWidget)
+void FlightsWidget::set_map_widget(OpenLayerWidget *mWidget)
 {
 	this->mapWidget = mWidget;
 }

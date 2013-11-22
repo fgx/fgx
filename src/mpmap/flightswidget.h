@@ -6,8 +6,8 @@
 // Geoff McLane
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
-#ifndef PILOTSWIDGET_H
-#define PILOTSWIDGET_H
+#ifndef FLIGHTSWIDGET_H
+#define FLIGHTSWIDGET_H
 
 
 #include <QNetworkAccessManager>
@@ -31,23 +31,13 @@ class MainObject;
 
 #include "aircraft/xaero.h"
 
-class PilotsWidget : public QWidget
+class FlightsWidget : public QWidget
 {
 Q_OBJECT
 public:
-	explicit PilotsWidget(MainObject *mob, QWidget *parent = 0);
+    explicit FlightsWidget(MainObject *mob, QWidget *parent = 0);
 
-	enum COLS{
-		C_CALLSIGN = 0,
-		C_AIRCRAFT = 1,
-		C_ALTITUDE =2,
-		C_HEADING = 3,
-		C_PITCH = 4,
-		C_LAT = 5,
-		C_LON = 6,
-		C_FLAG = 7,
-		C_COUNT = 8
-	};
+
 
 	MainObject *mainObject;
 
@@ -93,4 +83,4 @@ public slots:
 
 };
 
-#endif // PILOTSWIDGET_H
+#endif // FLIGHTSWIDGET_H

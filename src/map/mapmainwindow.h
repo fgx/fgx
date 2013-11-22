@@ -2,15 +2,19 @@
 #define MAPMAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <QDockWidget>
 
 #include "xobjects/mainobject.h"
+
+#include "mpmap/flightswidget.h"
+class FlightsWidget;
 
 //#include "marble/MarbleGlobal.h"
 //#include "marble/MarbleWidget.h"
 
 #include "map/mapcorewidget.h"
 class MapCoreWidget;
+
 
 class MapMainWindow : public QMainWindow
 {
@@ -21,6 +25,9 @@ public:
     MainObject *mainObject;
 
     MapCoreWidget *mapWidget;
+
+    QDockWidget *dockPilots;
+    FlightsWidget *flightsWidget;
 
 signals:
 

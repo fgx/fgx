@@ -203,7 +203,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	marbleWidget->setProjection( 0 );
 
 	marbleWidget->setShowCompass(false);
-	marbleWidget->setShowClouds( true );
+    marbleWidget->setShowClouds( false );
 	marbleWidget->setShowBorders( true );
 	marbleWidget->setShowOverviewMap(false);
 	marbleWidget->setShowScaleBar(true);
@@ -211,9 +211,10 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	marbleWidget->setShowTerrain(true);
 	marbleWidget->setShowLakes(true);
 	marbleWidget->setShowRivers(true);
-	marbleWidget->setShowGrid(false);
+    marbleWidget->setShowGrid(true);
 	marbleWidget->setShowCrosshairs(false);
-	marbleWidget->setShowCities(true);
+
+    marbleWidget->setShowCities(false);
 	marbleWidget->setShowOtherPlaces(false);
 	//marbleWidget->model()->treeModel()->
 
