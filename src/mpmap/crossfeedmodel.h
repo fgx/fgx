@@ -3,8 +3,6 @@
 
 #include <QStandardItemModel>
 
-#include "xobjects/mainobject.h"
-class MainObject;
 
 class CrossfeedModel : public QStandardItemModel
 {

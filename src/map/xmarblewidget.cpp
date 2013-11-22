@@ -5,11 +5,13 @@
 
 #include "map/xmarblewidget.h"
 
-void XMarbleWidget::XMarbleWidget()
+/*
+XMarbleWidget::XMarbleWidget(QWidget *parent) :
+    Marble::MarbleWidget(parent)
 {
     this->model_registered = false;
 }
-
+*/
 
 void XMarbleWidget::register_mainobject(MainObject *mOb)
 {
@@ -45,9 +47,9 @@ void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 	//== Draw Radar Widgets
     for(int idx=0; idx < this->mainObject->cfModel->rowCount(); idx++)
 	{
-        Marble::GeoDataCoordinates blip(radarModel->item(idx, 5)->text().toFloat(),
-								radarModel->item(idx, 4)->text().toFloat(),
-                                 0.0, Marble::GeoDataCoordinates::Degree
+        Marble::GeoDataCoordinates blip(this->mainObject->cfModel->item(idx, 5)->text().toFloat(),
+                                        this->mainObject->cfModel->item(idx, 4)->text().toFloat(),
+                                        0.0, Marble::GeoDataCoordinates::Degree
 						);
 
 		qreal xx;
@@ -86,14 +88,14 @@ void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 		font.setBold(true);
 		font.setPixelSize(10);
 		painter->setFont(font);
-		painter->drawText(xx + 12, yy + 3, radarModel->item(idx, 0)->text());
+        painter->drawText(xx + 12, yy + 3, this->mainObject->cfModel->item(idx, 0)->text());
 
 		font = painter->font();
 		//font.setFamily("Arial");
 		font.setBold(true);
 		font.setPixelSize(8);
 		painter->setFont(font);
-		painter->drawText(xx + 14, yy + 12, radarModel->item(idx, 3)->text());
+        painter->drawText(xx + 14, yy + 12, this->mainObject->cfModel->item(idx, 3)->text());
 
 
 

@@ -23,7 +23,7 @@
 class MainObject;
 
 #include "map/xmarblewidget.h"
-
+class XMarbleWidget;
 
 
 QT_FORWARD_DECLARE_CLASS(QNetworkDiskCache)

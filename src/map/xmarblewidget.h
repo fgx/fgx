@@ -24,7 +24,7 @@ class XMarbleWidget : public Marble::MarbleWidget
 {
 public:
 
-    explicit XMarbleWidget(QWidget *parent = 0);
+   // explicit XMarbleWidget(QWidget *parent);
 
     MainObject *mainObject;
     bool model_registered;
