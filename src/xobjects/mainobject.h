@@ -32,6 +32,9 @@
 #include "xobjects/xsettingsmodel.h"
 class XSettingsModel;
 
+#include "mpmap/crossfeedmodel.h"
+class CrossfeedModel;
+
 #include "xobjects/xprocess.h"
 class XProcess;
 
@@ -97,6 +100,7 @@ public:
     XSettings *settings;
 	XSettingsModel *X;
 
+    CrossfeedModel *cfModel;
 
 	LauncherWindow *launcherWindow;
     MapMainWindow  *mapMainWindow;

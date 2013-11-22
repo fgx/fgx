@@ -24,6 +24,8 @@ class MainObject;
 
 #include "map/xmarblewidget.h"
 
+
+
 QT_FORWARD_DECLARE_CLASS(QNetworkDiskCache)
 
 
@@ -35,6 +37,7 @@ public:
 	explicit MapCoreWidget(MainObject *mob, QWidget *parent = 0);
 
 	MainObject *mainObject;
+
 
 	QString *mpmapFollowCallsign;
 	QSlider *sliderZoom;

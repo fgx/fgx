@@ -46,6 +46,9 @@ MainObject::MainObject(QObject *parent) :
 	);
 
 
+    cfModel = new CrossfeedModel(this);
+
+
 	//================================================================
 	//= Processes - the nub..
 	//================================================================

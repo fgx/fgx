@@ -30,5 +30,5 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
     //mapWidget->setShowScaleBar(true);
     //mapWidget->setShowCompass(true);
 
-    //XSettings::autosizeWindow(this, 100, 100);
+    XSettings::autosizeWindow(this, 100, 100);
 }

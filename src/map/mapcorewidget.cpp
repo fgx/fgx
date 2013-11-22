@@ -191,14 +191,14 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//====================================================================
 	//== Marble Map
 	//====================================================================
-	marbleWidget = new XMarbleWidget();
+    marbleWidget = new XMarbleWidget();
 	midLayout->addWidget(marbleWidget, 10);
 
 
-	marbleWidget->setMapThemeId("earth/openstreetmap/openstreetmap.dgml");
+    marbleWidget->setMapThemeId("earth/openstreetmap/openstreetmap.dgml");
 	//marbleWidget->setMapThemeId("earth/bluemarble/bluemarble.dgml");
 	//marbleWidget->setMapThemeId("earth/plain/plain.dgml");
-	//marbleWidget->setMapThemeId("earth/srtm/srtm.dgml");
+    //marbleWidget->setMapThemeId("earth/srtm/srtm.dgml");
 
 	marbleWidget->setProjection( 0 );
 

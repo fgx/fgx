@@ -80,7 +80,8 @@ HEADERS += xobjects/xsettings.h \
         map/mapmainwindow.h \
         map/mapcorewidget.h \
         map/xmarblewidget.h \
-        network/crossfeedjson.h
+        network/crossfeedjson.h \
+    mpmap/crossfeedmodel.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -148,7 +149,8 @@ SOURCES += main.cpp \
         map/mapmainwindow.cpp \
         map/mapcorewidget.cpp \
         map/xmarblewidget.cpp \
-        network/crossfeedjson.cpp
+        network/crossfeedjson.cpp \
+    mpmap/crossfeedmodel.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \

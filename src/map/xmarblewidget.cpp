@@ -5,25 +5,45 @@
 
 #include "map/xmarblewidget.h"
 
-
-
-void XMarbleWidget::radar_init(QStandardItemModel *mRadar)
+void XMarbleWidget::XMarbleWidget()
 {
-	radarModel = mRadar;
+    this->model_registered = false;
 }
 
+
+void XMarbleWidget::register_mainobject(MainObject *mOb)
+{
+    this->mainObject = mOb;
+    this->model_registered = true;
+}
+
+/*
+void XMarbleWidget::XMarbleWidget()
+{
+    this->radarModel = new QStandardItemModel(this);
+
+    QStringList header_labels;
+    header_labels << "Callsign" << "Model" <<  "Hdg" << "Alt" << "Lat" << "Lon" << "Flag" << "Count";
+    radarModel->setHorizontalHeaderLabels(header_labels);
+
+}
+*/
 
 void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 {
 
-    return;
+     //qDebug() << "radar count" << radarModel->rowCount();
+
+     return;
+    //return;
     //painter->autoMapQuality();
 	painter->save();
 
 	//int f_height = 12;
 
+
 	//== Draw Radar Widgets
-	for(int idx=0; idx < radarModel->rowCount(); idx++)
+    for(int idx=0; idx < this->mainObject->cfModel->rowCount(); idx++)
 	{
         Marble::GeoDataCoordinates blip(radarModel->item(idx, 5)->text().toFloat(),
 								radarModel->item(idx, 4)->text().toFloat(),

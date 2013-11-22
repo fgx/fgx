@@ -4,6 +4,8 @@
 
 #include <QStandardItemModel>
 
+#include "xobjects/mainobject.h"
+class MainObject;
 
 #include "marble/MarbleGlobal.h"
 #include "marble/MarbleWidget.h"
@@ -22,8 +24,15 @@ class XMarbleWidget : public Marble::MarbleWidget
 {
 public:
 
-	QStandardItemModel *radarModel;
-	void radar_init(QStandardItemModel *mRadar);
+    explicit XMarbleWidget(QWidget *parent = 0);
+
+    MainObject *mainObject;
+    bool model_registered;
+
+    //void radar_init(QStandardItemModel *mRadar);
+    void register_mainobject(MainObject *mOb);
+
+
 	void radar_refresh();
 
     virtual void customPaint(Marble::GeoPainter* painter);
