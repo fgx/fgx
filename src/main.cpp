@@ -129,7 +129,7 @@ int main( int argc, char* argv[])
 
 	//* check for dev_mode, install message handler
 	if( XSettings::dev_mode() == false ){
-		qInstallMsgHandler(fgxErrorMessage);
+        //qInstallMsgHandler(fgxErrorMessage);
 	}
 	
 	//QMenuBar *menuBar = new QMenuBar(0);

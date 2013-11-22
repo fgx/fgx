@@ -32,8 +32,8 @@
 #include "xobjects/xsettingsmodel.h"
 class XSettingsModel;
 
-#include "mpmap/flightsmodel.h"
-class FlightsModel;
+//#include "mpmap/flightsmodel.h"
+//class FlightsModel;
 
 #include "xobjects/xprocess.h"
 class XProcess;
@@ -100,7 +100,7 @@ public:
     XSettings *settings;
 	XSettingsModel *X;
 
-    FlightsModel *flightsModel;
+    //FlightsModel *flightsModel;
 
 	LauncherWindow *launcherWindow;
     MapMainWindow  *mapMainWindow;

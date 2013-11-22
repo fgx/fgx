@@ -9,9 +9,11 @@ FlightsModel::FlightsModel(QObject *parent) :
     QStandardItemModel(parent)
 {
 
-    timmy = new QTimer(this);
-    netMan = new QNetworkAccessManager(this);
-
+    timer = new QTimer(this);
+    this->netMan = new QNetworkAccessManager(this);
+    //this->connect(this->netMan, SIGNAL( finished(QNetworkReply *)),
+     //       this, SLOT(on_server_finished(QNetworkReply *))
+    //); << FAILS.. does not connect ??!"
 
     setColumnCount(7);
 
@@ -25,7 +27,7 @@ FlightsModel::FlightsModel(QObject *parent) :
     this->setHorizontalHeaderItem(C_FLIGHT_ID, item);
 
     item = new QStandardItem("Callsign");
-    this->setHorizontalHeaderItem(C_FLIGHT_ID, item);
+    this->setHorizontalHeaderItem(C_CALLSIGN, item);
 
     /*
     tree->header()->setStretchLastSection(true);
@@ -48,22 +50,26 @@ FlightsModel::FlightsModel(QObject *parent) :
     //
     //QTimer::singleShot( 2 * 1000, this, SLOT(fetch_server()) );
      //qDebug() << "init";
-    timmy->setInterval(1000);
-    timmy->start();
+    timer->setInterval(2000);
+    this->connect(this->timer, SIGNAL(timeout()),
+                  this, SLOT(fetch_server()) );
+    //timer->start();
+
 }
 
 
 
 void FlightsModel::fetch_server()
 {
-    qDebug() << "fetch";
 
     server_string = "";
     QUrl url("http://crossfeed.fgx.ch/flights.json");
     QNetworkRequest request;
-    request.setUrl(url );
+    request.setUrl( url );
 
-    reply = netMan->get(request);
+    //reply = netMan->get(request);
+    QNetworkReply *reply = netMan->get(request);
+
     connect(reply, SIGNAL( error(QNetworkReply::NetworkError)),
             this, SLOT(on_server_error(QNetworkReply::NetworkError))
     );
@@ -73,7 +79,9 @@ void FlightsModel::fetch_server()
     connect(reply, SIGNAL( finished()),
             this, SLOT(on_server_read_finished())
     );
+
     //statusBar->showMessage("Request");
+    qDebug() << "fetch";
 
 }
 
@@ -88,8 +96,9 @@ void FlightsModel::on_server_error(QNetworkReply::NetworkError error){
 }
 
 void FlightsModel::on_server_ready_read(){
-    QString s(reply->readAll());
-    this->server_string.append(s);
+   // QString s(netMan->reply->readAll());
+    //this->server_string.append(s);
+    qDebug() << "read";
 }
 
 //=============================================
@@ -102,6 +111,14 @@ void FlightsModel::on_server_ready_read(){
 */
 
 void FlightsModel::on_server_read_finished(){
-    qDebug() << "done" << server_string;
 
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    qDebug() << "done" << reply->readAll();
 }
+
+
+void FlightsModel::on_server_finished(QNetworkReply *reply){
+    qDebug() << "done_server";
+    reply->deleteLater();
+}
+

@@ -9,11 +9,15 @@
 #include "mpmap/flightswidget.h"
 class FlightsWidget;
 
+#include "mpmap/flightsmodel.h"
+class FlightsModel;
+
 //#include "marble/MarbleGlobal.h"
 //#include "marble/MarbleWidget.h"
 
 #include "map/mapcorewidget.h"
 class MapCoreWidget;
+
 
 
 class MapMainWindow : public QMainWindow
@@ -28,6 +32,8 @@ public:
 
     QDockWidget *dockPilots;
     FlightsWidget *flightsWidget;
+    FlightsModel *flightModel;
+
 
 signals:
 

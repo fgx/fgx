@@ -6,6 +6,8 @@
 // Geoff McLane
 // GNU GPLv2, see main.cpp and shipped licence.txt for further information
 
+#include <QtDebug>
+
 #include <QCoreApplication>
 #include <QApplication>
 #include <QTimer>
@@ -27,6 +29,8 @@
 #include "xobjects/xsettingsmodel.h"
 
 
+
+
 MainObject::MainObject(QObject *parent) :
 	QObject(parent)
 {
@@ -46,7 +50,7 @@ MainObject::MainObject(QObject *parent) :
 	);
 
 
-    flightsModel = new FlightsModel(this);
+    flightsModel = 0; //new FlightsModel(this);
 
 
 	//================================================================
@@ -202,10 +206,10 @@ MainObject::MainObject(QObject *parent) :
 	//launcherWindow->hide();
 
     mapMainWindow = new MapMainWindow(this);
-    //mapMainWindow->hide();
+    mapMainWindow->hide();
 
 	//== initialise after initial show so UI dont look frozen while cache loading etc
-	QTimer::singleShot(300, this, SLOT(initialize()));
+    QTimer::singleShot(1000, this, SLOT(initialize()));
 	
 
 }
@@ -220,6 +224,8 @@ MainObject::~MainObject()
 //= Initialize
 void MainObject::initialize(){
     //on_launcher();
+    qDebug() << "initttt";
+    flightsModel = new FlightsModel(this);
     on_map_main_window();
 	
 }
@@ -527,7 +533,9 @@ void MainObject::on_upx(QString option, bool enabled, QString value)
 
 void MainObject::on_map_main_window()
 {
+     qDebug() << "on_map_main_window";
     mapMainWindow->show();
     mapMainWindow->raise();
+
 
 }

@@ -14,6 +14,9 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
 
     this->mainObject = mob;
 
+
+    this->flightModel = new FlightsModel(this);
+
     this->setWindowTitle("FGx - The Utlimate Map ;)");
     this->setWindowIcon(QIcon(":/icon/map_type"));
 
@@ -40,10 +43,14 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
     this->dockPilots = new QDockWidget();
     this->addDockWidget(Qt::RightDockWidgetArea, dockPilots);
 
+
+
     this->flightsWidget = new FlightsWidget(mainObject);
     dockPilots->setWidget(this->flightsWidget);
     //this->flightsWidget->set_map_widget(mapWidget);
 
 
-    XSettings::autosizeWindow(this, 100, 100);
+    XSettings::autosizeWindow(this, 300, 300);
+
+   // this->mainObject->flightsModel->timer->start();
 }

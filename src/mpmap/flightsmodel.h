@@ -10,7 +10,8 @@
 
 class FlightsModel : public QStandardItemModel
 {
-    Q_OBJECT
+Q_OBJECT
+
 public:
     explicit FlightsModel(QObject *parent);
 
@@ -28,24 +29,29 @@ public:
         C_COUNT
     };
 
-    QTimer *timmy;
+    QTimer *timer;
 
     QNetworkAccessManager *netMan;
-    QNetworkReply  *reply;
+    //QNetworkReply  *reply;
     QString server_string;
 
 
 
-    void on_server_error(QNetworkReply::NetworkError);
-    void on_server_ready_read();
-    void on_server_read_finished();
+
 
 
 signals:
+    //
 
 public slots:
 
  void fetch_server();
+ void on_server_error(QNetworkReply::NetworkError);
+ void on_server_ready_read();
+ void on_server_read_finished();
+
+ void on_server_finished(QNetworkReply *reply);
+
 
 };
 
