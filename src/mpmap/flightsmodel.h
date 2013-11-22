@@ -2,13 +2,16 @@
 #define FLIGHTSMODEL_H
 
 #include <QStandardItemModel>
-#include <QTimer>
 
+#include <QTimer>
+#include <QDateTime>
 
 #include <QHostInfo>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+
+
 
 class FlightsModel : public QStandardItemModel
 {

@@ -10,7 +10,8 @@ LIBS += -lmarblewidget
 QT += network \
 	xml \
 	xmlpatterns \
-	webkit
+        webkit \
+        script
 
 
 # Input

@@ -1,6 +1,8 @@
 
 #include <QtDebug>
 
+#include <QScriptEngine>
+#include <QScriptValue>
 
 
 #include "flightsmodel.h"
@@ -13,7 +15,7 @@ FlightsModel::FlightsModel(QObject *parent) :
     this->netMan = new QNetworkAccessManager(this);
     this->connect(this->netMan, SIGNAL( finished(QNetworkReply *)),
            this, SLOT(on_server_finished(QNetworkReply *))
-    ); //<< FAILS.. does not connect ??!"
+    ); //<< FAILS.. does not connect ??! NO Was DNS
 
     setColumnCount(7);
 
@@ -50,7 +52,7 @@ FlightsModel::FlightsModel(QObject *parent) :
     //
     //QTimer::singleShot( 2 * 1000, this, SLOT(fetch_server()) );
      //qDebug() << "init";
-    timer->setInterval(2000);
+    timer->setInterval(1000);
     this->connect(this->timer, SIGNAL(timeout()),
                   this, SLOT(fetch_server()) );
     //timer->start();
@@ -63,12 +65,18 @@ void FlightsModel::fetch_server()
 {
 
     server_string = "";
-    QUrl url("http://crossfeed.fgx.ch/flights.json");
+
+    //WTF DNS is slow..
+    //QUrl url("http://http://crossfeed.fgx.ch/flights.json");
+    QUrl url("http://5.35.249.200/flights.json"); //http://crossfeed.fgx.ch/flights.json");
+
     QNetworkRequest request;
     request.setUrl( url );
+    request.setRawHeader("Host", "crossfeed.fgx.ch");
 
     //reply = netMan->get(request);
     QNetworkReply *reply = netMan->get(request);
+    qDebug() << "fetch  >" << QDateTime::currentDateTimeUtc().toString();
     /*
     connect(reply, SIGNAL( error(QNetworkReply::NetworkError)),
             this, SLOT(on_server_error(QNetworkReply::NetworkError))
@@ -81,9 +89,9 @@ void FlightsModel::fetch_server()
     );
     */
     //statusBar->showMessage("Request");
-    QHostInfo::lookupHost("crossfeed.fgx.ch", this, SLOT(on_dns(const QHostInfo&)) );
-    this->timer->stop();
-    qDebug() << "fetchssss";
+    //QHostInfo::lookupHost("crossfeed.fgx.ch", this, SLOT(on_dns(const QHostInfo&)) );
+    //this->timer->stop();
+    //qDebug() << "fetchssss";
 
 }
 
@@ -115,16 +123,23 @@ void FlightsModel::on_server_ready_read(){
 void FlightsModel::on_server_read_finished(){
 
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    qDebug() << "done " << reply->readAll();
+    //qDebug() << "done "; //<< reply->readAll();
+    //qDebug() << "reply  >" << QDateTime::currentDateTimeUtc().toString();
 }
 
 
 void FlightsModel::on_server_finished(QNetworkReply *reply){
-    qDebug() << "done_server";
+    //qDebug() << "done_server" ;
+    qDebug() << "reply  <" << QDateTime::currentDateTimeUtc().toString();
     reply->deleteLater();
+
+
+
 }
+
 
 void FlightsModel::on_dns(const QHostInfo &host)
 {
     qDebug() << "DNS" << host.addresses();
 }
+
