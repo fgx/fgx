@@ -13,9 +13,9 @@ XMarbleWidget::XMarbleWidget(QWidget *parent) :
 }
 */
 
-void XMarbleWidget::register_mainobject(MainObject *mOb)
+void XMarbleWidget::register_flights_model(FlightsModel *flyMod)
 {
-    this->mainObject = mOb;
+    this->flightsModel = flyMod;
     this->model_registered = true;
 }
 
@@ -45,10 +45,10 @@ void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 
 
 	//== Draw Radar Widgets
-    for(int idx=0; idx < this->mainObject->flightsModel->rowCount(); idx++)
+    for(int idx=0; idx < this->flightsModel->rowCount(); idx++)
 	{
-        Marble::GeoDataCoordinates blip(this->mainObject->flightsModel->item(idx, 5)->text().toFloat(),
-                                        this->mainObject->flightsModel->item(idx, 4)->text().toFloat(),
+        Marble::GeoDataCoordinates blip(this->flightsModel->item(idx, 5)->text().toFloat(),
+                                        this->flightsModel->item(idx, 4)->text().toFloat(),
                                         0.0, Marble::GeoDataCoordinates::Degree
 						);
 
@@ -88,14 +88,14 @@ void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 		font.setBold(true);
 		font.setPixelSize(10);
 		painter->setFont(font);
-        painter->drawText(xx + 12, yy + 3, this->mainObject->flightsModel->item(idx, 0)->text());
+        painter->drawText(xx + 12, yy + 3, this->flightsModel->item(idx, 0)->text());
 
 		font = painter->font();
 		//font.setFamily("Arial");
 		font.setBold(true);
 		font.setPixelSize(8);
 		painter->setFont(font);
-        painter->drawText(xx + 14, yy + 12, this->mainObject->flightsModel->item(idx, 3)->text());
+        painter->drawText(xx + 14, yy + 12, this->flightsModel->item(idx, 3)->text());
 
 
 

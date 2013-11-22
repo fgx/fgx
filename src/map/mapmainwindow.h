@@ -30,9 +30,9 @@ public:
 
     MapCoreWidget *mapWidget;
 
-    QDockWidget *dockPilots;
+    QDockWidget *dockFlights;
     FlightsWidget *flightsWidget;
-    FlightsModel *flightModel;
+    FlightsModel *flightsModel;
 
 
 signals:

@@ -50,7 +50,7 @@ MainObject::MainObject(QObject *parent) :
 	);
 
 
-    flightsModel = 0; //new FlightsModel(this);
+    //flightsModel = 0; //new FlightsModel(this);
 
 
 	//================================================================
@@ -224,8 +224,8 @@ MainObject::~MainObject()
 //= Initialize
 void MainObject::initialize(){
     //on_launcher();
-    qDebug() << "initttt";
-    flightsModel = new FlightsModel(this);
+    //qDebug() << "initttt";
+    //flightsModel = new FlightsModel(this);
     on_map_main_window();
 	
 }

@@ -11,9 +11,9 @@ FlightsModel::FlightsModel(QObject *parent) :
 
     timer = new QTimer(this);
     this->netMan = new QNetworkAccessManager(this);
-    //this->connect(this->netMan, SIGNAL( finished(QNetworkReply *)),
-     //       this, SLOT(on_server_finished(QNetworkReply *))
-    //); << FAILS.. does not connect ??!"
+    this->connect(this->netMan, SIGNAL( finished(QNetworkReply *)),
+           this, SLOT(on_server_finished(QNetworkReply *))
+    ); //<< FAILS.. does not connect ??!"
 
     setColumnCount(7);
 
@@ -69,7 +69,7 @@ void FlightsModel::fetch_server()
 
     //reply = netMan->get(request);
     QNetworkReply *reply = netMan->get(request);
-
+    /*
     connect(reply, SIGNAL( error(QNetworkReply::NetworkError)),
             this, SLOT(on_server_error(QNetworkReply::NetworkError))
     );
@@ -79,9 +79,11 @@ void FlightsModel::fetch_server()
     connect(reply, SIGNAL( finished()),
             this, SLOT(on_server_read_finished())
     );
-
+    */
     //statusBar->showMessage("Request");
-    qDebug() << "fetch";
+    QHostInfo::lookupHost("crossfeed.fgx.ch", this, SLOT(on_dns(const QHostInfo&)) );
+    this->timer->stop();
+    qDebug() << "fetchssss";
 
 }
 
@@ -91,7 +93,7 @@ void FlightsModel::fetch_server()
 //==========================================================
 void FlightsModel::on_server_error(QNetworkReply::NetworkError error){
     qDebug() << "error" << error;
-    Q_UNUSED(error);
+    //Q_UNUSED(error);
     //outLog("FGx: PilotsWidget::on_server_error()");
 }
 
@@ -113,7 +115,7 @@ void FlightsModel::on_server_ready_read(){
 void FlightsModel::on_server_read_finished(){
 
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    qDebug() << "done" << reply->readAll();
+    qDebug() << "done " << reply->readAll();
 }
 
 
@@ -122,3 +124,7 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
     reply->deleteLater();
 }
 
+void FlightsModel::on_dns(const QHostInfo &host)
+{
+    qDebug() << "DNS" << host.addresses();
+}

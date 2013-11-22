@@ -4,8 +4,8 @@
 
 #include <QStandardItemModel>
 
-#include "xobjects/mainobject.h"
-class MainObject;
+#include "mpmap/flightsmodel.h"
+class FlightsModel;
 
 #include "marble/MarbleGlobal.h"
 #include "marble/MarbleWidget.h"
@@ -26,11 +26,11 @@ public:
 
    // explicit XMarbleWidget(QWidget *parent);
 
-    MainObject *mainObject;
+    FlightsModel *flightsModel;
     bool model_registered;
 
     //void radar_init(QStandardItemModel *mRadar);
-    void register_mainobject(MainObject *mOb);
+    void register_flights_model(FlightsModel *flyMod);
 
 
 	void radar_refresh();

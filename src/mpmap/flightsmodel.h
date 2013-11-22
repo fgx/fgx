@@ -4,6 +4,8 @@
 #include <QStandardItemModel>
 #include <QTimer>
 
+
+#include <QHostInfo>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -13,7 +15,7 @@ class FlightsModel : public QStandardItemModel
 Q_OBJECT
 
 public:
-    explicit FlightsModel(QObject *parent);
+    explicit FlightsModel(QObject *parent=0);
 
 
     enum COLS{
@@ -52,7 +54,7 @@ public slots:
 
  void on_server_finished(QNetworkReply *reply);
 
-
+ void on_dns(const QHostInfo &host);
 };
 
 #endif // FLIGHTSMODEL_H
