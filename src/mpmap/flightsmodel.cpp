@@ -31,6 +31,26 @@ FlightsModel::FlightsModel(QObject *parent) :
     item = new QStandardItem("Callsign");
     this->setHorizontalHeaderItem(C_CALLSIGN, item);
 
+
+
+    item = new QStandardItem("Speed");
+    this->setHorizontalHeaderItem(C_SPEED, item);
+
+    item = new QStandardItem("Heading");
+    this->setHorizontalHeaderItem(C_HEADING, item);
+
+    item = new QStandardItem("Altitude");
+    this->setHorizontalHeaderItem(C_ALTITUDE, item);
+
+
+
+    item = new QStandardItem("Lat");
+    this->setHorizontalHeaderItem(C_LAT, item);
+    item = new QStandardItem("Lon");
+    this->setHorizontalHeaderItem(C_LON, item);
+
+
+
     /*
     tree->header()->setStretchLastSection(true);
     tree->header()->setResizeMode(QHeaderView::Stretch);
@@ -49,13 +69,11 @@ FlightsModel::FlightsModel(QObject *parent) :
     tree->headerItem()->setTextAlignment(C_LAT, Qt::AlignRight);
     tree->headerItem()->setTextAlignment(C_LON, Qt::AlignRight);
     */
-    //
-    //QTimer::singleShot( 2 * 1000, this, SLOT(fetch_server()) );
-     //qDebug() << "init";
-    timer->setInterval(1000);
+
+
+    timer->setInterval(3000);
     this->connect(this->timer, SIGNAL(timeout()),
                   this, SLOT(fetch_server()) );
-    //timer->start();
 
 }
 
@@ -64,11 +82,12 @@ FlightsModel::FlightsModel(QObject *parent) :
 void FlightsModel::fetch_server()
 {
 
-    server_string = "";
+    //server_string = "";
 
     //WTF DNS is slow..
     //QUrl url("http://http://crossfeed.fgx.ch/flights.json");
-    QUrl url("http://5.35.249.200/flights.json"); //http://crossfeed.fgx.ch/flights.json");
+    // @todo: make this a setting
+    QUrl url("http://5.35.249.200/flights.json");
 
     QNetworkRequest request;
     request.setUrl( url );
@@ -88,10 +107,6 @@ void FlightsModel::fetch_server()
             this, SLOT(on_server_read_finished())
     );
     */
-    //statusBar->showMessage("Request");
-    //QHostInfo::lookupHost("crossfeed.fgx.ch", this, SLOT(on_dns(const QHostInfo&)) );
-    //this->timer->stop();
-    //qDebug() << "fetchssss";
 
 }
 
@@ -111,15 +126,6 @@ void FlightsModel::on_server_ready_read(){
     qDebug() << "read";
 }
 
-//=============================================
-// Server call finished.. so parse to tree
-//=============================================
-/* we do not want to clear the tree and reload as user would loose focus..
-   Also the last "communicate tiem means a pilot does not clear of the list"
-   A net conection might drop and reappear later = crash or terrain terrain etc..
-   SO current plan is to make a time stamp when a new pilot is gr
-*/
-
 void FlightsModel::on_server_read_finished(){
 
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
@@ -128,13 +134,53 @@ void FlightsModel::on_server_read_finished(){
 }
 
 
+
+
+
+
+
+//=============================================
+// Server call finished.. so parse to tree
+//=============================================
+/* we do not want to clear the tree and reload as user would loose focus..
+   Also the last "communicate tiem means a pilot does not clear of the list"
+   A net conection might drop and reappear later = crash or terrain terrain etc..
+   SO current plan is to make a time stamp when a new pilot is gr
+*/
 void FlightsModel::on_server_finished(QNetworkReply *reply){
     //qDebug() << "done_server" ;
-    qDebug() << "reply  <" << QDateTime::currentDateTimeUtc().toString();
+    //qDebug() << "reply  <" << QDateTime::currentDateTimeUtc().toString();
+    //qDebug() << reply->errorString();
+
+
+    if ( reply->error() != QNetworkReply::NoError){
+
+        // @todo: handle error
+        qDebug() << " net error > " << reply->errorString() << " - " << QDateTime::currentDateTimeUtc().toString();
+        reply->deleteLater();
+        return;
+    }
+
+    // Parse the JSON from crossfeed
+    QScriptEngine engine;
+    QScriptValue data = engine.evaluate("(" + reply->readAll() + ")");
+
+    QScriptValue nFlights = data.property("flights");
+
+    if ( nFlights.isArray() ){
+
+        qDebug() << "YES";
+        QScriptValueIterator it(nFlights);
+        while (it.hasNext()) {
+            it.next();
+            qDebug() << it.name() << ": " << it.value().toString();
+            qDebug() << it.value().property("callsign").toString();
+        }
+
+    }
+
+
     reply->deleteLater();
-
-
-
 }
 
 

@@ -6,6 +6,12 @@
 #include <QTimer>
 #include <QDateTime>
 
+// @todo:  qt5 this could be QJson..
+#include <QScriptEngine>
+#include <QScriptValue>
+#include <QScriptValueIterator>
+
+
 #include <QHostInfo>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -27,7 +33,8 @@ public:
         C_AIRCRAFT,
         C_ALTITUDE,
         C_HEADING,
-        C_PITCH,
+        C_SPEED,
+        //C_PITCH,
         C_LAT,
         C_LON,
         C_FLAG,
@@ -38,11 +45,7 @@ public:
 
     QNetworkAccessManager *netMan;
     //QNetworkReply  *reply;
-    QString server_string;
-
-
-
-
+    //QString server_string;
 
 
 signals:
