@@ -71,6 +71,7 @@ FlightsModel::FlightsModel(QObject *parent) :
     */
 
 
+
     timer->setInterval(3000);
     this->connect(this->timer, SIGNAL(timeout()),
                   this, SLOT(fetch_server()) );
@@ -162,6 +163,12 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
     }
 
     // Parse the JSON from crossfeed
+    /*
+     *"flights":[
+     *    {"fid":1385156785000,"callsign":"dozor","lat":59.245209,"lon":29.946378,"alt_ft":323,"model":"Aircraft/D-100/Models/D-100.xml","spd_kts":0,"hdg":278,"dist_nm":0}
+     * ]
+     */
+
     QScriptEngine engine;
     QScriptValue data = engine.evaluate("(" + reply->readAll() + ")");
 
@@ -172,9 +179,29 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
         qDebug() << "YES";
         QScriptValueIterator it(nFlights);
         while (it.hasNext()) {
+
             it.next();
             qDebug() << it.name() << ": " << it.value().toString();
-            qDebug() << it.value().property("callsign").toString();
+            //qDebug() << it.value().property("callsign").toString();
+            QString callsign = it.value().property("callsign").toString();
+
+            // @TODO: Geoff?? should this be callsign or fid we search for ? (or the option).. for now callsign
+            QList<QStandardItem *> fitems = this->findItems(callsign, Qt::MatchExactly, C_CALLSIGN);
+            if (fitems.count() == 0){
+
+                    QStandardItem *iFid = new QStandardItem( it.value().property("fid").toString() );
+                    QStandardItem *iCallsign = new QStandardItem( it.value().property("callsign").toString() );
+                    QStandardItem *iAltitudeHigh = new QStandardItem( it.value().property("alt_ft").toString() );
+                    QStandardItem *iSpeedmebaby = new QStandardItem( it.value().property("spd_kts").toString() );
+
+                // todo@ at and FGx platform level, we can insert or insert index..
+                // this means fid here and index key almost.. is the problem pete has..
+                QList<QStandardItem *> insertItemsList;
+                insertItemsList << iFid <<  iCallsign <<  iAltitudeHigh << iSpeedmebaby;
+                this->appendRow( insertItemsList );
+            }
+
+
         }
 
     }

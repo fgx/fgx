@@ -180,11 +180,14 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
     tree->setColumnHidden(FlightsModel::C_FLAG, true);
     tree->setColumnHidden(FlightsModel::C_COUNT, true);
 
+
     tree->setColumnHidden(FlightsModel::C_AIRCRAFT, !chkShowModel->isChecked());
     tree->setColumnHidden(FlightsModel::C_HEADING, !chkShowHdg->isChecked());
     tree->setColumnHidden(FlightsModel::C_ALTITUDE, !chkShowAlt->isChecked());
-    tree->setColumnHidden(FlightsModel::C_LAT, !chkShowLatLon->isChecked());
-    tree->setColumnHidden(FlightsModel::C_LON, !chkShowLatLon->isChecked());
+    //tree->setColumnHidden(FlightsModel::C_LAT, !chkShowLatLon->isChecked());
+    //tree->setColumnHidden(FlightsModel::C_LON, !chkShowLatLon->isChecked());
+    tree->setColumnHidden(FlightsModel::C_LAT, true);
+    tree->setColumnHidden(FlightsModel::C_LON, true);
 
     tree->setColumnWidth(FlightsModel::C_CALLSIGN, 100);
     tree->setColumnWidth(FlightsModel::C_AIRCRAFT, 100);
