@@ -28,13 +28,13 @@ public:
 
 
     enum COLS{
+        // The yet to test atomic geoff.cf.Id..
         C_FLIGHT_ID = 0,
-        C_CALLSIGN,
-        C_AIRCRAFT,
+        C_CALLSIGN,       
         C_ALTITUDE,
         C_HEADING,
         C_SPEED,
-        //C_PITCH,
+        C_AIRCRAFT,
         C_LAT,
         C_LON,
         C_FLAG,
