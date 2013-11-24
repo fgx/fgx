@@ -72,7 +72,7 @@ FlightsModel::FlightsModel(QObject *parent) :
 
 
 
-    timer->setInterval(3000);
+    timer->setInterval(1000);
     timer->setSingleShot(false);
     this->connect(this->timer, SIGNAL(timeout()),
                   this, SLOT(fetch_server()) );
@@ -203,10 +203,17 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
 
                     QStandardItem *iFid = new QStandardItem( it.value().property("fid").toString() );
                     QStandardItem *iCallsign = new QStandardItem( it.value().property("callsign").toString() );
-                    QStandardItem *iAltitude = new QStandardItem( it.value().property("alt_ft").toString() );
-                    QStandardItem *iHeading = new QStandardItem( it.value().property("hdg").toString() );
-                    QStandardItem *iSpeed = new QStandardItem( it.value().property("spd_kts").toString() );
                     QStandardItem *iModel = new QStandardItem( it.value().property("model").toString() );
+
+                    QStandardItem *iAltitude = new QStandardItem( it.value().property("alt_ft").toString() );
+                    iAltitude->setTextAlignment(Qt::AlignRight);
+
+                    QStandardItem *iHeading = new QStandardItem( it.value().property("hdg").toString() );
+                    iHeading->setTextAlignment(Qt::AlignRight);
+
+                    QStandardItem *iSpeed = new QStandardItem( it.value().property("spd_kts").toString() );
+                    iSpeed->setTextAlignment(Qt::AlignRight);
+
                     QStandardItem *iLat = new QStandardItem( it.value().property("lat").toString() );
                     QStandardItem *iLon = new QStandardItem( it.value().property("lon").toString() );
 
@@ -217,7 +224,12 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
                 this->appendRow( insertItemsList );
             }else{
                 qDebug() << "update";
-
+                int row = fitems.at(0)->index().row();
+                this->item(row, C_ALTITUDE)->setText(it.value().property("alt_ft").toString());
+                this->item(row, C_HEADING)->setText(it.value().property("hdg").toString());
+                this->item(row, C_SPEED)->setText(it.value().property("spd_kts").toString());
+                this->item(row, C_LAT)->setText(it.value().property("lat").toString());
+                this->item(row, C_LON)->setText(it.value().property("lon").toString());
             }
 
 
