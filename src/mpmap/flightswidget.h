@@ -15,9 +15,11 @@
 #include <QNetworkReply>
 
 #include <QSortFilterProxyModel>
+#include <QModelIndex>
+#include <QTreeView>
 
 #include <QWidget>
-#include <QTreeView>
+
 #include <QStatusBar>
 #include <QCheckBox>
 #include <QComboBox>
@@ -38,7 +40,7 @@ class FlightsModel;
 
 
 /*! \class FlightsWidget
- * \brief The FlightsWidget contains a QTreeView and associated controls to view pilots
+ * \brief The FlightsWidget contains a QTreeView and associated controls to view flights
  *
  *
  * @author: Peter Morgan
@@ -82,6 +84,7 @@ public slots:
 
 	void on_show_cols(QAbstractButton*);
 
+    void on_tree_double_clicked(const QModelIndex &);
     void do_update();
 };
 

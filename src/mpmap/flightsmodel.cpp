@@ -235,6 +235,9 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
                 // this means fid here and index key almost.. is the problem pete has..
                 QList<QStandardItem *> insertItemsList;
                 insertItemsList << iFid <<  iCallsign << iAltitude << iHeading << iSpeed << iModel << iLat << iLon;
+                for(int i =0; i < insertItemsList.count(); i++){
+                    insertItemsList.at(i)->setEditable(false);
+                }
                 this->appendRow( insertItemsList );
             }else{
                // qDebug() << "update";

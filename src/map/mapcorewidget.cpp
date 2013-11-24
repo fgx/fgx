@@ -18,6 +18,7 @@
 #include <QtGui/QDesktopServices>
 
 
+#include "xwidgets/toolbargroup.h"
 
 #include "map/mapcorewidget.h"
 //#include "map/radarplugin.h"
@@ -340,14 +341,14 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
 void MapCoreWidget::on_map_clicked()
 {
-    qDebug() << "clicked";
+    //qDebug() << "clicked";
 
 }
 void MapCoreWidget::on_map_moved(const Marble::GeoDataLatLonAltBox &region)
 {
-    qDebug() << "moved";
-    this->txtLat->setText( region.center().latToString() );
-    this->txtLon->setText( region.center().lonToString() );
+    //qDebug() << "moved";
+    this->txtLat->setText( QString::number(region.center().latitude()) );
+    this->txtLon->setText( QString::number(region.center().longitude()) );
 }
 
 

@@ -112,6 +112,11 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 
 	mainObject->settings->beginGroup("pilots_widget_cols");
 
+    QCheckBox *chkFlightId = new QCheckBox();
+    chkFlightId->setText("Heading");
+    layCols->addWidget(chkFlightId);
+    buttonGroupCols->addButton(chkFlightId, FlightsModel::C_HEADING);
+    chkFlightId->setChecked(mainObject->settings->value(QString::number(FlightsModel::C_FLIGHT_ID), "1").toBool());
 
 	QCheckBox *chkShowModel = new QCheckBox();
 	chkShowModel->setText("Aircraft Type");
@@ -205,8 +210,9 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 	tree->setSortingEnabled(true);
     tree->sortByColumn(FlightsModel::C_CALLSIGN, Qt::AscendingOrder);
 
-    //connect(tree,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-    //		this, SLOT(on_item_doubled_clicked(QTreeWidgetItem*,int)));
+    connect(tree, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SLOT(on_tree_double_clicked(QModelIndex))
+    );
 
 	//===========================================================================
 	//= Status Bar
@@ -223,15 +229,18 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 }
 
 
+void FlightsWidget::on_tree_double_clicked(const QModelIndex & index)
+{
+    qDebug() << index.row() << index.column();
+
+}
+
 void FlightsWidget::do_update()
 {
     this->lcdLag->display(QString::number(this->mainObject->flightsModel->lag));
     statusBar->showMessage(QString::number(this->mainObject->flightsModel->rowCount()).append(" flights") );
 
 }
-
-
-
 
 
 
