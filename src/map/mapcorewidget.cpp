@@ -204,7 +204,6 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     //marbleWidget->setProjection( Marble::Equirectangular );
     marbleWidget->setProjection( Marble::Mercator );
 
-    marbleWidget->setZoom(2000);
 
 	marbleWidget->setShowCompass(false);
     marbleWidget->setShowClouds( false );
@@ -344,9 +343,11 @@ void MapCoreWidget::on_map_clicked()
     qDebug() << "clicked";
 
 }
-void MapCoreWidget::on_map_moved(const Marble::GeoDataLatLonAltBox &vizLatLon)
+void MapCoreWidget::on_map_moved(const Marble::GeoDataLatLonAltBox &region)
 {
     qDebug() << "moved";
+    this->txtLat->setText( region.center().latToString() );
+    this->txtLon->setText( region.center().lonToString() );
 }
 
 

@@ -94,10 +94,13 @@ void FlightsModel::fetch_server()
     QNetworkRequest request;
     request.setUrl( url );
     request.setRawHeader("Host", "crossfeed.fgx.ch");
+    // tag with current epoch ms
+    QString no = QString::number(QDateTime::currentMSecsSinceEpoch());
+    request.setAttribute(QNetworkRequest::User, no );
 
     //reply = netMan->get(request);
-    QNetworkReply *reply = netMan->get(request);
-    qDebug() << "fetch  >" << QDateTime::currentDateTimeUtc().toString();
+    netMan->get(request);
+    qDebug() << "fetch  >" << QDateTime::currentDateTimeUtc() << no << QDateTime::currentMSecsSinceEpoch();
     /*
     connect(reply, SIGNAL( error(QNetworkReply::NetworkError)),
             this, SLOT(on_server_error(QNetworkReply::NetworkError))
@@ -161,6 +164,13 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
         qDebug() << " net error > " << reply->errorString() << " - " << QDateTime::currentDateTimeUtc().toString();
         reply->deleteLater();
         return;
+    }
+    bool ok;
+    qint64 ms = reply->request().attribute(QNetworkRequest::User).toLongLong(&ok);
+    //qDebug() << ok << ms << QDateTime::currentMSecsSinceEpoch();
+    if (ok){
+        int lag = QDateTime::currentMSecsSinceEpoch() - ms;
+        qDebug() << "round trip" << lag;
     }
 
     // Parse the JSON from crossfeed
