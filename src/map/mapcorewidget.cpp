@@ -46,21 +46,21 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//= Main Layout and Splitter
 	QVBoxLayout *mainLayout = new QVBoxLayout(this);
 	mainLayout->setContentsMargins(0,0,0,0);
-	mainLayout->setSpacing(0);
+    mainLayout->setSpacing(2);
 
     //===========
     QHBoxLayout *topBar = new QHBoxLayout();
     mainLayout->addLayout(topBar);
 
     //===================================================
-    //= Base Layer
+    //= Map Base Layers and Projection
     ToolBarGroup *tbBaseLayer = new ToolBarGroup(this);
     topBar->addWidget(tbBaseLayer);
     tbBaseLayer->lblTitle->setText("Base Layer");
 
-    // Select Base
-    QToolButton *buttBaseLayer = new QToolButton();
-    buttBaseLayer->setIcon(QIcon(":/icon/map"));
+    //= Base Layer
+    buttBaseLayer = new QToolButton();
+    buttBaseLayer->setIcon(QIcon(":/icon/map_type"));
     buttBaseLayer->setToolTip("Change base layer");
     buttBaseLayer->setPopupMode(QToolButton::InstantPopup);
     tbBaseLayer->addWidget(buttBaseLayer);
@@ -77,16 +77,58 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     QAction *a;
     a = menuBase->addAction("OSM");
     a->setProperty("theme", "earth/openstreetmap/openstreetmap.dgml");
+    a->setCheckable(true);
+    a->setChecked(true);
     this->actGroupBaseLayer->addAction(a);
 
     a = menuBase->addAction("Blue Marble");
     a->setProperty("theme", "earth/bluemarble/bluemarble.dgml");
+    a->setCheckable(true);
+    this->actGroupBaseLayer->addAction(a);
+
+    a = menuBase->addAction("SRTM");
+    a->setProperty("theme", "earth/srtm/srtm.dgml");
+    a->setCheckable(true);
+    this->actGroupBaseLayer->addAction(a);
+
+    a = menuBase->addAction("Plain");
+    a->setProperty("theme", "earth/plain/plain.dgml");
+    a->setCheckable(true);
     this->actGroupBaseLayer->addAction(a);
 
 
-    //marbleWidget->setMapThemeId("earth/bluemarble/bluemarble.dgml");
-    //marbleWidget->setMapThemeId("earth/plain/plain.dgml");
-    //marbleWidget->setMapThemeId("earth/srtm/srtm.dgml");
+
+    //= Projection
+    this->buttProjection = new QToolButton();
+    this->buttProjection->setIcon(QIcon(":/icon/map_type"));
+    this->buttProjection->setToolTip("Change projection");
+    this->buttProjection->setPopupMode(QToolButton::InstantPopup);
+    tbBaseLayer->addWidget(this->buttProjection);
+
+    QMenu *menuProjection = new QMenu(this->buttProjection);
+    this->buttProjection->setMenu(menuProjection);
+
+    this->actGroupProjection = new QActionGroup(this);
+    this->actGroupProjection->setExclusive(true);
+    connect(this->actGroupProjection, SIGNAL(triggered(QAction*)),
+            this, SLOT(on_map_projection_action(QAction*))
+    );
+
+    a = menuProjection->addAction("Mercator");
+    a->setProperty("proj", Marble::Mercator );
+    a->setCheckable(true);
+    a->setChecked(true);
+    this->actGroupProjection->addAction(a);
+
+    a = menuProjection->addAction("Equirectangular");
+    a->setProperty("proj", Marble::Equirectangular );
+    a->setCheckable(true);
+    this->actGroupProjection->addAction(a);
+
+    a = menuProjection->addAction("Spherical");
+    a->setProperty("proj", Marble::Spherical );
+    a->setCheckable(true);
+    this->actGroupProjection->addAction(a);
 
     //===================================================
     //= Map View
@@ -192,33 +234,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	colsWidgetAction->setDefaultWidget(groupBoxRadarCols);
 	menuCols->addAction(colsWidgetAction);*/
 
-	//=============================================
-	// Map Type
-	/*QToolButton *buttMapType = new QToolButton(this);
-	buttMapType->setText("Map Type");
-	buttMapType->setIcon(QIcon(":/icon/map_type"));
-	buttMapType->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttMapType->setPopupMode(QToolButton::InstantPopup);
-	toolbar->addWidget(buttMapType);
 
-	QMenu *menuMapType = new QMenu();
-	buttMapType->setMenu(menuMapType);
-
-	QActionGroup *actionGroup = new QActionGroup(this);
-	actionGroup->setExclusive(true);
-	connect(actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(on_map_type(QAction*)));
-
-	QAction *actionMapOsm =menuMapType->addAction("Open Street Map");
-	actionMapOsm->setCheckable(true);
-	actionMapOsm->setChecked(true);
-	actionMapOsm->setProperty("map_type", "osm");
-	actionGroup->addAction(actionMapOsm);
-
-	QAction *actionMapGoogle =menuMapType->addAction("Google Satellite");
-	actionMapGoogle->setCheckable(true);
-	actionMapGoogle->setProperty("map_type", "google_satellite");
-	actionGroup->addAction(actionMapGoogle);
-	actionMapGoogle->setVisible(false);*/
 
 
 	//============================================================================
@@ -547,10 +563,15 @@ void MapCoreWidget::on_map_view_action(QAction *act)
     this->marbleWidget->setCenterLongitude(act->property("lon").toReal());
     this->marbleWidget->setZoom(act->property("zoom").toInt());
 }
-/*
+
 void MapCoreWidget::on_map_base_layer_action(QAction *act)
 {
     qDebug() << "base" << act->property("theme").toString();
     this->marbleWidget->setMapThemeId( act->property("theme").toString() );
 }
-*/
+
+void MapCoreWidget::on_map_projection_action(QAction *act)
+{
+    qDebug() << "on_map_projection_action" << act->property("proj").toInt();
+    this->marbleWidget->setProjection( act->property("proj").toInt() );
+}

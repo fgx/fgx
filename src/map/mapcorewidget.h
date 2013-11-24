@@ -50,6 +50,9 @@ public:
 
 	MainObject *mainObject;
 
+    QToolButton *buttBaseLayer;
+    QToolButton *buttProjection;
+
     QToolButton *buttLoadView;
     QToolButton *buttSaveView;
 
@@ -85,6 +88,7 @@ private:
 
     QActionGroup *actGroupMapViews;
     QActionGroup *actGroupBaseLayer;
+    QActionGroup *actGroupProjection;
 
 
 signals:
@@ -95,7 +99,8 @@ public slots:
 
 
     void on_map_view_action(QAction *);
-    //void on_map_base_layer_action(QAction*);
+    void on_map_base_layer_action(QAction*);
+    void on_map_projection_action(QAction*);
 
 	void on_slider_zoom(int zoom);
 	void on_butt_zoom_in();
