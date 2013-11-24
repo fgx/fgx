@@ -80,7 +80,7 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 	//actionRefresh->setText("Refresh");
 	actionRefresh->setIcon(QIcon(":/icon/refresh"));
 	toolbar->addAction(actionRefresh);
-	connect(actionRefresh, SIGNAL(triggered()), this, SLOT(fetch_pilots()));
+    //connect(actionRefresh, SIGNAL(triggered()), this, SLOT(fetch_pilots()));
 
 
 

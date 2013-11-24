@@ -22,6 +22,7 @@ class FlightsModel;
 
 class XMarbleWidget : public Marble::MarbleWidget
 {
+
 public:
 
    // explicit XMarbleWidget(QWidget *parent);

@@ -20,12 +20,6 @@ void XMarbleWidget::register_flights_model(FlightsModel *flyMod)
     this->connect(this->flightsModel, SIGNAL(update_done()), this, SLOT(update()));
 }
 
-void XMarbleWidget::do_update()
-{
-    qDebug() << "do_update";
-    this->update();
-}
-
 /*
 void XMarbleWidget::XMarbleWidget()
 {
@@ -41,7 +35,7 @@ void XMarbleWidget::XMarbleWidget()
 void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 {
 
-     qDebug() << "radar count" << this->flightsModel->rowCount();
+     //qDebug() << "pain map" << this->flightsModel->rowCount();
 
 
     //return;
@@ -54,6 +48,9 @@ void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 	//== Draw Radar Widgets
     for(int idx=0; idx < this->flightsModel->rowCount(); idx++)
 	{
+        bool lat_ok;
+        bool lon_ok;
+
         // Yes,, LON, LAT is order !!
         Marble::GeoDataCoordinates blip(this->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
                                         this->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),

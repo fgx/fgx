@@ -169,7 +169,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	connect(buttZoomIn, SIGNAL(clicked()), this, SLOT(on_butt_zoom_in()));
 
 	sliderZoom = new QSlider();
-	sliderZoom->setRange(1150, 4000);
+    //sliderZoom->setRange(1150, 4000);
 	sliderZoom->setTickPosition(QSlider::TicksLeft);
 	sliderZoom->setTickInterval(1);
 	sliderZoom->setPageStep(500);
@@ -201,7 +201,10 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//marbleWidget->setMapThemeId("earth/plain/plain.dgml");
     //marbleWidget->setMapThemeId("earth/srtm/srtm.dgml");
 
-	marbleWidget->setProjection( 0 );
+    //marbleWidget->setProjection( Marble::Equirectangular );
+    marbleWidget->setProjection( Marble::Mercator );
+
+    marbleWidget->setZoom(2000);
 
 	marbleWidget->setShowCompass(false);
     marbleWidget->setShowClouds( false );
@@ -220,7 +223,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//marbleWidget->model()->treeModel()->
 
 
-	marbleWidget->model()->pluginManager();
+    //marbleWidget->model()->pluginManager();
 
 	//mapWidget->zoomVie
 	//mapWidget->model()->addPlacemarkFile("/home/ffs/fgx/example.kml");
@@ -230,9 +233,18 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//mapWidget->setMinimumZoom(100);
 	//marbleWidget->
 
-	connect(marbleWidget, SIGNAL(zoomChanged(int)), this, SLOT(on_map_zoom_changed(int)));
+    connect(marbleWidget, SIGNAL(zoomChanged(int)),
+            this, SLOT(on_map_zoom_changed(int))
+    );
+
 	//
-	//connect(marbleWidget, SIGNAL(mouseClickGeoPosition(qreal,qreal,GeoDataCoordinates::Unit));
+    connect(marbleWidget, SIGNAL(mouseClickGeoPosition(qreal,qreal,GeoDataCoordinates::Unit)),
+           this, SLOT(on_map_clicked())
+    );
+
+    connect(marbleWidget, SIGNAL(visibleLatLonAltBoxChanged(const GeoDataLatLonAltBox &)),
+            this, SLOT(on_map_moved(const GeoDataLatLonAltBox &))
+    );
 	//connect(marbleWidget, SIGNAL(mouseMoveGeoPosition(QString)), this, SLOT(on_map_move(QString)));
 
 
@@ -246,7 +258,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//mapWidget->fileViewModel()->addMap()
 
 
-
+    sliderZoom->setRange(marbleWidget->minimumZoom(), marbleWidget->maximumZoom());
 
 
 	//============================================================
@@ -321,12 +333,21 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 	//connect(mainObject, SIGNAL(on_debug_mode(bool)), this, SLOT(on_debug_mode(bool)));
 
-	marbleWidget->zoomView(1600);
+    marbleWidget->zoomView(2000);
 
 
 }
 
 
+void MapCoreWidget::on_map_clicked()
+{
+    qDebug() << "clicked";
+
+}
+void MapCoreWidget::on_map_moved(const Marble::GeoDataLatLonAltBox &vizLatLon)
+{
+    qDebug() << "moved";
+}
 
 
 //= Overide the closeEvent

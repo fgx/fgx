@@ -22,6 +22,14 @@
 #include "xobjects/mainobject.h"
 class MainObject;
 
+
+
+#include "marble/MarbleGlobal.h"
+#include "marble/MarbleWidget.h"
+#include "marble/GeoDataLatLonAltBox.h"
+
+using namespace Marble;
+
 #include "map/xmarblewidget.h"
 class XMarbleWidget;
 
@@ -84,6 +92,8 @@ public slots:
 	void on_butt_zoom_out();
 	void on_map_zoom_changed(int);
 
+    void on_map_clicked();
+    void on_map_moved(const GeoDataLatLonAltBox &);
 
 	void refresh_map();
 	void map_focus(QString lon, QString lat);
