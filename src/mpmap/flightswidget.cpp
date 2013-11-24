@@ -157,8 +157,9 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 	tree->setAlternatingRowColors(true);
 
 
+
 	tree->header()->setStretchLastSection(true);
-	tree->header()->setResizeMode(QHeaderView::Stretch);
+    //tree->header()->setResizeMode(QHeaderView::Stretch);
     /*
 	tree->headerItem()->setText(C_CALLSIGN, "Callsign");
 	tree->headerItem()->setText(C_AIRCRAFT, "Aircraft");
@@ -177,8 +178,13 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
     */
 
     //tree->setColumnHidden(C_PITCH, true);
-    tree->setColumnHidden(FlightsModel::C_FLAG, true);
-    tree->setColumnHidden(FlightsModel::C_COUNT, true);
+    bool x_hidden = false;
+    tree->setColumnHidden(FlightsModel::C_FLAG, x_hidden);
+    tree->setColumnHidden(FlightsModel::C_COUNT, x_hidden);
+
+    tree->setColumnHidden(FlightsModel::C_FLIGHT_ID, x_hidden);
+    tree->setColumnHidden(FlightsModel::C_LAT, x_hidden);
+    tree->setColumnHidden(FlightsModel::C_LON, x_hidden);
 
 
     tree->setColumnHidden(FlightsModel::C_AIRCRAFT, !chkShowModel->isChecked());
@@ -186,8 +192,7 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
     tree->setColumnHidden(FlightsModel::C_ALTITUDE, !chkShowAlt->isChecked());
     //tree->setColumnHidden(FlightsModel::C_LAT, !chkShowLatLon->isChecked());
     //tree->setColumnHidden(FlightsModel::C_LON, !chkShowLatLon->isChecked());
-    tree->setColumnHidden(FlightsModel::C_LAT, true);
-    tree->setColumnHidden(FlightsModel::C_LON, true);
+
 
     tree->setColumnWidth(FlightsModel::C_CALLSIGN, 100);
     tree->setColumnWidth(FlightsModel::C_AIRCRAFT, 100);

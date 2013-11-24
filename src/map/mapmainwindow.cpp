@@ -48,6 +48,8 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
     this->flightsWidget = new FlightsWidget(mainObject);
     this->dockFlights->setWidget(this->flightsWidget);
 
+    this->flightsWidget->setMinimumWidth(500);
+
     //this->flightsWidget->set_map_widget(mapWidget);
 
 

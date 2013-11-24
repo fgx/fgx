@@ -73,6 +73,7 @@ FlightsModel::FlightsModel(QObject *parent) :
 
 
     timer->setInterval(3000);
+    timer->setSingleShot(false);
     this->connect(this->timer, SIGNAL(timeout()),
                   this, SLOT(fetch_server()) );
 
@@ -177,6 +178,17 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
     if ( nFlights.isArray() ){
 
         qDebug() << "YES";
+        /*
+         * C_FLIGHT_ID = 0,
+        C_CALLSIGN,
+        C_ALTITUDE,
+        C_HEADING,
+        C_SPEED,
+        C_AIRCRAFT,
+        C_LAT,
+        C_LON,
+        C_FLAG,
+        C_COUNT */
         QScriptValueIterator it(nFlights);
         while (it.hasNext()) {
 
@@ -191,14 +203,21 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
 
                     QStandardItem *iFid = new QStandardItem( it.value().property("fid").toString() );
                     QStandardItem *iCallsign = new QStandardItem( it.value().property("callsign").toString() );
-                    QStandardItem *iAltitudeHigh = new QStandardItem( it.value().property("alt_ft").toString() );
-                    QStandardItem *iSpeedmebaby = new QStandardItem( it.value().property("spd_kts").toString() );
+                    QStandardItem *iAltitude = new QStandardItem( it.value().property("alt_ft").toString() );
+                    QStandardItem *iHeading = new QStandardItem( it.value().property("hdg").toString() );
+                    QStandardItem *iSpeed = new QStandardItem( it.value().property("spd_kts").toString() );
+                    QStandardItem *iModel = new QStandardItem( it.value().property("model").toString() );
+                    QStandardItem *iLat = new QStandardItem( it.value().property("lat").toString() );
+                    QStandardItem *iLon = new QStandardItem( it.value().property("lon").toString() );
 
                 // todo@ at and FGx platform level, we can insert or insert index..
                 // this means fid here and index key almost.. is the problem pete has..
                 QList<QStandardItem *> insertItemsList;
-                insertItemsList << iFid <<  iCallsign <<  iAltitudeHigh << iSpeedmebaby;
+                insertItemsList << iFid <<  iCallsign << iAltitude << iHeading << iSpeed << iModel << iLat << iLon;
                 this->appendRow( insertItemsList );
+            }else{
+                qDebug() << "update";
+
             }
 
 
