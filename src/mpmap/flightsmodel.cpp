@@ -96,49 +96,18 @@ void FlightsModel::fetch_server()
     QNetworkRequest request;
     request.setUrl( url );
     request.setRawHeader("Host", "crossfeed.fgx.ch");
+
     // tag with current epoch ms
     QString no = QString::number(QDateTime::currentMSecsSinceEpoch());
     request.setAttribute(QNetworkRequest::User, no );
 
     //reply = netMan->get(request);
     netMan->get(request);
-    qDebug() << "fetch  >" << QDateTime::currentDateTimeUtc() << no << QDateTime::currentMSecsSinceEpoch();
-    /*
-    connect(reply, SIGNAL( error(QNetworkReply::NetworkError)),
-            this, SLOT(on_server_error(QNetworkReply::NetworkError))
-    );
-    connect(reply, SIGNAL( readyRead()),
-            this, SLOT(on_server_ready_read())
-    );
-    connect(reply, SIGNAL( finished()),
-            this, SLOT(on_server_read_finished())
-    );
-    */
+    //qDebug() << "fetch  >" << QDateTime::currentDateTimeUtc() << no << QDateTime::currentMSecsSinceEpoch();
+
 
 }
 
-
-//==========================================================
-//= Server Events
-//==========================================================
-//void FlightsModel::on_server_error(QNetworkReply::NetworkError error){
-  //  qDebug() << "er/ror" << error;
-    //Q_UNUSED(error);
-    //outLog("FGx: PilotsWidget::on_server_error()");
-//}
-
-//void FlightsModel::on_server_ready_read(){
-   // QString s(netMan->reply->readAll());
-    //this->server_string.append(s);
-  //  qDebug() << "read";
-//}
-
-//void FlightsModel::on_server_read_finished(){
-
-  //  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    //qDebug() << "done "; //<< reply->readAll();
-    //qDebug() << "reply  >" << QDateTime::currentDateTimeUtc().toString();
-//}
 
 
 

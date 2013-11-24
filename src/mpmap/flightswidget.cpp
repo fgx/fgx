@@ -113,9 +113,9 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 	mainObject->settings->beginGroup("pilots_widget_cols");
 
     QCheckBox *chkFlightId = new QCheckBox();
-    chkFlightId->setText("Heading");
+    chkFlightId->setText("Flight ID");
     layCols->addWidget(chkFlightId);
-    buttonGroupCols->addButton(chkFlightId, FlightsModel::C_HEADING);
+    buttonGroupCols->addButton(chkFlightId, FlightsModel::C_FLIGHT_ID);
     chkFlightId->setChecked(mainObject->settings->value(QString::number(FlightsModel::C_FLIGHT_ID), "1").toBool());
 
 	QCheckBox *chkShowModel = new QCheckBox();

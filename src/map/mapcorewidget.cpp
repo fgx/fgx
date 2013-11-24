@@ -1,32 +1,33 @@
 
 
-#include <QtCore/QByteArray>
-#include <QtCore/QFile>
-#include <QtCore/QStringList>
+#include <QByteArray>
+#include <QFile>
+#include <QStringList>
 
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QAction>
-#include <QtGui/QActionGroup>
-#include <QtGui/QToolButton>
-#include <QtGui/QMenu>
-#include <QtGui/QLabel>
-#include <QtGui/QSplitter>
+#include <QAction>
+#include <QActionGroup>
 
+#include <QToolButton>
+#include <QMenu>
+#include <QLabel>
+#include <QSplitter>
 
-#include <QtWebKit/QWebFrame>
-#include <QtGui/QDesktopServices>
+#include <QInputDialog>
+
 
 
 #include "xwidgets/toolbargroup.h"
 
 #include "map/mapcorewidget.h"
-//#include "map/radarplugin.h"
-
-
 
 #include "marble/MarbleModel.h"
 #include "marble/PluginInterface.h"
+
+
+const QString MapCoreWidget::SETTINGS_TAG = QString("map_views");
 
 
 MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
@@ -47,6 +48,79 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	mainLayout->setContentsMargins(0,0,0,0);
 	mainLayout->setSpacing(0);
 
+    //===========
+    QHBoxLayout *topBar = new QHBoxLayout();
+    mainLayout->addLayout(topBar);
+
+    //===================================================
+    //= Base Layer
+    ToolBarGroup *tbBaseLayer = new ToolBarGroup(this);
+    topBar->addWidget(tbBaseLayer);
+    tbBaseLayer->lblTitle->setText("Base Layer");
+
+    // Select Base
+    QToolButton *buttBaseLayer = new QToolButton();
+    buttBaseLayer->setIcon(QIcon(":/icon/map"));
+    buttBaseLayer->setToolTip("Change base layer");
+    buttBaseLayer->setPopupMode(QToolButton::InstantPopup);
+    tbBaseLayer->addWidget(buttBaseLayer);
+
+    QMenu *menuBase = new QMenu(buttBaseLayer);
+    buttBaseLayer->setMenu(menuBase);
+    this->actGroupBaseLayer = new QActionGroup(this);
+    this->actGroupBaseLayer->setExclusive(true);
+    connect(this->actGroupBaseLayer, SIGNAL(triggered(QAction*)),
+            this, SLOT(on_map_base_layer_action(QAction*))
+    );
+
+
+    QAction *a;
+    a = menuBase->addAction("OSM");
+    a->setProperty("theme", "earth/openstreetmap/openstreetmap.dgml");
+    this->actGroupBaseLayer->addAction(a);
+
+    a = menuBase->addAction("Blue Marble");
+    a->setProperty("theme", "earth/bluemarble/bluemarble.dgml");
+    this->actGroupBaseLayer->addAction(a);
+
+
+    //marbleWidget->setMapThemeId("earth/bluemarble/bluemarble.dgml");
+    //marbleWidget->setMapThemeId("earth/plain/plain.dgml");
+    //marbleWidget->setMapThemeId("earth/srtm/srtm.dgml");
+
+    //===================================================
+    //= Map View
+    ToolBarGroup *tbView = new ToolBarGroup(this);
+    topBar->addWidget(tbView);
+    tbView->lblTitle->setText("Save / Load");
+
+    // Load view
+    this->buttLoadView = new QToolButton();
+    this->buttLoadView->setIcon(QIcon(":/icon/load"));
+    this->buttLoadView->setToolTip("Load view");
+    this->buttLoadView->setPopupMode(QToolButton::InstantPopup);
+
+    QMenu *menu = new QMenu(this->buttLoadView);
+    this->buttLoadView->setMenu(menu);
+    tbView->addWidget(this->buttLoadView);
+
+    this->actGroupMapViews = new QActionGroup(this);
+    this->actGroupMapViews->setExclusive(false);
+    connect(this->actGroupMapViews, SIGNAL(triggered(QAction*)),
+            this, SLOT(on_map_view_action(QAction*))
+    );
+
+
+    // Save View
+    this->buttSaveView = new QToolButton();
+    this->buttSaveView->setIcon(QIcon(":/icon/save"));
+    this->buttSaveView->setToolTip("Save current view");
+    tbView->addWidget(this->buttSaveView);
+    connect(this->buttSaveView, SIGNAL(clicked()),
+            this, SLOT(on_save_view())
+    );
+
+    topBar->addStretch(20);
 
 
 	toolbarAirports = new QToolBar();
@@ -335,6 +409,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
     marbleWidget->zoomView(2000);
 
+    this->load_views();
 
 }
 
@@ -403,4 +478,79 @@ void MapCoreWidget::map_focus(QString lon, QString lat)
 	}
 }
 
+//=====================================================
+void MapCoreWidget::on_save_view()
+{
 
+    bool ok;
+    QString txt = QInputDialog::getText(this, QString("Save Map View"),
+                                        QString("Enter Label:"), QLineEdit::Normal,
+                                        QString(""), &ok);
+    if (ok && !txt.isEmpty() ){
+
+        QSettings settings;
+
+        // retrive current index
+        int size = settings.beginReadArray( MapCoreWidget::SETTINGS_TAG );
+        qDebug() << "write " << size;
+        settings.endArray();
+
+        // Write view
+        settings.beginWriteArray( MapCoreWidget::SETTINGS_TAG );
+            settings.setArrayIndex(size);
+            settings.setValue("label", txt);
+            settings.setValue("lat", this->marbleWidget->centerLatitude());
+            settings.setValue("lon", this->marbleWidget->centerLongitude());
+            settings.setValue("zoom", this->marbleWidget->zoom());
+        settings.endArray();
+    }
+}
+
+void MapCoreWidget::on_load_view()
+{
+
+}
+
+void MapCoreWidget::load_views()
+{
+
+    QMenu *menu = this->buttLoadView->menu();
+
+    QSettings settings;
+    int size = settings.beginReadArray( MapCoreWidget::SETTINGS_TAG );
+    qDebug() << "load " << size;
+    for (int i = 0; i < size; ++i) {
+        settings.setArrayIndex(i);
+        QString lbl = settings.value("label").toString();
+        if(lbl.isEmpty()){
+            lbl.append("- no label -");
+        }
+        QAction *act = new QAction(menu);
+        menu->addAction(act);
+        this->actGroupMapViews->addAction(act);
+        act->setText(lbl);
+        act->setProperty("lat", settings.value("lat"));
+        act->setProperty("lon", settings.value("lon"));
+        act->setProperty("zoom", settings.value("zoom"));
+        //qDebug() << "-----------";
+        //qDebug() << settings.value("label").toString();
+       // qDebug() << settings.value("lat").toReal();
+        //qDebug() << settings.value("lon").toReal();
+
+    }
+    settings.endArray();
+}
+
+void MapCoreWidget::on_map_view_action(QAction *act)
+{
+    this->marbleWidget->setCenterLatitude(act->property("lat").toReal());
+    this->marbleWidget->setCenterLongitude(act->property("lon").toReal());
+    this->marbleWidget->setZoom(act->property("zoom").toInt());
+}
+/*
+void MapCoreWidget::on_map_base_layer_action(QAction *act)
+{
+    qDebug() << "base" << act->property("theme").toString();
+    this->marbleWidget->setMapThemeId( act->property("theme").toString() );
+}
+*/

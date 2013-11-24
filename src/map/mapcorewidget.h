@@ -1,22 +1,19 @@
 #ifndef MAPCOREWIDGET_H
 #define MAPCOREWIDGET_H
 
-#include <QtCore/QVariant>
-#include <QtCore/QString>
-
-#include <QtWebKit/QWebView>
-#include <QWebInspector>
-#include <QtNetwork/QNetworkDiskCache>
+#include <QVariant>
+#include <QString>
 
 
-#include <QtGui/QStatusBar>
-#include <QtGui/QProgressBar>
-#include <QtGui/QLabel>
-#include <QtGui/QWidget>
-#include <QtGui/QActionGroup>
-#include <QtGui/QToolButton>
-#include <QtGui/QSlider>
-#include <QtGui/QDoubleSpinBox>
+
+#include <QStatusBar>
+#include <QProgressBar>
+#include <QLabel>
+#include <QWidget>
+#include <QActionGroup>
+#include <QToolButton>
+#include <QSlider>
+#include <QDoubleSpinBox>
 #include <QToolBar>
 
 #include "xobjects/mainobject.h"
@@ -28,13 +25,17 @@ class MainObject;
 #include "marble/MarbleWidget.h"
 #include "marble/GeoDataLatLonAltBox.h"
 
-using namespace Marble;
+
 
 #include "map/xmarblewidget.h"
 class XMarbleWidget;
 
+//QT_FORWARD_DECLARE_CLASS(QNetworkDiskCache)
 
-QT_FORWARD_DECLARE_CLASS(QNetworkDiskCache)
+#include "xwidgets/toolbargroup.h"
+class ToolBarGroup;
+
+using namespace Marble;
 
 
 
@@ -42,10 +43,15 @@ class MapCoreWidget : public QWidget
 {
 Q_OBJECT
 public:
+
+    static const QString SETTINGS_TAG;
+
 	explicit MapCoreWidget(MainObject *mob, QWidget *parent = 0);
 
 	MainObject *mainObject;
 
+    QToolButton *buttLoadView;
+    QToolButton *buttSaveView;
 
 	QString *mpmapFollowCallsign;
 	QSlider *sliderZoom;
@@ -77,6 +83,9 @@ private:
 
 	QToolButton *buttDebug;
 
+    QActionGroup *actGroupMapViews;
+    QActionGroup *actGroupBaseLayer;
+
 
 signals:
 
@@ -85,7 +94,8 @@ signals:
 public slots:
 
 
-
+    void on_map_view_action(QAction *);
+    //void on_map_base_layer_action(QAction*);
 
 	void on_slider_zoom(int zoom);
 	void on_butt_zoom_in();
@@ -101,7 +111,11 @@ public slots:
 	//======================================
 	void closeEvent(QCloseEvent *event);
 
+    void on_save_view();
+    void on_load_view();
 
+    void load_views();
+    //void save_current_view();
 
 };
 
