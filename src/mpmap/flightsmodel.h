@@ -34,7 +34,7 @@ public:
         C_ALTITUDE,
         C_HEADING,
         C_SPEED,
-        C_AIRCRAFT,
+        C_AERO,
         C_LAT,
         C_LON,
         C_FLAG,

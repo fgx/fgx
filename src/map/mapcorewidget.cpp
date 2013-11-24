@@ -566,12 +566,12 @@ void MapCoreWidget::on_map_view_action(QAction *act)
 
 void MapCoreWidget::on_map_base_layer_action(QAction *act)
 {
-    qDebug() << "base" << act->property("theme").toString();
+    //qDebug() << "base" << act->property("theme").toString();
     this->marbleWidget->setMapThemeId( act->property("theme").toString() );
 }
 
 void MapCoreWidget::on_map_projection_action(QAction *act)
 {
-    qDebug() << "on_map_projection_action" << act->property("proj").toInt();
+    //qDebug() << "on_map_projection_action" << act->property("proj").toInt();
     this->marbleWidget->setProjection( act->property("proj").toInt() );
 }

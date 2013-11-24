@@ -3,7 +3,7 @@
 
 #include <QScriptEngine>
 #include <QScriptValue>
-
+#include <QFileInfo>
 
 #include "flightsmodel.h"
 
@@ -33,7 +33,8 @@ FlightsModel::FlightsModel(QObject *parent) :
     item = new QStandardItem("Callsign");
     this->setHorizontalHeaderItem(C_CALLSIGN, item);
 
-
+    item = new QStandardItem("Model");
+    this->setHorizontalHeaderItem(C_AERO, item);
 
     item = new QStandardItem("Speed");
     this->setHorizontalHeaderItem(C_SPEED, item);
@@ -74,7 +75,7 @@ FlightsModel::FlightsModel(QObject *parent) :
 
 
 
-    timer->setInterval(1000);
+    timer->setInterval(2000);
     timer->setSingleShot(false);
     this->connect(this->timer, SIGNAL(timeout()),
                   this, SLOT(fetch_server()) );
@@ -186,7 +187,9 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
 
                     QStandardItem *iFid = new QStandardItem( it.value().property("fid").toString() );
                     QStandardItem *iCallsign = new QStandardItem( it.value().property("callsign").toString() );
-                    QStandardItem *iModel = new QStandardItem( it.value().property("model").toString() );
+
+                    QFileInfo fInfo(it.value().property("model").toString());
+                    QStandardItem *iModel = new QStandardItem( fInfo.baseName() );
 
                     QStandardItem *iAltitude = new QStandardItem( it.value().property("alt_ft").toString() );
                     iAltitude->setTextAlignment(Qt::AlignRight);

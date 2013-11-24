@@ -121,8 +121,8 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 	QCheckBox *chkShowModel = new QCheckBox();
 	chkShowModel->setText("Aircraft Type");
 	layCols->addWidget(chkShowModel);
-    buttonGroupCols->addButton(chkShowModel, FlightsModel::C_AIRCRAFT);
-    chkShowModel->setChecked(mainObject->settings->value(QString::number(FlightsModel::C_AIRCRAFT), "1").toBool());
+    buttonGroupCols->addButton(chkShowModel, FlightsModel::C_AERO);
+    chkShowModel->setChecked(mainObject->settings->value(QString::number(FlightsModel::C_AERO), "1").toBool());
 
 	QCheckBox *chkShowLatLon = new QCheckBox();
 	chkShowLatLon->setText("Lat/Lon");
@@ -186,7 +186,7 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
     */
 
     //tree->setColumnHidden(C_PITCH, true);
-    bool x_hidden = false;
+    bool x_hidden = true;
     tree->setColumnHidden(FlightsModel::C_FLAG, x_hidden);
     tree->setColumnHidden(FlightsModel::C_COUNT, x_hidden);
 
@@ -195,7 +195,7 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
     tree->setColumnHidden(FlightsModel::C_LON, x_hidden);
 
 
-    tree->setColumnHidden(FlightsModel::C_AIRCRAFT, !chkShowModel->isChecked());
+    tree->setColumnHidden(FlightsModel::C_AERO, !chkShowModel->isChecked());
     tree->setColumnHidden(FlightsModel::C_HEADING, !chkShowHdg->isChecked());
     tree->setColumnHidden(FlightsModel::C_ALTITUDE, !chkShowAlt->isChecked());
     //tree->setColumnHidden(FlightsModel::C_LAT, !chkShowLatLon->isChecked());
@@ -203,7 +203,7 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 
 
     tree->setColumnWidth(FlightsModel::C_CALLSIGN, 100);
-    tree->setColumnWidth(FlightsModel::C_AIRCRAFT, 100);
+    tree->setColumnWidth(FlightsModel::C_AERO, 100);
     tree->setColumnWidth(FlightsModel::C_ALTITUDE, 50);
     tree->setColumnWidth(FlightsModel::C_HEADING, 50);
 
