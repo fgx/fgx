@@ -49,14 +49,14 @@ public:
 
 
 signals:
-    //
+    void update_done();
 
 public slots:
 
  void fetch_server();
- void on_server_error(QNetworkReply::NetworkError);
- void on_server_ready_read();
- void on_server_read_finished();
+ //void on_server_error(QNetworkReply::NetworkError);
+// void on_server_ready_read();
+ //void on_server_read_finished();
 
  void on_server_finished(QNetworkReply *reply);
 

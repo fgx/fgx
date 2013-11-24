@@ -116,24 +116,24 @@ void FlightsModel::fetch_server()
 //==========================================================
 //= Server Events
 //==========================================================
-void FlightsModel::on_server_error(QNetworkReply::NetworkError error){
-    qDebug() << "error" << error;
+//void FlightsModel::on_server_error(QNetworkReply::NetworkError error){
+  //  qDebug() << "er/ror" << error;
     //Q_UNUSED(error);
     //outLog("FGx: PilotsWidget::on_server_error()");
-}
+//}
 
-void FlightsModel::on_server_ready_read(){
+//void FlightsModel::on_server_ready_read(){
    // QString s(netMan->reply->readAll());
     //this->server_string.append(s);
-    qDebug() << "read";
-}
+  //  qDebug() << "read";
+//}
 
-void FlightsModel::on_server_read_finished(){
+//void FlightsModel::on_server_read_finished(){
 
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+  //  QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     //qDebug() << "done "; //<< reply->readAll();
     //qDebug() << "reply  >" << QDateTime::currentDateTimeUtc().toString();
-}
+//}
 
 
 
@@ -177,7 +177,7 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
 
     if ( nFlights.isArray() ){
 
-        qDebug() << "YES";
+        //qDebug() << "YES";
         /*
          * C_FLIGHT_ID = 0,
         C_CALLSIGN,
@@ -193,7 +193,7 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
         while (it.hasNext()) {
 
             it.next();
-            qDebug() << it.name() << ": " << it.value().toString();
+            //qDebug() << it.name() << ": " << it.value().toString();
             //qDebug() << it.value().property("callsign").toString();
             QString callsign = it.value().property("callsign").toString();
 
@@ -223,18 +223,19 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
                 insertItemsList << iFid <<  iCallsign << iAltitude << iHeading << iSpeed << iModel << iLat << iLon;
                 this->appendRow( insertItemsList );
             }else{
-                qDebug() << "update";
+               // qDebug() << "update";
                 int row = fitems.at(0)->index().row();
                 this->item(row, C_ALTITUDE)->setText(it.value().property("alt_ft").toString());
                 this->item(row, C_HEADING)->setText(it.value().property("hdg").toString());
                 this->item(row, C_SPEED)->setText(it.value().property("spd_kts").toString());
+
                 this->item(row, C_LAT)->setText(it.value().property("lat").toString());
                 this->item(row, C_LON)->setText(it.value().property("lon").toString());
             }
 
 
-        }
-
+        } // while
+        emit update_done();
     }
 
 

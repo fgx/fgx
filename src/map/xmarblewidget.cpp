@@ -17,6 +17,13 @@ void XMarbleWidget::register_flights_model(FlightsModel *flyMod)
 {
     this->flightsModel = flyMod;
     this->model_registered = true;
+    this->connect(this->flightsModel, SIGNAL(update_done()), this, SLOT(update()));
+}
+
+void XMarbleWidget::do_update()
+{
+    qDebug() << "do_update";
+    this->update();
 }
 
 /*
@@ -34,9 +41,9 @@ void XMarbleWidget::XMarbleWidget()
 void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 {
 
-     //qDebug() << "radar count" << radarModel->rowCount();
+     qDebug() << "radar count" << this->flightsModel->rowCount();
 
-     return;
+
     //return;
     //painter->autoMapQuality();
 	painter->save();
@@ -47,8 +54,9 @@ void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 	//== Draw Radar Widgets
     for(int idx=0; idx < this->flightsModel->rowCount(); idx++)
 	{
-        Marble::GeoDataCoordinates blip(this->flightsModel->item(idx, 5)->text().toFloat(),
-                                        this->flightsModel->item(idx, 4)->text().toFloat(),
+        // Yes,, LON, LAT is order !!
+        Marble::GeoDataCoordinates blip(this->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
+                                        this->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
                                         0.0, Marble::GeoDataCoordinates::Degree
 						);
 
@@ -88,14 +96,14 @@ void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 		font.setBold(true);
 		font.setPixelSize(10);
 		painter->setFont(font);
-        painter->drawText(xx + 12, yy + 3, this->flightsModel->item(idx, 0)->text());
+        painter->drawText(xx + 12, yy + 3, this->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text());
 
 		font = painter->font();
 		//font.setFamily("Arial");
 		font.setBold(true);
 		font.setPixelSize(8);
 		painter->setFont(font);
-        painter->drawText(xx + 14, yy + 12, this->flightsModel->item(idx, 3)->text());
+        painter->drawText(xx + 14, yy + 12, this->flightsModel->item(idx, FlightsModel::C_ALTITUDE)->text());
 
 
 

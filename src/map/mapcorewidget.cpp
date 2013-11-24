@@ -193,6 +193,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//====================================================================
     marbleWidget = new XMarbleWidget();
 	midLayout->addWidget(marbleWidget, 10);
+    marbleWidget->register_flights_model(this->mainObject->flightsModel);
 
 
     marbleWidget->setMapThemeId("earth/openstreetmap/openstreetmap.dgml");
@@ -217,6 +218,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     marbleWidget->setShowCities(false);
 	marbleWidget->setShowOtherPlaces(false);
 	//marbleWidget->model()->treeModel()->
+
 
 	marbleWidget->model()->pluginManager();
 

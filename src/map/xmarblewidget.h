@@ -37,6 +37,8 @@ public:
 
     virtual void customPaint(Marble::GeoPainter* painter);
 
+public slots:
+    void do_update();
 
 };
 
