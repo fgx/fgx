@@ -81,7 +81,8 @@ HEADERS += xobjects/xsettings.h \
         map/mapcorewidget.h \
         map/xmarblewidget.h \
         network/crossfeedjson.h \
-        mpmap/flightsmodel.h
+        mpmap/flightsmodel.h \
+    xwidgets/toolbargroup.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -149,7 +150,8 @@ SOURCES += main.cpp \
         map/mapcorewidget.cpp \
         map/xmarblewidget.cpp \
         network/crossfeedjson.cpp \
-        mpmap/flightsmodel.cpp
+        mpmap/flightsmodel.cpp \
+    xwidgets/toolbargroup.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \

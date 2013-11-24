@@ -41,6 +41,8 @@ public:
         C_COUNT
     };
 
+    int lag;
+
     QTimer *timer;
 
     QNetworkAccessManager *netMan;

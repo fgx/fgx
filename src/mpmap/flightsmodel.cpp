@@ -11,6 +11,8 @@ FlightsModel::FlightsModel(QObject *parent) :
     QStandardItemModel(parent)
 {
 
+    lag = 0;
+
     timer = new QTimer(this);
     this->netMan = new QNetworkAccessManager(this);
     this->connect(this->netMan, SIGNAL( finished(QNetworkReply *)),
@@ -165,13 +167,15 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
         reply->deleteLater();
         return;
     }
-    bool ok;
-    qint64 ms = reply->request().attribute(QNetworkRequest::User).toLongLong(&ok);
+    //bool ok;
+    qint64 ms = reply->request().attribute(QNetworkRequest::User).toLongLong();
     //qDebug() << ok << ms << QDateTime::currentMSecsSinceEpoch();
-    if (ok){
-        int lag = QDateTime::currentMSecsSinceEpoch() - ms;
-        qDebug() << "round trip" << lag;
-    }
+    //if (ok){
+    this->lag = QDateTime::currentMSecsSinceEpoch() - ms;
+    //    qDebug() << "round trip" << lag;
+    //}else{
+     //   lag = 0;
+    //}
 
     // Parse the JSON from crossfeed
     /*

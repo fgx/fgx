@@ -83,6 +83,9 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
     //connect(actionRefresh, SIGNAL(triggered()), this, SLOT(fetch_pilots()));
 
 
+    lcdLag = new QLCDNumber();
+    toolbar->addWidget(lcdLag);
+
 
 	//===================================================
 	// Show cols actiona re created here but added below to status bar
@@ -213,32 +216,20 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 
 	statusBar->addPermanentWidget(buttShowColumns);
 
-
+    connect(this->mainObject->flightsModel, SIGNAL(update_done()),
+            this, SLOT(do_update())
+    );
 
 }
-/*
-void FlightsWidget::fetch_pilots()
+
+
+void FlightsWidget::do_update()
 {
-
-	server_string = "";
-	QUrl url("http://mpmap01.flightgear.org/fg_server_xml.cgi?mpserver01.flightgear.org:5001");
-	QNetworkRequest request;
-	request.setUrl(url );
-
-	reply = netMan->get(request);
-	connect(reply, SIGNAL( error(QNetworkReply::NetworkError)),
-			this, SLOT(on_server_error(QNetworkReply::NetworkError))
-	);
-	connect(reply, SIGNAL( readyRead()),
-			this, SLOT(on_server_ready_read())
-	);
-	connect(reply, SIGNAL( finished()),
-			this, SLOT(on_server_read_finished())
-	);
-	statusBar->showMessage("Request");
+    this->lcdLag->display(QString::number(this->mainObject->flightsModel->lag));
+    statusBar->showMessage(QString::number(this->mainObject->flightsModel->rowCount()).append(" flights") );
 
 }
-*/
+
 
 
 

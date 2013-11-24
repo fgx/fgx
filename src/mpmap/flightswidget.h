@@ -11,9 +11,9 @@
 
 
 #include <QNetworkAccessManager>
+#include <QNetworkRequest>
 #include <QNetworkReply>
 
-//#include <QDomDocument>
 #include <QSortFilterProxyModel>
 
 #include <QWidget>
@@ -21,6 +21,7 @@
 #include <QStatusBar>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QLCDNumber>
 
 
 #include "xobjects/mainobject.h"
@@ -58,6 +59,8 @@ public:
 	QCheckBox *checkBoxAutoRefresh;
 	QComboBox *comboBoxHz;
 
+    QLCDNumber *lcdLag;
+
     QTreeView *tree;
     QSortFilterProxyModel *proxyModel;
 
@@ -79,6 +82,7 @@ public slots:
 
 	void on_show_cols(QAbstractButton*);
 
+    void do_update();
 };
 
 #endif // FLIGHTSWIDGET_H
