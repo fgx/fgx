@@ -339,6 +339,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//connect(marbleWidget, SIGNAL(mouseMoveGeoPosition(QString)), this, SLOT(on_map_move(QString)));
 
 
+    //------------------------------------------
     // Test placemark
     GeoDataPlacemark *pm = new GeoDataPlacemark( "YES" );
     pm->setCoordinate(30.523333, 50.45,0,  GeoDataCoordinates::Degree);
@@ -349,6 +350,8 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     this->docFlights->append(pm); // I can se this <<
 
     this->marbleWidget->model()->treeModel()->addDocument( this->docFlights );
+
+    //------------------------------------------
 
     connect(this->mainObject->flightsModel, SIGNAL(update_done()),
             this, SLOT(update_flights())
