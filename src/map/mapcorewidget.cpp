@@ -338,34 +338,21 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     );
 	//connect(marbleWidget, SIGNAL(mouseMoveGeoPosition(QString)), this, SLOT(on_map_move(QString)));
 
-   // GeoDataPlacemark *pm = new GeoDataPlacemark( "YES" );
-   // pm->setCoordinate(30.523333, 50.45,0,  GeoDataCoordinates::Degree);
-    //qDebug() << pm->isVisible();
+
+    // Test placemark
+    GeoDataPlacemark *pm = new GeoDataPlacemark( "YES" );
+    pm->setCoordinate(30.523333, 50.45,0,  GeoDataCoordinates::Degree);
 
 
+    // Create Model
     this->docFlights = new GeoDataDocument();
-     //this->docFlights->append(pm);
+    this->docFlights->append(pm); // I can se this <<
 
     this->marbleWidget->model()->treeModel()->addDocument( this->docFlights );
 
     connect(this->mainObject->flightsModel, SIGNAL(update_done()),
             this, SLOT(update_flights())
     );
-    /*
-    GeoDataPlacemark *pm2 = new GeoDataPlacemark( "NO" );
-    pm2->setCoordinate(30.523333, 50.45,
-                      0,
-                      GeoDataCoordinates::Degree);
-     this->docFlights->append(pm2);
-     */
-    //QFile file("/home/ffs/fgx/example.kml");
-    //file.open(QIODevice::ReadOnly);
-    //QString xml = file.readAll();
-    //qDebug() << xml;
-    //file.close();
-    // mapWidget->model()->addPlacemarkData(xml, "data");
-    // mapWidget->model()->addGeoDataString(xml, "data");
-    //mapWidget->fileViewModel()->addMap()
 
 
     sliderZoom->setRange(marbleWidget->minimumZoom(), marbleWidget->maximumZoom());
