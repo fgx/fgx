@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QDockWidget>
-
+#include <QTabWidget>
 #include "xobjects/mainobject.h"
 
 #include "mpmap/flightswidget.h"
@@ -28,7 +28,9 @@ public:
 
     MainObject *mainObject;
 
-    MapCoreWidget *mapWidget;
+    //MapCoreWidget *mapWidget;
+
+    QTabWidget *tabWidget;
 
     QDockWidget *dockFlights;
     FlightsWidget *flightsWidget;

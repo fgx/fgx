@@ -360,6 +360,10 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
     sliderZoom->setRange(marbleWidget->minimumZoom(), marbleWidget->maximumZoom());
 
+    //= debug tree
+    QTreeView *treeDebug = new QTreeView();
+    midLayout->addWidget(treeDebug);
+    treeDebug->setModel(this->marbleWidget->model()->treeModel());
 
 	//============================================================
 	//== Status Bar
@@ -589,8 +593,13 @@ void MapCoreWidget::on_map_projection_action(QAction *act)
 
 void MapCoreWidget::update_flights()
 {
+    //return;
 
    qDebug() << "update flights";
+
+   // Createing a new doucment and adding here works
+   //GeoDataDocument *doco = new GeoDataDocument();
+
    for(int idx=0; idx < this->mainObject->flightsModel->rowCount(); idx++)
    {
 
@@ -601,12 +610,17 @@ void MapCoreWidget::update_flights()
                          this->mainObject->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
                          0,
                          GeoDataCoordinates::Degree);
-       qDebug() << pm->isVisible();
+
        this->docFlights->append(pm);
-       qDebug() << pm->isVisible();
+       //doco->append(pm);
+       //this->marbleWidget->model()->treeModel()->updateFeature(pm); << segfaults...
+
 
    }
-   //this->marbleWidget->model()->treeModel()->update();
-   //this->marbleWidget->model()->treeModel()->updateFeature(pm);
+   //this->marbleWidget->model()->treeModel()->addDocument(doco);
+
+   this->marbleWidget->update(); // Does Nothing aparently
+
+   //this->marbleWidget->model()->treeModel()->update() << segfaults
 
 }

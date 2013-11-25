@@ -38,7 +38,7 @@ void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
      //qDebug() << "pain map" << this->flightsModel->rowCount();
 
 
-    return;
+    //return;
     //painter->autoMapQuality();
 	painter->save();
 

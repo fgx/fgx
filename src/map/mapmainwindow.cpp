@@ -21,11 +21,17 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
     this->setWindowIcon(QIcon(":/icon/map_type"));
 
 
-    this->mapWidget = new MapCoreWidget(this->mainObject);
+    this->tabWidget = new QTabWidget();
+    this->setCentralWidget(this->tabWidget);
+
+
+
+    MapCoreWidget *mapWidget = new MapCoreWidget(this->mainObject);
 
     //mapWidget->setMapThemeId("earth/bluemarble/bluemarble.dgml");
     //mapWidget->setMapThemeId("earth/openstreetmap/openstreetmap.dgml");
-    this->setCentralWidget(this->mapWidget);
+    //this->setCentralWidget(this->mapWidget);
+    this->tabWidget->addTab(mapWidget, "MAP");
 
     // Enable the cloud cover and enable the country borders
     //mapWidget->setShowClouds( false );
