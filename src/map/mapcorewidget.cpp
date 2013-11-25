@@ -599,17 +599,13 @@ void MapCoreWidget::on_map_projection_action(QAction *act)
 
 void MapCoreWidget::update_flights()
 {
-   //GeoDataTreeModel *treeModel = this->marbleWidget->model()->treeModel();
-   //treeModel->match()
-    //return;
+
    qDebug() << "update flights";
    for(int idx=0; idx < this->mainObject->flightsModel->rowCount(); idx++)
    {
-       bool lat_ok;
-       bool lon_ok;
-       qDebug() << "update)flights" << idx << this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() << this->mainObject->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat() << this->mainObject->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat();
-       // Yes,, LON, LAT is order !!
-       //Marble::GeoDataCoordinates blip(this->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
+
+       qDebug() <<  idx << this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() << this->mainObject->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat() << this->mainObject->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat();
+
        GeoDataPlacemark *pm = new GeoDataPlacemark( this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() );
        pm->setCoordinate(this->mainObject->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
                          this->mainObject->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
