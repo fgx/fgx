@@ -309,8 +309,9 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	marbleWidget->setShowCrosshairs(false);
 
     marbleWidget->setShowCities(false);
-	marbleWidget->setShowOtherPlaces(false);
+    marbleWidget->setShowOtherPlaces(true);
 	//marbleWidget->model()->treeModel()->
+
 
 
     //marbleWidget->model()->pluginManager();
@@ -337,15 +338,34 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     );
 	//connect(marbleWidget, SIGNAL(mouseMoveGeoPosition(QString)), this, SLOT(on_map_move(QString)));
 
+   // GeoDataPlacemark *pm = new GeoDataPlacemark( "YES" );
+   // pm->setCoordinate(30.523333, 50.45,0,  GeoDataCoordinates::Degree);
+    //qDebug() << pm->isVisible();
 
-	 //QFile file("/home/ffs/fgx/example.kml");
-	 //file.open(QIODevice::ReadOnly);
-	 //QString xml = file.readAll();
-	 //qDebug() << xml;
-	 //file.close();
-	// mapWidget->model()->addPlacemarkData(xml, "data");
-	// mapWidget->model()->addGeoDataString(xml, "data");
-	//mapWidget->fileViewModel()->addMap()
+
+    this->docFlights = new GeoDataDocument();
+     //this->docFlights->append(pm);
+
+    this->marbleWidget->model()->treeModel()->addDocument( this->docFlights );
+
+    connect(this->mainObject->flightsModel, SIGNAL(update_done()),
+            this, SLOT(update_flights())
+    );
+    /*
+    GeoDataPlacemark *pm2 = new GeoDataPlacemark( "NO" );
+    pm2->setCoordinate(30.523333, 50.45,
+                      0,
+                      GeoDataCoordinates::Degree);
+     this->docFlights->append(pm2);
+     */
+    //QFile file("/home/ffs/fgx/example.kml");
+    //file.open(QIODevice::ReadOnly);
+    //QString xml = file.readAll();
+    //qDebug() << xml;
+    //file.close();
+    // mapWidget->model()->addPlacemarkData(xml, "data");
+    // mapWidget->model()->addGeoDataString(xml, "data");
+    //mapWidget->fileViewModel()->addMap()
 
 
     sliderZoom->setRange(marbleWidget->minimumZoom(), marbleWidget->maximumZoom());
@@ -574,4 +594,33 @@ void MapCoreWidget::on_map_projection_action(QAction *act)
 {
     //qDebug() << "on_map_projection_action" << act->property("proj").toInt();
     this->marbleWidget->setProjection( act->property("proj").toInt() );
+}
+
+
+void MapCoreWidget::update_flights()
+{
+   //GeoDataTreeModel *treeModel = this->marbleWidget->model()->treeModel();
+   //treeModel->match()
+    //return;
+   qDebug() << "update flights";
+   for(int idx=0; idx < this->mainObject->flightsModel->rowCount(); idx++)
+   {
+       bool lat_ok;
+       bool lon_ok;
+       qDebug() << "update)flights" << idx << this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() << this->mainObject->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat() << this->mainObject->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat();
+       // Yes,, LON, LAT is order !!
+       //Marble::GeoDataCoordinates blip(this->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
+       GeoDataPlacemark *pm = new GeoDataPlacemark( this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() );
+       pm->setCoordinate(this->mainObject->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
+                         this->mainObject->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
+                         0,
+                         GeoDataCoordinates::Degree);
+       qDebug() << pm->isVisible();
+       this->docFlights->append(pm);
+       qDebug() << pm->isVisible();
+
+   }
+   //this->marbleWidget->model()->treeModel()->update();
+   //this->marbleWidget->model()->treeModel()->updateFeature(pm);
+
 }

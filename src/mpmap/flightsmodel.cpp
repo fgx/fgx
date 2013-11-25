@@ -80,6 +80,7 @@ FlightsModel::FlightsModel(QObject *parent) :
     this->connect(this->timer, SIGNAL(timeout()),
                   this, SLOT(fetch_server()) );
 
+
 }
 
 

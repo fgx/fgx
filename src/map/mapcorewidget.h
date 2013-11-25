@@ -24,8 +24,9 @@ class MainObject;
 #include "marble/MarbleGlobal.h"
 #include "marble/MarbleWidget.h"
 #include "marble/GeoDataLatLonAltBox.h"
-
-
+#include "marble/GeoDataDocument.h"
+#include "marble/GeoDataPlacemark.h"
+#include "marble/GeoDataTreeModel.h"
 
 #include "map/xmarblewidget.h"
 class XMarbleWidget;
@@ -63,6 +64,7 @@ public:
 	QToolBar *toolbarAirports;
 
 	XMarbleWidget *marbleWidget;
+    GeoDataDocument *docFlights;
 
 private:
 
@@ -118,9 +120,9 @@ public slots:
 
     void on_save_view();
     void on_load_view();
-
     void load_views();
-    //void save_current_view();
+
+    void update_flights();
 
 };
 
