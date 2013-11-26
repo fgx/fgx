@@ -28,6 +28,7 @@ class MainObject;
 #include "marble/GeoDataPlacemark.h"
 #include "marble/GeoDataTreeModel.h"
 #include "marble/GeoDataStyle.h"
+#include "marble/GeoDataTrack.h"
 
 #include "aircraft/xaero.h"
 
@@ -55,6 +56,7 @@ public:
 	MainObject *mainObject;
 
     QHash<QString, GeoDataPlacemark*> blips;
+    QHash<QString, GeoDataTrack*> tracks;
 
 
     QToolButton *buttBaseLayer;
@@ -71,6 +73,7 @@ public:
 
 	XMarbleWidget *marbleWidget;
     GeoDataDocument *docFlights;
+    GeoDataDocument *docTracks;
 
 private:
 

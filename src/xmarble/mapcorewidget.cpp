@@ -362,9 +362,10 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
     // Create Model
     this->docFlights = new GeoDataDocument();
-    //this->docFlights->append(pm); // I can se this <<
-
     this->marbleWidget->model()->treeModel()->addDocument( this->docFlights );
+
+    this->docTracks = new GeoDataDocument();
+    this->marbleWidget->model()->treeModel()->addDocument( this->docTracks );
 
     //------------------------------------------
 
@@ -624,36 +625,47 @@ void MapCoreWidget::update_flights()
 {
     //return;
 
-   qDebug() << "update flights";
-   this->marbleWidget->setUpdatesEnabled(false);
+    qDebug() << "update flights";
+   // this->marbleWidget->setUpdatesEnabled(false);
     this->marbleWidget->model()->treeModel()->removeDocument(this->docFlights);
+    //this->marbleWidget->model()->treeModel()->removeDocument(this->docTracks);
    // Createing a new doucment and adding here works
    //GeoDataDocument *doco = new GeoDataDocument();
 
    for(int idx=0; idx < this->mainObject->flightsModel->rowCount(); idx++)
    {
        GeoDataPlacemark *pm;
+      // GeoDataTrack *trk;
        QString callsign = this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text();
        if( !this->blips.contains(callsign) ){
             pm = new GeoDataPlacemark( this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() );
             this->blips.insert(callsign, pm);
             this->docFlights->append(pm);
 
-
+            //trk = new GeoDataTrack();
+            //this->tracks.insert(callsign, trk);
+            //this->docTracks->append(trk);
 
 
             //sty->setIconStyle(ico);
 
        }else{
            pm = this->blips.value(callsign);
+          // trk = this->tracks.value(callsign);
        }
        qDebug() <<  idx << this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() << this->mainObject->flightsModel->item(idx, FlightsModel::C_HEADING)->text().toInt();
 
        pm->setCoordinate(this->mainObject->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
                          this->mainObject->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
-                         0,
+                         this->mainObject->flightsModel->item(idx, FlightsModel::C_ALTITUDE)->text().toInt() * 0.3048, // ft 2 metres
                          GeoDataCoordinates::Degree);
        //
+       //GeoDataCoordinates coord(this->mainObject->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
+      //                      this->mainObject->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
+      //                      this->mainObject->flightsModel->item(idx, FlightsModel::C_ALTITUDE)->text().toFloat() * 0.3048,
+      //                      GeoDataCoordinates::Degree);
+//
+       //trk->addPoint(QDateTime::currentDateTimeUtc(), coord);
        //GeoDataStyle *sty = new GeoDataStyle;
        //GeoDataIconStyle ico;
        //ico.setIconPath(":/img/radar_blip.png");
@@ -669,8 +681,8 @@ void MapCoreWidget::update_flights()
 
    }
     this->marbleWidget->model()->treeModel()->addDocument(this->docFlights);
-    this->marbleWidget->setUpdatesEnabled(true);
-   //this->marbleWidget->update(); // Does Nothing aparently
+    //this->marbleWidget->model()->treeModel()->addDocument(this->docTracks);
+   // this->marbleWidget->setUpdatesEnabled(true);
 
    //this->marbleWidget->model()->treeModel()->update(); //<< segfaults
 
