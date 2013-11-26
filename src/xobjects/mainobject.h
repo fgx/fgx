@@ -45,7 +45,7 @@ class XProcess;
 #include "launcher/launcherwindow.h"
 class LauncherWindow;
 
-#include "map/mapmainwindow.h"
+#include "xmarble/mapmainwindow.h"
 class MapMainWindow;
 
 //#include "mpmap/mpmapxwidget.h"

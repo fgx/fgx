@@ -1,5 +1,5 @@
-#ifndef MAPMAINWINDOW_H
-#define MAPMAINWINDOW_H
+#ifndef MAPPANEL_H
+#define MAPPANEL_H
 
 #include <QMainWindow>
 #include <QDockWidget>
@@ -15,24 +15,26 @@ class FlightsWidget;
 //#include "marble/MarbleGlobal.h"
 //#include "marble/MarbleWidget.h"
 
-#include "map/mapcorewidget.h"
+#include "xmarble/mapcorewidget.h"
 class MapCoreWidget;
 
 
 
-class MapMainWindow : public QMainWindow
+class MapPanel : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit MapMainWindow(MainObject*, QWidget *parent = 0);
+    explicit MapPanel(MainObject*, QWidget *parent = 0);
 
     MainObject *mainObject;
 
-    //MapCoreWidget *mapWidget;
+    MapCoreWidget *mapWidget;
 
+
+
+    QDockWidget *docker;
     QTabWidget *tabWidget;
 
-    QDockWidget *dockFlights;
     FlightsWidget *flightsWidget;
     //FlightsModel *flightsModel;
 
@@ -43,4 +45,4 @@ public slots:
 
 };
 
-#endif // MAPMAINWINDOW_H
+#endif // MAPPANEL_H

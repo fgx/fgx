@@ -3,7 +3,7 @@
 
 #include <QDateTime>
 
-#include "map/xmarblewidget.h"
+#include "xmarble/xmarblewidget.h"
 
 /*
 XMarbleWidget::XMarbleWidget(QWidget *parent) :

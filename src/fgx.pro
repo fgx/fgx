@@ -77,12 +77,13 @@ HEADERS += xobjects/xsettings.h \
         utilities/simgear/SGGeodesy.h \
         utilities/simgear/constants.h \
         utilities/simgear/compiler.h \
-        map/mapmainwindow.h \
-        map/mapcorewidget.h \
-        map/xmarblewidget.h \
+        xmarble/mapmainwindow.h \
+        xmarble/mappanel.h \
+        xmarble/mapcorewidget.h \
+        xmarble/xmarblewidget.h \
         network/crossfeedjson.h \
         mpmap/flightsmodel.h \
-    xwidgets/toolbargroup.h
+        xwidgets/toolbargroup.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -146,18 +147,20 @@ SOURCES += main.cpp \
         utilities/workThread.cpp \
         utilities/loadAptDat.cpp \
         utilities/simgear/SGGeodesy.cpp \
-        map/mapmainwindow.cpp \
-        map/mapcorewidget.cpp \
-        map/xmarblewidget.cpp \
+        xmarble/mapmainwindow.cpp \
+        xmarble/mappanel.cpp \
+        xmarble/mapcorewidget.cpp \
+        xmarble/xmarblewidget.cpp \
         network/crossfeedjson.cpp \
         mpmap/flightsmodel.cpp \
-    xwidgets/toolbargroup.cpp
+        xwidgets/toolbargroup.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \
 	resources/openlayers.qrc \
 	resources/default.qrc \
-	resources/images.qrc
+	resources/images.qrc \
+    resources/marble_icons.qrc
 CONFIG += qt thread
 
 unix {

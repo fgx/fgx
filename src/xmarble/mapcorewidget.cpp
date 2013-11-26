@@ -21,7 +21,7 @@
 
 #include "xwidgets/toolbargroup.h"
 
-#include "map/mapcorewidget.h"
+#include "xmarble/mapcorewidget.h"
 
 #include "marble/MarbleModel.h"
 #include "marble/PluginInterface.h"
@@ -60,7 +60,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
     //= Base Layer
     buttBaseLayer = new QToolButton();
-    buttBaseLayer->setIcon(QIcon(":/icon/map_type"));
+    buttBaseLayer->setIcon(QIcon(":/micon/base_layer"));
     buttBaseLayer->setToolTip("Change base layer");
     buttBaseLayer->setPopupMode(QToolButton::InstantPopup);
     tbBaseLayer->addWidget(buttBaseLayer);
@@ -100,7 +100,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
     //= Projection
     this->buttProjection = new QToolButton();
-    this->buttProjection->setIcon(QIcon(":/icon/map_type"));
+    this->buttProjection->setIcon(QIcon(":/micon/projection"));
     this->buttProjection->setToolTip("Change projection");
     this->buttProjection->setPopupMode(QToolButton::InstantPopup);
     tbBaseLayer->addWidget(this->buttProjection);
@@ -139,7 +139,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     // Load view
     QToolButton *buttKSFO = new QToolButton();
     tbView->addWidget(buttKSFO);
-    buttKSFO->setIcon(QIcon(":/icon/tower"));
+    buttKSFO->setIcon(QIcon(":/micon/home"));
     buttKSFO->setToolTip("Center KSFO");
     connect(buttKSFO, SIGNAL(clicked()),
             this, SLOT(center_ksfo())
@@ -147,7 +147,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
     // Load view
     this->buttLoadView = new QToolButton();
-    this->buttLoadView->setIcon(QIcon(":/icon/load"));
+    this->buttLoadView->setIcon(QIcon(":/micon/load"));
     this->buttLoadView->setToolTip("Load view");
     this->buttLoadView->setPopupMode(QToolButton::InstantPopup);
 
@@ -164,7 +164,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
     // Save View
     this->buttSaveView = new QToolButton();
-    this->buttSaveView->setIcon(QIcon(":/icon/save"));
+    this->buttSaveView->setIcon(QIcon(":/micon/save"));
     this->buttSaveView->setToolTip("Save current view");
     tbView->addWidget(this->buttSaveView);
     connect(this->buttSaveView, SIGNAL(clicked()),

@@ -28,7 +28,7 @@ class MainObject;
 #include "marble/GeoDataPlacemark.h"
 #include "marble/GeoDataTreeModel.h"
 
-#include "map/xmarblewidget.h"
+#include "xmarble/xmarblewidget.h"
 class XMarbleWidget;
 
 //QT_FORWARD_DECLARE_CLASS(QNetworkDiskCache)

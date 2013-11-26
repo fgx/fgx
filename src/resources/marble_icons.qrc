@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/micon">
+        <file alias="save">marble_icons/drive_disk.png</file>
+        <file alias="projection">marble_icons/world.png</file>
+        <file alias="map">marble_icons/map.png</file>
+        <file alias="base_layer">marble_icons/layers.png</file>
+        <file alias="home">marble_icons/house.png</file>
+        <file alias="load">marble_icons/drive_go.png</file>
+    </qresource>
+</RCC>

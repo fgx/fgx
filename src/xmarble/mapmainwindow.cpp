@@ -26,12 +26,12 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
 
 
 
-    MapCoreWidget *mapWidget = new MapCoreWidget(this->mainObject);
+    MapPanel *mapPanel = new MapPanel(this->mainObject);
 
     //mapWidget->setMapThemeId("earth/bluemarble/bluemarble.dgml");
     //mapWidget->setMapThemeId("earth/openstreetmap/openstreetmap.dgml");
     //this->setCentralWidget(this->mapWidget);
-    this->tabWidget->addTab(mapWidget, "MAP");
+    this->tabWidget->addTab(mapPanel, QIcon(":/icon/map_type"), "MAP");
 
     // Enable the cloud cover and enable the country borders
     //mapWidget->setShowClouds( false );
@@ -42,21 +42,6 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
     //mapWidget->setShowScaleBar(true);
     //mapWidget->setShowCompass(true);
 
-
-    //================================================================================
-    //= Pilots widget
-    //================================================================================
-    this->dockFlights = new QDockWidget();
-    this->addDockWidget(Qt::RightDockWidgetArea, dockFlights);
-
-
-
-    this->flightsWidget = new FlightsWidget(mainObject);
-    this->dockFlights->setWidget(this->flightsWidget);
-
-    this->flightsWidget->setMinimumWidth(500);
-
-    //this->flightsWidget->set_map_widget(mapWidget);
 
 
     XSettings::autosizeWindow(this, 300, 300);
