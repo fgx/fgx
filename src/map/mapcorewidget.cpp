@@ -1,5 +1,5 @@
 
-
+#include <QTimer>
 #include <QByteArray>
 #include <QFile>
 #include <QStringList>
@@ -134,7 +134,16 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     //= Map View
     ToolBarGroup *tbView = new ToolBarGroup(this);
     topBar->addWidget(tbView);
-    tbView->lblTitle->setText("Save / Load");
+    tbView->lblTitle->setText("Load / Save");
+
+    // Load view
+    QToolButton *buttKSFO = new QToolButton();
+    tbView->addWidget(buttKSFO);
+    buttKSFO->setIcon(QIcon(":/icon/tower"));
+    buttKSFO->setToolTip("Center KSFO");
+    connect(buttKSFO, SIGNAL(clicked()),
+            this, SLOT(center_ksfo())
+    );
 
     // Load view
     this->buttLoadView = new QToolButton();
@@ -313,7 +322,9 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//marbleWidget->model()->treeModel()->
 
 
-
+    this->marbleWidget->setCenterLatitude(37.638);
+    this->marbleWidget->setCenterLongitude(-122.215);
+    this->marbleWidget->setZoom(2000);
     //marbleWidget->model()->pluginManager();
 
 	//mapWidget->zoomVie
@@ -341,13 +352,13 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
     //------------------------------------------
     // Test placemark
-    GeoDataPlacemark *pm = new GeoDataPlacemark( "YES" );
-    pm->setCoordinate(30.523333, 50.45,0,  GeoDataCoordinates::Degree);
+    //GeoDataPlacemark *pm = new GeoDataPlacemark( "YES" );
+    //pm->setCoordinate(30.523333, 50.45,0,  GeoDataCoordinates::Degree);
 
 
     // Create Model
     this->docFlights = new GeoDataDocument();
-    this->docFlights->append(pm); // I can se this <<
+    //this->docFlights->append(pm); // I can se this <<
 
     this->marbleWidget->model()->treeModel()->addDocument( this->docFlights );
 
@@ -360,10 +371,13 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
     sliderZoom->setRange(marbleWidget->minimumZoom(), marbleWidget->maximumZoom());
 
+    //================
     //= debug tree
+    /*
     QTreeView *treeDebug = new QTreeView();
     midLayout->addWidget(treeDebug);
     treeDebug->setModel(this->marbleWidget->model()->treeModel());
+    */
 
 	//============================================================
 	//== Status Bar
@@ -437,23 +451,34 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 	//connect(mainObject, SIGNAL(on_debug_mode(bool)), this, SLOT(on_debug_mode(bool)));
 
-    marbleWidget->zoomView(2000);
+
 
     this->load_views();
+   // QTimer::singleShot(1000, this, SLOT(center_ksfo()));
+
 
 }
 
+void MapCoreWidget::center_ksfo()
+{
+    //= Center on SF Bay
+    this->marbleWidget->setCenterLatitude(37.638);
+    this->marbleWidget->setCenterLongitude(-122.215);
+    this->marbleWidget->setZoom(2000);
+    this->marbleWidget->update();
+}
 
 void MapCoreWidget::on_map_clicked()
 {
     //qDebug() << "clicked";
 
+
 }
 void MapCoreWidget::on_map_moved(const Marble::GeoDataLatLonAltBox &region)
 {
     //qDebug() << "moved";
-    this->txtLat->setText( QString::number(region.center().latitude()) );
-    this->txtLon->setText( QString::number(region.center().longitude()) );
+    this->txtLat->setText( QString::number(region.center().latitude(GeoDataCoordinates::Degree)) );
+    this->txtLon->setText( QString::number(region.center().longitude(GeoDataCoordinates::Degree)) );
 }
 
 
@@ -593,7 +618,7 @@ void MapCoreWidget::on_map_projection_action(QAction *act)
 
 void MapCoreWidget::update_flights()
 {
-    //return;
+    return;
 
    qDebug() << "update flights";
 
@@ -619,8 +644,8 @@ void MapCoreWidget::update_flights()
    }
    //this->marbleWidget->model()->treeModel()->addDocument(doco);
 
-   this->marbleWidget->update(); // Does Nothing aparently
+   //this->marbleWidget->update(); // Does Nothing aparently
 
-   //this->marbleWidget->model()->treeModel()->update() << segfaults
+   //this->marbleWidget->model()->treeModel()->update(); //<< segfaults
 
 }

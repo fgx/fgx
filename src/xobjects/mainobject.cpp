@@ -536,6 +536,6 @@ void MainObject::on_map_main_window()
      qDebug() << "on_map_main_window";
     mapMainWindow->show();
     mapMainWindow->raise();
-
+    //mapMainWindow->tabWidget->widget(0)->center_ksfo();
 
 }

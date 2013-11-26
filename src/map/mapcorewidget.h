@@ -123,7 +123,7 @@ public slots:
     void load_views();
 
     void update_flights();
-
+    void center_ksfo();
 };
 
 #endif // MAPCOREWIDGET_H
