@@ -661,7 +661,7 @@ void MapCoreWidget::update_flights()
            pm = this->blips.value(callsign);
           // trk = this->tracks.value(callsign);
        }
-       qDebug() <<  idx << this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() << this->mainObject->flightsModel->item(idx, FlightsModel::C_HEADING)->text().toInt();
+       //qDebug() <<  idx << this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() << this->mainObject->flightsModel->item(idx, FlightsModel::C_HEADING)->text().toInt();
 
        pm->setCoordinate(this->mainObject->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
                          this->mainObject->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
@@ -711,13 +711,15 @@ void MapCoreWidget::center_on(XAero aero)
     //qDebug() << "actualmap" << g.latitude() << g.longitude();
 }
 
+//=======================================
+// Pops up select map dialog
 void MapCoreWidget::on_select_map_view()
 {
     MapSelectDialog *dial = new MapSelectDialog(this->mainObject);
     QPoint p = this->buttLoadView->pos();
 
-    p.setX(p.x() + (this->buttLoadView->rect().width() / 2) );
-    p.setY(p.y() + (this->buttLoadView->rect().height() / 2) );
+    p.setX(p.x() + 10); //(this->buttLoadView->rect().width() / 2) );
+    p.setY(p.y() + 10);; //(this->buttLoadView->rect().height() / 2) );
 
     //QPoint np = this->mapToGlobal(p);
     dial->move( this->mapToGlobal(p) );

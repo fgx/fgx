@@ -22,6 +22,7 @@ MapSelectDialog::MapSelectDialog(MainObject *mob, QWidget *parent) :
     lbl->setText("Select Map");
     mainLayout->addWidget(lbl);
 
+
     //=====================================================
     //== Tree
     this->tree = new QTreeView();
@@ -31,6 +32,10 @@ MapSelectDialog::MapSelectDialog(MainObject *mob, QWidget *parent) :
     this->tree->setRootIsDecorated(false);
     this->tree->setUniformRowHeights(false);
 
+    this->tree->setColumnWidth(MapViewsModel::C_LAT, 50);
+    this->tree->setColumnWidth(MapViewsModel::C_LON, 50);
+    this->tree->setColumnWidth(MapViewsModel::C_ZOOM, 50);
+
     bool hidd = false;
     this->tree->setColumnHidden(MapViewsModel::C_LAT, hidd);
     this->tree->setColumnHidden(MapViewsModel::C_LON, hidd);
@@ -38,4 +43,14 @@ MapSelectDialog::MapSelectDialog(MainObject *mob, QWidget *parent) :
 
     this->setMinimumWidth(300);
     this->setMinimumHeight(600);
+
+    connect(this->tree, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(on_tree_double_clicked(QModelIndex))
+    );
+
+}
+
+void MapSelectDialog::on_tree_double_clicked(QModelIndex)
+{
+
 }

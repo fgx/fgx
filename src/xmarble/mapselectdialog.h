@@ -19,7 +19,7 @@ public:
 signals:
 
 public slots:
-
+    void on_tree_double_clicked(QModelIndex);
 };
 
 #endif // MAPSELECTDIALOG_H

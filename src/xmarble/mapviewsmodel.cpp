@@ -2,6 +2,8 @@
 #include <QtDebug>
 #include <QSettings>
 
+#include <QToolButton>
+
 #include "mapviewsmodel.h"
 
 const QString MapViewsModel::SETTINGS_TAG = QString("map_views");
@@ -26,6 +28,8 @@ MapViewsModel::MapViewsModel(QObject *parent) :
     item = new QStandardItem("Lon");
     this->setHorizontalHeaderItem(C_LON, item);
 
+
+
     this->load();
 }
 
@@ -40,12 +44,16 @@ void MapViewsModel::load()
         if(lbl.isEmpty()){
             lbl.append("- no label -");
         }
-
+        QStandardItem *iLabel = new QStandardItem(lbl);
+        iLabel->setIcon(QIcon(":/micon/map"));
         QList<QStandardItem *> row;
-        row <<  new QStandardItem(lbl)
+        row << iLabel
              << new QStandardItem(settings.value("lat").toString())
              << new QStandardItem(settings.value("lon").toString())
              << new QStandardItem(settings.value("zoom").toString());
+        for(int i = 0; i < row.count(); i++){
+            row.at(i)->setEditable(false);
+        }
         this->appendRow(row);
     }
     settings.endArray();
