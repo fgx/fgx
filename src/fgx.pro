@@ -85,7 +85,9 @@ HEADERS += xobjects/xsettings.h \
         mpmap/flightsmodel.h \
         xwidgets/toolbargroup.h \
     navdata/navdatawidget.h \
-    navdata/navdatamodel.h
+    navdata/navdatamodel.h \
+    xmarble/mapviewsmodel.h \
+    xmarble/mapselectdialog.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -157,7 +159,9 @@ SOURCES += main.cpp \
         mpmap/flightsmodel.cpp \
         xwidgets/toolbargroup.cpp \
     navdata/navdatawidget.cpp \
-    navdata/navdatamodel.cpp
+    navdata/navdatamodel.cpp \
+    xmarble/mapviewsmodel.cpp \
+    xmarble/mapselectdialog.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \

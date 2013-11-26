@@ -50,8 +50,9 @@ MainObject::MainObject(QObject *parent) :
 	);
 
 
+    //= Other models
     this->flightsModel = new FlightsModel(this);
-
+    this->mapViewsModel = new MapViewsModel(this);
 
 	//================================================================
 	//= Processes - the nub..

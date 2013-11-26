@@ -130,6 +130,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     a->setCheckable(true);
     this->actGroupProjection->addAction(a);
 
+
     //===================================================
     //= Map View
     ToolBarGroup *tbView = new ToolBarGroup(this);
@@ -150,7 +151,11 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     this->buttLoadView->setIcon(QIcon(":/micon/load"));
     this->buttLoadView->setToolTip("Load view");
     this->buttLoadView->setPopupMode(QToolButton::InstantPopup);
-
+    connect(this->buttLoadView, SIGNAL(clicked()),
+            this, SLOT(on_select_map_view())
+    );
+    tbView->addWidget(this->buttLoadView);
+    /*
     QMenu *menu = new QMenu(this->buttLoadView);
     this->buttLoadView->setMenu(menu);
     tbView->addWidget(this->buttLoadView);
@@ -160,7 +165,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     connect(this->actGroupMapViews, SIGNAL(triggered(QAction*)),
             this, SLOT(on_map_view_action(QAction*))
     );
-
+    */
 
     // Save View
     this->buttSaveView = new QToolButton();
@@ -573,7 +578,7 @@ void MapCoreWidget::on_load_view()
 
 void MapCoreWidget::load_views()
 {
-
+    return;
     QMenu *menu = this->buttLoadView->menu();
 
     QSettings settings;
@@ -608,6 +613,8 @@ void MapCoreWidget::on_map_view_action(QAction *act)
     this->marbleWidget->setZoom(act->property("zoom").toInt());
 }
 
+
+//=================================================================================================
 void MapCoreWidget::on_map_base_layer_action(QAction *act)
 {
     //qDebug() << "base" << act->property("theme").toString();
@@ -621,6 +628,7 @@ void MapCoreWidget::on_map_projection_action(QAction *act)
 }
 
 
+//=================================================================================================
 void MapCoreWidget::update_flights()
 {
     //return;
@@ -701,4 +709,19 @@ void MapCoreWidget::center_on(XAero aero)
     this->marbleWidget->setZoom(2300);
     //}
     //qDebug() << "actualmap" << g.latitude() << g.longitude();
+}
+
+void MapCoreWidget::on_select_map_view()
+{
+    MapSelectDialog *dial = new MapSelectDialog(this->mainObject);
+    QPoint p = this->buttLoadView->pos();
+
+    p.setX(p.x() + (this->buttLoadView->rect().width() / 2) );
+    p.setY(p.y() + (this->buttLoadView->rect().height() / 2) );
+
+    //QPoint np = this->mapToGlobal(p);
+    dial->move( this->mapToGlobal(p) );
+    dial->show();
+
+
 }

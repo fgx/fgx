@@ -16,10 +16,6 @@
 #include <QDoubleSpinBox>
 #include <QToolBar>
 
-#include "xobjects/mainobject.h"
-class MainObject;
-
-
 
 #include "marble/MarbleGlobal.h"
 #include "marble/MarbleWidget.h"
@@ -30,12 +26,17 @@ class MainObject;
 #include "marble/GeoDataStyle.h"
 #include "marble/GeoDataTrack.h"
 
+
 #include "aircraft/xaero.h"
+
+#include "xmarble/mapselectdialog.h"
+class MapSelectDialog;
+
+#include "xobjects/mainobject.h"
+class MainObject;
 
 #include "xmarble/xmarblewidget.h"
 class XMarbleWidget;
-
-//QT_FORWARD_DECLARE_CLASS(QNetworkDiskCache)
 
 #include "xwidgets/toolbargroup.h"
 class ToolBarGroup;
@@ -135,6 +136,9 @@ public slots:
     void center_ksfo();
 
     void center_on(XAero aero);
+
+    void on_select_map_view();
+
 };
 
 #endif // MAPCOREWIDGET_H

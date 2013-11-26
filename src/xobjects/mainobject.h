@@ -35,7 +35,8 @@ class XSettingsModel;
 #include "mpmap/flightsmodel.h"
 class FlightsModel;
 
-
+#include "xmarble/mapviewsmodel.h"
+class MapViewsModel;
 
 #include "xobjects/xprocess.h"
 class XProcess;
@@ -102,6 +103,7 @@ public:
     XSettings *settings;
 	XSettingsModel *X;
 
+    MapViewsModel *mapViewsModel;
     FlightsModel *flightsModel;
 
 	LauncherWindow *launcherWindow;
