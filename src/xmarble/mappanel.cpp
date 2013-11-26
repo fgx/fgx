@@ -30,7 +30,7 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->tabWidget = new QTabWidget();
     this->docker->setWidget(this->tabWidget);
 
-
+    this->tabWidget->setMinimumWidth(400);
 
     //================================================================================
     //= Flights widget
@@ -48,11 +48,46 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->tabWidget->addTab(this->navDataWidget, QIcon(":/micon/navdata"), "Nav Data");
 
 
+    //================================================================================
+    //= Map Model Debug
+    QTreeView *treeDebug = new QTreeView();
+    this->tabWidget->addTab(treeDebug, QIcon(":/micon/navdata"), "Map Debug");
+    treeDebug->setModel( this->mapWidget->marbleWidget->model()->treeModel() );
 
+
+    //================================================================================
+    //= Dock for Small Map
+
+    this->dockSmall = new QDockWidget();
+    this->dockSmall->setMaximumHeight(300);
+    this->addDockWidget(Qt::RightDockWidgetArea, this->dockSmall );
+    this->dockSmall->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
+    this->dockSmall->setFloating(false);
+
+    //= Small Map
+    this->mapSmall = new MarbleWidget();
+    this->dockSmall->setWidget(this->mapSmall);
+    this->mapSmall->setMapThemeId("earth/plain/plain.dgml");
+    this->mapSmall->setProjection( Marble::Spherical );
+
+    this->mapSmall->setShowGrid(false);
+    this->mapSmall->setShowCompass(false);
+    this->mapSmall->setShowCities(false);
+    this->mapSmall->setShowCrosshairs(false);
+    this->mapSmall->setShowOverviewMap(false);
+    this->mapSmall->setShowScaleBar(false);
+
+    this->mapSmall->setShowBorders(true);
+    this->mapSmall->setShowRelief(true);
+
+    this->mapSmall->setShowPlaces(false);
+
+    this->mapSmall->setShowBackground(false);
+
+    this->mapSmall->setZoom(500);
 }
 
 void MapPanel::aircraft_selected(XAero aero)
 {
-    qDebug() << "map panel sel";
     this->mapWidget->center_on(aero);
 }

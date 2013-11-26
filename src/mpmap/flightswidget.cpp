@@ -238,7 +238,7 @@ void FlightsWidget::on_tree_double_clicked(const QModelIndex & index)
     aero.speed = this->mainObject->flightsModel->item(index.row(), FlightsModel::C_SPEED)->text();
     aero.lat = this->mainObject->flightsModel->item(index.row(), FlightsModel::C_LAT)->text();
     aero.lon = this->mainObject->flightsModel->item(index.row(), FlightsModel::C_LON)->text();
-    qDebug() << "fire";
+
     emit aircraft_selected(aero);
 }
 

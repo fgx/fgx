@@ -307,6 +307,9 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	marbleWidget->setShowOverviewMap(false);
 	marbleWidget->setShowScaleBar(true);
 
+    marbleWidget->setShowOverviewMap(true);
+    //marbleWidget->setLockToSubSolarPoint(true);
+
     //marbleWidget->setShowElevationModel(true);
 
 	marbleWidget->setShowTerrain(true);
@@ -325,9 +328,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//marbleWidget->model()->treeModel()->
 
 
-    this->marbleWidget->setCenterLatitude(37.638);
-    this->marbleWidget->setCenterLongitude(-122.215);
-    this->marbleWidget->setZoom(2000);
+
     //marbleWidget->model()->pluginManager();
 
 	//mapWidget->zoomVie
@@ -457,7 +458,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
 
     this->load_views();
-   // QTimer::singleShot(1000, this, SLOT(center_ksfo()));
+    QTimer::singleShot(1000, this, SLOT(center_ksfo()));
 
 
 }
@@ -663,6 +664,5 @@ void MapCoreWidget::center_on(XAero aero)
     g.setLongitude(aero.lon.toFloat(), GeoDataCoordinates::Degree);
     this->marbleWidget->centerOn(g);
     this->marbleWidget->setZoom(2000);
-    //this->marbleWidget->update();
-    qDebug() << "actualmap" << g.latitude() << g.longitude();
+    //qDebug() << "actualmap" << g.latitude() << g.longitude();
 }

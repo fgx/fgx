@@ -44,7 +44,7 @@ MapMainWindow::MapMainWindow(MainObject *mob, QWidget *parent) :
 
 
 
-    XSettings::autosizeWindow(this, 300, 300);
+    XSettings::autosizeWindow(this, 100, 200);
 
     this->mainObject->flightsModel->timer->start();
 }

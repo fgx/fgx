@@ -6,7 +6,9 @@
 #include <QTabWidget>
 #include "xobjects/mainobject.h"
 
-
+#include "marble/MarbleWidget.h"
+#include "marble/MarbleModel.h"
+#include "marble/GeoDataTreeModel.h"
 
 #include "xmarble/mapcorewidget.h"
 class MapCoreWidget;
@@ -17,6 +19,7 @@ class NavDataWidget;
 #include "mpmap/flightswidget.h"
 class FlightsWidget;
 
+using namespace Marble;
 
 
 //================================================
@@ -30,10 +33,13 @@ public:
     MainObject *mainObject;
 
     MapCoreWidget *mapWidget;
-
+    MarbleWidget *mapSmall;
 
 
     QDockWidget *docker;
+    QDockWidget *dockSmall;
+
+
     QTabWidget *tabWidget;
 
     NavDataWidget *navDataWidget;
