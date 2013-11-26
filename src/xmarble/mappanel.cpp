@@ -31,6 +31,17 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->docker->setWidget(this->tabWidget);
 
 
+
+    //================================================================================
+    //= Flights widget
+    this->flightsWidget = new FlightsWidget(mainObject);
+    this->tabWidget->addTab(this->flightsWidget, QIcon(":/micon/flights"), "Flights");
+
+    this->connect(this->flightsWidget, SIGNAL(aircraft_selected(XAero)),
+                  this, SLOT(aircraft_selected(XAero))
+    );
+
+
     //================================================================================
     //= Navdata widget
     this->navDataWidget = new NavDataWidget();
@@ -38,12 +49,10 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
 
 
 
-    //================================================================================
-    //= Flights widget
-    this->flightsWidget = new FlightsWidget(mainObject);
-    this->tabWidget->addTab(this->flightsWidget, QIcon(":/micon/flights"), "Flights");
+}
 
-
-
-
+void MapPanel::aircraft_selected(XAero aero)
+{
+    qDebug() << "map panel sel";
+    this->mapWidget->center_on(aero);
 }

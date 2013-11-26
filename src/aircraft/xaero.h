@@ -17,10 +17,13 @@ public:
 	XAero(QString callsign);
 
 	QString callsign;
-	QString lat;
-	QString lon;
+
 	QString altitude;
 	QString heading;
+    QString speed;
+
+    QString lat;
+    QString lon;
 
 };
 

@@ -231,8 +231,15 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 
 void FlightsWidget::on_tree_double_clicked(const QModelIndex & index)
 {
-    qDebug() << index.row() << index.column();
+    XAero aero(this->mainObject->flightsModel->item(index.row(), FlightsModel::C_CALLSIGN)->text());
 
+    aero.altitude = this->mainObject->flightsModel->item(index.row(), FlightsModel::C_ALTITUDE)->text();
+    aero.heading = this->mainObject->flightsModel->item(index.row(), FlightsModel::C_HEADING)->text();
+    aero.speed = this->mainObject->flightsModel->item(index.row(), FlightsModel::C_SPEED)->text();
+    aero.lat = this->mainObject->flightsModel->item(index.row(), FlightsModel::C_LAT)->text();
+    aero.lon = this->mainObject->flightsModel->item(index.row(), FlightsModel::C_LON)->text();
+    qDebug() << "fire";
+    emit aircraft_selected(aero);
 }
 
 void FlightsWidget::do_update()

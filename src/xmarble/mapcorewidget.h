@@ -27,6 +27,9 @@ class MainObject;
 #include "marble/GeoDataDocument.h"
 #include "marble/GeoDataPlacemark.h"
 #include "marble/GeoDataTreeModel.h"
+#include "marble/GeoDataLookAt.h"
+
+#include "aircraft/xaero.h"
 
 #include "xmarble/xmarblewidget.h"
 class XMarbleWidget;
@@ -124,6 +127,8 @@ public slots:
 
     void update_flights();
     void center_ksfo();
+
+    void center_on(XAero aero);
 };
 
 #endif // MAPCOREWIDGET_H

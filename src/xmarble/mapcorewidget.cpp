@@ -652,3 +652,17 @@ void MapCoreWidget::update_flights()
    //this->marbleWidget->model()->treeModel()->update(); //<< segfaults
 
 }
+
+
+void MapCoreWidget::center_on(XAero aero)
+{
+
+    GeoDataCoordinates g;
+    //g.setAltitude(aero.altitude.toFloat());
+    g.setLatitude(aero.lat.toFloat(), GeoDataCoordinates::Degree);
+    g.setLongitude(aero.lon.toFloat(), GeoDataCoordinates::Degree);
+    this->marbleWidget->centerOn(g);
+    this->marbleWidget->setZoom(2000);
+    //this->marbleWidget->update();
+    qDebug() << "actualmap" << g.latitude() << g.longitude();
+}

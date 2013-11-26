@@ -18,6 +18,8 @@
 #include <QModelIndex>
 #include <QTreeView>
 
+
+
 #include <QWidget>
 
 #include <QStatusBar>
@@ -30,8 +32,7 @@
 class MainObject;
 
 #include "utilities/utilities.h"
-
-#include "map/openlayerwidget.h"
+//#include "map/openlayerwidget.h"
 
 #include "aircraft/xaero.h"
 
@@ -73,14 +74,13 @@ public:
 
 signals:
 
-	void aircraft_selected(XAero aero);
+    void aircraft_selected(XAero);
 
 public slots:
 
 
 	void on_check_autorefresh(int);
 	void on_combo_changed(int);
-    //void on_item_doubled_clicked(QTreeWidgetItem*,int);
 
 	void on_show_cols(QAbstractButton*);
 

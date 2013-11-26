@@ -44,7 +44,7 @@ public:
 signals:
 
 public slots:
-
+    void aircraft_selected(XAero aero);
 };
 
 #endif // MAPPANEL_H
