@@ -622,32 +622,54 @@ void MapCoreWidget::on_map_projection_action(QAction *act)
 
 void MapCoreWidget::update_flights()
 {
-    return;
+    //return;
 
    qDebug() << "update flights";
-
+   this->marbleWidget->setUpdatesEnabled(false);
+    this->marbleWidget->model()->treeModel()->removeDocument(this->docFlights);
    // Createing a new doucment and adding here works
    //GeoDataDocument *doco = new GeoDataDocument();
 
    for(int idx=0; idx < this->mainObject->flightsModel->rowCount(); idx++)
    {
+       GeoDataPlacemark *pm;
+       QString callsign = this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text();
+       if( !this->blips.contains(callsign) ){
+            pm = new GeoDataPlacemark( this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() );
+            this->blips.insert(callsign, pm);
+            this->docFlights->append(pm);
 
-       qDebug() <<  idx << this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() << this->mainObject->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat() << this->mainObject->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat();
 
-       GeoDataPlacemark *pm = new GeoDataPlacemark( this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() );
+
+
+            //sty->setIconStyle(ico);
+
+       }else{
+           pm = this->blips.value(callsign);
+       }
+       qDebug() <<  idx << this->mainObject->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text() << this->mainObject->flightsModel->item(idx, FlightsModel::C_HEADING)->text().toInt();
+
        pm->setCoordinate(this->mainObject->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
                          this->mainObject->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
                          0,
                          GeoDataCoordinates::Degree);
+       //
+       //GeoDataStyle *sty = new GeoDataStyle;
+       //GeoDataIconStyle ico;
+       //ico.setIconPath(":/img/radar_blip.png");
+       //ico.setHeading( this->mainObject->flightsModel->item(idx, FlightsModel::C_HEADING)->text().toInt() );
+       //ico.setHeading();
+       //ico.setScale(2.0);
+       //sty->setIconStyle(ico);
 
-       this->docFlights->append(pm);
+       //pm->setStyle(sty);
        //doco->append(pm);
        //this->marbleWidget->model()->treeModel()->updateFeature(pm); << segfaults...
 
 
    }
-   //this->marbleWidget->model()->treeModel()->addDocument(doco);
-
+    this->marbleWidget->model()->treeModel()->addDocument(this->docFlights);
+    this->marbleWidget->setUpdatesEnabled(true);
    //this->marbleWidget->update(); // Does Nothing aparently
 
    //this->marbleWidget->model()->treeModel()->update(); //<< segfaults
@@ -663,6 +685,8 @@ void MapCoreWidget::center_on(XAero aero)
     g.setLatitude(aero.lat.toFloat(), GeoDataCoordinates::Degree);
     g.setLongitude(aero.lon.toFloat(), GeoDataCoordinates::Degree);
     this->marbleWidget->centerOn(g);
-    this->marbleWidget->setZoom(2000);
+    //if(this->marbleWidget->zoom < 2000){
+    this->marbleWidget->setZoom(2300);
+    //}
     //qDebug() << "actualmap" << g.latitude() << g.longitude();
 }

@@ -36,7 +36,7 @@ void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 {
 
      //qDebug() << "pain map" << this->flightsModel->rowCount();
-
+    return;
 
     //return;
     //painter->autoMapQuality();
@@ -70,6 +70,7 @@ void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 		//painter->setBrush(Qt::green);
 
 		//painter->setMatrix();
+
 		painter->setOpacity(0.9);
 		painter->setPen(Qt::black);
 		painter->setBrush(Qt::black);
@@ -79,7 +80,7 @@ void XMarbleWidget::customPaint(Marble::GeoPainter* painter)
 
 		painter->setPen(Qt::red);
 		painter->setBrush(Qt::red);
-		painter->drawEllipse(blip, 4, 4);
+        painter->drawEllipse(blip, 4, 4);
 		//GeoDataCoordinates blip2(home);
 
 

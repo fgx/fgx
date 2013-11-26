@@ -27,7 +27,7 @@ class MainObject;
 #include "marble/GeoDataDocument.h"
 #include "marble/GeoDataPlacemark.h"
 #include "marble/GeoDataTreeModel.h"
-#include "marble/GeoDataLookAt.h"
+#include "marble/GeoDataStyle.h"
 
 #include "aircraft/xaero.h"
 
@@ -53,6 +53,9 @@ public:
 	explicit MapCoreWidget(MainObject *mob, QWidget *parent = 0);
 
 	MainObject *mainObject;
+
+    QHash<QString, GeoDataPlacemark*> blips;
+
 
     QToolButton *buttBaseLayer;
     QToolButton *buttProjection;
