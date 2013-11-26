@@ -84,7 +84,8 @@ HEADERS += xobjects/xsettings.h \
         network/crossfeedjson.h \
         mpmap/flightsmodel.h \
         xwidgets/toolbargroup.h \
-    navdata/navdatawidget.h
+    navdata/navdatawidget.h \
+    navdata/navdatamodel.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -155,7 +156,8 @@ SOURCES += main.cpp \
         network/crossfeedjson.cpp \
         mpmap/flightsmodel.cpp \
         xwidgets/toolbargroup.cpp \
-    navdata/navdatawidget.cpp
+    navdata/navdatawidget.cpp \
+    navdata/navdatamodel.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \

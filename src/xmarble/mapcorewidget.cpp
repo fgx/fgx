@@ -297,28 +297,31 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
 
     marbleWidget->setMapThemeId("earth/openstreetmap/openstreetmap.dgml");
-	//marbleWidget->setMapThemeId("earth/bluemarble/bluemarble.dgml");
-	//marbleWidget->setMapThemeId("earth/plain/plain.dgml");
-    //marbleWidget->setMapThemeId("earth/srtm/srtm.dgml");
-
-    //marbleWidget->setProjection( Marble::Equirectangular );
     marbleWidget->setProjection( Marble::Mercator );
 
-
+    marbleWidget->setShowGrid(false);
+    marbleWidget->setShowCrosshairs(false);
 	marbleWidget->setShowCompass(false);
     marbleWidget->setShowClouds( false );
-	marbleWidget->setShowBorders( true );
+    marbleWidget->setShowAtmosphere(false);
 	marbleWidget->setShowOverviewMap(false);
 	marbleWidget->setShowScaleBar(true);
+
     //marbleWidget->setShowElevationModel(true);
+
 	marbleWidget->setShowTerrain(true);
+    marbleWidget->setShowIceLayer(true);
+    marbleWidget->setShowRelief(true);
 	marbleWidget->setShowLakes(true);
 	marbleWidget->setShowRivers(true);
-    marbleWidget->setShowGrid(true);
-	marbleWidget->setShowCrosshairs(false);
+    marbleWidget->setShowBorders( true );
 
+
+
+
+    marbleWidget->setShowCityLights(false);
     marbleWidget->setShowCities(false);
-    marbleWidget->setShowOtherPlaces(true);
+    marbleWidget->setShowOtherPlaces(false);
 	//marbleWidget->model()->treeModel()->
 
 

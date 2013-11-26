@@ -12,6 +12,7 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->mainObject = mob;
 
 
+    //=======================================================
     //= Map Widget in center
     this->mapWidget = new MapCoreWidget(this->mainObject);
     this->setCentralWidget(this->mapWidget);
@@ -29,12 +30,19 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->tabWidget = new QTabWidget();
     this->docker->setWidget(this->tabWidget);
 
+
+    //================================================================================
+    //= Navdata widget
+    this->navDataWidget = new NavDataWidget();
+    this->tabWidget->addTab(this->navDataWidget, QIcon(":/micon/navdata"), "Nav Data");
+
+
+
     //================================================================================
     //= Flights widget
     this->flightsWidget = new FlightsWidget(mainObject);
-    this->docker->setWidget(this->flightsWidget);
+    this->tabWidget->addTab(this->flightsWidget, QIcon(":/micon/flights"), "Flights");
 
-    this->flightsWidget->setMinimumWidth(500);
 
 
 

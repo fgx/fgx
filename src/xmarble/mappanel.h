@@ -6,19 +6,20 @@
 #include <QTabWidget>
 #include "xobjects/mainobject.h"
 
-#include "mpmap/flightswidget.h"
-class FlightsWidget;
 
-//#include "mpmap/flightsmodel.h"
-//class FlightsModel;
-
-//#include "marble/MarbleGlobal.h"
-//#include "marble/MarbleWidget.h"
 
 #include "xmarble/mapcorewidget.h"
 class MapCoreWidget;
 
+#include "navdata/navdatawidget.h"
+class NavDataWidget;
 
+#include "mpmap/flightswidget.h"
+class FlightsWidget;
+
+
+
+//================================================
 
 class MapPanel : public QMainWindow
 {
@@ -35,8 +36,9 @@ public:
     QDockWidget *docker;
     QTabWidget *tabWidget;
 
+    NavDataWidget *navDataWidget;
     FlightsWidget *flightsWidget;
-    //FlightsModel *flightsModel;
+
 
 
 signals:

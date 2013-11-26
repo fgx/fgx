@@ -6,5 +6,7 @@
         <file alias="base_layer">marble_icons/layers.png</file>
         <file alias="home">marble_icons/house.png</file>
         <file alias="load">marble_icons/drive_go.png</file>
+        <file alias="navdata">marble_icons/transmit.png</file>
+        <file alias="flights">marble_icons/table.png</file>
     </qresource>
 </RCC>

@@ -35,6 +35,8 @@ class XSettingsModel;
 #include "mpmap/flightsmodel.h"
 class FlightsModel;
 
+
+
 #include "xobjects/xprocess.h"
 class XProcess;
 
