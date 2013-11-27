@@ -658,16 +658,11 @@ void MapCoreWidget::update_flights()
 
 void MapCoreWidget::center_on(XAero aero)
 {
-
     GeoDataCoordinates g;
-    //g.setAltitude(aero.altitude.toFloat());
     g.setLatitude(aero.lat.toFloat(), GeoDataCoordinates::Degree);
     g.setLongitude(aero.lon.toFloat(), GeoDataCoordinates::Degree);
     this->marbleWidget->centerOn(g);
-    //if(this->marbleWidget->zoom < 2000){
     this->marbleWidget->setZoom(2300);
-    //}
-    //qDebug() << "actualmap" << g.latitude() << g.longitude();
 }
 
 //=======================================

@@ -41,6 +41,10 @@ public:
         C_COUNT
     };
 
+    enum ROLES{
+        SORT_ROLE = Qt::UserRole + 1
+    };
+
     int lag;
 
     QTimer *timer;

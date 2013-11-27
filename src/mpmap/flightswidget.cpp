@@ -149,16 +149,18 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 	menuCols->addAction(colsWidgetAction);
 
     //=========================================================
-    // Models
+    // Proxy Model - case insensitive
     //this->proxyModel = new QSortFilterProxyModel(this);
     //this->proxyModel->setSourceModel(this->mainObject->flightsModel);
+    //this->proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+
 
 	//=========================================================
 	//== Tree
     tree = new QTreeView();
 	mainLayout->addWidget(tree);
 
-    this->tree->setModel(this->mainObject->flightsModel);
+    this->tree->setModel(this->mainObject->flightsModel); //this->proxyModel);
 
 	tree->setRootIsDecorated(false);
 	tree->setUniformRowHeights(true);
@@ -186,8 +188,26 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
     */
 
     //tree->setColumnHidden(C_PITCH, true);
+
+
+    //tree->setColumnHidden(FlightsModel::C_LAT, !chkShowLatLon->isChecked());
+    //tree->setColumnHidden(FlightsModel::C_LON, !chkShowLatLon->isChecked());
+
+
+    tree->setColumnWidth(FlightsModel::C_CALLSIGN, 80);
+    tree->setColumnWidth(FlightsModel::C_AERO, 100);
+    tree->setColumnWidth(FlightsModel::C_ALTITUDE, 50);
+    tree->setColumnWidth(FlightsModel::C_HEADING, 50);
+    tree->setColumnWidth(FlightsModel::C_SPEED, 50);
+
+    tree->setColumnWidth(FlightsModel::C_FLAG, 50);
+    tree->setColumnWidth(FlightsModel::C_COUNT, 50);
+
+	tree->setSortingEnabled(true);
+    tree->sortByColumn(FlightsModel::C_CALLSIGN, Qt::AscendingOrder);
+
     bool x_hidden = true;
-    tree->setColumnHidden(FlightsModel::C_FLAG, x_hidden);
+    //tree->setColumnHidden(FlightsModel::C_FLAG, x_hidden);
     tree->setColumnHidden(FlightsModel::C_COUNT, x_hidden);
 
     tree->setColumnHidden(FlightsModel::C_FLIGHT_ID, x_hidden);
@@ -195,20 +215,9 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
     tree->setColumnHidden(FlightsModel::C_LON, x_hidden);
 
 
-    tree->setColumnHidden(FlightsModel::C_AERO, !chkShowModel->isChecked());
+    tree->setColumnHidden(FlightsModel::C_AERO, true); //!chkShowModel->isChecked());
     tree->setColumnHidden(FlightsModel::C_HEADING, !chkShowHdg->isChecked());
     tree->setColumnHidden(FlightsModel::C_ALTITUDE, !chkShowAlt->isChecked());
-    //tree->setColumnHidden(FlightsModel::C_LAT, !chkShowLatLon->isChecked());
-    //tree->setColumnHidden(FlightsModel::C_LON, !chkShowLatLon->isChecked());
-
-
-    tree->setColumnWidth(FlightsModel::C_CALLSIGN, 100);
-    tree->setColumnWidth(FlightsModel::C_AERO, 100);
-    tree->setColumnWidth(FlightsModel::C_ALTITUDE, 50);
-    tree->setColumnWidth(FlightsModel::C_HEADING, 50);
-
-	tree->setSortingEnabled(true);
-    tree->sortByColumn(FlightsModel::C_CALLSIGN, Qt::AscendingOrder);
 
     connect(tree, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(on_tree_double_clicked(QModelIndex))

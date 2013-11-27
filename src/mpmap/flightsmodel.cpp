@@ -36,16 +36,14 @@ FlightsModel::FlightsModel(QObject *parent) :
     item = new QStandardItem("Model");
     this->setHorizontalHeaderItem(C_AERO, item);
 
-    item = new QStandardItem("Speed");
+    item = new QStandardItem("Spd");
     this->setHorizontalHeaderItem(C_SPEED, item);
 
-    item = new QStandardItem("Heading");
+    item = new QStandardItem("Hdg");
     this->setHorizontalHeaderItem(C_HEADING, item);
 
-    item = new QStandardItem("Altitude");
+    item = new QStandardItem("Alt");
     this->setHorizontalHeaderItem(C_ALTITUDE, item);
-
-
 
     item = new QStandardItem("Lat");
     this->setHorizontalHeaderItem(C_LAT, item);
@@ -53,6 +51,13 @@ FlightsModel::FlightsModel(QObject *parent) :
     this->setHorizontalHeaderItem(C_LON, item);
 
 
+    item = new QStandardItem("Flag");
+    this->setHorizontalHeaderItem(C_FLAG, item);
+
+    item = new QStandardItem("Count");
+    this->setHorizontalHeaderItem(C_COUNT, item);
+
+    this->setSortRole(SORT_ROLE);
 
     timer->setInterval(2000);
     timer->setSingleShot(false);
@@ -122,10 +127,19 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
      //   return; // hack to get rid of dead crud as experiment
     //}
     //bool ok;
+
+    // Current time
+    qint64 timm = QDateTime::currentMSecsSinceEpoch();
+
+    // request send time
     qint64 ms = reply->request().attribute(QNetworkRequest::User).toLongLong();
-    //qDebug() << ok << ms << QDateTime::currentMSecsSinceEpoch();
-    //if (ok){
-    this->lag = QDateTime::currentMSecsSinceEpoch() - ms;
+
+    // calculate lag
+    this->lag = timm - ms;
+
+    // make into eopch seconds for expiry below
+    timm = timm / 1000;
+
     //    qDebug() << "round trip" << lag;
     //}else{
      //   lag = 0;
@@ -146,75 +160,97 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
 
     if ( nFlights.isArray() ){
 
-        //qDebug() << "YES";
-        /*
-         * C_FLIGHT_ID = 0,
-        C_CALLSIGN,
-        C_ALTITUDE,
-        C_HEADING,
-        C_SPEED,
-        C_AIRCRAFT,
-        C_LAT,
-        C_LON,
-        C_FLAG,
-        C_COUNT */
+        //= set out flag so we need to delete later
+        //for(int i=0; i < this->rowCount(); i++){
+            //QStandardItem *item = this->item(i, C_FLAG);
+            //int f = item->text().toInt();
+            //if (f > 0){
+           // item->setText("1");
+            //}
+        //}
+
+
         QScriptValueIterator it(nFlights);
         while (it.hasNext()) {
 
             it.next();
-            //qDebug() << it.name() << ": " << it.value().toString();
-            //qDebug() << it.value().property("callsign").toString();
+
             QString callsign = it.value().property("callsign").toString();
 
+            //= hack.. Avoids suprious json stuff that is happening - see pete
             if (callsign.length() > 2){
 
-
+                // Find Items matching this callsign
                 // @TODO: Geoff?? should this be callsign or fid we search for ? (or the option).. for now callsign
                 QList<QStandardItem *> fitems = this->findItems(callsign, Qt::MatchExactly, C_CALLSIGN);
-                if (fitems.count() == 0){
+                int row = -1;
 
+                if (fitems.count() > 0){
 
+                    // Update items in this row
+                    row = fitems.at(0)->index().row();
 
-                    QStandardItem *iFid = new QStandardItem( it.value().property("fid").toString() );
-                    QStandardItem *iCallsign = new QStandardItem( callsign );
-
-                    QFileInfo fInfo(it.value().property("model").toString()); // get model name
-                    QStandardItem *iModel = new QStandardItem( fInfo.baseName() );
-
-                    QStandardItem *iAltitude = new QStandardItem( it.value().property("alt_ft").toString() );
-                    iAltitude->setTextAlignment(Qt::AlignRight);
-
-                    QStandardItem *iHeading = new QStandardItem( it.value().property("hdg").toString() );
-                    iHeading->setTextAlignment(Qt::AlignRight);
-
-                    QStandardItem *iSpeed = new QStandardItem( it.value().property("spd_kts").toString() );
-                    iSpeed->setTextAlignment(Qt::AlignRight);
-
-                    QStandardItem *iLat = new QStandardItem( it.value().property("lat").toString() );
-                    QStandardItem *iLon = new QStandardItem( it.value().property("lon").toString() );
-
-                    QList<QStandardItem *> insertItemsList;
-                    insertItemsList << iFid <<  iCallsign << iAltitude << iHeading << iSpeed << iModel << iLat << iLon;
-                    for(int i =0; i < insertItemsList.count(); i++){
-                        insertItemsList.at(i)->setEditable(false);
-                    }
-                    this->appendRow( insertItemsList );
                 }else{
-                   // qDebug() << "update";
-                    int row = fitems.at(0)->index().row();
-                    this->item(row, C_ALTITUDE)->setText(it.value().property("alt_ft").toString());
-                    this->item(row, C_HEADING)->setText(it.value().property("hdg").toString());
-                    this->item(row, C_SPEED)->setText(it.value().property("spd_kts").toString());
 
-                    this->item(row, C_LAT)->setText(it.value().property("lat").toString());
-                    this->item(row, C_LON)->setText(it.value().property("lon").toString());
+                    // Not found so add new row
+                    QString aero_model = QFileInfo (it.value().property("model").toString() ).baseName(); // get model name
+                    QList<QStandardItem *> insertItemsList;
+
+                    QStandardItem *iCallsignn = new QStandardItem( callsign );
+                    iCallsignn->setData(callsign.toUpper(), SORT_ROLE);
+
+                    insertItemsList << new QStandardItem( it.value().property("fid").toString() )
+                                    << iCallsignn
+
+                                    << new QStandardItem( it.value().property("alt_ft").toString() )
+                                    << new QStandardItem( it.value().property("hdg").toString() )
+                                    << new QStandardItem( it.value().property("spd_kts").toString() )
+
+                                    << new QStandardItem( aero_model )
+
+                                    << new QStandardItem( it.value().property("lat").toString() )
+                                    << new QStandardItem( it.value().property("lon").toString() )
+
+                                     << new QStandardItem( QString::number(timm) );
+
+                    // loop items to set uneditable, and align some cols to right
+                    for(int i =0; i < insertItemsList.count(); i++){
+                        QStandardItem *itl = insertItemsList.at(i);
+                        itl->setEditable(false);
+                        if(i == C_HEADING || i == C_ALTITUDE || i == C_SPEED){
+                            itl->setTextAlignment(Qt::AlignVCenter|Qt::AlignRight);
+                        }else{
+                            itl->setTextAlignment(Qt::AlignVCenter);
+                        }
+                    }
+                    // append items and get the row
+                    this->appendRow( insertItemsList );
+                    row = this->indexFromItem(iCallsignn).row();
+
                 }
+                // Update all the stuff, including the stuff newly added..
+                // The model is sorted by SORT_ROLE, hence numbers are 0 padded
+                this->item(row, C_ALTITUDE)->setText(  it.value().property("alt_ft").toString());
+
+                this->item(row, C_ALTITUDE)->setData(  it.value().property("alt_ft").toString().rightJustified(6, QChar('0')), SORT_ROLE);
+
+                this->item(row, C_HEADING)->setText(it.value().property("hdg").toString());
+                this->item(row, C_HEADING)->setData(  it.value().property("hdg").toString().rightJustified(6, QChar('0')), SORT_ROLE);
+
+                this->item(row, C_SPEED)->setText(it.value().property("spd_kts").toString());
+                this->item(row, C_SPEED)->setData(  it.value().property("spd_kts").toString().rightJustified(6, QChar('0')), SORT_ROLE);
+
+                this->item(row, C_LAT)->setText(it.value().property("lat").toString());
+                this->item(row, C_LON)->setText(it.value().property("lon").toString());
+
+                this->item(row, C_FLAG)->setText( QString::number(timm) );
+                this->item(row, C_SPEED)->setData(  QString::number(timm) , SORT_ROLE);
+                //}
             } //valid callsign
 
         } // while
         emit update_done();
     }
-
 
     reply->deleteLater();
 }
