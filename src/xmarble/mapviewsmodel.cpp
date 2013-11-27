@@ -16,8 +16,8 @@ MapViewsModel::MapViewsModel(QObject *parent) :
 
     QStandardItem *item;
 
-    item = new QStandardItem("Label");
-    this->setHorizontalHeaderItem(C_LABEL, item);
+    item = new QStandardItem("Map View");
+    this->setHorizontalHeaderItem(C_BUTT, item);
 
     item = new QStandardItem("Zoom");
     this->setHorizontalHeaderItem(C_ZOOM, item);
@@ -28,6 +28,8 @@ MapViewsModel::MapViewsModel(QObject *parent) :
     item = new QStandardItem("Lon");
     this->setHorizontalHeaderItem(C_LON, item);
 
+    item = new QStandardItem("View");
+    this->setHorizontalHeaderItem(C_VIEW, item);
 
 
     this->load();
@@ -37,6 +39,7 @@ MapViewsModel::MapViewsModel(QObject *parent) :
 void MapViewsModel::load()
 {
     QSettings settings;
+    this->removeRows(0, this->rowCount());
     int size = settings.beginReadArray( MapViewsModel::SETTINGS_TAG );
     for (int i = 0; i < size; ++i) {
         settings.setArrayIndex(i);
@@ -47,10 +50,11 @@ void MapViewsModel::load()
         QStandardItem *iLabel = new QStandardItem(lbl);
         iLabel->setIcon(QIcon(":/micon/map"));
         QList<QStandardItem *> row;
-        row << iLabel
-             << new QStandardItem(settings.value("lat").toString())
-             << new QStandardItem(settings.value("lon").toString())
-             << new QStandardItem(settings.value("zoom").toString());
+        row << new QStandardItem()
+            << new QStandardItem(settings.value("lat").toString())
+            << new QStandardItem(settings.value("lon").toString())
+            << new QStandardItem(settings.value("zoom").toString())
+            << iLabel;
         for(int i = 0; i < row.count(); i++){
             row.at(i)->setEditable(false);
         }
@@ -61,6 +65,19 @@ void MapViewsModel::load()
 void MapViewsModel::save()
 {
 
+    QSettings settings;
+    int rc = this->rowCount();
+    settings.beginWriteArray( MapViewsModel::SETTINGS_TAG );
+
+        for(int i = 0; i < rc; i++){
+            settings.setArrayIndex(i);
+            settings.setValue("label", this->item(i, C_VIEW)->text());
+            settings.setValue("lat", this->item(i, C_LAT)->text());
+            settings.setValue("lon", this->item(i, C_LON)->text());
+            settings.setValue("zoom", this->item(i, C_ZOOM)->text());
+       }
+    settings.endArray();
+    settings.sync();
 }
 
 void MapViewsModel::add_view(QString label, QString lat, QString lon, int zoom)
@@ -70,5 +87,10 @@ void MapViewsModel::add_view(QString label, QString lat, QString lon, int zoom)
 
 void MapViewsModel::remove_view(QString label)
 {
-
+    QList<QStandardItem *> fitems = this->findItems(label, Qt::MatchExactly, MapViewsModel::C_VIEW);
+   // qDebug() << fitems.count();
+    if(fitems.count() > 0){
+        this->removeRow(fitems.at(0)->row());
+        this->save();
+    }
 }

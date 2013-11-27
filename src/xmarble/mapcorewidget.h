@@ -105,7 +105,8 @@ private:
 
 signals:
 
-	void setx(QString option, bool enabled, QString value);
+    //void setx(QString option, bool enabled, QString value);
+    void open_map_tab(QString view);
 
 public slots:
 
@@ -129,8 +130,8 @@ public slots:
 	void closeEvent(QCloseEvent *event);
 
     void on_save_view();
-    void on_load_view();
-    void load_views();
+    //void on_load_view();
+    //void load_views();
 
     void update_flights();
     void center_ksfo();
@@ -139,6 +140,7 @@ public slots:
 
     void on_select_map_view();
 
+    void on_open_map_view(QString, QString);
 };
 
 #endif // MAPCOREWIDGET_H

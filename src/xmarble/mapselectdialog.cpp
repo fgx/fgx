@@ -9,6 +9,12 @@ MapSelectDialog::MapSelectDialog(MainObject *mob, QWidget *parent) :
 
     this->mainObject = mob;
 
+    this->actionGroup = new QActionGroup(this);
+    this->actionGroup->setExclusive(false);
+    connect(this->actionGroup, SIGNAL(triggered(QAction*)),
+            this, SLOT(on_action(QAction*))
+    );
+
     this->setWindowFlags(Qt::Popup);
     //this->setWindowModality(QtCore.Qt.ApplicationModal)
 
@@ -25,9 +31,8 @@ MapSelectDialog::MapSelectDialog(MainObject *mob, QWidget *parent) :
 
     //=====================================================
     //== Tree
-    this->tree = new QTreeView();
+    this->tree = new QTreeWidget();
     mainLayout->addWidget(this->tree);
-    this->tree->setModel(this->mainObject->mapViewsModel);
 
     this->tree->setRootIsDecorated(false);
     this->tree->setUniformRowHeights(false);
@@ -44,13 +49,64 @@ MapSelectDialog::MapSelectDialog(MainObject *mob, QWidget *parent) :
     this->setMinimumWidth(300);
     this->setMinimumHeight(600);
 
-    connect(this->tree, SIGNAL(doubleClicked(QModelIndex)),
-            this, SLOT(on_tree_double_clicked(QModelIndex))
-    );
-
+    this->load_tree();
 }
 
-void MapSelectDialog::on_tree_double_clicked(QModelIndex)
+void MapSelectDialog::load_tree()
 {
+    MapViewsModel *model = this->mainObject->mapViewsModel ;
+    QAction *a;
+    this->tree->clear();
+    for(int idx=0; idx < model->rowCount(); idx++)
+    {
+        QString view = model->item(idx, MapViewsModel::C_VIEW)->text();
+        QTreeWidgetItem *item = new QTreeWidgetItem();
+        item->setText(MapViewsModel::C_VIEW,    view);
+        item->setText(MapViewsModel::C_LAT,     model->item(idx, MapViewsModel::C_LAT)->text());
+        item->setText(MapViewsModel::C_LON,     model->item(idx, MapViewsModel::C_LON)->text());
+        item->setText(MapViewsModel::C_ZOOM,    model->item(idx, MapViewsModel::C_ZOOM)->text());
+        this->tree->addTopLevelItem(item);
+
+        QToolButton *buttOpen = new QToolButton();
+        buttOpen->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        buttOpen->setPopupMode(QToolButton::InstantPopup);
+        buttOpen->setAutoRaise(true);
+        buttOpen->setText( view );
+        buttOpen->setIcon(QIcon(":/micon/map"));
+        this->tree->setItemWidget(item, MapViewsModel::C_BUTT, buttOpen);
+
+        QMenu *menu = new QMenu();
+        buttOpen->setMenu(menu);
+
+        a = menu->addAction("Open in this tab");
+        a->setProperty("action","this_tab");
+        a->setProperty("view", view);
+        this->actionGroup->addAction(a);
+
+        a = menu->addAction("Open in new tab");
+        a->setProperty("action","new_tab");
+        a->setProperty("view", view);
+        this->actionGroup->addAction(a);
+
+        menu->addSeparator();
+
+        a = menu->addAction("Remove this view");
+        a->setProperty("action","remove");
+        a->setProperty("view", view);
+        this->actionGroup->addAction(a);
+   }
+}
+
+void MapSelectDialog::on_action(QAction *act)
+{
+    QString a = act->property("action").toString();
+    QString v = act->property("view").toString();
+    if (a == "remove"){
+        QList<QStandardItem *> fitems = this->mainObject->mapViewsModel->findItems(v, Qt::MatchExactly, MapViewsModel::C_VIEW);
+        qDebug() << fitems.count();
+        this->mainObject->mapViewsModel->remove_view(v);
+        this->load_tree();
+    }
+    emit open_map_view(a, v);
 
 }

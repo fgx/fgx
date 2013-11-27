@@ -117,6 +117,10 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
         reply->deleteLater();
         return;
     }
+   // if(reply->readAll().length() < 10){
+        // qDebug() << " error NO DATA";
+     //   return; // hack to get rid of dead crud as experiment
+    //}
     //bool ok;
     qint64 ms = reply->request().attribute(QNetworkRequest::User).toLongLong();
     //qDebug() << ok << ms << QDateTime::currentMSecsSinceEpoch();
@@ -135,6 +139,7 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
      */
 
     QScriptEngine engine;
+    // toto if(engine.canEvaluate()
     QScriptValue data = engine.evaluate("(" + reply->readAll() + ")");
 
     QScriptValue nFlights = data.property("flights");
@@ -161,14 +166,19 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
             //qDebug() << it.value().property("callsign").toString();
             QString callsign = it.value().property("callsign").toString();
 
-            // @TODO: Geoff?? should this be callsign or fid we search for ? (or the option).. for now callsign
-            QList<QStandardItem *> fitems = this->findItems(callsign, Qt::MatchExactly, C_CALLSIGN);
-            if (fitems.count() == 0){
+            if (callsign.length() > 2){
+
+
+                // @TODO: Geoff?? should this be callsign or fid we search for ? (or the option).. for now callsign
+                QList<QStandardItem *> fitems = this->findItems(callsign, Qt::MatchExactly, C_CALLSIGN);
+                if (fitems.count() == 0){
+
+
 
                     QStandardItem *iFid = new QStandardItem( it.value().property("fid").toString() );
-                    QStandardItem *iCallsign = new QStandardItem( it.value().property("callsign").toString() );
+                    QStandardItem *iCallsign = new QStandardItem( callsign );
 
-                    QFileInfo fInfo(it.value().property("model").toString());
+                    QFileInfo fInfo(it.value().property("model").toString()); // get model name
                     QStandardItem *iModel = new QStandardItem( fInfo.baseName() );
 
                     QStandardItem *iAltitude = new QStandardItem( it.value().property("alt_ft").toString() );
@@ -183,25 +193,23 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
                     QStandardItem *iLat = new QStandardItem( it.value().property("lat").toString() );
                     QStandardItem *iLon = new QStandardItem( it.value().property("lon").toString() );
 
-                // todo@ at and FGx platform level, we can insert or insert index..
-                // this means fid here and index key almost.. is the problem pete has..
-                QList<QStandardItem *> insertItemsList;
-                insertItemsList << iFid <<  iCallsign << iAltitude << iHeading << iSpeed << iModel << iLat << iLon;
-                for(int i =0; i < insertItemsList.count(); i++){
-                    insertItemsList.at(i)->setEditable(false);
+                    QList<QStandardItem *> insertItemsList;
+                    insertItemsList << iFid <<  iCallsign << iAltitude << iHeading << iSpeed << iModel << iLat << iLon;
+                    for(int i =0; i < insertItemsList.count(); i++){
+                        insertItemsList.at(i)->setEditable(false);
+                    }
+                    this->appendRow( insertItemsList );
+                }else{
+                   // qDebug() << "update";
+                    int row = fitems.at(0)->index().row();
+                    this->item(row, C_ALTITUDE)->setText(it.value().property("alt_ft").toString());
+                    this->item(row, C_HEADING)->setText(it.value().property("hdg").toString());
+                    this->item(row, C_SPEED)->setText(it.value().property("spd_kts").toString());
+
+                    this->item(row, C_LAT)->setText(it.value().property("lat").toString());
+                    this->item(row, C_LON)->setText(it.value().property("lon").toString());
                 }
-                this->appendRow( insertItemsList );
-            }else{
-               // qDebug() << "update";
-                int row = fitems.at(0)->index().row();
-                this->item(row, C_ALTITUDE)->setText(it.value().property("alt_ft").toString());
-                this->item(row, C_HEADING)->setText(it.value().property("hdg").toString());
-                this->item(row, C_SPEED)->setText(it.value().property("spd_kts").toString());
-
-                this->item(row, C_LAT)->setText(it.value().property("lat").toString());
-                this->item(row, C_LON)->setText(it.value().property("lon").toString());
-            }
-
+            } //valid callsign
 
         } // while
         emit update_done();

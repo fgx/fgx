@@ -454,16 +454,6 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//connect(buttDebug, SIGNAL(clicked()), this, SLOT(on_show_debugger()));
 
 
-
-	//============================================================================
-	//== Main Settings connection
-	//connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
-	//connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
-	//connect(mainObject, SIGNAL(on_debug_mode(bool)), this, SLOT(on_debug_mode(bool)));
-
-
-
-    this->load_views();
     QTimer::singleShot(1000, this, SLOT(center_ksfo()));
 
 
@@ -571,40 +561,9 @@ void MapCoreWidget::on_save_view()
     }
 }
 
-void MapCoreWidget::on_load_view()
-{
 
-}
 
-void MapCoreWidget::load_views()
-{
-    return;
-    QMenu *menu = this->buttLoadView->menu();
 
-    QSettings settings;
-    int size = settings.beginReadArray( MapCoreWidget::SETTINGS_TAG );
-    qDebug() << "load " << size;
-    for (int i = 0; i < size; ++i) {
-        settings.setArrayIndex(i);
-        QString lbl = settings.value("label").toString();
-        if(lbl.isEmpty()){
-            lbl.append("- no label -");
-        }
-        QAction *act = new QAction(menu);
-        menu->addAction(act);
-        this->actGroupMapViews->addAction(act);
-        act->setText(lbl);
-        act->setProperty("lat", settings.value("lat"));
-        act->setProperty("lon", settings.value("lon"));
-        act->setProperty("zoom", settings.value("zoom"));
-        //qDebug() << "-----------";
-        //qDebug() << settings.value("label").toString();
-       // qDebug() << settings.value("lat").toReal();
-        //qDebug() << settings.value("lon").toReal();
-
-    }
-    settings.endArray();
-}
 
 void MapCoreWidget::on_map_view_action(QAction *act)
 {
@@ -633,7 +592,7 @@ void MapCoreWidget::update_flights()
 {
     //return;
 
-    qDebug() << "update flights";
+    //qDebug() << "update flights";
    // this->marbleWidget->setUpdatesEnabled(false);
     this->marbleWidget->model()->treeModel()->removeDocument(this->docFlights);
     //this->marbleWidget->model()->treeModel()->removeDocument(this->docTracks);
@@ -723,7 +682,19 @@ void MapCoreWidget::on_select_map_view()
 
     //QPoint np = this->mapToGlobal(p);
     dial->move( this->mapToGlobal(p) );
+    connect(dial, SIGNAL(open_map_view(QString,QString)),
+            this, SLOT(on_open_map_view(QString, QString))
+    );
     dial->show();
 
 
+}
+
+void MapCoreWidget::on_open_map_view(QString tab_action, QString view)
+{
+    if(tab_action == "new_tab"){
+        emit open_map_tab(view);
+    }else{
+
+    }
 }

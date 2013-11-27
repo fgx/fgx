@@ -11,11 +11,11 @@ public:
     static const QString SETTINGS_TAG;
 
     enum COLS{
-        C_LABEL = 0,
+        C_BUTT = 0,
         C_LAT,
         C_LON,
         C_ZOOM,
-        C_DELETE
+        C_VIEW
     };
 
     explicit MapViewsModel(QObject *parent = 0);
