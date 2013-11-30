@@ -1,0 +1,3 @@
+[submodule "src/externals/marble"]
+	path = src/externals/marble
+	url = https://github.com/fgx/fgx.git
