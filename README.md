@@ -5,7 +5,7 @@ FGx
 
 * Version 2.10.x
 
-[image](https://secure.travis-ci.org/fgx/fgx.png?branch=master:target: http://travis-ci.org/fgx/fgx)
+![image](https://secure.travis-ci.org/fgx/fgx.png?branch=master:target: http://travis-ci.org/fgx/fgx)
 
 
 The project
