@@ -32,7 +32,7 @@
 		OS_MAC = 2,
 		OS_LINUX = 3,
 		OS_WINDOWS = 4,
-		OS_UNKNOWN = 5,
+        OS_UNKNOWN = 5
 	};
 
 #endif // APP_CONFIG_H

@@ -87,7 +87,8 @@ HEADERS += xobjects/xsettings.h \
     navdata/navdatawidget.h \
     navdata/navdatamodel.h \
     xmarble/mapviewsmodel.h \
-    xmarble/mapselectdialog.h
+    xmarble/mapselectdialog.h \
+    xmarble/flightspaintlayer.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -161,7 +162,8 @@ SOURCES += main.cpp \
     navdata/navdatawidget.cpp \
     navdata/navdatamodel.cpp \
     xmarble/mapviewsmodel.cpp \
-    xmarble/mapselectdialog.cpp
+    xmarble/mapselectdialog.cpp \
+    xmarble/flightspaintlayer.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \

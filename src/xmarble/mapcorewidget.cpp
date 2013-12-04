@@ -36,11 +36,6 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
 	mainObject = mob;
 
-    //setWindowTitle(tr("MAP CORE"));
-    //setWindowIcon(QIcon(":/icon/mpmap"));
-
-    //setProperty("settings_namespace", QVariant("OpenLayerWidget_window"));
-    //mainObject->settings->restoreWindow(this);
 
 	//======================================================
 	//= Main Layout and Splitter
@@ -325,38 +320,20 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     marbleWidget->setShowBorders( true );
 
 
-
-
     marbleWidget->setShowCityLights(false);
     marbleWidget->setShowCities(false);
     marbleWidget->setShowOtherPlaces(false);
-	//marbleWidget->model()->treeModel()->
 
-
-
-    //marbleWidget->model()->pluginManager();
-
-	//mapWidget->zoomVie
-	//mapWidget->model()->addPlacemarkFile("/home/ffs/fgx/example.kml");
-
-	//mapWidget->model()->addGeoDataFile(QString("/home/ffs/fgx/example.kml"));
-
-	//mapWidget->setMinimumZoom(100);
-	//marbleWidget->
 
     connect(marbleWidget, SIGNAL(zoomChanged(int)),
             this, SLOT(on_map_zoom_changed(int))
     );
-
-	//
     connect(marbleWidget, SIGNAL(mouseClickGeoPosition(qreal,qreal,GeoDataCoordinates::Unit)),
            this, SLOT(on_map_clicked())
     );
-
     connect(marbleWidget, SIGNAL(visibleLatLonAltBoxChanged(const GeoDataLatLonAltBox &)),
             this, SLOT(on_map_moved(const GeoDataLatLonAltBox &))
     );
-	//connect(marbleWidget, SIGNAL(mouseMoveGeoPosition(QString)), this, SLOT(on_map_move(QString)));
 
 
     //------------------------------------------
@@ -369,8 +346,12 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     this->docFlights = new GeoDataDocument();
     this->marbleWidget->model()->treeModel()->addDocument( this->docFlights );
 
-    this->docTracks = new GeoDataDocument();
-    this->marbleWidget->model()->treeModel()->addDocument( this->docTracks );
+    this->flightsLayer = new FlightsPaintLayer(this->marbleWidget);
+    this->marbleWidget->addLayer(this->flightsLayer);
+    this->marbleWidget->installEventFilter(this->flightsLayer);
+
+    //this->docTracks = new GeoDataDocument();
+    //this->marbleWidget->model()->treeModel()->addDocument( this->docTracks );
 
     //------------------------------------------
 
@@ -562,9 +543,6 @@ void MapCoreWidget::on_save_view()
 }
 
 
-
-
-
 void MapCoreWidget::on_map_view_action(QAction *act)
 {
     this->marbleWidget->setCenterLatitude(act->property("lat").toReal());
@@ -586,6 +564,43 @@ void MapCoreWidget::on_map_projection_action(QAction *act)
     this->marbleWidget->setProjection( act->property("proj").toInt() );
 }
 
+void MapCoreWidget::center_on(XAero aero)
+{
+    GeoDataCoordinates g;
+    g.setLatitude(aero.lat.toFloat(), GeoDataCoordinates::Degree);
+    g.setLongitude(aero.lon.toFloat(), GeoDataCoordinates::Degree);
+    this->marbleWidget->centerOn(g);
+    this->marbleWidget->setZoom(2300);
+}
+
+//=======================================
+// Pops up select map dialog
+void MapCoreWidget::on_select_map_view()
+{
+    MapSelectDialog *dial = new MapSelectDialog(this->mainObject);
+    QPoint p = this->buttLoadView->pos();
+
+    p.setX(p.x() + 10); //(this->buttLoadView->rect().width() / 2) );
+    p.setY(p.y() + 10);; //(this->buttLoadView->rect().height() / 2) );
+
+    //QPoint np = this->mapToGlobal(p);
+    dial->move( this->mapToGlobal(p) );
+    connect(dial, SIGNAL(open_map_view(QString,QString)),
+            this, SLOT(on_open_map_view(QString, QString))
+    );
+    dial->show();
+
+
+}
+
+void MapCoreWidget::on_open_map_view(QString tab_action, QString view)
+{
+    if(tab_action == "new_tab"){
+        emit open_map_tab(view);
+    }else{
+
+    }
+}
 
 //=================================================================================================
 void MapCoreWidget::update_flights()
@@ -656,45 +671,4 @@ void MapCoreWidget::update_flights()
 }
 
 
-void MapCoreWidget::center_on(XAero aero)
-{
 
-    GeoDataCoordinates g;
-    //g.setAltitude(aero.altitude.toFloat());
-    g.setLatitude(aero.lat.toFloat(), GeoDataCoordinates::Degree);
-    g.setLongitude(aero.lon.toFloat(), GeoDataCoordinates::Degree);
-    this->marbleWidget->centerOn(g);
-    //if(this->marbleWidget->zoom < 2000){
-    this->marbleWidget->setZoom(2300);
-    //}
-    //qDebug() << "actualmap" << g.latitude() << g.longitude();
-}
-
-//=======================================
-// Pops up select map dialog
-void MapCoreWidget::on_select_map_view()
-{
-    MapSelectDialog *dial = new MapSelectDialog(this->mainObject);
-    QPoint p = this->buttLoadView->pos();
-
-    p.setX(p.x() + 10); //(this->buttLoadView->rect().width() / 2) );
-    p.setY(p.y() + 10);; //(this->buttLoadView->rect().height() / 2) );
-
-    //QPoint np = this->mapToGlobal(p);
-    dial->move( this->mapToGlobal(p) );
-    connect(dial, SIGNAL(open_map_view(QString,QString)),
-            this, SLOT(on_open_map_view(QString, QString))
-    );
-    dial->show();
-
-
-}
-
-void MapCoreWidget::on_open_map_view(QString tab_action, QString view)
-{
-    if(tab_action == "new_tab"){
-        emit open_map_tab(view);
-    }else{
-
-    }
-}

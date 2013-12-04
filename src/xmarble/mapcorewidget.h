@@ -29,21 +29,26 @@
 
 #include "aircraft/xaero.h"
 
-#include "xmarble/mapselectdialog.h"
-class MapSelectDialog;
-
 #include "xobjects/mainobject.h"
 class MainObject;
+
+
+#include "xmarble/mapselectdialog.h"
+class MapSelectDialog;
 
 #include "xmarble/xmarblewidget.h"
 class XMarbleWidget;
 
+#include "xmarble/flightspaintlayer.h"
+
+
 #include "xwidgets/toolbargroup.h"
 class ToolBarGroup;
 
+
+
+
 using namespace Marble;
-
-
 
 class MapCoreWidget : public QWidget
 {
@@ -74,7 +79,8 @@ public:
 
 	XMarbleWidget *marbleWidget;
     GeoDataDocument *docFlights;
-    GeoDataDocument *docTracks;
+    //GeoDataDocument *docTracks;
+    FlightsPaintLayer *flightsLayer;
 
 private:
 

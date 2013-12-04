@@ -52,7 +52,7 @@ Q_OBJECT
 public:
     explicit FlightsWidget(MainObject *mob, QWidget *parent = 0);
 
-
+    bool first_run;
 
 	MainObject *mainObject;
 

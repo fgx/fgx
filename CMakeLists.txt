@@ -102,7 +102,7 @@ set( fgx_SRCS src/main.cpp src/xobjects/xsettings.cpp src/settings/settingsdialo
     src/xmarble/mappanel.cpp src/xmarble/mapcorewidget.cpp src/xmarble/xmarblewidget.cpp
     src/network/crossfeedjson.cpp src/mpmap/flightsmodel.cpp src/xwidgets/toolbargroup.cpp
     src/navdata/navdatawidget.cpp src/navdata/navdatamodel.cpp src/xmarble/mapviewsmodel.cpp
-    src/xmarble/mapselectdialog.cpp )
+    src/xmarble/mapselectdialog.cpp src/xmarble/flightspaintlayer.cpp )
 
 set( fgx_HDRS src/xobjects/xsettings.h src/settings/settingsdialog.h src/network/networkwidget.h
     src/network/mptelnet.h src/aircraft/aircraftwidget.h src/airports/airportswidget.h
@@ -118,7 +118,7 @@ set( fgx_HDRS src/xobjects/xsettings.h src/settings/settingsdialog.h src/network
     src/utilities/workThread.h src/utilities/loadAptDat.h src/xmarble/mapmainwindow.h
     src/xmarble/mappanel.h src/xmarble/mapcorewidget.h src/network/crossfeedjson.h src/mpmap/flightsmodel.h
     src/xwidgets/toolbargroup.h src/navdata/navdatawidget.h src/navdata/navdatamodel.h
-    src/xmarble/mapviewsmodel.h src/xmarble/mapselectdialog.h )
+    src/xmarble/mapviewsmodel.h src/xmarble/mapselectdialog.h src/xmarble/flightspaintlayer.h )
 
 set( fgx_OTHERS src/xwidgets/xtreewidgetitem.h src/utilities/utilities.h src/airports/airportsdata.h
     src/aircraft/aircraftdata.h src/utilities/zlib/inftrees.h src/utilities/zlib/inflate.h

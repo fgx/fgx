@@ -46,6 +46,8 @@ MapSelectDialog::MapSelectDialog(MainObject *mob, QWidget *parent) :
     this->tree->setColumnHidden(MapViewsModel::C_LON, hidd);
     this->tree->setColumnHidden(MapViewsModel::C_ZOOM, hidd);
 
+    this->tree->header()->hide();
+
     this->setMinimumWidth(300);
     this->setMinimumHeight(600);
 
