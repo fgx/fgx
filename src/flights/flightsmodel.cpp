@@ -282,3 +282,8 @@ void FlightsModel::on_dns(const QHostInfo &host)
     qDebug() << "DNS" << host.addresses();
 }
 
+
+// QList <FlightPositions> FlightsModel::get_trails(QString callsign)
+//{
+//     return this->flightPositions[callsign]->cooordinates;
+//}

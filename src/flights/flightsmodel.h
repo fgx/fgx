@@ -68,6 +68,8 @@ public slots:
  //void on_server_error(QNetworkReply::NetworkError);
 // void on_server_ready_read();
  //void on_server_read_finished();
+ //QList <FlightPositions> get_trails(QString callsign);
+
 
  void on_server_finished(QNetworkReply *reply);
 

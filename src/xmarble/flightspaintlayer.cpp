@@ -75,7 +75,6 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
     {
         //bool lat_ok;
         //bool lon_ok;
-
         // Yes,, LON, LAT is order !!
         Marble::GeoDataCoordinates blip(this->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
                                         this->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
@@ -83,6 +82,13 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
                                         Marble::GeoDataCoordinates::Degree
                         );
         painter->drawEllipse(blip, 5, 5);
+        QString callsign = this->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text();
+        QList <GeoDataCoordinates> trails = this->flightsModel->flightPositions[callsign]->blips;
+        for(int ti = 0; ti < trails.length(); ti++){
+
+            Marble::GeoDataCoordinates t_blip  = trails.at(ti);
+            painter->drawEllipse(t_blip, 2, 2);
+        }
 
         //qreal xx;
         //qreal yy;
