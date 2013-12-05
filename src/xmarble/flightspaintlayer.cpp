@@ -4,7 +4,8 @@
 
 #include "flightspaintlayer.h"
 
-
+// This stuff is verbatim as a start from
+// http://techbase.kde.org/Projects/Marble/LayerInterface
 
 FlightsPaintLayer::FlightsPaintLayer(MarbleWidget* widget) : m_widget(widget), m_index(0)
 {
@@ -26,7 +27,7 @@ QStringList FlightsPaintLayer::renderPosition() const
     //layers << "ORBIT" << "USER_TOOLS" << "STARS";
 
     int index = m_index % layers.size();
-    qDebug() << QStringList() << layers.at(index);
+    //qDebug() << QStringList() << layers.at(index);
     return QStringList() << layers.at(index);
 }
 
@@ -44,7 +45,7 @@ bool FlightsPaintLayer::eventFilter(QObject *obj, QEvent *event)
 
     return false;
 }
-
+/*
 GeoDataCoordinates FlightsPaintLayer::approximate(const GeoDataCoordinates &base, qreal angle, qreal dist) const
 {
     // This is just a rough estimation that ignores projections.
@@ -53,12 +54,13 @@ GeoDataCoordinates FlightsPaintLayer::approximate(const GeoDataCoordinates &base
     return GeoDataCoordinates ( base.longitude(deg) + 1.5 * dist * sin(angle),
                 base.latitude(deg) + dist * cos(angle), 0.0, deg);
 }
+*/
 
 bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
     const QString& renderPos, GeoSceneLayer * layer )
 {
     // Have window title reflect the current paint layer
-    qDebug() << renderPosition().first();
+    //qDebug() << renderPosition().first();
     m_widget->setWindowTitle(renderPosition().first());
     GeoDataCoordinates home(8.4, 48.0, 0.0, GeoDataCoordinates::Degree);
     QTime now = QTime::currentTime();
@@ -80,8 +82,8 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
                                         0.0, //this->flightsModel->item(idx, FlightsModel::C_ALTITUDE)->text().toInt() * 10,
                                         Marble::GeoDataCoordinates::Degree
                         );
-
         painter->drawEllipse(blip, 5, 5);
+
         //qreal xx;
         //qreal yy;
         //screenCoordinates(blip.longitude(Marble::GeoDataCoordinates::Degree),

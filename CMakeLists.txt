@@ -100,7 +100,9 @@ set( fgx_SRCS src/main.cpp src/xobjects/xsettings.cpp src/settings/settingsdialo
     src/utilities/dirDialog.cpp src/launcher/menuwidget.cpp src/utilities/workThread.cpp
     src/utilities/loadAptDat.cpp src/utilities/simgear/SGGeodesy.cpp src/xmarble/mapmainwindow.cpp
     src/xmarble/mappanel.cpp src/xmarble/mapcorewidget.cpp src/xmarble/xmarblewidget.cpp
-    src/network/crossfeedjson.cpp src/mpmap/flightsmodel.cpp src/xwidgets/toolbargroup.cpp
+    src/network/crossfeedjson.cpp
+    src/flights/flightsmodel.cpp src/flights/flightpositions.cpp
+    src/xwidgets/toolbargroup.cpp
     src/navdata/navdatawidget.cpp src/navdata/navdatamodel.cpp src/xmarble/mapviewsmodel.cpp
     src/xmarble/mapselectdialog.cpp src/xmarble/flightspaintlayer.cpp )
 
@@ -116,7 +118,8 @@ set( fgx_HDRS src/xobjects/xsettings.h src/settings/settingsdialog.h src/network
     src/xwidgets/xcommandpreviewidget.h src/xwidgets/xdebugtreewidget.h src/map/openlayerwidget.h
     src/airports/metarwidget.h src/utilities/fileDialog.h src/utilities/dirDialog.h src/launcher/menuwidget.h
     src/utilities/workThread.h src/utilities/loadAptDat.h src/xmarble/mapmainwindow.h
-    src/xmarble/mappanel.h src/xmarble/mapcorewidget.h src/network/crossfeedjson.h src/mpmap/flightsmodel.h
+    src/xmarble/mappanel.h src/xmarble/mapcorewidget.h src/network/crossfeedjson.h
+    src/flights/flightsmodel.h src/flights/flightpositions.h
     src/xwidgets/toolbargroup.h src/navdata/navdatawidget.h src/navdata/navdatamodel.h
     src/xmarble/mapviewsmodel.h src/xmarble/mapselectdialog.h src/xmarble/flightspaintlayer.h )
 
@@ -127,11 +130,13 @@ set( fgx_OTHERS src/xwidgets/xtreewidgetitem.h src/utilities/utilities.h src/air
     src/utilities/zlib/deflate.h src/utilities/zlib/crc32.h src/utilities/zlib/trees.h
     src/utilities/fgx_gzlib.h src/utilities/helpers.h src/xobjects/latlng.h src/xobjects/xopt.h
     src/aircraft/xaero.h src/app_config.h src/utilities/simgear/SGGeodesy.h src/utilities/simgear/constants.h
-    src/utilities/simgear/compiler.h src/xmarble/xmarblewidget.h )
+    src/utilities/simgear/compiler.h src/xmarble/xmarblewidget.h
+    src/flights/flightsmodel.h src/flights/flightpositions.h )
 
 set( fgx_RCS src/resources/ycons.qrc src/resources/artwork.qrc src/resources/fonts.qrc src/resources/openlayers.qrc
     src/resources/default.qrc src/resources/images.qrc src/resources/marble_icons.qrc
     )
+
 
 include_directories( src/utilities/zlib src/xwidgets src/logs src/aircraft src/launcher src/xmarble src/airports
     src/panes src/map src src/xobjects src/utilities/simgear src/props src/network src/resources

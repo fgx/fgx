@@ -7,7 +7,7 @@
 #include <marble/GeoPainter.h>
 #include <marble/LayerInterface.h>
 
-#include "mpmap/flightsmodel.h"
+#include "flights/flightsmodel.h"
 class FlightsModel;
 
 
@@ -33,7 +33,7 @@ public:
     // Overriding QObject
     virtual bool eventFilter(QObject *obj, QEvent *event);
 
-    GeoDataCoordinates approximate(const GeoDataCoordinates &base, qreal angle, qreal dist) const;
+    //GeoDataCoordinates approximate(const GeoDataCoordinates &base, qreal angle, qreal dist) const;
 
     void register_flights_model(FlightsModel *fmod);
 

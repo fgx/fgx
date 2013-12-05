@@ -17,19 +17,10 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
+#include "flights/flightpositions.h"
 
 #include "marble/GeoDataCoordinates.h"
-
 using namespace Marble;
-
-// Class to store a list of last positions..
-// this could be self contained .. but for now we push at front to the max at end
-class XPositions
-{
-public:
-    QList<GeoDataCoordinates> coordinates;
-
-};
 
 
 class FlightsModel : public QStandardItemModel
@@ -63,10 +54,9 @@ public:
     QTimer *timer;
 
     QNetworkAccessManager *netMan;
-    //QNetworkReply  *reply;
-    //QString server_string;
-    // QHash<QString, QList<Marble::GeoDataCoordinates>> positions;
-    QHash<QString, XPositions> trailPositions;
+
+    // flightPositions
+    QHash<QString, FlightPositions*> flightPositions;
 
 
 signals:

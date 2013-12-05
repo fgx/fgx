@@ -36,7 +36,7 @@ class MainObject;
 
 #include "aircraft/xaero.h"
 
-#include "mpmap/flightsmodel.h"
+#include "flights/flightsmodel.h"
 class FlightsModel;
 
 

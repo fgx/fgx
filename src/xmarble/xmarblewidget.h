@@ -4,7 +4,7 @@
 
 #include <QStandardItemModel>
 
-#include "mpmap/flightsmodel.h"
+#include "flights/flightsmodel.h"
 class FlightsModel;
 
 #include "marble/MarbleGlobal.h"

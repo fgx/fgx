@@ -32,7 +32,7 @@
 #include "xobjects/xsettingsmodel.h"
 class XSettingsModel;
 
-#include "mpmap/flightsmodel.h"
+#include "flights/flightsmodel.h"
 class FlightsModel;
 
 #include "xmarble/mapviewsmodel.h"
