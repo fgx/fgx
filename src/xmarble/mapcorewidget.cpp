@@ -291,9 +291,9 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	//====================================================================
 	//== Marble Map
 	//====================================================================
-    marbleWidget = new XMarbleWidget();
+    marbleWidget = new MarbleWidget();
 	midLayout->addWidget(marbleWidget, 10);
-    marbleWidget->register_flights_model(this->mainObject->flightsModel);
+    //marbleWidget->register_flights_model(this->mainObject->flightsModel);
 
 
     marbleWidget->setMapThemeId("earth/openstreetmap/openstreetmap.dgml");

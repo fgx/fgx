@@ -35,8 +35,8 @@ class MainObject;
 #include "xmarble/mapselectdialog.h"
 class MapSelectDialog;
 
-#include "xmarble/xmarblewidget.h"
-class XMarbleWidget;
+//#include "xmarble/xmarblewidget.h"
+//class XMarbleWidget;
 
 #include "xmarble/flightspaintlayer.h"
 
@@ -76,7 +76,8 @@ public:
 
 	QToolBar *toolbarAirports;
 
-	XMarbleWidget *marbleWidget;
+    //XMarbleWidget *marbleWidget;
+    MarbleWidget *marbleWidget;
     //GeoDataDocument *docFlights;
     //GeoDataDocument *docTracks;
     FlightsPaintLayer *flightsLayer;
