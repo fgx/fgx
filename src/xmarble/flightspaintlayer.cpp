@@ -77,7 +77,8 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
         // Yes,, LON, LAT is order !!
         Marble::GeoDataCoordinates blip(this->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
                                         this->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
-                                        0.0, Marble::GeoDataCoordinates::Degree
+                                        0.0, //this->flightsModel->item(idx, FlightsModel::C_ALTITUDE)->text().toInt() * 10,
+                                        Marble::GeoDataCoordinates::Degree
                         );
 
         painter->drawEllipse(blip, 5, 5);
