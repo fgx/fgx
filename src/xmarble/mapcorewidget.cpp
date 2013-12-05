@@ -23,8 +23,8 @@
 
 #include "xmarble/mapcorewidget.h"
 
-#include "marble/MarbleModel.h"
-#include "marble/PluginInterface.h"
+//#include "marble/MarbleModel.h"
+//#include "marble/PluginInterface.h"
 
 
 const QString MapCoreWidget::SETTINGS_TAG = QString("map_views");

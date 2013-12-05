@@ -4,11 +4,15 @@
 #include <QMainWindow>
 #include <QDockWidget>
 #include <QTabWidget>
-#include "xobjects/mainobject.h"
+
 
 #include "marble/MarbleWidget.h"
 #include "marble/MarbleModel.h"
 #include "marble/GeoDataTreeModel.h"
+
+
+#include "xobjects/mainobject.h"
+class MainObject;
 
 #include "xmarble/mapcorewidget.h"
 class MapCoreWidget;

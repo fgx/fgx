@@ -7,7 +7,7 @@
 #include "flights/flightsmodel.h"
 class FlightsModel;
 
-#include "marble/MarbleGlobal.h"
+//#include "marble/MarbleGlobal.h"
 #include "marble/MarbleWidget.h"
 
 #include "marble/GeoPainter.h"

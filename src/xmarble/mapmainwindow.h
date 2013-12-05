@@ -4,7 +4,10 @@
 #include <QMainWindow>
 #include <QDockWidget>
 #include <QTabWidget>
+
+
 #include "xobjects/mainobject.h"
+class MainObject;
 
 #include "mpmap/flightswidget.h"
 class FlightsWidget;

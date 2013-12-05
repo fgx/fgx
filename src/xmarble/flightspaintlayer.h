@@ -3,7 +3,7 @@
 
 #include <marble/MarbleWidget.h>
 #include <marble/MarbleMap.h>
-#include <marble/MarbleModel.h>
+//#include <marble/MarbleModel.h>
 #include <marble/GeoPainter.h>
 #include <marble/LayerInterface.h>
 
