@@ -243,7 +243,8 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
                     row = this->indexFromItem(iCallsignn).row();
 
                     // Create the positions
-                    this->flightPositions[callsign] = new FlightPositions();
+                    p = new FlightPositions();
+                    this->flightPositions[callsign] = p;
 
                 }
                 // Update all the stuff, including the stuff newly added..
@@ -263,7 +264,7 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
                 this->item(row, C_FLAG)->setText( QString::number(timm) );
                 this->item(row, C_FLAG)->setData(  QString::number(timm) , SORT_ROLE);
 
-                p->update(lat, lon, alt_ft, hdg, spd_kt);
+                p->update_position(lat, lon, alt_ft, hdg, spd_kt);
 
                 //}
             } //valid callsign

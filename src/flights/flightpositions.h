@@ -1,7 +1,7 @@
 #ifndef FLIGHTPOSITIONS_H
 #define FLIGHTPOSITIONS_H
 
-#include <QList>
+#include <QQueue>
 
 #include "marble/GeoDataCoordinates.h"
 
@@ -21,7 +21,7 @@ public:
     QList<GeoDataCoordinates> cooordinates;
 
     //lat, lon, alt_ft, hdg, spd_kt
-    void update(QString lat, QString lon, QString alt_ft, QString hdg, QString spd_ft);
+    void update_position(QString lat, QString lon, QString alt_ft, QString hdg, QString spd_ft);
 
 };
 
