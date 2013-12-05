@@ -19,8 +19,16 @@ class FlightsPaintLayer : public QObject, public LayerInterface
 {
    // Q_OBJECT
 public:
+    enum MODE{
+        MINI_MODE,
+        NORMAL_MODE
+    };
     // Constructor
-    FlightsPaintLayer(MarbleWidget* widget);
+    FlightsPaintLayer(MarbleWidget* widget, MODE min_mode);
+
+
+    int map_mode;
+
 
     FlightsModel *flightsModel;
 

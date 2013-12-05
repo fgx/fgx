@@ -356,7 +356,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     //this->docFlights = new GeoDataDocument();
     //this->marbleWidget->model()->treeModel()->addDocument( this->docFlights );
 
-    this->flightsLayer = new FlightsPaintLayer(this->marbleWidget);
+    this->flightsLayer = new FlightsPaintLayer(this->marbleWidget, FlightsPaintLayer::NORMAL_MODE);
     this->marbleWidget->addLayer(this->flightsLayer);
     this->marbleWidget->installEventFilter(this->flightsLayer);
     // TODO - there's got to be a more elegant way to do this

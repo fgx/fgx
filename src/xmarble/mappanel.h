@@ -23,7 +23,7 @@ class NavDataWidget;
 #include "mpmap/flightswidget.h"
 class FlightsWidget;
 
-// #include "xmarble/flightspaintlayer.h"
+#include "xmarble/flightspaintlayer.h"
 
 using namespace Marble;
 
@@ -51,6 +51,7 @@ public:
     NavDataWidget *navDataWidget;
     FlightsWidget *flightsWidget;
 
+    FlightsPaintLayer *flightsMiniLayer;
 
 
 signals:

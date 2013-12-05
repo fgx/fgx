@@ -91,7 +91,14 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
 
     this->mapSmall->setShowBackground(false);
 
-    this->mapSmall->setZoom(500);
+    this->mapSmall->zoomView(400);
+
+
+    this->flightsMiniLayer = new FlightsPaintLayer(this->mapSmall, FlightsPaintLayer::MINI_MODE);
+    this->mapSmall->addLayer(this->flightsMiniLayer);
+    this->mapSmall->installEventFilter(this->flightsMiniLayer);
+    // TODO - there's got to be a more elegant way to do this
+    this->flightsMiniLayer->register_flights_model(this->mainObject->flightsModel);
 
 }
 
