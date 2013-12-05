@@ -7,6 +7,7 @@
 #include <marble/GeoPainter.h>
 #include <marble/LayerInterface.h>
 
+
 #include "flights/flightsmodel.h"
 class FlightsModel;
 

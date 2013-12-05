@@ -23,7 +23,7 @@
 //#include "marble/GeoDataPlacemark.h"
 //#include "marble/GeoDataTreeModel.h"
 //#include "marble/GeoDataStyle.h"
-//#include "marble/GeoDataTrack.h"
+#include "marble/AbstractFloatItem.h"
 
 
 #include "aircraft/xaero.h"

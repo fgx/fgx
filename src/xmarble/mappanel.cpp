@@ -68,7 +68,7 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->mapSmall = new MarbleWidget();
     this->dockSmall->setWidget(this->mapSmall);
     this->mapSmall->setMapThemeId("earth/plain/plain.dgml");
-    this->mapSmall->setProjection( Marble::Spherical );
+    this->mapSmall->setProjection( Marble::Mercator );
 
     this->mapSmall->setShowGrid(false);
     this->mapSmall->setShowCompass(false);
@@ -77,10 +77,17 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->mapSmall->setShowOverviewMap(false);
     this->mapSmall->setShowScaleBar(false);
 
-    this->mapSmall->setShowBorders(true);
+    this->mapSmall->floatItem("navigation")->hide();
+
+    this->mapSmall->setShowBorders(false);
     this->mapSmall->setShowRelief(true);
 
     this->mapSmall->setShowPlaces(false);
+    this->mapSmall->setShowCities(false);
+    this->mapSmall->setShowOtherPlaces(false);
+
+
+
 
     this->mapSmall->setShowBackground(false);
 

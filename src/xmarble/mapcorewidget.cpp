@@ -335,6 +335,16 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
             this, SLOT(on_map_moved(const GeoDataLatLonAltBox &))
     );
 
+    foreach ( AbstractFloatItem * floatItem, marbleWidget->floatItems() ){
+            qDebug() <<  floatItem->nameId() ;
+            if ( floatItem && floatItem->nameId() == "compass" ) {
+
+                // Put the compass onto the left hand side
+                floatItem->setPosition( QPoint( 10, 10 ) );
+                // Make the content size of the compass smaller
+                floatItem->setContentSize( QSize( 50, 50 ) );
+            }
+    }
 
     //------------------------------------------
     // Test placemark

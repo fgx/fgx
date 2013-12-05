@@ -60,7 +60,7 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
     painter->setRenderHint(QPainter::Antialiasing, true);
 
     // Large circle built by 60 small circles
-
+    //layer->
 
     //== Draw Radar Widgets
     for(int idx=0; idx < this->flightsModel->rowCount(); idx++)
@@ -86,13 +86,6 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
             painter->drawEllipse(t_blip.coord, 2, 2);
         }
     }
-
-
-    // hour, minute, second hand
-    //painter->drawLine(home, approximate(home, M_PI * now.minute() / 30.0, 0.75));
-    //painter->drawLine(home, approximate(home, M_PI * now.hour() / 6.0, 0.5));
-    //painter->setPen(QPen(QBrush(Qt::red), 4.0, Qt::SolidLine, Qt::RoundCap ));
-    //painter->drawLine(home, approximate(home, M_PI * now.second() / 30.0, 1.0));
 
     return true;
 }
