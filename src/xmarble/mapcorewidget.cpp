@@ -448,7 +448,8 @@ void MapCoreWidget::center_ksfo()
     //= Center on SF Bay
     this->marbleWidget->setCenterLatitude(37.638);
     this->marbleWidget->setCenterLongitude(-122.215);
-    this->marbleWidget->setZoom(2000);
+    //this->marbleWidget->setZoom(2000);
+    this->marbleWidget->zoomView(2000);
     this->marbleWidget->update();
 }
 
