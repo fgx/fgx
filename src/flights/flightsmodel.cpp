@@ -58,7 +58,7 @@ FlightsModel::FlightsModel(QObject *parent) :
     // does not accomodate so far, DNS fail, and last reponse time, lag etc..
     // so this is up for grabs of how to deal with things.....
     this->timer = new QTimer(this);
-    this->timer->setInterval(2000);
+    this->timer->setInterval(1000);
     this->timer->setSingleShot(false);
     this->connect(this->timer, SIGNAL(timeout()),
                   this, SLOT(fetch_server())
