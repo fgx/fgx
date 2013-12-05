@@ -31,9 +31,9 @@ public:
                         const QString& renderPos = "NONE", GeoSceneLayer * layer = 0 );
 
     // Overriding QObject
+    // TODO Make this work is key
     virtual bool eventFilter(QObject *obj, QEvent *event);
 
-    //GeoDataCoordinates approximate(const GeoDataCoordinates &base, qreal angle, qreal dist) const;
 
     void register_flights_model(FlightsModel *fmod);
 

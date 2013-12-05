@@ -45,25 +45,17 @@ bool FlightsPaintLayer::eventFilter(QObject *obj, QEvent *event)
 
     return false;
 }
-/*
-GeoDataCoordinates FlightsPaintLayer::approximate(const GeoDataCoordinates &base, qreal angle, qreal dist) const
-{
-    // This is just a rough estimation that ignores projections.
-    // It only works for short distances. Don't use in real code.
-    GeoDataCoordinates::Unit deg = GeoDataCoordinates::Degree;
-    return GeoDataCoordinates ( base.longitude(deg) + 1.5 * dist * sin(angle),
-                base.latitude(deg) + dist * cos(angle), 0.0, deg);
-}
-*/
+
+
 
 bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
     const QString& renderPos, GeoSceneLayer * layer )
 {
     // Have window title reflect the current paint layer
     //qDebug() << renderPosition().first();
-    m_widget->setWindowTitle(renderPosition().first());
-    GeoDataCoordinates home(8.4, 48.0, 0.0, GeoDataCoordinates::Degree);
-    QTime now = QTime::currentTime();
+    //m_widget->setWindowTitle(renderPosition().first());
+    //GeoDataCoordinates home(8.4, 48.0, 0.0, GeoDataCoordinates::Degree);
+    //QTime now = QTime::currentTime();
 
     painter->setRenderHint(QPainter::Antialiasing, true);
 
@@ -73,33 +65,25 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
     //== Draw Radar Widgets
     for(int idx=0; idx < this->flightsModel->rowCount(); idx++)
     {
-        //bool lat_ok;
-        //bool lon_ok;
+
         // Yes,, LON, LAT is order !!
         Marble::GeoDataCoordinates blip(this->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
                                         this->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
-                                        0.0, //this->flightsModel->item(idx, FlightsModel::C_ALTITUDE)->text().toInt() * 10,
+                                        0.0, //this->flightsModel->item(idx, FlightsModel::C_ALTITUDE)->text().toInt() * 10, << mad idea to make flights at 100 * 10 and exagerated position
                                         Marble::GeoDataCoordinates::Degree
                         );
         painter->drawEllipse(blip, 5, 5);
+
         QString callsign = this->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text();
         QList <GeoDataCoordinates> trails = this->flightsModel->flightPositions[callsign]->blips;
-        for(int ti = 0; ti < trails.length(); ti++){
-            qDebug() << callsign << ti;
-            Marble::GeoDataCoordinates t_blip  = trails.at(ti);
-            painter->drawEllipse(t_blip, 2, 2);
-        }
+        qDebug() << callsign << trails.length();
+        for(int tidx = 0; tidx < trails.length(); tidx++){
 
-        //qreal xx;
-        //qreal yy;
-        //screenCoordinates(blip.longitude(Marble::GeoDataCoordinates::Degree),
-        //				  blip.latitude(Marble::GeoDataCoordinates::Degree),
-        //				  xx, yy
-        //);
+            Marble::GeoDataCoordinates t_blip  = trails.at( tidx );
+            painter->drawEllipse(t_blip, 5, 5);
+        }
     }
 
-    //for (int i=0; i<60; ++i)
-     //   painter->drawEllipse(approximate(home, M_PI * i / 30.0, 1.0), 5, 5);
 
     // hour, minute, second hand
     //painter->drawLine(home, approximate(home, M_PI * now.minute() / 30.0, 0.75));
