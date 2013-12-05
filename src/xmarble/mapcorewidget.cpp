@@ -550,7 +550,8 @@ void MapCoreWidget::on_map_view_action(QAction *act)
 {
     this->marbleWidget->setCenterLatitude(act->property("lat").toReal());
     this->marbleWidget->setCenterLongitude(act->property("lon").toReal());
-    this->marbleWidget->setZoom(act->property("zoom").toInt());
+    //this->marbleWidget->setZoom(act->property("zoom").toInt());
+    this->marbleWidget->zoomView(act->property("zoom").toInt());
 }
 
 
@@ -573,7 +574,8 @@ void MapCoreWidget::center_on(XAero aero)
     g.setLatitude(aero.lat.toFloat(), GeoDataCoordinates::Degree);
     g.setLongitude(aero.lon.toFloat(), GeoDataCoordinates::Degree);
     this->marbleWidget->centerOn(g);
-    this->marbleWidget->setZoom(2300);
+    //this->marbleWidget->setZoom(2300);
+    this->marbleWidget->zoomView(2300);
 }
 
 //=======================================
@@ -605,8 +607,13 @@ void MapCoreWidget::on_open_map_view(QString tab_action, QString view)
     }
 }
 
+void MapCoreWidget::update_flights()
+{
+    this->marbleWidget->update();
+}
+
 //=================================================================================================
-//void MapCoreWidget::update_flights()
+//void MapCoreWidget::flights()
 //{
     //return;
 

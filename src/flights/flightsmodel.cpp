@@ -223,14 +223,14 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
                     insertItemsList << new QStandardItem( it.value().property("fid").toString() )
                                     << iCallsignn
 
-                                    << new QStandardItem( it.value().property("alt_ft").toString() )
-                                    << new QStandardItem( it.value().property("hdg").toString() )
-                                    << new QStandardItem( it.value().property("spd_kts").toString() )
+                                    << new QStandardItem( alt_ft )
+                                    << new QStandardItem( hdg )
+                                    << new QStandardItem( spd_kt )
 
                                     << new QStandardItem( aero_model )
 
-                                    << new QStandardItem( it.value().property("lat").toString() )
-                                    << new QStandardItem( it.value().property("lon").toString() )
+                                    << new QStandardItem( lat )
+                                    << new QStandardItem( lon )
 
                                      << new QStandardItem( QString::number(timm) );
 
@@ -257,18 +257,17 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
 
                 // Update all the stuff, including the stuff newly added..
                 // The model is sorted by SORT_ROLE, hence numbers are 0 padded
-                this->item(row, C_ALTITUDE)->setText(  it.value().property("alt_ft").toString());
+                this->item(row, C_ALTITUDE)->setText(  alt_ft );
+                this->item(row, C_ALTITUDE)->setData(  alt_ft.rightJustified(6, QChar('0')), SORT_ROLE);
 
-                this->item(row, C_ALTITUDE)->setData(  it.value().property("alt_ft").toString().rightJustified(6, QChar('0')), SORT_ROLE);
+                this->item(row, C_HEADING)->setText(hdg);
+                this->item(row, C_HEADING)->setData(  hdg.rightJustified(6, QChar('0')), SORT_ROLE);
 
-                this->item(row, C_HEADING)->setText(it.value().property("hdg").toString());
-                this->item(row, C_HEADING)->setData(  it.value().property("hdg").toString().rightJustified(6, QChar('0')), SORT_ROLE);
+                this->item(row, C_SPEED)->setText( spd_kt );
+                this->item(row, C_SPEED)->setData(  spd_kt.rightJustified(6, QChar('0')), SORT_ROLE);
 
-                this->item(row, C_SPEED)->setText(it.value().property("spd_kts").toString());
-                this->item(row, C_SPEED)->setData(  it.value().property("spd_kts").toString().rightJustified(6, QChar('0')), SORT_ROLE);
-
-                this->item(row, C_LAT)->setText(it.value().property("lat").toString());
-                this->item(row, C_LON)->setText(it.value().property("lon").toString());
+                this->item(row, C_LAT)->setText(lat);
+                this->item(row, C_LON)->setText(lon);
 
                 this->item(row, C_FLAG)->setText( QString::number(timm) );
                 this->item(row, C_SPEED)->setData(  QString::number(timm) , SORT_ROLE);

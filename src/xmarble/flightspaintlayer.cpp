@@ -60,12 +60,12 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
     painter->setRenderHint(QPainter::Antialiasing, true);
 
     // Large circle built by 60 small circles
-    painter->setPen( QPen(QBrush(QColor::fromRgb(255,0,0,200)), 3.0, Qt::SolidLine, Qt::RoundCap ) );
+
 
     //== Draw Radar Widgets
     for(int idx=0; idx < this->flightsModel->rowCount(); idx++)
     {
-
+        painter->setPen( QPen(QBrush(QColor::fromRgb(255,0,0,255)), 3.0, Qt::SolidLine, Qt::RoundCap ) );
         // Yes,, LON, LAT is order !!
         Marble::GeoDataCoordinates blip(this->flightsModel->item(idx, FlightsModel::C_LON)->text().toFloat(),
                                         this->flightsModel->item(idx, FlightsModel::C_LAT)->text().toFloat(),
@@ -76,11 +76,13 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
 
         QString callsign = this->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text();
         QList <GeoDataCoordinates> trails = this->flightsModel->flightPositions[callsign]->blips;
-        qDebug() << callsign << trails.length();
+        //qDebug() << callsign << trails.length();
+
+        painter->setPen( QPen(QBrush(QColor::fromRgb(255,0,0,150)), 1.0, Qt::SolidLine, Qt::RoundCap ) );
         for(int tidx = 0; tidx < trails.length(); tidx++){
 
             Marble::GeoDataCoordinates t_blip  = trails.at( tidx );
-            painter->drawEllipse(t_blip, 5, 5);
+            painter->drawEllipse(t_blip, 2, 2);
         }
     }
 

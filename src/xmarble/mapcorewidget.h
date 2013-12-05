@@ -139,7 +139,7 @@ public slots:
     //void on_load_view();
     //void load_views();
 
-    //void update_flights();
+    void update_flights();
     void center_ksfo();
 
     void center_on(XAero aero);
