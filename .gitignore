@@ -1,7 +1,7 @@
 fgx-build-desktop*/
 build-*/
 .DS_*
-
+build/
 CMakeCache.txt
 CMakeLists.txt.user
 CMakeFiles
