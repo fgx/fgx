@@ -17,7 +17,6 @@
 #include <QToolBar>
 
 
-#include "marble/MarbleGlobal.h"
 #include "marble/MarbleWidget.h"
 #include "marble/GeoDataLatLonAltBox.h"
 #include "marble/GeoDataDocument.h"
