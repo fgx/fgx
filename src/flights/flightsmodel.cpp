@@ -257,8 +257,10 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
 
                 // Update all the stuff, including the stuff newly added..
                 // The model is sorted by SORT_ROLE, hence numbers are 0 padded
+                QColor alt_color = FlightsModel::get_altitude_color(alt_ft);
                 this->item(row, C_ALTITUDE)->setText(  alt_ft );
                 this->item(row, C_ALTITUDE)->setData(  alt_ft.rightJustified(6, QChar('0')), SORT_ROLE);
+                this->item(row, C_ALTITUDE)->setBackground( alt_color );
 
                 this->item(row, C_HEADING)->setText(hdg);
                 this->item(row, C_HEADING)->setData(  hdg.rightJustified(6, QChar('0')), SORT_ROLE);
@@ -270,7 +272,7 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
                 this->item(row, C_LON)->setText(lon);
 
                 this->item(row, C_FLAG)->setText( QString::number(timm) );
-                this->item(row, C_SPEED)->setData(  QString::number(timm) , SORT_ROLE);
+                this->item(row, C_FLAG)->setData(  QString::number(timm) , SORT_ROLE);
 
                  p->update_position(lat, lon, alt_ft, hdg, spd_kt);
             } //valid callsign
@@ -286,6 +288,68 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
 void FlightsModel::on_dns(const QHostInfo &host)
 {
     qDebug() << "DNS" << host.addresses();
+}
+
+QColor FlightsModel::get_altitude_color(QString altitude)
+{
+    /* 31 colors - ie < 1,000 > 31,000
+        http://www.zonums.com/online/color_ramp/
+        200,0,0
+        9
+        255,255,0
+        9
+        0,255,0
+        9
+        0,255,255
+    */
+    QList<QString> colors;
+    colors << "#C80000"
+           << "#CD1900"
+           << "#D33300"
+           << "#D84C00"
+           << "#DE6600"
+           << "#E37F00"
+           << "#E99900"
+           << "#EEB200"
+           << "#F4CC00"
+           << "#F9E500"
+           << "#FFFF00"
+           << "#E5FF00"
+           << "#CCFF00"
+           << "#B2FF00"
+           << "#99FF00"
+           << "#7FFF00"
+           << "#66FF00"
+           << "#4CFF00"
+           << "#33FF00"
+           << "#19FF00"
+           << "#00FF00"
+           << "#00FF19"
+           << "#00FF33"
+           << "#00FF4C"
+           << "#00FF66"
+           << "#00FF7F"
+           << "#00FF99"
+           << "#00FFB2"
+           << "#00FFCC"
+           << "#00FFE5"
+           << "#00FFFF";
+
+    // take altitude and find index
+    int alt_idx = altitude.toInt() / 1000;
+    if (alt_idx == 0){
+        alt_idx = 1;
+    }else if(alt_idx > 31){
+        alt_idx = 31;
+    }
+
+    //qDebug() << altitude << alt;
+
+
+    QColor color;
+    color.setNamedColor( colors.at(alt_idx - 1) );
+    //color.setAlpha(100);
+    return color;
 }
 
 

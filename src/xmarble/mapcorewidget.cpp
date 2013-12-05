@@ -352,6 +352,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     // TODO - there's got to be a more elegant way to do this
     this->flightsLayer->register_flights_model(this->mainObject->flightsModel);
 
+    //this->marbleWidget->mapTheme()->
 
     //this->docTracks = new GeoDataDocument();
     //this->marbleWidget->model()->treeModel()->addDocument( this->docTracks );

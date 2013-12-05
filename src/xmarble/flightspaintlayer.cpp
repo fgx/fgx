@@ -75,14 +75,15 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
         painter->drawEllipse(blip, 5, 5);
 
         QString callsign = this->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text();
-        QList <GeoDataCoordinates> trails = this->flightsModel->flightPositions[callsign]->blips;
+        QList <XPosition> trails = this->flightsModel->flightPositions[callsign]->positions;
         //qDebug() << callsign << trails.length();
 
-        painter->setPen( QPen(QBrush(QColor::fromRgb(255,0,0,150)), 1.0, Qt::SolidLine, Qt::RoundCap ) );
+
         for(int tidx = 0; tidx < trails.length(); tidx++){
 
-            Marble::GeoDataCoordinates t_blip  = trails.at( tidx );
-            painter->drawEllipse(t_blip, 2, 2);
+            XPosition t_blip  = trails.at( tidx );
+            painter->setPen( QPen(QBrush(t_blip.alt_color), 1.0, Qt::SolidLine, Qt::RoundCap ) );
+            painter->drawEllipse(t_blip.coord, 2, 2);
         }
     }
 

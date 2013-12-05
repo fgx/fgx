@@ -57,7 +57,7 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
 
     //================================================================================
     //= Dock for Small Map
-    /*
+
     this->dockSmall = new QDockWidget();
     this->dockSmall->setMaximumHeight(300);
     this->addDockWidget(Qt::RightDockWidgetArea, this->dockSmall );
@@ -85,7 +85,7 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->mapSmall->setShowBackground(false);
 
     this->mapSmall->setZoom(500);
-    */
+
 }
 
 void MapPanel::aircraft_selected(XAero aero)
