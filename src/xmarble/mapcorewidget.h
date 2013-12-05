@@ -19,11 +19,11 @@
 
 #include "marble/MarbleWidget.h"
 #include "marble/GeoDataLatLonAltBox.h"
-#include "marble/GeoDataDocument.h"
-#include "marble/GeoDataPlacemark.h"
-#include "marble/GeoDataTreeModel.h"
-#include "marble/GeoDataStyle.h"
-#include "marble/GeoDataTrack.h"
+//#include "marble/GeoDataDocument.h"
+//#include "marble/GeoDataPlacemark.h"
+//#include "marble/GeoDataTreeModel.h"
+//#include "marble/GeoDataStyle.h"
+//#include "marble/GeoDataTrack.h"
 
 
 #include "aircraft/xaero.h"
@@ -61,7 +61,7 @@ public:
 	MainObject *mainObject;
 
     QHash<QString, GeoDataPlacemark*> blips;
-    QHash<QString, GeoDataTrack*> tracks;
+    //QHash<QString, GeoDataTrack*> tracks;
 
 
     QToolButton *buttBaseLayer;
@@ -77,7 +77,7 @@ public:
 	QToolBar *toolbarAirports;
 
 	XMarbleWidget *marbleWidget;
-    GeoDataDocument *docFlights;
+    //GeoDataDocument *docFlights;
     //GeoDataDocument *docTracks;
     FlightsPaintLayer *flightsLayer;
 
@@ -138,7 +138,7 @@ public slots:
     //void on_load_view();
     //void load_views();
 
-    void update_flights();
+    //void update_flights();
     void center_ksfo();
 
     void center_on(XAero aero);
