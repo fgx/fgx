@@ -85,7 +85,7 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
         QString callsign = this->flightsModel->item(idx, FlightsModel::C_CALLSIGN)->text();
         QList <GeoDataCoordinates> trails = this->flightsModel->flightPositions[callsign]->blips;
         for(int ti = 0; ti < trails.length(); ti++){
-
+            qDebug() << callsign << ti;
             Marble::GeoDataCoordinates t_blip  = trails.at(ti);
             painter->drawEllipse(t_blip, 2, 2);
         }
