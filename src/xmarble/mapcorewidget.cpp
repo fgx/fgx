@@ -349,6 +349,9 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     this->flightsLayer = new FlightsPaintLayer(this->marbleWidget);
     this->marbleWidget->addLayer(this->flightsLayer);
     this->marbleWidget->installEventFilter(this->flightsLayer);
+    // TODO - there's got to be a more elegant way to do this
+    this->flightsLayer->register_flights_model(this->mainObject->flightsModel);
+
 
     //this->docTracks = new GeoDataDocument();
     //this->marbleWidget->model()->treeModel()->addDocument( this->docTracks );
@@ -605,7 +608,7 @@ void MapCoreWidget::on_open_map_view(QString tab_action, QString view)
 //=================================================================================================
 void MapCoreWidget::update_flights()
 {
-    //return;
+    return;
 
     //qDebug() << "update flights";
    // this->marbleWidget->setUpdatesEnabled(false);

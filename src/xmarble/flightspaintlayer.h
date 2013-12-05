@@ -7,6 +7,11 @@
 #include <marble/GeoPainter.h>
 #include <marble/LayerInterface.h>
 
+#include "mpmap/flightsmodel.h"
+class FlightsModel;
+
+
+
 using namespace Marble;
 
 class FlightsPaintLayer : public QObject, public LayerInterface
@@ -15,6 +20,8 @@ class FlightsPaintLayer : public QObject, public LayerInterface
 public:
     // Constructor
     FlightsPaintLayer(MarbleWidget* widget);
+
+    FlightsModel *flightsModel;
 
     // Implemented from LayerInterface
     virtual QStringList renderPosition() const;
@@ -27,6 +34,8 @@ public:
     virtual bool eventFilter(QObject *obj, QEvent *event);
 
     GeoDataCoordinates approximate(const GeoDataCoordinates &base, qreal angle, qreal dist) const;
+
+    void register_flights_model(FlightsModel *fmod);
 
 private:
     MarbleWidget* m_widget;

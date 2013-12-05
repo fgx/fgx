@@ -19,6 +19,8 @@ class NavDataWidget;
 #include "mpmap/flightswidget.h"
 class FlightsWidget;
 
+// #include "xmarble/flightspaintlayer.h"
+
 using namespace Marble;
 
 
@@ -34,7 +36,7 @@ public:
 
     MapCoreWidget *mapWidget;
     MarbleWidget *mapSmall;
-
+    //FlightsPaintLayer *flightsLayer;
 
     QDockWidget *docker;
     QDockWidget *dockSmall;
