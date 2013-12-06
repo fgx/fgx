@@ -9,6 +9,8 @@ message(STATUS "*** Established modules path ${CMAKE_MODULE_PATH}")
 
 project( fgx )
 
+option(SYSTEM_ZLIB "Use the system version of Zlib" OFF)
+
 # Added for DEBUG only
 if(UNIX)
   if(APPLE)
@@ -79,18 +81,29 @@ else ()
 endif ()
 # ============================================================
 
+# =========================================================
+#  ZLIB_FOUND - system has ZLIB
+#  ZLIB_INCLUDE_DIR - the ZLIB include directory
+#  ZLIB_LIBRARIES
+if (SYSTEM_ZLIB)
+    find_package( ZLIB )
+    if (ZLIB_FOUND)
+        include_directories( ${ZLIB_INCLUDE_DIR} )
+        list( APPEND extra_LIBS ${ZLIB_LIBRARIES} )
+        message(STATUS "Using ZLIB includes at: ${ZLIB_INCLUDE_DIR}")
+        message(STATUS "Using ZLIB libraries: ${ZLIB_LIBRARIES}")
+        add_definitions(-DUSE_SYSTEM_ZLIB)
+    endif ()
+endif ()
+# ============================================================
+
 set( fgx_SRCS src/main.cpp src/xobjects/xsettings.cpp src/settings/settingsdialog.cpp src/network/networkwidget.cpp
     src/network/mptelnet.cpp src/aircraft/aircraftwidget.cpp src/airports/airportswidget.cpp
     src/xwidgets/execontrols.cpp src/panes/timeweatherwidget.cpp src/panes/renderingwidget.cpp
     src/panes/coresettingswidget.cpp src/xwidgets/xgroupboxes.cpp src/xobjects/mainobject.cpp
     src/launcher/launcherwindow.cpp src/utilities/statusbar.cpp src/utilities/utilities.cpp
     src/utilities/messagebox.cpp src/airports/importairportsdialog.cpp src/airports/airportsdata.cpp
-    src/aircraft/aircraftdata.cpp src/panes/viewlogwidget.cpp src/utilities/zlib/uncompr.c
-    src/utilities/zlib/trees.c src/utilities/zlib/inftrees.c src/utilities/zlib/inflate.c
-    src/utilities/zlib/inffast.c src/utilities/zlib/infback.c src/utilities/zlib/gzwrite.c
-    src/utilities/zlib/gzread.c src/utilities/zlib/gzlib.c src/utilities/zlib/gzclose.c
-    src/utilities/zlib/deflate.c src/utilities/zlib/crc32.c src/utilities/zlib/compress.c
-    src/utilities/zlib/adler32.c src/utilities/zlib/zutil.c src/utilities/fgx_gzlib.cpp
+    src/aircraft/aircraftdata.cpp src/panes/viewlogwidget.cpp src/utilities/fgx_gzlib.cpp
     src/utilities/helpers.cpp src/xobjects/xprocess.cpp src/props/telnetslave.cpp src/props/propstreewidget.cpp
     src/logs/viewlogswidget.cpp src/xobjects/latlng.cpp src/props/propeditwidget.cpp src/mpmap/mpmapwidget.cpp
     src/mpmap/flightswidget.cpp src/mpmap/xwebpage.cpp src/panes/expertoptionswidget.cpp
@@ -124,10 +137,7 @@ set( fgx_HDRS src/xobjects/xsettings.h src/settings/settingsdialog.h src/network
     src/xmarble/mapviewsmodel.h src/xmarble/mapselectdialog.h src/xmarble/flightspaintlayer.h )
 
 set( fgx_OTHERS src/xwidgets/xtreewidgetitem.h src/utilities/utilities.h src/airports/airportsdata.h
-    src/aircraft/aircraftdata.h src/utilities/zlib/inftrees.h src/utilities/zlib/inflate.h
-    src/utilities/zlib/inffixed.h src/utilities/zlib/inffast.h src/utilities/zlib/gzguts.h
-    src/utilities/zlib/fgx_zutil.h src/utilities/zlib/fgx_zlib.h src/utilities/zlib/fgx_zconf.h
-    src/utilities/zlib/deflate.h src/utilities/zlib/crc32.h src/utilities/zlib/trees.h
+    src/aircraft/aircraftdata.h
     src/utilities/fgx_gzlib.h src/utilities/helpers.h src/xobjects/latlng.h src/xobjects/xopt.h
     src/aircraft/xaero.h src/app_config.h src/utilities/simgear/SGGeodesy.h src/utilities/simgear/constants.h
     src/utilities/simgear/compiler.h src/xmarble/xmarblewidget.h
@@ -137,8 +147,21 @@ set( fgx_RCS src/resources/ycons.qrc src/resources/artwork.qrc src/resources/fon
     src/resources/default.qrc src/resources/images.qrc src/resources/marble_icons.qrc
     )
 
+if (NOT ZLIB_FOUND)
+    message(STATUS "Using local version of Zlib")
+    list( APPEND fgx_SRCS src/utilities/zlib/uncompr.c src/utilities/zlib/trees.c src/utilities/zlib/inftrees.c
+    src/utilities/zlib/inflate.c src/utilities/zlib/inffast.c src/utilities/zlib/infback.c
+    src/utilities/zlib/gzwrite.c src/utilities/zlib/gzread.c src/utilities/zlib/gzlib.c
+    src/utilities/zlib/gzclose.c src/utilities/zlib/deflate.c src/utilities/zlib/crc32.c
+    src/utilities/zlib/compress.c src/utilities/zlib/adler32.c src/utilities/zlib/zutil.c )
+    list( APPEND fgx_OTHERS src/utilities/zlib/inftrees.h src/utilities/zlib/inflate.h
+    src/utilities/zlib/inffixed.h src/utilities/zlib/inffast.h src/utilities/zlib/gzguts.h
+    src/utilities/zlib/fgx_zutil.h src/utilities/zlib/fgx_zlib.h src/utilities/zlib/fgx_zconf.h
+    src/utilities/zlib/deflate.h src/utilities/zlib/crc32.h src/utilities/zlib/trees.h )
+    include_directories( src/utilities/zlib )
+endif ()
 
-include_directories( src/utilities/zlib src/xwidgets src/logs src/aircraft src/launcher src/xmarble src/airports
+include_directories( src/xwidgets src/logs src/aircraft src/launcher src/xmarble src/airports
     src/panes src/map src src/xobjects src/utilities/simgear src/props src/network src/resources
     src/utilities src/navdata src/settings src/mpmap
     ${CMAKE_CURRENT_SOURCE_DIR}
