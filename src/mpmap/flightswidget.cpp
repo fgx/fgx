@@ -170,29 +170,6 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 
 
 	tree->header()->setStretchLastSection(true);
-    //tree->header()->setResizeMode(QHeaderView::Stretch);
-    /*
-	tree->headerItem()->setText(C_CALLSIGN, "Callsign");
-	tree->headerItem()->setText(C_AIRCRAFT, "Aircraft");
-	tree->headerItem()->setText(C_ALTITUDE, "Alt");
-	tree->headerItem()->setText(C_HEADING, "Hdg");
-	tree->headerItem()->setText(C_PITCH, "Pitch");
-	tree->headerItem()->setText(C_LAT, "Lat");
-	tree->headerItem()->setText(C_LON, "Lon");
-	tree->headerItem()->setText(C_FLAG, "Flag");
-	tree->headerItem()->setText(C_COUNT, "Count");
-
-	tree->headerItem()->setTextAlignment(C_ALTITUDE, Qt::AlignRight);
-	tree->headerItem()->setTextAlignment(C_HEADING, Qt::AlignRight);
-	tree->headerItem()->setTextAlignment(C_LAT, Qt::AlignRight);
-	tree->headerItem()->setTextAlignment(C_LON, Qt::AlignRight);
-    */
-
-    //tree->setColumnHidden(C_PITCH, true);
-
-
-    //tree->setColumnHidden(FlightsModel::C_LAT, !chkShowLatLon->isChecked());
-    //tree->setColumnHidden(FlightsModel::C_LON, !chkShowLatLon->isChecked());
 
 
     tree->setColumnWidth(FlightsModel::C_CALLSIGN, 80);
@@ -201,15 +178,15 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
     tree->setColumnWidth(FlightsModel::C_HEADING, 50);
     tree->setColumnWidth(FlightsModel::C_SPEED, 50);
 
-    tree->setColumnWidth(FlightsModel::C_FLAG, 50);
-    tree->setColumnWidth(FlightsModel::C_COUNT, 50);
+    tree->setColumnWidth(FlightsModel::C_TS, 50);
+    tree->setColumnWidth(FlightsModel::C_CURRENT, 50);
 
 	tree->setSortingEnabled(true);
     tree->sortByColumn(FlightsModel::C_CALLSIGN, Qt::AscendingOrder);
 
     bool x_hidden = true;
     //tree->setColumnHidden(FlightsModel::C_FLAG, x_hidden);
-    tree->setColumnHidden(FlightsModel::C_COUNT, x_hidden);
+    tree->setColumnHidden(FlightsModel::C_CURRENT, x_hidden);
 
     tree->setColumnHidden(FlightsModel::C_FLIGHT_ID, x_hidden);
     tree->setColumnHidden(FlightsModel::C_LAT, x_hidden);
@@ -223,7 +200,9 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
     connect(tree, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(on_tree_double_clicked(QModelIndex))
     );
-
+    connect(tree->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex )),
+            this, SLOT(on_tree_row_changed(QModelIndex, QModelIndex))
+    );
 	//===========================================================================
 	//= Status Bar
 	statusBar = new QStatusBar();
@@ -252,6 +231,11 @@ void FlightsWidget::on_tree_double_clicked(const QModelIndex & index)
     aero.lon = this->mainObject->flightsModel->item(index.row(), FlightsModel::C_LON)->text();
 
     emit aircraft_selected(aero);
+}
+
+void FlightsWidget::on_tree_row_changed(QModelIndex curr, QModelIndex prev)
+{
+    qDebug() << curr << prev;
 }
 
 void FlightsWidget::do_update()

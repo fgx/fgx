@@ -94,6 +94,8 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->mapSmall->zoomView(400);
 
 
+
+
     this->flightsMiniLayer = new FlightsPaintLayer(this->mapSmall, FlightsPaintLayer::MINI_MODE);
     this->mapSmall->addLayer(this->flightsMiniLayer);
     this->mapSmall->installEventFilter(this->flightsMiniLayer);

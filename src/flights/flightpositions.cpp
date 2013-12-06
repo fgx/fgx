@@ -11,7 +11,7 @@ void FlightPositions::update_position(QString lat, QString lon, QString alt_ft, 
                                     alt_ft.toInt(),
                                     Marble::GeoDataCoordinates::Degree);
     p.alt_ft = alt_ft;
-    p.alt_color = FlightsModel::get_altitude_color(alt_ft);
+    p.alt_color = FlightsModel::get_altitude_color(alt_ft, 255);
     p.spd_kt = spd_kt;
     p.hdg  = hdg;
 

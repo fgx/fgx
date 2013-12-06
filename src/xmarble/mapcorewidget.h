@@ -39,7 +39,6 @@ class MapSelectDialog;
 //class XMarbleWidget;
 
 #include "xmarble/flightspaintlayer.h"
-#include "xmarble/flightsminipaintlayer.h"
 
 #include "xwidgets/toolbargroup.h"
 class ToolBarGroup;
@@ -81,7 +80,7 @@ public:
     //GeoDataDocument *docFlights;
     //GeoDataDocument *docTracks;
     FlightsPaintLayer *flightsLayer;
-    FlightsMiniPaintLayer *flightsMiniLayer;
+
 private:
 
 	QProgressBar *progressBar;

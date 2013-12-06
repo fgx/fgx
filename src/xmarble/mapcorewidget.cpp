@@ -324,6 +324,13 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     marbleWidget->setShowCities(false);
     marbleWidget->setShowOtherPlaces(false);
 
+    /*
+    GeoDataTreeModel *model = this->marbleWidget->model()->treeModel();
+    qDebug() << "RCCCC" << model->rowCount();
+    for(int i; i < model->rowCount(); i++){
+        qDebug() << i;
+        model->removeDocument(i);
+    } */
 
     connect(marbleWidget, SIGNAL(zoomChanged(int)),
             this, SLOT(on_map_zoom_changed(int))
@@ -334,7 +341,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     connect(marbleWidget, SIGNAL(visibleLatLonAltBoxChanged(const GeoDataLatLonAltBox &)),
             this, SLOT(on_map_moved(const GeoDataLatLonAltBox &))
     );
-
+    /*
     foreach ( AbstractFloatItem * floatItem, marbleWidget->floatItems() ){
             qDebug() <<  floatItem->nameId() ;
             if ( floatItem && floatItem->nameId() == "compass" ) {
@@ -345,7 +352,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
                 floatItem->setContentSize( QSize( 50, 50 ) );
             }
     }
-
+    */
     //------------------------------------------
     // Test placemark
     //GeoDataPlacemark *pm = new GeoDataPlacemark( "YES" );

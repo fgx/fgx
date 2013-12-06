@@ -43,11 +43,11 @@ FlightsModel::FlightsModel(QObject *parent) :
     setHorizontalHeaderItem(C_LON, item);
 
 
-    item = new QStandardItem("Flag");
-    setHorizontalHeaderItem(C_FLAG, item);
+    item = new QStandardItem("Curr");
+    setHorizontalHeaderItem(C_CURRENT, item);
 
-    item = new QStandardItem("Count");
-    setHorizontalHeaderItem(C_COUNT, item);
+    item = new QStandardItem("TS");
+    setHorizontalHeaderItem(C_TS, item);
 
     setSortRole(SORT_ROLE);
 
@@ -257,7 +257,7 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
 
                 // Update all the stuff, including the stuff newly added..
                 // The model is sorted by SORT_ROLE, hence numbers are 0 padded
-                QColor alt_color = FlightsModel::get_altitude_color(alt_ft);
+                QColor alt_color = FlightsModel::get_altitude_color(alt_ft, 80);
                 this->item(row, C_ALTITUDE)->setText(  alt_ft );
                 this->item(row, C_ALTITUDE)->setData(  alt_ft.rightJustified(6, QChar('0')), SORT_ROLE);
                 this->item(row, C_ALTITUDE)->setBackground( alt_color );
@@ -271,8 +271,8 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
                 this->item(row, C_LAT)->setText(lat);
                 this->item(row, C_LON)->setText(lon);
 
-                this->item(row, C_FLAG)->setText( QString::number(timm) );
-                this->item(row, C_FLAG)->setData(  QString::number(timm) , SORT_ROLE);
+                this->item(row, C_TS)->setText( QString::number(timm) );
+                this->item(row, C_TS)->setData(  QString::number(timm), SORT_ROLE);
 
                  p->update_position(lat, lon, alt_ft, hdg, spd_kt);
             } //valid callsign
@@ -290,7 +290,7 @@ void FlightsModel::on_dns(const QHostInfo &host)
     qDebug() << "DNS" << host.addresses();
 }
 
-QColor FlightsModel::get_altitude_color(QString altitude)
+QColor FlightsModel::get_altitude_color(QString altitude, int alpha)
 {
     /* 31 colors - ie < 1,000 > 31,000
         http://www.zonums.com/online/color_ramp/
@@ -348,7 +348,7 @@ QColor FlightsModel::get_altitude_color(QString altitude)
 
     QColor color;
     color.setNamedColor( colors.at(alt_idx - 1) );
-    //color.setAlpha(100);
+    color.setAlpha(alpha);
     return color;
 }
 
