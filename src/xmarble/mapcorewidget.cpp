@@ -174,74 +174,21 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     topBar->addStretch(20);
 
 
-	toolbarAirports = new QToolBar();
-	mainLayout->addWidget(toolbarAirports);
 
+    //===================================================
+    //= Map View
+    ToolBarGroup *tbNavaids = new ToolBarGroup(this);
+    topBar->addWidget(tbNavaids);
+    tbNavaids->lblTitle->setText("Navaids");
 
-
-	toolbarAirports->addWidget(new QLabel(tr("Lat:")));
-	txtLat = new QLineEdit();
-	toolbarAirports->addWidget(txtLat);
-	//connect(txtLat, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
-
-	toolbarAirports->addWidget(new QLabel(tr("Lon:")));
-	txtLon = new QLineEdit();
-	toolbarAirports->addWidget(txtLon);
-	//connect(txtLon, SIGNAL(textChanged(QString)), this, SLOT(on_coords_changed()));
-
-
-	toolbarAirports->addWidget(new QLabel(tr("Heading:")));
-	spinHeading = new QDoubleSpinBox();
-	spinHeading->setRange(0.0, 359.99);
-	spinHeading->setSingleStep(0.1);
-	toolbarAirports->addWidget(spinHeading);
-	//connect(spinHeading, SIGNAL(valueChanged(QString)), this, SLOT(on_coords_changed()));
-
-
-
-
-	//=============================================
-	// Cols Selector
-	/*QToolButton *buttShowColumns = new QToolButton(this);
-	buttShowColumns->setText("Show");
-	buttShowColumns->setIcon(QIcon(":/icon/select_cols"));
-	buttShowColumns->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	buttShowColumns->setPopupMode(QToolButton::InstantPopup);
-	toolbar->addWidget(buttShowColumns);
-
-	QMenu *menuCols = new QMenu();
-	buttShowColumns->setMenu(menuCols);
-
-	//= Cols Widget
-	QWidget *widgetColsSelecta = new QWidget();
-	QVBoxLayout *layCols = new QVBoxLayout();
-	widgetColsSelecta->setLayout(layCols);
-
-
-	XGroupVBox *groupBoxRadarCols = new XGroupVBox("Radar Layer- TODO");
-	QButtonGroup *groupRadarCols = new QButtonGroup(this);
-	groupRadarCols->setExclusive(true);
-
-
-	QRadioButton *buttShowRadarAll = new QRadioButton();
-	buttShowRadarAll->setText("Icons and Labels");
-	buttShowRadarAll->setChecked(true);
-	groupBoxRadarCols->addWidget(buttShowRadarAll);
-	groupRadarCols->addButton(buttShowRadarAll, 1);
-
-	QRadioButton *buttShowRadarImg = new QRadioButton();
-	buttShowRadarImg->setText("Icons Only");
-	groupBoxRadarCols->addWidget(buttShowRadarImg);
-	groupRadarCols->addButton(buttShowRadarImg, 2);
-
-	QRadioButton *buttShowRadarLabels = new QRadioButton();
-	buttShowRadarLabels->setText("Labels Only");
-	groupBoxRadarCols->addWidget(buttShowRadarLabels);
-	groupRadarCols->addButton(buttShowRadarLabels, 3);
-
-	QWidgetAction *colsWidgetAction = new QWidgetAction(this);
-	colsWidgetAction->setDefaultWidget(groupBoxRadarCols);
-	menuCols->addAction(colsWidgetAction);*/
+    QStringList navAidLabels = QString("VOR-DME|TCAN|NDB|FIX|ILS").split("|");
+    for(int ci = 0; ci < navAidLabels.length(); ci++){
+        QToolButton *b = new QToolButton();
+        b->setText(navAidLabels.at(ci));
+        b->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        b->setCheckable(true);
+        tbNavaids->addWidget(b);
+    }
 
 
 

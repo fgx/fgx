@@ -59,9 +59,6 @@ public:
 
 	MainObject *mainObject;
 
-    QHash<QString, GeoDataPlacemark*> blips;
-    //QHash<QString, GeoDataTrack*> tracks;
-
 
     QToolButton *buttBaseLayer;
     QToolButton *buttProjection;
@@ -73,12 +70,9 @@ public:
 	QSlider *sliderZoom;
 	QLabel *lblZoom;
 
-	QToolBar *toolbarAirports;
 
-    //XMarbleWidget *marbleWidget;
     MarbleWidget *marbleWidget;
-    //GeoDataDocument *docFlights;
-    //GeoDataDocument *docTracks;
+
     FlightsPaintLayer *flightsLayer;
 
 private:
