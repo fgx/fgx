@@ -67,8 +67,6 @@ public:
     QToolButton *buttSaveView;
 
 	QString *mpmapFollowCallsign;
-	QSlider *sliderZoom;
-	QLabel *lblZoom;
 
 
     MarbleWidget *marbleWidget;
@@ -114,9 +112,6 @@ public slots:
     void on_map_base_layer_action(QAction*);
     void on_map_projection_action(QAction*);
 
-	void on_slider_zoom(int zoom);
-	void on_butt_zoom_in();
-	void on_butt_zoom_out();
 	void on_map_zoom_changed(int);
 
     void on_map_clicked();

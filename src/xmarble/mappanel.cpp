@@ -91,7 +91,7 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
 
     this->mapSmall->setShowBackground(false);
 
-    this->mapSmall->zoomView(400);
+    this->mapSmall->zoomView(800);
 
 
 
@@ -101,6 +101,15 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->mapSmall->installEventFilter(this->flightsMiniLayer);
     // TODO - there's got to be a more elegant way to do this
     this->flightsMiniLayer->register_flights_model(this->mainObject->flightsModel);
+
+    //= connect positions changed via crossfeed to redraw small map
+    connect(this->mainObject->flightsModel, SIGNAL(update_done()),
+            this->mapSmall, SLOT(update())
+    );
+    //= connect a click on a flight, ie selection change to update the small map - ie a hightlight blip
+    connect(this->flightsWidget->tree->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this->mapSmall, SLOT(update())
+    );
 
 }
 

@@ -23,9 +23,6 @@
 
 #include "xmarble/mapcorewidget.h"
 
-//#include "marble/MarbleModel.h"
-//#include "marble/PluginInterface.h"
-
 
 const QString MapCoreWidget::SETTINGS_TAG = QString("map_views");
 
@@ -127,7 +124,7 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 
 
     //===================================================
-    //= Map View
+    //= Map Views
     ToolBarGroup *tbView = new ToolBarGroup(this);
     topBar->addWidget(tbView);
     tbView->lblTitle->setText("Load / Save");
@@ -150,17 +147,6 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
             this, SLOT(on_select_map_view())
     );
     tbView->addWidget(this->buttLoadView);
-    /*
-    QMenu *menu = new QMenu(this->buttLoadView);
-    this->buttLoadView->setMenu(menu);
-    tbView->addWidget(this->buttLoadView);
-
-    this->actGroupMapViews = new QActionGroup(this);
-    this->actGroupMapViews->setExclusive(false);
-    connect(this->actGroupMapViews, SIGNAL(triggered(QAction*)),
-            this, SLOT(on_map_view_action(QAction*))
-    );
-    */
 
     // Save View
     this->buttSaveView = new QToolButton();
@@ -171,12 +157,10 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
             this, SLOT(on_save_view())
     );
 
-    topBar->addStretch(20);
-
 
 
     //===================================================
-    //= Map View
+    //= NavAids
     ToolBarGroup *tbNavaids = new ToolBarGroup(this);
     topBar->addWidget(tbNavaids);
     tbNavaids->lblTitle->setText("Navaids");
@@ -185,13 +169,24 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     for(int ci = 0; ci < navAidLabels.length(); ci++){
         QToolButton *b = new QToolButton();
         b->setText(navAidLabels.at(ci));
+        b->setIcon(QIcon(":/micon/navdata"));
         b->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         b->setCheckable(true);
         tbNavaids->addWidget(b);
     }
 
+    topBar->addStretch(20);
 
+    //===================================================
+    //= Map CURRENT
+    ToolBarGroup *tbMapCurrent = new ToolBarGroup(this);
+    topBar->addWidget(tbMapCurrent);
+    tbMapCurrent->lblTitle->setText("Info");
 
+    this->txtLat = new QLineEdit();
+    tbMapCurrent->addWidget(this->txtLat);
+    this->txtLon = new QLineEdit();
+    tbMapCurrent->addWidget(this->txtLon);
 
 	//============================================================================
 	// Middle pane with map
@@ -199,41 +194,6 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
 	QHBoxLayout *midLayout = new QHBoxLayout();
 	mainLayout->addLayout(midLayout, 200);
 
-
-	//====================================================================
-	//== Zoom Bar
-	//====================================================================
-	QVBoxLayout *layoutZoom = new QVBoxLayout();
-	midLayout->addLayout(layoutZoom, 0);
-
-	QString zbstyle("font-weight: bold; font-size: 10pt; color: black; padding: 0px; margin: 0px;");
-
-	QToolButton *buttZoomIn = new QToolButton();
-	buttZoomIn->setText("+");
-	buttZoomIn->setAutoRaise(true);
-	buttZoomIn->setStyleSheet(zbstyle);
-	layoutZoom->addWidget(buttZoomIn, 0);
-	connect(buttZoomIn, SIGNAL(clicked()), this, SLOT(on_butt_zoom_in()));
-
-	sliderZoom = new QSlider();
-    //sliderZoom->setRange(1150, 4000);
-	sliderZoom->setTickPosition(QSlider::TicksLeft);
-	sliderZoom->setTickInterval(1);
-	sliderZoom->setPageStep(500);
-	layoutZoom->addWidget(sliderZoom, 200);
-	connect(sliderZoom, SIGNAL(valueChanged(int)), SLOT(on_slider_zoom(int)));
-
-	QToolButton *buttZoomOut = new QToolButton();
-	buttZoomOut->setText("-");
-	buttZoomOut->setAutoRaise(true);
-	buttZoomOut->setStyleSheet(zbstyle);
-	layoutZoom->addWidget(buttZoomOut, 0);
-	connect(buttZoomOut, SIGNAL(clicked()), this, SLOT(on_butt_zoom_out()));
-
-	lblZoom = new QLabel("SS");
-	lblZoom->setStyleSheet("border: none; font-size: 8pt; margin: 0px; padding: 0px;");
-	//sslblZoom->setFixedWidth(80);
-	layoutZoom->addWidget(lblZoom);
 
 	//====================================================================
 	//== Marble Map
@@ -300,15 +260,8 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
             }
     }
     */
-    //------------------------------------------
-    // Test placemark
-    //GeoDataPlacemark *pm = new GeoDataPlacemark( "YES" );
-    //pm->setCoordinate(30.523333, 50.45,0,  GeoDataCoordinates::Degree);
 
 
-    // Create Model
-    //this->docFlights = new GeoDataDocument();
-    //this->marbleWidget->model()->treeModel()->addDocument( this->docFlights );
 
     this->flightsLayer = new FlightsPaintLayer(this->marbleWidget, FlightsPaintLayer::NORMAL_MODE);
     this->marbleWidget->addLayer(this->flightsLayer);
@@ -316,10 +269,6 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     // TODO - there's got to be a more elegant way to do this
     this->flightsLayer->register_flights_model(this->mainObject->flightsModel);
 
-    //this->marbleWidget->mapTheme()->
-
-    //this->docTracks = new GeoDataDocument();
-    //this->marbleWidget->model()->treeModel()->addDocument( this->docTracks );
 
     //------------------------------------------
 
@@ -328,15 +277,6 @@ MapCoreWidget::MapCoreWidget(MainObject *mob, QWidget *parent) :
     );
 
 
-    sliderZoom->setRange(marbleWidget->minimumZoom(), marbleWidget->maximumZoom());
-
-    //================
-    //= debug tree
-    /*
-    QTreeView *treeDebug = new QTreeView();
-    midLayout->addWidget(treeDebug);
-    treeDebug->setModel(this->marbleWidget->model()->treeModel());
-    */
 
 	//============================================================
 	//== Status Bar
@@ -441,27 +381,12 @@ void MapCoreWidget::closeEvent(QCloseEvent *event)
 
 
 //================================================
-// Zoom to point
-void MapCoreWidget::on_slider_zoom(int zoom)
-{
-	marbleWidget->zoomView(zoom);
-
-}
-
-//== Zoom in out buttons
-void MapCoreWidget::on_butt_zoom_in(){
-	sliderZoom->setValue(sliderZoom->value() + 400);
-}
-void MapCoreWidget::on_butt_zoom_out(){
-	sliderZoom->setValue(sliderZoom->value() - 400);
-}
-
-
+// Zoom
 void MapCoreWidget::on_map_zoom_changed(int zoom)
 {
 	//qDebug() << zoom;
-	sliderZoom->setValue(zoom);
-	lblZoom->setText(QString::number(zoom));
+    //sliderZoom->setValue(zoom);
+    //lblZoom->setText(QString::number(zoom));
 }
 
 
