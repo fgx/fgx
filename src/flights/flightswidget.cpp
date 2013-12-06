@@ -233,10 +233,12 @@ void FlightsWidget::on_tree_double_clicked(const QModelIndex & index)
     emit aircraft_selected(aero);
 }
 
-/* When a row is changed, then the current aircraft needs to be highlighted */
+/* When a row is changed, then the current aircraft needs to be highlighted,
+so to achieve this on the ini map, we set the C-CURRENT to 1, later maybe add 2 for differnt colors..
+
+*/
 void FlightsWidget::on_tree_row_changed(QModelIndex curr, QModelIndex prev)
 {
-    //qDebug() << curr << prev.row();
 
     if(prev.row() == -1){
 

@@ -34,8 +34,8 @@
 #include "xobjects/mainobject.h"
 class MainObject;
 
-#include "map/openlayerwidget.h"
-class OpenLayerWidget;
+#include "xmarble/mapcorewidget.h"
+class MapCoreWidget;
 
 #include "airports/metarwidget.h"
 class MetarWidget;
@@ -81,8 +81,8 @@ public:
 
 
 	QTabWidget *tabWidget;
-	OpenLayerWidget *mapWidget;
-	MetarWidget *metarWidget;
+    MapCoreWidget *mapWidget;
+    MetarWidget *metarWidget;
 
 	XGroupVBox *groupBoxAirport;
 	XGroupVBox *groupBoxUseCoordinates;
