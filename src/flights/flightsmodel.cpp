@@ -4,6 +4,7 @@
 #include <QScriptEngine>
 #include <QScriptValue>
 #include <QFileInfo>
+#include <QFont>
 
 #include "flightsmodel.h"
 
@@ -219,6 +220,9 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
 
                     QStandardItem *iCallsignn = new QStandardItem( callsign );
                     iCallsignn->setData(callsign.toUpper(), SORT_ROLE);
+                    QFont font = iCallsignn->font();
+                    font.setBold(true);
+                    iCallsignn->setFont(font);
 
                     insertItemsList << new QStandardItem( it.value().property("fid").toString() )
                                     << iCallsignn
@@ -232,7 +236,8 @@ void FlightsModel::on_server_finished(QNetworkReply *reply){
                                     << new QStandardItem( lat )
                                     << new QStandardItem( lon )
 
-                                     << new QStandardItem( QString::number(timm) );
+                                    << new QStandardItem( QString::number(timm) )
+                                    << new QStandardItem();
 
                     // loop items to set uneditable, and align some cols to right
                     for(int i =0; i < insertItemsList.count(); i++){

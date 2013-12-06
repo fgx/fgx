@@ -93,7 +93,7 @@ set( fgx_SRCS src/main.cpp src/xobjects/xsettings.cpp src/settings/settingsdialo
     src/utilities/zlib/adler32.c src/utilities/zlib/zutil.c src/utilities/fgx_gzlib.cpp
     src/utilities/helpers.cpp src/xobjects/xprocess.cpp src/props/telnetslave.cpp src/props/propstreewidget.cpp
     src/logs/viewlogswidget.cpp src/xobjects/latlng.cpp src/props/propeditwidget.cpp src/mpmap/mpmapwidget.cpp
-    src/mpmap/flightswidget.cpp src/mpmap/xwebpage.cpp src/panes/expertoptionswidget.cpp
+    src/flights/flightswidget.cpp src/mpmap/xwebpage.cpp src/panes/expertoptionswidget.cpp
     src/xobjects/xsettingsmodel.cpp src/xwidgets/fgxdebugwidget.cpp src/launcher/headerwidget.cpp
     src/xwidgets/xcommandpreviewidget.cpp src/xobjects/xopt.cpp src/xwidgets/xdebugtreewidget.cpp
     src/map/openlayerwidget.cpp src/aircraft/xaero.cpp src/airports/metarwidget.cpp src/utilities/fileDialog.cpp
@@ -113,7 +113,7 @@ set( fgx_HDRS src/xobjects/xsettings.h src/settings/settingsdialog.h src/network
     src/launcher/launcherwindow.h src/utilities/statusbar.h src/utilities/messagebox.h
     src/airports/importairportsdialog.h src/panes/viewlogwidget.h src/xobjects/xprocess.h
     src/props/telnetslave.h src/props/propstreewidget.h src/logs/viewlogswidget.h src/props/propeditwidget.h
-    src/mpmap/mpmapwidget.h src/mpmap/flightswidget.h src/mpmap/xwebpage.h src/panes/expertoptionswidget.h
+    src/mpmap/mpmapwidget.h src/flights/flightswidget.h src/mpmap/xwebpage.h src/panes/expertoptionswidget.h
     src/xobjects/xsettingsmodel.h src/xwidgets/fgxdebugwidget.h src/launcher/headerwidget.h
     src/xwidgets/xcommandpreviewidget.h src/xwidgets/xdebugtreewidget.h src/map/openlayerwidget.h
     src/airports/metarwidget.h src/utilities/fileDialog.h src/utilities/dirDialog.h src/launcher/menuwidget.h

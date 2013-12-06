@@ -61,7 +61,12 @@ bool FlightsPaintLayer::render( GeoPainter *painter, ViewportParams *viewport,
     for(int idx=0; idx < this->flightsModel->rowCount(); idx++)
     {
         if(this->map_mode == MINI_MODE){
-            painter->setPen( QPen(QBrush(QColor::fromRgb(0,0,50,255)), 3.0, Qt::SolidLine, Qt::RoundCap ) );
+            if(this->flightsModel->item(idx, FlightsModel::C_CURRENT)->text() == "1"){
+                painter->setPen( QPen(QBrush(QColor::fromRgb(255,0,0,255)), 3.0, Qt::SolidLine, Qt::RoundCap ) );
+            }else{
+                painter->setPen( QPen(QBrush(QColor::fromRgb(0,0,50,255)), 3.0, Qt::SolidLine, Qt::RoundCap ) );
+            }
+
         }else{
             painter->setPen( QPen(QBrush(QColor::fromRgb(255,0,0,255)), 3.0, Qt::SolidLine, Qt::RoundCap ) );
         }

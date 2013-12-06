@@ -186,7 +186,7 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 
     bool x_hidden = true;
     //tree->setColumnHidden(FlightsModel::C_FLAG, x_hidden);
-    tree->setColumnHidden(FlightsModel::C_CURRENT, x_hidden);
+    tree->setColumnHidden(FlightsModel::C_TS, x_hidden);
 
     tree->setColumnHidden(FlightsModel::C_FLIGHT_ID, x_hidden);
     tree->setColumnHidden(FlightsModel::C_LAT, x_hidden);
@@ -219,7 +219,7 @@ FlightsWidget::FlightsWidget(MainObject *mob, QWidget *parent) :
 
 }
 
-
+/* Flight is double clicked, so goto flight */
 void FlightsWidget::on_tree_double_clicked(const QModelIndex & index)
 {
     XAero aero(this->mainObject->flightsModel->item(index.row(), FlightsModel::C_CALLSIGN)->text());
@@ -233,9 +233,19 @@ void FlightsWidget::on_tree_double_clicked(const QModelIndex & index)
     emit aircraft_selected(aero);
 }
 
+/* When a row is changed, then the current aircraft needs to be highlighted */
 void FlightsWidget::on_tree_row_changed(QModelIndex curr, QModelIndex prev)
 {
-    qDebug() << curr << prev;
+    //qDebug() << curr << prev.row();
+
+    if(prev.row() == -1){
+
+     }else{
+        //QModelIndex xx = prev.child(prev.row(), )
+        this->mainObject->flightsModel->item(prev.row(), FlightsModel::C_CURRENT)->setText("");
+        //qDebug() << prevItem;
+    }
+    this->mainObject->flightsModel->item(curr.row(), FlightsModel::C_CURRENT)->setText("1");
 }
 
 void FlightsWidget::do_update()
