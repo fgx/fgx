@@ -85,6 +85,8 @@ public slots:
 	void on_show_cols(QAbstractButton*);
 
     void on_tree_double_clicked(const QModelIndex &);
+    void on_tree_row_changed(QModelIndex curr, QModelIndex prev);
+
     void do_update();
 };
 

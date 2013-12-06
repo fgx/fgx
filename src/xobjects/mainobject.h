@@ -51,10 +51,7 @@ class LauncherWindow;
 #include "xmarble/mapmainwindow.h"
 class MapMainWindow;
 
-//#include "mpmap/mpmapxwidget.h"
-//class MpMapXWidget;
 
-#include "mpmap/mpmapwidget.h"
 
 #include "logs/viewlogswidget.h"
 #include "props/propstreewidget.h"

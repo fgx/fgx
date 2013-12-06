@@ -370,14 +370,14 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
 
 
-	//============================================================================
-	// Map Widget
-	//============================================================================
-	mapWidget = new OpenLayerWidget(mainObject);
-	mapWidget->setMinimumWidth(400);
-	mainLayout->addWidget(mapWidget);
-    mapWidget->load_map("airport");
-	connect(mapWidget, SIGNAL(map_double_clicked(QString,QString, QString)), this, SLOT(on_map_double_clicked(QString, QString, QString)));
+    //============================================================================
+    // Map Widget
+    //============================================================================
+    mapWidget = new MapCoreWidget(mainObject);
+    mapWidget->setMinimumWidth(400);
+    mainLayout->addWidget(mapWidget);
+    //mapWidget->load_map("airport");
+    connect(mapWidget, SIGNAL(map_double_clicked(QString,QString, QString)), this, SLOT(on_map_double_clicked(QString, QString, QString)));
 
 
 	//============================================================================
@@ -416,12 +416,14 @@ void AirportsWidget::on_map_double_clicked(QString lat, QString lon, QString hea
 	emit setx("--lat=", true, lat);
 	emit setx("--lon=", true, lon);
 	emit setx("--heading=", true, heading);
-	mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
-							 lat,
-							 lon,
-							 heading,
-							 "0"
-							 );
+    /* TODO redo
+    mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
+                             lat,
+                             lon,
+                             heading,
+                             "0"
+                             );
+    */
 }
 
 
@@ -590,7 +592,7 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 
 	//= Clear the Info tree
 	treeAptInfo->model()->removeRows(0, treeAptInfo->model()->rowCount());
-	mapWidget->clear_map();
+    //TODO mapWidget->clear_map();
 
 	//= No selection -eg a filter removing a selected node
 	if(!currentIdx.isValid()){
@@ -611,7 +613,7 @@ void AirportsWidget::on_airport_tree_selected(QModelIndex currentIdx, QModelInde
 
 
 	load_info_tree(airport_dir, airport_code);
-	mapWidget->zoom_to_airport(airport_code);
+    //TODO mapWidget->zoom_to_airport(airport_code);
 
 }
 
@@ -728,12 +730,12 @@ void AirportsWidget::load_info_tree(QString airport_dir, QString airport_code){
 	//= Were using --lat's enabled flag to scheckif positin is enabled terrible hack
 	XOpt latopt = mainObject->X->get_opt("--lat=");
 	if(latopt.enabled){
-		mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
+        /* TODO mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
 								 mainObject->X->getx("--lat="),
 								 mainObject->X->getx("--lon="),
 								 mainObject->X->getx("--heading="),
 								 "0"
-								 );
+                                 ); */
 	}
 
 
@@ -836,13 +838,13 @@ int AirportsWidget::load_runways_node(QString airport_dir, QString airport_code)
 			tItem1->setText(CI_TYPE, "runway");
 			tItem1->setText(CI_SETTING_KEY, QString(airport_code).append("runway").append(
 											nodeRunway.childNodes().at(1).firstChildElement("rwy").text()));
-
+            /* TODO
 			mapWidget->add_runway(	airport_code,
 								  tItem0->text(CI_NODE),
 								  tItem1->text(CI_NODE),
 								  tItem0->text(CI_LAT), tItem0->text(CI_LON),
 								  tItem1->text(CI_LAT), tItem1->text(CI_LON)
-								  );
+                                  ); */
 
 		}
 	}
@@ -953,11 +955,12 @@ int AirportsWidget::load_parking_node(QString airport_dir, QString airport_code)
 							pItem->setText(CI_LON, Helpers::hmm_to_decimal(attribs.namedItem("lon").nodeValue()));
 							pItem->setText(CI_HEADING, attribs.namedItem("heading").nodeValue());
 							pItem->setText(CI_SETTING_KEY, QString(airport_code).append("stand").append(stand));
-							mapWidget->add_stand( airport_code,
+                            /* TODO
+                            mapWidget->add_stand( airport_code,
 												  stand,
 												  pItem->text(CI_LAT),
 												  pItem->text(CI_LON)
-												 );
+                                                 ); */
 						}
 					}
 				}
@@ -1027,7 +1030,8 @@ void AirportsWidget::load_tower_node(QString airport_dir, QString airport_code){
 		towerParent->setText(CI_LAT, towersNode.at(0).childNodes().at(0).firstChildElement("lat").text());
 		towerParent->setText(CI_LON, towersNode.at(0).childNodes().at(0).firstChildElement("lon").text());
 
-		mapWidget->add_tower(airport_code, towerParent->text(CI_LAT), towerParent->text(CI_LON));
+        // TODO
+        //mapWidget->add_tower(airport_code, towerParent->text(CI_LAT), towerParent->text(CI_LON));
 		towerParent->setText(0, QString("%1 - Tower").arg(airport_code) );
 
 
@@ -1136,12 +1140,13 @@ void AirportsWidget::on_upx(QString option, bool enabled, QString value)
 
 		XOpt lat = mainObject->X->get_opt("--lat=");
 		if(lat.enabled){ // Lat enabled is used to hold "custom postion" and not a runway or parking
+            /* TODO
 			mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
 									 mainObject->X->getx("--lat="),
 									 mainObject->X->getx("--lon="),
 									 mainObject->X->getx("--heading="),
 									 "0"
-									 );
+                                     ); */
 		}
 	}
 
@@ -1181,10 +1186,11 @@ void AirportsWidget::on_airport_info_selection_changed()
 			emit setx("--heading=", false, item->text(CI_HEADING));
 			mainObject->launcherWindow->on_upx("--parking-id=", true, item->text(CI_NODE)); // Show parking in header
 		}
+        /* TODO
 		mapWidget->show_aircraft(mainObject->X->getx("--callsign="),
 								 item->text(CI_LAT), item->text(CI_LON),
 								 item->text(CI_HEADING),
-								 "0");
+                                 "0"); */
 	}
 
 }
@@ -1194,7 +1200,8 @@ void AirportsWidget::on_airport_info_double_clicked(QTreeWidgetItem *item, int c
 	Q_UNUSED(col_idx);
 	QString typ = item->text(CI_TYPE);
 	if (typ == "stand" || typ == "runway" || typ == "tower"){
-		mapWidget->zoom_to_latlon(item->text(CI_LAT), item->text(CI_LON), 16);
+        // TODO
+        //mapWidget->zoom_to_latlon(item->text(CI_LAT), item->text(CI_LON), 16);
 	}
 }
 

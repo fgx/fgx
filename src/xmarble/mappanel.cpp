@@ -68,7 +68,7 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->mapSmall = new MarbleWidget();
     this->dockSmall->setWidget(this->mapSmall);
     this->mapSmall->setMapThemeId("earth/plain/plain.dgml");
-    this->mapSmall->setProjection( Marble::Spherical );
+    this->mapSmall->setProjection( Marble::Mercator );
 
     this->mapSmall->setShowGrid(false);
     this->mapSmall->setShowCompass(false);
@@ -77,14 +77,39 @@ MapPanel::MapPanel(MainObject *mob, QWidget *parent) :
     this->mapSmall->setShowOverviewMap(false);
     this->mapSmall->setShowScaleBar(false);
 
-    this->mapSmall->setShowBorders(true);
+    this->mapSmall->floatItem("navigation")->hide();
+
+    this->mapSmall->setShowBorders(false);
     this->mapSmall->setShowRelief(true);
 
     this->mapSmall->setShowPlaces(false);
+    this->mapSmall->setShowCities(false);
+    this->mapSmall->setShowOtherPlaces(false);
+
+
+
 
     this->mapSmall->setShowBackground(false);
 
-    this->mapSmall->setZoom(500);
+    this->mapSmall->zoomView(800);
+
+
+
+
+    this->flightsMiniLayer = new FlightsPaintLayer(this->mapSmall, FlightsPaintLayer::MINI_MODE);
+    this->mapSmall->addLayer(this->flightsMiniLayer);
+    this->mapSmall->installEventFilter(this->flightsMiniLayer);
+    // TODO - there's got to be a more elegant way to do this
+    this->flightsMiniLayer->register_flights_model(this->mainObject->flightsModel);
+
+    //= connect positions changed via crossfeed to redraw small map
+    connect(this->mainObject->flightsModel, SIGNAL(update_done()),
+            this->mapSmall, SLOT(update())
+    );
+    //= connect a click on a flight, ie selection change to update the small map - ie a hightlight blip
+    connect(this->flightsWidget->tree->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this->mapSmall, SLOT(update())
+    );
 
 }
 

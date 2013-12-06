@@ -42,8 +42,8 @@ public:
         C_AERO,
         C_LAT,
         C_LON,
-        C_FLAG,
-        C_COUNT
+        C_TS,
+        C_CURRENT
     };
 
     enum ROLES{
@@ -69,7 +69,7 @@ public slots:
     void fetch_server();
     void on_server_finished(QNetworkReply *reply);
 
-    static QColor get_altitude_color(QString altitude);
+    static QColor get_altitude_color(QString altitude, int alpha);
 
 };
 

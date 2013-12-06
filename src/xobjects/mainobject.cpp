@@ -49,22 +49,31 @@ MainObject::MainObject(QObject *parent) :
 			this, SLOT(on_upx(QString,bool,QString))
 	);
 
-
-    //= Other models
+    //===========================================
+    //=== Other models
+    //
+    //  Flight and LIVe stuff from crossfeed
     this->flightsModel = new FlightsModel(this);
+
+    // Saved map views
     this->mapViewsModel = new MapViewsModel(this);
 
 	//================================================================
 	//= Processes - the nub..
 	//================================================================
 	processFgFs  = new XProcess(this, "fgfs");
+
+    // TODO is this redundant and inbuilt ?
 	processTerraSync  = new XProcess(this, "terrasync");
+
+    // TODO is this important
 	processFgCom  = new XProcess(this, "fgcom");
 
 
 
 	//====================================
 	//= Set GLobal style
+    // TODO Reinstate this as an option
 	QApplication::setStyle( QStyleFactory::create(settings->style_current()) );
 	//QApplication::setQuitOnLastWindowClosed(false);
 
@@ -161,11 +170,11 @@ MainObject::MainObject(QObject *parent) :
 	actionGroupUrls->addAction(act);
 
 	act = menuHelp->addAction(tr("Bugs and Issues"));
-	act->setProperty("url", "http://code.google.com/p/fgx/issues/list");
+    act->setProperty("url", "https://github.com/fgx/fgx/issues");
 	actionGroupUrls->addAction(act);
 
 	act = menuHelp->addAction(tr("Source Code"));
-	act->setProperty("url", "https://gitorious.org/fgx/fgx/");
+    act->setProperty("url", "https://github.com/fgx/fgx");
 	actionGroupUrls->addAction(act);
 
 	menuHelp->addSeparator();

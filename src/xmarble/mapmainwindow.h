@@ -9,14 +9,10 @@
 #include "xobjects/mainobject.h"
 class MainObject;
 
-#include "mpmap/flightswidget.h"
+#include "flights/flightswidget.h"
 class FlightsWidget;
 
-//#include "mpmap/flightsmodel.h"
-//class FlightsModel;
 
-//#include "marble/MarbleGlobal.h"
-//#include "marble/MarbleWidget.h"
 
 #include "xmarble/mappanel.h"
 class MapPanel;

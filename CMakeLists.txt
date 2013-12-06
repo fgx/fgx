@@ -105,11 +105,11 @@ set( fgx_SRCS src/main.cpp src/xobjects/xsettings.cpp src/settings/settingsdialo
     src/utilities/messagebox.cpp src/airports/importairportsdialog.cpp src/airports/airportsdata.cpp
     src/aircraft/aircraftdata.cpp src/panes/viewlogwidget.cpp src/utilities/fgx_gzlib.cpp
     src/utilities/helpers.cpp src/xobjects/xprocess.cpp src/props/telnetslave.cpp src/props/propstreewidget.cpp
-    src/logs/viewlogswidget.cpp src/xobjects/latlng.cpp src/props/propeditwidget.cpp src/mpmap/mpmapwidget.cpp
-    src/mpmap/flightswidget.cpp src/mpmap/xwebpage.cpp src/panes/expertoptionswidget.cpp
+    src/logs/viewlogswidget.cpp src/xobjects/latlng.cpp src/props/propeditwidget.cpp
+    src/flights/flightswidget.cpp  src/panes/expertoptionswidget.cpp
     src/xobjects/xsettingsmodel.cpp src/xwidgets/fgxdebugwidget.cpp src/launcher/headerwidget.cpp
     src/xwidgets/xcommandpreviewidget.cpp src/xobjects/xopt.cpp src/xwidgets/xdebugtreewidget.cpp
-    src/map/openlayerwidget.cpp src/aircraft/xaero.cpp src/airports/metarwidget.cpp src/utilities/fileDialog.cpp
+    src/aircraft/xaero.cpp src/airports/metarwidget.cpp src/utilities/fileDialog.cpp
     src/utilities/dirDialog.cpp src/launcher/menuwidget.cpp src/utilities/workThread.cpp
     src/utilities/loadAptDat.cpp src/utilities/simgear/SGGeodesy.cpp src/xmarble/mapmainwindow.cpp
     src/xmarble/mappanel.cpp src/xmarble/mapcorewidget.cpp src/xmarble/xmarblewidget.cpp
@@ -126,9 +126,9 @@ set( fgx_HDRS src/xobjects/xsettings.h src/settings/settingsdialog.h src/network
     src/launcher/launcherwindow.h src/utilities/statusbar.h src/utilities/messagebox.h
     src/airports/importairportsdialog.h src/panes/viewlogwidget.h src/xobjects/xprocess.h
     src/props/telnetslave.h src/props/propstreewidget.h src/logs/viewlogswidget.h src/props/propeditwidget.h
-    src/mpmap/mpmapwidget.h src/mpmap/flightswidget.h src/mpmap/xwebpage.h src/panes/expertoptionswidget.h
+     src/flights/flightswidget.h  src/panes/expertoptionswidget.h
     src/xobjects/xsettingsmodel.h src/xwidgets/fgxdebugwidget.h src/launcher/headerwidget.h
-    src/xwidgets/xcommandpreviewidget.h src/xwidgets/xdebugtreewidget.h src/map/openlayerwidget.h
+    src/xwidgets/xcommandpreviewidget.h src/xwidgets/xdebugtreewidget.h
     src/airports/metarwidget.h src/utilities/fileDialog.h src/utilities/dirDialog.h src/launcher/menuwidget.h
     src/utilities/workThread.h src/utilities/loadAptDat.h src/xmarble/mapmainwindow.h
     src/xmarble/mappanel.h src/xmarble/mapcorewidget.h src/network/crossfeedjson.h
@@ -143,7 +143,7 @@ set( fgx_OTHERS src/xwidgets/xtreewidgetitem.h src/utilities/utilities.h src/air
     src/utilities/simgear/compiler.h src/xmarble/xmarblewidget.h
     src/flights/flightsmodel.h src/flights/flightpositions.h )
 
-set( fgx_RCS src/resources/ycons.qrc src/resources/artwork.qrc src/resources/fonts.qrc src/resources/openlayers.qrc
+set( fgx_RCS src/resources/ycons.qrc src/resources/artwork.qrc src/resources/fonts.qrc
     src/resources/default.qrc src/resources/images.qrc src/resources/marble_icons.qrc
     )
 

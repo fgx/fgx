@@ -23,7 +23,7 @@
 //#include "marble/GeoDataPlacemark.h"
 //#include "marble/GeoDataTreeModel.h"
 //#include "marble/GeoDataStyle.h"
-//#include "marble/GeoDataTrack.h"
+#include "marble/AbstractFloatItem.h"
 
 
 #include "aircraft/xaero.h"
@@ -39,7 +39,6 @@ class MapSelectDialog;
 //class XMarbleWidget;
 
 #include "xmarble/flightspaintlayer.h"
-
 
 #include "xwidgets/toolbargroup.h"
 class ToolBarGroup;
@@ -60,9 +59,6 @@ public:
 
 	MainObject *mainObject;
 
-    QHash<QString, GeoDataPlacemark*> blips;
-    //QHash<QString, GeoDataTrack*> tracks;
-
 
     QToolButton *buttBaseLayer;
     QToolButton *buttProjection;
@@ -71,15 +67,10 @@ public:
     QToolButton *buttSaveView;
 
 	QString *mpmapFollowCallsign;
-	QSlider *sliderZoom;
-	QLabel *lblZoom;
 
-	QToolBar *toolbarAirports;
 
-    //XMarbleWidget *marbleWidget;
     MarbleWidget *marbleWidget;
-    //GeoDataDocument *docFlights;
-    //GeoDataDocument *docTracks;
+
     FlightsPaintLayer *flightsLayer;
 
 private:
@@ -121,9 +112,6 @@ public slots:
     void on_map_base_layer_action(QAction*);
     void on_map_projection_action(QAction*);
 
-	void on_slider_zoom(int zoom);
-	void on_butt_zoom_in();
-	void on_butt_zoom_out();
 	void on_map_zoom_changed(int);
 
     void on_map_clicked();

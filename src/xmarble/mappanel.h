@@ -20,10 +20,11 @@ class MapCoreWidget;
 #include "navdata/navdatawidget.h"
 class NavDataWidget;
 
-#include "mpmap/flightswidget.h"
+#include "flights/flightswidget.h"
 class FlightsWidget;
 
-// #include "xmarble/flightspaintlayer.h"
+#include "xmarble/flightspaintlayer.h"
+class FlightsPaintLayer;
 
 using namespace Marble;
 
@@ -51,6 +52,7 @@ public:
     NavDataWidget *navDataWidget;
     FlightsWidget *flightsWidget;
 
+    FlightsPaintLayer *flightsMiniLayer;
 
 
 signals:
