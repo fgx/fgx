@@ -34,7 +34,9 @@
 #include "utilities/utilities.h"
 #include "xobjects/xsettings.h"
 
-//* message handler
+// Global Message handler
+// All debug messages are send here for processing to
+// log files, console and alike
 void fgxErrorMessage(QtMsgType type, const char *msg)
 {
     QString m = msg;
@@ -63,7 +65,7 @@ int main( int argc, char* argv[])
 	QApplication::setOrganizationName("FGx");
 	QApplication::setOrganizationDomain("fgx.ch");
 	QApplication::setApplicationName("FGxFlightGearLauncher");
-	QApplication::setApplicationVersion("2.10.0");
+    QApplication::setApplicationVersion("2.15.0");
 	
 	//=====================================================
 	//== Add fonts to database and set default application font
@@ -76,10 +78,12 @@ int main( int argc, char* argv[])
 	QFontDatabase::addApplicationFont(":/font/freeuniversalbold");
 	
 	// Setting a default size too, and spacing, because we need it on screen
-	QFont universal("FreeUniversal", 14);
+    /*
+    QFont universal("FreeUniversal", 14);
 	universal.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
 	app.setFont(universal);
-	
+    */
+
 	//=====================================================
 	//== Global styles
 	
@@ -87,6 +91,7 @@ int main( int argc, char* argv[])
 	// darker gray: #999999 (box titles), lightgray #dddddd (lines and borders)
 	
 	QString styles("");
+    /*
 	styles.append("QWidget, QLabel { font-family: FreeUniversal; font-size: 12px; }");
 	styles.append("QLineEdit { background-color: #fffee0; border: 1px solid #dddddd }");
 	styles.append("QGroupBox { background-color: #ffffff; border-top: 24px solid #ffffff;}");
@@ -119,7 +124,7 @@ int main( int argc, char* argv[])
 	
 	styles.append("ExeControls { background-color: #ffffff; border: 0px; margin-top: 22px; }");
 	styles.append("ExeControls::title { color: #000000; background-color: yellow; margin-top: 0px; margin-left: 0px; }");
-	
+    */
 	app.setStyleSheet(styles);
 	
 	//== Start the application here
@@ -129,7 +134,7 @@ int main( int argc, char* argv[])
 
 	//* check for dev_mode, install message handler
 	if( XSettings::dev_mode() == false ){
-		qInstallMsgHandler(fgxErrorMessage);
+        //qInstallMsgHandler(fgxErrorMessage);
 	}
 	
 	//QMenuBar *menuBar = new QMenuBar(0);
