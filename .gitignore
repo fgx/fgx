@@ -1,6 +1,10 @@
 fgx-build-desktop*/
 build-*/
+docs_build/
 .DS_*
+*.pyc
+
+src/fgx.pro.*
 
 CMakeCache.txt
 CMakeLists.txt.user
