@@ -3,21 +3,23 @@ FGx
 
 **Cross platform launcher for FlightGear**
 
-HomePage: http://fgx/freeflightsim.org 
+HomePage: http://fgx.freeflightsim.org 
 
 * FGx is
-  * written in c++ using qt toolkit 
-  * around spring 2015 expect qt5 (can u help ?)
+  - written in c++ using qt toolkit 
+  - around spring 2015 expect qt5 (can u help ?)
 * Issues, Feature Requests & Bugs: 
-  * https://github.com/fgx/fgx/issues
+  - https://github.com/fgx/fgx/issues
+* Team Chat:
+  * http://fgx-project.googlegroups.com
+  * chat at irc.flightgear.org#fgx
 * Code: 
   * https://github.com/fgx/fgx
 * API Docs: 
   * http://fgx/freeflightsim.org 
 
 
-  (Closed) Developer Group:
-<http://fgx-project.googlegroups.com>
+
 
   
 ![image](https://secure.travis-ci.org/fgx/fgx.png?branch=master:target: http://travis-ci.org/fgx/fgx)
