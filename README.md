@@ -11,8 +11,8 @@ FGx
 The project
 --------------------------
 
-* Bugs and documentation: http://code.google.com/p/fgx
-* Code: http://gitorious.org/fgx
+* Code: https://github.com/fgx/fgx
+* Issues & Bugs: https://github.com/fgx/fgx/issues
 
 
 Minimal Requirements
@@ -86,7 +86,7 @@ Please start with reading section WARRANTY of GPLv2 or later licence you get wit
 FGx Links
 ----------------------------------
 Source, main Git Repository:
-<http://www.gitorious.org/fgx>
+<https://github.com/fgx/fgxx>
 
 Issue tracker, tasks:
 <http://fgx.googlecode.com>
