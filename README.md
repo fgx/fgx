@@ -1,33 +1,26 @@
 FGx 
 ========
 
-**FREE AND OPEN SOURCE LAUNCHER FOR FLIGHTGEAR**
+**Cross platform launcher for FlightGear**
 
-* Version 2.10.x
+HomePage: http://fgx/freeflightsim.org 
 
+* FGx is
+  * written in c++ using qt toolkit 
+  * around spring 2015 expect qt5 (can u help ?)
+* Issues, Feature Requests & Bugs: 
+  * https://github.com/fgx/fgx/issues
+* Code: 
+  * https://github.com/fgx/fgx
+* API Docs: 
+  * http://fgx/freeflightsim.org 
+
+
+  (Closed) Developer Group:
+<http://fgx-project.googlegroups.com>
+
+  
 ![image](https://secure.travis-ci.org/fgx/fgx.png?branch=master:target: http://travis-ci.org/fgx/fgx)
-
-
-The project
---------------------------
-
-* Code: https://github.com/fgx/fgx
-* Issues & Bugs: https://github.com/fgx/fgx/issues
-
-
-Minimal Requirements
---------------------------
-Hard- and Software (TODO: Windows, Linux requirements):
-* Apple Intel-based Mac, OSX 10.5.8, 1 GB RAM, 128 Mb VRAM
-* Windows XP, Vista
-* Linux Debian/Ubuntu, tested also for Fedora/Gentoo
-
-Development requirements:
---------------------------
-* Open Source Edition of qt, >= 4.7
-  * http://doc.qt.nokia.com/4.7-snapshot/requirements.htm
-* Qt Creator, for OSX you can also use XCode <= 4.0
-* lastet git
 
 
 Installation
@@ -51,22 +44,16 @@ All the code is under GPLv2 or later. LICENSE.txt and README.txt have to be incl
 
 Authors
 -----------------------
-* Yves Sablonier (CH), flightgear [at] sablonier dot ch
-   * Project Lead, Code Facility Services, GUI Design and Features
 * Pete Morgan (UK) pete [at] freeflightsim dot org
-   * Coding lead, Developer and Programmer, Application Design
+   * Project Lead, Coding lead, Developer and Programmer, Application Design
 * Geoff McLane (F) ubuntu [at] geoffair.info
    * Senior Developer, Analyst, Reviewer, Engineer and Programmer
+* Yves Sablonier (CH), flightgear [at] sablonier dot ch
+   * Sleeping but creator of FGx -  Project Lead, Code Facility Services, GUI Design and Features
+   
+Some included code in FGx comes from other GPL sources, like zlib from Jean-Loup Gailly/Mark Adler. We try to pay attribution everywhere, you will find such notes directly in the source files or documentation at http://fgx.freeflightsim.org
 
-Some included code in FGx comes from other GPL sources, like zlib from Jean-Loup Gailly/Mark Adler. We try to pay attribution everywhere, you will find such notes directly in the source files or documentation.
-
-Other Notices
--------------------------------
-FlightGear is a free and open source Flight Simulator, available under GPLv2 or later here:
-<http://www.flightgear.org or here: http://www.gitorious.org/fg>
-Qt Open Source Edition is under Qt GNU GPL v. 3.0 Version
-
-Thanks
+Thanks from Yves
 -------------------------------
 First I send my BIG THANKS to Pete, who decided to contribute and who is responsible that FGx improves fast since early 2011. Second my thanks goes to Geoff McLane who brings a lot more style into the code with his analyses, proposals and new code.
 
@@ -78,25 +65,6 @@ Special thanks from Yves goes to Martin Spott, James Turner and Frederic Bouvier
 (Beware of FlightGear versions where you have to pay for, original FlightGear is FREE, has a huge community, 
 a living forum and wiki. We guess you will never get a better version than the original.)
 
-
-WARRANTY
------------------------------
-Please start with reading section WARRANTY of GPLv2 or later licence you get with this software.
-
-FGx Links
-----------------------------------
-Source, main Git Repository:
-<https://github.com/fgx/fgxx>
-
-Issue tracker, tasks:
-<http://fgx.googlecode.com>
-
-(Closed) Developer Group:
-<http://fgx-project.googlegroups.com>
-
-Personal Developer Sites:
-<http://fgx.freeflightsim.org>
-<http://fgx.sablonier.ch>
 
 FlightGear Links
 -----------------------------------
