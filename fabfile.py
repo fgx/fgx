@@ -30,6 +30,7 @@ def make_docs():
         local("mkdir  %s/docs_build/html/screenshots/" % (PROJECT_ROOT) )
     local("cp %s/screenshots/*.jpeg %s/docs_build/html/screenshots/" % (PROJECT_ROOT, PROJECT_ROOT) )
     local("cp %s/src/resources/artwork/fgx-logo.png %s/docs_build/html/" % (PROJECT_ROOT, PROJECT_ROOT) )
+    local("cp %s/src/resources/fgx.ico %s/docs_build/html/favicon.ico" % (PROJECT_ROOT, PROJECT_ROOT) )
    
 
 def ssh_test():
