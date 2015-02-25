@@ -8,10 +8,9 @@ from fabric.api import env, local, run, cd, lcd, sudo, warn_only
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 REMOTE_DIR = "/home/fg/fgx"
-
-
 env.hosts = [ 'fgx.freeflightsim.org' ]
 env.use_ssh_config = True
+
 
 def _read_version():
     """reads the ./version_file"""
@@ -19,6 +18,7 @@ def _read_version():
     v = f.read()
     f.close()
     return v
+
 
 def make_docs():
     """Generate API docs"""
@@ -31,6 +31,7 @@ def make_docs():
     local("cp %s/screenshots/*.jpeg %s/docs_build/html/screenshots/" % (PROJECT_ROOT, PROJECT_ROOT) )
     local("cp %s/src/resources/artwork/fgx-logo.png %s/docs_build/html/" % (PROJECT_ROOT, PROJECT_ROOT) )
    
+
 def ssh_test():
     """Test sssh connection to fgx site"""
     run("whoami")

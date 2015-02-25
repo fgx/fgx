@@ -13,15 +13,20 @@
  * 
  * \section main_toc Contents
  * 
- * * \ref overview
+ * * \ref download
  * * \ref install_guide
  * * \ref developers_guide
  *  - \ref todo and \ref TODO
  * * \ref source_docs
  * * \ref developers
  * 
- *  \subsection lic_shot Licence
- *    - GNU GENERAL PUBLIC LICENSE
- *    - see \ref LICENSE.txt
+ *  \subsection lic_shot Legal 
+ *    - FGx is released under the GNU GENERAL PUBLIC LICENSE
+ *    - see \ref LICENSE
+ *
  * 
+ * 
+ * 
+ *  * \page LICENSE LICENSE.txt
+ *  \include LICENSE.txt
  */
