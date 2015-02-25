@@ -71,6 +71,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     proxyModel->setSourceModel(model);
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setFilterKeyColumn(C_FILTER);
+    proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 
 
     //=======================================================
@@ -114,8 +115,9 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
     //=======================================================
     //= Top Toolbar
-    QToolBar *topBar = new QToolBar();
-    treeLayout->addWidget(topBar);
+    QHBoxLayout *topBar = new QHBoxLayout();
+    topBar->setSpacing(5);
+    treeLayout->addLayout(topBar);
 
     //---------------------------------------
     //= Filter Toolbar
@@ -135,10 +137,36 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
     //= Filter Text
     txtFilter = new QLineEdit();
+    txtFilter->setFixedWidth(100);
     grpFilter->addWidget(txtFilter);
     connect(txtFilter, SIGNAL(textChanged(const QString)), this, SLOT(on_filter_text_changed(const QString)));
 
 
+    //---------------------------------------
+    //= Directories
+    ToolBarGroup *grpDirectories = new ToolBarGroup();
+    topBar->addWidget(grpDirectories);
+    grpDirectories->setTitle("Directories");
+
+    //= Show Base button
+    QToolButton * buttShowBase = new QToolButton();
+    buttShowBase->setText("Base Package");
+    buttShowBase->setIcon(QIcon(":/icon/folder"));
+    buttShowBase->setCheckable(true);
+    buttShowBase->setChecked(true);
+    buttShowBase->setAutoRaise(true);
+    buttShowBase->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    grpDirectories->addWidget(buttShowBase);
+
+    //= Show Base button
+    QToolButton * buttAddDir = new QToolButton();
+    buttAddDir->setText("Add");
+    buttAddDir->setIcon(QIcon(":/icon/folder_add"));
+    buttAddDir->setAutoRaise(true);
+    buttAddDir->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    grpDirectories->addWidget(buttAddDir);
+
+    topBar->addStretch(20);
 
     //=======================================================
     //= Treeview
@@ -359,8 +387,6 @@ void AircraftWidget::on_filter_text_changed(const QString s){
 //==========================================================================
 void AircraftWidget::on_tree_selection_changed(){
 
-    qDebug() << "on_tree_selection_changed" ;
-    //QTreeWidgetItem *item = treeWidget->currentItem();
     if(treeView->selectionModel()->hasSelection() == false){
         outLog("on_tree_selection_changed: no selected item");
         labelAeroPath->setText("nooooo");
@@ -510,10 +536,13 @@ void AircraftWidget::load_tree(){
         line = in.readLine();
     }
 
-    /*treeWidget->sortByColumn(view == FOLDER_VIEW ? C_DIR : C_AERO, Qt::AscendingOrder);*/
     treeView->sortByColumn(C_DIR, Qt::AscendingOrder);
     treeView->sortByColumn(C_AERO, Qt::AscendingOrder);
 
+    treeView->resizeColumnToContents(C_DIR);
+    treeView->resizeColumnToContents(C_AERO);
+    treeView->resizeColumnToContents(C_FDM);
+    //treeView->resizeColumnToContents(C_DIR);
 
     select_node(mainObject->X->getx("--aircraft="));
     QString str = QString("%1 aircrafts").arg(countaircrafts)+QString(", %1 models").arg(c);

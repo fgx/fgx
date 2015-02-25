@@ -43,5 +43,6 @@
         <file alias="ok">ycons/fgx-ok-green.png</file>
         <file alias="not-ok">ycons/fgx-not-ok-red.png</file>
         <file alias="clear_filter">icons/cal_cont.png</file>
+        <file alias="folder_add">icons/folder--plus.png</file>
     </qresource>
 </RCC>
