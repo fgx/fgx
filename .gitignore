@@ -3,6 +3,7 @@ build-*/
 docs_build/
 .DS_*
 *.pyc
+*.kate-swp
 
 src/fgx.pro.*
 
