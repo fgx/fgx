@@ -10,6 +10,7 @@
 #define XSETTINGS_H
 
 #include <QSettings>
+#include <QSplitter>
 
 class XSettings : public QSettings
 {
@@ -18,32 +19,34 @@ public:
 
     explicit XSettings(QObject *parent = 0);
 
-	static bool dev_mode();
+    static bool dev_mode();
 
-	static QString cache_dir();
+    static QString cache_dir();
 
-	QString fgx_path();
-	static QString fgx_current_dir();
-
-
-	void saveWindow(QWidget *widget);
-	void restoreWindow(QWidget *widget);
+    QString fgx_path();
+    static QString fgx_current_dir();
 
 
-	QString fgcom_exe_path();
-	QString fgcom_port();
-	QString fgcom_no();
-	QString default_fgcom_no();
-	QString default_fgcom_port();
+    void saveWindow(QWidget *widget);
+    void restoreWindow(QWidget *widget);
 
-	
-	static QString log_file_path();
+    void saveSplitter(QSplitter *splitter);
+    void restoreSplitter(QSplitter *splitter);
 
-	QString style_current();
-	QString style_default();
+    QString fgcom_exe_path();
+    QString fgcom_port();
+    QString fgcom_no();
+    QString default_fgcom_no();
+    QString default_fgcom_port();
+
+
+    static QString log_file_path();
+
+    QString style_current();
+    QString style_default();
 
 private:
-	QString _windowName(QWidget *widget);
+    QString _windowName(QWidget *widget);
 
 signals:
 

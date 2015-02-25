@@ -39,11 +39,11 @@ XSettings::XSettings(QObject *parent) :
 /** \brief return the currently selected style or the default
  */
 QString XSettings::style_current(){
-	return value("gui_style", style_default()).toString();
+    return value("gui_style", style_default()).toString();
 }
 
 QString XSettings::style_default(){
-	return "cleanlooks";
+    return "cleanlooks";
 
 }
 
@@ -51,8 +51,32 @@ QString XSettings::style_default(){
 //** fgx Install path
 //===========================================================================
 QString XSettings::fgx_path(){
-	return QDir::currentPath().append("/fgx.app/Contents/MacOS");
+    return QDir::currentPath().append("/fgx.app/Contents/MacOS");
 }
+
+//===========================================================================
+//** Save/Restore Splitter
+//===========================================================================
+/** \brief Saves a window size and position
+ *
+ */
+void XSettings::saveSplitter(QSplitter *splitter){
+    QString key = splitter->property("settings_namespace").toString();
+    QByteArray ba = splitter->saveState();
+    outLog("saveSplitter: Key="+key+", values "+ba.toHex());
+    setValue( key, QVariant(ba) );
+}
+/** \brief Restores a window position
+ *
+ */
+void XSettings::restoreSplitter(QSplitter *splitter){
+    //widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
+    QString key = splitter->property("settings_namespace").toString();
+    QByteArray ba = value(key).toByteArray();
+    outLog("saveSplitter: Key="+key+", values "+ba.toHex());
+    splitter->restoreState( ba );
+}
+
 
 //===========================================================================
 //** Save/Restore Window
@@ -75,24 +99,24 @@ void XSettings::restoreWindow(QWidget *widget){
     QString key = _windowName(widget);
     QByteArray ba = value(_windowName(widget)).toByteArray();
     outLog("restoreWindow: Key="+key+", values "+ba.toHex());
-    
-	// Set fixed size to 900,700 of all windows for first startup
-	
-	if (ba != "") {
-		widget->restoreGeometry(ba);
-	} else {
-		if (widget->accessibleName() == "launcherWindow") {
-			widget->resize(900,700);
-		}
-	}
+
+    // Set fixed size to 900,700 of all windows for first startup
+
+    if (ba != "") {
+        widget->restoreGeometry(ba);
+    } else {
+        if (widget->accessibleName() == "launcherWindow") {
+            widget->resize(900,700);
+        }
+    }
 
 }
 
 QString XSettings::_windowName(QWidget *widget){
-	QString key_name = "window/";
-	key_name.append(widget->property("settings_namespace").toString());
-	key_name.append("/geometry");
-	return key_name;
+    QString key_name = "window/";
+    key_name.append(widget->property("settings_namespace").toString());
+    key_name.append("/geometry");
+    return key_name;
 }
 
 
@@ -106,16 +130,16 @@ QString XSettings::_windowName(QWidget *widget){
  * \return  developer mode enabled
  */
 bool XSettings::dev_mode(){
-	QString curr = XSettings::fgx_current_dir().append("/DEV_MODE.txt");
-	return QFile::exists(curr);
+    QString curr = XSettings::fgx_current_dir().append("/DEV_MODE.txt");
+    return QFile::exists(curr);
 }
 
 // this should be used, yves
 QString XSettings::fgx_current_dir(){
-	return QDir::current().absolutePath();
+    return QDir::current().absolutePath();
 }
 
 // and this too, hrmbl !
 QString XSettings::cache_dir(){
-	return QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
+    return QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
 }

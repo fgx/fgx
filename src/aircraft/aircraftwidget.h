@@ -54,6 +54,7 @@ public:
 
     explicit AircraftWidget(MainObject *mOb, QWidget *parent = 0);
 
+    QString W_NAME;
     MainObject *mainObject;
 
     QCheckBox *checkBoxUseCustomHangar;
@@ -98,6 +99,8 @@ private:
     QLabel *labelAeroPath;
     QToolButton *buttonAeroPath;
 
+    QSplitter *splitter;
+
 signals:
     void setx( QString option, bool enabled,QString value);
 
@@ -118,6 +121,8 @@ public slots:
 
     void on_filter_text_changed(const QString);
     void on_clear_filter();
+
+    void on_splitter_moved();
 
 };
 

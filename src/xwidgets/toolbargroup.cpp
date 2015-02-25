@@ -1,5 +1,9 @@
 #include "toolbargroup.h"
 
+/* \brief A toolbar widgets with a title label on top and widgets underneath
+ * \author pete [at] freeflightsim [dot] org
+ */
+
 ToolBarGroup::ToolBarGroup(QWidget *parent) :
     QWidget(parent)
 {
@@ -17,6 +21,8 @@ ToolBarGroup::ToolBarGroup(QWidget *parent) :
     mainLayout->addWidget(bwid);
 
     bottomLayout = new QHBoxLayout();
+    bottomLayout->setContentsMargins(0,0,0,0);
+    bottomLayout->setSpacing(0);
     bwid->setLayout(bottomLayout);
 
 }

@@ -55,15 +55,32 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
 
+    // used for settings
+    W_NAME = "AircraftWidget";
     mainObject = mOb;
 
+    //========================================================
+    //= Models
+    model = new QStandardItemModel(this);
+    QStringList hLabels;
+    hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "Filter";
+    //model->setColumnCount(hLabels.length());
+    model->setHorizontalHeaderLabels(hLabels);
+
+    proxyModel = new QSortFilterProxyModel();
+    proxyModel->setSourceModel(model);
+    proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    proxyModel->setFilterKeyColumn(C_FILTER);
+
+
+    //=======================================================
     //* Main Layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
     setLayout(mainLayout);
     mainLayout->setSpacing(0);
     mainLayout->setContentsMargins(0,0,0,0);
 
-    QSplitter *splitter = new QSplitter(this);
+    splitter = new QSplitter(this);
     mainLayout->addWidget(splitter);
 
     //===============================================================================
@@ -96,40 +113,35 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     connect(buttSelectPath, SIGNAL(clicked()), this, SLOT(on_select_path()));
 
     //=======================================================
-    // Filter toolbar
+    //= Top Toolbar
     QToolBar *topBar = new QToolBar();
     treeLayout->addWidget(topBar);
 
+    //---------------------------------------
+    //= Filter Toolbar
     ToolBarGroup *grpFilter = new ToolBarGroup();
     topBar->addWidget(grpFilter);
     grpFilter->setTitle("Filter");
 
+    //= Clear filter button
     QToolButton * buttClearFilter = new QToolButton();
     buttClearFilter->setText("CKR >");
+    buttClearFilter->setFixedWidth(20);
     buttClearFilter->setIcon(QIcon(":/icon/clear_filter"));
     buttClearFilter->setAutoRaise(true);
     buttClearFilter->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    connect(buttClearFilter, SIGNAL(clicked()), this, SLOT(on_clear_filter()) );
     grpFilter->addWidget(buttClearFilter);
+    connect(buttClearFilter, SIGNAL(clicked()), this, SLOT(on_clear_filter()) );
 
+    //= Filter Text
     txtFilter = new QLineEdit();
     grpFilter->addWidget(txtFilter);
     connect(txtFilter, SIGNAL(textChanged(const QString)), this, SLOT(on_filter_text_changed(const QString)));
 
-    //== TODO NEW treeview _ + model
-    model = new QStandardItemModel(this);
-    QStringList hLabels;
-    //directory << aero << description << fdm << author << xml_file << file_path;
-    hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "Filter";
-    //model->setColumnCount(hLabels.length());
-    model->setHorizontalHeaderLabels(hLabels);
-
-    proxyModel = new QSortFilterProxyModel();
-    proxyModel->setSourceModel(model);
-    proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    proxyModel->setFilterKeyColumn(C_FILTER);
 
 
+    //=======================================================
+    //= Treeview
     treeView = new QTreeView(this);
     treeLayout->addWidget(treeView);
     treeView->setModel(proxyModel);
@@ -153,7 +165,8 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     );
 
 
-
+    //=================================
+    //= Status Bar
     statusBarTree = new QStatusBar();
     statusBarTree->setSizeGripEnabled(false);
     treeLayout->addWidget(statusBarTree);
@@ -168,7 +181,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     statusBarTree->addPermanentWidget(checkViewNested);
     connect(checkViewNested, SIGNAL(clicked()), this, SLOT(load_tree()));*/
 
-    //== Reload aircrafts
+    //== Reload cache
     QToolButton *actionReloadCacheDb = new QToolButton(this);
     actionReloadCacheDb->setText("Reload");
     actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
@@ -178,10 +191,10 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
 
+
     //================================================================================================
     //= Right
     //================================================================================================
-
 
     QGroupBox *grpAero = new QGroupBox();
     splitter->addWidget(grpAero);
@@ -319,11 +332,17 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     splitter->setCollapsible(1, false);
     splitter->setStretchFactor(0, 50);
     splitter->setStretchFactor(1, 10);
+    splitter->setProperty("settings_namespace", "aircraft_widget_splitter");
+    this->mainObject->settings->restoreSplitter(splitter);
+    connect(splitter, SIGNAL(splitterMoved(int,int)), this, SLOT(on_splitter_moved()));
 
     //== Main Settings connection
     connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
     connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
+}
+void AircraftWidget::on_splitter_moved(){
+    this->mainObject->settings->saveSplitter(splitter);
 }
 
 void AircraftWidget::on_clear_filter(){
