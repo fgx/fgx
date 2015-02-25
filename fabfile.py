@@ -7,6 +7,12 @@ from fabric.api import env, local, run, cd, lcd, sudo, warn_only
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
+REMOTE_DIR = "/home/fg/fgx"
+
+
+env.hosts = [ 'fgx.freeflightsim.org' ]
+env.use_ssh_config = True
+
 def _read_version():
     """reads the ./version_file"""
     f = open(PROJECT_ROOT + "/version", "r")
@@ -24,4 +30,19 @@ def make_docs():
         local("mkdir  %s/docs_build/html/screenshots/" % (PROJECT_ROOT) )
     local("cp %s/screenshots/*.jpeg %s/docs_build/html/screenshots/" % (PROJECT_ROOT, PROJECT_ROOT) )
     local("cp %s/src/resources/artwork/fgx-logo.png %s/docs_build/html/" % (PROJECT_ROOT, PROJECT_ROOT) )
-            
+   
+def ssh_test():
+    """Test sssh connection to fgx site"""
+    run("whoami")
+    run("pwd")
+    run("ls -alh")
+    
+          
+def up_www():
+    """Updates the online website"""
+    with cd(REMOTE_DIR):
+        run("git pull")
+        run("fab make_docs")
+        
+    
+    
