@@ -117,6 +117,7 @@ public slots:
     void on_open_aircraft_path();
 
     void on_filter_text_changed(const QString);
+    void on_clear_filter();
 
 };
 

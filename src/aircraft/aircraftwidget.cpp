@@ -46,7 +46,7 @@
 
 #include "aircraft/aircraftwidget.h"
 #include "aircraft/aircraftdata.h"
-#include "xwidgets/xtreewidgetitem.h"
+#include "xwidgets/toolbargroup.h"
 #include "utilities/utilities.h"
 #include "utilities/messagebox.h"
 
@@ -95,8 +95,22 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     treeTopBar->addWidget(buttSelectPath);
     connect(buttSelectPath, SIGNAL(clicked()), this, SLOT(on_select_path()));
 
+    //=======================================================
+    // Filter toolbar
+    QToolBar *topBar = new QToolBar();
+    treeLayout->addWidget(topBar);
+
+    ToolBarGroup *grpFilter = new ToolBarGroup();
+    topBar->addWidget(grpFilter);
+    grpFilter->setTitle("Filter");
+
+    QToolButton * buttClearFilter = new QToolButton();
+    buttClearFilter->setText("CKR >");
+    connect(buttClearFilter, SIGNAL(clicked()), this, SLOT(on_clear_filter()) );
+    grpFilter->addWidget(buttClearFilter);
+
     txtFilter = new QLineEdit();
-    treeTopBar->addWidget(txtFilter);
+    grpFilter->addWidget(txtFilter);
     connect(txtFilter, SIGNAL(textChanged(const QString)), this, SLOT(on_filter_text_changed(const QString)));
 
     //== TODO NEW treeview _ + model
@@ -130,8 +144,8 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     treeView->setColumnHidden(C_XML_FILE, true);
     treeView->setColumnHidden(C_FILE_PATH, true);
     treeView->setColumnHidden(C_FILTER, true);
-    connect( treeView,
-             SIGNAL( itemSelectionChanged() ),
+    connect( treeView->selectionModel(),
+             SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection & ) ),
              SLOT( on_tree_selection_changed() )
     );
 
@@ -301,7 +315,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     splitter->setCollapsible(0, false);
     splitter->setCollapsible(1, false);
     splitter->setStretchFactor(0, 50);
-    splitter->setStretchFactor(1, 1);
+    splitter->setStretchFactor(1, 10);
 
     //== Main Settings connection
     connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
@@ -309,6 +323,10 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 }
 
+void AircraftWidget::on_clear_filter(){
+    txtFilter->setText("");
+    txtFilter->setFocus();
+}
 
 void AircraftWidget::on_filter_text_changed(const QString s){
     proxyModel->setFilterFixedString(s);
@@ -319,26 +337,24 @@ void AircraftWidget::on_filter_text_changed(const QString s){
 //==========================================================================
 void AircraftWidget::on_tree_selection_changed(){
 
-
+    qDebug() << "on_tree_selection_changed" ;
     //QTreeWidgetItem *item = treeWidget->currentItem();
     if(treeView->selectionModel()->hasSelection() == false){
         outLog("on_tree_selection_changed: no selected item");
-        labelAeroPath->setText("");
+        labelAeroPath->setText("nooooo");
         emit setx("--aircraft=", false, "");
         //buttonAeroPath->setDisabled(true);
         return;
     }
 
-    QModelIndex midx = treeView->selectionModel()->selectedIndexes().at(C_FILE_PATH);
-    QStandardItem *item = model->itemFromIndex( midx  );
+    QModelIndex midx = treeView->selectionModel()->selectedIndexes().at(C_DIR);
 
-    // This is obsolete debugging output somehow
-    //labelAeroPath->setText(mainObject->X->aircraft_path() + item->parent->text(C_DIR) + item->text(C_AERO));
+    QStandardItem *item = model->itemFromIndex( proxyModel->mapToSource(midx)  );
 
     //= Get the thumbnail image
-    QString thumb_file = QString("%1/%2/thumbnail.jpg").arg( mainObject->X->aircraft_path(),
-                                                                    item->text());
+    QString thumb_file = QString("%1/%2/thumbnail.jpg").arg(mainObject->X->aircraft_path(), item->text());
 
+    //qDebug() << "on_tree_selection_changed" << thumb_file << item->text();
     if(QFile::exists(thumb_file)){
         QPixmap aeroImage(thumb_file);
         if(!aeroImage.isNull()){
@@ -393,7 +409,7 @@ void AircraftWidget::select_node(QString aero){
 QString AircraftWidget::selected_aircraft(){
 
     QModelIndex midx = treeView->selectionModel()->selectedIndexes().at(C_AERO);
-    QStandardItem *item = model->itemFromIndex( midx  );
+    QStandardItem *item = model->itemFromIndex( proxyModel->mapToSource(midx)   );
     return item->text();
 }
 
