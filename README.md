@@ -22,7 +22,7 @@ HomePage: http://fgx.freeflightsim.org
 
 
   
-![image](https://secure.travis-ci.org/fgx/fgx.png?branch=master:target: http://travis-ci.org/fgx/fgx)
+![image](https://travis-ci.org/fgx/fgx.svg?branch=next)
 
 
 Installation

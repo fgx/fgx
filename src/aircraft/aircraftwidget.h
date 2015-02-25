@@ -17,7 +17,10 @@
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QLineEdit>
-#include <QTreeWidget>
+#include <QTreeView>
+#include <QStandardItemModel>
+#include <QStandardItem>
+#include <QSortFilterProxyModel>
 #include <QTabBar>
 #include <QLabel>
 #include <QStatusBar>
@@ -33,15 +36,16 @@ class AircraftWidget : public QWidget
 {
 Q_OBJECT
 public:
-    //aero << directory << xml_file << description << fdm << author << file_path;
+    //directory << aero << description << fdm << author << xml_file << file_path;
     enum COLS{
         C_DIR,
         C_AERO,
-        C_RATING,
         C_DESCRIPTION,
         C_FDM,
         C_AUTHOR,
-        C_FILE_PATH
+        C_XML_FILE,
+        C_FILE_PATH,
+        C_FILTER
     };
     /*enum VIEWS{
         LIST_VIEW = 1,
@@ -81,9 +85,15 @@ public:
     QString validate();
     void select_node(QString aero);
     QString selected_aircraft();
+    QList<QStandardItem*> create_model_row();
+
 
 private:
-    QTreeWidget *treeWidget;
+    QStandardItemModel *model;
+    QSortFilterProxyModel *proxyModel;
+    QTreeView *treeView;
+    QLineEdit *txtFilter;
+
     QStatusBar *statusBarTree;
     QLabel *labelAeroPath;
     QToolButton *buttonAeroPath;
@@ -105,6 +115,9 @@ public slots:
 
     void on_upx(QString option, bool enabled, QString value);
     void on_open_aircraft_path();
+
+    void on_filter_text_changed(const QString);
+
 };
 
 #endif // AIRCRAFTWIDGET_H
