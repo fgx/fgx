@@ -5,7 +5,6 @@ docs_build/
 *.pyc
 *.kate-swp
 
-src/fgx.pro.*
 
 CMakeCache.txt
 CMakeLists.txt.user
@@ -15,3 +14,39 @@ cmake_install.cmake
 install_manifest.txt
 
 
+## Thou shalt not add any binary stuff to project ;-)
+
+# C++ objects and libs
+
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.dll
+*.dylib
+
+# Qt-es
+
+/.qmake.cache
+/.qmake.stash
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+Makefile*
+*-build-*
+
+# QtCreator
+
+*.autosave
+
+#QtCtreator Qml
+*.qmlproject.user
+*.qmlproject.user.*

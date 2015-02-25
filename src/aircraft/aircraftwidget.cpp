@@ -106,6 +106,9 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
     QToolButton * buttClearFilter = new QToolButton();
     buttClearFilter->setText("CKR >");
+    buttClearFilter->setIcon(QIcon(":/icon/clear_filter"));
+    buttClearFilter->setAutoRaise(true);
+    buttClearFilter->setToolButtonStyle(Qt::ToolButtonIconOnly);
     connect(buttClearFilter, SIGNAL(clicked()), this, SLOT(on_clear_filter()) );
     grpFilter->addWidget(buttClearFilter);
 

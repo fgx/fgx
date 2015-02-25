@@ -27,7 +27,7 @@
         <file alias="help">ycons/fgx-help.png</file>
         <file alias="save">ycons/fgx-save.png</file>
         <file alias="load">ycons/fgx-load.png</file>
-		<file alias="reset">ycons/fgx-reset.png</file>
+        <file alias="reset">ycons/fgx-reset.png</file>
         <file alias="import">ycons/fgx-import.png</file>
         <file alias="start">ycons/fgx-start.png</file>
         <file alias="stop">ycons/fgx-stop.png</file>
@@ -40,7 +40,8 @@
         <file alias="map_type">icons/map.png</file>
         <file alias="tower">icons/building.png</file>
         <file alias="metar">icons/weather_rain.png</file>
-		<file alias="ok">ycons/fgx-ok-green.png</file>
-		<file alias="not-ok">ycons/fgx-not-ok-red.png</file>
+        <file alias="ok">ycons/fgx-ok-green.png</file>
+        <file alias="not-ok">ycons/fgx-not-ok-red.png</file>
+        <file alias="clear_filter">icons/cal_cont.png</file>
     </qresource>
 </RCC>
