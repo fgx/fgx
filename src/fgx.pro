@@ -75,7 +75,8 @@ HEADERS += xobjects/xsettings.h \
     utilities/simgear/SGGeodesy.h \
     utilities/simgear/constants.h \
     utilities/simgear/compiler.h \
-    xwidgets/toolbargroup.h
+    xwidgets/toolbargroup.h \
+    aircraft/aircraftproxymodel.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -140,7 +141,8 @@ SOURCES += main.cpp \
     utilities/workThread.cpp \
     utilities/loadAptDat.cpp \
     utilities/simgear/SGGeodesy.cpp \
-    xwidgets/toolbargroup.cpp
+    xwidgets/toolbargroup.cpp \
+    aircraft/aircraftproxymodel.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \

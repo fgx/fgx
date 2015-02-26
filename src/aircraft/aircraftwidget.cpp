@@ -65,7 +65,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     //model->setColumnCount(hLabels.length());
     model->setHorizontalHeaderLabels(hLabels);
 
-    proxyModel = new QSortFilterProxyModel();
+    proxyModel = new AircraftProxyModel(); //QSortFilterProxyModel();
     proxyModel->setSourceModel(model);
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setFilterKeyColumn(C_FILTER);
@@ -74,11 +74,14 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     //= Custom Dir button stuff
     buttGroupShowDirs = new QButtonGroup(this);
     buttGroupShowDirs->setExclusive(false);
+    connect(buttGroupShowDirs, SIGNAL(buttonClicked(QAbstractButton*)),
+            this,              SLOT(on_toggle_directory())
+    );
 
     actGroupDeleteCustomDirs = new QActionGroup(this);
     actGroupDeleteCustomDirs->setExclusive(false);
     connect(actGroupDeleteCustomDirs, SIGNAL(triggered(QAction*)),
-            this, SLOT(on_remove_custom_dir(QAction*))
+            this,                     SLOT(on_remove_custom_dir(QAction*))
     );
 
 
@@ -140,14 +143,17 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
     //= Show Base button
     QToolButton * buttShowBase = new QToolButton();
+    buttShowBase->setProperty("dir", mainObject->X->aircraft_path() );
+    buttShowBase->setProperty("base", "1" );
+    buttShowBase->setToolTip(mainObject->X->aircraft_path());
     buttShowBase->setText("Base Package");
-    buttShowBase->setIcon(QIcon(":/icon/folder"));
+    buttShowBase->setIcon(QIcon(":/icon/base_folder"));
     buttShowBase->setCheckable(true);
     buttShowBase->setChecked(true);
     buttShowBase->setAutoRaise(true);
     buttShowBase->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     grpCustomDirs->addWidget(buttShowBase);
-    //buttGroupCustomDirs->addButton();
+    buttGroupShowDirs->addButton(buttShowBase);
 
     //= Show Base button
     QToolButton * buttAddCustomDir = new QToolButton();
@@ -156,7 +162,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     buttAddCustomDir->setAutoRaise(true);
     buttAddCustomDir->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     grpCustomDirs->addWidget(buttAddCustomDir);
-    connect(buttAddCustomDir, SIGNAL(clicked()), this, SLOT(on_add_custom()));
+    connect(buttAddCustomDir, SIGNAL(clicked()), this, SLOT(on_add_custom_dir()));
 
     topBar->addStretch(20);
 
@@ -494,7 +500,7 @@ void AircraftWidget::load_aircraft(){
         // Add model row
         row = this->create_model_row();
         row.at(C_DIR)->setText(cols.at(C_DIR));
-        row.at(C_DIR)->setIcon(QIcon(":/icon/folder"));
+        row.at(C_DIR)->setIcon(QIcon(":/icon/base_folder"));
 
         row.at(C_AERO)->setText(cols.at(C_AERO));
         row.at(C_AERO)->setIcon(QIcon(":/icon/aircraft"));
@@ -637,6 +643,16 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
 //=====================================================================
 // Custom aircraft Dir Stuff
 //=====================================================================
+// switches a directories visiibility
+void AircraftWidget::on_toggle_directory(){
+
+
+    for(int i = 0; i < buttGroupShowDirs->buttons().length(); i++){
+        QString dir = buttGroupShowDirs->buttons().at(i)->property("dir").toString();
+    }
+}
+
+
 // HELP. .this function crashed for some reason..
 void AircraftWidget::on_remove_custom_dir(QAction *act)
 {
@@ -709,8 +725,9 @@ void AircraftWidget::load_custom_dir_buttons()
        lstCustomDirButtons.append(buttDir);
        qDebug() << "Add button" << dinfo.absoluteFilePath();
        buttDir->setProperty("dir", dinfo.absoluteFilePath());
+       buttDir->setToolTip(mainObject->X->aircraft_path());
        buttDir->setText(dinfo.baseName());
-       buttDir->setIcon(QIcon(":/icon/folder"));
+       buttDir->setIcon(QIcon(":/icon/custom_folder"));
        buttDir->setCheckable(true);
        buttDir->setChecked(true);
        buttDir->setAutoRaise(true);

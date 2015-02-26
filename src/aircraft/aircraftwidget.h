@@ -31,6 +31,9 @@
 #include "xwidgets/toolbargroup.h"
 class ToolBarGroup;
 
+#include "aircraft/aircraftproxymodel.h"
+class AircraftProxyModel;
+
 /*! \class AircraftWidget
 * \brief Aircraft panel with a left/right splitter, model/proxy/tree vs selected
 * \todo need to abtract out the aircraft custom directories, ie built in and custom
@@ -54,10 +57,7 @@ public:
         C_FILE_PATH,
         C_FILTER
     };
-    /*enum VIEWS{
-        LIST_VIEW = 1,
-        FOLDER_VIEW = 0
-    };*/
+
 
     explicit AircraftWidget(MainObject *mOb, QWidget *parent = 0);
 
@@ -100,7 +100,8 @@ public:
 
 private:
     QStandardItemModel *model;
-    QSortFilterProxyModel *proxyModel;
+    //QSortFilterProxyModel *proxyModel;
+    AircraftProxyModel  *proxyModel;
     QTreeView *treeView;
     QLineEdit *txtFilter;
 
@@ -135,6 +136,7 @@ public slots:
     void on_add_custom_dir();
     void on_remove_custom_dir(QAction*);
     void load_custom_dir_buttons();
+    void on_toggle_directory();
 };
 
 #endif // AIRCRAFTWIDGET_H
