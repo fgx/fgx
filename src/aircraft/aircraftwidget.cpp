@@ -61,7 +61,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     //= Models
     model = new QStandardItemModel(this);
     QStringList hLabels;
-    hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "DirPath" << "Filter";
+    hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "DirPath" << "Filter" << "BASE";
     //model->setColumnCount(hLabels.length());
     model->setHorizontalHeaderLabels(hLabels);
 
@@ -420,6 +420,7 @@ void AircraftWidget::on_tree_selection_changed(){
         lblAeroDescription->setText("-");
         lblAeroXml->setText("");
         this->buttOpenAeroDir->setDisabled(true);
+        this->buttOpenAeroDir->setIcon(QIcon(":/icon/folder_open"));
         emit setx("--aircraft=", false, "");
         return;
     }
@@ -431,11 +432,21 @@ void AircraftWidget::on_tree_selection_changed(){
                             proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(C_DESCRIPTION))
                           )->text());
 
-    this->buttOpenAeroDir->setDisabled(false);
-    QString dir =  model->itemFromIndex(
+
+    QString xmlFile =  model->itemFromIndex(
                         proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(C_FILE_PATH))
                     )->text();
-    lblAeroXml->setText(dir);
+    lblAeroXml->setText(xmlFile);
+
+    int is_base =  model->itemFromIndex(
+                        proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(C_BASE))
+                    )->text().toInt();
+    this->buttOpenAeroDir->setDisabled(false);
+    if( is_base == 1 ){
+        this->buttOpenAeroDir->setIcon(QIcon(":/icon/base_folder"));
+    }else{
+        this->buttOpenAeroDir->setIcon(QIcon(":/icon/custom_folder"));
+    }
 
     QModelIndex midx = treeView->selectionModel()->selectedIndexes().at(C_DIR);
     QStandardItem *item = model->itemFromIndex( proxyModel->mapToSource(midx)  );
@@ -542,6 +553,7 @@ void AircraftWidget::load_custom_aircraft(){
             row.at(C_XML_FILE)->setText(mi.xml_file);
             row.at(C_FILE_PATH)->setText(mi.file_path);
             row.at(C_FILTER_PATH)->setText(custom_dirs.at(i));
+            row.at(C_BASE)->setText("0");
 
             QString filter_str = mi.aero;
             filter_str.append( mi.description );
@@ -600,6 +612,7 @@ void AircraftWidget::load_aircraft(){
         QString filter_str = cols.at(C_AERO);
         filter_str.append(cols.at(C_DESCRIPTION) );
         row.at(C_FILTER)->setText( filter_str );
+        row.at(C_BASE)->setText("1");
         c++;
         line = in.readLine();
     }
@@ -620,7 +633,7 @@ void AircraftWidget::load_aircraft(){
 
 QList<QStandardItem*> AircraftWidget::create_model_row(){
     QList<QStandardItem*> lst;
-    lst << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem();
+    lst << new QStandardItem()  << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem();
     model->appendRow(lst);
     return lst;
 }

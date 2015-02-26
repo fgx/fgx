@@ -56,7 +56,8 @@ public:
         C_XML_FILE,
         C_FILE_PATH,
         C_FILTER_PATH,
-        C_FILTER
+        C_FILTER,
+        C_BASE
     };
 
 
