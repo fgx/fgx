@@ -55,7 +55,7 @@ public:
         C_AUTHOR,
         C_XML_FILE,
         C_FILE_PATH,
-        C_DIR_PATH,
+        C_FILTER_PATH,
         C_FILTER
     };
 
@@ -73,6 +73,7 @@ public:
     /* \brief List of pointers to custon Buttons */
     QList<QToolButton*> lstCustomDirButtons;
     QLineEdit *txtFilter;
+    QToolButton * buttShowBase;
 
 
     QLabel *aeroImageLabel;

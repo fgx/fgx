@@ -17,7 +17,7 @@ public:
     QString authors;
     QString description;
     QString file_path;
-    QString dir_path; // for filter
+    QString filter_path; // for filter
 };
 
 #endif // MODELINFO_H

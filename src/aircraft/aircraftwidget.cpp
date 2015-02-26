@@ -142,11 +142,11 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     grpCustomDirs->setTitle("Directories");
 
     //= Show Base button
-    QToolButton * buttShowBase = new QToolButton();
-    buttShowBase->setProperty("dir", mainObject->X->aircraft_path() );
+    buttShowBase = new QToolButton();
+    //buttShowBase->setProperty("dir", mainObject->X->aircraft_path() ); ?? WE DO THIS AT LOAD_AIRCRAFT IN CASE CHANGED
     buttShowBase->setProperty("base", "1" );
-    buttShowBase->setToolTip(mainObject->X->aircraft_path());
-    buttShowBase->setText("Base Package");
+    buttShowBase->setToolTip( mainObject->X->aircraft_path());
+    buttShowBase->setText( "Base Package" );
     buttShowBase->setIcon(QIcon(":/icon/base_folder"));
     buttShowBase->setCheckable(true);
     buttShowBase->setChecked(true);
@@ -182,9 +182,12 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     treeView->setColumnWidth(C_DIR, 60);
     treeView->setColumnWidth(C_FDM, 60);
     treeView->setColumnWidth(C_DESCRIPTION, 200);
-    //treeView->setColumnHidden(C_XML_FILE, true);
-    //treeView->setColumnHidden(C_FILE_PATH, true);
-    //treeView->setColumnHidden(C_FILTER, true);
+    treeView->setColumnHidden(C_XML_FILE, true);
+    treeView->setColumnHidden(C_FILE_PATH, true);
+    treeView->setColumnHidden(C_FILTER_PATH, true);
+    //treeView->setColumnHidden(C_DESCRIPTION, true);
+    //treeView->setColumnHidden(C_AUTHOR, true);
+    treeView->setColumnHidden(C_FILTER, true);
     connect( treeView->selectionModel(),
              SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection & ) ),
              SLOT( on_tree_selection_changed() )
@@ -475,7 +478,7 @@ void AircraftWidget::on_reload_cache(){
 
 void AircraftWidget::load_custom_aircraft(){
 
-     QList<QStandardItem*> row;
+    QList<QStandardItem*> row;
     //=== Load Custom Paths
     QStringList custom_dirs = this->mainObject->settings->value("custom_aircraft_dirs").toStringList();
     for(int i = 0; i < custom_dirs.size(); i++){
@@ -483,6 +486,7 @@ void AircraftWidget::load_custom_aircraft(){
        //qDebug() << xmlSets;
         for(int fi = 0; fi < xmlSets.length(); fi++){
             ModelInfo mi = AircraftData::read_model_xml(xmlSets.at(fi).absoluteFilePath());
+
             // Add model row
             row = this->create_model_row();
             row.at(C_DIR)->setText(mi.dir);
@@ -499,7 +503,7 @@ void AircraftWidget::load_custom_aircraft(){
             row.at(C_AUTHOR)->setText(mi.authors);
             row.at(C_XML_FILE)->setText(mi.xml_file);
             row.at(C_FILE_PATH)->setText(mi.file_path);
-            row.at(C_DIR_PATH)->setText(mi.dir_path);
+            row.at(C_FILTER_PATH)->setText(custom_dirs.at(i));
 
             QString filter_str = mi.aero;
             filter_str.append( mi.description );
@@ -511,6 +515,9 @@ void AircraftWidget::load_custom_aircraft(){
 //=============================================================
 // Load Aircaft To Tree
 void AircraftWidget::load_aircraft(){
+
+    buttShowBase->setToolTip( mainObject->X->aircraft_path());
+    buttShowBase->setProperty("dir", mainObject->X->aircraft_path());
 
     int c =0;
 
@@ -552,7 +559,7 @@ void AircraftWidget::load_aircraft(){
         row.at(C_AUTHOR)->setText(cols.at(C_AUTHOR));
         row.at(C_XML_FILE)->setText(cols.at(C_XML_FILE));
         row.at(C_FILE_PATH)->setText(cols.at(C_FILE_PATH));
-        row.at(C_DIR_PATH)->setText(cols.at(C_DIR_PATH));
+        row.at(C_FILTER_PATH)->setText(cols.at(C_FILTER_PATH));
 
         QString filter_str = cols.at(C_AERO);
         filter_str.append(cols.at(C_DESCRIPTION) );
@@ -561,7 +568,7 @@ void AircraftWidget::load_aircraft(){
         line = in.readLine();
     }
 
-    treeView->sortByColumn(C_DIR, Qt::AscendingOrder);
+    //treeView->sortByColumn(C_DIR, Qt::AscendingOrder);
     treeView->sortByColumn(C_AERO, Qt::AscendingOrder);
 
     treeView->resizeColumnToContents(C_DIR);
@@ -689,6 +696,8 @@ void AircraftWidget::on_toggle_directory(){
 
     for(int i = 0; i < buttGroupShowDirs->buttons().length(); i++){
         QString dir = buttGroupShowDirs->buttons().at(i)->property("dir").toString();
+       // qDebug() << "d=" << dir;
+        this->proxyModel->show_dir(dir, buttGroupShowDirs->buttons().at(i)->isChecked());
     }
 }
 
@@ -765,7 +774,7 @@ void AircraftWidget::load_custom_dir_buttons()
        lstCustomDirButtons.append(buttDir);
        qDebug() << "Add button" << dinfo.absoluteFilePath();
        buttDir->setProperty("dir", dinfo.absoluteFilePath());
-       buttDir->setToolTip(mainObject->X->aircraft_path());
+       buttDir->setToolTip(custom_dirs.at(i));
        buttDir->setText(dinfo.baseName());
        buttDir->setIcon(QIcon(":/icon/custom_folder"));
        buttDir->setCheckable(true);
@@ -786,11 +795,12 @@ void AircraftWidget::load_custom_dir_buttons()
        meniw->addAction(act);
       //  qDebug() << "post action =" << dinfo.absoluteFilePath();
        actGroupDeleteCustomDirs->addAction(act);
-         qDebug() << "  psot group =" << dinfo.absoluteFilePath();
+       qDebug() << "  psot group =" << dinfo.absoluteFilePath();
 
 
    }
    qDebug() << " Done loading";
+   this->on_toggle_directory();
 }
 void AircraftWidget::on_open_aircraft_path()
 {

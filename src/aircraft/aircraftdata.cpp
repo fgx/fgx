@@ -52,9 +52,10 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 
     QTextStream out(&cacheFile);
 
+    QString aircraft_base_path =  mainObject->X->aircraft_path();
     //= Get files Entries from Aircaft/ directory
-    QDir aircraftDir( mainObject->X->aircraft_path() );
-    qDebug() << "aircraft_path()=" << mainObject->X->aircraft_path() ;
+    QDir aircraftDir(aircraft_base_path);
+    qDebug() << "aircraft_path()=" << aircraft_base_path;
 
     aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
 
@@ -92,8 +93,9 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
                     file_path.append(xml_file);
 
                     ModelInfo mi = AircraftData::read_model_xml(file_path);
+                    mi.filter_path = aircraft_base_path;
                     QStringList lines;
-                    lines  << mi.dir << mi.aero << mi.description << mi.fdm << mi.authors << mi.xml_file << mi.file_path << mi.dir_path;
+                    lines  << mi.dir << mi.aero << mi.description << mi.fdm << mi.authors << mi.xml_file << mi.file_path << mi.filter_path;
                     out << lines.join("\t") << "\n";
 
                     found++;
@@ -113,6 +115,8 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
     cacheFile.close();
     return false;
 }
+
+/* \brief Returns all -set.xml files in a directory. Recus is for custom folder and selecting a parent */
 QFileInfoList AircraftData::get_xml_set_files(QString dir_path, bool recus){
     QDir dir( dir_path );
     QStringList filters;
@@ -133,7 +137,7 @@ QFileInfoList AircraftData::get_xml_set_files(QString dir_path, bool recus){
     return setList;
 }
 
-/* \brief Parses the xml-set file */
+/* \brief Parses the xml-set file by querying DOM */
 ModelInfo AircraftData::read_model_xml(QString xml_set_path){
 
     QFileInfo fInfo(xml_set_path);
@@ -141,7 +145,7 @@ ModelInfo AircraftData::read_model_xml(QString xml_set_path){
     ModelInfo mi;
     mi.ok = false;
     mi.file_path = xml_set_path;
-    mi.dir_path = fInfo.dir().absolutePath();
+    //mi.dir_path = fInfo.dir().absolutePath();
     mi.dir = fInfo.dir().dirName();
 
     // the model = filename without --set.xml
