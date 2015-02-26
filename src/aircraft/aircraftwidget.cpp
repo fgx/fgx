@@ -46,7 +46,6 @@
 
 #include "aircraft/aircraftwidget.h"
 #include "aircraft/aircraftdata.h"
-#include "xwidgets/toolbargroup.h"
 #include "utilities/utilities.h"
 #include "utilities/messagebox.h"
 
@@ -55,8 +54,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
 
-    // used for settings
-    W_NAME = "AircraftWidget";
+
     mainObject = mOb;
 
     //========================================================
@@ -72,6 +70,17 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setFilterKeyColumn(C_FILTER);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+
+    //= Custom Dir button stuff
+    buttGroupShowDirs = new QButtonGroup(this);
+    buttGroupShowDirs->setExclusive(false);
+
+    actGroupDeleteCustomDirs = new QActionGroup(this);
+    actGroupDeleteCustomDirs->setExclusive(false);
+    connect(actGroupDeleteCustomDirs, SIGNAL(triggered(QAction*)),
+            this, SLOT(on_remove_custom_dir(QAction*))
+    );
+
 
 
     //=======================================================
@@ -93,25 +102,6 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     leftWidget->setLayout(treeLayout);
     treeLayout->setContentsMargins(0,0,0,0);
     treeLayout->setSpacing(0);
-
-    //** Top Bar Layout
-    QHBoxLayout *treeTopBar = new QHBoxLayout();
-    treeTopBar->setContentsMargins(5,5,5,5);
-    treeTopBar->setSpacing(5);
-    treeLayout->addLayout(treeTopBar);
-
-    //= Use Custom Hangar (Aircraft Directory)
-    checkBoxUseCustomHangar = new QCheckBox("Use Custom Hangar (Custom aircraft directory):");
-    treeTopBar->addWidget(checkBoxUseCustomHangar);
-    connect(checkBoxUseCustomHangar, SIGNAL(clicked()), this, SLOT(on_custom_hangar_path()) );
-
-    txtAircraftPath = new QLineEdit();
-    treeTopBar->addWidget(txtAircraftPath);
-
-    buttSelectPath = new QToolButton();
-    buttSelectPath->setText("Select");
-    treeTopBar->addWidget(buttSelectPath);
-    connect(buttSelectPath, SIGNAL(clicked()), this, SLOT(on_select_path()));
 
     //=======================================================
     //= Top Toolbar
@@ -143,10 +133,10 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
 
     //---------------------------------------
-    //= Directories
-    ToolBarGroup *grpDirectories = new ToolBarGroup();
-    topBar->addWidget(grpDirectories);
-    grpDirectories->setTitle("Directories");
+    //= Custom Directories
+    grpCustomDirs = new ToolBarGroup();
+    topBar->addWidget(grpCustomDirs);
+    grpCustomDirs->setTitle("Directories");
 
     //= Show Base button
     QToolButton * buttShowBase = new QToolButton();
@@ -156,15 +146,17 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     buttShowBase->setChecked(true);
     buttShowBase->setAutoRaise(true);
     buttShowBase->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    grpDirectories->addWidget(buttShowBase);
+    grpCustomDirs->addWidget(buttShowBase);
+    //buttGroupCustomDirs->addButton();
 
     //= Show Base button
-    QToolButton * buttAddDir = new QToolButton();
-    buttAddDir->setText("Add");
-    buttAddDir->setIcon(QIcon(":/icon/folder_add"));
-    buttAddDir->setAutoRaise(true);
-    buttAddDir->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    grpDirectories->addWidget(buttAddDir);
+    QToolButton * buttAddCustomDir = new QToolButton();
+    buttAddCustomDir->setText("Add");
+    buttAddCustomDir->setIcon(QIcon(":/icon/folder_add"));
+    buttAddCustomDir->setAutoRaise(true);
+    buttAddCustomDir->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    grpCustomDirs->addWidget(buttAddCustomDir);
+    connect(buttAddCustomDir, SIGNAL(clicked()), this, SLOT(on_add_custom()));
 
     topBar->addStretch(20);
 
@@ -364,6 +356,8 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     this->mainObject->settings->restoreSplitter(splitter);
     connect(splitter, SIGNAL(splitterMoved(int,int)), this, SLOT(on_splitter_moved()));
 
+    load_custom_dir_buttons();
+
     //== Main Settings connection
     connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
     connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
@@ -402,7 +396,6 @@ void AircraftWidget::on_tree_selection_changed(){
     //= Get the thumbnail image
     QString thumb_file = QString("%1/%2/thumbnail.jpg").arg(mainObject->X->aircraft_path(), item->text());
 
-    //qDebug() << "on_tree_selection_changed" << thumb_file << item->text();
     if(QFile::exists(thumb_file)){
         QPixmap aeroImage(thumb_file);
         if(!aeroImage.isNull()){
@@ -422,21 +415,6 @@ void AircraftWidget::on_tree_selection_changed(){
     mainObject->launcherWindow->on_upx("--aircraft=", true, selected_aircraft()); // Show aircraft in header
 }
 
-//============================================
-//== Select an hangar/custom aircraft directory path
-
-void AircraftWidget::on_custom_hangar_path() {
-    emit setx("custom_hangar_enabled", checkBoxUseCustomHangar->isChecked(), "");
-    emit setx("--fg-aircraft=", checkBoxUseCustomHangar->isChecked(), txtAircraftPath->text());
-
-    if (txtAircraftPath->text() != "") {
-        on_reload_cache();
-    }else {
-        QMessageBox::warning(this, tr("Custom Aircraft Directory"),
-            tr("Click on \"select\" and set a valid path to an aircraft directory containing one or more aircrafts."),
-            QMessageBox::Ok);
-    }
-}
 
 //==============================
 //== Select an aircraft in tree
@@ -452,6 +430,7 @@ void AircraftWidget::select_node(QString aero){
 
     }*/
 }
+
 //==============================
 //== return selected Aircraft
 QString AircraftWidget::selected_aircraft(){
@@ -485,12 +464,12 @@ void AircraftWidget::on_reload_cache(){
     progress.setWindowIcon(QIcon(":/icon/load"));
 
     AircraftData::import(progress, mainObject);
-    load_tree();
+    load_aircraft();
 }
 
 //=============================================================
 // Load Aircaft To Tree
-void AircraftWidget::load_tree(){
+void AircraftWidget::load_aircraft(){
     int c =0;
 
     model->removeRows(0, model->rowCount());
@@ -568,7 +547,7 @@ void AircraftWidget::initialize(){
     if (!QFile::exists(mainObject->data_file("aircraft.txt"))){
         statusBarTree->showMessage("*** FGx: No cached data. Use set paths and reload");
     }else{
-        load_tree();
+        load_aircraft();
     }
     first_load_done = true;
 }
@@ -611,11 +590,8 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
         //= see tree load
         select_node(value);
 
-    }else if(option == "custom_hangar_enabled"){
-        checkBoxUseCustomHangar->setChecked(enabled);
-
     }else if(option == "--fg-aircraft="){
-        txtAircraftPath->setText(value);
+        //txtAircraftPath->setText(value);
 
     //== tab radio
     }else if(option == "--nav1="){
@@ -658,25 +634,107 @@ void AircraftWidget::on_upx( QString option, bool enabled, QString value)
     }
 }
 
-
-void AircraftWidget::on_select_path()
+//=====================================================================
+// Custom aircraft Dir Stuff
+//=====================================================================
+// HELP. .this function crashed for some reason..
+void AircraftWidget::on_remove_custom_dir(QAction *act)
 {
-#ifdef USE_ALTERNATE_GETFILE
-    QString dirPath = util_getDirName(this, tr("Select Hangar (Aircraft directory)"),
-                                            txtAircraftPath->text());
-#else // !#ifdef USE_ALTERNATE_GETFILE
-    QString dirPath = QFileDialog::getExistingDirectory(this, tr("Select Hangar (Aircraft directory)"),
-                                                         txtAircraftPath->text(), QFileDialog::ShowDirsOnly);
-#endif // #ifdef USE_ALTERNATE_GETFILE y/n
-    if(dirPath.length() > 0){
-        txtAircraftPath->setText(dirPath);
+    qDebug() << "--------on_remove_custom_dir()";
+
+    QString dir = act->property("dir").toString();
+
+    //return;
+    QStringList custom_dirs = this->mainObject->settings->value("custom_aircraft_dirs").toStringList();
+    int idx = custom_dirs.indexOf(dir);
+    qDebug() << dir << "==" << idx;
+    if( idx == -1) {
+        qDebug() << "arrgggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh";
+        return;
     }
-
-    on_custom_hangar_path();
-
+    custom_dirs.removeAt(idx);
+    qDebug() << "removed dir " << idx << custom_dirs;
+    this->mainObject->settings->setValue("custom_aircraft_dirs", custom_dirs);
+    this->mainObject->settings->sync();
+    qDebug() << "saved " << custom_dirs;
+    this->load_custom_dir_buttons();
+    qDebug() << " ALL DONE ";
 }
 
+void AircraftWidget::on_add_custom_dir()
+{
 
+    QString sel_dir = QFileDialog::getExistingDirectory(this, tr("Select and Aircraft directory"),
+                                                         "DIR", QFileDialog::ShowDirsOnly);
+    if(sel_dir.length() == 0){
+       return;
+    }
+
+    QStringList custom_dirs = this->mainObject->settings->value("custom_aircraft_dirs").toStringList();
+    if(custom_dirs.indexOf(sel_dir) == -1){
+        custom_dirs.append(sel_dir);
+    }
+    this->mainObject->settings->setValue("custom_aircraft_dirs", custom_dirs);
+    this->mainObject->settings->sync();
+    this->load_custom_dir_buttons();
+}
+
+void AircraftWidget::load_custom_dir_buttons()
+{
+    qDebug() << "---load_custom_dir_buttons" << actGroupDeleteCustomDirs->actions().length() << "=" << buttGroupShowDirs->buttons().length() << "=" << lstCustomDirButtons.length();
+
+    // Delete all the deletes from actinGroup
+    QList<QAction*> actions = actGroupDeleteCustomDirs->actions();
+    for(int i = 0; i < actions.length(); i++){
+        actGroupDeleteCustomDirs->removeAction(actions.at(i));
+    }
+
+    // Loop buttons and remove from containers then delete
+    while(!lstCustomDirButtons.isEmpty() ){
+        qDebug() << "nuked button" ;
+        grpCustomDirs->removeWidget(lstCustomDirButtons.at(0));
+        buttGroupShowDirs->removeButton(lstCustomDirButtons.at(0));
+        delete lstCustomDirButtons.takeFirst();
+    }
+    qDebug() << " after nuke " << actGroupDeleteCustomDirs->actions().length() << "=" << buttGroupShowDirs->buttons().length() << "=" << lstCustomDirButtons.length();
+
+   QStringList custom_dirs = this->mainObject->settings->value("custom_aircraft_dirs").toStringList();
+   for(int i=0; i < custom_dirs.size(); i++){
+
+       QFileInfo dinfo(custom_dirs.at(i));
+
+       QToolButton * buttDir = new QToolButton();
+       grpCustomDirs->bottomLayout->insertWidget(grpCustomDirs->bottomLayout->count() - 1, buttDir);
+       buttGroupShowDirs->addButton(buttDir);
+       lstCustomDirButtons.append(buttDir);
+       qDebug() << "Add button" << dinfo.absoluteFilePath();
+       buttDir->setProperty("dir", dinfo.absoluteFilePath());
+       buttDir->setText(dinfo.baseName());
+       buttDir->setIcon(QIcon(":/icon/folder"));
+       buttDir->setCheckable(true);
+       buttDir->setChecked(true);
+       buttDir->setAutoRaise(true);
+       buttDir->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+
+       // qDebug() << "pre menu =" << dinfo.absoluteFilePath();
+       QMenu *meniw = new QMenu();
+       buttDir->setMenu(meniw);
+       buttDir->setPopupMode(QToolButton::MenuButtonPopup); //grhhhh.. vs Qt::ToolButtonTextBesideIcon
+
+       /// qDebug() << "pre action =" << dinfo.absoluteFilePath();
+       // remove action
+       QAction *act = meniw->addAction("Remove");
+       act->setIcon(QIcon(":/icon/bin"));
+       act->setProperty("dir", dinfo.absoluteFilePath());
+       meniw->addAction(act);
+      //  qDebug() << "post action =" << dinfo.absoluteFilePath();
+       actGroupDeleteCustomDirs->addAction(act);
+         qDebug() << "  psot group =" << dinfo.absoluteFilePath();
+
+
+   }
+   qDebug() << " Done loading";
+}
 void AircraftWidget::on_open_aircraft_path()
 {
     if(labelAeroPath->text().length() == 0){

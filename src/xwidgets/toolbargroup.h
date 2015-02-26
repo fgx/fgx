@@ -17,6 +17,7 @@ public:
 
     void setTitle(QString);
     void addWidget(QWidget *);
+    void removeWidget(QWidget *);
 
 signals:
 

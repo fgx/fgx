@@ -15,6 +15,7 @@
 #include <QWidget>
 #include <QAbstractButton>
 #include <QButtonGroup>
+#include <QActionGroup>
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QTreeView>
@@ -27,9 +28,15 @@
 #include <QToolButton>
 
 #include "xobjects/mainobject.h"
+#include "xwidgets/toolbargroup.h"
+class ToolBarGroup;
 
 /*! \class AircraftWidget
-* \brief The grid widget panel
+* \brief Aircraft panel with a left/right splitter, model/proxy/tree vs selected
+* \todo need to abtract out the aircraft custom directories, ie built in and custom
+* \todo qt5 need to serialise airarft cache to json
+* \todo future is run next vs master vs others and detect versions..
+* \todo download aircraft from remote.. WIP at https://github.com/fgx/fgx-installer
 */
 
 class AircraftWidget : public QWidget
@@ -54,14 +61,16 @@ public:
 
     explicit AircraftWidget(MainObject *mOb, QWidget *parent = 0);
 
-    QString W_NAME;
     MainObject *mainObject;
 
-    QCheckBox *checkBoxUseCustomHangar;
+    ToolBarGroup *grpCustomDirs;
 
-    QButtonGroup *groupUseAircraft;
-    QLineEdit *txtAircraftPath;
-    QToolButton *buttSelectPath;
+    /* \brief Toggle buttons to show hide aircraft */
+    QButtonGroup *buttGroupShowDirs;
+    /* \brief Delete dropdown actions */
+    QActionGroup *actGroupDeleteCustomDirs;
+    /* \brief List of pointers to custon Buttons */
+    QList<QToolButton*> lstCustomDirButtons;
 
 
     QLabel *aeroImageLabel;
@@ -105,9 +114,8 @@ signals:
     void setx( QString option, bool enabled,QString value);
 
 public slots:
-    void load_tree();
-    void on_select_path();
-    void on_custom_hangar_path();
+    void load_aircraft();
+
     void on_tree_selection_changed();
     void on_reload_cache();
 
@@ -124,6 +132,9 @@ public slots:
 
     void on_splitter_moved();
 
+    void on_add_custom_dir();
+    void on_remove_custom_dir(QAction*);
+    void load_custom_dir_buttons();
 };
 
 #endif // AIRCRAFTWIDGET_H

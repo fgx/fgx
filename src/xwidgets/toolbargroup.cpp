@@ -34,3 +34,6 @@ void ToolBarGroup::setTitle(QString title){
 void ToolBarGroup::addWidget(QWidget *widget){
     this->bottomLayout->addWidget(widget);
 }
+void ToolBarGroup::removeWidget(QWidget *widget){
+    this->bottomLayout->addWidget(widget);
+}
