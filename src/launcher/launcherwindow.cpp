@@ -486,6 +486,7 @@ void LauncherWindow::header_show_message(QString message)
 //* Misc Events
 //=======================================================================================================================
 void LauncherWindow::moveEvent(QMoveEvent *ev){
+    Q_UNUSED(ev);
     this->mainObject->settings->saveWindow(this);
 }
 

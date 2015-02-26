@@ -75,9 +75,12 @@ public:
     QLineEdit *txtFilter;
     QToolButton * buttShowBase;
 
-
+    QLabel *lblAero;
+    QLabel *lblAeroDescription;
+    QLabel *lblAeroXml;
     QLabel *aeroImageLabel;
     QCheckBox *checkViewNested;
+    QToolButton *buttOpenAeroDir;
 
 
     QLineEdit *txtNav1;
@@ -109,8 +112,8 @@ private:
     QTreeView *treeView;
 
 
-    QStatusBar *statusBarTree;
-    QLabel *labelAeroPath;
+    QStatusBar *statusBar;
+
     QToolButton *buttonAeroPath;
 
     QSplitter *splitter;
@@ -142,6 +145,7 @@ public slots:
     void on_remove_custom_dir(QAction*);
     void load_custom_dir_buttons();
     void on_toggle_directory();
+
 };
 
 #endif // AIRCRAFTWIDGET_H

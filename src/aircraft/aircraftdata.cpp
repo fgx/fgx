@@ -66,7 +66,7 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 
         // Filter out default dir names, should be a QDir name filter?
         if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
-            qDebug() << "ENTRY+" << *entry;
+            //qDebug() << "ENTRY+" << *entry;
             progress.setValue(c);
             progress.setLabelText(*entry);
             progress.repaint();
@@ -125,7 +125,7 @@ QFileInfoList AircraftData::get_xml_set_files(QString dir_path, bool recus){
     if(recus){
         QFileInfoList allentries = dir.entryInfoList();
         for(int i = 0; i < allentries.length(); i++){
-            qDebug() << "--" << allentries.at(i).absoluteFilePath();
+            //qDebug() << "--" << allentries.at(i).absoluteFilePath();
             if(allentries.at(i).isDir()){
                 QFileInfoList subset = AircraftData::get_xml_set_files(allentries.at(i).absoluteFilePath(), false);
                 for(int ii = 0; ii < subset.length(); ii++){

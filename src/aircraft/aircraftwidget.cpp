@@ -196,13 +196,11 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
     //=================================
     //= Status Bar
-    statusBarTree = new QStatusBar();
-    statusBarTree->setSizeGripEnabled(false);
-    treeLayout->addWidget(statusBarTree);
+    statusBar = new QStatusBar();
+    statusBar->setSizeGripEnabled(false);
+    treeLayout->addWidget(statusBar);
 
-    //== Path label
-    labelAeroPath = new QLabel();
-    statusBarTree->addPermanentWidget(labelAeroPath);
+
 
     //== View nested Checkbox
     /*checkViewNested = new QCheckBox();
@@ -216,7 +214,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
     actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     actionReloadCacheDb->setAutoRaise(true);
-    statusBarTree->addPermanentWidget(actionReloadCacheDb);
+    statusBar->addPermanentWidget(actionReloadCacheDb);
     connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
 
@@ -228,11 +226,35 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     QGroupBox *grpAero = new QGroupBox();
     splitter->addWidget(grpAero);
     grpAero->setDisabled(false);
-    grpAero->setTitle(tr("Preview, Radio, Fuel"));
+    //grpAero->setTitle(tr("Preview, Radio, Fuel"));
 
 
     QVBoxLayout *aeroLayout = new QVBoxLayout();
     grpAero->setLayout(aeroLayout);
+
+    QHBoxLayout *layAeroTopBar = new QHBoxLayout();
+    aeroLayout->addLayout(layAeroTopBar);
+
+    lblAero = new QLabel();
+    lblAero->setStyleSheet("font-size: 20pt; font-weight: bold;");
+    layAeroTopBar->addWidget(lblAero, 10);
+
+    buttOpenAeroDir = new QToolButton();
+    buttOpenAeroDir->setToolTip("Browse model files");
+    buttOpenAeroDir->setAutoRaise(true);
+    buttOpenAeroDir->setIcon(QIcon(":/icon/folder_open"));
+    buttOpenAeroDir->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    buttOpenAeroDir->setDisabled(true);
+    layAeroTopBar->addWidget(buttOpenAeroDir, 0);
+    connect(buttOpenAeroDir, SIGNAL(clicked()),
+            this, SLOT(on_open_aircraft_path())
+    );
+
+    lblAeroDescription = new QLabel();
+    aeroLayout->addWidget(lblAeroDescription);
+
+    lblAeroXml = new QLabel();
+    aeroLayout->addWidget(lblAeroXml);
 
     //**********************************************8
     //** Aero Panel
@@ -371,6 +393,8 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
     connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
 
+    this->on_tree_selection_changed();
+
 }
 void AircraftWidget::on_splitter_moved(){
     this->mainObject->settings->saveSplitter(splitter);
@@ -392,19 +416,32 @@ void AircraftWidget::on_tree_selection_changed(){
 
     if(treeView->selectionModel()->hasSelection() == false){
         outLog("on_tree_selection_changed: no selected item");
-        labelAeroPath->setText("nooooo");
+        lblAero->setText("-");
+        lblAeroDescription->setText("-");
+        lblAeroXml->setText("");
+        this->buttOpenAeroDir->setDisabled(true);
         emit setx("--aircraft=", false, "");
-        //buttonAeroPath->setDisabled(true);
         return;
     }
 
-    QModelIndex midx = treeView->selectionModel()->selectedIndexes().at(C_DIR);
+    lblAero->setText( model->itemFromIndex(
+                            proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(C_AERO))
+                          )->text());
+    lblAeroDescription->setText( model->itemFromIndex(
+                            proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(C_DESCRIPTION))
+                          )->text());
 
+    this->buttOpenAeroDir->setDisabled(false);
+    QString dir =  model->itemFromIndex(
+                        proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(C_FILE_PATH))
+                    )->text();
+    lblAeroXml->setText(dir);
+
+    QModelIndex midx = treeView->selectionModel()->selectedIndexes().at(C_DIR);
     QStandardItem *item = model->itemFromIndex( proxyModel->mapToSource(midx)  );
 
     //= Get the thumbnail image
     QString thumb_file = QString("%1/%2/thumbnail.jpg").arg(mainObject->X->aircraft_path(), item->text());
-
     if(QFile::exists(thumb_file)){
         QPixmap aeroImage(thumb_file);
         if(!aeroImage.isNull()){
@@ -420,6 +457,7 @@ void AircraftWidget::on_tree_selection_changed(){
     }else{
         aeroImageLabel->setText("No Image");
     }
+
     emit setx("--aircraft=", true, selected_aircraft());
     mainObject->launcherWindow->on_upx("--aircraft=", true, selected_aircraft()); // Show aircraft in header
 }
@@ -465,7 +503,7 @@ QString AircraftWidget::validate(){
 void AircraftWidget::on_reload_cache(){
 
     model->removeRows(0, model->rowCount());
-    statusBarTree->showMessage("Reloading cache");
+    statusBar->showMessage("Reloading cache");
 
     QProgressDialog progress(this);
     QSize size(320,100);
@@ -535,8 +573,6 @@ void AircraftWidget::load_aircraft(){
     }
     QTextStream in(&dataFile);
     QString line = in.readLine();
-    int countaircrafts = 0;
-
     c = 0;
     while(!line.isNull()){
 
@@ -577,8 +613,8 @@ void AircraftWidget::load_aircraft(){
     //treeView->resizeColumnToContents(C_DIR);
 
     select_node(mainObject->X->getx("--aircraft="));
-    QString str = QString("%1 aircrafts").arg(countaircrafts)+QString(", %1 models").arg(c);
-    statusBarTree->showMessage(str);
+    QString str = QString("%1 aircraft").arg(this->model->rowCount());
+    statusBar->showMessage(str);
     outLog("*** FGx: AircraftWidget::load_tree: with " + str);
 }
 
@@ -598,7 +634,7 @@ void AircraftWidget::initialize(){
         return;
     }
     if (!QFile::exists(mainObject->data_file("aircraft.txt"))){
-        statusBarTree->showMessage("*** FGx: No cached data. Use set paths and reload");
+        statusBar->showMessage("*** No cached data. Use set paths and reload");
     }else{
         load_aircraft();
     }
@@ -702,6 +738,7 @@ void AircraftWidget::on_toggle_directory(){
 }
 
 
+
 // HELP. .this function crashed for some reason..
 void AircraftWidget::on_remove_custom_dir(QAction *act)
 {
@@ -802,11 +839,13 @@ void AircraftWidget::load_custom_dir_buttons()
    qDebug() << " Done loading";
    this->on_toggle_directory();
 }
+
 void AircraftWidget::on_open_aircraft_path()
 {
-    if(labelAeroPath->text().length() == 0){
+    if(lblAeroXml->text().length() == 0){
         return;
     }
-    QUrl url(QString("file://%1").arg(labelAeroPath->text()));
+    QFileInfo fi(lblAeroXml->text());
+    QUrl url(QString("file://%1").arg(fi.dir().absolutePath()));
     QDesktopServices::openUrl(url);
 }
