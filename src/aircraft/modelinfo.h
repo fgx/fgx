@@ -12,11 +12,12 @@ public:
     bool ok; // is true is xml parsed and data read
     QString aero;
     QString xml_file;
-    QString dir;
+    QString dir; // short parentdir
     QString fdm;
     QString authors;
     QString description;
     QString file_path;
+    QString dir_path; // for filter
 };
 
 #endif // MODELINFO_H

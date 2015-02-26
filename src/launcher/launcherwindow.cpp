@@ -485,7 +485,9 @@ void LauncherWindow::header_show_message(QString message)
 //=======================================================================================================================
 //* Misc Events
 //=======================================================================================================================
-
+void LauncherWindow::moveEvent(QMoveEvent *ev){
+    this->mainObject->settings->saveWindow(this);
+}
 
 //= window close
 void LauncherWindow::closeEvent(QCloseEvent *event){
@@ -609,3 +611,5 @@ void LauncherWindow::on_upx(QString option, bool enabled, QString value)
 
 
 }
+
+

@@ -55,6 +55,7 @@ public:
         C_AUTHOR,
         C_XML_FILE,
         C_FILE_PATH,
+        C_DIR_PATH,
         C_FILTER
     };
 
@@ -98,6 +99,7 @@ public:
     QString selected_aircraft();
     QList<QStandardItem*> create_model_row();
 
+    void load_custom_aircraft();
 
 private:
     QStandardItemModel *model;
@@ -117,6 +119,7 @@ signals:
 
 public slots:
     void load_aircraft();
+
 
     void on_tree_selection_changed();
     void on_reload_cache();

@@ -59,89 +59,90 @@ class MenuWidget;
 
 class LauncherWindow : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
 
-	LauncherWindow(MainObject *mob, QWidget *parent = 0);
+    LauncherWindow(MainObject *mob, QWidget *parent = 0);
 
-	~LauncherWindow();
+    ~LauncherWindow();
 
-	MainObject *mainObject;
-	bool initializing;
+    MainObject *mainObject;
+    bool initializing;
 
-	MenuWidget *menuWidget;
-	HeaderWidget *headerWidget;
+    MenuWidget *menuWidget;
+    HeaderWidget *headerWidget;
 
-	XGroupHBox *toolBox;
+    XGroupHBox *toolBox;
 
-	QToolButton *buttonWhatsThis;
+    QToolButton *buttonWhatsThis;
 
-	QActionGroup *actionGroupStyle;
-	QTabWidget *tabWidget;
+    QActionGroup *actionGroupStyle;
+    QTabWidget *tabWidget;
 
-	CoreSettingsWidget *coreSettingsWidget;
-	TimeWeatherWidget *timeWeatherWidget;
-	RenderingWidget *renderingWidget;
-	AircraftWidget *aircraftWidget;
-	AirportsWidget *airportsWidget;
-	NetworkWidget *networkWidget;
-	ExpertOptionsWidget *expertOptionsWidget;
+    CoreSettingsWidget *coreSettingsWidget;
+    TimeWeatherWidget *timeWeatherWidget;
+    RenderingWidget *renderingWidget;
+    AircraftWidget *aircraftWidget;
+    AirportsWidget *airportsWidget;
+    NetworkWidget *networkWidget;
+    ExpertOptionsWidget *expertOptionsWidget;
 
-	QPushButton *buttonLoadSettings;
-	QPushButton *buttonSaveSettings;
-	QPushButton *buttonResetSettings;
+    QPushButton *buttonLoadSettings;
+    QPushButton *buttonSaveSettings;
+    QPushButton *buttonResetSettings;
 
-	ExeControls *exeAll;
-	ExeControls *exeFgfs;
-	ExeControls *exeTerraSync;
-	ExeControls *exeFgCom;
+    ExeControls *exeAll;
+    ExeControls *exeFgfs;
+    ExeControls *exeTerraSync;
+    ExeControls *exeFgCom;
 
-	StatusBar *statusBar;
-	MessageBox *messageBox;
-	
-	QMessageBox *NativeMessageBox;
+    StatusBar *statusBar;
+    MessageBox *messageBox;
 
-	void closeEvent(QCloseEvent *event);
+    QMessageBox *NativeMessageBox;
+
+    void closeEvent(QCloseEvent *event);
+    void moveEvent(QMoveEvent *ev);
 
 signals:
-	void setx(QString option, bool enabled, QString value);
+    void setx(QString option, bool enabled, QString value);
 
 public slots:
 
 
-	//= Start/Stop
-	void on_start_all_clicked();
-	void on_start_fgfs_clicked();
-	void on_start_terrasync_clicked();
-	void on_start_fgcom_clicked();
+    //= Start/Stop
+    void on_start_all_clicked();
+    void on_start_fgfs_clicked();
+    void on_start_terrasync_clicked();
+    void on_start_fgcom_clicked();
 
 
-	//* Actions
-	void on_whats_this();
+    //* Actions
+    void on_whats_this();
 
-	//* Functions
-	void save_settings();
-	void load_profile();
-	void save_profile();
-	void reset_profile();
-	void initialize();
-	bool validate();
-	
-	//* Header messages
-	void header_show_message(QString message);
+    //* Functions
+    void save_settings();
+    void load_profile();
+    void save_profile();
+    void reset_profile();
+    void initialize();
+    bool validate();
 
-
-	//* Ouput Buttons
-	void on_command_preview();
+    //* Header messages
+    void header_show_message(QString message);
 
 
-	//* Widget Events
-	void on_tab_changed(int);
+    //* Ouput Buttons
+    void on_command_preview();
 
-	void on_upx(QString option, bool enabled, QString value);
 
-	void on_debug_mode();
+    //* Widget Events
+    void on_tab_changed(int);
+
+    void on_upx(QString option, bool enabled, QString value);
+
+    void on_debug_mode();
 };
 
 #endif // LAUNCHERWINDOW_H

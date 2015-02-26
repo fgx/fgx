@@ -61,7 +61,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     //= Models
     model = new QStandardItemModel(this);
     QStringList hLabels;
-    hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "Filter";
+    hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "DirPath" << "Filter";
     //model->setColumnCount(hLabels.length());
     model->setHorizontalHeaderLabels(hLabels);
 
@@ -182,9 +182,9 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     treeView->setColumnWidth(C_DIR, 60);
     treeView->setColumnWidth(C_FDM, 60);
     treeView->setColumnWidth(C_DESCRIPTION, 200);
-    treeView->setColumnHidden(C_XML_FILE, true);
-    treeView->setColumnHidden(C_FILE_PATH, true);
-    treeView->setColumnHidden(C_FILTER, true);
+    //treeView->setColumnHidden(C_XML_FILE, true);
+    //treeView->setColumnHidden(C_FILE_PATH, true);
+    //treeView->setColumnHidden(C_FILTER, true);
     connect( treeView->selectionModel(),
              SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection & ) ),
              SLOT( on_tree_selection_changed() )
@@ -473,16 +473,54 @@ void AircraftWidget::on_reload_cache(){
     load_aircraft();
 }
 
+void AircraftWidget::load_custom_aircraft(){
+
+     QList<QStandardItem*> row;
+    //=== Load Custom Paths
+    QStringList custom_dirs = this->mainObject->settings->value("custom_aircraft_dirs").toStringList();
+    for(int i = 0; i < custom_dirs.size(); i++){
+        QFileInfoList xmlSets = AircraftData::get_xml_set_files(custom_dirs.at(i), true);
+       //qDebug() << xmlSets;
+        for(int fi = 0; fi < xmlSets.length(); fi++){
+            ModelInfo mi = AircraftData::read_model_xml(xmlSets.at(fi).absoluteFilePath());
+            // Add model row
+            row = this->create_model_row();
+            row.at(C_DIR)->setText(mi.dir);
+            row.at(C_DIR)->setIcon(QIcon(":/icon/custom_folder"));
+
+            row.at(C_AERO)->setText(mi.aero);
+            row.at(C_AERO)->setIcon(QIcon(":/icon/aircraft"));
+            QFont f = row.at(C_AERO)->font();
+            f.setBold(true);
+            row.at(C_AERO)->setFont(f);
+
+            row.at(C_DESCRIPTION)->setText(mi.description);
+            row.at(C_FDM)->setText(mi.fdm);
+            row.at(C_AUTHOR)->setText(mi.authors);
+            row.at(C_XML_FILE)->setText(mi.xml_file);
+            row.at(C_FILE_PATH)->setText(mi.file_path);
+            row.at(C_DIR_PATH)->setText(mi.dir_path);
+
+            QString filter_str = mi.aero;
+            filter_str.append( mi.description );
+            row.at(C_FILTER)->setText( filter_str );
+        }
+    }
+}
+
 //=============================================================
 // Load Aircaft To Tree
 void AircraftWidget::load_aircraft(){
+
     int c =0;
+
+    QList<QStandardItem*> row;
 
     model->removeRows(0, model->rowCount());
 
-    // Load Custom Paths
+    this->load_custom_aircraft();
 
-
+    //=== Load Base Package
     QFile dataFile(mainObject->data_file(("aircraft.txt")));
     if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
            //TODO  - catch error
@@ -490,9 +528,8 @@ void AircraftWidget::load_aircraft(){
     }
     QTextStream in(&dataFile);
     QString line = in.readLine();
-    QString last_dir("");
     int countaircrafts = 0;
-    QList<QStandardItem*> row;
+
     c = 0;
     while(!line.isNull()){
 
@@ -515,6 +552,7 @@ void AircraftWidget::load_aircraft(){
         row.at(C_AUTHOR)->setText(cols.at(C_AUTHOR));
         row.at(C_XML_FILE)->setText(cols.at(C_XML_FILE));
         row.at(C_FILE_PATH)->setText(cols.at(C_FILE_PATH));
+        row.at(C_DIR_PATH)->setText(cols.at(C_DIR_PATH));
 
         QString filter_str = cols.at(C_AERO);
         filter_str.append(cols.at(C_DESCRIPTION) );
@@ -539,7 +577,7 @@ void AircraftWidget::load_aircraft(){
 
 QList<QStandardItem*> AircraftWidget::create_model_row(){
     QList<QStandardItem*> lst;
-    lst << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem();
+    lst << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem();
     model->appendRow(lst);
     return lst;
 }

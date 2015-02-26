@@ -46,6 +46,6 @@
         <file alias="folder_add">icons/folder--plus.png</file>
         <file alias="bin">icons/bin.png</file>
         <file alias="base_folder">icons/folder-stamp.png</file>
-        <file alias="custom_folder">icons/folder-shred.png</file>
+        <file alias="custom_folder">icons/folder_image.png</file>
     </qresource>
 </RCC>
