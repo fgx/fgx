@@ -480,6 +480,8 @@ void AircraftWidget::load_aircraft(){
 
     model->removeRows(0, model->rowCount());
 
+    // Load Custom Paths
+
 
     QFile dataFile(mainObject->data_file(("aircraft.txt")));
     if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){

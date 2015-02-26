@@ -71,6 +71,7 @@ public:
     QActionGroup *actGroupDeleteCustomDirs;
     /* \brief List of pointers to custon Buttons */
     QList<QToolButton*> lstCustomDirButtons;
+    QLineEdit *txtFilter;
 
 
     QLabel *aeroImageLabel;
@@ -103,7 +104,7 @@ private:
     //QSortFilterProxyModel *proxyModel;
     AircraftProxyModel  *proxyModel;
     QTreeView *treeView;
-    QLineEdit *txtFilter;
+
 
     QStatusBar *statusBarTree;
     QLabel *labelAeroPath;

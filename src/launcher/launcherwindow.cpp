@@ -535,11 +535,16 @@ void LauncherWindow::on_tab_changed(int tab_idx){
         airportsWidget->mapWidget->update();
     } */
 
-    if(tab_idx == tabWidget->indexOf(expertOptionsWidget)){
+    if(tab_idx == tabWidget->indexOf(this->expertOptionsWidget)){
         //on_command_preview();
     }else{
         //= we dont want to restore to output preview cos it validates and will throw popup
         mainObject->settings->setValue("launcher_last_tab", tabWidget->currentIndex());
+    }
+
+    // deal with focus in events
+    if(tab_idx == tabWidget->indexOf(this->aircraftWidget)) {
+        this->aircraftWidget->txtFilter->setFocus();
     }
 }
 

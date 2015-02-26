@@ -13,14 +13,20 @@
 #include <QProgressDialog>
 
 #include "xobjects/mainobject.h"
+class MainObject;
 
+#include "aircraft/modelinfo.h"
+class ModelInfo;
 
 class AircraftData
 {
 public:
-	//AircraftData();
+    //AircraftData();
 
-	static bool import(QProgressDialog &progress, MainObject *mainObject);
+    static bool import(QProgressDialog &progress, MainObject *mainObject);
+
+    QStringList get_model_files(QString dir);
+    static ModelInfo read_xml_data(QString dir);
 
 };
 

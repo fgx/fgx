@@ -75,59 +75,23 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
             QStringList list_xml = dir.entryList(filters);
 
             if(list_xml.count() > 0){ // << Scan MOdels
-                QString directory;
-                QString aero;
-                QString description;
-                QString fdm;
-                QString author;
                 QString xml_file;
 
 
                 //** Add Path Node
-                directory = QString(*entry);
+                QString directory = QString(*entry);
                 //** Add Models
                 for (int i = 0; i < list_xml.size(); ++i){
 
                     xml_file = QString(list_xml.at(i));
-                    aero = QString(xml_file);
-                    aero.chop(8);
 
-                    //*=parse the Xml file - f&*& long winded
                     QString file_path =  mainObject->X->aircraft_path(*entry);
                     file_path.append("/");
-                    file_path.append(list_xml.at(i));
-                    QFile xmlFile( file_path);
-                    if (xmlFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+                    file_path.append(xml_file);
 
-                        /* The file content is converted to UTF-8.
-                             Some files are Windows, encoding and throw error with QxmlQuery etc
-                             Its a hack and don't quite understand whats happening.. said pedro
-                        */
-                        QString xmlString = QString(xmlFile.readAll()).toUtf8();
-
-                        QXmlQuery query;
-                        query.setFocus(xmlString);
-                        //query.setFocus(&xmlFile); << Because file is not QTF8 using sting instead
-                        query.setQuery("PropertyList/sim");
-                        if (query.isValid()){
-
-                            QString res;
-                            query.evaluateTo(&res);
-                            xmlFile.close();
-
-                            QDomDocument dom;
-                            dom.setContent("" + res + "");
-                            QDomNodeList nodes = dom.elementsByTagName("sim");
-
-                            QDomNode n = nodes.at(0);
-                            description = n.firstChildElement("description").text();
-                            author = n.firstChildElement("author").text().trimmed().replace(("\n"),"");
-                            fdm = n.firstChildElement("flight-model").text();
-                        } /* !query.isValid() */
-                    } /*  xmlFile.open() */
-
+                    ModelInfo mi = AircraftData::read_xml_data(file_path);
                     QStringList lines;
-                    lines  << directory << aero << description << fdm << author << xml_file << file_path;
+                    lines  << mi.dir << mi.aero << mi.description << mi.fdm << mi.authors << mi.xml_file << mi.file_path;
                     out << lines.join("\t") << "\n";
 
                     found++;
@@ -146,4 +110,48 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 
     cacheFile.close();
     return false;
+}
+
+/* \brief Parses the xml-set file */
+ModelInfo AircraftData::read_xml_data(QString xml_set_path){
+
+    ModelInfo mi;
+    mi.ok = false;
+    mi.file_path = xml_set_path;
+
+    QFileInfo fi(xml_set_path);
+    mi.aero = fi.fileName();
+    mi.aero.chop(8);
+
+    QFile xmlFile( xml_set_path );
+    if (xmlFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+
+        /* The file content is converted to UTF-8.
+             Some files are Windows, encoding and throw error with QxmlQuery etc
+             Its a hack and don't quite understand whats happening.. said pedro
+        */
+        QString xmlString = QString(xmlFile.readAll()).toUtf8();
+
+        QXmlQuery query;
+        query.setFocus(xmlString);
+        //query.setFocus(&xmlFile); << Because file is not QTF8 using sting instead
+        query.setQuery("PropertyList/sim");
+        if (query.isValid()){
+
+            QString res;
+            query.evaluateTo(&res);
+            xmlFile.close();
+
+            QDomDocument dom;
+            dom.setContent("" + res + "");
+            QDomNodeList nodes = dom.elementsByTagName("sim");
+
+            QDomNode n = nodes.at(0);
+            mi.description = n.firstChildElement("description").text();
+            mi.authors = n.firstChildElement("author").text().trimmed().replace(("\n"),"");
+            mi.fdm = n.firstChildElement("flight-model").text();
+        } /* !query.isValid() */
+    } /*  xmlFile.open() */
+
+    return mi;
 }
