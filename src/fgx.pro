@@ -65,19 +65,20 @@ HEADERS += xobjects/xsettings.h \
 	xwidgets/xdebugtreewidget.h \
 	map/openlayerwidget.h \
 	aircraft/xaero.h \
-	airports/metarwidget.h \ 
+	airports/metarwidget.h \
 	utilities/fileDialog.h \
 	app_config.h \
 	utilities/dirDialog.h \
 	launcher/menuwidget.h \
-    utilities/workThread.h \
-    utilities/loadAptDat.h \
-    utilities/simgear/SGGeodesy.h \
-    utilities/simgear/constants.h \
-    utilities/simgear/compiler.h \
-    xwidgets/toolbargroup.h \
-    aircraft/aircraftproxymodel.h \
-    aircraft/modelinfo.h
+	utilities/workThread.h \
+	utilities/loadAptDat.h \
+	utilities/simgear/SGGeodesy.h \
+	utilities/simgear/constants.h \
+	utilities/simgear/compiler.h \
+	xwidgets/toolbargroup.h \
+	aircraft/aircraftproxymodel.h \
+	aircraft/modelinfo.h \
+	fgtools/fileviewerwidget.h
 SOURCES += main.cpp \
 	xobjects/xsettings.cpp \
 	settings/settingsdialog.cpp \
@@ -135,16 +136,17 @@ SOURCES += main.cpp \
 	xwidgets/xdebugtreewidget.cpp \
 	map/openlayerwidget.cpp \
 	aircraft/xaero.cpp \
-	airports/metarwidget.cpp \ 
+	airports/metarwidget.cpp \
 	utilities/fileDialog.cpp \
 	utilities/dirDialog.cpp \
 	launcher/menuwidget.cpp \
-    utilities/workThread.cpp \
-    utilities/loadAptDat.cpp \
-    utilities/simgear/SGGeodesy.cpp \
-    xwidgets/toolbargroup.cpp \
-    aircraft/aircraftproxymodel.cpp \
-    aircraft/modelinfo.cpp
+	utilities/workThread.cpp \
+	utilities/loadAptDat.cpp \
+	utilities/simgear/SGGeodesy.cpp \
+	xwidgets/toolbargroup.cpp \
+	aircraft/aircraftproxymodel.cpp \
+	aircraft/modelinfo.cpp \
+	fgtools/fileviewerwidget.cpp
 RESOURCES += resources/ycons.qrc \
 	resources/artwork.qrc \
 	resources/fonts.qrc \
@@ -157,7 +159,7 @@ unix {
 	contains(SYSTEM_ZLIB, "ON") {
 		packagesExist(zlib) {
 			CONFIG += link_pkgconfig
-    		PKGCONFIG += zlib
+			PKGCONFIG += zlib
 			message("Using system zlib")
 			DEFINE += USE_SYSTEM_ZLIB
 			HEADERS -= utilities/zlib/inftrees.h \

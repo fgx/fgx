@@ -49,6 +49,8 @@
 #include "utilities/utilities.h"
 #include "utilities/messagebox.h"
 
+#include "fgtools/fileviewerwidget.h"
+class FileViewerWidget;
 
 AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
@@ -217,6 +219,14 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     statusBar->addPermanentWidget(actionReloadCacheDb);
     connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
+    QMenu *menuReload = new QMenu();
+    actionReloadCacheDb->setMenu(menuReload);
+    actionReloadCacheDb->setPopupMode(QToolButton::MenuButtonPopup);
+
+    QAction *actView = menuReload->addAction("View `aircraft.txt` cache file" );
+    connect(actView, SIGNAL(triggered()),
+            this, SLOT(on_view_aircraft_cache())
+    );
 
 
     //================================================================================================
@@ -861,4 +871,12 @@ void AircraftWidget::on_open_aircraft_path()
     QFileInfo fi(lblAeroXml->text());
     QUrl url(QString("file://%1").arg(fi.dir().absolutePath()));
     QDesktopServices::openUrl(url);
+}
+void AircraftWidget::on_view_aircraft_cache()
+{
+    FileViewerWidget *fileViewer = new FileViewerWidget();
+    fileViewer->setFile(mainObject->data_file("aircraft.txt"));
+    fileViewer->setWindowState(Qt::WindowMaximized);
+    fileViewer->show();
+
 }

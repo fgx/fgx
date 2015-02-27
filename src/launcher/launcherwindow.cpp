@@ -225,7 +225,7 @@ LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
 
     //= All
     exeAll = new ExeControls("FlightGear");
-    exeAll->setStyleSheet("QGroupBox::title { color: #ffffff; background-color: #007eff }");
+    //exeAll->setStyleSheet("QGroupBox::title { color: #ffffff; background-color: #007eff }");
     bottomActionLayout->addWidget(exeAll);
     connect(	exeAll->buttonStart, SIGNAL(clicked()),
             this, SLOT(on_start_all_clicked())

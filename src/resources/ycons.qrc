@@ -48,5 +48,6 @@
         <file alias="base_folder">icons/folder-stamp.png</file>
         <file alias="custom_folder">icons/folder_image.png</file>
         <file alias="folder_open">icons/folder-horizontal-open.png</file>
+        <file alias="close">icons/cross-white.png</file>
     </qresource>
 </RCC>

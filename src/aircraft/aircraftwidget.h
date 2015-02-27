@@ -135,7 +135,10 @@ public slots:
     void on_fuel_changed();
 
     void on_upx(QString option, bool enabled, QString value);
+
+
     void on_open_aircraft_path();
+    void on_view_aircraft_cache();
 
     void on_filter_text_changed(const QString);
     void on_clear_filter();
@@ -146,6 +149,7 @@ public slots:
     void on_remove_custom_dir(QAction*);
     void load_custom_dir_buttons();
     void on_toggle_directory();
+
 
 };
 
