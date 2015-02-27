@@ -6,7 +6,7 @@
     <tab type="user" url="https://github.com/fgx/fgx/releases" title="Download"/>
     <tab type="user" url="https://github.com/fgx/fgx/issues" title="Bugs &amp; Issues"/>
     <tab type="user" url="https://github.com/fgx/fgx" title="Source Code"/>
-    <tab type="pages" visible="yes" title="" intro="Pages"/>
+    <tab type="pages" visible="yes" title="Pages" intro=""/>
     <tab type="modules" visible="yes" title="" intro=""/>
     <tab type="namespaces" visible="yes" title="">
       <tab type="namespacelist" visible="yes" title="" intro=""/>

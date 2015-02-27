@@ -2,14 +2,7 @@
  *
  * <b>FGx</b> - a cross platform launcher for FlightGear
  * 
- * <table class="screenshots">
- * <tr>
- * <td><img src="fgx-screenshots/main.jpeg"  class="gallery" height="100" title="Main launcher"></td>
- * <td><img src="fgx-screenshots/network.jpeg"  class="gallery" height="100" title="Network"></td>
- * <td><img src="fgx-screenshots/aircraft.jpeg"  class="gallery" height="100" title="Aircraft"></td>
- * <td><img src="fgx-screenshots/debug.jpeg"  class="gallery" height="100" title="Developers"></td>
- * </tr>
- * </table>
+ * \htmlinclude screenshots.html
  * 
  * \section main_toc Contents
  * 
