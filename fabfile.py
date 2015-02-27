@@ -26,9 +26,9 @@ def make_local_docs():
     # see http://stackoverflow.com/questions/11032280/specify-doxygen-parameters-through-command-line
     ver = _read_version()
     local('(cat %s/docs/doxygen.fgx.conf; echo "PROJECT_NUMBER = %s") | doxygen -' % (PROJECT_ROOT, ver))
-    if not os.path.exists("%s/docs_build/html/screenshots/" % (PROJECT_ROOT) ):
-        local("mkdir  %s/docs_build/html/screenshots/" % (PROJECT_ROOT) )
-    local("cp %s/screenshots/*.jpeg %s/docs_build/html/screenshots/" % (PROJECT_ROOT, PROJECT_ROOT) )
+    if not os.path.exists("%s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT) ):
+        local("mkdir  %s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT) )
+    local("cp %s/fgx-screenshots/*.jpeg %s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT, PROJECT_ROOT) )
     local("cp %s/src/resources/artwork/fgx-logo.png %s/docs_build/html/" % (PROJECT_ROOT, PROJECT_ROOT) )
     local("cp %s/src/resources/fgx.ico %s/docs_build/html/favicon.ico" % (PROJECT_ROOT, PROJECT_ROOT) )
    
@@ -40,7 +40,7 @@ def make_remote_docs():
         ver = _read_version()
         run("git pull origin next")
         run('(cat %s/docs/doxygen.fgx.conf; echo "PROJECT_NUMBER = %s") | doxygen -' % (PROJECT_ROOT, ver))
-        run("cp %s/screenshots/*.jpeg %s/docs_build/html/screenshots/" % (PROJECT_ROOT, PROJECT_ROOT) )
+        run("cp %s/fgx-screenshots/*.jpeg %s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT, PROJECT_ROOT) )
         run("cp %s/src/resources/artwork/fgx-logo.png %s/docs_build/html/" % (PROJECT_ROOT, PROJECT_ROOT) )
         run("cp %s/src/resources/fgx.ico %s/docs_build/html/favicon.ico" % (PROJECT_ROOT, PROJECT_ROOT) )
    
