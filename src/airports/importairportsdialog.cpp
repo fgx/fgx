@@ -27,17 +27,17 @@
 /* Shows the import airports widget
 
    TODO: MessageOBx to confirm import and this will take a while
-		 Close after import finished
+         Close after import finished
    */
 
 ImportAirportsDialog::ImportAirportsDialog(QWidget *parent) :
-	QDialog(parent)
+    QDialog(parent)
 {
 
 
 
     setWindowTitle("Import Airports");
-	setWindowIcon(QIcon(":/icon/import"));
+    setWindowIcon(QIcon(":/icon/import"));
 
     setFixedWidth(400);
 
@@ -53,7 +53,10 @@ ImportAirportsDialog::ImportAirportsDialog(QWidget *parent) :
     mainVBox->setSpacing(10);
 
 
-	QLabel *lblHelp = new QLabel("Importing can take a few seconds !");
+    QString s("This import scans the scenery directories, and extracts data from xml files.\n\nImporting can take a few moments !");
+    //s.append("\n\nSoon we ")
+
+    QLabel *lblHelp = new QLabel(s);
     mainVBox->addWidget(lblHelp, 1);
     lblHelp->setStyleSheet("background-color: #efefef; padding: 5px; border: 1px solid #000099;");
 
@@ -67,16 +70,16 @@ ImportAirportsDialog::ImportAirportsDialog(QWidget *parent) :
     //* Cancel Import button
     buttCancelImport = new QPushButton();
     buttonBox->addWidget(buttCancelImport);
-	buttCancelImport->setText(tr("Cancel"));
-	buttCancelImport->setIcon(QIcon(":/icon/black"));
+    buttCancelImport->setText(tr("Cancel"));
+    buttCancelImport->setIcon(QIcon(":/icon/black"));
     connect(buttCancelImport, SIGNAL(clicked()), this, SLOT(reject()));
 
     //* Import button
     buttImport = new QPushButton();
     buttonBox->addWidget(buttImport);
     buttImport->setText(tr("Import"));
-	buttImport->setIcon(QIcon(":/icon/import"));
-	connect(buttImport, SIGNAL(clicked()), this, SLOT(accept())  );
+    buttImport->setIcon(QIcon(":/icon/import"));
+    connect(buttImport, SIGNAL(clicked()), this, SLOT(accept())  );
 
 
 }

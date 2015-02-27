@@ -187,7 +187,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     treeView->setColumnHidden(C_XML_FILE, true);
     treeView->setColumnHidden(C_FILE_PATH, true);
     treeView->setColumnHidden(C_FILTER_PATH, true);
-    //treeView->setColumnHidden(C_DESCRIPTION, true);
+    treeView->setColumnHidden(C_BASE, true);
     //treeView->setColumnHidden(C_AUTHOR, true);
     treeView->setColumnHidden(C_FILTER, true);
     connect( treeView->selectionModel(),
