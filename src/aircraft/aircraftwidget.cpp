@@ -63,7 +63,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     //= Models
     model = new QStandardItemModel(this);
     QStringList hLabels;
-    hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "DirPath" << "Filter" << "BASE";
+    hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "FilterDir" << "Filter" << "BASE";
     //model->setColumnCount(hLabels.length());
     model->setHorizontalHeaderLabels(hLabels);
 
@@ -402,6 +402,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     //== Main Settings connection
     connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
     connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
+    connect(mainObject, SIGNAL(on_debug_mode(bool)), this, SLOT(on_debug_mode()));
 
     this->on_tree_selection_changed();
 
@@ -535,15 +536,22 @@ void AircraftWidget::on_reload_cache(){
     load_aircraft();
 }
 
+/* @brief Load Custom Aircraft Paths */
 void AircraftWidget::load_custom_aircraft(){
 
     QList<QStandardItem*> row;
-    //=== Load Custom Paths
+
+    // Get paths as lsit from settings
     QStringList custom_dirs = this->mainObject->settings->value("custom_aircraft_dirs").toStringList();
     for(int i = 0; i < custom_dirs.size(); i++){
+
+        // get the xml-sets in dir, and recus eg might be a single aircraft or a dir of aircraft
         QFileInfoList xmlSets = AircraftData::get_xml_set_files(custom_dirs.at(i), true);
-       //qDebug() << xmlSets;
+        //qDebug() << xmlSets;
+
         for(int fi = 0; fi < xmlSets.length(); fi++){
+
+            // get data from the model file
             ModelInfo mi = AircraftData::read_model_xml(xmlSets.at(fi).absoluteFilePath());
 
             // Add model row
@@ -565,7 +573,7 @@ void AircraftWidget::load_custom_aircraft(){
             row.at(C_FILTER_PATH)->setText(custom_dirs.at(i));
             row.at(C_BASE)->setText("0");
 
-            QString filter_str = mi.aero;
+            QString filter_str = mi.aero; // filter is the aero+description
             filter_str.append( mi.description );
             row.at(C_FILTER)->setText( filter_str );
         }
@@ -573,7 +581,7 @@ void AircraftWidget::load_custom_aircraft(){
 }
 
 //=============================================================
-// Load Aircaft To Tree
+/* @brief Load/reload the model */
 void AircraftWidget::load_aircraft(){
 
     buttShowBase->setToolTip( mainObject->X->aircraft_path());
@@ -618,6 +626,7 @@ void AircraftWidget::load_aircraft(){
         row.at(C_XML_FILE)->setText(cols.at(C_XML_FILE));
         row.at(C_FILE_PATH)->setText(cols.at(C_FILE_PATH));
         row.at(C_FILTER_PATH)->setText(cols.at(C_FILTER_PATH));
+        //row.at(C_FILTER_PATH)->setText(mainObject->X->aircraft_path());
 
         QString filter_str = cols.at(C_AERO);
         filter_str.append(cols.at(C_DESCRIPTION) );
@@ -643,7 +652,9 @@ void AircraftWidget::load_aircraft(){
 
 QList<QStandardItem*> AircraftWidget::create_model_row(){
     QList<QStandardItem*> lst;
-    lst << new QStandardItem()  << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem() << new QStandardItem();
+    for(int i = 0; i < this->model->columnCount(); i++){
+        lst.append( new QStandardItem() );
+    }
     model->appendRow(lst);
     return lst;
 }
@@ -879,4 +890,14 @@ void AircraftWidget::on_view_aircraft_cache()
     fileViewer->setWindowState(Qt::WindowMaximized);
     fileViewer->show();
 
+}
+
+void AircraftWidget::on_debug_mode(){
+    bool hidden = !this->mainObject->debug_mode;
+    treeView->setColumnHidden(C_XML_FILE, hidden);
+    treeView->setColumnHidden(C_FILE_PATH, hidden);
+    treeView->setColumnHidden(C_FILTER_PATH, hidden);
+    treeView->setColumnHidden(C_BASE, hidden);
+    //treeView->setColumnHidden(C_AUTHOR, true);
+    treeView->setColumnHidden(C_FILTER, hidden);
 }

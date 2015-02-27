@@ -135,6 +135,7 @@ public slots:
     void on_fuel_changed();
 
     void on_upx(QString option, bool enabled, QString value);
+    void on_debug_mode();
 
 
     void on_open_aircraft_path();
