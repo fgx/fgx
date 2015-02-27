@@ -1119,7 +1119,7 @@ dl.section dd {
 	font-family: monospace;
 	font-size: 14pt;
 	padding: 10px;
-	margin: 10px;
+	margin: 10px 150px 0 0;
 }
 
 #projectlogo
@@ -1371,4 +1371,8 @@ ul div.fragment {
 
 table.screenshots{
 	border: none;
+}
+
+#MSearchBox {
+    margin-right: 60px;
 }

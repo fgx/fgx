@@ -184,12 +184,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     treeView->setColumnWidth(C_DIR, 60);
     treeView->setColumnWidth(C_FDM, 60);
     treeView->setColumnWidth(C_DESCRIPTION, 200);
-    treeView->setColumnHidden(C_XML_FILE, true);
-    treeView->setColumnHidden(C_FILE_PATH, true);
-    treeView->setColumnHidden(C_FILTER_PATH, true);
-    treeView->setColumnHidden(C_BASE, true);
-    //treeView->setColumnHidden(C_AUTHOR, true);
-    treeView->setColumnHidden(C_FILTER, true);
+    this->on_debug_mode(); // debug mode shows/hides some columns
     connect( treeView->selectionModel(),
              SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection & ) ),
              SLOT( on_tree_selection_changed() )
