@@ -1,0 +1,3 @@
+[submodule "fgx-screenshots"]
+	path = fgx-screenshots
+	url = https://github.com/fgx/fgx-screenshots.git
