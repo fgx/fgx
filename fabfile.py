@@ -38,7 +38,7 @@ def make_remote_docs():
     # see http://stackoverflow.com/questions/11032280/specify-doxygen-parameters-through-command-line
     with cd(REMOTE_DIR):
         ver = _read_version()
-        run("git pull")
+        run("git pull origin next")
         run('(cat %s/docs/doxygen.fgx.conf; echo "PROJECT_NUMBER = %s") | doxygen -' % (PROJECT_ROOT, ver))
         run("cp %s/screenshots/*.jpeg %s/docs_build/html/screenshots/" % (PROJECT_ROOT, PROJECT_ROOT) )
         run("cp %s/src/resources/artwork/fgx-logo.png %s/docs_build/html/" % (PROJECT_ROOT, PROJECT_ROOT) )

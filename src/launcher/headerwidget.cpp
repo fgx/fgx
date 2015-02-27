@@ -36,14 +36,12 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
 
     //= Main header
     headerLabel = new QLabel("");
-    headerLabel->setStyleSheet("QLabel { margin: 0px; color: #666666; font-size: 16px;}");
-    headerLabel->setStyleSheet("background-color: black; color: yellow; font-size: 14pt; font-family: monospace; padding: 2px; border-radius: 8px;");
+    headerLabel->setStyleSheet("color: #333333; font-size: 18pt; font-family: monospace; padding: 2px; border-radius: 8px;");
     mainLayout->addWidget(headerLabel, 0, 1, 1, 1);
 
     //= Callsing Full words
     callsignLabel = new QLabel("");
-    callsignLabel->setStyleSheet("color: #333333; font-size: 12pt; font-family: monospace; margin-left: 20px;");
-    //callsignLabel->setStyleSheet("background-color: black; color: yellow; font-size: 20pt; font-family: monospace;");
+    callsignLabel->setStyleSheet("color: #333333; font-size: 8pt; font-family: monospace; margin-left: 10px;");
     mainLayout->addWidget(callsignLabel, 1, 1, 1, 1);
 
 
