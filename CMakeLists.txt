@@ -67,6 +67,10 @@ set( fgx_SRCS src/main.cpp src/xobjects/xsettings.cpp src/settings/settingsdialo
     src/xobjects/xsettingsmodel.cpp src/xwidgets/fgxdebugwidget.cpp src/launcher/headerwidget.cpp
     src/xwidgets/xcommandpreviewidget.cpp src/xobjects/xopt.cpp src/xwidgets/xdebugtreewidget.cpp
     src/map/openlayerwidget.cpp src/aircraft/xaero.cpp src/airports/metarwidget.cpp src/utilities/fileDialog.cpp
+    src/aircraft/aircraftproxymodel.cpp
+    src/aircraft/modelinfo.cpp
+    src/xwidgets/toolbargroup.cpp
+    src/fgtools/fileviewerwidget.cpp
     src/utilities/dirDialog.cpp src/launcher/menuwidget.cpp src/utilities/workThread.cpp
     src/utilities/loadAptDat.cpp src/utilities/simgear/SGGeodesy.cpp )
 
@@ -80,6 +84,10 @@ set( fgx_HDRS src/xobjects/xsettings.h src/settings/settingsdialog.h src/network
     src/mpmap/mpmapwidget.h src/mpmap/mpmapxwidget.h src/mpmap/pilotswidget.h src/mpmap/xwebpage.h
     src/panes/expertoptionswidget.h src/xobjects/xsettingsmodel.h src/xwidgets/fgxdebugwidget.h
     src/launcher/headerwidget.h src/xwidgets/xcommandpreviewidget.h src/xwidgets/xdebugtreewidget.h
+    src/aircraft/aircraftproxymodel.h
+    src/aircraft/modelinfo.h
+    src/xwidgets/toolbargroup.h
+    src/fgtools/fileviewerwidget.h
     src/map/openlayerwidget.h src/airports/metarwidget.h src/utilities/fileDialog.h src/utilities/dirDialog.h
     src/launcher/menuwidget.h src/utilities/workThread.h src/utilities/loadAptDat.h )
 
@@ -114,7 +122,7 @@ add_executable( fgx ${fgx_SRCS} ${fgx_HDRS_MOC} ${fgx_RESOURCES_RCC} ${fgx_OTHER
 
 target_link_libraries( fgx ${QT_LIBRARIES} )
 
-# deal with install 
+# deal with install
 set_target_properties( fgx PROPERTIES DEBUG_POSTFIX d )
 install(TARGETS fgx DESTINATION bin )
 
