@@ -6,7 +6,7 @@ before_install:
 script:
     - mkdir build_temp
     - cd build_temp
-    - cmake ../fgx
+    - cmake ../
     - make
 notifications:
     channels:
