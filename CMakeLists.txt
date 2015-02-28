@@ -25,6 +25,9 @@ MESSAGE("*** GUI system is ${GUI} ***")
 
 project( fgx )
 
+file(READ version versionFile)
+string(STRIP ${versionFile} FGX_VERSION)
+
 # to distinguish between debug and release lib
 set( CMAKE_DEBUG_POSTFIX d )
 
@@ -135,20 +138,36 @@ install(TARGETS fgx DESTINATION bin )
 ## === Debian - pete checking things out !
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_VENDOR "FGx Team")
-set(CPACK_PACKAGE_VERSION_MAJOR "2")
-set(CPACK_PACKAGE_VERSION_MINOR "15")
-set(CPACK_PACKAGE_VERSION_PATCH "1")
 
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A cross-platform FlightGear launcher")
-set(CPACK_PACKAGE_DESCRIPTION "FGx - A cross-platform FlightGear launcher")
-set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "FGx - FlightGear Launcher")
+set(CPACK_PACKAGE_VERSION ${FGX_VERSION})
+
+## This need to be realite to "project root" ??
+
+
+#set(CPACK_PACKAGE_VERSION_MAJOR "2")
+#set(CPACK_PACKAGE_VERSION_MINOR "15")
+#set(CPACK_PACKAGE_VERSION_PATCH "1")
+
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "FGx FlightGear launcher")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/etc/dist_description.txt")
+#set(CPACK_PACKAGE_DESCRIPTION "FGx - A cross-platform FlightGear launcherXXX")
+#'set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "FGx - FlightGear LauncherDEV")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
+
 
 set(CPACK_PACKAGE_CONTACT "fgx@freeflightsim.org")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "fgx@freeflightsim.org")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "http://fgx.freeflightsim.org")
-
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt4-xml,libqt4-network,libqt4-gui,libqt4-webkit")
+set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
 
+install(FILES "${CMAKE_SOURCE_DIR}/src/resources/fgx_32x32x32.xpm"
+        DESTINATION "/usr/share/fgx"
+)
+
+install(FILES "${CMAKE_SOURCE_DIR}/etc/fgx.desktop"
+        DESTINATION "/usr/share/applications"
+)
 #set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/Debian/postinst")
 
 

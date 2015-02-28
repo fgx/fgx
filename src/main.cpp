@@ -67,7 +67,7 @@ int main( int argc, char* argv[])
     QApplication::setApplicationName("FGx");
 
     // TODO get this from the /version file
-    QApplication::setApplicationVersion("2.15.1");
+    QApplication::setApplicationVersion("2.15.3");
 
     //=====================================================
     //== Add fonts to database and set default application font

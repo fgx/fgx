@@ -1,0 +1,3 @@
+FGx is a cross-platform launcher for FlightGear. The GUI application
+is written in c++/qt and allows a quick way to fire up FlightGeaar without the terminal.
+

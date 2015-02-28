@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=FGx
+GenericName=FGx FlightGear Launcher
+Icon=/usr/share/fgx/fgx_32x32x32.xpm
+Exec=/usr/bin/fgx
+Categories=Game
