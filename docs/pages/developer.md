@@ -1,20 +1,34 @@
 Developer Info   {#developer}
 ================
 
-Jenkins
-=====================
+FGx is written in c++ and the Qt toolkit.
 
+Requirments
+==========================
+
+- A c++ compiler
+- `Qt Toolkit` - from [download.qt.io](http://download.qt.io/archive/qt/)
+  - Were in the process of switching to Qt5
+- `cmake` - a build system from [cmake.org](http://www.cmake.org/)
+- `git` - for source code 
+
+
+[CI] Continuous Integration 
+==============================
+
+Jenkins
+-------------------------
 
 
 There is a Jenkins instance being experimented with, the idea
-is to autobuild the tarballs and installers.
+is to completely autobuild the tarballs and installers.
 
 The Jenkins instance is running on Red Hat's [OpenShift](https://openshift.com/) cloud:
 - https://jenkins-fgx.rhcloud.com/
-- Please email pete for access
+- Please email pete/geoff for access
 
 Travis CI
-=====================
+-------------------------
 
 - https://travis-ci.org/fgx/fgx/builds
 
