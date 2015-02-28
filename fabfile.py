@@ -19,20 +19,33 @@ def _chunks(l, n):
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
 
-def _read_version(path):
+def _read_version(is_remote):
+    if is_remote:
+        output = run('cat version')
+    else:
+        output = local('cat version', capture=True)
+    return output.strip()
     """reads the ./version_file"""
     f = open(path + "/version", "r")
     v = f.read()
     f.close()
     return v
 
-def _get_shot_files(path):
+def _get_shot_files(is_remote):
+    if is_remote:
+        output = run('ls fgx-screenshots')
+    else:
+        output = local('ls fgx-screenshots', capture=True)
+        
+    raw_files = output.split()
+    #print "=======", raw_files
+    
     files = []
-    for file in os.listdir("%s/fgx-screenshots" % path):
+    for file in raw_files:
         if file.endswith(".jpeg"):
             files.append(file)
-    print files
-    print "------------------"
+    # print files
+    #print "------------------"
     return sorted(files)
     
 def _make_screenshots_html(shots):
@@ -42,23 +55,23 @@ def _make_screenshots_html(shots):
         s += "<tr>\n"
         for i, c in enumerate(row):
             print i, c
-            s += '\t<td align="center">'
-            s += '\t\t<a href="fgx-screenshots/%s">' % ( c)
-            s += '\t\t\t<img src="fgx-screenshots/%s" class="fgx-shots" data-lightbox="screenshots" height="120" title="%s"/></td>\n' % ( c, c)
+            s += '\t<td align="center">\n'
+            s += '\t\t<a href="fgx-screenshots/%s">\n' % ( c)
+            s += '\t\t\t<img src="fgx-screenshots/%s" class="fgx-shots" height="120" title="%s"/></td>\n' % ( c, c)
             s += '\t\t</a>\n'
             s += '\t</td>\n'
         s += "</tr>\n"
-    
     s += "</table></div>\n"
+    
     s += "<script>\n"
     s +=  "$('#fgx-shots').magnificPopup({type:'image', delegate: 'a', gallery:{enabled: true}});\n"
     s += "</script>\n"
     return s
 
-def _create_shots_html(path):
-    shots =  _get_shot_files(path)
+def _create_shots_html(is_remote):
+    shots =  _get_shot_files(is_remote)
     html = _make_screenshots_html(shots)
-    f = open("%s/docs/screenshots.html" % path, "w")
+    f = open("docs/screenshots.html" , "w")
     f.write(html)
     f.close()
 
@@ -68,8 +81,9 @@ def make_local_docs():
     # see http://stackoverflow.com/questions/11032280/specify-doxygen-parameters-through-command-line
     #shots =  _get_shot_files(PROJECT_ROOT)
     #html = _make_screenshots_html(shots)
-    print _create_shots_html(PROJECT_ROOT)
-    ver = _read_version(PROJECT_ROOT)
+    print _create_shots_html(False)
+    ver = _read_version(False)
+    
     local('(cat %s/docs/doxygen.fgx.conf; echo "PROJECT_NUMBER = %s") | doxygen -' % (PROJECT_ROOT, ver))
     if not os.path.exists("%s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT) ):
         local("mkdir  %s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT) )
@@ -82,12 +96,12 @@ def make_remote_docs():
     # overiding version on std in
     # see http://stackoverflow.com/questions/11032280/specify-doxygen-parameters-through-command-line
     with cd(REMOTE_DIR):
-        ver = _read_version()
         run("git pull origin next")
-        run('(cat %s/docs/doxygen.fgx.conf; echo "PROJECT_NUMBER = %s") | doxygen -' % (PROJECT_ROOT, ver))
-        run("cp %s/fgx-screenshots/*.jpeg %s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT, PROJECT_ROOT) )
-        run("cp %s/src/resources/artwork/fgx-logo.png %s/docs_build/html/" % (PROJECT_ROOT, PROJECT_ROOT) )
-        run("cp %s/src/resources/fgx.ico %s/docs_build/html/favicon.ico" % (PROJECT_ROOT, PROJECT_ROOT) )
+        run("git submodule update")
+        with cd(REMOTE_DIR + "/fgx-screenshots"):
+            run("git pull origin master")
+        run("fab make_local_docs")
+ 
    
 def ssh_test():
     """Test sssh connection to fgx site"""

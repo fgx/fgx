@@ -1,13 +1,13 @@
 Download & Install FGx   {#download}
 =======================
 
-Coming Soon:
+\note  Early 2015: This project is in active development again, expect binary builds soom, but for now only source is available.
 
-This is coming soon with new autobuild - spring 2015
 
-There is a Jenkins instance and we need a few slaves to autobuild..
+* Downloads will be at https://github.com/fgx/fgx/releases
+* Help wanted with building, can u Kenkins slave ?
 
-https://jenkins-fgx.rhcloud.com/ on RedHat cloud
+
 
 
 
