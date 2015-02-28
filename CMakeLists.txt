@@ -136,14 +136,11 @@ install(TARGETS fgx DESTINATION bin )
 
 ##=====================================================
 ## === Debian - pete checking things out !
-set(CPACK_GENERATOR "DEB")
+set(CPACK_GENERATOR "DEB;RPM")
 set(CPACK_PACKAGE_VENDOR "FGx Team")
+set(CPACK_PACKAGE_CONTACT "fgx@freeflightsim.org")
 
 set(CPACK_PACKAGE_VERSION ${FGX_VERSION})
-
-## This need to be realite to "project root" ??
-
-
 #set(CPACK_PACKAGE_VERSION_MAJOR "2")
 #set(CPACK_PACKAGE_VERSION_MINOR "15")
 #set(CPACK_PACKAGE_VERSION_PATCH "1")
@@ -151,20 +148,21 @@ set(CPACK_PACKAGE_VERSION ${FGX_VERSION})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "FGx FlightGear launcher")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/etc/dist_description.txt")
 #set(CPACK_PACKAGE_DESCRIPTION "FGx - A cross-platform FlightGear launcherXXX")
-#'set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "FGx - FlightGear LauncherDEV")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
 
-set(CPACK_PACKAGE_CONTACT "fgx@freeflightsim.org")
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "fgx@freeflightsim.org")
+
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${CPACK_PACKAGE_CONTACT})
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "http://fgx.freeflightsim.org")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt4-xml,libqt4-network,libqt4-gui,libqt4-webkit")
 set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
 
+## deb logo
 install(FILES "${CMAKE_SOURCE_DIR}/src/resources/fgx_48x48x32.png"
         DESTINATION "/usr/share/pixmaps"
 )
 
+## ubuntu shortcut
 install(FILES "${CMAKE_SOURCE_DIR}/etc/fgx.desktop"
         DESTINATION "/usr/share/applications"
 )
