@@ -75,7 +75,7 @@ def _create_shots_html(is_remote):
     f.write(html)
     f.close()
 
-def make_local_docs():
+def make_docs():
     """Generate API docs"""
     # overiding version on std in
     # see http://stackoverflow.com/questions/11032280/specify-doxygen-parameters-through-command-line
@@ -91,7 +91,7 @@ def make_local_docs():
     local("cp %s/src/resources/artwork/fgx-logo.png %s/docs_build/html/" % (PROJECT_ROOT, PROJECT_ROOT) )
     local("cp %s/src/resources/fgx.ico %s/docs_build/html/favicon.ico" % (PROJECT_ROOT, PROJECT_ROOT) )
    
-def make_remote_docs():
+def update_www():
     """Generate REMOTE API docs"""
     # overiding version on std in
     # see http://stackoverflow.com/questions/11032280/specify-doxygen-parameters-through-command-line
