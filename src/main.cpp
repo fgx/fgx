@@ -64,10 +64,10 @@ int main( int argc, char* argv[])
     QApplication app(argc, argv);
     QApplication::setOrganizationName("FGx");
     QApplication::setOrganizationDomain("fgx.github.io");
-    QApplication::setApplicationName("FGx");
+    QApplication::setApplicationName("FGx-" FGX_VERSION);
 
-    // TODO get this from the /version file
-    QApplication::setApplicationVersion("2.15.3");
+    // from /version file
+    QApplication::setApplicationVersion(FGX_VERSION);
 
     //=====================================================
     //== Add fonts to database and set default application font
