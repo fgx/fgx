@@ -100,7 +100,7 @@ def update_www():
         run("git submodule update")
         with cd(REMOTE_DIR + "/fgx-screenshots"):
             run("git pull origin master")
-        run("fab make_local_docs")
+        run("fab make_docs")
  
    
 def ssh_test():
