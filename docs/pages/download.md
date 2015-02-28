@@ -5,7 +5,7 @@ Download & Install FGx   {#download}
 
 
 * Downloads will be at https://github.com/fgx/fgx/releases
-* Help wanted with building, can u Kenkins slave ?
+* Help wanted with building, can you accomodate a Jenkins slave ?
 
 
 

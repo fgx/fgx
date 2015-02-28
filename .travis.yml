@@ -4,8 +4,9 @@ compiler:
 before_install:
     - sudo apt-get update -qq 
 script:
-    - cd src
-    - qmake
+    - mkdir build_temp
+    - cd build_temp
+    - cmake ../fgx
     - make
 notifications:
     channels:

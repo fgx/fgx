@@ -83,7 +83,7 @@ def make_local_docs():
     #html = _make_screenshots_html(shots)
     print _create_shots_html(False)
     ver = _read_version(False)
-    
+    local("cp %s/LICENSE.txt %s/docs/LICENSE.txt" % (PROJECT_ROOT, PROJECT_ROOT) ) ## doxygen is pain in butt
     local('(cat %s/docs/doxygen.fgx.conf; echo "PROJECT_NUMBER = %s") | doxygen -' % (PROJECT_ROOT, ver))
     if not os.path.exists("%s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT) ):
         local("mkdir  %s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT) )
