@@ -301,17 +301,24 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
 void OpenLayerWidget::load_map(QString m_typ)
 {
     this->map_type = m_typ;
+
+    // We open the map.html, read contents and setHtml to webview
     QFile file(":/openlayers/map.html");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
         qDebug() << "MAP: could not open file" << file.fileName();
         return;
     }
 
+    // read html
     QByteArray contents = file.readAll();
+
     // @TODO:  This stuff id dodgy and "qrc:///" caused seg fault - pete
-    webView->setHtml(contents, QUrl("qrc://")); // This prefix does not work with src:///openlayers/ .. help.. Geoff.. gral.?
+    webView->setHtml(contents, QUrl("qrc:///openlayers")); // This prefix does not work with src:///openlayers/ .. help.. Geoff.. gral.?
+
+    //= Add a reference as "Qt" to this Class in Javascript, eg Qt.xxx() in favascript would call this->xxx()
     webView->page()->mainFrame()->addToJavaScriptWindowObject("Qt", this);
 
+    //=  Enable the web inspector
     webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, mainObject->debug_mode);
 
     webInspector->setPage(webView->page());
