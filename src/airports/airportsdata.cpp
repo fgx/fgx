@@ -25,7 +25,7 @@
 
 bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
 
-
+    qDebug() << "IMPORT AIRPORT APTDAT";
     QHash<QString, QString> airports;
     QString msg;
     QTime tm;
@@ -40,7 +40,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
     int found = 0;
     int air_added = 0;
     ms = tm.restart();
-	
+
     // Removing cache file, if exists()
     if (QFile::exists(mainObject->data_file("airports.txt"))) {
             outLog("*** FGx airportsdata reload: cache file exists!");
@@ -51,7 +51,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
     //= Cache File
     QFile cacheFile( mainObject->data_file("airports.txt") );
     if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
-            //qDebug() << "TODO Open error cachce file=";
+            qDebug() << "TODO Open error cachce file=";
             return true;
     }
     QTextStream out(&cacheFile);
@@ -80,7 +80,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
 #else
     QChar psep(':');
 #endif
-	
+
     // AIIIIII, found the doubler !, said yves very very loud - well done said pete ;-)
     for (i = 0; i < fgfs_args.size(); i++) {
         msg = fgfs_args.at(i);
@@ -97,7 +97,7 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
             int pathnumber = 0;
             for( QStringList::ConstIterator entry = path_list.begin(); entry != path_list.end(); entry++) {
                 path = *entry;
-				pathnumber = pathnumber + 1;
+                pathnumber = pathnumber + 1;
                 if (d.exists(path)) {
                     // we have a PATH to check, but we are ONLY checking 'Airports'
                     if ( !(path.indexOf(QChar('/')) == (path.size()-1)) &&

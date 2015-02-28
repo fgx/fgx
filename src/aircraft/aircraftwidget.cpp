@@ -50,7 +50,7 @@
 #include "utilities/messagebox.h"
 
 #include "fgtools/fileviewerwidget.h"
-class FileViewerWidget;
+
 
 AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)

@@ -172,20 +172,6 @@ LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
     bottomActionLayout->addStretch(20);
 
 
-    //== Help Box
-    XGroupHBox *helpBox = new XGroupHBox(tr("Help"));
-    helpBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: #ffff00 }");
-    bottomActionLayout->addWidget(helpBox);
-
-    //= Whats this button
-    buttonWhatsThis = new QToolButton();
-    buttonWhatsThis->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    buttonWhatsThis->setText("Whats this");
-    buttonWhatsThis->setAutoRaise(true);
-    buttonWhatsThis->setIcon(QIcon(":/icon/help"));
-    buttonWhatsThis->setStyleSheet("padding: 0px;");
-    helpBox->addWidget(buttonWhatsThis);
-    connect(buttonWhatsThis, SIGNAL(clicked()), this, SLOT(on_whats_this()));
 
     bottomActionLayout->addStretch(100);
 
@@ -193,16 +179,6 @@ LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
     //== Start Stop ==
     //=============================================================
 
-
-    //= FgCom
-    exeFgCom = new ExeControls("FGCom");
-    bottomActionLayout->addWidget(exeFgCom);
-    connect(exeFgCom->buttonStart, SIGNAL(clicked()),
-            this, SLOT(on_start_fgcom_clicked())
-            );
-
-    connect(mainObject->processFgCom, SIGNAL(running(bool)), exeFgCom, SLOT(set_running(bool)));
-    connect(exeFgCom, SIGNAL(stop()), mainObject->processFgCom, SLOT(stop()));
 
     //= TerraSync
     exeTerraSync = new ExeControls("TerraSync");
@@ -551,11 +527,6 @@ void LauncherWindow::on_tab_changed(int tab_idx){
     }
 }
 
-//============================================
-//=
-void LauncherWindow::on_whats_this() {
-    QWhatsThis::enterWhatsThisMode();
-}
 
 
 
@@ -565,7 +536,6 @@ void LauncherWindow::on_whats_this() {
 void LauncherWindow::on_debug_mode()
 {
     exeFgfs->setVisible(mainObject->debug_mode == true);
-    exeFgCom->setVisible(mainObject->debug_mode == true);
     exeTerraSync->setVisible(mainObject->debug_mode == true);
     exeAll->setVisible(mainObject->debug_mode == false);
 }

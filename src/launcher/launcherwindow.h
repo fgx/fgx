@@ -75,8 +75,6 @@ public:
 
     XGroupHBox *toolBox;
 
-    QToolButton *buttonWhatsThis;
-
     QActionGroup *actionGroupStyle;
     QTabWidget *tabWidget;
 
@@ -95,7 +93,6 @@ public:
     ExeControls *exeAll;
     ExeControls *exeFgfs;
     ExeControls *exeTerraSync;
-    ExeControls *exeFgCom;
 
     StatusBar *statusBar;
     MessageBox *messageBox;
@@ -117,9 +114,6 @@ public slots:
     void on_start_terrasync_clicked();
     void on_start_fgcom_clicked();
 
-
-    //* Actions
-    void on_whats_this();
 
     //* Functions
     void save_settings();
