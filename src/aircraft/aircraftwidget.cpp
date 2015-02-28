@@ -602,7 +602,11 @@ void AircraftWidget::load_aircraft(){
     while(!line.isNull()){
 
         QStringList cols = line.split("\t");
-
+        if (cols.size() <= C_FILTER_PATH) {
+            //TODO - warn discarding line
+            line = in.readLine();
+            continue;
+        }
 
         // Add model row
         row = this->create_model_row();
