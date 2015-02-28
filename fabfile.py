@@ -95,6 +95,7 @@ def update_www():
     """Generate REMOTE API docs"""
     # overiding version on std in
     # see http://stackoverflow.com/questions/11032280/specify-doxygen-parameters-through-command-line
+    local("git push origin next")
     with cd(REMOTE_DIR):
         run("git pull origin next")
         run("git submodule update")
