@@ -136,7 +136,12 @@ install(TARGETS fgx DESTINATION bin )
 
 ##=====================================================
 ## === Debian - pete checking things out !
-set(CPACK_GENERATOR "DEB;RPM")
+IF(WIN32)
+   set(CPACK_GENERATOR "NSIS;ZIP")
+else(WIN32)
+   set(CPACK_GENERATOR "RPM;DEB")
+endif(WIN32)
+
 set(CPACK_PACKAGE_VENDOR "FGx Team")
 set(CPACK_PACKAGE_CONTACT "fgx@freeflightsim.org")
 
@@ -151,22 +156,32 @@ set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/etc/dist_description.txt
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
 
-
+## DEB Specific
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${CPACK_PACKAGE_CONTACT})
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "http://fgx.freeflightsim.org")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt4-xml,libqt4-network,libqt4-gui,libqt4-webkit")
 set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
-
-## deb logo
-install(FILES "${CMAKE_SOURCE_DIR}/src/resources/fgx_48x48x32.png"
-        DESTINATION "/usr/share/pixmaps"
-)
-
-## ubuntu shortcut
-install(FILES "${CMAKE_SOURCE_DIR}/etc/fgx.desktop"
-        DESTINATION "/usr/share/applications"
-)
 #set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/Debian/postinst")
+
+
+## NSIS specific
+set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/src/resources/fgx.ico")
+set(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
+set(CPACK_NSIS_PACKAGE_NAME "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
+set(CPACK_NSIS_HELP_LINK "http://fgx.freeflightsim.org")
+set(CPACK_NSIS_URL_INFO_ABOUT "http://fgx.freeflightsim.org")
+
+if(UNIX)
+    ##  logo
+    install(FILES "${CMAKE_SOURCE_DIR}/src/resources/fgx_48x48x32.png"
+            DESTINATION "/usr/share/pixmaps"
+    )
+    ## ubuntu shortcut
+    install(FILES "${CMAKE_SOURCE_DIR}/etc/fgx.desktop"
+            DESTINATION "/usr/share/applications"
+    )
+ENDIF(UNIX)
+
 
 
 INCLUDE(CPack)

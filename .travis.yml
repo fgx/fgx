@@ -2,7 +2,8 @@ language: cpp
 compiler:
   - gcc
 before_install:
-    - sudo apt-get update -qq 
+    - sudo apt-get update -qq
+    - sudo apt-get install rpm
 script:
     - mkdir build_temp
     - cd build_temp
