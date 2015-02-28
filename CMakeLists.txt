@@ -268,7 +268,16 @@ set(CPACK_NSIS_URL_INFO_ABOUT "http://fgx.freeflightsim.org")
 # fgx-ubuntu-VER-32.deb/rpm
 # fgx-ubuntu-VER-64.deb/rpm
 # fgx-win-installer-VER-64.exe < windows
-#set( CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-ubuntu-${CPACK_PACKAGE_VERSION}" )
+
+#EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
+set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-ubuntu-${ARCHITECTURE}" )
+
+set(BITNESS 32)
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  set(BITNESS 64)
+endif()
+set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-ubuntu-${BITNESS}bit" )
+
 
 
 if(UNIX)
