@@ -4,6 +4,7 @@ cmake_minimum_required( VERSION 2.8.8 )
 
 project( fgx )
 
+## Process ./version file
 file(READ version versionFile)
 string(STRIP ${versionFile} FGX_VERSION)
 string(REPLACE "." ";" VERSION_LIST ${FGX_VERSION})
@@ -23,6 +24,8 @@ if(UNIX)
 else(UNIX)
    add_definitions( -DWINDOWS )
 endif(UNIX)
+
+
 # QT = network xml xmlpatterns webkit
 # CONFIG = qt thread
 message(STATUS "*** Finding Qt4 components ${components}")
@@ -260,6 +263,13 @@ set(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 set(CPACK_NSIS_PACKAGE_NAME "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 set(CPACK_NSIS_HELP_LINK "http://fgx.freeflightsim.org")
 set(CPACK_NSIS_URL_INFO_ABOUT "http://fgx.freeflightsim.org")
+
+## What we probably want 
+# fgx-ubuntu-VER-32.deb/rpm
+# fgx-ubuntu-VER-64.deb/rpm
+# fgx-win-installer-VER-64.exe < windows
+#set( CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-ubuntu-${CPACK_PACKAGE_VERSION}" )
+
 
 if(UNIX)
     ##  logo

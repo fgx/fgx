@@ -63,8 +63,8 @@ int main( int argc, char* argv[])
 
     QApplication app(argc, argv);
     QApplication::setOrganizationName("FGx");
-    QApplication::setOrganizationDomain("fgx.github.io");
-    QApplication::setApplicationName("FGx-" FGX_VERSION);
+    QApplication::setOrganizationDomain("fgx.freeflightsim.org");
+    QApplication::setApplicationName("FGx");
 
     // from /version file
     QApplication::setApplicationVersion(FGX_VERSION);
