@@ -3,6 +3,6 @@ Type=Application
 Version=1.0
 Name=FGx
 GenericName=FGx FlightGear Launcher
-Icon=/usr/share/fgx/fgx_32x32x32.xpm
+Icon=fgx_48x48x32.png
 Exec=/usr/bin/fgx
 Categories=Game

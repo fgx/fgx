@@ -161,8 +161,8 @@ set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "http://fgx.freeflightsim.org")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt4-xml,libqt4-network,libqt4-gui,libqt4-webkit")
 set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
 
-install(FILES "${CMAKE_SOURCE_DIR}/src/resources/fgx_32x32x32.xpm"
-        DESTINATION "/usr/share/fgx"
+install(FILES "${CMAKE_SOURCE_DIR}/src/resources/fgx_48x48x32.png"
+        DESTINATION "/usr/share/pixmaps"
 )
 
 install(FILES "${CMAKE_SOURCE_DIR}/etc/fgx.desktop"
