@@ -3,17 +3,19 @@ Developer Info   {#developer}
 
 Jenkins
 =====================
+
+
+
 There is a Jenkins instance being experimented with, the idea
 is to autobuild the tarballs and installers.
 
-The Jenkins instance is running on RedHats OpenShift cloud:
+The Jenkins instance is running on Red Hat's [OpenShift](https://openshift.com/) cloud:
 - https://jenkins-fgx.rhcloud.com/
-- Please send pedro an email for access
+- Please email pete for access
 
 Travis CI
 =====================
 
-- Travis build is defined in travis.yml
 - https://travis-ci.org/fgx/fgx/builds
 
 master Branch

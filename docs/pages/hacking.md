@@ -7,4 +7,4 @@ Windows
 Download and Install Qt Toolkit from 
 - 
 
-NSIS
+
