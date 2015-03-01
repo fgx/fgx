@@ -90,6 +90,8 @@ def make_docs():
     local("cp %s/fgx-screenshots/*.jpeg %s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT, PROJECT_ROOT) )
     local("cp %s/src/resources/artwork/fgx-logo.png %s/docs_build/html/" % (PROJECT_ROOT, PROJECT_ROOT) )
     local("cp %s/src/resources/fgx.ico %s/docs_build/html/favicon.ico" % (PROJECT_ROOT, PROJECT_ROOT) )
+    local("cp %s/src/resources/fgx_48x48x32.png %s/docs_build/html/favicon.png" % (PROJECT_ROOT, PROJECT_ROOT) )
+    
    
 def update_www():
     """Generate REMOTE API docs"""
