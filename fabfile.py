@@ -3,55 +3,44 @@
 
 import os
 
-
 from fabric.api import env, local, run, cd, lcd, sudo, warn_only
+
+
+env.hosts = [ 'fgx.freeflightsim.org' ]
+env.use_ssh_config = True
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 REMOTE_DIR = "/home/fg/fgx"
 
-env.hosts = [ 'fgx.freeflightsim.org' ]
-env.use_ssh_config = True
+SCREEN_SHOT_ROWS = 4 # no of rows of screenshots on www site
 
 def _chunks(l, n):
-    """ Yield successive n-sized chunks from l.
+    """ Yield successive n-sized chunks from l. (makes rows for screenshots adn nicked from stackoverflow)
     """
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
 
 def _read_version(is_remote):
-    if is_remote:
-        output = run('cat version')
-    else:
-        output = local('cat version', capture=True)
+    """Read the ./version file"""
+    output = local('cat version', capture=True)
     return output.strip()
-    """reads the ./version_file"""
-    f = open(path + "/version", "r")
-    v = f.read()
-    f.close()
-    return v
-
-def _get_shot_files(is_remote):
-    if is_remote:
-        output = run('ls fgx-screenshots')
-    else:
-        output = local('ls fgx-screenshots', capture=True)
-        
+    
+def _get_shot_files():
+    """read the files in fgx=screenshots and return jpeg atmo - todo gif etc"""
+    output = local('ls fgx-screenshots', capture=True)   
     raw_files = output.split()
-    #print "=======", raw_files
     
     files = []
     for file in raw_files:
-        if file.endswith(".jpeg"):
+        if file.endswith(".jpeg") or file.endswith(".jpg") or file.endswith(".gif") or file.endswith(".png"):
             files.append(file)
-    # print files
-    #print "------------------"
     return sorted(files)
     
 def _make_screenshots_html(shots):
-    
+    """Generates the <table> html and js for the gallery"""
     s = '<div id="fgx-shots"><table>\n'
-    for row in _chunks(shots, 3):
+    for row in _chunks(shots, SCREEN_SHOT_ROWS):
         s += "<tr>\n"
         for i, c in enumerate(row):
             print i, c
@@ -68,8 +57,9 @@ def _make_screenshots_html(shots):
     s += "</script>\n"
     return s
 
-def _create_shots_html(is_remote):
-    shots =  _get_shot_files(is_remote)
+def _create_shots_html():
+    """Created the docs/screenshots.html file which is \htmlinclude by doxygen"""
+    shots =  _get_shot_files()
     html = _make_screenshots_html(shots)
     f = open("docs/screenshots.html" , "w")
     f.write(html)
@@ -77,12 +67,12 @@ def _create_shots_html(is_remote):
 
 def make_docs():
     """Generate API docs"""
-    # overiding version on std in
+    # doxygen input is not the doxygen file but overiding version on std in
     # see http://stackoverflow.com/questions/11032280/specify-doxygen-parameters-through-command-line
-    #shots =  _get_shot_files(PROJECT_ROOT)
-    #html = _make_screenshots_html(shots)
-    print _create_shots_html(False)
-    ver = _read_version(False)
+    
+    _create_shots_html()
+    ver = _read_version()
+    
     local("cp %s/LICENSE.txt %s/docs/LICENSE.txt" % (PROJECT_ROOT, PROJECT_ROOT) ) ## doxygen is pain in butt
     local('(cat %s/docs/doxygen.fgx.conf; echo "PROJECT_NUMBER = %s") | doxygen -' % (PROJECT_ROOT, ver))
     if not os.path.exists("%s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT) ):
@@ -94,9 +84,8 @@ def make_docs():
     
    
 def update_www():
-    """Generate REMOTE API docs"""
-    # overiding version on std in
-    # see http://stackoverflow.com/questions/11032280/specify-doxygen-parameters-through-command-line
+    """Updates www site"""
+    
     local("git push origin next")
     with cd(REMOTE_DIR):
         run("git pull origin next")
@@ -112,12 +101,6 @@ def ssh_test():
     run("pwd")
     run("ls -alh")
     
-          
-def up_www():
-    """Updates the online website"""
-    with cd(REMOTE_DIR):
-        run("git pull")
-        run("fab make_docs")
-        
+
     
     
