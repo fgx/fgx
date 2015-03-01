@@ -21,7 +21,7 @@ def _chunks(l, n):
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
 
-def _read_version(is_remote):
+def _read_version():
     """Read the ./version file"""
     output = local('cat version', capture=True)
     return output.strip()
