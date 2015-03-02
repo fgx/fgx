@@ -23,8 +23,6 @@
  * The general idea of the class is to  provide one central place to access settings. It is
  * for this reason that methods are created to hide some of the completities, such as aircraft_path().
  *
- * @author: Peter Morgan
- * @author: Yves Sablonier
  */
 
 
@@ -57,8 +55,12 @@ QString XSettings::fgx_path(){
 //===========================================================================
 //** Save/Restore Splitter
 //===========================================================================
-/** \brief Saves a window size and position
+/** \brief Saves a splitters dimensions
  *
+ * The `settings_namespace` property needs to be set 
+ * 
+ * @todo check for settings_namespace
+ * @bug no namespace problem
  */
 void XSettings::saveSplitter(QSplitter *splitter){
     QString key = splitter->property("settings_namespace").toString();
@@ -66,11 +68,12 @@ void XSettings::saveSplitter(QSplitter *splitter){
     outLog("saveSplitter: Key="+key+", values "+ba.toHex());
     setValue( key, QVariant(ba) );
 }
-/** \brief Restores a window position
- *
+
+/** \brief Restores a splitters dimensions
+ * @todo check for settings_namespace
+ * @bug no namespace problem
  */
 void XSettings::restoreSplitter(QSplitter *splitter){
-    //widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
     QString key = splitter->property("settings_namespace").toString();
     QByteArray ba = value(key).toByteArray();
     outLog("saveSplitter: Key="+key+", values "+ba.toHex());
@@ -81,27 +84,26 @@ void XSettings::restoreSplitter(QSplitter *splitter){
 //===========================================================================
 //** Save/Restore Window
 //===========================================================================
-/** \brief Saves a window size and position
+/** \brief Saves a window's size and position
  *
  */
 void XSettings::saveWindow(QWidget *widget){
-    //setValue( _windowName(widget), QVariant(widget->saveGeometry()) );
     QString key = _windowName(widget);
     QByteArray ba = widget->saveGeometry();
     outLog("saveWindow: Key="+key+", values "+ba.toHex());
     setValue( key, QVariant(ba) );
 }
-/** \brief Restores a window position
- *
+/** \brief Restores a size window position
+ * 
+ * @todo check screensize
+ * @bug monitor could be offscreen
  */
 void XSettings::restoreWindow(QWidget *widget){
-    //widget->restoreGeometry( value(_windowName(widget)).toByteArray() );
     QString key = _windowName(widget);
     QByteArray ba = value(_windowName(widget)).toByteArray();
     outLog("restoreWindow: Key="+key+", values "+ba.toHex());
 
     // Set fixed size to 900,700 of all windows for first startup
-
     if (ba != "") {
         widget->restoreGeometry(ba);
     } else {
@@ -110,8 +112,12 @@ void XSettings::restoreWindow(QWidget *widget){
         }
     }
 
+    // We need to check here window is nto offsreen, 
+    // eg a dual monitor previous and now no dual so screen is restored off screen
+    //QDesktopSccreen dimensions vs postion
 }
 
+/** \brief Extracts the `settings_namespace` property */
 QString XSettings::_windowName(QWidget *widget){
     QString key_name = "window/";
     key_name.append(widget->property("settings_namespace").toString());
@@ -134,12 +140,15 @@ bool XSettings::dev_mode(){
     return QFile::exists(curr);
 }
 
-// this should be used, yves
+/** \brief this should be used, yves ? 
+ */
 QString XSettings::fgx_current_dir(){
     return QDir::current().absolutePath();
 }
 
-// and this too, hrmbl !
+/** \brief shortcut to cache directory 
+ *
+ */
 QString XSettings::cache_dir(){
     return QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
 }

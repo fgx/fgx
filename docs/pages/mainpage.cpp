@@ -4,7 +4,7 @@
  * \section main_toc Welcome
  * * \ref download
  * * \ref developer
- *   * \ref hacking
+ *   * \ref hackers_guide
  *   * \ref todo
  * * Released under the GPL -  see \ref LICENSE
  * 

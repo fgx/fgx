@@ -1,4 +1,4 @@
-Download & Install FGx   {#download}
+Download & Install   {#download}
 =======================
 
 \note  Early 2015: This project is in active development again, expect binary builds soom, but for now only source is available.

@@ -202,7 +202,10 @@ a {
 	font-size: 11pt;
 	margin: 10px 10% 20px 30px;
 }
-
+.contents .bug{
+    font-size: 11pt;
+    margin: 10px 10% 20px 30px;
+}
 
 a:hover {
 	text-decoration: underline;
@@ -1088,9 +1091,16 @@ dl.todo
         padding: 10px;
         border-left:4px solid #00C0E0;
         background-color:  #DCFAFF ;
-				border-radius: 10px;
+		border-radius: 10px;
 }
-
+dl.bug
+{
+        margin: 5px 10% 5px 30px;
+        padding: 10px;
+        border-left:4px solid red;
+        background-color:  #FFC3B9 ;
+        border-radius: 10px;
+}
 dl.test
 {
         margin-left:-7px;

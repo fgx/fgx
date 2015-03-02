@@ -33,7 +33,11 @@
 
 #include "xobjects/xsettingsmodel.h"
 
-
+/*! \class LauncherWindow
+ *  \brief The LauncherWindow is raised and controlled by MainObject
+ * 
+ * At Present its created upon application launch as a hidden/show window
+*/
 LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
     : QWidget(parent)
 {

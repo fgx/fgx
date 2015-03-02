@@ -1,0 +1,21 @@
+/*!
+
+\page hackers_guide Hackers Guide
+
+\section hacker_guide Hackers Guide
+
+
+This is a beief rundown of how the fgx works..
+
+As usual it starts  in main.cpp
+
+And specifically the MainObject
+
+The LauncherWindow
+
+
+
+\endpage
+*/
+
+

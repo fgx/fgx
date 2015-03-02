@@ -48,8 +48,13 @@ class FgxDebugWidget;
 /*! \class MainObject
  * \brief The MainObject is an extended QObject, and the main "controller" for FGx
  *
- * This is the main object created and called when the app starts in the backgound
- * It manifest itself and is made visible via an icon in the QSystemTrayIcon ie TaskBar
+ * This was bad naming but a "main object" created when the app starts in the backgound
+ * and is passed around as a "state machine" of sorts.
+ * 
+ * Child "background" in memory containers are
+ * 
+ * 
+ * It is only via an icon in the QSystemTrayIcon ie TaskBar
  * All widgets are children to this object and are hidden (at the moment)
  *
  * MainObject also controls the starting and stopping of processes// TBC
@@ -80,7 +85,7 @@ public:
     XSettings *settings;
 	XSettingsModel *X;
 
-
+    /* \brief Instance of LauncherWindow */
 	LauncherWindow *launcherWindow;
 	//MpMapWidget *mpMapWidget;
 	//MpMapXWidget *mpMapXWidget;
@@ -91,7 +96,6 @@ public:
 
 	XProcess *processFgFs;
 	XProcess *processTerraSync;
-	XProcess *processFgCom;
 
 
     QSystemTrayIcon *trayIcon;
