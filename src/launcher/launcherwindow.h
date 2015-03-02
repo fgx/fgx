@@ -112,7 +112,7 @@ public slots:
     void on_start_all_clicked();
     void on_start_fgfs_clicked();
     void on_start_terrasync_clicked();
-    void on_start_fgcom_clicked();
+
 
 
     //* Functions

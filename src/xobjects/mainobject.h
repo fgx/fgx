@@ -50,10 +50,10 @@ class FgxDebugWidget;
  *
  * This was bad naming but a "main object" created when the app starts in the backgound
  * and is passed around as a "state machine" of sorts.
- * 
+ *
  * Child "background" in memory containers are
- * 
- * 
+ *
+ *
  * It is only via an icon in the QSystemTrayIcon ie TaskBar
  * All widgets are children to this object and are hidden (at the moment)
  *
@@ -69,33 +69,33 @@ Q_OBJECT
 public:
     explicit MainObject(QObject *parent = 0);
     ~MainObject();
-	
-	static int runningOs();
 
-	bool debug_mode;
+    static int runningOs();
 
-	static QString log_file_path();
+    bool debug_mode;
 
-	QString data_file(QString file_name);
-	QString default_file(QString file_name);
+    static QString log_file_path();
 
-	static QString temp_dir();
-	static QString temp_dir(QString append_path);
+    QString data_file(QString file_name);
+    QString default_file(QString file_name);
+
+    static QString temp_dir();
+    static QString temp_dir(QString append_path);
 
     XSettings *settings;
-	XSettingsModel *X;
+    XSettingsModel *X;
 
     /* \brief Instance of LauncherWindow */
-	LauncherWindow *launcherWindow;
-	//MpMapWidget *mpMapWidget;
-	//MpMapXWidget *mpMapXWidget;
+    LauncherWindow *launcherWindow;
+    //MpMapWidget *mpMapWidget;
+    //MpMapXWidget *mpMapXWidget;
 
-	ViewLogsWidget *viewLogsWidget;
-	PropsTreeWidget *propertiesBrowser;
-	FgxDebugWidget *fgxDebugWidget;
+    ViewLogsWidget *viewLogsWidget;
+    PropsTreeWidget *propertiesBrowser;
+    FgxDebugWidget *fgxDebugWidget;
 
-	XProcess *processFgFs;
-	XProcess *processTerraSync;
+    XProcess *processFgFs;
+    XProcess *processTerraSync;
 
 
     QSystemTrayIcon *trayIcon;
@@ -106,56 +106,55 @@ public:
 
     QAction *actionLauncher;
     QAction *actionMpMap;
-	QAction *actionPropsBrowser;
-	QAction *actionSetupWizard;
+    QAction *actionPropsBrowser;
+    QAction *actionSetupWizard;
 
-	QAction *actionViewLogs;
-	QAction *actionViewFgxDebug;
-	QAction *actionBrowserMap;
+    QAction *actionViewLogs;
+    QAction *actionViewFgxDebug;
+    QAction *actionBrowserMap;
 
     QAction *actionQuit;
 
-	QString get_fgfs_command();
-	QStringList get_fgfs_args();
-	QStringList get_env();
+    QString get_fgfs_command();
+    QStringList get_fgfs_args();
+    QStringList get_env();
 
 signals:
-	void show_settings(int);
-	void reload_paths();
-	void on_debug_mode(bool enabled);
-	void setx(QString option, bool enabled, QString value);
+    void show_settings(int);
+    void reload_paths();
+    void on_debug_mode(bool enabled);
+    void setx(QString option, bool enabled, QString value);
 
 public slots:
 
-	void initialize();
+    void initialize();
 
     void on_tray_icon(QSystemTrayIcon::ActivationReason reason);
 
     void on_launcher();
-	void on_browsermap();
-	void on_properties_browser();
+    void on_browsermap();
+    void on_properties_browser();
 
-	void on_view_logs();
-	void clear_log(QString log_name);
-	void add_log(QString log_name, QString data);
+    void on_view_logs();
+    void clear_log(QString log_name);
+    void add_log(QString log_name, QString data);
 
-	void start_all();
-	void start_fgfs();
-	void start_fgcom();
-	void start_terrasync();
-	void stop_all();
+    void start_all();
+    void start_fgfs();
+    void start_terrasync();
+    void stop_all();
 
-	void on_quit();
+    void on_quit();
 
-	void on_view_fgx_debug();
-	void set_debug_mode(bool);
+    void on_view_fgx_debug();
+    void set_debug_mode(bool);
 
-	void on_action_open_url(QAction*);
+    void on_action_open_url(QAction*);
 
-	void on_about_qt();
-	void on_about_fgx();
+    void on_about_qt();
+    void on_about_fgx();
 
-	void on_upx(QString option, bool enabled, QString value);
+    void on_upx(QString option, bool enabled, QString value);
 
 };
 

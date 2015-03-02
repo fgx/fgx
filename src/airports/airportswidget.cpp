@@ -141,7 +141,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
 
     QAction *actView = meniw->addAction("View `airports.txt` cache file" );
     connect(actView, SIGNAL(triggered()),
-            this, SLOT(on_view_aiports_cache())
+            this, SLOT(on_view_airports_cache())
     );
     //==============================================================================
     //== Airports/Runways Splitter
@@ -1230,7 +1230,7 @@ void AirportsWidget::on_debug_mode()
     treeAirports->setColumnHidden(CA_DIR, this->mainObject->debug_mode == false);
 }
 
-void AirportsWidget::on_view_aircraft_cache()
+void AirportsWidget::on_view_airports_cache()
 {
     FileViewerWidget *fileViewer = new FileViewerWidget();
     fileViewer->setFile(mainObject->data_file("airports.txt"));

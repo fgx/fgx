@@ -142,7 +142,7 @@ set( fgx_HDRS
     src/settings/settingsdialog.h
     src/utilities/dirDialog.h
     src/utilities/fileDialog.h
-    src/utilities/loadAptDat.h 
+    src/utilities/loadAptDat.h
     src/utilities/messagebox.h
     src/utilities/statusbar.h
     src/utilities/workThread.h
@@ -232,7 +232,7 @@ install(TARGETS fgx DESTINATION bin )
 IF(WIN32)
    set(CPACK_GENERATOR "NSIS;ZIP")
 else(WIN32)
-   set(CPACK_GENERATOR "RPM;DEB")
+   set(CPACK_GENERATOR "DEB")
 endif(WIN32)
 
 set(CPACK_PACKAGE_VENDOR "FGx Team")
@@ -264,7 +264,7 @@ set(CPACK_NSIS_PACKAGE_NAME "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 set(CPACK_NSIS_HELP_LINK "http://fgx.freeflightsim.org")
 set(CPACK_NSIS_URL_INFO_ABOUT "http://fgx.freeflightsim.org")
 
-## What we probably want 
+## What we probably want
 # fgx-ubuntu-VER-32.deb/rpm
 # fgx-ubuntu-VER-64.deb/rpm
 # fgx-win-installer-VER-64.exe < windows

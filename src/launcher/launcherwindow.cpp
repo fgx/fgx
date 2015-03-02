@@ -35,7 +35,7 @@
 
 /*! \class LauncherWindow
  *  \brief The LauncherWindow is raised and controlled by MainObject
- * 
+ *
  * At Present its created upon application launch as a hidden/show window
 */
 LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
@@ -323,13 +323,6 @@ void LauncherWindow::on_start_terrasync_clicked() {
     mainObject->start_terrasync();
 }
 
-void LauncherWindow::on_start_fgcom_clicked() {
-    if(!validate()){
-        return;
-    }
-    //save_settings();
-    mainObject->start_fgcom();
-}
 
 
 //================================================================================

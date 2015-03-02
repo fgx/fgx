@@ -51,7 +51,6 @@ MainObject::MainObject(QObject *parent) :
     //================================================================
     processFgFs  = new XProcess(this, "fgfs");
     processTerraSync  = new XProcess(this, "terrasync");
-    processFgCom  = new XProcess(this, "fgcom");
 
 
 
@@ -287,12 +286,9 @@ void MainObject::start_all(){
 
     // Does not need to start when not checked in settings
     if (X->terrasync_enabled()){
-    start_terrasync();
+        start_terrasync();
     }
 
-    if (X->fgcom_enabled()){
-    start_fgcom();
-    }
 }
 
 //========================================================
@@ -300,13 +296,9 @@ void MainObject::start_all(){
 void MainObject::stop_all(){
     processFgFs->stop();
 
-    // Stop only processes enabled
-    if (X->fgcom_enabled()){
-    processFgCom->stop();
-    }
 
     if (X->terrasync_enabled()){
-    processTerraSync->stop();
+        processTerraSync->stop();
     }
 }
 
@@ -332,35 +324,6 @@ void MainObject::start_terrasync(){
     processTerraSync->start(terra_command_line, QStringList());
 }
 
-//========================================================
-//== Start FgCom
-void MainObject::start_fgcom(){
-
-    QStringList args;
-    QString arg;
-    QString cmd;
-
-    cmd = settings->value("fgcom_port").toString();
-    cmd = cmd.simplified();
-        if (cmd.size()) {
-            arg = "-p";
-            arg.append(cmd);
-            args << arg;
-        }
-
-    cmd = settings->value("fgcom_no").toString();
-    cmd = cmd.simplified();
-        if (cmd.size()) {
-            arg = "-S";
-            arg.append(cmd);
-            args << arg;
-        }
-
-    QString command_line = X->fgcom_exe_path();
-    command_line.append(" ").append( args.join(" ") );
-
-    processFgCom->start(command_line, QStringList() );
-}
 
 
 void MainObject::on_quit(){

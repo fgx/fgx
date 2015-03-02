@@ -163,7 +163,7 @@ public slots:
 
     void on_debug_mode();
 
-    void on_view_aircraft_cache();
+    void on_view_airports_cache();
 
 };
 
