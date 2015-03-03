@@ -334,6 +334,8 @@ void loadAptDat::_loadStatic(void * vp)
         version = 810;
     } else if (credits.startsWith("850 Version")) {
         version = 850;
+    } else if (credits.startsWith("1000 Version")) {
+        version = 1000;
     } else {
         fgx_gzClose(gzf);
         pli->msg = "ERROR: Unknown version ["+zf+"]";
@@ -366,6 +368,9 @@ void loadAptDat::_loadStatic(void * vp)
         line_id = row_code.toInt();
         parts = line.split(" ", QString::SkipEmptyParts);
         pcnt = parts.count();
+        if (line_id == 99) {
+            break;  // end of file
+        }
         if ((line_id == 1)||(line_id == 16)||(line_id == 17)) {
             // got airport
             // 1. check for previous airport
@@ -522,9 +527,9 @@ void loadAptDat::_loadStatic(void * vp)
                     comm.name = parts.at(2);
                 else {
                     comm.name = "";
-                    msg.sprintf("%d cnt=%d: ",line_counter,pcnt);
-                    outLog("CHECK ME! COMM line without name "+msg+" ["+line+"]");
-                    debug_stop(line_counter);
+                    // msg.sprintf("%d cnt=%d: ",line_counter,pcnt);
+                    // outLog("CHECK ME! COMM line without name "+msg+" ["+line+"]");
+                    // debug_stop(line_counter);
                 }
                 if (pli->work.abort)
                     break;
@@ -535,10 +540,8 @@ void loadAptDat::_loadStatic(void * vp)
                 outLog("CHECK ME! Unknown COMM line "+msg+" ["+line+"]");
                 debug_stop(line_counter);
             }
-        } else if (line_id == 99) {
-            break;  // end of file
         } else {
-            if (version == 850) {
+            if ((version == 850)||(version == 1000)) {
                 double az1, az2, s, lat1, lon1, lat2, lon2, feet;
                 if (line_id == 100) {
                     // * 100  Runway
@@ -726,6 +729,34 @@ void loadAptDat::_loadStatic(void * vp)
                     // *  20  Taxiway sign (inc. dist-remain) Zero, one or many for each airport
                 } else if (line_id == 21) {
                     // *  21  Lighting (VASI, PAPI, Wig-Wag, etc.) Zero or many for each airport
+                } else if (line_id == 120) {
+                    // # 120 hold lines W A13
+                } else if (line_id == 130) {
+                    // # 130 Airport Boundary
+                } else if (line_id == 1000) {
+                    // # 1000 Northerly flow
+                } else if (line_id == 1001) {
+                    // # 1001 KGRB 270 020 999
+                } else if (line_id == 1002) {
+                    // # 1002 KGRB 0
+                } else if (line_id == 1003) {
+                    // # 1003 KGRB 0
+                } else if (line_id == 1004) {
+                    // # 1004 0000 2400
+                } else if (line_id == 1100) {
+                    // # 1100 36 12654 all heavy|jets|turboprops|props 000360 000360 Northerly
+                } else if (line_id == 1101) {
+                    // # 1101 36 left
+                } else if (line_id == 1200) {
+                    // # ????
+                } else if (line_id == 1201) {
+                    // # 1201 42.75457409 -073.80880021 both 2110 _start
+                } else if (line_id == 1202) {
+                    // # 1202 2110 2112 twoway taxiway
+                } else if (line_id == 1204) {
+                    // # 1204 arrival 01,19
+                } else if (line_id == 1300) {
+                    // # 1300 30.32875704 -009.41140596 323.85 misc jets|props Ramp
                 } else {
                     msg.sprintf("%d cnt=%d",line_counter,pcnt);
                     outLog("CHECK ME! Unknown 850 line "+msg+" ["+line+"]");
