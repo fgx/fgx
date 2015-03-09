@@ -66,6 +66,9 @@ def _create_shots_html():
     f.write(html)
     f.close()
 
+
+
+
 def make_docs():
     """Generate API docs"""
     # doxygen input is not the doxygen file but overiding version on std in
