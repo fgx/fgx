@@ -15,6 +15,7 @@ REMOTE_DIR = "/home/fg/fgx"
 
 SCREEN_SHOT_ROWS = 4 # no of rows of screenshots on www site
 
+
 def _chunks(l, n):
     """ Yield successive n-sized chunks from l. (makes rows for screenshots adn nicked from stackoverflow)
     """
