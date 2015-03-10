@@ -28,7 +28,7 @@ add_definitions( -DAPP_VERSION="${APP_VERSION}" )
 set(APP_SHORT "FGx")
 add_definitions( -DAPP_SHORT="${APP_SHORT}" )
 
-set(APP_ONE_LINER "FGx - A cross-plfrom launcher for FlightGear")
+set(APP_ONE_LINER "FGX - cross-plafrom launcher for FlightGear")
 add_definitions( -DAPP_ONE_LINER="${APP_ONE_LINER}" )
 
 set(APP_ORG "FGx Team")
@@ -52,7 +52,10 @@ add_definitions( -DAPP_ISSUES="${APP_ISSUES}" )
 #=====================================================
 ## Set up Platform
 
-# determine 32/54 bit
+# probably unix only
+EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
+
+# determine 32/64 bit
 set(BITNESS 32)
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
   set(BITNESS 64)
@@ -89,6 +92,8 @@ set( QT_USE_QTXML TRUE )
 set( QT_USE_QTXMLPATTERNS TRUE )
 set( QT_USE_QTWEBKIT TRUE )
 
+#=====================================================
+## Sources
 set( fgx_SRCS
     src/aircraft/aircraftdata.cpp
     src/aircraft/aircraftproxymodel.cpp
@@ -159,6 +164,8 @@ set( fgx_SRCS
     src/xwidgets/xdebugtreewidget.cpp
     src/xwidgets/xgroupboxes.cpp
     )
+#=====================================================
+## Headers
 set( fgx_HDRS
     src/aircraft/aircraftproxymodel.h
     src/aircraft/aircraftwidget.h
@@ -204,6 +211,8 @@ set( fgx_HDRS
     src/xwidgets/xdebugtreewidget.h
     src/xwidgets/xgroupboxes.h
     )
+#=====================================================
+## Others.. 
 set( fgx_OTHERS
     src/xwidgets/xtreewidgetitem.h
     src/utilities/utilities.h
@@ -230,6 +239,9 @@ set( fgx_OTHERS
     src/utilities/simgear/constants.h
     src/utilities/simgear/compiler.h
     )
+    
+#=====================================================
+## Resource files
 set( fgx_RCS
     src/resources/ycons.qrc
     src/resources/artwork.qrc
@@ -237,6 +249,9 @@ set( fgx_RCS
     src/resources/openlayers.qrc
     src/resources/default.qrc
     )
+    
+#=====================================================
+## Directories
 include_directories(
     src/utilities/zlib
     src/xwidgets
@@ -257,6 +272,9 @@ include_directories(
     ${QT_INCLUDE_DIR}
  )
 
+#=====================================================
+## Setup targets
+
 # Added for DEBUG only
 get_property(inc_dirs DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
 message(STATUS "*** inc_dirs = ${inc_dirs}")
@@ -270,21 +288,20 @@ target_link_libraries( fgx ${QT_LIBRARIES} )
 if (MSVC)
     set_target_properties( fgx PROPERTIES DEBUG_POSTFIX d )
 endif ()
+
 # deal with install
 install(TARGETS fgx DESTINATION bin )
 
-##=====================================================
+##======================================================================
 ## cpack - Packaging and Installers
-##=====================================================
+##======================================================================
 ## What we probably want
 # fgx-VER-BITNESSbit-{platform}-{release}.deb/rpm
-# fgx-ubuntu-VER-64.deb/rpm
-# fgx-win-installer-VER-64.exe < windows
 
 IF(WIN32)
    set(CPACK_GENERATOR "NSIS;ZIP")
 else(WIN32)
-   set(CPACK_GENERATOR "DEB")
+   set(CPACK_GENERATOR "DEB;RPM;TAR")
 endif(WIN32)
 
 set(CPACK_PACKAGE_VENDOR ${APP_ORG})
@@ -316,14 +333,8 @@ set(CPACK_NSIS_HELP_LINK ${APP_WWW})
 set(CPACK_NSIS_URL_INFO_ABOUT ${APP_WWW})
 
 
-
-EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
-
-
-
-
 if(UNIX)
-    set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-ubuntu-${ARCHITECTURE}" )
+    set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-${BITNESS}bit-linux" )
     ##  logo
     install(FILES "${CMAKE_SOURCE_DIR}/src/resources/fgx_48x48x32.png"
             DESTINATION "/usr/share/pixmaps"
@@ -337,5 +348,6 @@ else()
 ENDIF(UNIX)
 
 INCLUDE(CPack)
+
 
 # EOF

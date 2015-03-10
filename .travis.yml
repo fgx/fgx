@@ -9,7 +9,7 @@ script:
     - cd build_temp
     - cmake ../
     - make
-    - cpack
+    - make package
 notifications:
     channels:
       - "irc.flightgear.org#fgx"
