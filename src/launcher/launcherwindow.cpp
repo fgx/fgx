@@ -136,7 +136,7 @@ LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
     XGroupHBox *toolBox = new XGroupHBox(tr("Profiles"));
     bottomActionLayout->addWidget(toolBox);
 
-    toolBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: yellow }");
+    //toolBox->setStyleSheet("XGroupHBox::title { color: #000000; background-color: yellow }");
 
     //= Load Settings
     QToolButton *buttonLoadSettings = new QToolButton(this);

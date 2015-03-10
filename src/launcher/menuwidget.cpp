@@ -19,7 +19,11 @@
 #include "launcher/launcherwindow.h"
 #include "xobjects/mainobject.h"
 
-
+/*! \class MenuWidget
+ *  \brief The MenuWidget is the top part of the LauncherWindow. Its contains the toplevel menu
+ *         and has ended up separate to make tweaking for OSX easier.
+ *
+*/
 MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
     QWidget(parent)
 {
@@ -78,6 +82,7 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 
     profileMenu = new QMenu(tr("&Profile"));
 
+    //== Help Menu
     helpMenu = new QMenu(tr("&Help"));
     helpFGxGroup = new QMenu(tr("&FGx Online Help"));
     helpFlightGearGroup = new QMenu(tr("&FlightGear Online Help"));
@@ -103,10 +108,10 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
 
     //=======================================
     // Menu FlightGear Help actions
-    urlActionWiki = new QAction(tr("FlightGear Wiki"), this);
+    urlActionWiki = new QAction(tr("Wiki - wiki.flightgear.org"), this);
     connect(urlActionWiki, SIGNAL(triggered()), this, SLOT(on_menu_url_wiki()));
 
-    urlActionForums = new QAction(tr("FlightGear Forums"), this);
+    urlActionForums = new QAction(tr("Forums - forums.flightgear.org"), this);
     connect(urlActionForums, SIGNAL(triggered()), this, SLOT(on_menu_url_forums()));
 
     //=======================================
@@ -133,11 +138,17 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
     // Add actions to menu "Help"
     helpFlightGearGroup->addAction(urlActionWiki);
     helpFlightGearGroup->addAction(urlActionForums);
-    helpFGxGroup->addAction("FGx - Source code and Bugs at github", this, SLOT(on_menu_fgx_github()) );
+    helpFGxGroup->addAction("Website -  fgx.freeflightsim.org", this, SLOT(on_menu_fgx_www()) );
+    helpFGxGroup->addAction("Bugs & Requests -  fgx.freeflightsim.org", this, SLOT(on_menu_fgx_issues()) );
+    helpFGxGroup->addAction("Source Code - github.com/fgx/fgx", this, SLOT(on_menu_fgx_github()) );
     helpFGxGroup->addAction(urlActionFGxUserHelp);
 
-    helpMenu->addMenu(helpFlightGearGroup);
     helpMenu->addMenu(helpFGxGroup);
+    helpMenu->addSeparator();
+    helpMenu->addMenu(helpFlightGearGroup);
+    helpMenu->addSeparator();
+    helpMenu->addAction("About FGx", this, SLOT(on_menu_fgx_version_info()));
+    helpMenu->addAction("About Qt", this, SLOT(on_menu_qt_version_info()));
 
     // Create menubar, parentless 0 is needed for OSX using the wrapper for
     // getting native OSX menus, see qt4 MenuBar doc
@@ -273,7 +284,24 @@ void MenuWidget::on_menu_fgx_user_forums()
     QUrl url("http://forum.flightgear.org/viewforum.php?f=65");
     QDesktopServices::openUrl( url );
 }
-
+void MenuWidget::on_menu_fgx_www(){
+    QDesktopServices::openUrl( QUrl("http://fgx.freeflightsim.org") );
+}
+void MenuWidget::on_menu_fgx_issues(){
+    QDesktopServices::openUrl( QUrl("https://github.com/fgx/fgx/isssues") );
+}
 void MenuWidget::on_menu_fgx_github(){
     QDesktopServices::openUrl( QUrl("https://github.com/fgx/fgx") );
+}
+
+/**
+ * @todo Create the help text
+ */
+void MenuWidget::on_menu_fgx_version_info(){
+    QString s = "Version Info: TODO";
+    QMessageBox::about(this, "About FGx", s);
+}
+
+void MenuWidget::on_menu_qt_version_info(){
+    QMessageBox::aboutQt(this, "About Qt");
 }

@@ -16,8 +16,8 @@
 #include "utilities/utilities.h"
 
 /*! \class HeaderWidget
- *  \brief The HeaderWidget is the top part of the LauncherWindow, contains the info and a leddage box
- * 
+ *  \brief The HeaderWidget is the top part of the LauncherWindow and contains the info and a normally hidden message/info box
+ *
 */
 HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
     QWidget(parent)
