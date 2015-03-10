@@ -1,6 +1,7 @@
-/*! \mainpage Home
+/*! \mainpage FGx
  *
- *
+ * FGx is a cross-platfrom launcher, runs on windows, linux and osx (the X is FGx :-)
+ * 
  * \section main_toc Welcome
  * * \ref download
  * * \ref developer

@@ -138,9 +138,9 @@ MenuWidget::MenuWidget(MainObject *mob, QWidget *parent) :
     // Add actions to menu "Help"
     helpFlightGearGroup->addAction(urlActionWiki);
     helpFlightGearGroup->addAction(urlActionForums);
-    helpFGxGroup->addAction("Website -  fgx.freeflightsim.org", this, SLOT(on_menu_fgx_www()) );
-    helpFGxGroup->addAction("Bugs & Requests -  fgx.freeflightsim.org", this, SLOT(on_menu_fgx_issues()) );
-    helpFGxGroup->addAction("Source Code - github.com/fgx/fgx", this, SLOT(on_menu_fgx_github()) );
+    helpFGxGroup->addAction("Website", this, SLOT(on_menu_fgx_www()) );
+    helpFGxGroup->addAction("Bugs & Requests", this, SLOT(on_menu_fgx_issues()) );
+    helpFGxGroup->addAction("Source Code", this, SLOT(on_menu_fgx_github()) );
     helpFGxGroup->addAction(urlActionFGxUserHelp);
 
     helpMenu->addMenu(helpFGxGroup);
@@ -285,13 +285,13 @@ void MenuWidget::on_menu_fgx_user_forums()
     QDesktopServices::openUrl( url );
 }
 void MenuWidget::on_menu_fgx_www(){
-    QDesktopServices::openUrl( QUrl("http://fgx.freeflightsim.org") );
+    QDesktopServices::openUrl( QUrl(APP_WWW) );
 }
 void MenuWidget::on_menu_fgx_issues(){
-    QDesktopServices::openUrl( QUrl("https://github.com/fgx/fgx/isssues") );
+    QDesktopServices::openUrl( QUrl(APP_ISSUES) );
 }
 void MenuWidget::on_menu_fgx_github(){
-    QDesktopServices::openUrl( QUrl("https://github.com/fgx/fgx") );
+    QDesktopServices::openUrl( QUrl(APP_PROJECT) );
 }
 
 /**

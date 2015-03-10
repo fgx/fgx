@@ -23,8 +23,8 @@ Jenkins
 There is a Jenkins instance being experimented with, the idea
 is to completely autobuild the tarballs and installers.
 
-The Jenkins instance is running on Red Hat's [OpenShift](https://openshift.com/) cloud:
-- https://jenkins-fgx.rhcloud.com/
+The Jenkins instance is running on pedro server
+- https://jenkins.daffodil.uk.com/
 - Please email pete/geoff for access
 
 Travis CI

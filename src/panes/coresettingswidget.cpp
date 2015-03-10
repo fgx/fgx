@@ -71,28 +71,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 
 
-     //==================================================================
-     //= Picture Label
-     imageLabel =  new QLabel(this);
-     //imageLabel->setScaledContents(true);
-     imageLabel->resize(300,225);
-     imageLabel->setStyleSheet("background: #5b5a56");
-     imageLabel->setMargin(5);
-
-     // Seed random image
-     QTime time = QTime::currentTime();
-     qsrand((uint)time.msec());
-     // There are only nine images at the moment, see resources /images
-     // and images.qrc
-     int randomValue = randInt(1,9);
-     imageLabel->setPixmap(QPixmap(":/images/"+QString::number(randomValue)));
-
-     //connect(imageLabel, SIGNAL(clicked), this, SLOT(on_imagelabel_clicked()) );
-     imgBox->addWidget(imageLabel);
-     imageLabel->setWhatsThis(tr("<b>Just an image</b><br>Here you see some randomly selected images. \
-                                 Just for getting some impression from what FlightGear is bringing to you. \
-                                 This does not reflect you aircraft selection."));
-
     layoutLeft->addStretch(10);
 
 

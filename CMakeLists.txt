@@ -1,22 +1,69 @@
+#================================================
 # CMakeLists.txt - for FGx launcher project
-# CMakeLists.txt, original generated from src\fgx.pro
+#================================================
+# This project is not built and managed by cmake..
+# sorry folks but qmake dont work xplatform.. the way we want 
+#
+
 cmake_minimum_required( VERSION 2.8.8 )
 
 project( fgx )
 
-## Process ./version file
+#=====================================================
+## Set Version  from ./version txt file
 file(READ version versionFile)
-string(STRIP ${versionFile} FGX_VERSION)
-string(REPLACE "." ";" VERSION_LIST ${FGX_VERSION})
-list(GET VERSION_LIST 0 FGX_MAJOR_VERSION)
-list(GET VERSION_LIST 1 FGX_MINOR_VERSION)
-list(GET VERSION_LIST 2 FGX_POINT_VERSION)
-add_definitions( -DFGX_VERSION="${FGX_VERSION}" )
+string(STRIP ${versionFile} APP_VERSION)
+string(REPLACE "." ";" VERSION_LIST ${APP_VERSION})
+list(GET VERSION_LIST 0 APP_MAJOR_VERSION)
+list(GET VERSION_LIST 1 APP_MINOR_VERSION)
+list(GET VERSION_LIST 2 APP_POINT_VERSION)
+
+#=======================================================
+## Setup  APP macros
+# This block assign values for final use in application
+# the definitions such as as source links contact are here
+
+add_definitions( -DAPP_VERSION="${APP_VERSION}" )
+
+set(APP_SHORT "FGx")
+add_definitions( -DAPP_SHORT="${APP_SHORT}" )
+
+set(APP_ONE_LINER "FGx - A cross-plfrom launcher for FlightGear")
+add_definitions( -DAPP_ONE_LINER="${APP_ONE_LINER}" )
+
+set(APP_ORG "FGx Team")
+add_definitions( -DAPP_ORG="${APP_ORG}" )
+
+set(APP_DOMAIN "fgx.freeflightsim.org")
+add_definitions( -DAPP_DOMAIN="${APP_DOMAIN}" )
+
+set(APP_CONTACT "fgx@freeflightsim.org")
+add_definitions( -DAPP_CONTACT="${APP_CONTACT}" )
+
+set(APP_WWW "http://${APP_DOMAIN}")
+add_definitions( -DAPP_WWW="${APP_WWW}" )
+
+set(APP_PROJECT "http://github.com/fgx/fgx")
+add_definitions( -DAPP_PROJECT="${APP_PROJECT}" )
+
+set(APP_ISSUES "http://github.com/fgx/fgx/issues")
+add_definitions( -DAPP_ISSUES="${APP_ISSUES}" )
+
+#=====================================================
+## Set up Platform
+
+# determine 32/54 bit
+set(BITNESS 32)
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  set(BITNESS 64)
+endif()
+
 
 if (MSVC)
     # to distinguish between debug and release lib
     set( CMAKE_DEBUG_POSTFIX d )
 endif ()
+
 
 # Add LINUX or WINDOWS definitions
 if(UNIX)
@@ -26,8 +73,8 @@ else(UNIX)
 endif(UNIX)
 
 
-# QT = network xml xmlpatterns webkit
-# CONFIG = qt thread
+#=====================================================
+## QT
 message(STATUS "*** Finding Qt4 components ${components}")
 find_package ( Qt4 COMPONENTS QtCore QtGui QtNetwork QtWebkit QtXml QtXmlPatterns REQUIRED )
 include ( ${QT_USE_FILE} )
@@ -189,7 +236,6 @@ set( fgx_RCS
     src/resources/fonts.qrc
     src/resources/openlayers.qrc
     src/resources/default.qrc
-    src/resources/images.qrc
     )
 include_directories(
     src/utilities/zlib
@@ -228,59 +274,56 @@ endif ()
 install(TARGETS fgx DESTINATION bin )
 
 ##=====================================================
-## === Debian - pete checking things out !
+## cpack - Packaging and Installers
+##=====================================================
+## What we probably want
+# fgx-VER-BITNESSbit-{platform}-{release}.deb/rpm
+# fgx-ubuntu-VER-64.deb/rpm
+# fgx-win-installer-VER-64.exe < windows
+
 IF(WIN32)
    set(CPACK_GENERATOR "NSIS;ZIP")
 else(WIN32)
    set(CPACK_GENERATOR "DEB")
 endif(WIN32)
 
-set(CPACK_PACKAGE_VENDOR "FGx Team")
-set(CPACK_PACKAGE_CONTACT "fgx@freeflightsim.org")
+set(CPACK_PACKAGE_VENDOR ${APP_ORG})
+set(CPACK_PACKAGE_CONTACT ${APP_CONTACT})
 
-set(CPACK_PACKAGE_VERSION ${FGX_VERSION})
-set(CPACK_PACKAGE_VERSION_MAJOR "${FGX_MAJOR_VERSION}")
-set(CPACK_PACKAGE_VERSION_MINOR "${FGX_MINOR_VERSION}")
-set(CPACK_PACKAGE_VERSION_PATCH "${FGX_POINT_VERSION}")
+set(CPACK_PACKAGE_VERSION ${APP_VERSION})
+set(CPACK_PACKAGE_VERSION_MAJOR "${APP_MAJOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_MINOR "${APP_MINOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_PATCH "${APP_POINT_VERSION}")
 
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "FGx FlightGear launcher")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${APP_ONE_LINER}")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/etc/dist_description.txt")
-#set(CPACK_PACKAGE_DESCRIPTION "FGx - A cross-platform FlightGear launcherXXX")
+set(CPACK_PACKAGE_DESCRIPTION ${APP_POINT_VERSION})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
 
 ## DEB Specific
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${CPACK_PACKAGE_CONTACT})
-set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "http://fgx.freeflightsim.org")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt4-xml,libqt4-network,libqt4-gui,libqt4-webkit")
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${APP_WWW})
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt4-xml,libqt4-network,libqt4-gui,libqt4-webkit,libqt4-xmlpatterns")
 set(CPACK_DEBIAN_PACKAGE_SECTION "Games")
-#set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/Debian/postinst")
 
 
 ## NSIS specific
 set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/src/resources/fgx.ico")
 set(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 set(CPACK_NSIS_PACKAGE_NAME "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
-set(CPACK_NSIS_HELP_LINK "http://fgx.freeflightsim.org")
-set(CPACK_NSIS_URL_INFO_ABOUT "http://fgx.freeflightsim.org")
+set(CPACK_NSIS_HELP_LINK ${APP_WWW})
+set(CPACK_NSIS_URL_INFO_ABOUT ${APP_WWW})
 
-## What we probably want
-# fgx-ubuntu-VER-32.deb/rpm
-# fgx-ubuntu-VER-64.deb/rpm
-# fgx-win-installer-VER-64.exe < windows
 
-#EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
-set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-ubuntu-${ARCHITECTURE}" )
 
-set(BITNESS 32)
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-  set(BITNESS 64)
-endif()
-set( CPACK_PACKAGE_FILE_NAME "fgx-ubuntu-${CPACK_PACKAGE_VERSION}-${BITNESS}bit" )
+EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
+
 
 
 
 if(UNIX)
+    set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-ubuntu-${ARCHITECTURE}" )
     ##  logo
     install(FILES "${CMAKE_SOURCE_DIR}/src/resources/fgx_48x48x32.png"
             DESTINATION "/usr/share/pixmaps"
@@ -289,6 +332,8 @@ if(UNIX)
     install(FILES "${CMAKE_SOURCE_DIR}/etc/fgx.desktop"
             DESTINATION "/usr/share/applications"
     )
+else()
+    set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-${ARCHITECTURE}" )    
 ENDIF(UNIX)
 
 INCLUDE(CPack)

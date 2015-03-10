@@ -49,7 +49,7 @@ LauncherWindow::LauncherWindow(MainObject *mob, QWidget *parent)
     setProperty("settings_namespace", QVariant("launcher_window"));
     mainObject->settings->restoreWindow(this);
 
-    setWindowTitle(QCoreApplication::applicationName().append(" - ").append(QCoreApplication::applicationVersion()));
+    setWindowTitle(QCoreApplication::applicationName());
     setWindowIcon(QIcon(":/icon/favicon"));
 
 
