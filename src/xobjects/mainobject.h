@@ -27,10 +27,11 @@ class XSettingsModel;
 #include "xobjects/xprocess.h"
 class XProcess;
 
-
-
 #include "launcher/launcherwindow.h"
 class LauncherWindow;
+
+#include "installer/installwindow.h"
+class InstallWindow;
 
 #include "mpmap/mpmapwidget.h"
 #include "mpmap/mpmapxwidget.h"
@@ -87,6 +88,10 @@ public:
 
     /* \brief Instance of LauncherWindow */
     LauncherWindow *launcherWindow;
+
+    /* \brief Instance of InstallWindow */
+    InstallWindow *installWindow;
+
     //MpMapWidget *mpMapWidget;
     //MpMapXWidget *mpMapXWidget;
 

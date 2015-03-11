@@ -52,9 +52,11 @@
 #include "fgtools/fileviewerwidget.h"
 
 
+
 AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     QWidget(parent)
 {
+
 
 
     mainObject = mOb;
