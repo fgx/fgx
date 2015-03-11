@@ -1,6 +1,6 @@
 /*! \mainpage FGx
  *
- * FGx is a cross-platfrom launcher, runs on windows, linux and osx (the X is FGx :-)
+ * FGx is a cross-platfrom launcher for <a href="https://wiki.flightgear.org" target="_blank">FlightGear</a> and runs on Windows, Linux and OSX (the x in FGx :-)
  * 
  * \section main_toc Welcome
  * * \ref download
