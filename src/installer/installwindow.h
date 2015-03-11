@@ -9,8 +9,12 @@
 #define INSTALL_WINDOW_H
 
 #include <QWidget>
-#include <QPlainTextEdit>
-
+#include <QTabWidget>
+#include <QTreeView>
+#include <QStandardItemModel>
+#include <QSortFilterProxyModel>
+#include <QStatusBar>
+#include <QLineEdit>
 
 #include "xobjects/mainobject.h"
 
@@ -23,14 +27,24 @@ public:
 
     MainObject *mainObject;
 
-   // QPlainTextEdit *txtMetar;
+    QStandardItemModel *model;
+    QSortFilterProxyModel *proxyModel;
 
+    QTabWidget *tabWidget;
+    QTreeView *treeView;
+
+    QLineEdit *txtSvnCheckoutPath;
+
+    QStatusBar *statusBar;
+
+    //void closeEvent(QCloseEvent *event);
+    void moveEvent(QMoveEvent *ev);
 
 signals:
 
 public slots:
     //void load_metar(QString apt);
-    //void clear_metar();
+    void on_init_svn();
 
 };
 
