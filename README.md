@@ -16,22 +16,28 @@ HomePage: http://fgx.freeflightsim.org
 * Code: 
   * https://github.com/fgx/fgx
 * API Docs: 
-  * http://fgx/freeflightsim.org 
+  * http://fgx.freeflightsim.org 
 
 
 
-
-  
-![image](https://travis-ci.org/fgx/fgx.svg?branch=next)
+Build Status
+------------------------
+[![Build Status](https://travis-ci.org/fgx/fgx.svg?branch=next)](https://travis-ci.org/fgx/fgx)
 
 
 Installation
 --------------------------
-From source
-  > cd src/
-  > qmake
-  > make
 
+From source using cmake (qmake is expired)
+
+```bash
+git checkout https://github.com/fgx/fgx
+mkdir fgx_build
+cd fgx_build
+cmake ../fgx
+make
+sudo make install
+```
 About
 --------------------------
 FGX is a qt-based c++ launcher for FlightGear. There is more than one launcher around for FlightGear like FGrun or others, intention for FGX was mainly to have fast and small launcher for OSX, starting the real and only free and Open Source Flight Simulator FlightGear within 5 seconds (also development versions and nightly builds). Since it makes no sense to have such a launcher only for one platform using qt, it became cross-platform and could be used also with Debian and Win.
