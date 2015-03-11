@@ -18,6 +18,23 @@
 // https://github.com/anrichter/qsvn/blob/master/src/CMakeLists.txt
 // https://github.com/anrichter/qsvn/blob/master/src/svnclient.cpp
 
+/*
+https://gcc.gnu.org/wiki/SvnTricks
+
+svn checkout --depth immediates http://svn.code.sf.net/p/flightgear/fgaddon/trunk/ ./fgaddon
+
+## list all aircraft directories
+svn list Aircraft/
+
+# get the root files inc -set.xml
+svn update --set-depth files ./Aircraft/tu154
+
+## download whole aero
+svn update --set-depth infinity ./Aircraft/787
+
+
+*/
+
 //SvnCpp
 //#include "svnqt/svnqt_defines.h"
 #include "svnqt/svnqttypes.h"

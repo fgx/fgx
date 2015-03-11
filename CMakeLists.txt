@@ -95,11 +95,16 @@ set( QT_USE_QTWEBKIT TRUE )
 
 ##=================================================
 ## Attempt to include subversion
-FIND_PACKAGE(Subversion)
-include_directories("/usr/include/subversion-1" "/usr/include/svncpp" "/usr/include/apr-1.0" "/usr/include/svnqt")
+#FIND_PACKAGE(Subversion)
+#include_directories("/usr/include/subversion-1" "/usr/include/svncpp" "/usr/include/apr-1.0" "/usr/include/svnqt")
+include_directories("/usr/include/subversion-1" "/usr/include/apr-1.0" "/usr/include/svnqt")
 
-#FIND_PACKAGE(svnqt)
-#include_directories(${svnqt_INCLUDE_DIRS})
+#link_directories("/usr/lib/libsvnqt")
+#add_library( svnqt SHARED IMPORTED )
+
+#FIND_PACKAGE(SVNQT )
+#include_directories(${SVNQT_INCLUDE_DIRS})
+#message(STATUS "*** libs ${SVNQT_INCLUDE_DIRS}")
 
 #=====================================================
 ## Sources
@@ -290,7 +295,7 @@ include_directories(
     src/settings src/mpmap
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${QT_INCLUDE_DIR}
-    ${SUBVERSION_INCLUDE_DIR}
+    #${SUBVERSION_INCLUDE_DIR}
     /usr/include/svnqt
 
  )
