@@ -28,131 +28,131 @@ class CoreSettingsWidget : public QWidget
 {
 Q_OBJECT
 public:
-	explicit CoreSettingsWidget(MainObject *mOb, QWidget *parent = 0);
+    explicit CoreSettingsWidget(MainObject *mOb, QWidget *parent = 0);
 
-	MainObject *mainObject;
-	
-	bool fgrootcheck;
-	
-	XMessageLabel *messageLabel;
-	
-	//* Images
-	QLabel *imageLabel;
+    MainObject *mainObject;
 
+    bool fgrootcheck;
 
-	//* Callsign
-	QLineEdit *txtCallSign;
+    XMessageLabel *messageLabel;
 
-	//* Screen
-	QComboBox *comboScreenSize;
-	QCheckBox *checkBoxDisableSplashScreen;
-	QCheckBox *checkBoxFullScreenStartup;
-	
-	QHBoxLayout *screenSizeBox;
-	QLineEdit *lineEditScreenSizeW;
-	QLineEdit *lineEditScreenSizeH;
-	QLabel *lineEditScreenSizeWLabel;
-	QLabel *lineEditScreenSizeHLabel;
-	
+    //* Images
+    //QLabel *imageLabel;
 
 
-	//* MpMap
-	QCheckBox *checkBoxShowMpMap;
-	QComboBox *comboMpMapServer;
+    //* Callsign
+    QLineEdit *txtCallSign;
+
+    //* Screen
+    QComboBox *comboScreenSize;
+    QCheckBox *checkBoxDisableSplashScreen;
+    QCheckBox *checkBoxFullScreenStartup;
+
+    QHBoxLayout *screenSizeBox;
+    QLineEdit *lineEditScreenSizeW;
+    QLineEdit *lineEditScreenSizeH;
+    QLabel *lineEditScreenSizeWLabel;
+    QLabel *lineEditScreenSizeHLabel;
 
 
-	//** Paths
-	QButtonGroup *buttonGroupPaths;
-	XGroupHBox *groupBoxFgFs;
-	XGroupHBox *groupBoxFgRoot;
 
-	QLineEdit *lineEditFgFsPath;
-	QLineEdit *lineEditFgRootPath;
-	QToolButton *buttonSetFgfsPath;
-	QToolButton *buttonSetFgRootPath;
-	QLabel *labelFgfsProgram;
-	QLabel *labelFgfsCheck;
-	
-	QLabel *labelFgRootData;
-	QLabel *labelFgRootCheck;
-	
-	QCheckBox *checkBoxUseTerrasync;
-	QLabel *labelTerrasyncProgram;
-	QLabel *labelTerrasyncCheck;
-	QToolButton *buttonSetTerrasyncExePath;
-	QToolButton *buttonSetTerrasyncDataPath;
-	
-	QLabel *labelTerrasyncData;
-	QLabel *labelTerrasyncDataCheck;
-	
-	QLineEdit *lineEditTerraSyncDataPath;
-	QLineEdit *lineEditTerraSyncExePath;
-	
-	QCheckBox *checkBoxUseCustomScenery;
-	QLabel *labelCustomScene;
-	QLabel *labelCustomSceneCheck;
-	QLineEdit *lineEditCustomScenePath;
-	QToolButton *buttonSetCustomSceneryPath;
-	
-	QLabel *labelFGComExeInfo;
-	QLineEdit *lineEditFGComExePath;
-	
-	//* Controls
-	QLabel *labelInputs;
+    //* MpMap
+    QCheckBox *checkBoxShowMpMap;
+    QComboBox *comboMpMapServer;
 
-	//* Functions
-	void initialize();
-	QString validate();
+
+    //** Paths
+    QButtonGroup *buttonGroupPaths;
+    XGroupHBox *groupBoxFgFs;
+    XGroupHBox *groupBoxFgRoot;
+
+    QLineEdit *lineEditFgFsPath;
+    QLineEdit *lineEditFgRootPath;
+    QToolButton *buttonSetFgfsPath;
+    QToolButton *buttonSetFgRootPath;
+    QLabel *labelFgfsProgram;
+    QLabel *labelFgfsCheck;
+
+    QLabel *labelFgRootData;
+    QLabel *labelFgRootCheck;
+
+    QCheckBox *checkBoxUseTerrasync;
+    QLabel *labelTerrasyncProgram;
+    QLabel *labelTerrasyncCheck;
+    QToolButton *buttonSetTerrasyncExePath;
+    QToolButton *buttonSetTerrasyncDataPath;
+
+    QLabel *labelTerrasyncData;
+    QLabel *labelTerrasyncDataCheck;
+
+    QLineEdit *lineEditTerraSyncDataPath;
+    QLineEdit *lineEditTerraSyncExePath;
+
+    QCheckBox *checkBoxUseCustomScenery;
+    QLabel *labelCustomScene;
+    QLabel *labelCustomSceneCheck;
+    QLineEdit *lineEditCustomScenePath;
+    QToolButton *buttonSetCustomSceneryPath;
+
+    QLabel *labelFGComExeInfo;
+    QLineEdit *lineEditFGComExePath;
+
+    //* Controls
+    QLabel *labelInputs;
+
+    //* Functions
+    void initialize();
+    QString validate();
 
 
 signals:
-	void setx(QString option, bool enabled, QString value);
+    void setx(QString option, bool enabled, QString value);
 
 
 public slots:
 
-	void on_callsign_changed(QString);
+    void on_callsign_changed(QString);
 
-	void on_show_mp_map();
-	
-	void on_fgfs_path(QString);
-	void on_fgroot_path(QString);
-	void on_terrasync_path(QString);
-	void on_terrasync_data_path(QString);	
-	void on_terrasync_enabled();
-	void terrasync_enabled_checkstate();
-	void on_custom_scenery_enabled();
-	void on_custom_scenery_path(QString);
-	void custom_scenery_enabled_checkstate();
+    void on_show_mp_map();
 
-	void load_joysticks();
+    void on_fgfs_path(QString);
+    void on_fgroot_path(QString);
+    void on_terrasync_path(QString);
+    void on_terrasync_data_path(QString);
+    void on_terrasync_enabled();
+    void terrasync_enabled_checkstate();
+    void on_custom_scenery_enabled();
+    void on_custom_scenery_path(QString);
+    void custom_scenery_enabled_checkstate();
 
-	void on_upx(QString option, bool enabled, QString value);
-	
-	// Path checks
-	void fgfs_check_path();
-	void fgroot_check_path();
-	void terrasync_exe_check_path();
-	void terrasync_data_check_path();
-	void custom_scenery_check_path();
-	
-	// "Set" buttons
-	void on_select_fgfsbutton();
-	void on_select_fgrootbutton();
-	void on_select_terrasyncexebutton();
-	void on_select_terrasyncdatabutton();
-	void on_select_customscenerybutton();
-	
-	void reload_lists();
-	
-	// Emit settings when changed
-	void fgfs_set_path();
-	void fgroot_set_path();
-	void terrasyncexe_set_path();
-	void terrasyncdata_set_path();
-	void customscenery_set_path();
-	
-	int randInt(int low, int high);
+    void load_joysticks();
+
+    void on_upx(QString option, bool enabled, QString value);
+
+    // Path checks
+    void fgfs_check_path();
+    void fgroot_check_path();
+    void terrasync_exe_check_path();
+    void terrasync_data_check_path();
+    void custom_scenery_check_path();
+
+    // "Set" buttons
+    void on_select_fgfsbutton();
+    void on_select_fgrootbutton();
+    void on_select_terrasyncexebutton();
+    void on_select_terrasyncdatabutton();
+    void on_select_customscenerybutton();
+
+    void reload_lists();
+
+    // Emit settings when changed
+    void fgfs_set_path();
+    void fgroot_set_path();
+    void terrasyncexe_set_path();
+    void terrasyncdata_set_path();
+    void customscenery_set_path();
+
+    int randInt(int low, int high);
 };
 
 #endif // CORESETTINGSWIDGET_H

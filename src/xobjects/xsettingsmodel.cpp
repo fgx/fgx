@@ -559,9 +559,14 @@ QStringList XSettingsModel::get_fgfs_args()
 
         if(item(row_idx, C_ENABLED)->text() == "1"){
             QString op = item(row_idx, C_OPTION)->text();
+            QString opval = item(row_idx, C_VALUE)->text();
             str = "";
             if(op.startsWith("--")){
-                str.append(item(row_idx, C_OPTION)->text()).append(item(row_idx, C_VALUE)->text());
+                if(op == "--geometry=" && opval == "0x0" ){
+                    // skip geometry if empty 0 vals
+                } else {
+                    str.append(item(row_idx, C_OPTION)->text()).append(opval);
+                }
             }
             if(str.length() > 0){
                 if (str.indexOf(QChar(' ')) > 0) {
