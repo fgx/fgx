@@ -76,7 +76,10 @@ def make_docs():
     
     _create_shots_html()
     ver = _read_version()
-    
+    run("git submodule init")
+    run("git submodule update")
+    with cd(PROJECT_ROOT + "/fgx-screenshots"):
+        run("git pull origin master")
     local("cp %s/LICENSE.txt %s/docs/LICENSE.txt" % (PROJECT_ROOT, PROJECT_ROOT) ) ## doxygen is pain in butt
     local('(cat %s/docs/doxygen.fgx.conf; echo "PROJECT_NUMBER = %s") | doxygen -' % (PROJECT_ROOT, ver))
     if not os.path.exists("%s/docs_build/html/fgx-screenshots/" % (PROJECT_ROOT) ):
