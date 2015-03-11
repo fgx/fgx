@@ -298,7 +298,8 @@ void MenuWidget::on_menu_fgx_github(){
  * @todo Create the help text
  */
 void MenuWidget::on_menu_fgx_version_info(){
-    QString s = "Version Info: TODO";
+    QString s = "Version : ";
+    s.append(APP_VERSION);
     QMessageBox::about(this, "About FGx", s);
 }
 
