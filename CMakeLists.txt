@@ -292,6 +292,31 @@ endif ()
 # deal with install
 install(TARGETS fgx DESTINATION bin )
 
+
+#==============================================================
+# Determine which branch we on
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+  execute_process(
+    COMMAND git rev-parse --abbrev-ref HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_BRANCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  
+else(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+  set(GIT_BRANCH "")
+  
+endif(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+
+message(STATUS "*** Git current branch: ${GIT_BRANCH}")
+if( GIT_BRANCH STREQUAL "next" )
+    set(APP_RELEASE "unstable")
+else(GIT_BRANCH STREQUAL "next")
+    set(APP_RELEASE "stable")
+endif(GIT_BRANCH STREQUAL "next")
+message(STATUS "*** app release: ${APP_RELEASE}")
+
 ##======================================================================
 ## cpack - Packaging and Installers
 ##======================================================================
@@ -334,7 +359,7 @@ set(CPACK_NSIS_URL_INFO_ABOUT ${APP_WWW})
 
 
 if(UNIX)
-    set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-${BITNESS}bit-linux" )
+    set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-linux-${BITNESS}bit-${APP_RELEASE}" )
     ##  logo
     install(FILES "${CMAKE_SOURCE_DIR}/src/resources/fgx_48x48x32.png"
             DESTINATION "/usr/share/pixmaps"

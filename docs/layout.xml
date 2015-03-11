@@ -24,7 +24,7 @@
     <tab type="examples" visible="yes" title="" intro=""/>
     <tab type="user" url="https://github.com/fgx/fgx/issues" title="Bugs &amp; Issues"/>
      <tab type="user" url="https://github.com/fgx/fgx" title="Source Code"/>
-    <tab type="user" url="https://jenkins-fgx.rhcloud.com/" title="Jenkins"/>
+    <tab type="user" url="https://jenkins.freeflightsim.org/" title="Jenkins"/>
     <tab type="user" url="https://travis-ci.org/fgx/fgx" title="Travis"/>
   </navindex>
 
