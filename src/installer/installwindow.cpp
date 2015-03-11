@@ -120,7 +120,7 @@ InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
 
     txtSvnCheckoutPath = new QLineEdit();
     layAddOnTop->addWidget(txtSvnCheckoutPath, 2);
-    txtSvnCheckoutPath->setText( this->mainObject->settings->value("fgx_extras") );
+    txtSvnCheckoutPath->setText( this->mainObject->settings->value("install_path").toString() );
 
     QToolButton *buttSvnInit = new QToolButton();
     buttSvnInit->setText("Init SVN");
@@ -154,36 +154,43 @@ void InstallWindow::moveEvent(QMoveEvent *ev){
 
 void InstallWindow::on_init_svn(){
 
-    QString target_path = this->txtSvnCheckoutPath->text();
-    if(target_path.length() == 0){
+    QString install_path = this->txtSvnCheckoutPath->text().trimmed();
+    if(install_path.length() == 0){
         // @todo validate path
         return;
     }
-    this->mainObject->settings->setValue("fgx_extras", target_path);
-    QFileInfo info(target_path);
+    this->mainObject->settings->setValue("install_path", install_path);
 
+    QFileInfo info(install_path);
+
+    QString target_path = info.absoluteFilePath();
+    target_path.append("/fgaddon");
 
     QString svn_url("http://svn.code.sf.net/p/flightgear/fgaddon/trunk/");
+
 
     // wtf, where does contextP come from
     svn::Context context; // = new svn::Context();
 
     svn::Client *client = svn::Client::getobject(&context, 0);
-    //svn::Path path("/");
 
     svn::CheckoutParameter checkoutRarams;
     checkoutRarams.moduleName(svn_url)
-            .destination("/home/fgxl/svn-test/")
+            .destination(target_path)
             .depth(svn::DepthImmediates)
             .revision(svn::Revision::HEAD);
+    statusBar->showMessage( QString("Checking Out: ").append(svn_url) );
     try {
         //client->checkout(checkoutRarams);
         client->checkout(checkoutRarams);
     } catch(svn::ClientException ce) {
         qDebug() << "error=" << ce.msg();
-
+        statusBar->showMessage( QString("ERROR: ").append(ce.msg) );
+        return;
     }
+     qDebug() << "Inital Checkout OK";
 
+    statusBar->showMessage( QString("Getting List");
     //svn::InfoEntry infoEntry;
     //infoEntry = client->info(path, false, svn::Revision::UNDEFINED, svn::Revision::UNDEFINED);
 
