@@ -93,6 +93,7 @@ def update_www():
     local("git push origin next")
     with cd(REMOTE_DIR):
         run("git pull origin next")
+        run("git submodule init")
         run("git submodule update")
         with cd(REMOTE_DIR + "/fgx-screenshots"):
             run("git pull origin master")
