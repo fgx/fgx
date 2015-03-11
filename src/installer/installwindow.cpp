@@ -12,10 +12,26 @@
 
 #include "installwindow.h"
 
-#include "svncpp/client.hpp"
-#include "svncpp/info.hpp"
-#include "svncpp/dirent.hpp"
+//#include "svnclient.h"
 
+// apt-get libsvnqt
+// https://github.com/anrichter/qsvn/blob/master/src/CMakeLists.txt
+// https://github.com/anrichter/qsvn/blob/master/src/svnclient.cpp
+
+//SvnCpp
+//#include "svnqt/svnqt_defines.h"
+#include "svnqt/svnqttypes.h"
+#include "svnqt/context.h"
+#include "svnqt/client.h"
+#include "svnqt/client_commit_parameter.h"
+#include "svnqt/revision.h"
+#include "svnqt/status.h"
+#include "svnqt/targets.h"
+#include "svnqt/url.h"
+#include "svnqt/wc.h"
+#include "svnqt/client_parameter.h"
+#include "svnqt/client_update_parameter.h"
+#include "svnqt/smart_pointer.h"
 
 InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
     QWidget(parent)
@@ -23,14 +39,20 @@ InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
 
     mainObject = mob;
 
-    svn::Context context("/home/fgxx/svn-test");
+    QString fgsvn("http://svn.code.sf.net/p/flightgear/fgaddon/trunk/");
 
-    svn::Client client(&context);
+    // wtf, where does contextP come from
+    svn::Context context; // = new svn::Context();
 
+    svn::Client *client = svn::Client::getobject(&context, 0);
     svn::Path path("/");
 
-    svn::InfoVector infoVector;
-    infoVector = client.info(path, false, svn::Revision::UNSPECIFIED, svn::Revision::UNSPECIFIED);
+    svn::CheckoutParameter checkoutRarams;
+    checkoutRarams.moduleName(fgsvn).destination("/home/fgxl/svn-test/").depth(svn::DepthEmpty);
+    client->checkout(checkoutRarams);
+    //svn::InfoEntry infoEntry;
+    //infoEntry = client->info(path, false, svn::Revision::UNDEFINED, svn::Revision::UNDEFINED);
+
 
     setWindowIcon(QIcon(":/icon/metar"));
     setWindowTitle("Installer");

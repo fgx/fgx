@@ -93,7 +93,13 @@ set( QT_USE_QTXMLPATTERNS TRUE )
 set( QT_USE_QTWEBKIT TRUE )
 
 
-include_directories("/usr/include/subversion-1" "/usr/include/svncpp" "/usr/include/apr-1.0")
+##=================================================
+## Attempt to include subversion
+FIND_PACKAGE(Subversion)
+include_directories("/usr/include/subversion-1" "/usr/include/svncpp" "/usr/include/apr-1.0" "/usr/include/svnqt")
+
+#FIND_PACKAGE(svnqt)
+#include_directories(${svnqt_INCLUDE_DIRS})
 
 #=====================================================
 ## Sources
@@ -255,6 +261,14 @@ set( fgx_RCS
     src/resources/default.qrc
     )
 
+set (SVN_QT_FILES
+    /usr/include/svnqt/context.h
+    /usr/include/svnqt/client.h
+    /usr/include/svnqt/client_parameter.h
+    /usr/include/svnqt/client_update_parameter.h
+    /usr/include/svnqt/smart_pointer.h
+    )
+
 #=====================================================
 ## Directories
 include_directories(
@@ -276,6 +290,9 @@ include_directories(
     src/settings src/mpmap
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${QT_INCLUDE_DIR}
+    ${SUBVERSION_INCLUDE_DIR}
+    /usr/include/svnqt
+
  )
 
 #=====================================================
@@ -288,9 +305,9 @@ message(STATUS "*** inc_dirs = ${inc_dirs}")
 QT4_WRAP_CPP( fgx_HDRS_MOC ${fgx_HDRS} )
 QT4_ADD_RESOURCES( fgx_RESOURCES_RCC ${fgx_RCS} )
 
-add_executable( fgx ${fgx_SRCS} ${fgx_HDRS_MOC} ${fgx_RESOURCES_RCC} ${fgx_OTHERS} )
+add_executable( fgx ${fgx_SRCS} ${fgx_HDRS_MOC} ${fgx_RESOURCES_RCC} ${fgx_OTHERS} ${SVN_QT_FILES})
 
-target_link_libraries( fgx ${QT_LIBRARIES} )
+target_link_libraries( fgx ${QT_LIBRARIES} ${SVN_QT_FILES})
 if (MSVC)
     set_target_properties( fgx PROPERTIES DEBUG_POSTFIX d )
 endif ()
