@@ -168,6 +168,31 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
     topBar->addStretch(20);
 
+    //---------------------------------------
+    //= Refresh Action
+    ToolBarGroup *grpActions = new ToolBarGroup();
+    topBar->addWidget(grpActions);
+    grpActions->setTitle("Actions");
+
+    //== Reload cache
+    QToolButton *actionReloadCacheDb = new QToolButton(this);
+    actionReloadCacheDb->setText("Reload");
+    actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
+    actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    actionReloadCacheDb->setAutoRaise(true);
+    grpActions->addWidget(actionReloadCacheDb);
+    connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
+
+    QMenu *menuReload = new QMenu();
+    actionReloadCacheDb->setMenu(menuReload);
+    actionReloadCacheDb->setPopupMode(QToolButton::MenuButtonPopup);
+
+    QAction *actView = menuReload->addAction("View `aircraft.txt` cache file" );
+    connect(actView, SIGNAL(triggered()),
+            this, SLOT(on_view_aircraft_cache())
+    );
+
+
     //=======================================================
     //= Treeview
     treeView = new QTreeView(this);
@@ -205,23 +230,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     statusBarTree->addPermanentWidget(checkViewNested);
     connect(checkViewNested, SIGNAL(clicked()), this, SLOT(load_tree()));*/
 
-    //== Reload cache
-    QToolButton *actionReloadCacheDb = new QToolButton(this);
-    actionReloadCacheDb->setText("Reload");
-    actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
-    actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    actionReloadCacheDb->setAutoRaise(true);
-    statusBar->addPermanentWidget(actionReloadCacheDb);
-    connect(actionReloadCacheDb, SIGNAL(clicked()), this, SLOT(on_reload_cache()) );
 
-    QMenu *menuReload = new QMenu();
-    actionReloadCacheDb->setMenu(menuReload);
-    actionReloadCacheDb->setPopupMode(QToolButton::MenuButtonPopup);
-
-    QAction *actView = menuReload->addAction("View `aircraft.txt` cache file" );
-    connect(actView, SIGNAL(triggered()),
-            this, SLOT(on_view_aircraft_cache())
-    );
 
 
     //================================================================================================
@@ -231,6 +240,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     QGroupBox *grpAero = new QGroupBox();
     splitter->addWidget(grpAero);
     grpAero->setDisabled(false);
+    grpAero->setMinimumWidth(300);
     //grpAero->setTitle(tr("Preview, Radio, Fuel"));
 
 
@@ -799,15 +809,15 @@ void AircraftWidget::on_remove_custom_dir(QAction *act)
 void AircraftWidget::on_add_custom_dir()
 {
 
-    QString sel_dir = QFileDialog::getExistingDirectory(this, tr("Select and Aircraft directory"),
-                                                         "DIR", QFileDialog::ShowDirsOnly);
+    QString sel_dir = QFileDialog::getExistingDirectory(this, tr("Select an Aircraft directory"),
+                                                         "", QFileDialog::ShowDirsOnly);
     if(sel_dir.length() == 0){
        return;
     }
-
+    QString sto_dir = QDir::fromNativeSeparators(sel_dir);
     QStringList custom_dirs = this->mainObject->settings->value("custom_aircraft_dirs").toStringList();
-    if(custom_dirs.indexOf(sel_dir) == -1){
-        custom_dirs.append(sel_dir);
+    if(custom_dirs.indexOf(sto_dir) == -1){
+        custom_dirs.append(sto_dir);
     }
     this->mainObject->settings->setValue("custom_aircraft_dirs", custom_dirs);
     this->mainObject->settings->sync();
@@ -816,7 +826,7 @@ void AircraftWidget::on_add_custom_dir()
 
 void AircraftWidget::load_custom_dir_buttons()
 {
-    qDebug() << "---load_custom_dir_buttons" << actGroupDeleteCustomDirs->actions().length() << "=" << buttGroupShowDirs->buttons().length() << "=" << lstCustomDirButtons.length();
+    //qDebug() << "---load_custom_dir_buttons" << actGroupDeleteCustomDirs->actions().length() << "=" << buttGroupShowDirs->buttons().length() << "=" << lstCustomDirButtons.length();
 
     // Delete all the deletes from actinGroup
     QList<QAction*> actions = actGroupDeleteCustomDirs->actions();
@@ -831,7 +841,7 @@ void AircraftWidget::load_custom_dir_buttons()
         buttGroupShowDirs->removeButton(lstCustomDirButtons.at(0));
         delete lstCustomDirButtons.takeFirst();
     }
-    qDebug() << " after nuke " << actGroupDeleteCustomDirs->actions().length() << "=" << buttGroupShowDirs->buttons().length() << "=" << lstCustomDirButtons.length();
+    //qDebug() << " after nuke " << actGroupDeleteCustomDirs->actions().length() << "=" << buttGroupShowDirs->buttons().length() << "=" << lstCustomDirButtons.length();
 
    QStringList custom_dirs = this->mainObject->settings->value("custom_aircraft_dirs").toStringList();
    for(int i=0; i < custom_dirs.size(); i++){
@@ -842,9 +852,9 @@ void AircraftWidget::load_custom_dir_buttons()
        grpCustomDirs->bottomLayout->insertWidget(grpCustomDirs->bottomLayout->count() - 1, buttDir);
        buttGroupShowDirs->addButton(buttDir);
        lstCustomDirButtons.append(buttDir);
-       qDebug() << "Add button" << dinfo.absoluteFilePath();
-       buttDir->setProperty("dir", dinfo.absoluteFilePath());
-       buttDir->setToolTip(custom_dirs.at(i));
+       //qDebug() << "Add button" << dinfo.absoluteFilePath();
+       buttDir->setProperty("dir", QDir::toNativeSeparators(dinfo.absoluteFilePath()));
+       buttDir->setToolTip( QDir::toNativeSeparators( custom_dirs.at(i) ) );
        buttDir->setText(dinfo.baseName());
        buttDir->setIcon(QIcon(":/icon/custom_folder"));
        buttDir->setCheckable(true);
