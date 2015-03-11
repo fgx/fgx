@@ -66,7 +66,7 @@ InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
 
     svn::CheckoutParameter checkoutRarams;
     checkoutRarams.moduleName(fgsvn).destination("/home/fgxl/svn-test/").depth(svn::DepthEmpty);
-    client->checkout(checkoutRarams);
+    //client->checkout(checkoutRarams);
     //svn::InfoEntry infoEntry;
     //infoEntry = client->info(path, false, svn::Revision::UNDEFINED, svn::Revision::UNDEFINED);
 

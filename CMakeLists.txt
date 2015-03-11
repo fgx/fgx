@@ -102,7 +102,8 @@ include_directories("/usr/include/subversion-1" "/usr/include/apr-1.0" "/usr/inc
 #link_directories("/usr/lib/libsvnqt")
 #add_library( svnqt SHARED IMPORTED )
 
-#FIND_PACKAGE(SVNQT )
+#SET(SVNQT_DIR /usr/lib/libsvnqt)
+#FIND_PACKAGE(svnqt REQUIRED)
 #include_directories(${SVNQT_INCLUDE_DIRS})
 #message(STATUS "*** libs ${SVNQT_INCLUDE_DIRS}")
 
@@ -295,8 +296,6 @@ include_directories(
     src/settings src/mpmap
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${QT_INCLUDE_DIR}
-    #${SUBVERSION_INCLUDE_DIR}
-    /usr/include/svnqt
 
  )
 
@@ -312,7 +311,7 @@ QT4_ADD_RESOURCES( fgx_RESOURCES_RCC ${fgx_RCS} )
 
 add_executable( fgx ${fgx_SRCS} ${fgx_HDRS_MOC} ${fgx_RESOURCES_RCC} ${fgx_OTHERS} ${SVN_QT_FILES})
 
-target_link_libraries( fgx ${QT_LIBRARIES} ${SVN_QT_FILES})
+target_link_libraries( fgx ${QT_LIBRARIES} "/usr/lib/libsvnqt.so")
 if (MSVC)
     set_target_properties( fgx PROPERTIES DEBUG_POSTFIX d )
 endif ()
