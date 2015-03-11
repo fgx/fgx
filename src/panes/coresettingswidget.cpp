@@ -18,6 +18,7 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QWhatsThis>
+#include <QColor>
 
 #include "panes/coresettingswidget.h"
 #include "xwidgets/xgroupboxes.h"
@@ -92,8 +93,11 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
     labelFgfsProgram = new QLabel("Path to FlightGear program (fgfs):");
     labelFgfsCheck = new QLabel("");
 
-    lineEditFgFsPath = new QLineEdit("");
-    lineEditFgFsPath->setFixedSize(QSize(240,20));
+    //#lineEditFgFsPath = new QLineEdit("");
+    //lineEditFgFsPath->setFixedSize(QSize(240,20));
+    comboFgFsPath = new QComboBox();
+    comboFgFsPath->setFixedSize(QSize(240,20));
+    comboFgFsPath->setEditable(true);
 
     buttonSetFgfsPath = new QToolButton();
     buttonSetFgfsPath->setFixedSize(20,20);
@@ -102,18 +106,18 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
 
     QHBoxLayout *fgfsPathBox = new QHBoxLayout();
-    fgfsPathBox->addWidget(lineEditFgFsPath);
+    fgfsPathBox->addWidget(comboFgFsPath);
     fgfsPathBox->addWidget(labelFgfsCheck);
     fgfsPathBox->addWidget(buttonSetFgfsPath);
     grpFgfs->addLayout(fgfsPathBox);
-    lineEditFgFsPath->setText( mainObject->X->fgfs_path() );
+    comboFgFsPath->setEditText( mainObject->X->fgfs_path() );
 
     // "Set" clicked
     connect( buttonSetFgfsPath, SIGNAL(clicked()),this, SLOT(on_select_fgfsbutton()) );
 
     //Check if path exists, set pixmap, emit setting
-    connect(lineEditFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(fgfs_check_path()));
-    connect(lineEditFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(on_fgfs_path(QString)));
+    connect(comboFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(fgfs_check_path()));
+    connect(comboFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(on_fgfs_path(QString)));
     connect(buttonSetFgfsPath, SIGNAL(clicked()), this, SLOT(fgfs_set_path()));
 
     //----------------------------------------------
@@ -304,6 +308,8 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
     grpBoxControls->setWhatsThis("<b>Controls</b><br><br>FlightGear use auto-detection to detect your input devices. This is just a pre-check of what FlightGear will see.");
 
     layoutInput->addStretch(20);
+
+    this->add_fgfs_paths();
 
     connect(this, SIGNAL(setx(QString,bool,QString)), mainObject->X, SLOT(set_option(QString,bool,QString)) );
     connect(mainObject->X, SIGNAL(upx(QString,bool,QString)), this, SLOT(on_upx(QString,bool,QString)));
@@ -506,11 +512,11 @@ void CoreSettingsWidget::custom_scenery_enabled_checkstate()
 //======================================================================
 
 void CoreSettingsWidget::fgfs_set_path() {
-    emit setx("fgfs_path", true, lineEditFgFsPath->text());
+    emit setx("fgfs_path", true, comboFgFsPath->currentText());
 }
 
 void CoreSettingsWidget::fgroot_set_path() {
-    emit setx("fgroot_path", true, lineEditFgRootPath->text());
+    emit setx("fgroot_path", true, comboFgFsPath->currentText());
 }
 
 void CoreSettingsWidget::terrasyncexe_set_path() {
@@ -538,7 +544,7 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
         comboMpMapServer->setCurrentIndex(comboMpMapServer->findData(value));
 
     }else if(option == "fgfs_path"){
-        lineEditFgFsPath->setText(mainObject->X->fgfs_path());
+        comboFgFsPath->setEditText(mainObject->X->fgfs_path());
 
     }else if(option == "fgroot_path"){
         lineEditFgRootPath->setText(mainObject->X->fgroot());
@@ -569,7 +575,7 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 
 void CoreSettingsWidget::fgfs_check_path()
 {
-    bool fgfs_exists = QFile::exists(lineEditFgFsPath->text());
+    bool fgfs_exists = QFile::exists(comboFgFsPath->currentText());
     if (fgfs_exists) {
         labelFgfsCheck->setPixmap(QPixmap(":/icon/ok"));
     } else {
@@ -637,13 +643,13 @@ void CoreSettingsWidget::on_select_fgfsbutton()
 {
 #ifdef USE_ALTERNATE_GETFILE
     QString filePathFgfs = util_getFileName((QWidget *)this, tr("Select FlightGear binary (fgfs)"),
-                                            lineEditFgFsPath->text());
+                                            comboFgFsPath->text());
 #else // !#ifdef USE_ALTERNATE_GETFILE
     QString filePathFgfs = QFileDialog::getOpenFileName(this, tr("Select FlightGear binary (fgfs)"),
-    lineEditFgFsPath->text());
+    comboFgFsPath->currentText());
 #endif // #ifdef USE_ALTERNATE_GETFILE y/n
         if(filePathFgfs.length() > 0){
-            lineEditFgFsPath->setText(filePathFgfs);
+            comboFgFsPath->setEditText(filePathFgfs);
         }
 
     fgfs_check_path();
@@ -674,7 +680,7 @@ void CoreSettingsWidget::on_select_terrasyncexebutton()
     QString title = tr("Select Terrasync binary (terrasync)");
     QString previous = lineEditTerraSyncExePath->text(); // get current
     if (previous.length() == 0) { // try harder to help user
-        previous = lineEditFgFsPath->text(); // if they have already set 'fgfs'
+        previous = comboFgFsPath->currentText(); // if they have already set 'fgfs'
         previous = util_getBasePath(previous);
         previous.append("terrasync");       // add default exe name
 #ifdef Q_OS_WIN
@@ -750,4 +756,84 @@ int CoreSettingsWidget::randInt(int low, int high)
 {
     // Random number between low and high
     return qrand() % ((high + 1) - low) + low;
+}
+
+/** Detects possible paths for fgfs
+ * @todo Add Windows and OSX paths
+*/
+void CoreSettingsWidget::add_fgfs_paths(){
+
+    QString which;
+    QStringList lst;
+    if(this->mainObject->runningOs() == OS_LINUX){
+        //= LINUX
+        lst.append("/usr/bin/fgfs");
+        lst.append("/usr/local/bin/fgfs");
+
+        which = this->which_fgfs();
+        if(which != "" && lst.indexOf(which) == -1){
+            lst.append(which);
+        }
+    }
+    if(this->mainObject->runningOs() == OS_WINDOWS){
+        // @TODO add predictable paths
+
+    }
+
+    lst.sort();
+
+
+    for(int i = 0; i < lst.size(); i++){
+
+        //= get path and check it exists
+        QString path = lst.at(i);
+        QFileInfo info(path);
+        bool exists = false;
+        if(info.exists() && info.isFile()){
+            exists = true;
+        }
+
+        //= add to combo
+        int idx = comboFgFsPath->findText(path, Qt::MatchExactly); // maybe we need case insensitive ??
+        if(idx == -1){
+            comboFgFsPath->addItem(path);
+        }
+        idx = comboFgFsPath->findText(path, Qt::MatchExactly); // refind the new the index
+
+        //= set color of item
+        QColor color;
+        color.setNamedColor(exists ? "green" : "red");
+        comboFgFsPath->setItemData(idx, color, Qt::ForegroundRole);
+
+        //= if it exists, then we need to select
+        if(which != ""){
+             idx = comboFgFsPath->findText(which, Qt::MatchExactly);
+             comboFgFsPath->setEditText(comboFgFsPath->itemText(idx));
+        }
+    }
+
+}
+
+/** detects runs "which fgms" and returns result on nix */
+QString CoreSettingsWidget::which_fgfs(){
+
+    QString command = "which fgfs";
+
+    QProcess *process = new QProcess(this);
+    process->start(command);
+
+    if(process->waitForStarted()){
+
+        process->waitForFinished();
+        QByteArray result =  process->readAllStandardOutput();
+        //QByteArray errorResult = process->readAllStandardError();
+        QString exe = QString(result).trimmed();
+
+        if(exe.length() == 0){
+
+        }else{
+            return exe;
+        }
+    }
+    return QString("");
 }

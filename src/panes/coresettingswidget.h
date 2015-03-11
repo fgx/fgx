@@ -51,8 +51,8 @@ public:
     QHBoxLayout *screenSizeBox;
     QLineEdit *lineEditScreenSizeW;
     QLineEdit *lineEditScreenSizeH;
-    QLabel *lineEditScreenSizeWLabel;
-    QLabel *lineEditScreenSizeHLabel;
+    //QLabel *lineEditScreenSizeWLabel;
+    //QLabel *lineEditScreenSizeHLabel;
 
 
 
@@ -67,6 +67,7 @@ public:
     XGroupHBox *groupBoxFgRoot;
 
     QLineEdit *lineEditFgFsPath;
+    QComboBox *comboFgFsPath;
     QLineEdit *lineEditFgRootPath;
     QToolButton *buttonSetFgfsPath;
     QToolButton *buttonSetFgRootPath;
@@ -153,6 +154,10 @@ public slots:
     void customscenery_set_path();
 
     int randInt(int low, int high);
+
+    QString which_fgfs();
+    void add_fgfs_paths();
+
 };
 
 #endif // CORESETTINGSWIDGET_H
