@@ -89,14 +89,17 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
     //----------------------------------------------
     //= FlightGear executable (fgfs)
 
-    labelFgfsProgram = new QLabel("Path to FlightGear program (fgfs): ");
+    labelFgfsProgram = new QLabel("Path to FlightGear program (fgfs):");
     labelFgfsCheck = new QLabel("");
+
     lineEditFgFsPath = new QLineEdit("");
     lineEditFgFsPath->setFixedSize(QSize(240,20));
+
     buttonSetFgfsPath = new QToolButton();
     buttonSetFgfsPath->setFixedSize(20,20);
     buttonSetFgfsPath->setIcon(QIcon(":/icon/path"));
     grpFgfs->addWidget(labelFgfsProgram);
+
 
     QHBoxLayout *fgfsPathBox = new QHBoxLayout();
     fgfsPathBox->addWidget(lineEditFgFsPath);
@@ -265,7 +268,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
     connect(checkBoxShowMpMap, SIGNAL(clicked()), this, SLOT(on_show_mp_map()));
 
     comboMpMapServer = new QComboBox();
-    comboMpMapServer->addItem("mpmap01.flightgear.org", "http://mpmap01.flightgear.org");
+    //#comboMpMapServer->addItem("mpmap01.flightgear.org", "http://mpmap01.flightgear.org"); // Olivers is down
     comboMpMapServer->addItem("mpmap02.flightgear.org", "http://mpmap02.flightgear.org");
     comboMpMapServer->setCurrentIndex(0);
     grpMapFeatures->addWidget(comboMpMapServer);
