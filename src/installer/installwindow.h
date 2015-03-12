@@ -15,8 +15,23 @@
 #include <QSortFilterProxyModel>
 #include <QStatusBar>
 #include <QLineEdit>
+#include <QProgressBar>
+
 
 #include "xobjects/mainobject.h"
+
+#include "svnqt/svnqttypes.h"
+#include "svnqt/context.h"
+#include "svnqt/client.h"
+#include "svnqt/client_commit_parameter.h"
+#include "svnqt/revision.h"
+#include "svnqt/status.h"
+#include "svnqt/targets.h"
+#include "svnqt/url.h"
+#include "svnqt/wc.h"
+#include "svnqt/client_parameter.h"
+#include "svnqt/client_update_parameter.h"
+#include "svnqt/smart_pointer.h"
 
 
 class InstallWindow : public QWidget
@@ -26,9 +41,12 @@ public:
     explicit InstallWindow(MainObject *mob, QWidget *parent = 0);
 
     MainObject *mainObject;
+    //##svn::Client *svnClient;
+
 
     QStandardItemModel *model;
     QSortFilterProxyModel *proxyModel;
+    QList<QStandardItem*> create_model_row();
 
     QTabWidget *tabWidget;
     QTreeView *treeView;
@@ -36,6 +54,8 @@ public:
     QLineEdit *txtSvnCheckoutPath;
 
     QStatusBar *statusBar;
+    QProgressBar *progressBar;
+
 
     //void closeEvent(QCloseEvent *event);
     void moveEvent(QMoveEvent *ev);
@@ -43,8 +63,8 @@ public:
 signals:
 
 public slots:
-    //void load_metar(QString apt);
-    void on_init_svn();
+    void svn_init();
+    void svn_list_aircraft();
 
 };
 

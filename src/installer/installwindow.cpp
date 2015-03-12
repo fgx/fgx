@@ -38,18 +38,6 @@ svn update --set-depth infinity ./Aircraft/787
 // svnqt
 // I think its this said pedro - https://projects.kde.org/projects/playground/devtools/kdesvn/repository
 //#include "svnqt/svnqt_defines.h"
-#include "svnqt/svnqttypes.h"
-#include "svnqt/context.h"
-#include "svnqt/client.h"
-#include "svnqt/client_commit_parameter.h"
-#include "svnqt/revision.h"
-#include "svnqt/status.h"
-#include "svnqt/targets.h"
-#include "svnqt/url.h"
-#include "svnqt/wc.h"
-#include "svnqt/client_parameter.h"
-#include "svnqt/client_update_parameter.h"
-#include "svnqt/smart_pointer.h"
 
 InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
     QWidget(parent)
@@ -57,7 +45,9 @@ InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
 
     mainObject = mob;
 
-
+    //= Setup svn client
+    //#svn::Context context; // = new svn::Context();
+    //this->svnClient = svn::Client::getobject(&context, 0);
 
 
     //==========================================
@@ -78,6 +68,7 @@ InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
     setWindowTitle("Installer");
     setMinimumWidth(600);
 
+    setWindowTitle(QDir::currentPath());
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->setContentsMargins(0,0,0,0);
@@ -126,13 +117,14 @@ InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
     buttSvnInit->setText("Init SVN");
     layAddOnTop->addWidget(buttSvnInit, 0);
     this->connect(buttSvnInit, SIGNAL(clicked()),
-                  this, SLOT(on_init_svn())
+                  this, SLOT(svn_init())
                   );
     //==========================================
     //= TreeView
     treeView = new QTreeView(this);
     layAddon->addWidget(treeView, 10);
     treeView->setModel(this->model);
+    treeView->setRootIsDecorated(false);
     //treeView->setModel(this->proxyModel);
 
 
@@ -141,7 +133,9 @@ InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
     statusBar = new QStatusBar();
     layAddon->addWidget(statusBar);
 
-
+    progressBar = new QProgressBar();
+    statusBar->addPermanentWidget(progressBar);
+    progressBar->hide();
 
 }
 
@@ -151,8 +145,16 @@ void InstallWindow::moveEvent(QMoveEvent *ev){
     this->mainObject->settings->saveWindow(this);
 }
 
+QList<QStandardItem*> InstallWindow::create_model_row(){
+    QList<QStandardItem*> lst;
+    for(int i = 0; i < this->model->columnCount(); i++){
+        lst.append( new QStandardItem() );
+    }
+    model->appendRow(lst);
+    return lst;
+}
 
-void InstallWindow::on_init_svn(){
+void InstallWindow::svn_init(){
 
     QString install_path = this->txtSvnCheckoutPath->text().trimmed();
     if(install_path.length() == 0){
@@ -160,39 +162,132 @@ void InstallWindow::on_init_svn(){
         return;
     }
     this->mainObject->settings->setValue("install_path", install_path);
+    this->mainObject->settings->sync();
 
     QFileInfo info(install_path);
 
-    QString target_path = info.absoluteFilePath();
+    QString target_path = QDir::fromNativeSeparators(info.absoluteFilePath());
     target_path.append("/fgaddon");
 
     QString svn_url("http://svn.code.sf.net/p/flightgear/fgaddon/trunk/");
 
-
-    // wtf, where does contextP come from
     svn::Context context; // = new svn::Context();
+    svn::Client *svnClient = svn::Client::getobject(&context, 0);
 
-    svn::Client *client = svn::Client::getobject(&context, 0);
+    //= first we clean up as svn gets corrupt !!
+    svnClient->cleanup(target_path);
 
-    svn::CheckoutParameter checkoutRarams;
-    checkoutRarams.moduleName(svn_url)
-            .destination(target_path)
-            .depth(svn::DepthImmediates)
-            .revision(svn::Revision::HEAD);
+    //= Initial Checkout - this runs regardless atmo
+    // @todo determine is a repos exists and is valid
+    svn::CheckoutParameter params;
+    params.moduleName( svn_url )
+                .destination( QDir::toNativeSeparators(target_path) )
+                .depth( svn::DepthImmediates )
+                .revision( svn::Revision::HEAD );
+
+    qDebug() << "Checking out=" << QString("Checking Out: ").append(svn_url);
+    //= Do checkout
     statusBar->showMessage( QString("Checking Out: ").append(svn_url) );
+    progressBar->setRange(0, 0);
+    progressBar->show();
     try {
-        //client->checkout(checkoutRarams);
-        client->checkout(checkoutRarams);
+        svnClient->checkout(params);
     } catch(svn::ClientException ce) {
         qDebug() << "error=" << ce.msg();
-        statusBar->showMessage( QString("ERROR: ").append(ce.msg) );
+        statusBar->showMessage( QString("ERROR: ").append(ce.msg()) );
         return;
     }
-     qDebug() << "Inital Checkout OK";
+    qDebug() << "Inital Checkout OK";
 
-    statusBar->showMessage( QString("Getting List");
-    //svn::InfoEntry infoEntry;
-    //infoEntry = client->info(path, false, svn::Revision::UNDEFINED, svn::Revision::UNDEFINED);
 
+    svn::UpdateParameter uparams;
+    uparams.targets(QDir::toNativeSeparators(target_path + "/Aircraft"))
+                .depth( svn::DepthImmediates )
+                .revision( svn::Revision::HEAD )
+                .sticky_depth(true);
+    svn::Revisions toRevisions;
+
+    try {
+        toRevisions = svnClient->update(uparams);
+        qDebug() << " udpate=" << toRevisions.length();
+
+    } catch(svn::ClientException ce) {
+        qDebug() << "error=" << ce.msg();
+        statusBar->showMessage( QString("ERROR: ").append(ce.msg()) );
+        return;
+    }
+
+    //this->svn_list_aircraft();
+
+
+}
+
+void InstallWindow::svn_list_aircraft(){
+
+    statusBar->showMessage( QString("Getting List") );
+
+    svn::Context context; // = new svn::Context();
+    svn::Client *svnClient = svn::Client::getobject(&context, 0);
+
+    QString aircraft_path = this->mainObject->settings->value("install_path").toString().append("/fgaddon").append("/Aircraft");
+    qDebug() << "target_path=" << aircraft_path;
+
+    //= List Directories
+    svn::DirEntries entries;
+    try {
+        entries = svnClient->list(aircraft_path, svn::Revision::HEAD, svn::Revision::HEAD,svn::DepthImmediates, false);
+
+    } catch(svn::ClientException ce) {
+        qDebug() << "error=" << ce.msg();
+        statusBar->showMessage( QString("ERROR: ").append(ce.msg()) );
+        return;
+    }
+    qDebug() << "GOT LIST=" << entries.count();
+
+    //= Add entries to model
+    progressBar->setRange(0, entries.count());
+    progressBar->show();
+    for(int i = 0; i < entries.count(); i++){
+        progressBar->setValue(i);
+        svn::DirEntry *dir = entries.at(i);
+        qDebug() << " =" << dir->isDir() << "=" << dir->name();
+
+        if( dir->name().length() > 0){ // first entry is blank!
+
+            QList<QStandardItem *> items = this->create_model_row();
+            QStandardItem *dItem = items.at(0);
+            dItem->setText( dir->name() );
+            dItem->setIcon( QIcon(":/icon/custom_folder") );
+        }
+    }
+
+
+
+    //= Loop our model rows, and get the base files
+    progressBar->setRange(0, this->model->rowCount());
+    svn::Revisions toRevisions;
+    for(int ridx = 0; ridx < this->model->rowCount(); ridx++){
+        progressBar->setValue(ridx);
+        QString adir = model->item(ridx, 0)->text();
+        QString aero_path = aircraft_path;
+        aero_path.append("/").append(adir);
+        qDebug() << " =" << adir << aero_path;
+
+        //svn update --set-depth files ./Aircraft/tu154
+        svn::UpdateParameter params;
+        params.targets(aero_path)
+                    .depth( svn::DepthFiles )
+                    .revision( svn::Revision::HEAD );
+
+        try {
+            toRevisions = svnClient->update(params);
+            qDebug() << " udpate=" << toRevisions.length();
+
+        } catch(svn::ClientException ce) {
+            qDebug() << "error=" << ce.msg();
+            statusBar->showMessage( QString("ERROR: ").append(ce.msg()) );
+            return;
+        }
+    }
 
 }
