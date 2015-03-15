@@ -22,6 +22,7 @@
 
 #include "svnqt/svnqttypes.h"
 #include "svnqt/context.h"
+#include "svnqt/context_listener.h"
 #include "svnqt/client.h"
 #include "svnqt/client_commit_parameter.h"
 #include "svnqt/revision.h"

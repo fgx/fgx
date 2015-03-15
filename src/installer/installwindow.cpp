@@ -171,8 +171,11 @@ void InstallWindow::svn_init(){
 
     QString svn_url("http://svn.code.sf.net/p/flightgear/fgaddon/trunk/");
 
-    svn::Context context; // = new svn::Context();
-    svn::Client *svnClient = svn::Client::getobject(&context, 0);
+    svn::Context svnContext; // = new svn::Context();
+    svn::Client *svnClient = svn::Client::getobject(&svnContext, 0);
+    //svn::ContextListener *listener = new svn::ContextListener();
+    //svnContext->setListener(listener);
+    //listener->setVerbose(true);
 
     //= first we clean up as svn gets corrupt !!
     svnClient->cleanup(target_path);
