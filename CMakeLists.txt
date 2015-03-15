@@ -164,7 +164,7 @@ set( fgx_SRCS
     src/xwidgets/xdebugtreewidget.cpp
     src/xwidgets/xgroupboxes.cpp
     src/installer/installwindow.cpp
-    src/installer/install_aircrafttreewidget.cpp
+    src/installer/aircraftinstallwidget.cpp
     src/installer/downloadmanagerwidget.cpp
     src/installer/servercall.cpp
     )
@@ -215,7 +215,7 @@ set( fgx_HDRS
     src/xwidgets/xdebugtreewidget.h
     src/xwidgets/xgroupboxes.h
     src/installer/installwindow.h
-    src/installer/install_aircrafttreewidget.h
+    src/installer/aircraftinstallwidget.h
     src/installer/downloadmanagerwidget.h
     src/installer/servercall.h
     )

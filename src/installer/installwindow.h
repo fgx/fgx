@@ -20,7 +20,8 @@
 
 #include "xobjects/mainobject.h"
 
-#include "install_aircrafttreewidget.h"
+#include "aircraftinstallwidget.h"
+class AircraftInstallWidget;
 
 class InstallWindow : public QWidget
 {
@@ -31,7 +32,7 @@ public:
     MainObject *mainObject;
 
     QTabWidget *tabWidget;
-    AircraftTreeWidget *aircraftInstallWidget;
+    AircraftInstallWidget *aircraftInstallWidget;
 
 
     void moveEvent(QMoveEvent *ev);

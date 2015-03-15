@@ -19,19 +19,6 @@ InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
 
     mainObject = mob;
 
-    //= Setup svn client
-    //#svn::Context context; // = new svn::Context();
-    //this->svnClient = svn::Client::getobject(&context, 0);
-
-
-    //==========================================
-    //= Setup Models
-    this->model = new QStandardItemModel(this);
-    this->proxyModel = new QSortFilterProxyModel(this);
-
-    QStringList hLabels;
-    hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "FilterDir" << "Filter" << "BASE";
-    model->setHorizontalHeaderLabels(hLabels);
 
     //==========================================
     //= Window + Layout
@@ -62,8 +49,12 @@ InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
     tabWidget = new QTabWidget(this);
     mainLayout->addWidget(tabWidget, 10);
 
-    this->aircraftInstallWidget = new AircraftTreeWidget();
+
+    //==========================================
+    //= Aircraft Tab
+    this->aircraftInstallWidget = new AircraftInstallWidget();
     tabWidget->addTab( this->aircraftInstallWidget, "FG Addon");
+
 
 
 

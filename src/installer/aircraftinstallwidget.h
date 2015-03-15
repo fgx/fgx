@@ -8,10 +8,9 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <QAction>
-//#include <QTabBar>
 #include <QStackedWidget>
 
-
+#include <QNetworkAccessManager>
 
 #include <QScriptValue>
 #include <QScriptValueIterator>
@@ -23,11 +22,11 @@
 #include "installer/downloadmanagerwidget.h"
 class DownloadManagerWidget;
 
-class AircraftDownloadWidget : public QWidget
+class AircraftInstallWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AircraftDownloadWidget(QWidget *parent = 0);
+    explicit AircraftInstallWidget(QWidget *parent = 0);
 
     enum COLS{
         C_SUB_DIR = 0,
@@ -46,7 +45,7 @@ public:
         C_ACTION_LBL
     };
 
-
+    QNetworkAccessManager *netMan;
     //QAction *actEdit;
     QTreeWidget *tree;
     QTabBar *tabBar;
