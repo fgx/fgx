@@ -62,54 +62,11 @@ InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
     tabWidget = new QTabWidget(this);
     mainLayout->addWidget(tabWidget, 10);
 
-    //====================================================================
-    // FgAddons
-    //====================================================================
-
-    //= Container widget with layout
-    QWidget *widgetAddOns = new QWidget();
-    tabWidget->addTab(widgetAddOns, "FG Addons");
-    QVBoxLayout *layAddon = new QVBoxLayout();
-    layAddon->setContentsMargins(0,0,0,0);
-    layAddon->setSpacing(0);
-    widgetAddOns->setLayout(layAddon);
+    this->aircraftInstallWidget = new AircraftTreeWidget();
+    tabWidget->addTab( this->aircraftInstallWidget, "FG Addon");
 
 
-    //= Temp path for now
-    QHBoxLayout *layAddOnTop = new QHBoxLayout();
-    layAddOnTop->setContentsMargins(0,0,0,0);
-    layAddOnTop->setSpacing(0);
-    layAddon->addLayout(layAddOnTop);
 
-    layAddOnTop->addWidget(new QLabel("Checkout Path:"), 0);
-
-    txtSvnCheckoutPath = new QLineEdit();
-    layAddOnTop->addWidget(txtSvnCheckoutPath, 2);
-    txtSvnCheckoutPath->setText( this->mainObject->settings->value("install_path").toString() );
-
-    QToolButton *buttSvnInit = new QToolButton();
-    buttSvnInit->setText("Init SVN");
-    layAddOnTop->addWidget(buttSvnInit, 0);
-    this->connect(buttSvnInit, SIGNAL(clicked()),
-                  this, SLOT(svn_init())
-                  );
-    //==========================================
-    //= TreeView
-    treeView = new QTreeView(this);
-    layAddon->addWidget(treeView, 10);
-    treeView->setModel(this->model);
-    treeView->setRootIsDecorated(false);
-    //treeView->setModel(this->proxyModel);
-
-
-    //==========================================
-    //= StatusBar
-    statusBar = new QStatusBar();
-    layAddon->addWidget(statusBar);
-
-    progressBar = new QProgressBar();
-    statusBar->addPermanentWidget(progressBar);
-    progressBar->hide();
 
 }
 
@@ -118,13 +75,3 @@ void InstallWindow::moveEvent(QMoveEvent *ev){
     Q_UNUSED(ev);
     this->mainObject->settings->saveWindow(this);
 }
-
-QList<QStandardItem*> InstallWindow::create_model_row(){
-    QList<QStandardItem*> lst;
-    for(int i = 0; i < this->model->columnCount(); i++){
-        lst.append( new QStandardItem() );
-    }
-    model->appendRow(lst);
-    return lst;
-}
-

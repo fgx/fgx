@@ -29,23 +29,11 @@ public:
     explicit InstallWindow(MainObject *mob, QWidget *parent = 0);
 
     MainObject *mainObject;
-    //##svn::Client *svnClient;
-
-
-    QStandardItemModel *model;
-    QSortFilterProxyModel *proxyModel;
-    QList<QStandardItem*> create_model_row();
 
     QTabWidget *tabWidget;
-    QTreeView *treeView;
-
-    QLineEdit *txtSvnCheckoutPath;
-
-    QStatusBar *statusBar;
-    QProgressBar *progressBar;
+    AircraftTreeWidget *aircraftInstallWidget;
 
 
-    //void closeEvent(QCloseEvent *event);
     void moveEvent(QMoveEvent *ev);
 
 signals:

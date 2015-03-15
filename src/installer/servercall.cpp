@@ -7,7 +7,7 @@
 #include <QScriptEngine>
 #include <QScriptValue>
 
-#include "xobjects/servercall.h"
+#include "installer/servercall.h"
 
 ServerCall::ServerCall( QObject *parent) :
     QObject(parent)
@@ -212,9 +212,10 @@ void ServerCall::on_server_read_finished()
 
 
 
-
+/*
 
 void ServerCall::attach_statusbar(XStatusBar *sBar)
 {
     this->statusBar = sBar;
 }
+*/

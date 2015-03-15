@@ -10,13 +10,14 @@
 #include <QHBoxLayout>
 #include <QGroupBox>
 #include <QToolBar>
+#include <QToolButton>
 #include <QHeaderView>
 #include <QPushButton>
 
 #include "xobjects/xsettings.h"
 #include "installer/install_aircrafttreewidget.h"
 
-AircraftTreeWidget::AircraftTreeWidget(QWidget *parent) :
+AircraftDownloadWidget::AircraftDownloadWidget(QWidget *parent) :
     QWidget(parent)
 {
 
@@ -112,10 +113,11 @@ AircraftTreeWidget::AircraftTreeWidget(QWidget *parent) :
 
     //==========================================
     //== Status Bar
+    /*
     statusBar = new XStatusBar(this);
     mainLayout->addWidget(statusBar);
     connect(statusBar, SIGNAL(refresh_server()), this, SLOT(fetch_server()));
-
+    */
 
     downManWidget = new DownloadManagerWidget();
     mainLayout->addWidget(downManWidget);
@@ -125,7 +127,7 @@ AircraftTreeWidget::AircraftTreeWidget(QWidget *parent) :
     //========================================
     //= Server Call
     server = new ServerCall(this);
-    server->attach_statusbar(statusBar);
+    //server->attach_statusbar(statusBar);
     connect(server, SIGNAL(data(QScriptValue)),
             this, SLOT(on_server_data(QScriptValue)));
 
@@ -149,14 +151,14 @@ AircraftTreeWidget::AircraftTreeWidget(QWidget *parent) :
 
 //=================================================================
 //== Fetch Server
-void AircraftTreeWidget::fetch_server()
+void AircraftDownloadWidget::fetch_server()
 {
     server->get("http://download.fgx.ch/aircraft/index.json");
 }
 
 //=================================================================
 //== Load Server Data
-void AircraftTreeWidget::on_server_data(QScriptValue data)
+void AircraftDownloadWidget::on_server_data(QScriptValue data)
 {
     //qDebug() << data.toString();
     if ( data.property("aircraft").isArray() )
@@ -220,7 +222,7 @@ void AircraftTreeWidget::on_server_data(QScriptValue data)
 
 //======================================================
 // Info Button
-void AircraftTreeWidget::on_info_button_clicked(QAbstractButton *butt)
+void AircraftDownloadWidget::on_info_button_clicked(QAbstractButton *butt)
 {
     emit open_aero(butt->property("id").toInt());
     qDebug() << "emit" << butt->property("id").toInt();
@@ -230,7 +232,7 @@ void AircraftTreeWidget::on_info_button_clicked(QAbstractButton *butt)
 
 //======================================================
 // Install Button
-void AircraftTreeWidget::on_install_button_clicked(QAbstractButton *butt)
+void AircraftDownloadWidget::on_install_button_clicked(QAbstractButton *butt)
 {
 
     //#if ( downloadQueue.contains(""))
@@ -264,24 +266,25 @@ void AircraftTreeWidget::on_install_button_clicked(QAbstractButton *butt)
             item->setText(C_ACTION_LBL, "Queued for download");
         }
         */
-        downManWidget->add_download(zip_file,
-                                   XSettings::getInstance().server_url("/download/aircraft/zip/"),
-                                    XSettings::temp(QString("/aero/")));
+
+        //downManWidget->add_download(zip_file,
+        //                           XSettings::getInstance().server_url("/download/aircraft/zip/"),
+        //                            XSettings::temp(QString("/aero/")));
 
 
 
     }else if(state == "queued"){
         //downloadQueue.remove_file(zip_file);
-        downManWidget->remove_download(zip_file,
-                                   XSettings::getInstance().server_url("/download/aircraft/zip/"),
-                                    XSettings::temp(QString("/aero/")));
+        //downManWidget->remove_download(zip_file,
+        //                           XSettings::getInstance().server_url("/download/aircraft/zip/"),
+        //                            XSettings::temp(QString("/aero/")));
 
     }
     //progressBar->setVisible(true);
 }
 
 
-void AircraftTreeWidget::on_status_update(QString zip_file, QString status)
+void AircraftDownloadWidget::on_status_update(QString zip_file, QString status)
 {
     QString butt_label = "na";
     QString status_label = "na";

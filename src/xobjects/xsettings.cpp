@@ -57,8 +57,8 @@ QString XSettings::fgx_path(){
 //===========================================================================
 /** \brief Saves a splitters dimensions
  *
- * The `settings_namespace` property needs to be set 
- * 
+ * The `settings_namespace` property needs to be set
+ *
  * @todo check for settings_namespace
  * @bug no namespace problem
  */
@@ -94,7 +94,7 @@ void XSettings::saveWindow(QWidget *widget){
     setValue( key, QVariant(ba) );
 }
 /** \brief Restores a size window position
- * 
+ *
  * @todo check screensize
  * @bug monitor could be offscreen
  */
@@ -112,7 +112,7 @@ void XSettings::restoreWindow(QWidget *widget){
         }
     }
 
-    // We need to check here window is nto offsreen, 
+    // We need to check here window is nto offsreen,
     // eg a dual monitor previous and now no dual so screen is restored off screen
     //QDesktopSccreen dimensions vs postion
 }
@@ -140,15 +140,21 @@ bool XSettings::dev_mode(){
     return QFile::exists(curr);
 }
 
-/** \brief this should be used, yves ? 
+/** \brief this should be used, yves ?
  */
 QString XSettings::fgx_current_dir(){
     return QDir::current().absolutePath();
 }
 
-/** \brief shortcut to cache directory 
- *
- */
+/** \brief shortcut to cache directory */
 QString XSettings::cache_dir(){
     return QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
 }
+
+QString XSettings::aircraft_downloads_url(){
+    return QString("http://localhost/~fg/flightgear-aircraft/");
+}
+QString XSettings::aircraft_downloads_url(QString append_1, QString append_2){
+    return XSettings::aircraft_downloads_url().append(append_1).append(append_2);
+}
+

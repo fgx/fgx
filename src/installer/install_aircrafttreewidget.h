@@ -1,5 +1,5 @@
-#ifndef INSTALL_AIRCRAFTTREEWIDGET_H
-#define INSTALL_AIRCRAFTTREEWIDGET_H
+#ifndef INSTALL_DOWNLOAD_WIDGET_H
+#define INSTALL_DOWNLOAD_WIDGET_H
 
 #include <QWidget>
 #include <QTreeWidget>
@@ -21,12 +21,13 @@
 
 #include "installer/servercall.h"
 #include "installer/downloadmanagerwidget.h"
+class DownloadManagerWidget;
 
-class AircraftTreeWidget : public QWidget
+class AircraftDownloadWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AircraftTreeWidget(QWidget *parent = 0);
+    explicit AircraftDownloadWidget(QWidget *parent = 0);
 
     enum COLS{
         C_SUB_DIR = 0,
@@ -80,4 +81,4 @@ public slots:
 
 };
 
-#endif // INSTALL_AIRCRAFTTREEWIDGET_H
+#endif // INSTALL_DOWNLOAD_WIDGET_H

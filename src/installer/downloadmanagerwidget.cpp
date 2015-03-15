@@ -9,7 +9,7 @@
 #include <QHeaderView>
 #include <QPushButton>
 
-#include "download/downloadmanagerwidget.h"
+#include "installer/downloadmanagerwidget.h"
 #include "xobjects/xsettings.h"
 
 const QString DownloadManagerWidget::SEP = QString("~|~");
@@ -186,7 +186,7 @@ void DownloadManagerWidget::startNextDownload()
         return;                 // skip this download
     }
 
-    QUrl url( XSettings::server_url( url_path, file_name) );
+    QUrl url( XSettings::aircraft_downloads_url( url_path, file_name) );
     qDebug() << url.toString();
     QNetworkRequest req(url);
 
