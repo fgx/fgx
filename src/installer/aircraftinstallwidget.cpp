@@ -17,15 +17,35 @@
 #include "xobjects/xsettings.h"
 #include "installer/aircraftinstallwidget.h"
 
-AircraftInstallWidget::AircraftInstallWidget(QWidget *parent) :
-    QWidget(parent)
+AircraftInstallWidget::AircraftInstallWidget(QMainWindow *parent) :
+    QMainWindow(parent)
 {
 
+    //==================================
+    //= Setup Models
+    model = new QStandardItemModel(this);
+    QStringList hLabels;
+    hLabels << "Dir" << "Aero" << "Description" <<  "Author" <<  "Size" << "Hash" << "Updated" << "Download" << "Status";
+    model->setHorizontalHeaderLabels(hLabels);
+
+    proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setSourceModel(model);
+
+
+    //==================================
+    //= NetworkManaget
     netMan = new QNetworkAccessManager(this);
+    connect(this->netMan, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(on_request_finished(QNetworkReply*))
+            );
+
+
+    QWidget *mainWidget = new QWidget();
+    this->setCentralWidget(mainWidget);
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->setContentsMargins(0,0,0,0);
-    setLayout(mainLayout);
+    mainWidget->setLayout(mainLayout);
 
 
     /*
@@ -38,15 +58,18 @@ AircraftInstallWidget::AircraftInstallWidget(QWidget *parent) :
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     */
     QString tree_style("QTreeView::item:hover {background-color: #dddddd;}");
-    tree = new QTreeWidget();
+
+    tree = new QTreeView();
     mainLayout->addWidget(tree);
 
+    tree->setModel(this->model);
     tree->setUniformRowHeights(true);
     tree->setAlternatingRowColors(true);
     tree->setRootIsDecorated(false);
     tree->setStyleSheet(tree_style);
 
-    tree->headerItem()->setText(C_AERO, "Aero");
+
+    /* tree->headerItem()->setText(C_AERO, "Aero");
     tree->headerItem()->setText(C_DESCRIPTION, "Description");
     tree->headerItem()->setText(C_STATUS, "Status");
     tree->headerItem()->setText(C_ZIP_SIZE, "Size");
@@ -59,6 +82,7 @@ AircraftInstallWidget::AircraftInstallWidget(QWidget *parent) :
     tree->headerItem()->setText(C_LAST_UPDATED, "Updated");
     tree->headerItem()->setText(C_ACTION, "Action");
     tree->headerItem()->setText(C_ACTION_LBL, "Package Status");
+    */
     tree->header()->setStretchLastSection(true);
 
     tree->setColumnWidth(C_SUB_DIR, 80);
@@ -66,49 +90,21 @@ AircraftInstallWidget::AircraftInstallWidget(QWidget *parent) :
     tree->setColumnWidth(C_DESCRIPTION, 200);
     tree->setColumnWidth(C_ZIP_SIZE, 60);
     tree->setColumnWidth(C_ZIP_MD5, 160);
-    tree->setColumnWidth(C_STATUS, 80);
-    tree->setColumnWidth(C_ID, 50);
+    //tree->setColumnWidth(C_STATUS, 80);
+   // tree->setColumnWidth(C_ID, 50);
 
-    tree->setColumnHidden(C_ID, true);
-    tree->setColumnHidden(C_ZIP_MD5, true);
-    tree->setColumnHidden(C_ZIP_FILE, false);
-    tree->setColumnHidden(C_SUB_DIR, true);
-    tree->setColumnHidden(C_XML_SET, true);
+   // tree->setColumnHidden(C_ID, true);
+       // tree->setColumnHidden(C_XML_SET, true);
+
+
+   // tree->setColumnHidden(C_ZIP_MD5, true);
+   // tree->setColumnHidden(C_ZIP_FILE, false);
+   // tree->setColumnHidden(C_SUB_DIR, true);
+
 
     //====================================================
     //== Downloaded panel
 
-    /*
-    QGroupBox *grpDownloader = new QGroupBox();
-    mainLayout->addWidget(grpDownloader);
-
-    QHBoxLayout *grpDownLay = new QHBoxLayout();
-    grpDownloader->setLayout(grpDownLay);
-
-    grpDownLay->addWidget(new QLabel("Queued:"), 0);
-    lblQueuedCount = new QLabel("None");
-    lblQueuedCount->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    grpDownLay->addWidget(lblQueuedCount, 1);
-
-
-    grpDownLay->addWidget(new QLabel("Status:"), 0);
-    lblStatus = new QLabel("Idle");
-    lblStatus->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    grpDownLay->addWidget(lblStatus, 1);
-
-    QWidget *progContainer = new QWidget(); // Need a container to fix width of progress.. sighns
-    grpDownLay->addWidget(progContainer);
-    progContainer->setFixedWidth(200);
-    QHBoxLayout *progLay = new QHBoxLayout();
-    progLay->setContentsMargins(0,0,0,0);
-    progContainer->setLayout(progLay);
-    progressBar = new QProgressBar();
-    progressBar->setRange(0, 100);
-    progressBar->setValue(0);
-    progressBar->setVisible(false);
-    progressBar->setFixedHeight(16);
-    progLay->addWidget(progressBar, 1);
-    */
 
 
     //==========================================
@@ -126,10 +122,10 @@ AircraftInstallWidget::AircraftInstallWidget(QWidget *parent) :
 
     //========================================
     //= Server Call
-    server = new ServerCall(this);
+    //server = new ServerCall(this);
     //server->attach_statusbar(statusBar);
-    connect(server, SIGNAL(data(QScriptValue)),
-            this, SLOT(on_server_data(QScriptValue)));
+   // connect(server, SIGNAL(data(QScriptValue)),
+    //        this, SLOT(on_server_data(QScriptValue)));
 
 
 
@@ -153,25 +149,33 @@ AircraftInstallWidget::AircraftInstallWidget(QWidget *parent) :
 //== Fetch Server
 void AircraftInstallWidget::fetch_server()
 {
-    server->get("http://localhost/~fg/flightgear-aircraft/index.json");
+    QUrl url("http://127.0.0.1/~fg/flightgear-aircraft/index.json");
+    //QUrl url("http://downloads.freeflightsim.org/flightgear-aircraft/index.json");
+    QNetworkRequest req(url);
+    netMan->get(req);
+    qDebug() << "requeeted" << url.toString();
 }
 
 //=================================================================
 //== Load Server Data
 void AircraftInstallWidget::on_server_data(QScriptValue data)
 {
-    qDebug() << "on_server_data" << data.toString();
+
     if ( data.property("aircraft").isArray() )
     {
+        qDebug() << "on_server_data";
         QScriptValueIterator it(data.property("aircraft"));
+        int c = 0;
         while (it.hasNext()) {
             it.next();
             if (it.flags() & QScriptValue::SkipInEnumeration){
                 continue;
             }
+            QList<QStandardItem*> items = this->create_model_row();
 
-            QTreeWidgetItem *item = new QTreeWidgetItem();
-             qDebug() << "YES";
+
+            QString dir = it.value().property("dir").toString();
+             qDebug() << "YES" << dir;
             /*
             item->setIcon(C_AERO, QIcon(":/icon/rel"));
             QFont f = item->font(C_AERO);
@@ -179,24 +183,22 @@ void AircraftInstallWidget::on_server_data(QScriptValue data)
             item->setFont(C_AERO, f);
             item->setText(C_AERO, it.value().property("aero").toString());
             */
-            item->setText(C_ID, it.value().property("id").toString() );
-            item->setText(C_SUB_DIR, it.value().property("sub_dir").toString() );
-            item->setText(C_XML_SET, it.value().property("xml_set").toString() );
-            item->setText(C_LAST_UPDATED, it.value().property("last_updated").toString());
-            item->setText(C_STATUS, it.value().property("status").toString());
-            item->setText(C_AUTHOR, it.value().property("author").toString());
-            item->setText(C_DESCRIPTION, it.value().property("description").toString());
-            item->setText(C_ZIP_FILE, it.value().property("zip_file").toString());
-            item->setText(C_ZIP_MD5 , it.value().property("zip_md5").toString());
-            item->setText(C_ZIP_SIZE, it.value().property("zip_size").toString() );
-            item->setText(C_STATUS, it.value().property("status").toString());
+            items.at(C_SUB_DIR)->setText( dir.append(".zip") );
+            items.at(C_AERO)->setText( it.value().property("aero").toString() );
+            items.at(C_LAST_UPDATED)->setText(it.value().property("last_updated").toString());
 
-            item->setText(C_ACTION_LBL, "Available for download");
-            //item->setText(C_STATUS, it.value().property("status").toString());
+            items.at(C_AUTHOR)->setText( it.value().property("author").toString());
+            items.at(C_DESCRIPTION)->setText( it.value().property("description").toString());
+            items.at(C_ZIP_MD5)->setText( it.value().property("md5").toString());
+            items.at(C_ZIP_SIZE)->setText( it.value().property("zip_size").toString() );
+
+            items.at(C_ACTION_LBL)->setText( "Available for download");
+
 
             //= only after adding item to tree can we add the buttons..
-            tree->addTopLevelItem(item);
+            model->appendRow(items);
 
+            /*
             QToolButton *buttInfo = new QToolButton();
             buttInfo->setText(it.value().property("aero").toString());
             buttInfo->setProperty("id", it.value().property("id").toString());
@@ -206,16 +208,21 @@ void AircraftInstallWidget::on_server_data(QScriptValue data)
             buttInfo->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
             //buttInfo->setProperty("state", "none");
             buttInfo->setStyleSheet("font-weight: bold; text-align: left;");
-            tree->setItemWidget(item, C_AERO, buttInfo);
+            //tree->setItemWidget(item, C_AERO, buttInfo);
+            tree->setIndexWidget(items.at(C_ACTION)->index(), buttInfo);
             buttGroupInfo->addButton(buttInfo);
-
-            QPushButton *buttInstall = new QPushButton();
+            */
+            QToolButton *buttInstall = new QToolButton();
+            buttInstall->setAutoRaise(true);
             buttInstall->setText("Download");
             buttInstall->setProperty("id", it.value().property("id").toString());
             buttInstall->setProperty("zip_file", it.value().property("zip_file").toString());
             buttInstall->setProperty("state", "available");
-            tree->setItemWidget(item, C_ACTION, buttInstall);
+            //tree->setItemWidget(item, C_ACTION, buttInstall);
+            tree->setIndexWidget(items.at(C_ACTION)->index(), buttInstall);
             buttGroupInstall->addButton(buttInstall);
+
+            c++;
         }
     }
 }
@@ -305,7 +312,7 @@ void AircraftInstallWidget::on_status_update(QString zip_file, QString status)
     }
 
 
-
+    /*
     QList<QTreeWidgetItem *> items = tree->findItems(zip_file, Qt::MatchExactly, C_ZIP_FILE);
     for(int i = 0; i < items.count(); i++){
         QTreeWidgetItem *item = items.at(i);
@@ -321,6 +328,22 @@ void AircraftInstallWidget::on_status_update(QString zip_file, QString status)
            b->setStyleSheet(style);
            b->setDisabled(disabled);
        }
-    }
+    }*/
 }
 
+void AircraftInstallWidget::on_request_finished(QNetworkReply *reply){
+    qDebug() << "on_request_finished" << reply->request().url().toString();
+    QScriptEngine engine;
+    QScriptValue json = engine.evaluate( "(" + reply->readAll() + ")");
+    this->on_server_data(json);
+}
+
+
+QList<QStandardItem*> AircraftInstallWidget::create_model_row(){
+    QList<QStandardItem*> lst;
+    for(int i = 0; i < this->model->columnCount(); i++){
+        lst.append( new QStandardItem() );
+    }
+    //model->appendRow(lst);
+    return lst;
+}
