@@ -32,6 +32,9 @@ class XProcess;
 #include "launcher/launcherwindow.h"
 class LauncherWindow;
 
+#include "installer/installwindow.h"
+class InstallWindow;
+
 #include "mpmap/mpmapwidget.h"
 #include "mpmap/mpmapxwidget.h"
 #include "logs/viewlogswidget.h"
@@ -87,6 +90,10 @@ public:
 
     /* \brief Instance of LauncherWindow */
     LauncherWindow *launcherWindow;
+
+    /* \brief Instance of InstallWindow */
+    InstallWindow *installWindow;
+
     //MpMapWidget *mpMapWidget;
     //MpMapXWidget *mpMapXWidget;
 

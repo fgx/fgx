@@ -195,8 +195,11 @@ MainObject::MainObject(QObject *parent) :
     }
 
     launcherWindow = new LauncherWindow(this);
-    //launcherWindow->hide();
+    launcherWindow->hide();
 
+
+    installWindow = new InstallWindow(this);
+    installWindow->show();
 
     //== initialise after initial show so UI dont look frozen while cache loading etc
     QTimer::singleShot(300, this, SLOT(initialize()));
@@ -213,7 +216,7 @@ MainObject::~MainObject()
 //============================================================================
 //= Initialize
 void MainObject::initialize(){
-    on_launcher();
+    //on_launcher();
 
 
 }

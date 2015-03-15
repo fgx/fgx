@@ -2,7 +2,7 @@
 # CMakeLists.txt - for FGx launcher project
 #================================================
 # This project is not built and managed by cmake..
-# sorry folks but qmake dont work xplatform.. the way we want 
+# sorry folks but qmake dont work xplatform.. the way we want
 #
 
 cmake_minimum_required( VERSION 2.8.8 )
@@ -79,7 +79,7 @@ endif(UNIX)
 #=====================================================
 ## QT
 message(STATUS "*** Finding Qt4 components ${components}")
-find_package ( Qt4 COMPONENTS QtCore QtGui QtNetwork QtWebkit QtXml QtXmlPatterns REQUIRED )
+find_package ( Qt4 COMPONENTS QtCore QtGui QtNetwork QtWebkit QtScript QtXml QtXmlPatterns REQUIRED )
 include ( ${QT_USE_FILE} )
 add_definitions( ${QT_DEFINITIONS} )
 # debug messages
@@ -163,6 +163,10 @@ set( fgx_SRCS
     src/xwidgets/xcommandpreviewidget.cpp
     src/xwidgets/xdebugtreewidget.cpp
     src/xwidgets/xgroupboxes.cpp
+    src/installer/installwindow.cpp
+    src/installer/install_aircrafttreewidget.cpp
+    src/installer/downloadmanagerwidget.cpp
+    src/installer/servercall.cpp
     )
 #=====================================================
 ## Headers
@@ -210,9 +214,13 @@ set( fgx_HDRS
     src/xwidgets/xcommandpreviewidget.h
     src/xwidgets/xdebugtreewidget.h
     src/xwidgets/xgroupboxes.h
+    src/installer/installwindow.h
+    src/installer/install_aircrafttreewidget.h
+    src/installer/downloadmanagerwidget.h
+    src/installer/servercall.h
     )
 #=====================================================
-## Others.. 
+## Others..
 set( fgx_OTHERS
     src/xwidgets/xtreewidgetitem.h
     src/utilities/utilities.h
@@ -239,7 +247,7 @@ set( fgx_OTHERS
     src/utilities/simgear/constants.h
     src/utilities/simgear/compiler.h
     )
-    
+
 #=====================================================
 ## Resource files
 set( fgx_RCS
@@ -249,7 +257,7 @@ set( fgx_RCS
     src/resources/openlayers.qrc
     src/resources/default.qrc
     )
-    
+
 #=====================================================
 ## Directories
 include_directories(
@@ -258,6 +266,7 @@ include_directories(
     src/logs
     src/aircraft
     src/launcher
+    src/installer
     src/airports
     src/panes
     src/map
@@ -303,10 +312,10 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
     OUTPUT_VARIABLE GIT_BRANCH
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
-  
+
 else(EXISTS "${CMAKE_SOURCE_DIR}/.git")
   set(GIT_BRANCH "")
-  
+
 endif(EXISTS "${CMAKE_SOURCE_DIR}/.git")
 
 message(STATUS "*** Git current branch: ${GIT_BRANCH}")
@@ -369,7 +378,7 @@ if(UNIX)
             DESTINATION "/usr/share/applications"
     )
 else()
-    set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-${ARCHITECTURE}" )    
+    set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-${ARCHITECTURE}" )
 ENDIF(UNIX)
 
 INCLUDE(CPack)
