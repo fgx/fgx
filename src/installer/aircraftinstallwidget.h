@@ -5,10 +5,12 @@
 #include <QWidget>
 #include <QTreeView>
 #include <QButtonGroup>
+#include <QPushButton>
 #include <QAbstractButton>
 #include <QLabel>
 #include <QProgressBar>
 #include <QAction>
+#include <QLineEdit>
 #include <QStackedWidget>
 #include <QStandardItemModel>
 #include <QSortFilterProxyModel>
@@ -32,7 +34,7 @@ class AircraftInstallWidget : public QMainWindow
 public:
     explicit AircraftInstallWidget(QMainWindow *parent = 0);
 
-    //hLabels << "Dir" << "Aero" << "Description" << "Author" << "Size" << "Hash" << "Updated" << "Download" << "status";
+    //hLabels << "Dir" << "Aero" << "Description" << "Author" << "Size" << "Hash" << "Updated"  << "status" << "Filter";
     enum COLS{
         C_SUB_DIR = 0,
         C_AERO,
@@ -41,14 +43,18 @@ public:
         C_ZIP_SIZE,
         C_ZIP_MD5,
         C_LAST_UPDATED,
-        C_ACTION,
-        C_ACTION_LBL
+        C_STATUS,
+        C_FILTER
     };
 
     QNetworkAccessManager *netMan;
 
     QStandardItemModel *model;
     QSortFilterProxyModel *proxyModel;
+    QLineEdit *txtFilter;
+
+    QLabel *lblAero;
+    QPushButton *buttDownload;
 
     //QAction *actEdit;
     QTreeView *tree;
@@ -69,20 +75,21 @@ signals:
 public slots:
 
     void fetch_server();
-    void on_server_data(QScriptValue);
+    void load_data(QScriptValue);
 
-    void on_install_button_clicked(QAbstractButton*);
-    void on_info_button_clicked(QAbstractButton*);
+    void on_butt_download_clicked();
+
+
 
     void on_status_update(QString zip_file, QString status);
 
     void on_request_finished(QNetworkReply *reply);
-    //void on_q_count(int count);
-    //void on_add();
-    //void on_edit();
-    //void on_delete();
 
 
+    void on_filter_text_changed(const QString);
+    void on_clear_filter();
+
+    void on_tree_selection_changed(QItemSelection, QItemSelection);
 
 };
 
