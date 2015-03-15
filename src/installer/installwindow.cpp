@@ -52,7 +52,7 @@ InstallWindow::InstallWindow(MainObject *mob, QWidget *parent) :
 
     //==========================================
     //= Aircraft Tab
-    this->aircraftInstallWidget = new AircraftInstallWidget();
+    this->aircraftInstallWidget = new AircraftInstallWidget(mainObject);
     tabWidget->addTab( this->aircraftInstallWidget, "FG Addon");
 
 

@@ -16,15 +16,17 @@
 #include <QDockWidget>
 #include <QFormLayout>
 
-#include "xobjects/xsettings.h"
+
+
 #include "xwidgets/toolbargroup.h"
 
 #include "installer/aircraftinstallwidget.h"
 
-AircraftInstallWidget::AircraftInstallWidget(QMainWindow *parent) :
+AircraftInstallWidget::AircraftInstallWidget(MainObject *mOb, QMainWindow *parent) :
     QMainWindow(parent)
 {
 
+    mainObject = mOb;
     //==================================
     //= Setup Models
     model = new QStandardItemModel(this);
@@ -138,6 +140,7 @@ AircraftInstallWidget::AircraftInstallWidget(QMainWindow *parent) :
 
     buttDownload = new QPushButton();
     buttDownload->setText("Download");
+    buttDownload->setDisabled(true);
     layForm->addRow("", this->buttDownload);
     connect(buttDownload, SIGNAL(clicked()),
             this, SLOT(on_butt_download_clicked())
@@ -165,23 +168,20 @@ AircraftInstallWidget::AircraftInstallWidget(QMainWindow *parent) :
 
 
 
-    //=================================
-    //== Buttons groups
-    buttGroupInstall = new QButtonGroup(this);
-    connect(    buttGroupInstall, SIGNAL(buttonClicked(QAbstractButton*)),
-                this, SLOT(on_install_button_clicked(QAbstractButton*))
-    );
 
-    buttGroupInfo = new QButtonGroup(this);
-    connect(    buttGroupInfo, SIGNAL(buttonClicked(QAbstractButton*)),
-                this, SLOT(on_info_button_clicked(QAbstractButton*))
-    );
 
     QTimer::singleShot(500, this, SLOT(fetch_server()));
 }
 
 void AircraftInstallWidget::on_tree_selection_changed(QItemSelection sel, QItemSelection desel){
 
+    if(this->tree->selectionModel()->hasSelection() == false){
+        this->buttDownload->setDisabled(true);
+        this->lblAero->setText("");
+        return;
+    }
+
+    this->buttDownload->setDisabled(false);
     QString aero = this->model->itemFromIndex( this->proxyModel->mapToSource(sel.indexes().at(C_SUB_DIR)) )->text();
     this->lblAero->setText(aero);
 }
@@ -190,8 +190,7 @@ void AircraftInstallWidget::on_tree_selection_changed(QItemSelection sel, QItemS
 //== Fetch Server
 void AircraftInstallWidget::fetch_server()
 {
-    QUrl url("http://127.0.0.1/~fg/flightgear-aircraft/index.json");
-    //QUrl url("http://downloads.freeflightsim.org/flightgear-aircraft/index.json");
+    QUrl url( this->mainObject->settings->aircraft_downloads_url("index.json") );
     QNetworkRequest req(url);
     netMan->get(req);
     qDebug() << "requeeted" << url.toString();
@@ -295,7 +294,7 @@ void AircraftInstallWidget::on_request_finished(QNetworkReply *reply){
     qDebug() << "on_request_finished" << reply->request().url().toString();
     QScriptEngine engine;
     QScriptValue json = engine.evaluate( "(" + reply->readAll() + ")");
-    this->on_server_data(json);
+    this->load_data(json);
 }
 
 
@@ -323,9 +322,9 @@ void AircraftInstallWidget::on_butt_download_clicked(){
 
     QString state = "available";
 
-
-
     QString zip_file = lblAero->text();
+    QString sub_dir = lblAero->text();
+    sub_dir.chop(4);
 
     if(  state == "available" ){
 
@@ -347,8 +346,9 @@ void AircraftInstallWidget::on_butt_download_clicked(){
         */
 
         downManWidget->add_download(zip_file,
-                                   XSettings::getInstance().server_url("/download/aircraft/zip/"),
-                                    XSettings::temp(QString("/aero/")));
+                                   this->mainObject->settings->aircraft_downloads_url(sub_dir, zip_file),
+                                   QString("/home/fgx/_TEMP_/")
+                                    );
 
 
 
@@ -360,3 +360,4 @@ void AircraftInstallWidget::on_butt_download_clicked(){
 
     }
     //progressBar->setVisible(true);_
+}

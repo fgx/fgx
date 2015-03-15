@@ -88,9 +88,9 @@ DownloadManagerWidget::DownloadManagerWidget(QWidget *parent) :
 
 //========================================================================================
 //== Add Download
-void DownloadManagerWidget::add_download(QString file_name, QString url_prefix, QString save_dir)
+void DownloadManagerWidget::add_download(QString file_name, QString url, QString save_dir)
 {
-    QString s = make_q_string(file_name,  url_prefix , save_dir );
+    QString s = make_q_string(file_name,  url , save_dir );
     if(downloadQueue.contains(s)){
         return;
     }
@@ -102,7 +102,7 @@ void DownloadManagerWidget::add_download(QString file_name, QString url_prefix, 
     fnt.setBold(true);
     item->setFont(C_FILE, fnt);
 
-    item->setText(C_URL, url_prefix);
+    item->setText(C_URL, url);
     item->setText(C_TEMP, save_dir );
     item->setText(C_Q, s );
 
@@ -140,9 +140,9 @@ void DownloadManagerWidget::remove_download(QString file_name, QString url_prefi
     }
 
 }
-QString DownloadManagerWidget::make_q_string(QString file_name, QString url_prefix, QString save_dir)
+QString DownloadManagerWidget::make_q_string(QString file_name, QString url, QString save_dir)
 {
-    return QString(file_name).append( SEP ).append( url_prefix ).append( SEP ).append( save_dir );
+    return QString(file_name).append( SEP ).append( url ).append( SEP ).append( save_dir );
 }
 
 
@@ -174,7 +174,7 @@ void DownloadManagerWidget::startNextDownload()
     QString s = downloadQueue.dequeue();
     QStringList list = s.split(SEP);
     QString file_name = list.at(0);
-    QString url_path = list.at(1);
+    QString zip_url = list.at(1);
     QString temp_path = list.at(2);
 
     //QString filename = saveFileName(url);
@@ -186,7 +186,7 @@ void DownloadManagerWidget::startNextDownload()
         return;                 // skip this download
     }
 
-    QUrl url( XSettings::aircraft_downloads_url( url_path, file_name) );
+    QUrl url(zip_url );
     qDebug() << url.toString();
     QNetworkRequest req(url);
 

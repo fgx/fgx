@@ -23,7 +23,8 @@
 //#include "xwidgets/xstatusbar.h"
 //class XStatusBar;
 
-//#include "installer/servercall.h"
+#include "xobjects/mainobject.h"
+class MainObject;
 
 #include "installer/downloadmanagerwidget.h"
 class DownloadManagerWidget;
@@ -32,7 +33,7 @@ class AircraftInstallWidget : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit AircraftInstallWidget(QMainWindow *parent = 0);
+    explicit AircraftInstallWidget(MainObject *mob, QMainWindow *parent = 0);
 
     //hLabels << "Dir" << "Aero" << "Description" << "Author" << "Size" << "Hash" << "Updated"  << "status" << "Filter";
     enum COLS{
@@ -47,6 +48,7 @@ public:
         C_FILTER
     };
 
+    MainObject *mainObject;
     QNetworkAccessManager *netMan;
 
     QStandardItemModel *model;
@@ -62,10 +64,6 @@ public:
 
     DownloadManagerWidget *downManWidget;
 
-    //ServerCall *server;
-    //XStatusBar *statusBar;
-    QButtonGroup *buttGroupInstall;
-    QButtonGroup *buttGroupInfo;
 
     QList<QStandardItem*> create_model_row();
 

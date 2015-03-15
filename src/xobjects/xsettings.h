@@ -45,8 +45,9 @@ public:
     QString style_current();
     QString style_default();
 
-    static QString aircraft_downloads_url();
-    static QString aircraft_downloads_url(QString append_1, QString append_2);
+    QString aircraft_downloads_url();
+    QString aircraft_downloads_url(QString file);
+    QString aircraft_downloads_url(QString dir, QString file);
 
 private:
     QString _windowName(QWidget *widget);
