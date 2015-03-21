@@ -87,10 +87,16 @@ MainObject::MainObject(QObject *parent) :
     actionLauncher->setIconVisibleInMenu(true);
     connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
 
+    //= Installer Action
+    actionInstaller = popupMenu->addAction(QIcon(":icon/install"), tr("Open Installer..."));
+    actionInstaller->setIconVisibleInMenu(true);
+    connect(actionInstaller, SIGNAL(triggered()), this, SLOT(on_installer()) );
+
     //= Browser MpMap action
     actionBrowserMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Browser Map ..."));
     actionBrowserMap->setIconVisibleInMenu(true);
     connect(actionBrowserMap, SIGNAL(triggered()), this, SLOT(on_browsermap()));
+
 
 
     //== Properties browseer
@@ -141,22 +147,23 @@ MainObject::MainObject(QObject *parent) :
 
 
     //== Web Links
+    // @TODO: Change these to macros
     QMenu *menuHelp = new QMenu(tr("Help"));
     popupMenu->addMenu(menuHelp);
 
     QActionGroup *actionGroupUrls = new QActionGroup(this);
     connect(actionGroupUrls, SIGNAL(triggered(QAction*)), this, SLOT(on_action_open_url(QAction*)));
 
-    QAction *act = menuHelp->addAction(tr("Project Page"));
-    act->setProperty("url", "http://code.google.com/p/fgx");
+    QAction *act = menuHelp->addAction(tr("FGx Website"));
+    act->setProperty("url", APP_WWW);
     actionGroupUrls->addAction(act);
 
     act = menuHelp->addAction(tr("Bugs and Issues"));
-    act->setProperty("url", "http://code.google.com/p/fgx/issues/list");
+    act->setProperty("url", APP_ISSUES);
     actionGroupUrls->addAction(act);
 
     act = menuHelp->addAction(tr("Source Code"));
-    act->setProperty("url", "https://gitorious.org/fgx/fgx/");
+    act->setProperty("url", APP_PROJECT);
     actionGroupUrls->addAction(act);
 
     menuHelp->addSeparator();
@@ -194,10 +201,11 @@ MainObject::MainObject(QObject *parent) :
         fgxDebugWidget->show();
     }
 
+    //= Main launcher window
     launcherWindow = new LauncherWindow(this);
     launcherWindow->hide();
 
-
+    //= Install Window
     installWindow = new InstallWindow(this);
     installWindow->show();
 
@@ -216,9 +224,8 @@ MainObject::~MainObject()
 //============================================================================
 //= Initialize
 void MainObject::initialize(){
-    //on_launcher();
-
-
+    on_launcher();
+    trayIcon->showMessage("FGx", "Click on this icon for more windows", QSystemTrayIcon::Information, 10000);
 }
 
 //============================================================================
@@ -234,6 +241,14 @@ void MainObject::on_launcher(){
 
 }
 
+//============================================================================
+//=  Installer window
+void MainObject::on_installer(){
+
+    installWindow->show();
+    installWindow->raise();
+
+}
 
 //****************************************************************************
 //** Browser Map
