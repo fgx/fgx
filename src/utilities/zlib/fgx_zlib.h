@@ -38,6 +38,7 @@
 
 #ifndef ZLIB_H
 #define ZLIB_H
+#define _ZLIB_H
 #define FGX_ZLIB_H  /* modified version just for FGx */
 
 #include "fgx_zconf.h"
