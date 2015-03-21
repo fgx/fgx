@@ -154,16 +154,16 @@ MainObject::MainObject(QObject *parent) :
     QActionGroup *actionGroupUrls = new QActionGroup(this);
     connect(actionGroupUrls, SIGNAL(triggered(QAction*)), this, SLOT(on_action_open_url(QAction*)));
 
-    QAction *act = menuHelp->addAction(tr("Project Page"));
-    act->setProperty("url", "http://code.google.com/p/fgx");
+    QAction *act = menuHelp->addAction(tr("FGx Website"));
+    act->setProperty("url", APP_WWW);
     actionGroupUrls->addAction(act);
 
     act = menuHelp->addAction(tr("Bugs and Issues"));
-    act->setProperty("url", "http://code.google.com/p/fgx/issues/list");
+    act->setProperty("url", APP_ISSUES);
     actionGroupUrls->addAction(act);
 
     act = menuHelp->addAction(tr("Source Code"));
-    act->setProperty("url", "https://gitorious.org/fgx/fgx/");
+    act->setProperty("url", APP_PROJECT);
     actionGroupUrls->addAction(act);
 
     menuHelp->addSeparator();
@@ -225,6 +225,7 @@ MainObject::~MainObject()
 //= Initialize
 void MainObject::initialize(){
     on_launcher();
+    trayIcon->showMessage("FGx", "Click on this icon for more windows", QSystemTrayIcon::Information, 10000);
 }
 
 //============================================================================
