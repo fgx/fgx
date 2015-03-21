@@ -368,12 +368,47 @@ typedef uLong FAR uLongf;
    typedef Byte       *voidp;
 #endif
 
+#if !defined(Z_U4) && !defined(Z_SOLO) && defined(STDC)
+#  include <limits.h>
+#  if (UINT_MAX == 0xffffffffUL)
+#    define Z_U4 unsigned
+#  elif (ULONG_MAX == 0xffffffffUL)
+#    define Z_U4 unsigned long
+#  elif (USHRT_MAX == 0xffffffffUL)
+#    define Z_U4 unsigned short
+#  endif
+#endif
+
+#ifdef Z_U4
+   typedef Z_U4 z_crc_t;
+#else
+   typedef unsigned long z_crc_t;
+#endif
+
 #ifdef HAVE_UNISTD_H    /* may be set to #if 1 by ./configure */
 #  define Z_HAVE_UNISTD_H
 #endif
 
+#ifdef HAVE_STDARG_H    /* may be set to #if 1 by ./configure */
+#  define Z_HAVE_STDARG_H
+#endif
+
 #ifdef STDC
-#  include <sys/types.h>    /* for off_t */
+#  ifndef Z_SOLO
+#    include <sys/types.h>    /* for off_t */
+#  endif
+#endif
+
+#if defined(STDC) || defined(Z_HAVE_STDARG_H)
+#  ifndef Z_SOLO
+#    include <stdarg.h>         /* for va_list */
+#  endif
+#endif
+
+#ifdef _WIN32
+#  ifndef Z_SOLO
+#    include <stddef.h>         /* for wchar_t */
+#  endif
 #endif
 
 /* a little trick to accommodate both "#define _LARGEFILE64_SOURCE" and
