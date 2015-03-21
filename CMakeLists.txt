@@ -63,10 +63,15 @@ endif()
 
 
 if (MSVC)
+    set(WARNING_FLAGS "${WARNING_FLAGS} /wd4996")
+    # foreach(warning 4244 4251 4267 4275 4290 4786 4305)
+    #     set(WARNING_FLAGS "${WARNING_FLAGS} /wd${warning}")
+    # endforeach(warning)
+    set( MSVC_FLAGS "-DNOMINMAX -D_USE_MATH_DEFINES -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -D__CRT_NONSTDC_NO_WARNINGS" )
     # to distinguish between debug and release lib
     set( CMAKE_DEBUG_POSTFIX d )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARNING_FLAGS} ${MSVC_FLAGS} -D_REENTRANT" )
 endif ()
-
 
 # Add LINUX or WINDOWS definitions
 if(UNIX)
@@ -258,6 +263,35 @@ set( fgx_RCS
     src/resources/default.qrc
     )
 
+####################################
+### add contrib stuff
+####################################
+set(name libminizip)
+set(dir src/utilities/minizip)
+include_directories( ${dir} )   # and so it can be found
+add_definitions( -DFGX_ZLIB )   # signal using built-in zlib, so use fgx_zlib.h
+set(${name}_SOURCES
+    ${dir}/ioapi.c
+    ${dir}/mztools.c
+    ${dir}/unzip.c
+    ${dir}/zip.c
+    )
+set(${name}_HEADERS
+    ${dir}/crypt.h
+    ${dir}/ioapi.h
+    ${dir}/mztools.h
+    ${dir}/unzip.h
+    ${dir}/zip.h
+    )
+if (WIN32)
+    list(APPEND ${name}_SOURCES ${dir}/iowin32.c)
+    list(APPEND ${name}_HEADERS ${dir}/iowin32.h)
+endif ()
+list(APPEND fgx_SRCS ${${name}_SOURCES})
+list(APPEND fgx_HDRS ${${name}_HEADERS})
+list(APPEND fgx_SRCS src/utilities/fgx_unz.cpp )
+list(APPEND fgx_HDRS src/utilities/fgx_unz.h )
+    
 #=====================================================
 ## Directories
 include_directories(
