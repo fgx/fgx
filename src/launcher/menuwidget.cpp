@@ -294,15 +294,10 @@ void MenuWidget::on_menu_fgx_github(){
     QDesktopServices::openUrl( QUrl(APP_PROJECT) );
 }
 
-/**
- * @todo Create the help text
- */
 void MenuWidget::on_menu_fgx_version_info(){
-    QString s = "Version : ";
-    s.append(APP_VERSION);
-    QMessageBox::about(this, "About FGx", s);
+    this->mainObject->on_about_fgx();
 }
 
 void MenuWidget::on_menu_qt_version_info(){
-    QMessageBox::aboutQt(this, "About Qt");
+   this->mainObject->on_about_qt();
 }
