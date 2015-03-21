@@ -19,9 +19,9 @@ list(GET VERSION_LIST 1 APP_MINOR_VERSION)
 list(GET VERSION_LIST 2 APP_POINT_VERSION)
 
 #=======================================================
-## Setup  APP macros
+# APP macros
 # This block assign values for final use in application
-# the definitions such as as source links contact are here
+# the definitions such as as source, links, contacts etc are here
 
 add_definitions( -DAPP_VERSION="${APP_VERSION}" )
 
@@ -303,7 +303,9 @@ install(TARGETS fgx DESTINATION bin )
 
 
 #==============================================================
-# Determine which branch we on
+# GIT data
+# Determine which branch were on as this
+# sets APP_RELEASE, eg stable vs unstable
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
   execute_process(
@@ -325,6 +327,7 @@ else(GIT_BRANCH STREQUAL "next")
     set(APP_RELEASE "stable")
 endif(GIT_BRANCH STREQUAL "next")
 message(STATUS "*** app release: ${APP_RELEASE}")
+
 
 ##======================================================================
 ## cpack - Packaging and Installers
