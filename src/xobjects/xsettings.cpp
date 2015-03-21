@@ -152,7 +152,7 @@ QString XSettings::cache_dir(){
 }
 
 QString XSettings::aircraft_downloads_url(){
-    return QString("http://localhost/~fg/flightgear-aircraft/");
+    return QString("http://127.0.0.1/~fg/flightgear-aircraft/");
     //return QString("http://downloads.freeflightsim.org/flightgear-aircraft/");
 }
 QString XSettings::aircraft_downloads_url(QString file){

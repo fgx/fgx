@@ -91,6 +91,7 @@ DownloadManagerWidget::DownloadManagerWidget(QWidget *parent) :
 void DownloadManagerWidget::add_download(QString file_name, QString url, QString save_dir)
 {
     QString s = make_q_string(file_name,  url , save_dir );
+    qDebug() << "add_download" << s;
     if(downloadQueue.contains(s)){
         return;
     }
@@ -115,7 +116,7 @@ void DownloadManagerWidget::add_download(QString file_name, QString url, QString
 
     downloadQueue.enqueue(s);
     emit status_update(file_name, "queued");
-
+    qDebug() << "========" << downloadQueue.count();
     this->startNextDownload();
 }
 
@@ -153,7 +154,7 @@ void DownloadManagerWidget::startNextDownload()
 
 
     qDebug() << "check_q=" <<  downloadQueue.count();
-    return;
+
     //lblQueuedCount->setText(downloadQueue.isEmpty() ? "None" : QString::number(downloadQueue.count()));
     //emit q_count(items);
 
@@ -178,6 +179,7 @@ void DownloadManagerWidget::startNextDownload()
     QString temp_path = list.at(2);
 
     //QString filename = saveFileName(url);
+    qDebug() << temp_path.append(file_name);
     fileOut.setFileName(temp_path.append(file_name));
     if (!fileOut.open(QIODevice::WriteOnly)) {
         qDebug() << "ERROR cannot open";
@@ -186,7 +188,7 @@ void DownloadManagerWidget::startNextDownload()
         return;                 // skip this download
     }
 
-    QUrl url(zip_url );
+    QUrl url( zip_url );
     qDebug() << url.toString();
     QNetworkRequest req(url);
 

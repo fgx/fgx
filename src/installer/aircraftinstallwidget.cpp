@@ -347,7 +347,7 @@ void AircraftInstallWidget::on_butt_download_clicked(){
 
         downManWidget->add_download(zip_file,
                                    this->mainObject->settings->aircraft_downloads_url(sub_dir, zip_file),
-                                   QString("/home/fgx/_TEMP_/")
+                                   QString("/home/fgxx/_TEMP_/")
                                     );
 
 

@@ -28,7 +28,7 @@ add_definitions( -DAPP_VERSION="${APP_VERSION}" )
 set(APP_SHORT "FGx")
 add_definitions( -DAPP_SHORT="${APP_SHORT}" )
 
-set(APP_ONE_LINER "FGX - cross-plafrom launcher for FlightGear")
+set(APP_ONE_LINER "FGx - A cross-plafrom launcher for FlightGear")
 add_definitions( -DAPP_ONE_LINER="${APP_ONE_LINER}" )
 
 set(APP_ORG "FGx Team")
@@ -366,7 +366,7 @@ set(CPACK_NSIS_PACKAGE_NAME "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 set(CPACK_NSIS_HELP_LINK ${APP_WWW})
 set(CPACK_NSIS_URL_INFO_ABOUT ${APP_WWW})
 
-
+## Geoff - need to decide on the packnames (prefer 32bit vs i86 for idiots)
 if(UNIX)
     set( CPACK_PACKAGE_FILE_NAME "fgx-${CPACK_PACKAGE_VERSION}-linux-${BITNESS}bit-${APP_RELEASE}" )
     ##  logo
