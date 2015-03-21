@@ -139,7 +139,7 @@ AircraftInstallWidget::AircraftInstallWidget(MainObject *mOb, QMainWindow *paren
     layForm->addRow("Aero", this->lblAero);
 
     buttDownload = new QPushButton();
-    buttDownload->setText("Download");
+    buttDownload->setText("Add to Queue");
     buttDownload->setDisabled(true);
     layForm->addRow("", this->buttDownload);
     connect(buttDownload, SIGNAL(clicked()),

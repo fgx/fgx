@@ -87,10 +87,16 @@ MainObject::MainObject(QObject *parent) :
     actionLauncher->setIconVisibleInMenu(true);
     connect(actionLauncher, SIGNAL(triggered()), this, SLOT(on_launcher()) );
 
+    //= Installer Action
+    actionInstaller = popupMenu->addAction(QIcon(":icon/install"), tr("Open Installer..."));
+    actionInstaller->setIconVisibleInMenu(true);
+    connect(actionInstaller, SIGNAL(triggered()), this, SLOT(on_installer()) );
+
     //= Browser MpMap action
     actionBrowserMap = popupMenu->addAction(QIcon(":icon/mpmap"), tr("Open Browser Map ..."));
     actionBrowserMap->setIconVisibleInMenu(true);
     connect(actionBrowserMap, SIGNAL(triggered()), this, SLOT(on_browsermap()));
+
 
 
     //== Properties browseer
@@ -141,6 +147,7 @@ MainObject::MainObject(QObject *parent) :
 
 
     //== Web Links
+    // @TODO: Change these to macros
     QMenu *menuHelp = new QMenu(tr("Help"));
     popupMenu->addMenu(menuHelp);
 
@@ -194,10 +201,11 @@ MainObject::MainObject(QObject *parent) :
         fgxDebugWidget->show();
     }
 
+    //= Main launcher window
     launcherWindow = new LauncherWindow(this);
     launcherWindow->hide();
 
-
+    //= Install Window
     installWindow = new InstallWindow(this);
     installWindow->show();
 
@@ -216,9 +224,7 @@ MainObject::~MainObject()
 //============================================================================
 //= Initialize
 void MainObject::initialize(){
-    //on_launcher();
-
-
+    on_launcher();
 }
 
 //============================================================================
@@ -234,6 +240,14 @@ void MainObject::on_launcher(){
 
 }
 
+//============================================================================
+//=  Installer window
+void MainObject::on_installer(){
+
+    installWindow->show();
+    installWindow->raise();
+
+}
 
 //****************************************************************************
 //** Browser Map

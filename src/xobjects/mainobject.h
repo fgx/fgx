@@ -112,6 +112,7 @@ public:
     QLabel *lblCallsign;
 
     QAction *actionLauncher;
+    QAction *actionInstaller;
     QAction *actionMpMap;
     QAction *actionPropsBrowser;
     QAction *actionSetupWizard;
@@ -139,6 +140,7 @@ public slots:
     void on_tray_icon(QSystemTrayIcon::ActivationReason reason);
 
     void on_launcher();
+    void on_installer();
     void on_browsermap();
     void on_properties_browser();
 
