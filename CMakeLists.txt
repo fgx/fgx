@@ -291,7 +291,7 @@ list(APPEND fgx_SRCS ${${name}_SOURCES})
 list(APPEND fgx_HDRS ${${name}_HEADERS})
 list(APPEND fgx_SRCS src/utilities/fgx_unz.cpp )
 list(APPEND fgx_HDRS src/utilities/fgx_unz.h )
-    
+
 #=====================================================
 ## Directories
 include_directories(
@@ -355,11 +355,11 @@ else(EXISTS "${CMAKE_SOURCE_DIR}/.git")
 endif(EXISTS "${CMAKE_SOURCE_DIR}/.git")
 
 message(STATUS "*** Git current branch: ${GIT_BRANCH}")
-if( GIT_BRANCH STREQUAL "next" )
-    set(APP_RELEASE "unstable")
-else(GIT_BRANCH STREQUAL "next")
+if( GIT_BRANCH STREQUAL "master" )
     set(APP_RELEASE "stable")
-endif(GIT_BRANCH STREQUAL "next")
+else()
+    set(APP_RELEASE "unstable")
+endif()
 message(STATUS "*** app release: ${APP_RELEASE}")
 
 
