@@ -18,13 +18,23 @@
 
 
 /*! \class XSettingsModel
- * \brief The XSettingsModel is an extended QStandardItemModel, and the main "setting and state" for FGx
+ * \brief The XSettingsModel is an extended QStandardItemModel, and the main "setting and state" for the Launcher.
+ *
+ * - The globally accessible instance is via MainObject#X (Can't remember why it ended up as X, but is nice and short).
+ * - The state of the model is viewable via the
+ * - fgfs options are intialised in the #XSettingsModel() contructor by calling the add_option() function
+ * - The upx() signal and set_option() slot are the primary way to share data and are generally seen througout the code as:-
+ *     \code
+ *      connect(this,          SIGNAL(setx(QString, bool, QString)),
+ *      mainObject->X, SLOT(set_option(QString, bool, QString)) );
+ *
+ *      connect(mainObject->X, SIGNAL(upx(QString, bool, QString)),
+ *      this,          SLOT(on_upx(QString, bool, QString)));
+ *     \endcode
+ * - The 'state' of model is saved to ini file using XSettingsModel::save_file(), and are loaded with XSettingsModel::load_profile()
  *
  *
- * @authors: Peter Morgan
  */
-
-
 
 XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
     QStandardItemModel(parent)
@@ -52,6 +62,7 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
     //==================
     add_option("fgfs_path", false,"","",0,"","paths");
     add_option("fgroot_path", false,"","",0,"","paths");
+    add_option("fgx_workspace_path", false,"","",0,"","paths");
     add_option("terrasync_enabled", false,"","",0,"","paths");
     add_option("terrasync_exe_path", false,"","",0,"","paths");
     add_option("terrasync_data_path", false,"","",0,"","paths");
@@ -173,8 +184,12 @@ XSettingsModel::XSettingsModel(MainObject *mob, QObject *parent) :
 
 
 
-//==================================================
-// == Add an Option
+/*!
+  * \brief Add an option and is called multiple times in the contructor; creates and appends a row to the model.
+  *
+  * \note Options will not be saved, unless they are first 'declared' with this function
+  *
+  */
 void XSettingsModel::add_option( QString option, bool enabled, QString value, QString preset, int level, QString description, QString area)
 {
     Q_UNUSED(value); //= Uses preset intead
@@ -755,6 +770,12 @@ QString XSettingsModel::fgfs_path(){
     }
 
 
+}
+
+/** \brief Path to fgx workspace
+ */
+QString XSettingsModel::fgx_workspace_path(){
+    return QString(getx("fgx_workspace_path"));
 }
 
 //===========================================================================

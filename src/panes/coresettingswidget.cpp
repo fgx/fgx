@@ -33,6 +33,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
     mainObject = mOb;
 
     fgrootcheck = false;
+    strFgFsExeLabel = this->mainObject->runningOs() == OS_WINDOWS ? "fgfs.exe" : "fgfs";
 
     QHBoxLayout *mainLayout = new QHBoxLayout();
     setLayout(mainLayout);
@@ -81,76 +82,105 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
     QVBoxLayout *layoutPaths = new QVBoxLayout();
     layoutMiddle->addLayout(layoutPaths);
 
+
     //----------------------------------------------
     //= FlightGear box
-
-    XGroupVBox *grpFgfs = new XGroupVBox("FlightGear program and data");
-    layoutPaths->addWidget(grpFgfs,2);
+    XGroupVBox *grpFgfs = new XGroupVBox("FlightGear Program");
+    layoutPaths->addWidget(grpFgfs, 2);
 
     //----------------------------------------------
     //= FlightGear executable (fgfs)
+    QString slbl = QString("Path to the `%1` application:").arg (  this->strFgFsExeLabel);
+    labelFgfsProgram = new QLabel(slbl);
+    grpFgfs->addWidget(labelFgfsProgram);
 
-    labelFgfsProgram = new QLabel("Path to FlightGear program (fgfs):");
-    labelFgfsCheck = new QLabel("");
+    QHBoxLayout *fgfsPathBox = new QHBoxLayout();
+    grpFgfs->addLayout(fgfsPathBox);
 
     //#lineEditFgFsPath = new QLineEdit("");
     //lineEditFgFsPath->setFixedSize(QSize(240,20));
     comboFgFsPath = new QComboBox();
-    comboFgFsPath->setFixedSize(QSize(240,20));
+    //comboFgFsPath->setFixedSize(QSize(240,20));
     comboFgFsPath->setEditable(true);
+    comboFgFsPath->setEditText( mainObject->X->fgfs_path() );
+    fgfsPathBox->addWidget(comboFgFsPath, 2);
+
+    labelFgfsCheck = new QLabel("");
+    fgfsPathBox->addWidget(labelFgfsCheck);
 
     buttonSetFgfsPath = new QToolButton();
     buttonSetFgfsPath->setFixedSize(20,20);
     buttonSetFgfsPath->setIcon(QIcon(":/icon/path"));
-    grpFgfs->addWidget(labelFgfsProgram);
-
-
-    QHBoxLayout *fgfsPathBox = new QHBoxLayout();
-    fgfsPathBox->addWidget(comboFgFsPath);
-    fgfsPathBox->addWidget(labelFgfsCheck);
     fgfsPathBox->addWidget(buttonSetFgfsPath);
-    grpFgfs->addLayout(fgfsPathBox);
-    comboFgFsPath->setEditText( mainObject->X->fgfs_path() );
 
-    // "Set" clicked
-    connect( buttonSetFgfsPath, SIGNAL(clicked()),this, SLOT(on_select_fgfsbutton()) );
 
-    //Check if path exists, set pixmap, emit setting
-    connect(comboFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(fgfs_check_path()));
-    connect(comboFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(on_fgfs_path(QString)));
-    connect(buttonSetFgfsPath, SIGNAL(clicked()), this, SLOT(fgfs_set_path()));
+    connect(comboFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(check_fgfs_path()));
+    connect(comboFgFsPath, SIGNAL(textChanged(QString)), this, SLOT(on_fgfs_path_changed(QString)));
+    connect(buttonSetFgfsPath, SIGNAL(clicked()),this, SLOT(on_select_fgfs_clicked()) );
 
     //----------------------------------------------
-    //= FlightGear Root Data Directory (/fgdata)
+    //= Base Data Directory (/fgdata)
+    //----------------------------------------------
+    XGroupVBox *grpFgdata = new XGroupVBox("FlightGear Data");
+    layoutPaths->addWidget(grpFgdata, 2);
 
-    labelFgRootData = new QLabel("Path to FlightGear data directory (fgdata): ");
-    labelFgRootCheck = new QLabel("");
+    labelFgRootData = new QLabel("Path to data directory (fgdata): ");
+    grpFgdata->addWidget(labelFgRootData);
+
+    QHBoxLayout *fgfsRootBox = new QHBoxLayout();
+    grpFgdata->addLayout(fgfsRootBox);
+
     lineEditFgRootPath = new QLineEdit("");
-    lineEditFgRootPath->setFixedSize(QSize(240,20));
+    //lineEditFgRootPath->setFixedSize(QSize(240,20));
+    lineEditFgRootPath->setText( mainObject->X->fgroot() );
+    fgfsRootBox->addWidget(lineEditFgRootPath, 2);
+
+    labelFgRootCheck = new QLabel("");
+    fgfsRootBox->addWidget(labelFgRootCheck);
+
     buttonSetFgRootPath = new QToolButton();
     buttonSetFgRootPath->setFixedSize(20,20);
     buttonSetFgRootPath->setIcon(QIcon(":/icon/path"));
-    grpFgfs->addWidget(labelFgRootData);
-
-    QHBoxLayout *fgfsRootBox = new QHBoxLayout();
-    fgfsRootBox->addWidget(lineEditFgRootPath);
-    fgfsRootBox->addWidget(labelFgRootCheck);
     fgfsRootBox->addWidget(buttonSetFgRootPath);
-    grpFgfs->addLayout(fgfsRootBox);
-    lineEditFgRootPath->setText( mainObject->X->fgroot() );
 
-    // "Set" clicked
-    connect( buttonSetFgRootPath, SIGNAL(clicked()),this, SLOT(on_select_fgrootbutton()) );
+    connect(buttonSetFgRootPath, SIGNAL(clicked()),this, SLOT(on_select_fgroot_clicked()) );
+    connect(lineEditFgRootPath, SIGNAL(textChanged(QString)), this, SLOT(on_fgroot_path_changed(QString)));
+
+
+
+    //----------------------------------------------
+    //= FGX Workspace
+    //----------------------------------------------
+    XGroupVBox *grpFgxWs = new XGroupVBox("FGx Workspace");
+    layoutPaths->addWidget(grpFgxWs, 2);
+
+    labelFgxWsData = new QLabel("Path to a fgx workspace directory for downloads etc");
+    grpFgxWs->addWidget(labelFgxWsData);
+
+    QHBoxLayout *fgxWsBox = new QHBoxLayout();
+    grpFgxWs->addLayout(fgxWsBox);
+
+    lineEditFgxWsPath = new QLineEdit("");
+    //lineEditFgxWsPath->setFixedSize(QSize(240,20));
+    fgxWsBox->addWidget(lineEditFgxWsPath, 2);
+
+    labelFgxWsCheck = new QLabel("");
+    fgxWsBox->addWidget(labelFgxWsCheck);
+
+    buttonSetFgxWsPath = new QToolButton();
+    buttonSetFgxWsPath->setFixedSize(20,20);
+    buttonSetFgxWsPath->setIcon(QIcon(":/icon/path"));
+    fgxWsBox->addWidget(buttonSetFgxWsPath);
 
     //Check if path exists and set pixmap
-    connect(lineEditFgRootPath, SIGNAL(textChanged(QString)), this, SLOT(fgroot_check_path()));
-    connect(lineEditFgRootPath, SIGNAL(textChanged(QString)), this, SLOT(on_fgroot_path(QString)));
-    connect(buttonSetFgRootPath, SIGNAL(clicked()), this, SLOT(fgroot_set_path()));
+
+    connect(lineEditFgxWsPath, SIGNAL(textChanged(QString)), this, SLOT(on_fgx_workspace_path_changed(QString)));
+    connect(buttonSetFgxWsPath, SIGNAL(clicked()), this, SLOT(on_select_fgx_workspace_clicked()));
 
 
     //----------------------------------------------
     //= Scenery box
-
+    //----------------------------------------------
     XGroupVBox *grpScene = new XGroupVBox("Scenery program and data");
     layoutPaths->addWidget(grpScene,2);
 
@@ -279,18 +309,6 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
     connect(comboMpMapServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_show_mp_map()));
     layoutRight->addStretch(20);
 
-    //----------------------------------------------
-    //= FGCom Executable (fgcom)
-
-    //labelFGComExeInfo = new QLabel(tr("FGCom executable (fgcom):"));
-    //grpFgPaths->addWidget(labelFGComExeInfo, 1);
-
-    //lineEditFGComExePath = new QLineEdit("");
-    //lineEditFGComExePath->setStyleSheet(style_paths);
-    //lineEditFGComExePath->setFixedSize(QSize(280,20));
-    //grpFgPaths->addWidget(lineEditFGComExePath);
-
-    //lineEditFGComExePath->setText(mainObject->X->fgcom_exe_path());
 
 
 
@@ -438,17 +456,29 @@ void CoreSettingsWidget::on_show_mp_map(){
 
 //=====================================
 // Emit fgfs path
-void CoreSettingsWidget::on_fgfs_path(QString txt)
+void CoreSettingsWidget::on_fgfs_path_changed(QString txt)
 {
-    emit( mainObject->X->set_option("fgfs_path", true, txt));
+    this->set_fgfs_path();
+    this->check_fgfs_path();
 }
 
 //=====================================
 // Emit fgroot path
-void CoreSettingsWidget::on_fgroot_path(QString txt)
+void CoreSettingsWidget::on_fgroot_path_changed(QString txt)
 {
     emit( setx("fgroot_path", true, txt));
 }
+
+
+//=====================================
+// Emit fgroot path
+void CoreSettingsWidget::on_fgx_workspace_path_changed(QString txt_ignore)
+{
+    Q_UNUSED(txt_ignore);
+    this->set_fgx_workspace_path();
+    this->check_fgx_workspace_path();
+}
+
 
 //=====================================
 // Emit terrasync path
@@ -511,14 +541,16 @@ void CoreSettingsWidget::custom_scenery_enabled_checkstate()
 // Update Settings
 //======================================================================
 
-void CoreSettingsWidget::fgfs_set_path() {
+void CoreSettingsWidget::set_fgfs_path() {
     emit setx("fgfs_path", true, comboFgFsPath->currentText());
 }
 
-void CoreSettingsWidget::fgroot_set_path() {
-    emit setx("fgroot_path", true, comboFgFsPath->currentText());
+void CoreSettingsWidget::set_fgroot_path() {
+    emit setx("fgroot_path", true, lineEditFgRootPath->text());
 }
-
+void CoreSettingsWidget::set_fgx_workspace_path() {
+    emit setx("fgx_workspace_path", true, lineEditFgxWsPath->text());
+}
 void CoreSettingsWidget::terrasyncexe_set_path() {
     emit setx("terrasync_exe_path", true, lineEditTerraSyncExePath->text());
 }
@@ -563,6 +595,9 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
     }else if(option == "terrasync_data_path"){
         lineEditTerraSyncDataPath->setText(mainObject->X->terrasync_data_path());
 
+    }else if(option == "fgx_workspace_path"){
+        lineEditFgxWsPath->setText(mainObject->X->fgx_workspace_path());
+
     }else if(option == "custom_scenery_path"){
         lineEditCustomScenePath->setText(enabled ? value : mainObject->X->custom_scenery_path());
     }
@@ -573,10 +608,10 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 // Check paths and give some feedback
 //======================================================================
 
-void CoreSettingsWidget::fgfs_check_path()
+void CoreSettingsWidget::check_fgfs_path()
 {
-    bool fgfs_exists = QFile::exists(comboFgFsPath->currentText());
-    if (fgfs_exists) {
+    bool exists = QFile::exists(comboFgFsPath->currentText());
+    if (exists) {
         labelFgfsCheck->setPixmap(QPixmap(":/icon/ok"));
     } else {
         labelFgfsCheck->setPixmap(QPixmap(":/icon/not-ok"));
@@ -584,18 +619,27 @@ void CoreSettingsWidget::fgfs_check_path()
 
 }
 
-void CoreSettingsWidget::fgroot_check_path()
+void CoreSettingsWidget::check_fgroot_path()
 {
     // NEW: check if "version" file exists in folder.
     // Without this file also fgfs won’t start
     // Needs a version check later ...
-    bool fgroot_exists = QFile::exists(lineEditFgRootPath->text()+"/version");
-    if (fgroot_exists) {
+    bool exists = QFile::exists(lineEditFgRootPath->text() + "/version");
+    if (exists) {
         labelFgRootCheck->setPixmap(QPixmap(":/icon/ok"));
-        fgrootcheck = true;
+        this->fgrootcheck = true;
     } else {
         labelFgRootCheck->setPixmap(QPixmap(":/icon/not-ok"));
-        fgrootcheck = false;
+        this->fgrootcheck = false;
+    }
+}
+void CoreSettingsWidget::check_fgx_workspace_path()
+{
+    bool exists = QFile::exists(lineEditFgxWsPath->text());
+    if (exists) {
+        labelFgxWsCheck->setPixmap(QPixmap(":/icon/ok"));
+    } else {
+        labelFgxWsCheck->setPixmap(QPixmap(":/icon/not-ok"));
     }
 
 }
@@ -638,25 +682,28 @@ void CoreSettingsWidget::custom_scenery_check_path()
 // Set paths with buttons
 //======================================================================
 
-void CoreSettingsWidget::on_select_fgfsbutton()
+void CoreSettingsWidget::on_select_fgfs_clicked()
 
 {
+    QString title = QString("Select FlightGear binary (%1)").arg(this->strFgFsExeLabel);
 #ifdef USE_ALTERNATE_GETFILE
-    QString filePathFgfs = util_getFileName((QWidget *)this, tr("Select FlightGear binary (fgfs)"),
-                                            comboFgFsPath->text());
+    QString filePathFgfs = util_getFileName((QWidget *)this,
+                                             title ,
+                                            comboFgFsPath->currentText());
 #else // !#ifdef USE_ALTERNATE_GETFILE
-    QString filePathFgfs = QFileDialog::getOpenFileName(this, tr("Select FlightGear binary (fgfs)"),
-    comboFgFsPath->currentText());
+    QString filePathFgfs = QFileDialog::getOpenFileName(this, title, comboFgFsPath->currentText());
 #endif // #ifdef USE_ALTERNATE_GETFILE y/n
         if(filePathFgfs.length() > 0){
             comboFgFsPath->setEditText(filePathFgfs);
+            check_fgfs_path();
+            this->set_fgfs_path();
         }
 
-    fgfs_check_path();
+
+
 }
 
-void CoreSettingsWidget::on_select_fgrootbutton()
-
+void CoreSettingsWidget::on_select_fgroot_clicked()
 {
 #ifdef USE_ALTERNATE_GETFILE
     QString dirPathFgRoot = util_getDirName(this, tr("Select FlightGear data directory (fgdata)"),
@@ -668,12 +715,28 @@ void CoreSettingsWidget::on_select_fgrootbutton()
 
     if(dirPathFgRoot.length() > 0){
         lineEditFgRootPath->setText(dirPathFgRoot);
+        check_fgroot_path();
+        this->set_fgroot_path();
     }
-    fgroot_check_path();
+
     if (fgrootcheck == true) {
         reload_lists();
     }
 }
+
+
+void CoreSettingsWidget::on_select_fgx_workspace_clicked(){
+    QString dirPathFgxWs = QFileDialog::getExistingDirectory(this, tr("Select FGx Workslpace directory "),
+                                                              lineEditFgxWsPath->text(), QFileDialog::ShowDirsOnly);
+    if(dirPathFgxWs.length() > 0){
+        lineEditFgxWsPath->setText(dirPathFgxWs);
+        this->set_fgx_workspace_path();
+        this->check_fgx_workspace_path();
+
+    }
+
+}
+
 
 void CoreSettingsWidget::on_select_terrasyncexebutton()
 {

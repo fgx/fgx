@@ -38,7 +38,7 @@ public:
 
     //* Images
     //QLabel *imageLabel;
-
+    QString strFgFsExeLabel;
 
     //* Callsign
     QLineEdit *txtCallSign;
@@ -71,8 +71,13 @@ public:
     QLineEdit *lineEditFgRootPath;
     QToolButton *buttonSetFgfsPath;
     QToolButton *buttonSetFgRootPath;
+    QToolButton *buttonSetFgxWsPath;
     QLabel *labelFgfsProgram;
     QLabel *labelFgfsCheck;
+
+    QLabel *labelFgxWsData;
+    QLabel *labelFgxWsCheck;
+    QLineEdit *lineEditFgxWsPath;
 
     QLabel *labelFgRootData;
     QLabel *labelFgRootCheck;
@@ -116,8 +121,9 @@ public slots:
 
     void on_show_mp_map();
 
-    void on_fgfs_path(QString);
-    void on_fgroot_path(QString);
+    void on_fgfs_path_changed(QString);
+    void on_fgroot_path_changed(QString);
+    void on_fgx_workspace_path_changed(QString);
     void on_terrasync_path(QString);
     void on_terrasync_data_path(QString);
     void on_terrasync_enabled();
@@ -131,15 +137,17 @@ public slots:
     void on_upx(QString option, bool enabled, QString value);
 
     // Path checks
-    void fgfs_check_path();
-    void fgroot_check_path();
+    void check_fgfs_path();
+    void check_fgroot_path();
+    void check_fgx_workspace_path();
     void terrasync_exe_check_path();
     void terrasync_data_check_path();
     void custom_scenery_check_path();
 
     // "Set" buttons
-    void on_select_fgfsbutton();
-    void on_select_fgrootbutton();
+    void on_select_fgfs_clicked();
+    void on_select_fgroot_clicked();
+    void on_select_fgx_workspace_clicked();
     void on_select_terrasyncexebutton();
     void on_select_terrasyncdatabutton();
     void on_select_customscenerybutton();
@@ -147,8 +155,9 @@ public slots:
     void reload_lists();
 
     // Emit settings when changed
-    void fgfs_set_path();
-    void fgroot_set_path();
+    void set_fgfs_path();
+    void set_fgroot_path();
+    void set_fgx_workspace_path();
     void terrasyncexe_set_path();
     void terrasyncdata_set_path();
     void customscenery_set_path();

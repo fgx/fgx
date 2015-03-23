@@ -207,7 +207,7 @@ MainObject::MainObject(QObject *parent) :
 
     //= Install Window
     installWindow = new InstallWindow(this);
-    installWindow->show();
+    installWindow->hide();
 
     //== initialise after initial show so UI dont look frozen while cache loading etc
     QTimer::singleShot(300, this, SLOT(initialize()));

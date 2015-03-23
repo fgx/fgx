@@ -13,7 +13,7 @@
 #include <QtGui>    // for Q_OS_???? macros, if needed
 
 /* define to use 'alternate' functions for get-file and get-directory */
-// #define USE_ALTERNATE_GETFILE
+//#define USE_ALTERNATE_GETFILE
 #undef USE_ALTERNATE_GETFILE
 
 #define DEF_TO_MS   10000   // 20111227 - was 5000
