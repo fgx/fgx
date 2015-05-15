@@ -23,6 +23,35 @@
 #undef ADD_EXTRA_DEBUG
 
 
+QHash<QString, QString> AirportsData::getAirportNameMap(MainObject *mainObject) {
+	QHash<QString, QString> airportMap;
+
+	QString path(mainObject->X->fgroot() + QString("/Airports/apt.dat.gz"));
+
+	fgx_gzHandle apt_dat_file = fgx_gzOpen(path);
+
+	while( !fgx_gzEof( apt_dat_file ) ) {
+		QString line = fgx_gzReadline( apt_dat_file );
+
+		if(line.trimmed().isEmpty()) continue;
+
+		QStringList ls = line.split(" ", QString::SkipEmptyParts);
+
+		// 1 is the row code for airports, 16 for seaplane bases (not in FlightGear!) and 17 for heliports
+		// see http://data.x-plane.com/file_specs/XP%20APT850%20Spec.pdf for details
+		if(ls[0].compare("1") == 0 || ls[0].compare("16") == 0 || ls[0].compare("17") == 0) {
+			QString airport_name = QStringList(ls.mid(5)).join(" ");
+			QString airport_code = ls[4];
+			airportMap.insert(airport_code, airport_name);
+		}
+	}
+
+	fgx_gzClose( apt_dat_file );
+
+	return airportMap;
+}
+
+
 bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
 
 
@@ -34,7 +63,6 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
     progress.setValue(0);
     progress.setWindowTitle("Scanning Airport Directories");
     progress.setRange(0, 50000);
-
 
     int c = 0;
     int found = 0;
@@ -55,7 +83,10 @@ bool AirportsData::import(QProgressDialog &progress, MainObject *mainObject){
             return true;
     }
     QTextStream out(&cacheFile);
-
+    
+    msg = "FGx airportsdata reload: Scanning apt.dat.gz in " + mainObject->X->fgroot() + "/Airports/apt.dat.gz";
+    outLog(msg);
+    airports = getAirportNameMap(mainObject);
 
     //================================================
     //* Lets Loop the directories
