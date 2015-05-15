@@ -12,6 +12,7 @@
 
 #include <QWidget>
 #include <QProgressDialog>
+#include <QHash>
 
 #include "xobjects/mainobject.h"
 
@@ -19,6 +20,7 @@ class AirportsData
 {
 public:
 	//AirportsData();
+	static QHash<QString, QString> getAirportNameMap(MainObject *mainObject);
 	static bool import(QProgressDialog &progress, MainObject *mainObject);
 };
 
