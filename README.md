@@ -6,8 +6,8 @@ FGx
 HomePage: http://fgx.freeflightsim.org 
 
 * FGx is
-  - written in c++ using qt toolkit 
-  - around spring 2015 expect qt5 (can u help ?)
+  - written in c++ using qt4 toolkit 
+  - around spring 2016 expect qt5 (can u help ?)
 * Issues, Feature Requests & Bugs: 
   - https://github.com/fgx/fgx/issues
 * Team Chat:
@@ -46,7 +46,7 @@ Build Status
 
 About
 --------------------------
-FGX is a qt-based c++ launcher for [FlightGear](http://wiki.flightgear.org). There is more than one launcher around for FlightGear like FGrun and others, intention for FGX was mainly to have fast and small launcher for OSX, starting the real and only free and Open Source Flight Simulator FlightGear within 5 seconds (also development versions and nightly builds). Since it makes no sense to have such a launcher only for one platform using qt, it became cross-platform and could be used also with Debian and Win.
+FGx is a qt4/c++ launcher for [FlightGear](http://wiki.flightgear.org). There is more than one launcher around for FlightGear like FGrun and others, intention for FGX was mainly to have fast and small launcher for OSX, starting the real and only free and Open Source Flight Simulator FlightGear within 5 seconds (also development versions and nightly builds). Since it makes no sense to have such a launcher only for one platform using qt, it became cross-platform and could be used also with Debian and Win.
 
 The FGX project was started early 2011 by Yves Sablonier in Swiss Mountains, peering to another project started once by Pedro. Bright Pedro in Wales (there are mountains too) was enough of a git to go and check it out, then code a load of patches to its current state and do all needed changes, to get more stable code. Yves Sablonier tried to step down, but Pedro still needs him for issue tracking, polish, to get a good logo, and maybe once for good manuals and documentation. So Yves Sablonier did not step down, but he is always one step behind ...
 
