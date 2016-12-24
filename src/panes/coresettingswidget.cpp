@@ -90,7 +90,7 @@ CoreSettingsWidget::CoreSettingsWidget(MainObject *mOb, QWidget *parent) :
 
     //----------------------------------------------
     //= FlightGear executable (fgfs)
-    QString slbl = QString("Path to the `%1` application:").arg (  this->strFgFsExeLabel);
+    QString slbl = QString("Path to the `%1` executable:").arg (  this->strFgFsExeLabel);
     labelFgfsProgram = new QLabel(slbl);
     grpFgfs->addWidget(labelFgfsProgram);
 
@@ -577,9 +577,11 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 
     }else if(option == "fgfs_path"){
         comboFgFsPath->setEditText(mainObject->X->fgfs_path());
+        this->check_fgfs_path();
 
     }else if(option == "fgroot_path"){
         lineEditFgRootPath->setText(mainObject->X->fgroot());
+        this->check_fgroot_path();
 
     }else if (option == "terrasync_enabled") {
         checkBoxUseTerrasync->setChecked(enabled);
@@ -607,7 +609,6 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 //======================================================================
 // Check paths and give some feedback
 //======================================================================
-
 void CoreSettingsWidget::check_fgfs_path()
 {
     bool exists = QFile::exists(comboFgFsPath->currentText());
