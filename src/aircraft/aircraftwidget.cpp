@@ -591,7 +591,7 @@ void AircraftWidget::load_aircraft(){
 
     buttShowBase->setToolTip( mainObject->X->aircraft_path());
     buttShowBase->setProperty("dir", mainObject->X->aircraft_path());
-
+    statusBar->showMessage("Loading...");
     int c =0;
 
     QList<QStandardItem*> row;
@@ -609,6 +609,8 @@ void AircraftWidget::load_aircraft(){
     QTextStream in(&dataFile);
     QString line = in.readLine();
     c = 0;
+    treeView->setUpdatesEnabled(false);
+    //treeView->setModel(new QStandardItemModel() );
     while(!line.isNull()){
 
         QStringList cols = line.split("\t");
@@ -617,7 +619,7 @@ void AircraftWidget::load_aircraft(){
             line = in.readLine();
             continue;
         }
-
+        qDebug() << line;
         // Add model row
         row = this->create_model_row();
         row.at(C_DIR)->setText(cols.at(C_DIR));
@@ -644,6 +646,7 @@ void AircraftWidget::load_aircraft(){
         c++;
         line = in.readLine();
     }
+    treeView->setUpdatesEnabled(true);
 
     //treeView->sortByColumn(C_DIR, Qt::AscendingOrder);
     treeView->sortByColumn(C_AERO, Qt::AscendingOrder);

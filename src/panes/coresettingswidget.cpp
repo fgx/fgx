@@ -581,7 +581,6 @@ void CoreSettingsWidget::on_upx( QString option, bool enabled, QString value)
 
     }else if(option == "fgroot_path"){
         lineEditFgRootPath->setText(mainObject->X->fgroot());
-        this->check_fgroot_path();
 
     }else if (option == "terrasync_enabled") {
         checkBoxUseTerrasync->setChecked(enabled);
