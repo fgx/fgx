@@ -27,13 +27,13 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
         QWidget(parent)
 {
 
-	mainObject = mOb;
-	
-	setProperty("settings_namespace", QVariant("mpmap_window"));
-	mainObject->settings->restoreWindow(this);
+    mainObject = mOb;
+
+    setProperty("settings_namespace", QVariant("mpmap_window"));
+    mainObject->settings->restoreWindow(this);
 
     setWindowTitle(tr("Multi Player Map"));
-	setWindowIcon(QIcon(":/icon/mpmap"));
+    setWindowIcon(QIcon(":/icon/mpmap"));
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(0,0,0,0);
@@ -45,37 +45,37 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
     mainLayout->addWidget(toolbar, 1);
 
     //** Select server
-	QLabel *lblSelectServer = new QLabel(tr("Select Server:"));
+    QLabel *lblSelectServer = new QLabel(tr("Select Server:"));
     toolbar->addWidget(lblSelectServer);
 
     comboServer = new QComboBox();
     toolbar->addWidget(comboServer);
-	
-	//**get callsign
 
-	//**add callsign to url
-	comboServer->addItem("MpMap-01", QVariant("http://mpmap01.flightgear.org/"));
-	comboServer->addItem("MpMap-02", QVariant("http://mpmap02.flightgear.org/"));
-	comboServer->setCurrentIndex(0);
-	connect(comboServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_server()) );
+    //**get callsign
 
-	//=============================================================
-	//== Cache
-	//qDebug() << QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
+    //**add callsign to url
+    comboServer->addItem("MpMap-01", QVariant("http://mpmap01.flightgear.org/"));
+    comboServer->addItem("MpMap-02", QVariant("http://mpmap02.flightgear.org/"));
+    comboServer->setCurrentIndex(0);
+    connect(comboServer, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combo_server()) );
 
-	networkDiskCache = new QNetworkDiskCache(this);
-	networkDiskCache->setCacheDirectory(QDesktopServices::storageLocation(QDesktopServices::CacheLocation));
+    //=============================================================
+    //== Cache
+    //qDebug() << QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
 
-	networkCookieJar = new QNetworkCookieJar(this);
+    networkDiskCache = new QNetworkDiskCache(this);
+    networkDiskCache->setCacheDirectory(QStandardPaths::writableLocation(QStandardPaths::CacheLocation));
 
-	//== Browser
-	webView = new QWebView(this);
-	mainLayout->addWidget(webView, 100);
-	webView->page()->networkAccessManager()->setCache(networkDiskCache);
-	webView->page()->networkAccessManager()->setCookieJar(networkCookieJar);
-	connect(webView, SIGNAL(loadStarted()), this, SLOT(start_progress()));
-	connect(webView, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
-	connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));
+    networkCookieJar = new QNetworkCookieJar(this);
+
+    //== Browser
+    webView = new QWebView(this);
+    mainLayout->addWidget(webView, 100);
+    webView->page()->networkAccessManager()->setCache(networkDiskCache);
+    webView->page()->networkAccessManager()->setCookieJar(networkCookieJar);
+    connect(webView, SIGNAL(loadStarted()), this, SLOT(start_progress()));
+    connect(webView, SIGNAL(loadProgress(int)), this, SLOT(update_progress(int)));
+    connect(webView, SIGNAL(loadFinished(bool)), this, SLOT(end_progress(bool)));
 
     //*** Status Bar
     statusBar = new QStatusBar(this);
@@ -88,7 +88,7 @@ MpMapWidget::MpMapWidget(MainObject *mOb, QWidget *parent) :
     statusBar->addPermanentWidget(progressBar);
 
     //*** Initialise
-	on_combo_server();
+    on_combo_server();
 }
 
 //=============================================================
@@ -101,23 +101,23 @@ void MpMapWidget::update_progress(int v){
     progressBar->setValue(v);
 }
 void MpMapWidget::end_progress(bool Ok){
-	Q_UNUSED(Ok);
+    Q_UNUSED(Ok);
     progressBar->setVisible(false);
-	statusBar->showMessage( webView->url().toString() );
+    statusBar->showMessage( webView->url().toString() );
 }
 
 
 void MpMapWidget::on_combo_server(){
-	QUrl server_url( comboServer->itemData(comboServer->currentIndex()).toString() );
+    QUrlQuery server_url( comboServer->itemData(comboServer->currentIndex()).toString() );
 	server_url.addQueryItem("follow", mainObject->settings->value("callsign").toString() );
-	webView->load( server_url );
+    webView->load( server_url.toString() );
 	statusBar->showMessage(QString("Loading: ").append( server_url.toString()) );
 }
 
 //** Overide the closeEvent
 void MpMapWidget::closeEvent(QCloseEvent *event)
  {
-	mainObject->settings->saveWindow(this);
-	Q_UNUSED(event);
+    mainObject->settings->saveWindow(this);
+    Q_UNUSED(event);
  }
 

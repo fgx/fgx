@@ -18,9 +18,10 @@
 #include <QMenu>
 #include <QLabel>
 #include <QSplitter>
+#include <QStandardPaths>
 
 
-#include <QtWebKit/QWebFrame>
+#include <QtWebKitWidgets/QWebFrame>
 #include <QDesktopServices>
 
 #include <QDoubleValidator>
@@ -201,7 +202,7 @@ OpenLayerWidget::OpenLayerWidget(MainObject *mob, QWidget *parent) :
     //=============================================================
     //== Cache
     networkDiskCache = new QNetworkDiskCache(this);
-    networkDiskCache->setCacheDirectory(QDesktopServices::storageLocation(QDesktopServices::CacheLocation));
+    networkDiskCache->setCacheDirectory(QStandardPaths::writableLocation(QStandardPaths::CacheLocation));
 
 
     //== Browser

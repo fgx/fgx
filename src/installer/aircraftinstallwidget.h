@@ -16,9 +16,7 @@
 #include <QSortFilterProxyModel>
 #include <QNetworkAccessManager>
 
-#include <QScriptEngine>
-#include <QScriptValue>
-#include <QScriptValueIterator>
+#include <QJsonDocument>
 
 //#include "xwidgets/xstatusbar.h"
 //class XStatusBar;
@@ -73,7 +71,7 @@ signals:
 public slots:
 
     void fetch_server();
-    void load_data(QScriptValue);
+    //TODO void load_data(QScriptValue);
 
     void on_butt_download_clicked();
 

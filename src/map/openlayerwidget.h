@@ -12,7 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QString>
 
-#include <QtWebKit/QWebView>
+#include <QtWebKitWidgets/QWebView>
 #include <QWebInspector>
 #include <QtNetwork/QNetworkDiskCache>
 
@@ -38,118 +38,118 @@ class OpenLayerWidget : public QWidget
 {
 Q_OBJECT
 public:
-	explicit OpenLayerWidget(MainObject *mob, QWidget *parent = 0);
+    explicit OpenLayerWidget(MainObject *mob, QWidget *parent = 0);
 
-	MainObject *mainObject;
-	QString *mpmapFollowCallsign;
-	QSlider *sliderZoom;
-	QLabel *lblZoom;
+    MainObject *mainObject;
+    QString *mpmapFollowCallsign;
+    QSlider *sliderZoom;
+    QLabel *lblZoom;
 
-	QString map_type;
-	QToolBar *toolbarAirports;
+    QString map_type;
+    QToolBar *toolbarAirports;
 
-	QWebView *webView;
+    QWebView *webView;
 
 private:
 
-	QProgressBar *progressBar;
-	QStatusBar *statusBar;
-	QComboBox *comboServer;
+    QProgressBar *progressBar;
+    QStatusBar *statusBar;
+    QComboBox *comboServer;
 
-	QLineEdit *txtLat;
-	QLineEdit *txtLon;
-	QSpinBox *spinHeading;
-	QDial *dialHeading;
-
-
-	QButtonGroup *buttonGroupViewLayers;
-	QCheckBox *chkViewStands;
-	QCheckBox *chkViewRunwayLabels;
-	QCheckBox *chkViewRunwayLines;
-
-	QCheckBox *chkViewGridLines;
+    QLineEdit *txtLat;
+    QLineEdit *txtLon;
+    QSpinBox *spinHeading;
+    QDial *dialHeading;
 
 
-	QToolButton *buttDebug;
-	QWebInspector *webInspector;
+    QButtonGroup *buttonGroupViewLayers;
+    QCheckBox *chkViewStands;
+    QCheckBox *chkViewRunwayLabels;
+    QCheckBox *chkViewRunwayLines;
 
-	QNetworkDiskCache *networkDiskCache;
-	//QNetworkCookieJar *networkCookieJar;
+    QCheckBox *chkViewGridLines;
+
+
+    QToolButton *buttDebug;
+    QWebInspector *webInspector;
+
+    QNetworkDiskCache *networkDiskCache;
+    //QNetworkCookieJar *networkCookieJar;
 
 signals:
 
-	void setx(QString option, bool enabled, QString value);
-	void setv(QString option, QString value);
-	void map_double_clicked(QString lat, QString lon, QString heading);
+    void setx(QString option, bool enabled, QString value);
+    void setv(QString option, QString value);
+    void map_double_clicked(QString lat, QString lon, QString heading);
 
 public slots:
 
-	//= browser progress
-	void start_progress();
-	void update_progress(int progress);
-	void end_progress(bool Ok);
+    //= browser progress
+    void start_progress();
+    void update_progress(int progress);
+    void end_progress(bool Ok);
 
-	//= map calls
-	void load_map(QString map_type);
-	void execute_js(QString js_string);
-
-
-	//# To map markers and features
-	void clear_airport(QString apt);
-	void clear_map();
-
-	void add_runway(QString apt, QString rwy1, QString rwy2, QString lat1, QString lon1, QString lat2, QString lon2);
-	void add_stand(QString apt, QString name, QString lat, QString lon);
-	void add_tower(QString apt, QString lat, QString lon);
-
-	void show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude);
-	void focus_aircraft(QString callsign);
-
-	void show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude, bool is_tower);
-	//void display_radar_layer( int viz);
-	void clear_radar();
+    //= map calls
+    void load_map(QString map_type);
+    void execute_js(QString js_string);
 
 
-	void zoom_to_airport(QString apt);
-	void zoom_to_latlon(QString lat, QString lon, int zoom);
-	void zoom_to(int zoom);
+    //# To map markers and features
+    void clear_airport(QString apt);
+    void clear_map();
 
-	void on_zoom_in();
-	void on_zoom_out();
+    void add_runway(QString apt, QString rwy1, QString rwy2, QString lat1, QString lon1, QString lat2, QString lon2);
+    void add_stand(QString apt, QString name, QString lat, QString lon);
+    void add_tower(QString apt, QString lat, QString lon);
 
+    void show_aircraft(QString callsign, QString lat, QString lon, QString heading, QString altitude);
+    void focus_aircraft(QString callsign);
 
-	//====================================
-	//@<< From Map Events
-	void map_initialised();
-
-	void map_debug(QVariant);
-
-	//void map_mouse_move(QVariant lat, QVariant lon);
-	void map_click(QVariant lat, QVariant lon);
-	void map_right_click(QVariant lat, QVariant lon);
-
-	void map_set_coords(QVariant lat, QVariant lon);
-	void on_lat_changed(QString);
-	void on_lon_changed(QString);
+    void show_radar(QString callsign, QString lat, QString lon, QString heading, QString altitude, bool is_tower);
+    //void display_radar_layer( int viz);
+    void clear_radar();
 
 
-	void map_zoom_changed(QVariant zoom);
-	void map_error(QVariant err);
+    void zoom_to_airport(QString apt);
+    void zoom_to_latlon(QString lat, QString lon, int zoom);
+    void zoom_to(int zoom);
 
-	void marker_clicked(QVariant marker, QVariant mId);
-	void marker_unselected(QVariant curr_idx, QVariant mLocationId);
+    void on_zoom_in();
+    void on_zoom_out();
 
-	//======================================
-	void closeEvent(QCloseEvent *event);
 
-	void on_upx( QString option, bool enabled, QString value);
+    //====================================
+    //@<< From Map Events
+    void map_initialised();
 
-	void on_display_layer(QAbstractButton*);
+    void map_debug(QVariant);
 
-	void on_dial(int val);
-	void on_spin(int val);
-	void on_show_debugger();
-	void on_debug_mode(bool);
+    //void map_mouse_move(QVariant lat, QVariant lon);
+    void map_click(QVariant lat, QVariant lon);
+    void map_right_click(QVariant lat, QVariant lon);
+
+    void map_set_coords(QVariant lat, QVariant lon);
+    void on_lat_changed(QString);
+    void on_lon_changed(QString);
+
+
+    void map_zoom_changed(QVariant zoom);
+    void map_error(QVariant err);
+
+    void marker_clicked(QVariant marker, QVariant mId);
+    void marker_unselected(QVariant curr_idx, QVariant mLocationId);
+
+    //======================================
+    void closeEvent(QCloseEvent *event);
+
+    void on_upx( QString option, bool enabled, QString value);
+
+    void on_display_layer(QAbstractButton*);
+
+    void on_dial(int val);
+    void on_spin(int val);
+    void on_show_debugger();
+    void on_debug_mode(bool);
 };
 
 #endif // OPENLAYERWIDGET

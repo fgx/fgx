@@ -198,6 +198,7 @@ void AircraftInstallWidget::fetch_server()
 
 //=================================================================
 //== Load Server Data
+/* TODO in QJSON5
 void AircraftInstallWidget::load_data(QScriptValue data)
 {
 
@@ -246,7 +247,7 @@ void AircraftInstallWidget::load_data(QScriptValue data)
     }
 }
 
-
+*/
 
 //======================================================
 
@@ -292,9 +293,10 @@ void AircraftInstallWidget::on_status_update(QString zip_file, QString status)
 
 void AircraftInstallWidget::on_request_finished(QNetworkReply *reply){
     qDebug() << "on_request_finished" << reply->request().url().toString();
-    QScriptEngine engine;
-    QScriptValue json = engine.evaluate( "(" + reply->readAll() + ")");
-    this->load_data(json);
+    //QScriptEngine engine;
+    //QScriptValue json = engine.evaluate( "(" + reply->readAll() + ")");
+    //this->load_data(json);
+    // TODO Qt5
 }
 
 

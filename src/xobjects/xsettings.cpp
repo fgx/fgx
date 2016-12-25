@@ -148,7 +148,7 @@ QString XSettings::fgx_current_dir(){
 
 /** \brief shortcut to cache directory */
 QString XSettings::cache_dir(){
-    return QDesktopServices::storageLocation(QDesktopServices::CacheLocation);
+    return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
 }
 
 QString XSettings::aircraft_downloads_url(){

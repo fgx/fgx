@@ -81,17 +81,43 @@ else(UNIX)
 endif(UNIX)
 
 
-#=====================================================
-## QT
-message(STATUS "*** Finding Qt4 components ${components}")
-find_package ( Qt4 COMPONENTS QtCore QtGui QtNetwork QtWebkit QtScript QtXml QtXmlPatterns REQUIRED )
-include ( ${QT_USE_FILE} )
+# QT = network xml xmlpatterns webkit
+# CONFIG = qt thread
+message(STATUS "*** Finding Qt5 components ${components}")
+find_package ( Qt5 COMPONENTS Core Gui Widgets Network WebKit WebKitWidgets Xml XmlPatterns REQUIRED )
+#include ( ${QT_USE_FILE} )
+
+include_directories ( ${Qt5Core_INCLUDE_DIRS} )
+include_directories ( ${Qt5Gui_INCLUDE_DIRS} )
+include_directories ( ${Qt5Widgets_INCLUDE_DIRS} )
+include_directories ( ${Qt5Xml_INCLUDE_DIRS} )
+include_directories ( ${Qt5XmlPatterns_INCLUDE_DIRS} )
+include_directories ( ${Qt5WebKit_INCLUDE_DIRS} )
+include_directories ( ${Qt5WebKitWidgets_INCLUDE_DIRS} )
+include_directories ( ${Qt5Network_INCLUDE_DIRS} )
+
+add_definitions(${Qt5Core_DEFINITIONS})
+add_definitions(${Qt5Gui_DEFINITIONS})
+add_definitions(${Qt5Widgets_DEFINITIONS})
+add_definitions(${Qt5Xml_DEFINITIONS})
+add_definitions(${Qt5XmlPatterns_DEFINITIONS})
+add_definitions(${Qt5WebKit_DEFINITIONS})
+add_definitions(${Qt5WebKitWidgets_DEFINITIONS})
+add_definitions(${Qt5Network_DEFINITIONS})
 add_definitions( ${QT_DEFINITIONS} )
+
+# Executables fail to build with Qt 5 in the default configuration
+# without -fPIE. We add that here.
+# pete notes.. this means not using <qtFoo/QBar
+set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+
 # debug messages
 message(STATUS "*** include ( ${QT_USE_FILE} )")
 message(STATUS "*** defs ${QT_DEFINITIONS}")
 message(STATUS "*** libs ${QT_LIBRARIES}")
 
+set( QT_USE_QTGUI TRUE )
+set( QT_USE_QTWIDGETS TRUE )
 set( QT_USE_QTNETWORK TRUE )
 set( QT_USE_QTXML TRUE )
 set( QT_USE_QTXMLPATTERNS TRUE )
@@ -322,12 +348,14 @@ include_directories(
 get_property(inc_dirs DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
 message(STATUS "*** inc_dirs = ${inc_dirs}")
 
-QT4_WRAP_CPP( fgx_HDRS_MOC ${fgx_HDRS} )
-QT4_ADD_RESOURCES( fgx_RESOURCES_RCC ${fgx_RCS} )
+QT5_WRAP_CPP( fgx_HDRS_MOC ${fgx_HDRS} )
+QT5_ADD_RESOURCES( fgx_RESOURCES_RCC ${fgx_RCS} )
 
 add_executable( fgx ${fgx_SRCS} ${fgx_HDRS_MOC} ${fgx_RESOURCES_RCC} ${fgx_OTHERS} )
 
-target_link_libraries( fgx ${QT_LIBRARIES} )
+target_link_libraries( fgx Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::XmlPatterns Qt5::Network Qt5::WebKitWidgets Qt5::WebKit )
+#target_link_libraries( fgx ${QT_LIBRARIES} )
+
 if (MSVC)
     set_target_properties( fgx PROPERTIES DEBUG_POSTFIX d )
 endif ()

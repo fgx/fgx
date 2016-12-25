@@ -5,7 +5,7 @@
 #include <QString>
 #include <QHash>
 
-#include <QScriptValue>
+//TODO = json #include <QScriptValue>
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -41,7 +41,7 @@ public:
 
 
 signals:
-    void data(QScriptValue json);
+    //TODO json void data(QScriptValue json);
     void server_status(QString status);
 public slots:
     void on_server_ready_read();

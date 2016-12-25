@@ -11,7 +11,7 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 
-#include <QtXml/QXmlStreamReader>
+#include <QtCore/QXmlStreamReader>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomNodeList>
 
