@@ -31,11 +31,13 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
     setLayout(mainLayout);
 
     //= Fgx Logo is a QLabel with background image
+    /*
     QLabel *iconLabel = new QLabel("");
     iconLabel->setFixedHeight(40);
     iconLabel->setFixedWidth(40);
     iconLabel->setStyleSheet("QLabel { margin: 0px; background-image: url(:artwork/fgx-logo-flyer);  background-repeat: none;}");
     mainLayout->addWidget(iconLabel, 0, 0, 2, 1);
+    */
 
     //= Main header
     headerLabel = new QLabel("");
@@ -48,11 +50,24 @@ HeaderWidget::HeaderWidget(MainObject *mob, QWidget *parent) :
     mainLayout->addWidget(callsignLabel, 1, 1, 1, 1);
 
 
-    //= Message Label
-    messageLabel = new QLabel();
-    messageLabel->setText("FGx booted ;-)");
-    mainLayout->addWidget(messageLabel, 0, 2,2,1);
+    //= Message Status
+    this->statusBar = new QStatusBar();
+    this->statusBar->setSizeGripEnabled(false);
+    mainLayout->addWidget(this->statusBar, 0, 2, 1, 1);
 
+    //= Time stuff ============= TODO
+    /*
+    QString dt_sty = "background-color: #444444; color: #000044; font-family: monospace;";
+    //= UTC Time
+    this->dtUTC = new QLabel("");
+    this->dtUTC->setStyleSheet(dt_sty);
+    mainLayout->addWidget(this->dtUTC, 0, 3, 1, 1);
+
+    //= Main header
+    this->dtLocal = new QLabel("");
+    this->dtLocal->setStyleSheet(dt_sty);
+    mainLayout->addWidget(this->dtLocal, 1, 3, 1, 1);
+    */
 }
 
 //========================================================================
@@ -62,18 +77,17 @@ void HeaderWidget::showMessage(QString message){
 }
 
 void HeaderWidget::showMessage(QString message, int timeout){
+    qDebug() << "## show_message=" << message;
+    this->statusBar->setStyleSheet("color: #000099; font-size: 16pt; padding-left: 20px; text-align: center; ");
+    this->statusBar->showMessage(message, timeout);
 
-    messageLabel->setStyleSheet("QLabel { color: #666666; font-size: 16px; padding-left: 5px; background-color: yellow; }");
-    messageLabel->setText(message);
-
-    QTimer::singleShot(timeout, this, SLOT(cancel_message()) );
 }
 
 //== Cancel message
 void HeaderWidget::cancel_message()
 {
-    messageLabel->setStyleSheet("");
-    messageLabel->setText("");
+    this->statusBar->setStyleSheet("");
+    this->statusBar->showMessage("clear", 3000);
 }
 
 

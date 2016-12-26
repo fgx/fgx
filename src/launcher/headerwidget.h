@@ -14,6 +14,7 @@
 
 #include <QWidget>
 #include <QLabel>
+#include <QStatusBar>
 
 
 #include "xobjects/mainobject.h"
@@ -24,21 +25,24 @@ class HeaderWidget : public QWidget
 {
 Q_OBJECT
 public:
-	explicit HeaderWidget(MainObject *mob, QWidget *parent = 0);
+    explicit HeaderWidget(MainObject *mob, QWidget *parent = 0);
 
-	MainObject *mainObject;
+    MainObject *mainObject;
 
-	//QTimer *fadeTimer;
+    //QTimer *fadeTimer;
 
-	//QWidget *headerWidget;
-	QLabel *headerLabel;
-	QLabel *callsignLabel;
+    //QWidget *headerWidget;
+    QLabel *headerLabel;
+    QLabel *callsignLabel;
 
-	//QWidget *popWidget;
-	QLabel *messageLabel;
+    //QLabel *dtUTC;
+    //QLabel *dtLocal;
 
-	void setHeader(QString text);
-	void setCallsign(QString text);
+    //QWidget *popWidget;
+    QStatusBar *statusBar;
+
+    void setHeader(QString text);
+    void setCallsign(QString text);
 
 
 
@@ -46,9 +50,12 @@ signals:
 
 public slots:
 
-	void showMessage(QString message, int timeout);
-	void showMessage(QString message);
-	void cancel_message();
+    void showMessage(QString message, int timeout);
+    void showMessage(QString message);
+    void cancel_message();
+
+    //void update_time_labels();
+
 
 };
 

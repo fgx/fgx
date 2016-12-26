@@ -16,7 +16,7 @@
 //#define USE_ALTERNATE_GETFILE
 #undef USE_ALTERNATE_GETFILE
 
-#define DEF_TO_MS   10000   // 20111227 - was 5000
+#define DEF_TO_MS   5000   // 20111227 - was 5000
 
 // 20120127 - NEW features
 // enable thread load of apt.dat.gz

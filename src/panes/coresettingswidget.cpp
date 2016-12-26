@@ -356,6 +356,7 @@ void CoreSettingsWidget::initialize(){
 //==============================================
 //== Load Joysticks
 void CoreSettingsWidget::load_joysticks(){
+
     labelInputs->setText("");
     QString find = "Joystick ";
     QString none = "not detected";
@@ -364,6 +365,7 @@ void CoreSettingsWidget::load_joysticks(){
     int count = 0;
     QString startJSDemoPath;
     QStringList args;
+
     startJSDemoPath = mainObject->X->getx("jsdemo_exe_path");
     // TODO Fix this macro
 #ifdef Q_OS_MAC
@@ -386,7 +388,7 @@ void CoreSettingsWidget::load_joysticks(){
             startJSDemoPath = "js_demo";
         }
     }
-    // This will do NOTHING is no 'environment' defined
+    // This will do NOTHING if no 'environment' defined
     QStringList extra_env = mainObject->X->get_fgfs_env();
     if (extra_env.size()) {
         //= append new env vars
@@ -439,7 +441,7 @@ void CoreSettingsWidget::load_joysticks(){
 // Callsign Changed
 void CoreSettingsWidget::on_callsign_changed(QString txt)
 {
-    emit( setx("--callsign=", true, txt ));
+    emit( setx("--callsign=", true, txt ) );
     mainObject->launcherWindow->on_upx("--callsign=", true, txt); // change text in headerwidget
 }
 

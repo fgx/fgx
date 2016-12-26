@@ -137,7 +137,7 @@ QFileInfoList AircraftData::get_xml_set_files(QString dir_path, bool recus){
     return setList;
 }
 
-/* \brief Parses the xml-set file by querying DOM */
+/* \brief Parses the xml-set file by querying DOM..argh!!! */
 ModelInfo AircraftData::read_model_xml(QString xml_set_path){
 
     QFileInfo fInfo(xml_set_path);

@@ -55,43 +55,6 @@ void ServerCall::get(QString url, QHash<QString, QString> vars)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(on_server_error(QNetworkReply::NetworkError)));
 }
 
-/*
-def fetch(self, fetch_url, params, xWidget, debugMode=False):
-
-        self.widget = xWidget
-        self.params = params
-        if debugMode:
-                self.debug = debugMode
-
-        #print self.settings.server_url()
-        srv_url = self.settings.server_url()
-        if srv_url == None:
-                print "NO URL in dServer.fetch()"
-                return
-        self.url = QtCore.QUrl( "%s%s" % (srv_url, fetch_url) )
-        if self.params:
-                for p in self.params:
-                        self.url.addQueryItem( str(p), str(self.params[p]) )
-
-        self.request = QtNetwork.QNetworkRequest()
-        self.request.setUrl( self.url )
-        self.load_cookies()
-
-        if self.debug:
-                print "\n--------------------------------------------------"
-                print ">> fetch: "
-                print "       %s" %  self.url.toString()
-
-        self.update_status(BUSY)
-        self.error = False
-        self.abort_flag = False
-        self.timeoutTimer.start()
-        self.POST = False
-        self.reply = self.netMan.get( self.request)
-        self.connect(self.reply, QtCore.SIGNAL( 'error(QNetworkReply::NetworkError)'), self.on_network_error)
-        self.connect(self.reply, QtCore.SIGNAL( 'readyRead()'), self.on_server_ready_read)
-        self.connect(self.reply, QtCore.SIGNAL( 'finished()'), self.on_server_read_finished)
- */
 
 
 void ServerCall::post(QString url, QHash<QString, QString> payload)

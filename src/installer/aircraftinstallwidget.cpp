@@ -192,8 +192,8 @@ void AircraftInstallWidget::fetch_server()
 {
     QUrl url( this->mainObject->settings->aircraft_downloads_url("index.json") );
     QNetworkRequest req(url);
-    netMan->get(req);
-    qDebug() << "requeeted" << url.toString();
+    //netMan->get(req);
+    //qDebug() << "requeeted" << url.toString();
 }
 
 //=================================================================
