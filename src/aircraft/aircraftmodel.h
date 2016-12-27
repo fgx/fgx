@@ -31,11 +31,13 @@ public:
 
     MainObject *mainObject;
 
+
+
     QList<QStandardItem*> create_model_row();
 signals:
 
 public slots:
-    void load_aircraft();
+    void load_aircraft(bool reload_cache);
     void load_custom_aircraft();
 };
 

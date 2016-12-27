@@ -93,7 +93,7 @@ public:
     QString selected_aircraft();
 
 
-    void load_custom_aircraft();
+    //void load_custom_aircraft();
 
 private:
 
@@ -111,11 +111,11 @@ signals:
     void setx( QString option, bool enabled,QString value);
 
 public slots:
-    void load_aircraft();
-
+    void load_aircraft(bool reload_cache);
+    void on_reload_cache();
 
     void on_tree_selection_changed();
-    void on_reload_cache();
+
 
     void on_enable_fuel_freeze_clicked();
 

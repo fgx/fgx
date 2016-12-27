@@ -524,31 +524,22 @@ QString AircraftWidget::validate(){
 //=============================================================
 // Rescan aircraft cache
 void AircraftWidget::on_reload_cache(){
-
-    statusBar->showMessage("Reloading cache");
-
-    QProgressDialog progress(this);
-    QSize size(320,100);
-    progress.resize(size);
-    progress.setWindowIcon(QIcon(":/icon/load"));
-
-    AircraftData::import(progress, mainObject);
-    this->mainObject->aircraftModel->load_aircraft();
+    this->load_aircraft(true);
 }
 
 
 
 //=============================================================
 /* @brief Load/reload the model */
-void AircraftWidget::load_aircraft(){
+void AircraftWidget::load_aircraft(bool reload_cache){
 
     buttShowBase->setToolTip( mainObject->X->aircraft_path());
     buttShowBase->setProperty("dir", mainObject->X->aircraft_path());
-    statusBar->showMessage("Loading...");
+    statusBar->showMessage(reload_cache ? "Reloading Cache" : "Loading...");
 
 
     treeView->setUpdatesEnabled(false);
-    this->mainObject->aircraftModel->load_aircraft();
+    this->mainObject->aircraftModel->load_aircraft(reload_cache);
     treeView->setUpdatesEnabled(true);
 
     treeView->sortByColumn(AircraftModel::C_AERO, Qt::AscendingOrder);
@@ -577,7 +568,7 @@ void AircraftWidget::initialize(){
     if (!QFile::exists(mainObject->data_file("aircraft.txt"))){
         statusBar->showMessage("*** No cached data. Use set paths and reload");
     }else{
-        this->mainObject->aircraftModel->load_aircraft();
+        this->mainObject->aircraftModel->load_aircraft(true);
     }
     first_load_done = true;
 }

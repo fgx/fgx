@@ -24,15 +24,14 @@
 //{
 //}
 
-bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
+bool AircraftData::import(QProgressDialog *progress, MainObject *mainObject){
 
     int c = 0;
     int found = 0;
 
-    progress.setRange(0, 2000);
-    progress.setWindowTitle("Scanning Aircraft Directories");
-    progress.show();
-    progress.repaint();
+    progress->setRange(0, 2000);
+    progress->setWindowTitle("Scanning Aircraft Directories");
+    progress->repaint();
 
     // Removing cache file, if exists()
     if (QFile::exists(mainObject->data_file("aircrafts.txt"))) {
@@ -60,16 +59,16 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
     aircraftDir.setFilter( QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
 
     QStringList entries = aircraftDir.entryList();
-    progress.setRange(0, entries.size() + 20);
+    progress->setRange(0, entries.size() + 20);
 
     for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry ){
 
         // Filter out default dir names, should be a QDir name filter?
         if (*entry != "Instruments" &&  *entry != "Instruments-3d" && *entry != "Generic") {
             //qDebug() << "ENTRY+" << *entry;
-            progress.setValue(c);
-            progress.setLabelText(*entry);
-            progress.repaint();
+            progress->setValue(c);
+            progress->setLabelText(*entry);
+            progress->repaint();
 
             //** get the List of *-set.xml files in dir
             QDir dir( mainObject->X->aircraft_path(*entry) );
@@ -100,9 +99,7 @@ bool AircraftData::import(QProgressDialog &progress, MainObject *mainObject){
 
                     found++;
 
-                    if(progress.wasCanceled()){
-                        //qDebug() << "Progress cancelled!";
-                        progress.hide();
+                    if(progress->wasCanceled()){
                         return true;
                     }
                     c++;

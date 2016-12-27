@@ -18,6 +18,7 @@
 #include <QMenuBar>
 #include <QLabel>
 #include <QWidgetAction>
+#include <QProgressDialog>
 
 #include "xobjects/xsettings.h"
 
@@ -109,6 +110,8 @@ public:
     XProcess *processTerraSync;
 
     AircraftModel *aircraftModel;
+
+    QProgressDialog *progressDialog;
 
     QSystemTrayIcon *trayIcon;
     QMenu *popupMenu;

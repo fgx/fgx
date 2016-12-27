@@ -1,6 +1,7 @@
 
 #include <QtDebug>
 #include <QStringList>
+#include <QProgressDialog>
 
 #include "aircraftmodel.h"
 #include "aircraft/aircraftdata.h"
@@ -15,26 +16,36 @@ AircraftModel::AircraftModel(MainObject *mOb) :
     hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "FilterDir" << "Filter" << "BASE";
     //model->setColumnCount(hLabels.length());
     this->setHorizontalHeaderLabels(hLabels);
+
+
 }
 
 
 /* @brief Load Custom Aircraft Paths */
 void AircraftModel::load_custom_aircraft(){
 
+    this->mainObject->progressDialog->setWindowTitle("Importing Custom Aicraft");
+
     QList<QStandardItem*> row;
 
     // Get paths as lsit from settings
     QStringList custom_dirs = this->mainObject->settings->value("custom_aircraft_dirs").toStringList();
+
     for(int i = 0; i < custom_dirs.size(); i++){
 
         // get the xml-sets in dir, and recus eg might be a single aircraft or a dir of aircraft
         QFileInfoList xmlSets = AircraftData::get_xml_set_files(custom_dirs.at(i), true);
         //qDebug() << xmlSets;
+        this->mainObject->progressDialog->setRange(0, xmlSets.length());
 
         for(int fi = 0; fi < xmlSets.length(); fi++){
 
+
             // get data from the model file
             ModelInfo mi = AircraftData::read_model_xml(xmlSets.at(fi).absoluteFilePath());
+
+            this->mainObject->progressDialog->setValue(fi);
+            this->mainObject->progressDialog->setLabelText(mi.aero);
 
             // Add model row
             row = this->create_model_row();
@@ -62,11 +73,27 @@ void AircraftModel::load_custom_aircraft(){
     }
 }
 
+
+
 //=============================================================
 /* @brief Load/reload the model */
-void AircraftModel::load_aircraft(){
+void AircraftModel::load_aircraft(bool  reload_cache){
 
-    int c =0;
+
+    QSize size(320,100);
+    this->mainObject->progressDialog->resize(size);
+    this->mainObject->progressDialog->setWindowIcon(QIcon(":/icon/load"));
+    this->mainObject->progressDialog->show();
+
+    if(reload_cache) {
+        bool cancelled = AircraftData::import(this->mainObject->progressDialog, mainObject);
+        if(cancelled){
+            this->mainObject->progressDialog->hide();
+            return;
+        }
+    }
+
+    int c = 0;
 
     QList<QStandardItem*> row;
 
@@ -77,7 +104,7 @@ void AircraftModel::load_aircraft(){
     //=== Load Base Package
     QFile dataFile(mainObject->data_file(("aircraft.txt")));
     if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
-           //TODO  - catch error
+           qDebug() << "no aircraft.txt";
            return;
     }
     QTextStream in(&dataFile);
@@ -119,6 +146,7 @@ void AircraftModel::load_aircraft(){
         c++;
         line = in.readLine();
     }
+    this->mainObject->progressDialog->hide();
 }
 
 

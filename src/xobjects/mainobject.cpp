@@ -55,6 +55,9 @@ MainObject::MainObject(QObject *parent) :
     //= Aircraft global Model
     aircraftModel = new AircraftModel(this);
 
+    progressDialog = new QProgressDialog();
+    progressDialog->hide();
+
     //====================================
     //= Set GLobal style
     QApplication::setStyle( QStyleFactory::create(settings->style_current()) );
