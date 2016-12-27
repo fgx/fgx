@@ -101,6 +101,7 @@ set( QT_USE_QTWEBKIT TRUE )
 ## Sources
 set( fgx_SRCS
     src/aircraft/aircraftdata.cpp
+    src/aircraft/aircraftmodel.cpp
     src/aircraft/aircraftproxymodel.cpp
     src/aircraft/aircraftwidget.cpp
     src/aircraft/modelinfo.cpp
@@ -172,10 +173,12 @@ set( fgx_SRCS
     src/installer/aircraftinstallwidget.cpp
     src/installer/downloadmanagerwidget.cpp
     src/installer/servercall.cpp
+    src/xobjects/xreply.cpp
     )
 #=====================================================
 ## Headers
 set( fgx_HDRS
+    src/aircraft/aircraftmodel.h
     src/aircraft/aircraftproxymodel.h
     src/aircraft/aircraftwidget.h
     src/aircraft/modelinfo.h
@@ -223,6 +226,7 @@ set( fgx_HDRS
     src/installer/aircraftinstallwidget.h
     src/installer/downloadmanagerwidget.h
     src/installer/servercall.h
+    src/xobjects/xreply.h
     )
 #=====================================================
 ## Others..

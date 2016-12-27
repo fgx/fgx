@@ -52,7 +52,8 @@ MainObject::MainObject(QObject *parent) :
     processFgFs  = new XProcess(this, "fgfs");
     processTerraSync  = new XProcess(this, "terrasync");
 
-
+    //= Aircraft global Model
+    aircraftModel = new AircraftModel(this);
 
     //====================================
     //= Set GLobal style

@@ -47,6 +47,10 @@ class ViewLogsWidget;
 class PropsTreeWidget;
 class FgxDebugWidget;
 
+#include "aircraft/aircraftmodel.h"
+class AircraftModel;
+
+
 
 /*! \class MainObject
  * \brief The MainObject is an extended QObject, and the main "controller" for FGx
@@ -104,6 +108,7 @@ public:
     XProcess *processFgFs;
     XProcess *processTerraSync;
 
+    AircraftModel *aircraftModel;
 
     QSystemTrayIcon *trayIcon;
     QMenu *popupMenu;

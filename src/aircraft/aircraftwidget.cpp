@@ -45,7 +45,9 @@
 
 
 #include "aircraft/aircraftwidget.h"
+#include "aircraft/aircraftmodel.h"
 #include "aircraft/aircraftdata.h"
+
 #include "utilities/utilities.h"
 #include "utilities/messagebox.h"
 
@@ -60,17 +62,11 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     mainObject = mOb;
 
     //========================================================
-    //= Models
-    model = new QStandardItemModel(this);
-    QStringList hLabels;
-    hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "FilterDir" << "Filter" << "BASE";
-    //model->setColumnCount(hLabels.length());
-    model->setHorizontalHeaderLabels(hLabels);
-
-    proxyModel = new AircraftProxyModel(); //QSortFilterProxyModel();
-    proxyModel->setSourceModel(model);
+    //= Model
+    proxyModel = new AircraftProxyModel();
+    proxyModel->setSourceModel( this->mainObject->aircraftModel );
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    proxyModel->setFilterKeyColumn(C_FILTER);
+    proxyModel->setFilterKeyColumn(AircraftModel::C_FILTER);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 
     //= Custom Dir button stuff
@@ -206,9 +202,9 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     treeView->header()->setStretchLastSection(true);
-    treeView->setColumnWidth(C_DIR, 60);
-    treeView->setColumnWidth(C_FDM, 60);
-    treeView->setColumnWidth(C_DESCRIPTION, 200);
+    treeView->setColumnWidth(AircraftModel::C_DIR, 60);
+    treeView->setColumnWidth(AircraftModel::C_FDM, 60);
+    treeView->setColumnWidth(AircraftModel::C_DESCRIPTION, 200);
     this->on_debug_mode(); // debug mode shows/hides some columns
     connect( treeView->selectionModel(),
              SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection & ) ),
@@ -441,21 +437,21 @@ void AircraftWidget::on_tree_selection_changed(){
         return;
     }
 
-    lblAero->setText( model->itemFromIndex(
-                            proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(C_AERO))
+    lblAero->setText( this->mainObject->aircraftModel->itemFromIndex(
+                            proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_AERO))
                           )->text());
-    lblAeroDescription->setText( model->itemFromIndex(
-                            proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(C_DESCRIPTION))
+    lblAeroDescription->setText( this->mainObject->aircraftModel->itemFromIndex(
+                            proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_DESCRIPTION))
                           )->text());
 
 
-    QString xmlFile =  model->itemFromIndex(
-                        proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(C_FILE_PATH))
+    QString xmlFile =  this->mainObject->aircraftModel->itemFromIndex(
+                        proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_FILE_PATH))
                     )->text();
     lblAeroXml->setText(xmlFile);
 
-    int is_base =  model->itemFromIndex(
-                        proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(C_BASE))
+    int is_base =  this->mainObject->aircraftModel->itemFromIndex(
+                        proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_BASE))
                     )->text().toInt();
     this->buttOpenAeroDir->setDisabled(false);
     if( is_base == 1 ){
@@ -464,8 +460,8 @@ void AircraftWidget::on_tree_selection_changed(){
         this->buttOpenAeroDir->setIcon(QIcon(":/icon/custom_folder"));
     }
 
-    QModelIndex midx = treeView->selectionModel()->selectedIndexes().at(C_DIR);
-    QStandardItem *item = model->itemFromIndex( proxyModel->mapToSource(midx)  );
+    QModelIndex midx = treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_DIR);
+    QStandardItem *item = this->mainObject->aircraftModel->itemFromIndex( proxyModel->mapToSource(midx)  );
 
     //= Get the thumbnail image
     QString thumb_file = QString("%1/%2/thumbnail.jpg").arg(mainObject->X->aircraft_path(), item->text());
@@ -509,8 +505,8 @@ void AircraftWidget::select_node(QString aero){
 //== return selected Aircraft
 QString AircraftWidget::selected_aircraft(){
 
-    QModelIndex midx = treeView->selectionModel()->selectedIndexes().at(C_AERO);
-    QStandardItem *item = model->itemFromIndex( proxyModel->mapToSource(midx)   );
+    QModelIndex midx = treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_AERO);
+    QStandardItem *item = this->mainObject->aircraftModel->itemFromIndex( proxyModel->mapToSource(midx)   );
     return item->text();
 }
 
@@ -529,7 +525,6 @@ QString AircraftWidget::validate(){
 // Rescan aircraft cache
 void AircraftWidget::on_reload_cache(){
 
-    model->removeRows(0, model->rowCount());
     statusBar->showMessage("Reloading cache");
 
     QProgressDialog progress(this);
@@ -538,52 +533,10 @@ void AircraftWidget::on_reload_cache(){
     progress.setWindowIcon(QIcon(":/icon/load"));
 
     AircraftData::import(progress, mainObject);
-    load_aircraft();
+    this->mainObject->aircraftModel->load_aircraft();
 }
 
-/* @brief Load Custom Aircraft Paths */
-void AircraftWidget::load_custom_aircraft(){
 
-    QList<QStandardItem*> row;
-
-    // Get paths as lsit from settings
-    QStringList custom_dirs = this->mainObject->settings->value("custom_aircraft_dirs").toStringList();
-    for(int i = 0; i < custom_dirs.size(); i++){
-
-        // get the xml-sets in dir, and recus eg might be a single aircraft or a dir of aircraft
-        QFileInfoList xmlSets = AircraftData::get_xml_set_files(custom_dirs.at(i), true);
-        //qDebug() << xmlSets;
-
-        for(int fi = 0; fi < xmlSets.length(); fi++){
-
-            // get data from the model file
-            ModelInfo mi = AircraftData::read_model_xml(xmlSets.at(fi).absoluteFilePath());
-
-            // Add model row
-            row = this->create_model_row();
-            row.at(C_DIR)->setText(mi.dir);
-            row.at(C_DIR)->setIcon(QIcon(":/icon/custom_folder"));
-
-            row.at(C_AERO)->setText(mi.aero);
-            row.at(C_AERO)->setIcon(QIcon(":/icon/aircraft"));
-            QFont f = row.at(C_AERO)->font();
-            f.setBold(true);
-            row.at(C_AERO)->setFont(f);
-
-            row.at(C_DESCRIPTION)->setText(mi.description);
-            row.at(C_FDM)->setText(mi.fdm);
-            row.at(C_AUTHOR)->setText(mi.authors);
-            row.at(C_XML_FILE)->setText(mi.xml_file);
-            row.at(C_FILE_PATH)->setText(mi.file_path);
-            row.at(C_FILTER_PATH)->setText(custom_dirs.at(i));
-            row.at(C_BASE)->setText("0");
-
-            QString filter_str = mi.aero; // filter is the aero+description
-            filter_str.append( mi.description );
-            row.at(C_FILTER)->setText( filter_str );
-        }
-    }
-}
 
 //=============================================================
 /* @brief Load/reload the model */
@@ -592,84 +545,26 @@ void AircraftWidget::load_aircraft(){
     buttShowBase->setToolTip( mainObject->X->aircraft_path());
     buttShowBase->setProperty("dir", mainObject->X->aircraft_path());
     statusBar->showMessage("Loading...");
-    int c =0;
 
-    QList<QStandardItem*> row;
 
-    model->removeRows(0, model->rowCount());
-
-    this->load_custom_aircraft();
-
-    //=== Load Base Package
-    QFile dataFile(mainObject->data_file(("aircraft.txt")));
-    if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
-           //TODO  - catch error
-           return;
-    }
-    QTextStream in(&dataFile);
-    QString line = in.readLine();
-    c = 0;
     treeView->setUpdatesEnabled(false);
-    //treeView->setModel(new QStandardItemModel() );
-    while(!line.isNull()){
-
-        QStringList cols = line.split("\t");
-        if (cols.size() <= C_FILTER_PATH) {
-            //TODO - warn discarding line
-            line = in.readLine();
-            continue;
-        }
-        qDebug() << line;
-        // Add model row
-        row = this->create_model_row();
-        row.at(C_DIR)->setText(cols.at(C_DIR));
-        row.at(C_DIR)->setIcon(QIcon(":/icon/base_folder"));
-
-        row.at(C_AERO)->setText(cols.at(C_AERO));
-        row.at(C_AERO)->setIcon(QIcon(":/icon/aircraft"));
-        QFont f = row.at(C_AERO)->font();
-        f.setBold(true);
-        row.at(C_AERO)->setFont(f);
-
-        row.at(C_DESCRIPTION)->setText(cols.at(C_DESCRIPTION));
-        row.at(C_FDM)->setText(cols.at(C_FDM));
-        row.at(C_AUTHOR)->setText(cols.at(C_AUTHOR));
-        row.at(C_XML_FILE)->setText(cols.at(C_XML_FILE));
-        row.at(C_FILE_PATH)->setText(cols.at(C_FILE_PATH));
-        row.at(C_FILTER_PATH)->setText(cols.at(C_FILTER_PATH));
-        //row.at(C_FILTER_PATH)->setText(mainObject->X->aircraft_path());
-
-        QString filter_str = cols.at(C_AERO);
-        filter_str.append(cols.at(C_DESCRIPTION) );
-        row.at(C_FILTER)->setText( filter_str );
-        row.at(C_BASE)->setText("1");
-        c++;
-        line = in.readLine();
-    }
+    this->mainObject->aircraftModel->load_aircraft();
     treeView->setUpdatesEnabled(true);
 
-    //treeView->sortByColumn(C_DIR, Qt::AscendingOrder);
-    treeView->sortByColumn(C_AERO, Qt::AscendingOrder);
+    treeView->sortByColumn(AircraftModel::C_AERO, Qt::AscendingOrder);
 
-    treeView->resizeColumnToContents(C_DIR);
-    treeView->resizeColumnToContents(C_AERO);
-    treeView->resizeColumnToContents(C_FDM);
+    treeView->resizeColumnToContents(AircraftModel::C_DIR);
+    treeView->resizeColumnToContents(AircraftModel::C_AERO);
+    treeView->resizeColumnToContents(AircraftModel::C_FDM);
     //treeView->resizeColumnToContents(C_DIR);
 
     select_node(mainObject->X->getx("--aircraft="));
-    QString str = QString("%1 aircraft").arg(this->model->rowCount());
+    QString str = QString("%1 aircraft").arg(this->mainObject->aircraftModel->rowCount());
     statusBar->showMessage(str);
     outLog("*** FGx: AircraftWidget::load_tree: with " + str);
 }
 
-QList<QStandardItem*> AircraftWidget::create_model_row(){
-    QList<QStandardItem*> lst;
-    for(int i = 0; i < this->model->columnCount(); i++){
-        lst.append( new QStandardItem() );
-    }
-    model->appendRow(lst);
-    return lst;
-}
+
 
 //=============================================================
 // Initialize
@@ -682,7 +577,7 @@ void AircraftWidget::initialize(){
     if (!QFile::exists(mainObject->data_file("aircraft.txt"))){
         statusBar->showMessage("*** No cached data. Use set paths and reload");
     }else{
-        load_aircraft();
+        this->mainObject->aircraftModel->load_aircraft();
     }
     first_load_done = true;
 }
@@ -906,10 +801,10 @@ void AircraftWidget::on_view_aircraft_cache()
 
 void AircraftWidget::on_debug_mode(){
     bool hidden = !this->mainObject->debug_mode;
-    treeView->setColumnHidden(C_XML_FILE, hidden);
-    treeView->setColumnHidden(C_FILE_PATH, hidden);
-    treeView->setColumnHidden(C_FILTER_PATH, hidden);
-    treeView->setColumnHidden(C_BASE, hidden);
-    //treeView->setColumnHidden(C_AUTHOR, true);
-    treeView->setColumnHidden(C_FILTER, hidden);
+    treeView->setColumnHidden(AircraftModel::C_XML_FILE, hidden);
+    treeView->setColumnHidden(AircraftModel::C_FILE_PATH, hidden);
+    treeView->setColumnHidden(AircraftModel::C_FILTER_PATH, hidden);
+    treeView->setColumnHidden(AircraftModel::C_BASE, hidden);
+    //treeView->setColumnHidden(AircraftModel::C_AUTHOR, true);
+    treeView->setColumnHidden(AircraftModel::C_FILTER, hidden);
 }

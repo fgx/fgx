@@ -19,7 +19,6 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QTreeView>
-#include <QStandardItemModel>
 #include <QStandardItem>
 #include <QSortFilterProxyModel>
 #include <QTabBar>
@@ -28,8 +27,11 @@
 #include <QToolButton>
 
 #include "xobjects/mainobject.h"
+class MainObject;
 #include "xwidgets/toolbargroup.h"
 class ToolBarGroup;
+
+
 
 #include "aircraft/aircraftproxymodel.h"
 class AircraftProxyModel;
@@ -46,19 +48,6 @@ class AircraftWidget : public QWidget
 {
 Q_OBJECT
 public:
-    //directory << aero << description << fdm << author << xml_file << file_path;
-    enum COLS{
-        C_DIR,
-        C_AERO,
-        C_DESCRIPTION,
-        C_FDM,
-        C_AUTHOR,
-        C_XML_FILE,
-        C_FILE_PATH,
-        C_FILTER_PATH,
-        C_FILTER,
-        C_BASE
-    };
 
 
     explicit AircraftWidget(MainObject *mOb, QWidget *parent = 0);
@@ -102,13 +91,12 @@ public:
     QString validate();
     void select_node(QString aero);
     QString selected_aircraft();
-    QList<QStandardItem*> create_model_row();
+
 
     void load_custom_aircraft();
 
 private:
-    QStandardItemModel *model;
-    //QSortFilterProxyModel *proxyModel;
+
     AircraftProxyModel  *proxyModel;
     QTreeView *treeView;
 
