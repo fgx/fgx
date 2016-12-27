@@ -31,7 +31,8 @@ class MainObject;
 #include "xwidgets/toolbargroup.h"
 class ToolBarGroup;
 
-
+#include "aircraft/aircraftmodel.h"
+class AircraftModel;
 
 #include "aircraft/aircraftproxymodel.h"
 class AircraftProxyModel;
@@ -96,7 +97,7 @@ public:
     //void load_custom_aircraft();
 
 private:
-
+    AircraftModel *model;
     AircraftProxyModel  *proxyModel;
     QTreeView *treeView;
 

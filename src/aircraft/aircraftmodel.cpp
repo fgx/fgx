@@ -4,14 +4,15 @@
 #include <QProgressDialog>
 #include <QXmlQuery>
 
-#include "aircraftmodel.h"
-#include "aircraft/aircraftdata.h"
+#include "aircraft/aircraftmodel.h"
+
 
 AircraftModel::AircraftModel(MainObject *mOb) :
     QStandardItemModel()
 {
 
     this->mainObject = mOb;
+    this->cacheFileName = mainObject->data_file("aircrafts.txt");
 
     QStringList hLabels;
     hLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "FilterDir" << "Filter" << "BASE";
@@ -41,12 +42,15 @@ bool AircraftModel::scan_dir(QString dir){
     return false;
 }
 
-
+bool AircraftModel::cache_exists(){
+    qDebug() << "cache_exists" << QFile::exists( this->cacheFileName ) << this->cacheFileName;
+    return QFile::exists( this->cacheFileName );
+}
 
 
 //=============================================================
 /* @brief Load/reload the model */
-void AircraftModel::load_aircraft(bool  reload_cache){
+void AircraftModel::load(bool reload_cache){
 
     bool cancelled = false;
 
@@ -56,12 +60,13 @@ void AircraftModel::load_aircraft(bool  reload_cache){
     this->mainObject->progressDialog->setWindowIcon(QIcon(":/icon/load"));
     this->mainObject->progressDialog->show();
 
-    if (QFile::exists(mainObject->data_file("aircrafts.txt"))) {
+    if ( this->cache_exists() ) {
         bool ok = this->read_cache();
-        if(!ok){
-            reload_cache = true;
-        } else {
+        if(ok){
+            this->mainObject->progressDialog->hide();
             return;
+        } else {
+            reload_cache = true;
         }
     } else {
         reload_cache = true;
@@ -81,8 +86,9 @@ void AircraftModel::load_aircraft(bool  reload_cache){
                 this->mainObject->progressDialog->hide();
                 return;
             }
-            qDebug() << "=" << this->modelInfoList.length();
+
         }
+        qDebug() << "= TOTAL items === " << this->modelInfoList.length();
         bool ok = this->write_cache();
     }
     this->mainObject->progressDialog->hide();
@@ -91,7 +97,7 @@ void AircraftModel::load_aircraft(bool  reload_cache){
 
 bool AircraftModel::read_cache(){
 
-    if( QFile::exists(mainObject->data_file("aircrafts.txt")) == false) {
+    if( !this->cache_exists() ) {
         return false;
     }
 
@@ -103,7 +109,7 @@ bool AircraftModel::read_cache(){
 
 
     //=== Load Base Package
-    QFile dataFile(mainObject->data_file(("aircraft.txt")));
+    QFile dataFile(this->cacheFileName);
     if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
            qDebug() << "no aircraft.txt";
            return false;
@@ -111,6 +117,8 @@ bool AircraftModel::read_cache(){
     QTextStream in(&dataFile);
     QString line = in.readLine();
     c = 0;
+
+    this->modelInfoList.clear();
 
     while(!line.isNull()){
 
@@ -120,8 +128,18 @@ bool AircraftModel::read_cache(){
             line = in.readLine();
             continue;
         }
-        qDebug() << line;
+        //qDebug() << line;
         // Add model row
+        ModelInfo mi = ModelInfo();
+        mi.dir = cols.at(C_DIR);
+        mi.aero = cols.at(C_AERO);
+        mi.fdm = cols.at(C_FDM);
+        mi.description = cols.at(C_DESCRIPTION);
+        mi.authors = cols.at(C_AUTHOR);
+        mi.xml_file = cols.at(C_XML_FILE);
+        mi.filter_path = cols.at(C_FILTER_PATH);
+        this->modelInfoList.append(mi);
+
         row = this->create_model_row();
         row.at(C_DIR)->setText(cols.at(C_DIR));
         row.at(C_DIR)->setIcon(QIcon(":/icon/base_folder"));
@@ -147,6 +165,7 @@ bool AircraftModel::read_cache(){
         c++;
         line = in.readLine();
     }
+    qDebug() << "LOAD CACHE items=" << this->modelInfoList.count();
     return true;
 }
 
@@ -241,14 +260,14 @@ ModelInfo AircraftModel::read_model_xml(QString xml_set_path){
 bool AircraftModel::write_cache(){
 
     // Removing cache file, if exists()
-    if (QFile::exists(mainObject->data_file("aircrafts.txt"))) {
+    if (this->cache_exists()) {
         outLog("*** FGx aircrafts/hangar data reload: cache file exists!");
-        QFile::remove(mainObject->data_file("airports.txt"));
+        QFile::remove(this->cacheFileName);
         outLog("*** FGx aircrafts/hangar data reload: REMOVED Aircraft CACHE FILE");
     }
 
     //= Cache File
-    QFile cacheFile( mainObject->data_file("aircraft.txt") );
+    QFile cacheFile( this->cacheFileName );
     if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
         qDebug() << "TODO Open error cachce file=ssssssssssssssssssssssssssssssssssssssss";
         return true;
@@ -264,5 +283,6 @@ bool AircraftModel::write_cache(){
     }
 
     cacheFile.close();
+    qDebug() << "Wrote Cache";
     return false;
 }

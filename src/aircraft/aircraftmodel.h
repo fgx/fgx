@@ -32,7 +32,7 @@ public:
     explicit AircraftModel(MainObject *mOb);
 
     MainObject *mainObject;
-
+    QString cacheFileName;
 
     QList<ModelInfo> modelInfoList;
 
@@ -40,7 +40,7 @@ public:
 signals:
 
 public slots:
-    void load_aircraft(bool reload_cache);
+    void load(bool reload_cache);
 
     bool scan_dir(QString dir);
 
@@ -49,6 +49,7 @@ public slots:
     static QFileInfoList get_xml_set_files(QString dir, bool recus);
     static ModelInfo read_model_xml(QString dir);
 
+    bool cache_exists();
     bool write_cache();
     bool read_cache();
 };

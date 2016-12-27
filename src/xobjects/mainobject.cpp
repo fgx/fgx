@@ -53,7 +53,7 @@ MainObject::MainObject(QObject *parent) :
     processTerraSync  = new XProcess(this, "terrasync");
 
     //= Aircraft global Model
-    aircraftModel = new AircraftModel(this);
+    //aircraftModel = new AircraftModel(this);
 
     progressDialog = new QProgressDialog();
     progressDialog->hide();

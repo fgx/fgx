@@ -48,8 +48,8 @@ class ViewLogsWidget;
 class PropsTreeWidget;
 class FgxDebugWidget;
 
-#include "aircraft/aircraftmodel.h"
-class AircraftModel;
+//#include "aircraft/aircraftmodel.h"
+//class AircraftModel;
 
 
 
@@ -109,7 +109,7 @@ public:
     XProcess *processFgFs;
     XProcess *processTerraSync;
 
-    AircraftModel *aircraftModel;
+    //AircraftModel *aircraftModel;
 
     QProgressDialog *progressDialog;
 

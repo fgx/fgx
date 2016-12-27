@@ -100,7 +100,6 @@ set( QT_USE_QTWEBKIT TRUE )
 #=====================================================
 ## Sources
 set( fgx_SRCS
-    src/aircraft/aircraftdata.cpp
     src/aircraft/aircraftmodel.cpp
     src/aircraft/aircraftproxymodel.cpp
     src/aircraft/aircraftwidget.cpp
@@ -234,7 +233,6 @@ set( fgx_OTHERS
     src/xwidgets/xtreewidgetitem.h
     src/utilities/utilities.h
     src/airports/airportsdata.h
-    src/aircraft/aircraftdata.h
     src/utilities/zlib/inftrees.h
     src/utilities/zlib/inflate.h
     src/utilities/zlib/inffixed.h
