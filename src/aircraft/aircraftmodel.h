@@ -4,8 +4,10 @@
 
 #include <QStringList>
 #include <QStandardItemModel>
+#include <QFileInfoList>
 
 
+#include "aircraft/modelinfo.h"
 #include "xobjects/mainobject.h"
 class MainObject;
 
@@ -32,13 +34,23 @@ public:
     MainObject *mainObject;
 
 
+    QList<ModelInfo> modelInfoList;
 
     QList<QStandardItem*> create_model_row();
 signals:
 
 public slots:
     void load_aircraft(bool reload_cache);
-    void load_custom_aircraft();
+
+    bool scan_dir(QString dir);
+
+
+
+    static QFileInfoList get_xml_set_files(QString dir, bool recus);
+    static ModelInfo read_model_xml(QString dir);
+
+    bool write_cache();
+    bool read_cache();
 };
 
 #endif // AIRCRAFTMODEL_H

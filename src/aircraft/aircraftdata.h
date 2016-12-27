@@ -25,8 +25,8 @@ public:
 
     static bool import(QProgressDialog *progress, MainObject *mainObject);
 
-    static QFileInfoList get_xml_set_files(QString dir, bool recus);
-    static ModelInfo read_model_xml(QString dir);
+    //static QFileInfoList get_xml_set_files(QString dir, bool recus);
+   // static ModelInfo read_model_xml(QString dir);
 
 };
 
