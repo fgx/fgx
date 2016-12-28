@@ -799,8 +799,6 @@ void AircraftWidget::on_debug_mode(){
     bool hidden = !this->mainObject->debug_mode;
     treeView->setColumnHidden(AircraftModel::C_XML_FILE, hidden);
     treeView->setColumnHidden(AircraftModel::C_FILE_PATH, hidden);
-    treeView->setColumnHidden(AircraftModel::C_FILTER_PATH, hidden);
-    treeView->setColumnHidden(AircraftModel::C_BASE, hidden);
-    //treeView->setColumnHidden(AircraftModel::C_AUTHOR, true);
+    treeView->setColumnHidden(AircraftModel::C_FILTER_DIR, hidden);
     treeView->setColumnHidden(AircraftModel::C_FILTER, hidden);
 }

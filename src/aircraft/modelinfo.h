@@ -17,8 +17,9 @@ public:
     QString fdm;
     QString authors;
     QString description;
-    QString file_path;
-    QString filter_path; // for filter
+    QString full_path;
+    QString filter_dir;
+    QString filter;
 
 };
 

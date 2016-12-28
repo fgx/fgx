@@ -79,11 +79,9 @@ QVariant AircraftModel::data(const QModelIndex &index, int role) const {
         case C_AERO:
             return mi.aero;
 
-        case C_AUTHOR:
+        case C_AUTHORS:
             return mi.authors;
 
-        case C_BASE:
-            return QVariant("C_BASE");
 
         case C_DESCRIPTION:
             return mi.description;
@@ -95,13 +93,16 @@ QVariant AircraftModel::data(const QModelIndex &index, int role) const {
             return mi.fdm;
 
         case C_FILE_PATH:
-            return mi.file_path;
+            return mi.full_path;
 
-        case C_FILTER_PATH:
-            return mi.filter_path;
+        case C_FILTER_DIR:
+            return mi.filter_dir;
 
         case C_XML_FILE:
             return mi.xml_file;
+
+        case C_FILTER:
+            return mi.aero + mi.description;
 
     }
     return QVariant("OOOPS");
@@ -221,7 +222,7 @@ bool AircraftModel::read_cache(){
     while(!line.isNull()){
 
         QStringList cols = line.split("\t");
-        if (cols.size() <= C_FILTER_PATH) {
+        if (cols.size() <= C_FILTER_DIR) {
             //TODO - warn discarding line
             line = in.readLine();
             continue;
@@ -235,8 +236,8 @@ bool AircraftModel::read_cache(){
         mi.fdm = cols.at(3);
         mi.authors = cols.at(4);
         mi.xml_file = cols.at(5);
-        mi.file_path = cols.at(6);
-        mi.filter_path = cols.at(7);
+        mi.full_path = cols.at(6);
+        mi.filter_dir = cols.at(7);
 
         this->modelInfoList.append(mi);
 
@@ -282,11 +283,11 @@ ModelInfo AircraftModel::read_model_xml(QString xml_set_path){
 
     ModelInfo mi;
     mi.ok = false;
-    mi.file_path = xml_set_path;
+    mi.full_path = xml_set_path;
     mi.dir = fInfo.dir().dirName();
 
     // the model = filename without -set.xml
-    //mi.xml_file = fInfo.fileName();
+    mi.xml_file = fInfo.fileName();
     mi.aero = fInfo.fileName();
     mi.aero.chop(8);
 
@@ -348,7 +349,7 @@ bool AircraftModel::write_cache(){
     for(int i = 0; i < this->modelInfoList.length(); i++){
         QStringList cols;
         ModelInfo mi = this->modelInfoList.at(i);
-        cols  << mi.dir << mi.aero << mi.description << mi.fdm << mi.authors << mi.xml_file << mi.file_path << mi.filter_path;
+        cols  << mi.dir << mi.aero << mi.description << mi.fdm << mi.authors << mi.xml_file << mi.full_path << mi.filter_dir;
         out << cols.join("\t") << "\n";
     }
 

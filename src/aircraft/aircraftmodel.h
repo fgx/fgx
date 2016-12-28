@@ -21,12 +21,11 @@ public:
         C_AERO,
         C_DESCRIPTION,
         C_FDM,
-        C_AUTHOR,
+        C_AUTHORS,
         C_XML_FILE,
         C_FILE_PATH,
-        C_FILTER_PATH,
-        C_FILTER,
-        C_BASE
+        C_FILTER_DIR,
+        C_FILTER
     };
 
     explicit AircraftModel(MainObject *mOb);
