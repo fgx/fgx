@@ -46,7 +46,7 @@
 
 #include "aircraft/aircraftwidget.h"
 #include "aircraft/aircraftmodel.h"
-#include "aircraft/aircraftdata.h"
+
 
 #include "utilities/utilities.h"
 #include "utilities/messagebox.h"
@@ -195,7 +195,8 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     //= Treeview
     treeView = new QTreeView(this);
     treeLayout->addWidget(treeView);
-    treeView->setModel(proxyModel);
+    //treeView->setModel(proxyModel);
+    treeView->setModel(this->model);
 
     treeView->setRootIsDecorated(false);
     treeView->setUniformRowHeights(true);
@@ -542,9 +543,9 @@ void AircraftWidget::load_aircraft(bool reload_cache){
     statusBar->showMessage(reload_cache ? "Reloading Cache" : "Loading...");
 
 
-    treeView->setUpdatesEnabled(false);
+    //treeView->setUpdatesEnabled(false);
     this->model->load(reload_cache);
-    treeView->setUpdatesEnabled(true);
+    //treeView->setUpdatesEnabled(true);
 
     treeView->sortByColumn(AircraftModel::C_AERO, Qt::AscendingOrder);
 

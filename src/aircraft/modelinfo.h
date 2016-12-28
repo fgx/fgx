@@ -2,6 +2,7 @@
 #define MODELINFO_H
 
 #include <QString>
+#include <QStringList>
 
 /* \brief Conveniance to hand around model/xml file properties */
 class ModelInfo
@@ -18,6 +19,7 @@ public:
     QString description;
     QString file_path;
     QString filter_path; // for filter
+
 };
 
 #endif // MODELINFO_H

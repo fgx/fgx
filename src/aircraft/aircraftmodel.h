@@ -3,7 +3,7 @@
 
 
 #include <QStringList>
-#include <QStandardItemModel>
+#include <QAbstractItemModel>
 #include <QFileInfoList>
 
 
@@ -11,7 +11,7 @@
 #include "xobjects/mainobject.h"
 class MainObject;
 
-class AircraftModel : public QStandardItemModel
+class AircraftModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
@@ -31,12 +31,25 @@ public:
 
     explicit AircraftModel(MainObject *mOb);
 
+    QModelIndex index(int row, int column, const QModelIndex &parent) const;
+    int rowCount(const QModelIndex &parent) const;
+    int rowCount();
+    int columnCount(const QModelIndex &idx) const;
+    QModelIndex parent(const QModelIndex &child) const;
+
+    QVariant data(const QModelIndex &index, int role) const;
+
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+
     MainObject *mainObject;
+    QStringList headerLabels;
+
     QString cacheFileName;
 
     QList<ModelInfo> modelInfoList;
 
-    QList<QStandardItem*> create_model_row();
+    //QList<QStandardItem*> create_model_row();
 signals:
 
 public slots:
