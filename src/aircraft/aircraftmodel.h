@@ -45,7 +45,7 @@ public:
     MainObject *mainObject;
     QStringList headerLabels;
 
-    QString cacheFileName;
+    QString cacheFileName();
 
     QList<ModelInfo> modelInfoList;
 

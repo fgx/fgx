@@ -12,12 +12,16 @@ AircraftModel::AircraftModel(MainObject *mOb) :
 {
 
     this->mainObject = mOb;
-    this->cacheFileName = mainObject->data_file("aircrafts.txt");
+
 
     //QStringList headerLabels;
      headerLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "FilterDir" << "Filter" << "BASE";
     //model->setColumnCount(hLabels.length());
     //this->setHorizontalHeaderLabels(hLabels);
+}
+
+QString AircraftModel::cacheFileName(){
+    return mainObject->data_file("aircrafts.txt");
 }
 
 QModelIndex AircraftModel::index(int row, int column, const QModelIndex &parent) const {
@@ -45,11 +49,29 @@ QModelIndex AircraftModel::parent(const QModelIndex &child) const {
 }
 
 QVariant AircraftModel::data(const QModelIndex &index, int role) const {
-    qDebug() << "data()" << index << " " << role;
-    if (!index.isValid())
+
+    if (!index.isValid()){
         return QVariant();
+    }
+
+    if (role == Qt::DecorationRole){
+        // Return an icon for col
+        switch(index.column()){
+            case C_AERO:
+                return QIcon(":/icon/aircraft");
+            case C_DIR:
+                return QIcon(":/icon/base_folder");
+        }
+        //qDebug() << "data() DecorationRole" << index << " " << role;
+        return QVariant();
+    }
+
+    //if (role == Qt::FontRole){
+    //    // TODO .. the bold
+    //}
 
     if (role != Qt::DisplayRole)
+        //qDebug() << "data()" << index << " " << role;
         return QVariant();
 
     ModelInfo mi = this->modelInfoList.at(index.row());
@@ -65,15 +87,19 @@ QVariant AircraftModel::data(const QModelIndex &index, int role) const {
 
         case C_DESCRIPTION:
             return mi.description;
+
         case C_DIR:
             return mi.dir;
 
         case C_FDM:
             return mi.fdm;
+
         case C_FILE_PATH:
             return mi.file_path;
+
         case C_FILTER_PATH:
             return mi.filter_path;
+
         case C_XML_FILE:
             return mi.xml_file;
 
@@ -91,7 +117,7 @@ QVariant AircraftModel::headerData(int section, Qt::Orientation orientation, int
 }
 
 Qt::ItemFlags AircraftModel::flags(const QModelIndex &index) const {
-    qDebug() << "flags()" << index << QAbstractItemModel::flags(index) ;
+    //qDebug() << "flags()" << index << QAbstractItemModel::flags(index) ;
     return QAbstractItemModel::flags(index);
 }
 
@@ -122,8 +148,7 @@ bool AircraftModel::scan_dir(QString dir){
 }
 
 bool AircraftModel::cache_exists(){
-    qDebug() << "cache_exists" << QFile::exists( this->cacheFileName ) << this->cacheFileName;
-    return QFile::exists( this->cacheFileName );
+    return QFile::exists( this->cacheFileName() );
 }
 
 
@@ -132,25 +157,23 @@ bool AircraftModel::cache_exists(){
 void AircraftModel::load(bool reload_cache){
 
     bool cancelled = false;
-
+    qDebug() << "aircraftModel::load" << reload_cache;
 
     QSize size(320,100);
     this->mainObject->progressDialog->resize(size);
     this->mainObject->progressDialog->setWindowIcon(QIcon(":/icon/load"));
     this->mainObject->progressDialog->show();
 
-    if ( this->cache_exists() ) {
+    if(reload_cache == false && this->cache_exists() ){
+        // so check cache exists and load
         bool ok = this->read_cache();
         if(ok){
+            // cache loaded so get outta here
             this->mainObject->progressDialog->hide();
             return;
-        } else {
-            reload_cache = true;
         }
-    } else {
         reload_cache = true;
     }
-
 
     if(reload_cache) {
 
@@ -183,13 +206,8 @@ bool AircraftModel::read_cache(){
 
     int c = 0;
 
-    //QList<QStandardItem*> row;
-
-    //this->removeRows(0, this->rowCount());
-
-
     //=== Load Base Package
-    QFile dataFile(this->cacheFileName);
+    QFile dataFile(this->cacheFileName() );
     if (!dataFile.open(QIODevice::ReadOnly | QIODevice::Text)){
            qDebug() << "no aircraft.txt";
            return false;
@@ -209,63 +227,28 @@ bool AircraftModel::read_cache(){
             continue;
         }
         //qDebug() << line;
-        // Add model row
+        //cols  << mi.dir << mi.aero << mi.description << mi.fdm << mi.authors << mi.xml_file << mi.file_path << mi.filter_path;
         ModelInfo mi = ModelInfo();
-        mi.dir = cols.at(C_DIR);
-        mi.aero = cols.at(C_AERO);
-        mi.fdm = cols.at(C_FDM);
-        mi.description = cols.at(C_DESCRIPTION);
-        mi.authors = cols.at(C_AUTHOR);
-        mi.xml_file = cols.at(C_XML_FILE);
-        mi.filter_path = cols.at(C_FILTER_PATH);
+        mi.dir = cols.at(0);
+        mi.aero = cols.at(1);
+        mi.description = cols.at(2);
+        mi.fdm = cols.at(3);
+        mi.authors = cols.at(4);
+        mi.xml_file = cols.at(5);
+        mi.file_path = cols.at(6);
+        mi.filter_path = cols.at(7);
+
         this->modelInfoList.append(mi);
-        /*
-        row = this->create_model_row();
-        row.at(C_DIR)->setText(cols.at(C_DIR));
-        row.at(C_DIR)->setIcon(QIcon(":/icon/base_folder"));
 
-        row.at(C_AERO)->setText(cols.at(C_AERO));
-        row.at(C_AERO)->setIcon(QIcon(":/icon/aircraft"));
-        QFont f = row.at(C_AERO)->font();
-        f.setBold(true);
-        row.at(C_AERO)->setFont(f);
-
-        row.at(C_DESCRIPTION)->setText(cols.at(C_DESCRIPTION));
-        row.at(C_FDM)->setText(cols.at(C_FDM));
-        row.at(C_AUTHOR)->setText(cols.at(C_AUTHOR));
-        row.at(C_XML_FILE)->setText(cols.at(C_XML_FILE));
-        row.at(C_FILE_PATH)->setText(cols.at(C_FILE_PATH));
-        row.at(C_FILTER_PATH)->setText(cols.at(C_FILTER_PATH));
-        //row.at(C_FILTER_PATH)->setText(mainObject->X->aircraft_path());
-
-        QString filter_str = cols.at(C_AERO);
-        filter_str.append(cols.at(C_DESCRIPTION) );
-        row.at(C_FILTER)->setText( filter_str );
-        row.at(C_BASE)->setText("1");
-        */
         c++;
         line = in.readLine();
-        if(c == 10) {
-            break;
-        }
+
     }
-    //this->dataChanged();
+
     qDebug() << "LOAD CACHE items=" << this->modelInfoList.count();
-    //this->headerDataChanged(Qt::Horizontal, 0, 5);
     return true;
 }
 
-
-/*
-QList<QStandardItem*> AircraftModel::create_model_row(){
-    QList<QStandardItem*> lst;
-    for(int i = 0; i < this->columnCount(); i++){
-        lst.append( new QStandardItem() );
-    }
-    //this->appendRow(lst);
-    return lst;
-}
-*/
 
 
 /* \brief Returns all -set.xml files in a directory. Recus is for custom folder and selecting a parent */
@@ -303,6 +286,7 @@ ModelInfo AircraftModel::read_model_xml(QString xml_set_path){
     mi.dir = fInfo.dir().dirName();
 
     // the model = filename without -set.xml
+    //mi.xml_file = fInfo.fileName();
     mi.aero = fInfo.fileName();
     mi.aero.chop(8);
 
@@ -342,17 +326,18 @@ ModelInfo AircraftModel::read_model_xml(QString xml_set_path){
     return mi;
 }
 
+/* \brief Writes internal modelInfoList to cache */
 bool AircraftModel::write_cache(){
 
     // Removing cache file, if exists()
     if (this->cache_exists()) {
         outLog("*** FGx aircrafts/hangar data reload: cache file exists!");
-        QFile::remove(this->cacheFileName);
+        QFile::remove(this->cacheFileName());
         outLog("*** FGx aircrafts/hangar data reload: REMOVED Aircraft CACHE FILE");
     }
 
     //= Open Cache File for write
-    QFile cacheFile( this->cacheFileName );
+    QFile cacheFile( this->cacheFileName() );
     if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
         qDebug() << "TODO Open error cachce file=ssssssssssssssssssssssssssssssssssssssss";
         return true;
