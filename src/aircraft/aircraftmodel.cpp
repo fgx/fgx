@@ -77,7 +77,7 @@ QVariant AircraftModel::data(const QModelIndex &index, int role) const {
     ModelInfo mi = this->modelInfoList.at(index.row());
     switch(index.column()){
         case C_AERO:
-            return mi.aero;
+            return mi.aero();
 
         case C_AUTHORS:
             return mi.authors;
@@ -99,10 +99,10 @@ QVariant AircraftModel::data(const QModelIndex &index, int role) const {
             return mi.filter_dir;
 
         case C_XML_FILE:
-            return mi.xml_file;
+            return mi.xml_file();
 
         case C_FILTER:
-            return mi.aero + mi.description;
+            return mi.filter();
 
     }
     return QVariant("OOOPS");
@@ -140,7 +140,7 @@ bool AircraftModel::scan_dir(QString dir){
         ModelInfo mi = AircraftModel::read_model_xml(xmlSets.at(fi).absoluteFilePath());
         this->modelInfoList.append(mi);
         this->mainObject->progressDialog->setValue(fi);
-        this->mainObject->progressDialog->setLabelText(mi.aero);
+        this->mainObject->progressDialog->setLabelText(mi.aero());
         if(this->mainObject->progressDialog->wasCanceled()){
             return true;
         }
@@ -231,11 +231,9 @@ bool AircraftModel::read_cache(){
         //cols  << mi.dir << mi.aero << mi.description << mi.fdm << mi.authors << mi.xml_file << mi.file_path << mi.filter_path;
         ModelInfo mi = ModelInfo();
         mi.dir = cols.at(0);
-        mi.aero = cols.at(1);
-        mi.description = cols.at(2);
+           mi.description = cols.at(2);
         mi.fdm = cols.at(3);
         mi.authors = cols.at(4);
-        mi.xml_file = cols.at(5);
         mi.full_path = cols.at(6);
         mi.filter_dir = cols.at(7);
 
@@ -287,9 +285,9 @@ ModelInfo AircraftModel::read_model_xml(QString xml_set_path){
     mi.dir = fInfo.dir().dirName();
 
     // the model = filename without -set.xml
-    mi.xml_file = fInfo.fileName();
-    mi.aero = fInfo.fileName();
-    mi.aero.chop(8);
+    //mi.xml_file = fInfo.fileName();
+    //mi.aero = fInfo.fileName();
+    //mi.aero.chop(8);
 
 
     QFile xmlFile( xml_set_path );
@@ -349,7 +347,7 @@ bool AircraftModel::write_cache(){
     for(int i = 0; i < this->modelInfoList.length(); i++){
         QStringList cols;
         ModelInfo mi = this->modelInfoList.at(i);
-        cols  << mi.dir << mi.aero << mi.description << mi.fdm << mi.authors << mi.xml_file << mi.full_path << mi.filter_dir;
+        cols  << mi.dir << mi.description << mi.fdm << mi.authors <<  mi.full_path << mi.filter_dir;
         out << cols.join("\t") << "\n";
     }
 
