@@ -15,7 +15,7 @@ AircraftModel::AircraftModel(MainObject *mOb) :
 
 
     //QStringList headerLabels;
-     headerLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "FilterDir" << "Filter" << "BASE";
+     headerLabels << "Dir" << "Aero" << "Description" << "FDM" << "Authors" << "XML" << "FilePath" << "FilterDir" << "Filter";
     //model->setColumnCount(hLabels.length());
     //this->setHorizontalHeaderLabels(hLabels);
 }
@@ -139,8 +139,8 @@ bool AircraftModel::scan_dir(QString dir){
         // get data from the model file
         ModelInfo mi = AircraftModel::read_model_xml(xmlSets.at(fi).absoluteFilePath());
         mi.filter_dir = dir;
-        if(mi.xml_file() == ""){
-            qDebug() << " Problem xmlfile=" << mi.full_path << xmlSets.at(fi).absoluteFilePath();
+        if(mi.dir == "KC135"){
+            qDebug() << " @@@@@ xmlfile=" << mi.full_path << mi.aero() << mi.description << mi.authors;
         }
         if(mi.ok){
             this->modelInfoList.append(mi);
@@ -216,6 +216,7 @@ void AircraftModel::load(bool reload_cache){
 
 bool AircraftModel::read_cache(){
 
+    this->modelInfoList.clear();
     if( !this->cache_exists() ) {
         return false;
     }
@@ -234,7 +235,7 @@ bool AircraftModel::read_cache(){
     QString line = in.readLine();
     c = 0;
 
-    this->modelInfoList.clear();
+
 
     while(!line.isNull()){
 
@@ -300,7 +301,7 @@ ModelInfo AircraftModel::read_model_xml(QString xml_set_path){
     mi.ok = false;
     mi.full_path = xml_set_path;
     mi.dir = fInfo.dir().dirName();
-
+    //qDebug() << "set=" << xml_set_path;
 
     QFile xmlFile( xml_set_path );
     if (xmlFile.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -310,7 +311,7 @@ ModelInfo AircraftModel::read_model_xml(QString xml_set_path){
              Its a hack and don't quite understand whats happening.. said pedro
         */
         QString xmlString = QString( xmlFile.readAll() ).toUtf8();
-
+        //qDebug() << "=" << mi.dir << "=" << xmlString.length();
         QXmlQuery query;
         query.setFocus(xmlString);
         //query.setFocus(&xmlFile); << Because file is not QTF8 using sting instead
@@ -319,25 +320,28 @@ ModelInfo AircraftModel::read_model_xml(QString xml_set_path){
 
             QString res;
             query.evaluateTo(&res);
-            xmlFile.close();
+
 
             QDomDocument dom;
             dom.setContent("" + res + "");
             QDomNodeList nodes = dom.elementsByTagName("sim");
 
             QDomNode n = nodes.at(0);
-            mi.description = n.firstChildElement("description").text();
-            mi.authors = n.firstChildElement("author").text().trimmed().replace(("\n"),"");
-            mi.fdm = n.firstChildElement("flight-model").text();
+            mi.description = n.firstChildElement("description").text().replace('\t', "");
+            mi.authors = n.firstChildElement("author").text().trimmed().replace("\n","").replace('\t', "");
+            mi.fdm = n.firstChildElement("flight-model").text().replace("\t", "");
             //qDebug() << "fdm" << mi.fdm;
             if (mi.fdm == "null"){
                 mi.fdm = "";
             }
             mi.ok = true;
 
-        } /* !query.isValid() */
-    } /*  xmlFile.open() */
+        } else {
+            mi.ok = false;
 
+        }
+    } /*  xmlFile.open() */
+    xmlFile.close();
     return mi;
 }
 
@@ -347,7 +351,7 @@ bool AircraftModel::write_cache(){
     // Removing cache file, if exists()
     if (this->cache_exists()) {
         outLog("*** FGx aircrafts/hangar data reload: cache file exists!");
-        QFile::remove(this->cacheFileName());
+        QFile::remove( this->cacheFileName() );
         outLog("*** FGx aircrafts/hangar data reload: REMOVED Aircraft CACHE FILE");
     }
 
@@ -367,6 +371,9 @@ bool AircraftModel::write_cache(){
         QStringList cols;
         ModelInfo mi = this->modelInfoList.at(i);
         cols  << mi.dir << mi.description << mi.fdm << mi.authors <<  mi.full_path << mi.filter_dir;
+        if(mi.full_path.length() == 0){
+            qDebug() << cols;
+        }
         out << cols.join("\t") << "\n";
     }
 

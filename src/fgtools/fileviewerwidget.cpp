@@ -38,7 +38,8 @@ FileViewerWidget::FileViewerWidget(QWidget *parent) :
             this, SLOT(close())
     );
 
-    txtEdit = new QTextEdit();
+    txtEdit = new QPlainTextEdit();
+    txtEdit->setWordWrapMode(QTextOption::NoWrap);
     mainLayout->addWidget(txtEdit);
 
 

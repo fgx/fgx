@@ -789,9 +789,10 @@ void AircraftWidget::on_open_aircraft_path()
 void AircraftWidget::on_view_aircraft_cache()
 {
     FileViewerWidget *fileViewer = new FileViewerWidget();
-    fileViewer->setFile(this->model->cacheFileName());
+
     fileViewer->setWindowState(Qt::WindowMaximized);
     fileViewer->show();
+    fileViewer->setFile(this->model->cacheFileName());
 
 }
 

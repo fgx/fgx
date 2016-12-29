@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QLabel>
-#include <QTextEdit>
+#include <QPlainTextEdit>
 
 /*! @brief Show a files contents, raw and pretty.
  *
@@ -25,7 +25,7 @@ public:
     explicit FileViewerWidget(QWidget *parent = 0);
 
     QLabel *lblFileName;
-    QTextEdit *txtEdit;
+    QPlainTextEdit *txtEdit;
 
     void setFile(QString file_name);
 
