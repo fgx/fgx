@@ -185,7 +185,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     actionReloadCacheDb->setMenu(menuReload);
     actionReloadCacheDb->setPopupMode(QToolButton::MenuButtonPopup);
 
-    QAction *actView = menuReload->addAction("View `aircraft.txt` cache file" );
+    QAction *actView = menuReload->addAction("View `aircraft_cache.txt` cache file" );
     connect(actView, SIGNAL(triggered()),
             this, SLOT(on_view_aircraft_cache())
     );
@@ -789,7 +789,7 @@ void AircraftWidget::on_open_aircraft_path()
 void AircraftWidget::on_view_aircraft_cache()
 {
     FileViewerWidget *fileViewer = new FileViewerWidget();
-    fileViewer->setFile(mainObject->data_file("aircraft.txt"));
+    fileViewer->setFile(this->model->cacheFileName());
     fileViewer->setWindowState(Qt::WindowMaximized);
     fileViewer->show();
 
