@@ -25,7 +25,7 @@ QModelIndex AircraftModel::index(int row, int column, const QModelIndex &parent)
         return QModelIndex();
     }
     if (row > rowCount() -1 ){
-        qDebug() << "index()" << "got ya!";
+        //qDebug() << "index()" << "got ya!";
         return QModelIndex();
     }
     return this->createIndex(row, column);
@@ -159,16 +159,9 @@ bool AircraftModel::cache_exists(){
 /* @brief Load/reload the model */
 void AircraftModel::load(bool reload_cache){
 
-    bool cancelled = false;
     qDebug() << "=========== aircraftModel::load reload="  << reload_cache;
 
-    QSize size(320,100);
-    this->mainObject->progressDialog->resize(size);
-    this->mainObject->progressDialog->reset();
-    this->mainObject->progressDialog->setWindowIcon(QIcon(":/icon/load"));
-    this->mainObject->progressDialog->setAutoClose(false);
-    this->mainObject->progressDialog->setAutoReset(false);
-    this->mainObject->progressDialog->show();
+
 
     // check cache exists and load
     if(reload_cache == false && this->cache_exists() ){
@@ -176,7 +169,6 @@ void AircraftModel::load(bool reload_cache){
         bool ok = this->read_cache();
         if(ok){
             // cache loaded so get outta here
-            this->mainObject->progressDialog->hide();
             qDebug() << "load cache and done";
             return;
         }
@@ -184,6 +176,15 @@ void AircraftModel::load(bool reload_cache){
     }
 
     if(reload_cache) {
+
+        QSize size(320,100);
+        this->mainObject->progressDialog->resize(size);
+        this->mainObject->progressDialog->setMinimumDuration(20);
+        this->mainObject->progressDialog->reset();
+        this->mainObject->progressDialog->setWindowIcon(QIcon(":/icon/load"));
+        this->mainObject->progressDialog->setAutoClose(false);
+        this->mainObject->progressDialog->setAutoReset(false);
+        this->mainObject->progressDialog->show();
 
         this->modelInfoList.clear();
         this->mainObject->progressDialog->setWindowTitle("Scanning aircraft directories");
@@ -224,20 +225,17 @@ void AircraftModel::load(bool reload_cache){
 
                 ModelInfo mi = AircraftModel::read_model_xml( xmlSets.at(ix).absoluteFilePath() );
                 mi.filter_dir = adir;
-                //mi.dir = xmlSets.at(ix).absoluteDir().dirName();
 
                 //qDebug() << ">" << ix << " " << adir << " " << mi.aero() << " " << mi.fdm << " " << mi.authors ;
-
 
                 if(mi.dir == "KC135"){
                     qDebug() << " @@@@@ xmlfile=" << mi.full_path << mi.aero() << mi.description << mi.authors;
                 }
                 if(mi.ok){
                     this->modelInfoList.append(mi);
-                   } else {
+                } else {
                     qDebug() << " Problem not ok=" << mi.full_path;
                 }
-
 
                 //this->mainObject->progressDialog->setLabelText( mdirs.at(i) + "\n" + mi.aero());
                 if( this->mainObject->progressDialog->wasCanceled() ){
@@ -258,52 +256,12 @@ void AircraftModel::load(bool reload_cache){
             this->mainObject->progressDialog->cancel();
             return;
         }
-         qDebug() << " Readt to save " << modelInfoList.length();
-        /*
-        QHashIterator<QString, QFileInfoList> it(xHashList);
-        //for(int fi = 0; fi < xmlSets.length(); fi++){
-        while(it.hasNext()) {
-            QFileInfoList xmlSets = it.value();
-            if(xmlSets.length() > 0) {
-                for(int fi = 0; fi < xmlSets.length(); fi++){
-                    // get data from the model file
-                    ModelInfo mi = AircraftModel::read_model_xml(xmlSets.at(fi).absoluteFilePath());
-                    //;
-                    if(mi.dir == "KC135"){
-                        qDebug() << " @@@@@ xmlfile=" << mi.full_path << mi.aero() << mi.description << mi.authors;
-                    }
-                    if(mi.ok){
-                        this->modelInfoList.append(mi);
-                    } else {
-                        qDebug() << " Problem not ok=" << mi.full_path;
-                    }
-                    this->mainObject->progressDialog->setValue(fi);
-                    this->mainObject->progressDialog->setLabelText( it.key() + "\n" + mi.aero());
-                    if(this->mainObject->progressDialog->wasCanceled()){
-                        return;
-                    }
-                }
-            }
-        }
-        */
-        //qDebug() << " === sets Count = " << this->modelInfoList.length();
 
-        // scan each directory
-        /*
-        for(int i = 0; i < mdirs.size(); i++){
-            cancelled = this->scan_dir(mdirs.at(i));
-            if(cancelled){
-                // Cancel button was pressed
-                this->mainObject->progressDialog->hide();
-                qDebug() << "scan cancelled";
-                return;
-            }
-
-        }*/
         qDebug() << "= TOTAL items scanned === " << this->modelInfoList.length();
-        //bool ok = this->write_cache();
+        bool ok = this->write_cache();
     } // reloead_cache == true;
     //this->read_cache();
+    //this->dataChanged(this->createIndex(0, 0), this->createIndex(this->rowCount() - 1, this->columnCount(QModelIndex()) - 1));
     this->mainObject->progressDialog->hide();
 
 }
@@ -403,18 +361,19 @@ ModelInfo AircraftModel::read_model_xml(QString xml_set_path){
     QFile xmlFile( xml_set_path );
     if (xmlFile.open(QIODevice::ReadOnly | QIODevice::Text)){
 
-        /* The file content is converted to UTF-8.
+        /* Previously, the filewas read to UTF-8 string, left for ref >>
+         * The file content is converted to UTF-8.
              Some files are Windows, encoding and throw error with QxmlQuery etc
              Its a hack and don't quite understand whats happening.. said pedro
         */
         //QString xmlString = QString( xmlFile.readAll() ).toUtf8();
 
 
-
         QDomDocument dom;
         QString errMsg;
         int lineNo;
         int colNo;
+
         bool loaded = dom.setContent(&xmlFile, false, &errMsg, &lineNo, &colNo);
         if (!loaded){
             qDebug() << "\t> not loaded " << lineNo << "=" << colNo << " " << errMsg;
@@ -430,21 +389,14 @@ ModelInfo AircraftModel::read_model_xml(QString xml_set_path){
         mi.description = n.firstChildElement("description").text().simplified();
         mi.authors = n.firstChildElement("author").text().simplified();
         mi.fdm = n.firstChildElement("flight-model").text().simplified();
-
         if (mi.fdm == "null"){
-            //qDebug() << "\t  fdm" << mi.fdm;
             mi.fdm = "";
         }
         mi.ok = true;
 
         xmlFile.close();
-        //qDebug() << "\t = Closed";
-    } else {
-        qDebug() << "\t = Not Opened";
-    }
-    /*  xmlFile.open() */
-    //qDebug() << "\t< read_model_xml=" << mi.ok;
 
+    } // xmlFile.open()
 
     return mi;
 }
@@ -468,24 +420,16 @@ bool AircraftModel::write_cache(){
     if(this->modelInfoList.length() == 0) {
         return false;
     }
-    this->mainObject->progressDialog->setWindowTitle("Writing cache");
-    this->mainObject->progressDialog->setLabelText("standby...");
-    this->mainObject->progressDialog->setRange(0, this->modelInfoList.length());
     QTextStream out(&cacheFile);
 
     for(int i = 0; i < this->modelInfoList.length(); i++){
-        this->mainObject->progressDialog->setValue(i);
         ModelInfo mi = this->modelInfoList.at(i);
         QStringList cols;
         cols  << mi.dir << mi.description << mi.fdm << mi.authors <<  mi.full_path << mi.filter_dir;
-        if(mi.full_path.length() == 0){
-            qDebug() << cols;
-        }
         out << cols.join("\t") << "\n";
     }
 
     cacheFile.close();
-
     qDebug() << "Wrote Cache" << this->modelInfoList.length();
     return true;
 }

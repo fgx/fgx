@@ -53,9 +53,9 @@ void FileViewerWidget::setFile(QString file_path){
 
     QFileInfo finfo(file_path);
 
-    this->setWindowTitle(file_path);
+    this->setWindowTitle("View Files");
 
-    this->lblFileName->setText(finfo.fileName());
+    this->lblFileName->setText( finfo.absoluteFilePath() );
 
     QFile file( file_path );
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
