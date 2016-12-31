@@ -56,6 +56,7 @@ MainObject::MainObject(QObject *parent) :
     //aircraftModel = new AircraftModel(this);
 
     progressDialog = new QProgressDialog();
+    progressDialog->setWindowModality(Qt::WindowModal);
     progressDialog->hide();
 
     //====================================

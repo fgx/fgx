@@ -32,7 +32,7 @@ public:
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const;
     int rowCount(const QModelIndex &parent) const;
-    int rowCount();
+    int rowCount() const;
     int columnCount(const QModelIndex &idx) const;
     QModelIndex parent(const QModelIndex &child) const;
 

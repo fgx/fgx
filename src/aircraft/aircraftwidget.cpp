@@ -546,7 +546,7 @@ void AircraftWidget::load_aircraft(bool reload_cache){
     //treeView->setUpdatesEnabled(false);
     this->model->load(reload_cache);
     //treeView->setUpdatesEnabled(true);
-
+    return;
     treeView->sortByColumn(AircraftModel::C_AERO, Qt::AscendingOrder);
 
     treeView->resizeColumnToContents(AircraftModel::C_DIR);
