@@ -10,6 +10,7 @@
 #include "app_config.h"
 
 #include <QProcess>
+#include <QTimer>
 #include <QByteArray>
 #include <QString>
 #include <QStringList>
@@ -65,7 +66,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
     //========================================================
     //= Model
-    proxyModel = new AircraftProxyModel();
+    proxyModel = new QSortFilterProxyModel(); //AircraftProxyModel();
     proxyModel->setSourceModel( this->model );
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setFilterKeyColumn(AircraftModel::C_FILTER);
@@ -195,8 +196,10 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     //= Treeview
     treeView = new QTreeView(this);
     treeLayout->addWidget(treeView);
-    //treeView->setModel(proxyModel);
-    treeView->setModel(this->model);
+
+
+    treeView->setModel(proxyModel);
+    //treeView->setModel(this->model);
 
     treeView->setRootIsDecorated(false);
     treeView->setUniformRowHeights(true);
@@ -409,6 +412,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     connect(mainObject, SIGNAL(on_debug_mode(bool)), this, SLOT(on_debug_mode()));
 
     this->on_tree_selection_changed();
+    QTimer::singleShot(1000, this, SLOT(on_after()) );
 
 }
 void AircraftWidget::on_splitter_moved(){
@@ -421,7 +425,7 @@ void AircraftWidget::on_clear_filter(){
 }
 
 void AircraftWidget::on_filter_text_changed(const QString s){
-    proxyModel->setFilterFixedString(s);
+    //proxyModel->setFilterFixedString(s);
 }
 
 //==========================================================================1
@@ -545,19 +549,23 @@ void AircraftWidget::load_aircraft(bool reload_cache){
 
     //treeView->setUpdatesEnabled(false);
     this->model->load(reload_cache);
+    this->proxyModel->invalidate();
+    //this->treeView->update();
     //treeView->setUpdatesEnabled(true);
-    return;
+
     treeView->sortByColumn(AircraftModel::C_AERO, Qt::AscendingOrder);
 
     treeView->resizeColumnToContents(AircraftModel::C_DIR);
     treeView->resizeColumnToContents(AircraftModel::C_AERO);
     treeView->resizeColumnToContents(AircraftModel::C_FDM);
     //treeView->resizeColumnToContents(C_DIR);
-
+    qDebug() << "YES: loaded with " << this->proxyModel->sourceModel()->rowCount();
+    return;
     select_node(mainObject->X->getx("--aircraft="));
     QString str = QString("%1 aircraft").arg(this->model->rowCount());
     statusBar->showMessage(str);
     outLog("*** FGx: AircraftWidget::load_tree: with " + str);
+
 }
 
 
@@ -573,11 +581,13 @@ void AircraftWidget::initialize(){
     //if (!QFile::exists(mainObject->data_file("aircraft.txt"))){
     //    statusBar->showMessage("*** No cached data. Use set paths and reload");
     //}else{
-    this->model->load(false);
+    //this->load_aircraft(false);
     //}
     first_load_done = true;
 }
-
+void AircraftWidget::on_after(){
+    this->load_aircraft(false);
+}
 
 
 
@@ -670,7 +680,7 @@ void AircraftWidget::on_toggle_directory(){
     for(int i = 0; i < buttGroupShowDirs->buttons().length(); i++){
         QString dir = buttGroupShowDirs->buttons().at(i)->property("dir").toString();
        // qDebug() << "d=" << dir;
-        this->proxyModel->show_dir(dir, buttGroupShowDirs->buttons().at(i)->isChecked());
+        //this->proxyModel->show_dir(dir, buttGroupShowDirs->buttons().at(i)->isChecked());
     }
 }
 

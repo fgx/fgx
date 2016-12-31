@@ -26,7 +26,7 @@ void AircraftProxyModel::show_dir(QString dir, bool show){
 }
 
 bool AircraftProxyModel::filterAcceptsRow(int source_row, const QModelIndex & source_parent ) const {
-
+    return true;
     QModelIndex dirIdx = this->sourceModel()->index(source_row, 7);
     QString dir = this->sourceModel()->data(dirIdx,  Qt::DisplayRole).toString();
     int idx = this->dirs.indexOf(dir);

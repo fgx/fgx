@@ -2,7 +2,7 @@
 #include <QtDebug>
 #include <QStringList>
 #include <QProgressDialog>
-#include <QXmlQuery>
+#include <QDomDocument>
 
 #include "aircraft/aircraftmodel.h"
 
@@ -24,10 +24,11 @@ QModelIndex AircraftModel::index(int row, int column, const QModelIndex &parent)
     if( rowCount() == 0 ){
         return QModelIndex();
     }
-    if (row > rowCount() -1 ){
-        //qDebug() << "index()" << "got ya!";
+    if (row > rowCount() - 1 ){
+        //sqDebug() << "index()" << "got ya!";
         return QModelIndex();
     }
+    //qDebug() << "data()" << row << "  " << column;
     return this->createIndex(row, column);
 }
 QModelIndex AircraftModel::parent(const QModelIndex &child) const {
@@ -45,7 +46,9 @@ int AircraftModel::rowCount() const {
 int AircraftModel::columnCount(const QModelIndex &idx) const {
      return this->headerLabels.length();
 }
-
+int AircraftModel::columnCount() const {
+     return this->headerLabels.length();
+}
 QVariant AircraftModel::headerData(int section, Qt::Orientation orientation, int role) const {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         return this->headerLabels.at(section);
@@ -58,8 +61,9 @@ Qt::ItemFlags AircraftModel::flags(const QModelIndex &index) const {
 }
 
 QVariant AircraftModel::data(const QModelIndex &index, int role) const {
-
+    //qDebug() << "data()" << index << " " << role;
     if (!index.isValid()){
+        qDebug() << "data() invalid index";
         return QVariant();
     }
 
@@ -80,7 +84,8 @@ QVariant AircraftModel::data(const QModelIndex &index, int role) const {
     //}
 
     if (role != Qt::DisplayRole)
-        //qDebug() << "data()" << index << " " << role;
+
+
         return QVariant();
 
     // Value for each Col cell
@@ -154,6 +159,11 @@ bool AircraftModel::cache_exists(){
     return QFile::exists( this->cacheFileName() );
 }
 
+void AircraftModel::data_changed(){
+    //qDebug() << " dataChanged()";
+    //emit dataChanged(this->index(0, 0, QModelIndex()),
+    //                 this->index(rowCount() -1 , columnCount() - 1, QModelIndex()));
+}
 
 //=============================================================
 /* @brief Load/reload the model */
@@ -170,6 +180,9 @@ void AircraftModel::load(bool reload_cache){
         if(ok){
             // cache loaded so get outta here
             qDebug() << "load cache and done";
+            //emit dataChanged(this->index(0, 0, QModelIndex()),
+            //                 this->index(rowCount() -1 , columnCount() - 1, QModelIndex()));
+            this->data_changed();
             return;
         }
         reload_cache = true;
@@ -262,6 +275,7 @@ void AircraftModel::load(bool reload_cache){
     } // reloead_cache == true;
     //this->read_cache();
     //this->dataChanged(this->createIndex(0, 0), this->createIndex(this->rowCount() - 1, this->columnCount(QModelIndex()) - 1));
+    this->data_changed();
     this->mainObject->progressDialog->hide();
 
 }

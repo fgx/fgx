@@ -37,6 +37,8 @@ class AircraftModel;
 #include "aircraft/aircraftproxymodel.h"
 class AircraftProxyModel;
 
+
+
 /*! \class AircraftWidget
 * \brief Aircraft panel with a left/right splitter, model/proxy/tree vs selected
 * \todo need to abtract out the aircraft custom directories, ie built in and custom
@@ -98,7 +100,9 @@ public:
 
 private:
     AircraftModel *model;
-    AircraftProxyModel  *proxyModel;
+    //AircraftProxyModel  *proxyModel;
+    QSortFilterProxyModel  *proxyModel;
+
     QTreeView *treeView;
 
 
@@ -111,7 +115,9 @@ private:
 signals:
     void setx( QString option, bool enabled,QString value);
 
+
 public slots:
+    void on_after();
     void load_aircraft(bool reload_cache);
     void on_reload_cache();
 

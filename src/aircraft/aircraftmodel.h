@@ -34,6 +34,7 @@ public:
     int rowCount(const QModelIndex &parent) const;
     int rowCount() const;
     int columnCount(const QModelIndex &idx) const;
+    int columnCount() const;
     QModelIndex parent(const QModelIndex &child) const;
 
     QVariant data(const QModelIndex &index, int role) const;
@@ -48,13 +49,16 @@ public:
 
     QList<ModelInfo> modelInfoList;
 
+    void data_changed();
     //QList<QStandardItem*> create_model_row();
 signals:
-
+    void dataChanged(const QModelIndex &, const QModelIndex &);
 public slots:
     void load(bool reload_cache);
 
     bool scan_dir(QString dir);
+
+
 
 
 

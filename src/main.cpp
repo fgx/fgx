@@ -70,7 +70,7 @@ int main( int argc, char* argv[])
     QApplication::setApplicationVersion(APP_VERSION);
 
 
-    //== Starts the application here
+    //== Starts the application here as object, visible in SysTray
     MainObject mainObject;
 
     QSettings startsettings;
