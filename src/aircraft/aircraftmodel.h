@@ -7,10 +7,11 @@
 #include <QStandardItem>
 #include <QFileInfoList>
 
-
-#include "aircraft/modelinfo.h"
 #include "xobjects/mainobject.h"
 class MainObject;
+
+#include "aircraft/modelinfo.h"
+
 
 class AircraftModel : public QStandardItemModel
 {
@@ -30,46 +31,24 @@ public:
     };
 
     explicit AircraftModel(MainObject *mOb);
-    /*
-    QModelIndex index(int row, int column, const QModelIndex &parent) const;
-    int rowCount(const QModelIndex &parent) const;
-    int rowCount() const;
-    int columnCount(const QModelIndex &idx) const;
-    int columnCount() const;
-    QModelIndex parent(const QModelIndex &child) const;
-
-    QVariant data(const QModelIndex &index, int role) const;
-
-    Qt::ItemFlags flags(const QModelIndex &index) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    */
 
     MainObject *mainObject;
 
     QString cacheFileName();
-
-    //QList<ModelInfo> modelInfoList;
-
-
     QList<QStandardItem*> create_append_row();
 
 signals:
 
 public slots:
+
     void load(bool reload_cache);
-
-    //bool scan_dir(QString dir);
-
-
-
-
+    bool cache_exists();
+    bool read_cache();
 
     static QFileInfoList get_xml_set_files(QString dir, bool recus);
     static ModelInfo read_model_xml(QString dir);
 
-    bool cache_exists();
-    //bool write_cache();
-    bool read_cache();
+
 };
 
 #endif // AIRCRAFTMODEL_H
