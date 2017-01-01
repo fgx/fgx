@@ -12,15 +12,12 @@ public:
     ModelInfo();
 
     bool ok; // is true is xml parsed and data read
-    QString aero();
-    QString xml_file();
     QString dir; // short parentdir
     QString fdm;
     QString authors;
     QString description;
     QString full_path;
     QString filter_dir;
-    QString filter();
 
 };
 

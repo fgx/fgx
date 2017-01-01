@@ -48,7 +48,7 @@ public:
 
     QString cacheFileName();
 
-    QList<ModelInfo> modelInfoList;
+    //QList<ModelInfo> modelInfoList;
 
 
     QList<QStandardItem*> create_append_row();
@@ -58,7 +58,7 @@ signals:
 public slots:
     void load(bool reload_cache);
 
-    bool scan_dir(QString dir);
+    //bool scan_dir(QString dir);
 
 
 
@@ -68,7 +68,7 @@ public slots:
     static ModelInfo read_model_xml(QString dir);
 
     bool cache_exists();
-    bool write_cache();
+    //bool write_cache();
     bool read_cache();
 };
 

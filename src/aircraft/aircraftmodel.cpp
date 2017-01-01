@@ -128,7 +128,7 @@ QVariant AircraftModel::data(const QModelIndex &index, int role) const {
 */
 
 
-
+/*
 bool AircraftModel::scan_dir(QString dir){
     return false;
     qDebug() << "##Scan = ", dir;
@@ -141,7 +141,7 @@ bool AircraftModel::scan_dir(QString dir){
         ModelInfo mi = AircraftModel::read_model_xml(xmlSets.at(fi).absoluteFilePath());
         mi.filter_dir = dir;
         if(mi.dir == "KC135"){
-            qDebug() << " @@@@@ xmlfile=" << mi.full_path << mi.aero() << mi.description << mi.authors;
+            qDebug() << " @@@@@ xmlfile=" << mi.full_path <<  mi.description << mi.authors;
         }
         if(mi.ok){
             this->modelInfoList.append(mi);
@@ -149,14 +149,14 @@ bool AircraftModel::scan_dir(QString dir){
             qDebug() << " Problem not ok=" << mi.full_path;
         }
         this->mainObject->progressDialog->setValue(fi);
-        this->mainObject->progressDialog->setLabelText( dir + "\n" + mi.aero());
+        this->mainObject->progressDialog->setLabelText( dir + "\n" );
         if(this->mainObject->progressDialog->wasCanceled()){
             return true;
         }
     }
     return false;
 }
-
+*/
 bool AircraftModel::cache_exists(){
     return QFile::exists( this->cacheFileName() );
 }
@@ -203,10 +203,11 @@ void AircraftModel::load(bool reload_cache){
         this->mainObject->progressDialog->setWindowIcon(QIcon(":/icon/load"));
         this->mainObject->progressDialog->setAutoClose(false);
         this->mainObject->progressDialog->setAutoReset(false);
+        this->mainObject->progressDialog->setWindowTitle("Scanning aircraft directories");
+        this->mainObject->progressDialog->setRange(0, 0);
+        this->mainObject->progressDialog->setValue(0);
         this->mainObject->progressDialog->show();
 
-        this->modelInfoList.clear();
-        this->mainObject->progressDialog->setWindowTitle("Scanning aircraft directories");
 
         //= List of model dirs to scan
         QStringList mdirs = this->mainObject->settings->value("custom_aircraft_dirs").toStringList();
@@ -214,9 +215,19 @@ void AircraftModel::load(bool reload_cache){
         mdirs.prepend(aircraft_base_path);
         qDebug() << "Dirs = " << mdirs;
 
-
-        this->mainObject->progressDialog->setRange(0, 0);
-        this->mainObject->progressDialog->setValue(0);
+        // remove cache file then open
+        if (this->cache_exists()) {
+            outLog("*** FGx aircrafts/hangar data reload: cache file exists!");
+            QFile::remove( this->cacheFileName() );
+            outLog("*** FGx aircrafts/hangar data reload: REMOVED Aircraft CACHE FILE");
+        }
+        //= Open Cache File for write
+        QFile cacheFile( this->cacheFileName() );
+        if(!cacheFile.open(QIODevice::WriteOnly | QIODevice::Text)){
+            qDebug() << "TODO Open error cachce file=";
+            return;
+        }
+        QTextStream out(&cacheFile);
 
         //= Walk the model dirs
         for(int i = 0; i < mdirs.length(); i++){
@@ -248,10 +259,13 @@ void AircraftModel::load(bool reload_cache){
                 //qDebug() << ">" << ix << " " << adir << " " << mi.aero() << " " << mi.fdm << " " << mi.authors ;
 
                 if(mi.dir == "KC135"){
-                    qDebug() << " @@@@@ xmlfile=" << mi.full_path << mi.aero() << mi.description << mi.authors;
+                    qDebug() << " @@@@@ xmlfile=" << mi.full_path << mi.description << mi.authors;
                 }
                 if(mi.ok){
-                    this->modelInfoList.append(mi);
+                    //this->modelInfoList.append(mi);
+                    QStringList cols;
+                    cols  << mi.dir << mi.description << mi.fdm << mi.authors <<  mi.full_path << mi.filter_dir;
+                    out << cols.join("\t") << "\n";
                 } else {
                     qDebug() << " Problem not ok=" << mi.full_path;
                 }
@@ -267,17 +281,18 @@ void AircraftModel::load(bool reload_cache){
 
             }  // xmlSets
         } // mdirs
-        qDebug() << " @@@@@ Read Done " << modelInfoList.length();
+        cacheFile.close();
+        qDebug() << " @@@@@ Read Done ";
 
         // No items so get outta here
-        if (modelInfoList.length() == 0) {
-            qDebug() << " no items so exit";
-            this->mainObject->progressDialog->cancel();
-            return;
-        }
+        //if (modelInfoList.length() == 0) {
+        //    qDebug() << " no items so exit";
+        //    this->mainObject->progressDialog->cancel();
+        //    return;
+        //}
 
-        qDebug() << "= TOTAL items scanned === " << this->modelInfoList.length();
-        bool ok = this->write_cache();
+        qDebug() << "= TOTAL items scanned === ";
+        //bool ok = this->write_cache();
     } // reloead_cache == true;
     //this->read_cache();
     //this->dataChanged(this->createIndex(0, 0), this->createIndex(this->rowCount() - 1, this->columnCount(QModelIndex()) - 1));
@@ -288,7 +303,7 @@ void AircraftModel::load(bool reload_cache){
 
 bool AircraftModel::read_cache(){
 
-    this->modelInfoList.clear();
+    //this->modelInfoList.clear();
     if( !this->cache_exists() ) {
         return false;
     }
@@ -362,7 +377,7 @@ bool AircraftModel::read_cache(){
 
     }
 
-    qDebug() << "LOADed CACHE items=" << this->modelInfoList.count();
+    qDebug() << "LOADed CACHE items=" << c;
     return true;
 }
 
@@ -450,6 +465,7 @@ ModelInfo AircraftModel::read_model_xml(QString xml_set_path){
 }
 
 /* \brief Writes internal modelInfoList to cache */
+/*
 bool AircraftModel::write_cache(){
 
     // Removing cache file, if exists()
@@ -481,3 +497,4 @@ bool AircraftModel::write_cache(){
     qDebug() << "Wrote Cache" << this->modelInfoList.length();
     return true;
 }
+*/
