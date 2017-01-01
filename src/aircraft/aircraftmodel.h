@@ -16,8 +16,6 @@ class MainObject;
 class ModelInfo
 {
 public:
-    ModelInfo();
-
     bool ok; // is true is xml parsed and data read
     QString dir; // short parentdir
     QString fdm;
