@@ -20,7 +20,6 @@
 #include <QLineEdit>
 #include <QTreeView>
 #include <QStandardItem>
-#include <QSortFilterProxyModel>
 #include <QTabBar>
 #include <QLabel>
 #include <QStatusBar>
@@ -99,9 +98,9 @@ public:
     //void load_custom_aircraft();
 
 private:
-    AircraftModel *model;
-    //AircraftProxyModel  *proxyModel;
-    QSortFilterProxyModel  *proxyModel;
+    AircraftModel *sourceModel;
+    AircraftProxyModel  *proxyModel;
+    //QSortFilterProxyModel  *proxyModel;
 
     QTreeView *treeView;
 
@@ -146,7 +145,7 @@ public slots:
     void load_custom_dir_buttons();
     void on_toggle_directory();
 
-
+    void update_statusbar();
 };
 
 #endif // AIRCRAFTWIDGET_H

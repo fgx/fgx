@@ -40,26 +40,8 @@ QList<QStandardItem*> AircraftModel::create_append_row(){
 /* @brief Load/reload the model */
 void AircraftModel::load(bool reload_cache){
 
-    qDebug() << "=========== aircraftModel::load reload="  << reload_cache;
+    //qDebug() << "=========== aircraftModel::load reload="  << reload_cache;
 
-
-
-    // check cache exists and load
-    /*
-    if(reload_cache == false && this->cache_exists() ){
-
-        bool ok = this->read_cache();
-        if(ok){
-            // cache loaded so get outta here
-            qDebug() << "load cache and done";
-            //emit dataChanged(this->index(0, 0, QModelIndex()),
-            //                 this->index(rowCount() -1 , columnCount() - 1, QModelIndex()));
-            //this->data_changed();
-            return;
-        }
-        reload_cache = true;
-    }
-    */
     QSize size(320,100);
     this->mainObject->progressDialog->resize(size);
     this->mainObject->progressDialog->setMinimumDuration(20);
@@ -145,7 +127,10 @@ bool AircraftModel::read_cache(){
     this->mainObject->progressDialog->setWindowTitle("Loading cache");
     this->mainObject->progressDialog->setLabelText("standby...");
     this->mainObject->progressDialog->setRange(0, 0);
+
     int c = 0;
+    this->removeRows(0, this->rowCount());
+    QString aircraft_base_path =  mainObject->X->aircraft_path();
 
     //=== Load Base Package
     QFile dataFile(this->cacheFileName() );
@@ -170,13 +155,19 @@ bool AircraftModel::read_cache(){
         QFileInfo fInfo(cols.at(4));
         QString aero = fInfo.fileName();
         aero.chop(8);
+        QString filepath = cols.at(4);
 
         row = this->create_append_row();
         row.at(C_DIR)->setText(cols.at(0));
-        row.at(C_DIR)->setIcon(QIcon(":/icon/base_folder"));
+        row.at(C_DIR)->setIcon(QIcon(":/icon/folder"));
 
         row.at(C_AERO)->setText(aero);
-        row.at(C_AERO)->setIcon(QIcon(":/icon/aircraft"));
+
+        if( cols.at(5) == aircraft_base_path){
+            row.at(C_AERO)->setIcon(QIcon(":/icon/aircraft_base"));
+        }else{
+            row.at(C_AERO)->setIcon(QIcon(":/icon/aircraft_other"));
+        }
         QFont f = row.at(C_AERO)->font();
         f.setBold(true);
         row.at(C_AERO)->setFont(f);
@@ -186,7 +177,7 @@ bool AircraftModel::read_cache(){
         row.at(C_AUTHORS)->setText(cols.at(3));
 
         row.at(C_XML_FILE)->setText(fInfo.fileName());
-        row.at(C_FILE_PATH)->setText(cols.at(4));
+        row.at(C_FILE_PATH)->setText(filepath);
         row.at(C_FILTER_DIR)->setText(cols.at(5));
 
         QString filter_str = aero.append(cols.at(2));

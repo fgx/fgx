@@ -12,7 +12,7 @@ public:
     explicit AircraftProxyModel(QObject *parent = 0);
 
     QStringList dirs;
-    void show_dir(QString dir, bool show);
+    void set_dir(QString dir, bool show);
 
     bool filterAcceptsRow(int source_row, const QModelIndex & source_parent ) const;
 signals:

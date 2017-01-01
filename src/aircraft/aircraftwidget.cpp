@@ -16,10 +16,8 @@
 #include <QStringList>
 #include <QFile>
 
-#include <QXmlQuery>
 #include <QDomDocument>
 
-// @TODO - qt5 dont use this
 #include <QDesktopServices>
 #include <QFileDialog>
 
@@ -62,12 +60,12 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
     mainObject = mOb;
 
-    this->model = new AircraftModel(this->mainObject);
+    this->sourceModel = new AircraftModel(this->mainObject);
 
     //========================================================
     //= Model
-    proxyModel = new QSortFilterProxyModel(); //AircraftProxyModel();
-    proxyModel->setSourceModel( this->model );
+    proxyModel = new AircraftProxyModel();
+    proxyModel->setSourceModel( this->sourceModel );
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setFilterKeyColumn(AircraftModel::C_FILTER);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
@@ -175,7 +173,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
 
     //== Reload cache
     QToolButton *actionReloadCacheDb = new QToolButton(this);
-    actionReloadCacheDb->setText("Reload");
+    actionReloadCacheDb->setText("Rescan");
     actionReloadCacheDb->setIcon(QIcon(":/icon/load"));
     actionReloadCacheDb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     actionReloadCacheDb->setAutoRaise(true);
@@ -211,6 +209,7 @@ AircraftWidget::AircraftWidget(MainObject *mOb, QWidget *parent) :
     treeView->setColumnWidth(AircraftModel::C_DIR, 60);
     treeView->setColumnWidth(AircraftModel::C_FDM, 60);
     treeView->setColumnWidth(AircraftModel::C_DESCRIPTION, 200);
+    treeView->setColumnHidden(AircraftModel::C_DIR, true);
     this->on_debug_mode(); // debug mode shows/hides some columns
     connect( treeView->selectionModel(),
              SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection & ) ),
@@ -425,7 +424,8 @@ void AircraftWidget::on_clear_filter(){
 }
 
 void AircraftWidget::on_filter_text_changed(const QString s){
-    //proxyModel->setFilterFixedString(s);
+    proxyModel->setFilterFixedString(s);
+    this->update_statusbar();
 }
 
 //==========================================================================1
@@ -443,32 +443,33 @@ void AircraftWidget::on_tree_selection_changed(){
         emit setx("--aircraft=", false, "");
         return;
     }
-    /*
-    lblAero->setText( this->mainObject->aircraftModel->itemFromIndex(
+
+    lblAero->setText( this->sourceModel->itemFromIndex(
                             proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_AERO))
-                          )->text());
-    lblAeroDescription->setText( this->mainObject->aircraftModel->itemFromIndex(
+                            )->text());
+    lblAeroDescription->setText( this->sourceModel->itemFromIndex(
                             proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_DESCRIPTION))
-                          )->text());
+                            )->text());
 
 
-    QString xmlFile =  this->mainObject->aircraftModel->itemFromIndex(
+    QString xmlFile =  this->sourceModel->itemFromIndex(
                         proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_FILE_PATH))
-                    )->text();
+                        )->text();
     lblAeroXml->setText(xmlFile);
 
-    int is_base =  this->mainObject->aircraftModel->itemFromIndex(
-                        proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_BASE))
-                    )->text().toInt();
+    //int is_base =  this->sourceModel->itemFromIndex(
+    //                        proxyModel->mapToSource(treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_FILTER_DIR))
+    //                        )->text() == mainObject->X->aircraft_path();
     this->buttOpenAeroDir->setDisabled(false);
-    if( is_base == 1 ){
-        this->buttOpenAeroDir->setIcon(QIcon(":/icon/base_folder"));
-    }else{
-        this->buttOpenAeroDir->setIcon(QIcon(":/icon/custom_folder"));
-    }
+    this->buttOpenAeroDir->setIcon(QIcon(":/icon/folder_open"));
+    //if( is_base == 1 ){
+    //    this->buttOpenAeroDir->setIcon(QIcon(":/icon/aircraft_base"));
+    //}else{
+    //    this->buttOpenAeroDir->setIcon(QIcon(":/icon/aircraft_other"));
+    //}
 
     QModelIndex midx = treeView->selectionModel()->selectedIndexes().at(AircraftModel::C_DIR);
-    QStandardItem *item = this->mainObject->aircraftModel->itemFromIndex( proxyModel->mapToSource(midx)  );
+    QStandardItem *item = this->sourceModel->itemFromIndex( proxyModel->mapToSource(midx)  );
 
     //= Get the thumbnail image
     QString thumb_file = QString("%1/%2/thumbnail.jpg").arg(mainObject->X->aircraft_path(), item->text());
@@ -490,7 +491,7 @@ void AircraftWidget::on_tree_selection_changed(){
 
     emit setx("--aircraft=", true, selected_aircraft());
     mainObject->launcherWindow->on_upx("--aircraft=", true, selected_aircraft()); // Show aircraft in header
-    */
+
 }
 
 
@@ -547,11 +548,11 @@ void AircraftWidget::load_aircraft(bool reload_cache){
     statusBar->showMessage(reload_cache ? "Reloading Cache" : "Loading...");
 
 
-    //treeView->setUpdatesEnabled(false);
-    this->model->load(reload_cache);
+    treeView->setUpdatesEnabled(false);
+    this->sourceModel->load(reload_cache);
     this->proxyModel->invalidate();
     //this->treeView->update();
-    //treeView->setUpdatesEnabled(true);
+    treeView->setUpdatesEnabled(true);
 
     treeView->sortByColumn(AircraftModel::C_AERO, Qt::AscendingOrder);
 
@@ -559,12 +560,13 @@ void AircraftWidget::load_aircraft(bool reload_cache){
     treeView->resizeColumnToContents(AircraftModel::C_AERO);
     treeView->resizeColumnToContents(AircraftModel::C_FDM);
     //treeView->resizeColumnToContents(C_DIR);
-    qDebug() << "YES: loaded with " << this->proxyModel->sourceModel()->rowCount();
-    return;
+    treeView->sortByColumn(AircraftModel::C_AERO);
+
+    this->on_toggle_directory();
     select_node(mainObject->X->getx("--aircraft="));
-    QString str = QString("%1 aircraft").arg(this->model->rowCount());
-    statusBar->showMessage(str);
-    outLog("*** FGx: AircraftWidget::load_tree: with " + str);
+
+    this->update_statusbar();
+
 
 }
 
@@ -680,8 +682,10 @@ void AircraftWidget::on_toggle_directory(){
     for(int i = 0; i < buttGroupShowDirs->buttons().length(); i++){
         QString dir = buttGroupShowDirs->buttons().at(i)->property("dir").toString();
        // qDebug() << "d=" << dir;
-        //this->proxyModel->show_dir(dir, buttGroupShowDirs->buttons().at(i)->isChecked());
+        this->proxyModel->set_dir(dir, buttGroupShowDirs->buttons().at(i)->isChecked());
     }
+    //this->proxyModel->invalidate();
+    this->update_statusbar();
 }
 
 
@@ -802,7 +806,7 @@ void AircraftWidget::on_view_aircraft_cache()
 
     fileViewer->setWindowState(Qt::WindowMaximized);
     fileViewer->show();
-    fileViewer->setFile(this->model->cacheFileName());
+    fileViewer->setFile(this->sourceModel->cacheFileName());
 
 }
 
@@ -812,4 +816,11 @@ void AircraftWidget::on_debug_mode(){
     treeView->setColumnHidden(AircraftModel::C_FILE_PATH, hidden);
     treeView->setColumnHidden(AircraftModel::C_FILTER_DIR, hidden);
     treeView->setColumnHidden(AircraftModel::C_FILTER, hidden);
+}
+
+void AircraftWidget::update_statusbar(){
+    QString str = QString("View %1 of %2 aircraft"
+                          ).arg(this->proxyModel->rowCount()
+                          ).arg(this->sourceModel->rowCount());
+    statusBar->showMessage(str);
 }

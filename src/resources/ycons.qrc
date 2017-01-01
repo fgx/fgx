@@ -51,5 +51,7 @@
         <file alias="close">icons/cross-white.png</file>
         <file alias="install">icons/inbox-download.png</file>
         <file alias="zip">icons/compress.png</file>
+        <file alias="aircraft_other">icons/document-attribute.png</file>
+        <file alias="aircraft_base">icons/blue-document-attribute-b.png</file>
     </qresource>
 </RCC>

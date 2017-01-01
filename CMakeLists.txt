@@ -103,7 +103,6 @@ set( fgx_SRCS
     src/aircraft/aircraftmodel.cpp
     src/aircraft/aircraftproxymodel.cpp
     src/aircraft/aircraftwidget.cpp
-    src/aircraft/modelinfo.cpp
     src/aircraft/xaero.cpp
     src/airports/airportsdata.cpp
     src/airports/airportswidget.cpp
@@ -180,7 +179,6 @@ set( fgx_HDRS
     src/aircraft/aircraftmodel.h
     src/aircraft/aircraftproxymodel.h
     src/aircraft/aircraftwidget.h
-    src/aircraft/modelinfo.h
     src/airports/airportswidget.h
     src/airports/importairportsdialog.h
     src/airports/metarwidget.h

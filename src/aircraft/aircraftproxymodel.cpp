@@ -9,7 +9,7 @@ AircraftProxyModel::AircraftProxyModel(QObject *parent) :
 }
 
 // This adds or removed entries to the filter
-void AircraftProxyModel::show_dir(QString dir, bool show){
+void AircraftProxyModel::set_dir(QString dir, bool show){
 
     int idx = this->dirs.indexOf(dir);
 
@@ -26,11 +26,11 @@ void AircraftProxyModel::show_dir(QString dir, bool show){
 }
 
 bool AircraftProxyModel::filterAcceptsRow(int source_row, const QModelIndex & source_parent ) const {
-    return true;
+
     QModelIndex dirIdx = this->sourceModel()->index(source_row, 7);
     QString dir = this->sourceModel()->data(dirIdx,  Qt::DisplayRole).toString();
-    int idx = this->dirs.indexOf(dir);
-    if(idx == -1){
+    //int idx = this->dirs.indexOf(dir);
+    if( this->dirs.indexOf(dir) == -1){
         return false;
     }
     return QSortFilterProxyModel::filterAcceptsRow( source_row, source_parent);

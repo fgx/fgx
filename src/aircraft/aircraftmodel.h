@@ -10,9 +10,26 @@
 #include "xobjects/mainobject.h"
 class MainObject;
 
-#include "aircraft/modelinfo.h"
+//#include "aircraft/modelinfo.h"
+
+// container for the xml data
+class ModelInfo
+{
+public:
+    ModelInfo();
+
+    bool ok; // is true is xml parsed and data read
+    QString dir; // short parentdir
+    QString fdm;
+    QString authors;
+    QString description;
+    QString full_path;
+    QString filter_dir;
+
+};
 
 
+// Storage for aircraft
 class AircraftModel : public QStandardItemModel
 {
     Q_OBJECT
