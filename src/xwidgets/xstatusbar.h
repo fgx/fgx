@@ -29,7 +29,7 @@ signals:
 public slots:
 
     void set_busy(bool state, QString mess);
-
+    void on_refresh_clicked();
 };
 
 #endif // XSTATUSBAR_H

@@ -25,7 +25,10 @@ MetarWidget::MetarWidget(MainObject *mob, QWidget *parent) :
     setWindowIcon(QIcon(":/icon/metar"));
     setWindowTitle("Metar Fetch");
 
-    setMinimumWidth(600);
+    setProperty("settings_namespace", "metar_widget");
+
+    setMinimumWidth(800);
+    setMinimumHeight(600);
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->setContentsMargins(0,0,0,0);
@@ -34,12 +37,20 @@ MetarWidget::MetarWidget(MainObject *mob, QWidget *parent) :
 
     txtMetar = new QPlainTextEdit();
     txtMetar->setStyleSheet("font-size: 9pt;");
+    txtMetar->setMaximumHeight(50);
     mainLayout->addWidget(txtMetar);
+
+    txtJson = new QPlainTextEdit();
+    txtJson->setStyleSheet("font-size: 9pt;");
+    mainLayout->addWidget(txtJson);
 
     statusBar = new XStatusBar();
     mainLayout->addWidget(statusBar);
     connect(statusBar, SIGNAL(refresh()),
             this, SLOT(on_refresh()));
+
+    this->mainObject->settings->restoreWindow(this);
+
 }
 
 void MetarWidget::show_metar(QString icao_code){
@@ -62,7 +73,15 @@ void MetarWidget::on_refresh(){
 }
 
 void MetarWidget::on_reply(XReply xreply){
-    qDebug() << "YES =" << xreply.raw;
+    if(xreply.error){
+        statusBar->set_busy(false, "Error");
+        return;
+    }
+    statusBar->set_busy(false, "Success");
+    //qDebug() << "YES =" << xreply.raw;
+    //qDebug() << "YES =" << xreply.data.property("Raw-Report").toString();
+    txtMetar->setPlainText( xreply.data.property("Raw-Report").toString() );
+    txtJson->setPlainText( xreply.raw );
 }
 
 //=================================================
@@ -127,4 +146,14 @@ void MetarWidget::load_metar(QString apt)
 void MetarWidget::clear_metar()
 {
     txtMetar->setPlainText( "" );
+}
+
+
+
+
+//= window close
+void MetarWidget::closeEvent(QCloseEvent *ev){
+    Q_UNUSED(ev);
+    this->mainObject->settings->saveWindow(this);
+
 }

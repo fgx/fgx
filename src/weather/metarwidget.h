@@ -37,10 +37,12 @@ public:
     QString apt_code;
 
     QPlainTextEdit *txtMetar;
+    QPlainTextEdit *txtJson;
     XStatusBar *statusBar;
 
 
-
+    void closeEvent(QCloseEvent *event);
+    //void moveEvent(QMoveEvent *ev);
 
 signals:
 

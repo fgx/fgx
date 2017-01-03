@@ -23,9 +23,11 @@ XStatusBar::XStatusBar(QWidget *parent) :
     buttRefresh->setIcon(QIcon(":/icon/refresh"));
     buttRefresh->setToolButtonStyle(Qt::ToolButtonIconOnly);
     mainLayout->addWidget(buttRefresh, 0);
+    connect(buttRefresh, SIGNAL(clicked(bool)), this, SLOT(on_refresh_clicked()));
 
-    //this->set_busy(bool state, QString mess);
-
+}
+void XStatusBar::on_refresh_clicked(){
+    emit refresh();
 }
 
 void XStatusBar::set_busy(bool state, QString mess){
