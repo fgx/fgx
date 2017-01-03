@@ -13,27 +13,45 @@
 #include <QPlainTextEdit>
 
 
+#include "network/netman.h"
+class NetManager;
+
+#include "xwidgets/xstatusbar.h"
+class XStatusBar;
 
 #include "xobjects/mainobject.h"
 class MainObject;
+
+
 
 
 class MetarWidget : public QWidget
 {
 Q_OBJECT
 public:
-	explicit MetarWidget(MainObject *mob, QWidget *parent = 0);
+    explicit MetarWidget(MainObject *mob, QWidget *parent = 0);
 
-	MainObject *mainObject;
+    MainObject *mainObject;
+    NetManager *netMan;
 
-	QPlainTextEdit *txtMetar;
+    QString apt_code;
+
+    QPlainTextEdit *txtMetar;
+    XStatusBar *statusBar;
+
+
 
 
 signals:
 
 public slots:
-	void load_metar(QString apt);
-	void clear_metar();
+    void show_metar(QString apt_code);
+    void load_metar(QString apt_code);
+    void fetch_metar();
+    void clear_metar();
+    void on_reply(XReply xreply);
+    void on_refresh();
+
 
 };
 

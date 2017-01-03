@@ -1,5 +1,5 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
-// FGx FlightGear Launcher // xopt.h
+// FGx FlightGear Launcher // xreply.h
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-
 // (c) 2010-2016
 //  Pete Morgan
@@ -9,15 +9,19 @@
 #define XREPLY_H
 
 #include <QString>
+#include <QScriptValue>
 
 class XReply
 {
 public:
     explicit XReply();
-    QString origin;
+    QObject *origin;
     QString url;
     bool ok;
-    QString data;
+    QString raw;
+    QScriptValue data;
+    bool error;
+    QString errorMess;
 
 };
 

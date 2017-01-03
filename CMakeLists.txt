@@ -107,7 +107,7 @@ set( fgx_SRCS
     src/airports/airportsdata.cpp
     src/airports/airportswidget.cpp
     src/airports/importairportsdialog.cpp
-    src/airports/metarwidget.cpp
+    src/weather/metarwidget.cpp
     src/fgtools/fileviewerwidget.cpp
     src/launcher/headerwidget.cpp
     src/launcher/launcherwindow.cpp
@@ -121,6 +121,7 @@ set( fgx_SRCS
     src/mpmap/xwebpage.cpp
     src/network/mptelnet.cpp
     src/network/networkwidget.cpp
+    src/network/netman.cpp
     src/panes/coresettingswidget.cpp
     src/panes/expertoptionswidget.cpp
     src/panes/renderingwidget.cpp
@@ -167,11 +168,12 @@ set( fgx_SRCS
     src/xwidgets/xcommandpreviewidget.cpp
     src/xwidgets/xdebugtreewidget.cpp
     src/xwidgets/xgroupboxes.cpp
+    src/xwidgets/xstatusbar.cpp
     src/installer/installwindow.cpp
     src/installer/aircraftinstallwidget.cpp
     src/installer/downloadmanagerwidget.cpp
     src/installer/servercall.cpp
-    src/xobjects/xreply.cpp
+    src/network/xreply.cpp
     )
 #=====================================================
 ## Headers
@@ -181,7 +183,7 @@ set( fgx_HDRS
     src/aircraft/aircraftwidget.h
     src/airports/airportswidget.h
     src/airports/importairportsdialog.h
-    src/airports/metarwidget.h
+    src/weather/metarwidget.h
     src/fgtools/fileviewerwidget.h
     src/launcher/headerwidget.h
     src/launcher/launcherwindow.h
@@ -194,6 +196,7 @@ set( fgx_HDRS
     src/mpmap/xwebpage.h
     src/network/mptelnet.h
     src/network/networkwidget.h
+    src/network/netman.h
     src/panes/coresettingswidget.h
     src/panes/expertoptionswidget.h
     src/panes/renderingwidget.h
@@ -219,11 +222,12 @@ set( fgx_HDRS
     src/xwidgets/xcommandpreviewidget.h
     src/xwidgets/xdebugtreewidget.h
     src/xwidgets/xgroupboxes.h
+    src/xwidgets/xstatusbar.h
     src/installer/installwindow.h
     src/installer/aircraftinstallwidget.h
     src/installer/downloadmanagerwidget.h
     src/installer/servercall.h
-    src/xobjects/xreply.h
+    src/network/xreply.h
     )
 #=====================================================
 ## Others..

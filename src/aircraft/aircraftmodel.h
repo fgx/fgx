@@ -1,7 +1,6 @@
 #ifndef AIRCRAFTMODEL_H
 #define AIRCRAFTMODEL_H
 
-
 #include <QStringList>
 #include <QStandardItemModel>
 #include <QStandardItem>

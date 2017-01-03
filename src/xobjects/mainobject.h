@@ -48,8 +48,7 @@ class ViewLogsWidget;
 class PropsTreeWidget;
 class FgxDebugWidget;
 
-//#include "aircraft/aircraftmodel.h"
-//class AircraftModel;
+
 
 
 
@@ -69,6 +68,7 @@ class FgxDebugWidget;
  *
  * @author: Peter Morgan
  * @author: Yves Sablonier
+ * @author: Geoff Mc.master.don
  */
 
 class MainObject : public QObject
@@ -102,6 +102,7 @@ public:
     //MpMapWidget *mpMapWidget;
     //MpMapXWidget *mpMapXWidget;
 
+
     ViewLogsWidget *viewLogsWidget;
     PropsTreeWidget *propertiesBrowser;
     FgxDebugWidget *fgxDebugWidget;
@@ -109,7 +110,6 @@ public:
     XProcess *processFgFs;
     XProcess *processTerraSync;
 
-    //AircraftModel *aircraftModel;
 
     QProgressDialog *progressDialog;
 
@@ -135,6 +135,8 @@ public:
     QStringList get_fgfs_args();
     QStringList get_env();
 
+
+
 signals:
     void show_settings(int);
     void reload_paths();
@@ -151,6 +153,7 @@ public slots:
     void on_installer();
     void on_browsermap();
     void on_properties_browser();
+
 
     void on_view_logs();
     void clear_log(QString log_name);

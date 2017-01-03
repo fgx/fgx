@@ -5,9 +5,20 @@ FGx
 
 HomePage: http://fgx.freeflightsim.org 
 
+Build Status
+------------------------
+
+**master**
+[![Build Status](https://travis-ci.org/fgx/fgx.svg?branch=master)](https://travis-ci.org/fgx/fgx)
+
+**next**
+[![Build Status](https://travis-ci.org/fgx/fgx.svg?branch=next)](https://travis-ci.org/fgx/fgx)
+
+
+
 * FGx is
   - written in c++ using qt4 toolkit 
-  - around spring 2016 expect qt5 (can u help ?)
+  - around spring 2016/7 expect qt5 (can u help ?)
 * Issues, Feature Requests & Bugs: 
   - https://github.com/fgx/fgx/issues
 * Team Chat:
@@ -23,7 +34,7 @@ HomePage: http://fgx.freeflightsim.org
 Installation
 --------------------------
 
-From source using cmake (qmake is expired)
+From source using `cmake` (qmake is expired, sorry)
 
 ```bash
 git checkout https://github.com/fgx/fgx
@@ -33,15 +44,6 @@ cmake ../fgx
 make
 sudo make install
 ```
-
-Build Status
-------------------------
-
-**master**
-[![Build Status](https://travis-ci.org/fgx/fgx.svg?branch=master)](https://travis-ci.org/fgx/fgx)
-
-**next**
-[![Build Status](https://travis-ci.org/fgx/fgx.svg?branch=next)](https://travis-ci.org/fgx/fgx)
 
 
 About

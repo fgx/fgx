@@ -37,7 +37,7 @@ class MainObject;
 #include "map/openlayerwidget.h"
 class OpenLayerWidget;
 
-#include "airports/metarwidget.h"
+#include "weather/metarwidget.h"
 class MetarWidget;
 
 #include "utilities/workThread.h"   // class workThread

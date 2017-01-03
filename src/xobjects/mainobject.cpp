@@ -25,6 +25,7 @@
 #include "settings/settingsdialog.h"
 #include "utilities/utilities.h"
 #include "xobjects/xsettingsmodel.h"
+class XSettingsModel;
 
 
 MainObject::MainObject(QObject *parent) :
@@ -52,8 +53,6 @@ MainObject::MainObject(QObject *parent) :
     processFgFs  = new XProcess(this, "fgfs");
     processTerraSync  = new XProcess(this, "terrasync");
 
-    //= Aircraft global Model
-    //aircraftModel = new AircraftModel(this);
 
     progressDialog = new QProgressDialog();
     progressDialog->setWindowModality(Qt::WindowModal);

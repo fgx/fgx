@@ -402,7 +402,7 @@ AirportsWidget::AirportsWidget(MainObject *mOb, QWidget *parent) :
     ploadItem = &pAptDat->loadItem;   // LOADITEM structure
 // #endif // #ifdef ENABLE_APT_DAT_LOAD
 
-}
+} // end constrict
 
 AirportsWidget::~AirportsWidget()
 {
@@ -1222,7 +1222,7 @@ void AirportsWidget::on_open_airports_folder()
 
 void AirportsWidget::on_show_metar()
 {
-    metarWidget->show();
+    metarWidget->show_metar("KSFO");
 }
 
 void AirportsWidget::on_debug_mode()
